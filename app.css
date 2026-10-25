@@ -1,0 +1,2242 @@
+/* BLOC - Gestaltung (ausgelagert aus index.html, 2026-09-29). Designs über :root[data-theme] bzw. html[data-thema]. */
+/* Modern: schlichtes, minimalistisches Design (Original) */
+:root{
+  color-scheme: light;
+  --bg:#f5f5f2;
+  --surface:#ffffff;
+  --surface-2:#ececea;
+  --border:#e2e1dd;
+  --text:#1c1c1e;
+  --text-dim:#6c6c70;
+  --accent:#ff5a36;
+  --accent-text:#ffffff;
+  --rest:#2fa88a;
+  --rest-text:#ffffff;
+  --blockrest:#4a7dff;
+  --danger:#e0393f;
+  /* Workouts und Blöcke bekommen je eine eigene Farbe, damit man sie auf einen Blick unterscheidet */
+  --wo-color:var(--accent);
+  --wo-text:var(--accent-text);
+  --bl-color:#7a4fd6;
+  --bl-text:#ffffff;
+  --gym-color:#c9201a;   /* Fitnessstudio: tiefes Rot, von der Akzent-Koralle gut zu unterscheiden */
+  --gym-text:#ffffff;
+  --tp-color:#3867e8;
+  --tp-text:#ffffff;
+  --ti-color:#1e8fd5;   /* Timer (Blöcke und Timer-Workouts): ein leicht anderes, helleres Blau als Air */
+  --ti-text:#ffffff;
+  /* Farblogik nach 60-30-10: ca. 60 % ruhige Flächen (--bg, --surface), 30 % Text, Linien und Zweitflächen (--text, --surface-2, --border),
+     höchstens 10 % Akzent (--accent) - und der gehört der Hauptaktion, dem Logo und der Arbeitsphase im Timer.
+     „Ausgewählt“ ist deshalb tonal: zarte Tönung der Akzentfarbe, normale Schriftfarbe, feine Kontur - weder schwarz noch grell. */
+  --tint:color-mix(in srgb, var(--accent) 68%, #f2a33a);   /* wärmere, weniger rötliche Basis für alle Tönungen */
+  --sel-bg:color-mix(in srgb, var(--tint) 16%, var(--surface));
+  --sel-text:var(--text);
+  --sel-border:color-mix(in srgb, var(--tint) 50%, var(--border));
+  /* Die vier Bereiche der Startseite haben je eine Farbe - Favoriten, Start-Knöpfe und Übersicht tragen die Farbe ihres Bereichs:
+     Fitnessstudio = --gym-color (Rot), Freiluft = --tp-color (blau), Workout = Akzent (BLOC-Orange); die übrigen Bereichsfarben sind am Ende dieser Datei auf Schwarz/Weiß gesetzt (ruhige Farbwelt) */
+  --ws-color:#1f9d6b;
+  --ws-text:#ffffff;
+  /* Kategorien der Bibliothek */
+  --c-cardio:var(--tp-color); --c-weight:var(--tp-color); --c-bw:var(--tp-color); --c-back:var(--tp-color); --c-legs:var(--tp-color); --c-core:var(--tp-color); --c-arms:var(--tp-color); --c-calis:var(--tp-color); --c-stretch:var(--ws-color);
+  --radius:18px;
+  --shadow:0 1px 2px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.06);
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#121214;
+  --surface:#1c1c1f;
+  --surface-2:#232326;
+  --border:#2e2e32;
+  --text:#f2f2f2;
+  --text-dim:#98989d;
+  --accent:#ff6b47;
+  --accent-text:#1a1005;
+  --rest:#34c19b;
+  --rest-text:#04231b;
+  --blockrest:#6f92ff;
+  --danger:#ff5c60;
+  --bl-color:#a98bff;
+  --bl-text:#170b33;
+  --gym-color:#ff4f45;   /* Fitnessstudio im Dunkeln: helleres Rot für Kontrast */
+  --gym-text:#ffffff;
+  --tp-color:#6f92ff;
+  --ti-color:#58b6f4;
+  --tp-text:#0b1330;
+  --ws-color:#3fcf8e;
+  --ws-text:#04231b;
+  --radius:18px;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme]){
+    color-scheme: dark;
+    --bg:#121214;
+    --surface:#1c1c1f;
+    --surface-2:#232326;
+    --border:#2e2e32;
+    --text:#f2f2f2;
+    --text-dim:#98989d;
+    --accent:#ff6b47;
+    --accent-text:#1a1005;
+    --rest:#34c19b;
+    --rest-text:#04231b;
+    --blockrest:#6f92ff;
+    --danger:#ff5c60;
+    --bl-color:#a98bff;
+    --bl-text:#170b33;
+    --gym-color:#ff4f45;
+    --gym-text:#ffffff;
+    --tp-color:#6f92ff;
+  --ti-color:#58b6f4;
+    --tp-text:#0b1330;
+    --ws-color:#3fcf8e;
+    --ws-text:#04231b;
+    --radius:18px;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
+}
+
+
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body{ height:100%; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  overscroll-behavior-y:none;
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+#app{ max-width:560px; margin:0 auto; padding:0 16px 110px; min-height:100%; }
+h1, h2, h3{ margin:0 0 4px; }
+.topbar{
+  position:sticky; top:0; z-index:5;
+  display:flex; align-items:center; gap:8px;
+  padding:calc(env(safe-area-inset-top) + 14px) 0 10px;
+  background:linear-gradient(var(--bg) 70%, transparent);
+}
+.topbar h1{ font-size:20px; flex:1; }
+.iconbtn{
+  width:58px; height:58px; border-radius:16px; border:none;
+  background:var(--surface); color:var(--text);
+  display:flex; align-items:center; justify-content:center;
+  font-size:25px; cursor:pointer; box-shadow:var(--shadow); flex-shrink:0;
+}
+.iconbtn:active{ transform:scale(.94); }
+.back{ font-size:27px; }
+.section-title{
+  font-size:12px; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--text-dim); margin:22px 4px 10px;
+}
+.card{
+  background:var(--surface); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:16px; margin-bottom:12px;
+}
+.list-item{
+  background:var(--surface); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:16px 18px; margin-bottom:10px;
+  display:flex; align-items:center; gap:12px; cursor:pointer; min-height:44px;
+}
+.list-item:active{ transform:scale(.99); }
+.list-item .meta{ flex:1; min-width:0; }
+.list-item .name{ font-weight:600; font-size:16px; margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.list-item .sub{ font-size:13px; color:var(--text-dim); }
+.chip{
+  font-size:12px; font-weight:600; padding:3px 9px; border-radius:100px;
+  background:var(--surface-2); color:var(--text-dim); white-space:nowrap;
+}
+.playbtn{
+  width:46px; height:46px; border-radius:50%; border:none;
+  background:var(--accent); color:var(--accent-text);
+  display:flex; align-items:center; justify-content:center; font-size:18px;
+  flex-shrink:0; cursor:pointer;
+}
+.playbtn:active{ transform:scale(.92); }
+.playbtn.wo{ background:var(--wo-color); color:var(--wo-text); }
+.playbtn.bl{ background:var(--bl-color); color:var(--bl-text); }
+.playbtn.tp{ background:var(--tp-color); color:var(--tp-text); }
+.playbtn.ws{ background:var(--ws-color); color:var(--ws-text); }
+/* Vorlagen: fertige Programme, direkt starten oder als eigenes Workout übernehmen */
+.lib-ico{ cursor:pointer; }
+.lib-ico svg{ width:22px; height:22px; }
+.tpl-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.tpl-item{ flex-wrap:wrap; }
+.tpl-item > .tpl-actions{ flex-basis:100%; margin:2px 0 0 60px; }
+.tpl-actions .tpl-adopt{ margin-top:0; }
+.tpl-hide{
+  border:none; background:none; color:var(--text-dim); font:inherit; font-size:13px; cursor:pointer;
+  padding:8px 6px; text-decoration:underline; text-underline-offset:3px;
+}
+.lib-tabs{ grid-template-columns:1fr 1fr !important; }
+.lib-tabs button{ grid-column:auto !important; }
+.lib-tabs-card{ padding:10px; }
+.lib-chips{ display:flex; gap:8px; overflow-x:auto; padding:2px 2px 12px; margin:0 -2px; scrollbar-width:none; }
+.lib-chips::-webkit-scrollbar{ display:none; }
+.lib-chip{
+  flex-shrink:0; border:1px solid var(--border); background:var(--surface); color:var(--text);
+  border-radius:100px; padding:8px 14px; font:inherit; font-size:14px; cursor:pointer; white-space:nowrap;
+}
+.lib-chip.active{ background:var(--sel-bg); color:var(--sel-text); border-color:var(--sel-bg); }
+.illu-btn{ border:none; background:none; padding:0; margin:0; cursor:pointer; color:inherit; align-self:flex-start; }
+.info-btn{
+  display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; margin-left:6px;
+  border-radius:50%; border:2px solid currentColor; background:none; color:inherit; cursor:pointer;
+  font:700 15px/1 Georgia, "Times New Roman", serif; font-style:italic; vertical-align:2px; opacity:.9;
+}
+.info-sheet h3{ margin:0; }
+.info-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.info-sub{ font-size:13px; color:var(--text-dim); margin-top:4px; }
+.info-x{ border:none; background:var(--surface-2); color:var(--text); width:38px; height:38px; border-radius:50%; font-size:22px; cursor:pointer; flex-shrink:0; }
+.info-live{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; padding:8px 8px 8px 12px; border-radius:12px; background:var(--surface-2); font-size:14px; }
+.info-live .tpl-adopt{ margin:0; }
+.info-gear{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin:0 0 10px; }
+.gchip{ display:inline-flex; align-items:center; gap:6px; padding:3px 11px 3px 8px; border-radius:999px; font-size:12.5px; font-weight:500; color:var(--text); background:var(--surface-2); }
+.gchip .ico{ width:16px; height:16px; flex:none; color:var(--bereich, var(--tp-color)); }
+.info-illu{ display:block; width:150px; height:150px; margin:10px auto 4px; color:var(--bereich, var(--tp-color)); }
+.info-views{ display:flex; justify-content:center; gap:10px; margin:10px 0 4px; }
+.info-views figure{ margin:0; flex:1; max-width:170px; text-align:center; }
+.info-views .info-illu{ width:100%; height:auto; aspect-ratio:1; margin:0 auto 2px; background:var(--surface-2); border-radius:14px; }
+.info-views figcaption{ font-size:12px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--text-dim); }
+.info-title{ font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-dim); margin:8px 0 6px; }
+.info-steps{ margin:0 0 12px; padding-left:22px; font-size:15px; line-height:1.45; }
+.info-steps li{ margin-bottom:6px; }
+.info-tip{ font-size:14px; background:var(--surface-2); border-radius:10px; padding:10px 12px; margin-bottom:14px; }
+.info-risk{ font-size:12.5px; color:var(--text-dim); line-height:1.4; margin:0 2px 12px; }
+.info-risk a{ color:inherit; text-decoration:underline; text-underline-offset:2px; }
+:root[data-theme="dark"]{
+  --c-cardio:var(--tp-color); --c-weight:var(--tp-color); --c-bw:var(--tp-color); --c-back:var(--tp-color); --c-legs:var(--tp-color); --c-core:var(--tp-color); --c-arms:var(--tp-color); --c-calis:var(--tp-color); --c-stretch:var(--tp-color);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme]){
+  --c-cardio:var(--tp-color); --c-weight:var(--tp-color); --c-bw:var(--tp-color); --c-back:var(--tp-color); --c-legs:var(--tp-color); --c-core:var(--tp-color); --c-arms:var(--tp-color); --c-calis:var(--tp-color); --c-stretch:var(--tp-color);
+} }
+
+.playbtn.cat{ background:var(--cat); color:var(--tp-text); }
+
+.tpl-item[style*="--cat"] .lib-illu{ color:var(--cat); }
+.cat-tags{ display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
+.cat-tag{
+  display:inline-block; font-size:11px; font-weight:700; line-height:1; padding:4px 7px; border-radius:100px;
+  color:var(--cat); background:color-mix(in srgb, var(--cat) 14%, transparent); border:1px solid color-mix(in srgb, var(--cat) 45%, transparent);
+  letter-spacing:.02em; white-space:nowrap; vertical-align:1px;
+}
+.lib-chip{ display:inline-flex; align-items:center; gap:6px; }
+.lib-chip .ico{ width:16px; height:16px; flex-shrink:0; }
+.lib-chip.active{ background:var(--sel-bg); border-color:var(--sel-bg); color:var(--sel-text); }
+
+
+.lib-tabs{ grid-template-columns:1fr 1fr 1fr !important; }
+.lib-sort{ display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-dim); margin:-2px 2px 12px; }
+.lib-sort button{ border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:100px; padding:5px 12px; font:inherit; font-size:13px; cursor:pointer; }
+.lib-sort button.active{ background:var(--text); color:var(--bg); border-color:var(--text); }
+.my-new{
+  width:100%; display:flex; align-items:center; justify-content:center; gap:8px; margin:0 0 12px; padding:16px;
+  border:2px dashed var(--tp-color); border-radius:var(--radius); background:none; color:var(--tp-color);
+  font:inherit; font-size:15px; font-weight:700; cursor:pointer;
+}
+.my-item{ border-left:5px solid var(--tp-color); }
+/* Baukasten */
+.dz-list{ min-height:74px; padding:6px; margin:0 -6px 6px; border:2px dashed transparent; border-radius:14px; transition:border-color .15s, background .15s; }
+.dz-list.dz-active{ border-color:var(--tp-color); background:color-mix(in srgb, var(--tp-color) 6%, transparent); }
+.dz-empty{ text-align:center; color:var(--text-dim); font-size:14px; padding:18px 10px; }
+.dz-row{
+  display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border);
+  border-left:5px solid var(--cat); border-radius:12px; padding:8px 8px 8px 4px; margin-bottom:8px;
+}
+.dz-row .meta{ flex:1; min-width:0; cursor:pointer; }
+.dz-row .name{ font-weight:600; font-size:15px; }
+.dz-row .sub{ font-size:12.5px; color:var(--text-dim); margin-top:2px; }
+.dz-row .sub .cat-tag{ font-size:10px; padding:3px 6px; margin-left:4px; }
+.dh{ width:34px; height:42px; display:flex; align-items:center; justify-content:center; color:var(--text-dim); cursor:grab; touch-action:none; flex-shrink:0; }
+.dz-btn{ width:38px; height:38px; border-radius:50%; border:1px solid var(--border); background:var(--surface-2); color:var(--text); font-size:20px; line-height:1; cursor:pointer; flex-shrink:0; }
+.dz-btn.add{ background:var(--tp-color); border-color:var(--tp-color); color:var(--tp-text); font-weight:700; }
+.dz-dragging{ opacity:.3; }
+.dz-ghost{ position:fixed; z-index:80; pointer-events:none; margin:0; box-shadow:0 12px 30px rgba(0,0,0,.28); transform:rotate(1.5deg) scale(1.02); }
+.dz-ph{ height:54px; margin-bottom:8px; border-radius:12px; border:2px dashed var(--tp-color); background:color-mix(in srgb, var(--tp-color) 10%, transparent); }
+.dz-trash{
+  position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom)); transform:translate(-50%, 160%);
+  z-index:79; display:flex; align-items:center; gap:8px; padding:16px 26px; border-radius:100px;
+  background:var(--danger); color:#fff; font-weight:700; font-size:15px; box-shadow:0 8px 24px rgba(0,0,0,.25);
+  transition:transform .2s ease;
+}
+.dz-trash.show{ transform:translate(-50%, 0); }
+.dz-trash.hot{ transform:translate(-50%, 0) scale(1.1); }
+body.dz-mode{ user-select:none; -webkit-user-select:none; cursor:grabbing; }
+.info-posture{ margin:0 0 10px; padding-left:0; list-style:none; font-size:15px; line-height:1.45; }
+.info-posture li{ position:relative; padding-left:24px; margin-bottom:6px; }
+.info-posture li::before{ content:"\2713"; position:absolute; left:2px; top:0; color:var(--bereich, var(--tp-color)); font-weight:700; }
+.info-avoid{ font-size:14px; border-radius:10px; padding:10px 12px; margin-bottom:12px; background:color-mix(in srgb, var(--danger) 10%, transparent); border:1px solid color-mix(in srgb, var(--danger) 35%, transparent); }
+.lvl{ display:inline-flex; align-items:center; gap:3px; font-size:12px; color:var(--text-dim); white-space:nowrap; vertical-align:1px; }
+.lvl i{ width:7px; height:7px; border-radius:50%; border:1.5px solid currentColor; display:inline-block; }
+.lvl i.on{ background:currentColor; }
+.cat-tags .lvl{ margin-left:4px; }
+.lib-filters{ display:flex; gap:8px; margin:0 0 10px; }
+.lib-filters select{ flex:1; min-width:0; padding:9px 10px; font-size:14px; }
+.my-new.surprise{ border-style:solid; border-color:var(--border); color:var(--text); background:var(--surface); }
+.seg-row{ display:flex; gap:6px; margin-bottom:6px; }
+.seg-row button{ flex:1; border:1px solid var(--border); background:var(--surface-2); color:var(--text); border-radius:10px; padding:10px 6px; font:inherit; font-size:14px; cursor:pointer; }
+/* „Ausgewählt“ sieht überall gleich aus (Akzentfarbe wie die Filter-Chips); Welt- und Kategoriefarben stecken nur in Symbolen und Markierungen */
+.seg-row button.active{ background:var(--sel-bg); border-color:var(--sel-bg); color:var(--sel-text); font-weight:700; }
+.tm-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.tm-grid label{ font-size:12px; margin:12px 0 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tm-grid .stepper button{ width:30px; height:44px; font-size:20px; flex-shrink:0; }
+.tm-grid .stepper input{ font-size:16px; min-width:0; }
+.tm-hint{ font-size:13px; color:var(--text-dim); margin:8px 0 2px; }
+.tm-chip{ flex-shrink:0; border:1px solid var(--cat); color:var(--cat); background:none; border-radius:100px; padding:6px 9px; font:inherit; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; }
+.dz-sticky{ position:sticky; top:0; z-index:4; max-height:44vh; overflow-y:auto; background:var(--bg); margin:0 -6px; padding:2px 6px 4px; border-bottom:1px solid var(--border); overscroll-behavior:contain; }
+.dz-sticky .section-title{ margin-top:10px; }
+.cover-hero .cover-kicker{ font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--bereich, var(--tp-color)); font-weight:700; }
+.cover-hero .cover-name{ margin:4px 0 6px; font-size:26px; }
+.cover-hero .cover-meta{ font-size:14px; color:var(--text-dim); }
+.cover-hero .cover-equip{ font-size:13px; color:var(--text-dim); margin:8px 0 4px; }
+.cover-hero .btn{ margin-top:10px; }
+.cover-note{ font-size:12.5px; color:var(--text-dim); text-align:center; margin-top:10px; }
+.sp-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+.lib-chip.nodot::before{ display:none; }
+/* Reiter als eine Segment-Leiste */
+.lib-tabs{ grid-template-columns:repeat(4,minmax(0,1fr)) !important; gap:6px !important; }
+.lib-tabs.seg-2{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+.lib-tabs button{ grid-column:auto !important; padding-top:11px !important; padding-bottom:11px !important; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.lib-tabs button{ padding-left:2px !important; padding-right:2px !important; }
+.fav-btn{ border:none; background:none; color:var(--text-dim); font-size:24px; line-height:1; cursor:pointer; padding:4px 6px; flex-shrink:0; }
+.fav-btn.on{ color:#f0b400; }
+.tpl-actions .fav-btn{ padding:4px 2px; }
+.cover-hero{ position:relative; }
+.cover-fav{ position:absolute; top:10px; right:10px; }
+.tpl-toggle{ cursor:pointer; user-select:none; -webkit-user-select:none; }
+.tpl-chev{ display:inline-block; margin-left:6px; transition:transform .2s ease; font-size:1.1em; line-height:1; }
+.tpl-toggle.zu .tpl-chev{ transform:rotate(-90deg); }
+.home-sec{ margin-top:26px; padding:6px 0; }
+.home-sec:first-of-type{ margin-top:10px; }
+.sec-count{
+  display:inline-block; margin-left:8px; min-width:22px; padding:2px 7px; border-radius:100px; font-size:11px; line-height:1.4;
+  text-align:center; background:var(--surface-2); color:var(--text-dim); letter-spacing:0;
+}
+.sec-body{ animation:secAuf .18s ease both; }
+@keyframes secAuf{ from{ opacity:0; transform:translateY(-4px); } to{ opacity:1; transform:none; } }
+.tpl-chev.zu{ transform:rotate(-90deg); }
+.tpl-mus{ font-size:13px; font-weight:600; color:var(--cat, var(--text)); margin-top:6px; line-height:1.35; }
+.info-mus{ margin:4px 0 10px; padding:10px 12px; border-radius:10px; font-size:14px; line-height:1.4;
+  background:color-mix(in srgb, var(--tp-color) 9%, transparent); border:1px solid color-mix(in srgb, var(--tp-color) 30%, transparent); }
+.info-mus-2{ color:var(--text-dim); font-size:13px; margin-top:3px; }
+.row-illu-wrap{ flex-shrink:0; width:50px; height:50px; border-radius:10px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  background:color-mix(in srgb, var(--cat) 12%, transparent); color:var(--cat); }
+.row-illu{ width:46px; height:46px; }
+.row-illu .pose-a{ animation:none !important; opacity:1 !important; }
+.dz-row.mit-bild{ padding-top:6px; padding-bottom:6px; }
+.tm-chip{ display:flex; flex-direction:column; align-items:center; line-height:1.15; }
+.tm-side{ font-size:10px; font-weight:600; opacity:.85; }
+.dz-row .meta{ min-width:0; }
+
+.row-tm{ font-weight:700; margin-right:6px; white-space:nowrap; }
+.row-mus{ display:inline; }
+.opt-card{ padding:0; }
+.opt-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; cursor:pointer; user-select:none; -webkit-user-select:none; }
+.opt-title{ font-weight:700; font-size:15px; }
+.opt-sum{ font-size:13px; color:var(--text-dim); margin-top:3px; }
+.opt-body{ padding:0 16px 16px; border-top:1px solid var(--border); }
+.opt-sep{ height:1px; background:var(--border); margin:16px 0 4px; }
+/* Icons statt Farben */
+.ico{ width:1em; height:1em; vertical-align:-.15em; }
+.cat-tag{ display:inline-flex !important; align-items:center; gap:4px; color:var(--text-dim) !important;
+  background:var(--surface-2) !important; border-color:var(--border) !important; }
+.cat-tag .ico{ width:13px; height:13px; color:var(--tp-color); }
+.sub-ico{ width:14px; height:14px; margin-right:4px; color:var(--tp-color); vertical-align:-2px; }
+.tpl-mus{ color:var(--text) !important; }
+.lib-equips{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:0 0 10px; }
+.lib-lbl{ font-size:12px; color:var(--text-dim); margin-right:2px; }
+.lib-equips .lib-chip{ padding:6px 11px; font-size:13px; }
+.lib-search{ position:relative; margin:0 0 10px; }
+.lib-search input{ width:100%; padding:12px 12px 12px 38px; font-size:15px; }
+.lib-search .s-ico{ position:absolute; left:12px; top:50%; transform:translateY(-50%); width:18px; height:18px; color:var(--text-dim); pointer-events:none; }
+.fav-btn.ex-fav{ font-size:22px; }
+.dz-row .fav-btn.ex-fav{ padding:2px; }
+/* Startseite: Kacheln */
+.ht-ico{ width:44px; height:44px; border-radius:12px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  background:color-mix(in srgb, var(--tp-color) 14%, transparent); color:var(--tp-color); }
+.ht-ico .ico{ width:24px; height:24px; }
+.ht-txt{ flex:1; min-width:0; }
+.ht-txt b{ display:block; font-size:16px; }
+.ht-txt small{ display:block; font-size:12.5px; color:var(--text-dim); margin-top:2px; }
+.sec-body{ margin:0 0 16px 14px; padding-left:12px; border-left:2px solid var(--border); }
+.ttl-sub{ display:block; font-size:12px; font-weight:600; letter-spacing:.06em; color:var(--text-dim); margin-top:3px; text-transform:uppercase; }
+.topbar.home h1 .ttl{ letter-spacing:.08em; }
+
+.filter-bar{ display:flex; gap:8px; margin:0 0 10px; }
+.filter-dd{
+  flex:1; min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:1px; position:relative;
+  padding:8px 26px 8px 12px; border:1px solid var(--border); border-radius:12px; background:var(--surface); color:var(--text);
+  font:inherit; text-align:left; cursor:pointer;
+}
+.filter-dd.on{ border-color:var(--tp-color); box-shadow:inset 0 0 0 1px var(--tp-color); }
+.fd-l{ font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.05em; }
+.fd-v{ font-size:14px; font-weight:600; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.fd-c{ position:absolute; right:10px; top:50%; transform:translateY(-50%); color:var(--text-dim); }
+.fs-hint{ font-size:13px; color:var(--text-dim); margin:2px 0 12px; }
+.fs-opt{
+  width:100%; display:flex; align-items:center; gap:12px; padding:12px; margin:0 0 6px; border:1px solid var(--border);
+  border-radius:12px; background:var(--surface); color:var(--text); font:inherit; font-size:15px; text-align:left; cursor:pointer;
+}
+.fs-opt.on{ border-color:var(--tp-color); background:color-mix(in srgb, var(--tp-color) 10%, transparent); }
+.fs-ico{ width:22px; display:flex; justify-content:center; color:var(--tp-color); }
+.fs-ico .ico{ width:20px; height:20px; }
+.fs-opt > span:nth-child(2){ flex:1; }
+.fs-check{ color:var(--tp-color); font-weight:700; opacity:0; }
+.fs-opt.on .fs-check{ opacity:1; }
+.info-lib{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 0 12px; }
+.cover-hide{ display:block; margin:8px auto 0; }
+.share-url{ font-size:14px; word-break:break-all; padding:10px 12px; border-radius:10px; background:var(--surface-2); margin-bottom:10px; user-select:all; -webkit-user-select:all; }
+.share-btns{ display:flex; gap:8px; }
+.share-btns .btn{ flex:1; margin-top:0; }
+.share-card > .btn{ margin-top:8px; }
+
+.lib-hidden{ text-align:center; color:var(--text-dim); font-size:13px; padding:14px 0 90px; }
+.hid-head{ display:flex; align-items:center; gap:10px; margin-top:34px; }
+.hid-head .ico{ width:18px; height:18px; }
+.hid-note{ font-size:13px; color:var(--text-dim); margin:-4px 2px 10px; }
+.tpl-item.is-hidden{ opacity:.6; }
+/* Startseite */
+/* Favoriten-Kacheln: zwei nebeneinander, die ganze Kachel startet (Stern entfernen: in der
+   Übersicht bzw. auf der Timer-Seite - so tippt man hier nicht aus Versehen daneben) */
+/* !important: die Designs setzen eigene Abstände für .list-item */
+/* Vorrang vor den Design-eigenen Knopfgrößen */
+
+
+.empty-btn{ width:auto; display:inline-flex; margin:16px auto 0; padding:13px 20px; font-size:15px; }
+/* Workout-Baukasten: Kacheln antippen, blau = im Workout */
+.wb-kachel{ cursor:pointer; user-select:none; -webkit-user-select:none; }
+.wb-kachel .fig-bild{ position:relative; }
+.wb-kachel.gewaehlt{ box-shadow:0 0 0 3px var(--geraet, #2b78e4), var(--shadow); background:color-mix(in srgb, var(--geraet, #2b78e4) 7%, var(--surface)); }
+.wb-kachel.gewaehlt .fig-bild{ background:color-mix(in srgb, var(--geraet, #2b78e4) 16%, transparent); color:var(--geraet, #2b78e4); }
+.wb-nr{ position:absolute; left:4px; top:4px; min-width:22px; height:22px; padding:0 6px; border-radius:11px; background:var(--geraet, #2b78e4); color:#fff;
+  font-size:12px; font-weight:700; line-height:22px; text-align:center; }
+.wb-ablauf .wb-nr{ background:var(--text); color:var(--bg); }
+.wb-kachel .ex-fav{ position:absolute; right:2px; top:2px; }
+.wb-i{ position:absolute; right:4px; bottom:4px; width:24px; height:24px; border-radius:50%; border:0; background:var(--surface); color:var(--text-dim);
+  font:italic 700 13px/24px Georgia, serif; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.15); }
+.wb-kopf{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.wb-kopf .sec-link{ white-space:nowrap; flex-shrink:0; }
+.wb-streifen{ display:flex; gap:8px; overflow-x:auto; padding:2px 2px 8px; margin:0 -2px 6px; scrollbar-width:thin; }
+.wb-mini{ flex:0 0 auto; position:relative; width:74px; padding:4px 4px 6px; border:0; border-radius:12px; background:var(--surface); box-shadow:var(--shadow);
+  color:inherit; font:inherit; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px; }
+.wb-mini-illu{ width:52px; height:52px; color:var(--cat); }
+.wb-mini-nr{ position:absolute; left:4px; top:4px; font-size:11px; font-weight:700; color:var(--text-dim); }
+.wb-mini-name{ font-size:10.5px; line-height:1.2; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.wb-leiste{ position:fixed; left:0; right:0; bottom:0; z-index:5; padding:8px 16px calc(10px + env(safe-area-inset-bottom));
+  background:color-mix(in srgb, var(--bg) 92%, transparent); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border-top:1px solid var(--border); }
+.wb-leiste-in{ max-width:560px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:13px; color:var(--text-dim); line-height:1.3; }
+.wb-leiste-in b{ color:var(--text); font-size:14px; }
+.wb-leiste .btn{ width:auto; margin:0; padding:12px 16px; white-space:nowrap; }
+.wb-knoepfe{ display:flex; gap:8px; flex-shrink:0; }
+.wb-mischen{ margin-top:8px; }
+/* Studio */
+.st-kachel{ border:0; text-align:left; font:inherit; color:inherit; cursor:pointer; }
+.st-kachel .fig-bild{ position:relative; }
+.st-kachel .ex-fav{ position:absolute; right:2px; top:2px; }
+.topbar .ex-fav{ font-size:24px; width:44px; height:44px; }
+.st-sub{ font-size:11.5px; color:var(--text-dim); line-height:1.25; margin-top:-2px; }
+.st-sub.an{ color:var(--text); font-weight:600; }
+/* Quadratische Übungskacheln in Air und Mobility & Stretch */
+.air-kachel{ cursor:pointer; user-select:none; -webkit-user-select:none; text-align:left; }
+.air-kachel .fig-bild{ position:relative; }
+.air-kachel .ex-fav{ position:absolute; right:2px; top:2px; }
+.air-start{ position:absolute; left:5px; bottom:5px; width:30px; height:30px; padding:0; border:0; border-radius:50%; background:var(--cat, var(--accent)); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:12px; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.25); }
+.air-start svg{ width:13px; height:13px; margin-left:1px; }
+.air-start::after{ content:""; position:absolute; inset:-7px; }   /* größerer Tippbereich (44 px), ohne dass der Knopf größer aussieht */
+.air-gear{ position:absolute; right:5px; bottom:5px; width:24px; height:24px; border-radius:50%; background:var(--surface); color:var(--text-dim);
+  display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(0,0,0,.2); pointer-events:none; }
+.air-gear .ico{ width:14px; height:14px; }
+.st-mus{ display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; font-size:12px; line-height:1.25; color:var(--text-dim); margin-top:-2px; }
+.fig-karte .fig-name:has(+ .st-mus){ min-height:0; }   /* die Muskeln stehen direkt unter dem Namen, keine Lücke für eine zweite Namenszeile */
+.st-ohne{ display:flex; align-items:center; justify-content:center; width:100%; height:100%; font-size:30px; opacity:.6; }
+.st-neu{ align-items:center; justify-content:center; gap:8px; border:1.5px dashed var(--border); background:transparent; box-shadow:none; color:var(--text-dim); font:inherit; cursor:pointer; min-height:150px; }
+.st-neu svg{ width:26px; height:26px; }
+.st-hero{ text-align:center; }
+.st-figur .st-illu{ display:block; width:170px; height:170px; margin:-6px auto 0; color:var(--cat); }
+.st-ziel{ font-size:13px; color:var(--text-dim); margin:2px 0 10px; }
+.st-steigern{ display:flex; align-items:center; gap:10px; text-align:left; padding:10px 12px; margin:0 0 12px; border-radius:12px;
+  background:color-mix(in srgb, var(--accent) 12%, transparent); font-size:14px; font-weight:600; }
+.st-steigern .btn{ width:auto; margin:0; padding:10px 14px; font-size:14px; flex:0 0 auto; }
+.st-heute{ font-size:14px; margin:0 0 12px; display:flex; flex-wrap:wrap; gap:6px; justify-content:center; align-items:center; }
+.st-satz{ padding:4px 9px; border-radius:999px; background:var(--surface-2); font-weight:600; font-variant-numeric:tabular-nums; }
+.st-leer{ color:var(--text-dim); }
+.st-eingabe{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+.st-feld label{ display:block; font-size:12px; color:var(--text-dim); margin:0 0 4px; }
+.st-step input{ font-size:20px; font-weight:700; }
+.st-los{ font-size:17px; }
+.st-pause{ display:flex; align-items:center; justify-content:center; gap:12px; margin-top:12px; padding:12px; border-radius:14px; background:var(--surface-2); }
+.st-pause b{ font-size:28px; font-variant-numeric:tabular-nums; }
+.st-pause .btn{ width:auto; margin:0; padding:9px 14px; }
+.st-pause[hidden]{ display:none; }
+.st-pause.vorbei{ background:color-mix(in srgb, var(--accent) 18%, transparent); }
+.st-pause.vorbei b{ font-size:16px; }
+.st-pausewahl{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; align-items:center; margin-top:12px; font-size:13px; color:var(--text-dim); }
+.st-undo{ margin-top:10px; border:0; background:none; color:var(--text-dim); font:inherit; font-size:13px; text-decoration:underline; cursor:pointer; }
+.st-verlauf{ padding-top:10px; }
+.st-kurve{ width:100%; height:44px; margin-bottom:6px; }
+.wo-kurve polyline{ fill:none; stroke:currentColor; stroke-width:2.5; vector-effect:non-scaling-stroke; stroke-linejoin:round; stroke-linecap:round; }
+.st-kurve{ color:var(--gym-color); }
+/* Fortschritt je Woche: kleine Kurve auf Studio-Kacheln, größere auf den Detailseiten */
+.st-spark{ display:block; width:100%; height:20px; margin-top:4px; color:var(--cat, var(--gym-color)); }
+.wo-kopf{ display:flex; justify-content:space-between; gap:10px; align-items:baseline; font-size:13px; color:var(--text-dim); margin-bottom:6px; }
+.wo-kopf b{ color:var(--text); font-variant-numeric:tabular-nums; }
+.st-v-zeile{ display:flex; justify-content:space-between; gap:10px; font-size:13.5px; padding:6px 0; border-top:1px solid var(--border); }
+.st-v-zeile:first-of-type{ border-top:0; }
+.st-v-zeile span{ color:var(--text-dim); white-space:nowrap; }
+.st-v-zeile b{ font-variant-numeric:tabular-nums; text-align:right; }
+#st-notiz{ width:100%; border:1px solid var(--border); border-radius:10px; padding:10px 12px; font:inherit; background:var(--surface); color:var(--text); resize:vertical; }
+.st-info .btn{ margin-top:12px; }
+/* Figuren prüfen */
+.fig-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(104px, 1fr)); gap:10px; margin-bottom:6px; }
+.fig-karte{ display:flex; flex-direction:column; align-items:stretch; gap:6px; padding:8px; background:var(--surface); border-radius:14px; box-shadow:var(--shadow); }
+.fig-karte.an{ box-shadow:0 0 0 2px var(--accent), var(--shadow); grid-column:span 2; }   /* markiert: mehr Platz für die Notiz */
+.fig-bild{ position:relative; display:block; padding:0; border:0; border-radius:10px; cursor:pointer; aspect-ratio:1;
+  background:color-mix(in srgb, var(--cat) 12%, transparent); color:var(--cat); }
+.fig-illu{ width:100%; height:100%; }
+.fig-2{ position:absolute; right:5px; top:5px; font-size:10px; font-weight:700; line-height:16px; width:16px; border-radius:50%; background:var(--surface); color:var(--text-dim); }
+.fig-name{ font-size:12.5px; font-weight:600; line-height:1.25; min-height:2.5em; }
+.fig-flag{ border:1px solid var(--border); background:transparent; color:var(--text-dim); border-radius:999px; padding:7px 8px; font-size:12.5px; font-weight:600; cursor:pointer; }
+.fig-flag.an{ background:var(--accent); border-color:var(--accent); color:var(--accent-text, #fff); }
+.fig-notiz{ font-size:13px; padding:8px 9px; margin:0; }
+.fig-leiste{ position:fixed; left:0; right:0; bottom:0; padding:10px 16px calc(12px + env(safe-area-inset-bottom)); background:linear-gradient(transparent, var(--bg) 30%); z-index:5; }
+.fig-leiste .btn{ max-width:560px; margin:0 auto; display:flex; }
+/* Wochenzeile: schlank, nur ein Blick - Titel, sieben Tage als Punkte, Anzahl und Dauer */
+.woche{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; margin:0 0 14px; background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); }
+.wo-links{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.wo-titel{ font-size:13.5px; font-weight:700; white-space:nowrap; }
+.wo-tage{ display:flex; gap:6px; flex:0 0 auto; }
+.wo-tag{ display:flex; flex-direction:column; align-items:center; gap:3px; }
+.wo-tag i{ display:block; width:12px; height:12px; border-radius:50%; background:var(--surface-2); box-shadow:inset 0 0 0 1.5px var(--border); }
+.wo-tag.an i{ background:var(--accent); box-shadow:none; }
+.wo-tag small{ font-size:9.5px; line-height:1; color:var(--text-dim); }
+.wo-tag.heute small{ color:var(--text); font-weight:700; }
+.wo-summe{ font-size:12.5px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+@media (max-width:340px){ .wo-tage{ gap:4px; } }
+.fav-empty{ font-size:12.5px; color:var(--text-dim); padding:8px 12px; border:1px dashed var(--border); border-radius:12px; margin-bottom:4px; line-height:1.4; }
+.page-hint{ font-size:13px; color:var(--text-dim); margin:0 4px 12px; }
+.fab-opt .ico.tp{ background:var(--tp-color); color:var(--tp-text); }
+.fab-opt:nth-child(3){ animation-delay:.08s; }
+/* Suche + Filter-Knopf */
+.search-row{ display:flex; gap:8px; align-items:stretch; margin:0 0 10px; }
+.search-row > .lib-search{ flex:1; margin:0; }
+.search-row > .my-new{ flex:1; margin:0; }
+.filter-btn{
+  position:relative; flex-shrink:0; width:48px; min-height:46px; border:1px solid var(--border); border-radius:12px;
+  background:var(--surface); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+.filter-btn .ico{ width:22px; height:22px; }
+.filter-btn.on{ border-color:var(--tp-color); color:var(--tp-color); box-shadow:inset 0 0 0 1px var(--tp-color); }
+.filter-zeile{ display:flex; align-items:center; gap:10px; width:100%; min-height:48px; margin:0 0 10px; padding:10px 14px;
+  border:1px solid var(--border); border-radius:12px; background:var(--surface); color:var(--text); font:inherit; font-size:14px; font-weight:600; text-align:left; cursor:pointer; }
+.filter-zeile .ico{ width:20px; height:20px; flex-shrink:0; }
+.filter-zeile .fz-text{ flex:1; }
+.filter-zeile.on{ border-color:var(--text); color:var(--text); box-shadow:inset 0 0 0 1px var(--text); }
+.filter-zeile .filter-n{ position:static; }
+.filter-zeile .tpl-chev{ margin-left:0; }
+.filter-n{ position:absolute; top:-6px; right:-6px; min-width:20px; height:20px; padding:0 5px; border-radius:10px; background:var(--sel-bg); color:var(--sel-text); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.active-filters{ display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:13px; color:var(--text-dim); margin:-2px 4px 10px; }
+.active-filters .tpl-hide{ padding:6px 0; flex-shrink:0; }
+/* schlanke Bibliothekskarten */
+.tpl-item.lib-card{ flex-wrap:nowrap; align-items:flex-start; padding:14px 10px 12px 14px; }
+.lib-card .meta{ padding-top:2px; }
+.lib-card .sub{ line-height:1.4; }
+.lib-card .sub .sub-ico{ vertical-align:-2px; }
+.card-mus{ font-size:12.5px; color:var(--text-dim); margin-top:3px; line-height:1.35; }
+.card-aside{ display:flex; flex-direction:column; align-items:flex-end; gap:2px; flex-shrink:0; }
+.card-aside .lib-illu{ width:58px; height:58px; }
+.card-acts{ display:flex; align-items:center; gap:0; }
+.card-acts .fav-btn{ width:40px; height:40px; padding:0; display:flex; align-items:center; justify-content:center; }
+.card-acts .tpl-adopt{ margin:0; }
+.more-btn{ width:40px; height:40px; border:none; background:none; color:var(--text-dim); font-size:20px; display:flex; align-items:center; justify-content:center; cursor:pointer; border-radius:50%; }
+.more-btn:active{ background:var(--surface-2); }
+/* Karten ohne Bild (Workouts): ☆ und ⋯ untereinander - lässt dem Namen mehr Breite */
+.lib-card:not(:has(.illu-btn)) .card-acts{ flex-direction:row; }
+.lib-card .name{ overflow-wrap:anywhere; -webkit-hyphens:auto; hyphens:auto; }
+
+
+.act-sheet h3{ margin-bottom:12px; }
+.act-opt .fs-ico{ color:var(--text); }
+/* Übersicht: beschriftete Symbole unter „Los geht's“ */
+.cover-acts{ display:flex; justify-content:center; gap:4px; margin:14px 0 2px; }
+.cover-act{ flex:1; max-width:92px; display:flex; flex-direction:column; align-items:center; gap:5px; border:none; background:none; color:var(--text); font:inherit; font-size:12px; cursor:pointer; padding:4px 2px; }
+.cover-act .ca-ico{ width:46px; height:46px; border-radius:50%; background:var(--surface-2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:21px; }
+.cover-act .ca-ico .ico{ width:21px; height:21px; }
+.cover-act.on .ca-ico{ color:#f0b400; }
+.cover-act:active .ca-ico{ transform:scale(.94); }
+.cover-act[disabled]{ opacity:.4; }
+.lbl-hint{ font-weight:400; color:var(--text-dim); font-size:12px; }
+.sp-avoid{ margin-top:14px; }
+.sp-avoid .toggle-row{ padding:6px 0; border:none; }
+/* Überrasch mich: Abbrechen/Zusammenstellen bleiben unten sichtbar, der Rest scrollt darunter durch */
+.confirm-sheet.sp-sheet{ padding-bottom:0; }
+.sp-foot{ position:sticky; bottom:0; z-index:2; margin:18px -20px 0; padding:12px 20px calc(14px + env(safe-area-inset-bottom));
+  background:var(--surface); border-top:1px solid var(--border); }
+/* „Zusammenstellen“ ist ein langes Wort: schmalere Ränder, damit beide Knöpfe auf schmale Handys passen */
+.sp-foot .btn{ padding-left:10px; padding-right:10px; font-size:clamp(15px, 4.6vw, 17px); }
+.sp-foot .btn-secondary{ flex:0 1 auto; width:auto; padding-left:18px; padding-right:18px; }
+.sp-foot .btn-primary{ flex:1 1 auto; }
+
+
+/* Feinauswahl (Fokus, Intensität, Regeln): zugeklappt eine Zeile mit der aktuellen Wahl */
+.sp-more{ display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; margin:16px 0 0; padding:12px 14px;
+  border:1px solid var(--border); border-radius:12px; background:var(--surface-2); color:var(--text); font:inherit; text-align:left; cursor:pointer; }
+.sp-more span{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.sp-more b{ font-size:14px; }
+.sp-more small{ font-size:12.5px; color:var(--text-dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.sp-more svg{ flex-shrink:0; color:var(--text-dim); transform:rotate(90deg); transition:transform .2s ease; }
+.sp-more.open svg{ transform:rotate(-90deg); }
+.sp-more-body{ padding:0 2px; }
+.sp-more-body > label:first-child{ margin-top:18px; }
+
+
+/* Einführung: eine Seite je Bereich in dessen Farbe (--intro-farbe) */
+.intro-sheet{ display:flex; flex-direction:column; min-height:min(540px, 78vh); }
+.intro-kopf{ display:flex; justify-content:space-between; align-items:center; min-height:36px; }
+.intro-punkte{ display:flex; gap:6px; align-items:center; }
+.intro-punkte i{ width:7px; height:7px; border-radius:4px; background:var(--border); transition:width .2s ease, background .2s ease; }
+.intro-punkte i.an{ width:20px; background:var(--intro-farbe); }
+.intro-weg{ border:none; background:none; color:var(--text-dim); font:inherit; font-size:14px; padding:8px 2px; cursor:pointer; }
+.intro-seite{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:12px 6px 22px; }
+.intro-ico{ width:88px; height:88px; border-radius:26px; display:flex; align-items:center; justify-content:center; margin-bottom:24px;
+  background:color-mix(in srgb, var(--intro-farbe) 16%, transparent); color:var(--intro-farbe); }
+.intro-ico .ico{ width:46px; height:46px; }
+.intro-seite h2{ margin:0 0 12px; font-size:25px; line-height:1.2; letter-spacing:-.01em; }
+.intro-seite p{ margin:0; max-width:34ch; font-size:15.5px; line-height:1.55; color:var(--text); }
+.intro-seite .intro-notiz{ margin-top:16px; font-size:13.5px; color:var(--text-dim); }
+.intro-knoepfe{ display:flex; gap:10px; }
+.intro-knoepfe .btn{ margin-top:0; }
+.intro-knoepfe .btn-secondary{ flex:0 0 auto; width:auto; padding-left:22px; padding-right:22px; }
+
+
+.tpl-item.is-hidden .playbtn{ filter:grayscale(1); }
+.tpl-adopt .ico{ width:16px; height:16px; }
+.tpl-item{ position:relative; }
+.tpl-adopt.hide-btn{ color:var(--text-dim); width:40px; height:40px; padding:0; justify-content:center; border-radius:50%; }
+.tpl-adopt.hide-btn.corner{ position:absolute; top:8px; right:8px; margin:0; background:none; border-color:transparent; }
+.tpl-item:has(.hide-btn.corner) > .meta{ padding-right:34px; }
+.custom-ico{ display:flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:12px; background:var(--surface-2); color:var(--text-dim); }
+.custom-ico .ico{ width:28px; height:28px; }
+.cat-tag.own{ font-style:italic; }
+.toast{
+  position:fixed; left:50%; bottom:calc(104px + env(safe-area-inset-bottom)); transform:translateX(-50%);   /* über dem +-Knopf */
+  background:var(--text); color:var(--bg); padding:11px 18px; border-radius:100px; font-size:14px;
+  z-index:30; box-shadow:0 6px 20px rgba(0,0,0,.25); max-width:calc(100% - 40px); text-align:center;
+  animation:fabIn .18s ease both; transition:opacity .35s;
+}
+.toast.weg{ opacity:0; }
+/* Piktogramme: Strichfigur, zwei Posen im Wechsel */
+/* Strichstärken der Figur (2026-10-16, „Klein“): feiner als vorher (6 / 9,5 / 12,5 / 5 / 2); alles über diese Variablen, zum Zurücknehmen Werte ersetzen.
+   Die Lücke um den vorderen Arm (Maske, js/02-bibliothek.js) folgt der Armstärke: Strich + 3 = gleiche Lücke wie früher. */
+.illu{ --illu-strich:5.2; --illu-rumpf:8.4; --illu-brust:11; --illu-hals:4.4; --illu-boden:1.8;
+  fill:none; stroke:currentColor; stroke-width:var(--illu-strich); stroke-linecap:round; stroke-linejoin:round; }
+.illu mask path{ stroke-width:calc(var(--illu-strich) + 3); }
+.illu circle{ fill:currentColor; stroke:none; }
+.illu .illu-floor{ stroke-width:var(--illu-boden); opacity:.4; }
+.info-illu .illu-floor, .pl-illu .illu-floor{ stroke-width:1.5; opacity:.5; stroke-dasharray:1 5; }   /* große Figuren: ruhiger gepunkteter Boden, kleine bleiben durchgezogen und dünn */
+.illu .pose-b{ opacity:0; }
+.illu .lb{ opacity:.55; }
+.illu .tr{ stroke-width:var(--illu-rumpf); }
+.illu .illu-matte{ fill:currentColor; stroke:none; opacity:.1; }
+.illu .nk{ stroke-width:var(--illu-hals); }
+.illu .br{ stroke-width:var(--illu-brust); }
+.illu .ip{ stroke-width:3.4; }
+.illu .ipf{ fill:currentColor; stroke:none; }
+/* Widerstandsband: dünne Linie in der Gerätefarbe */
+.illu .gb{ stroke-width:2.6; stroke:var(--accent); }
+.player .illu .gb{ stroke:currentColor; opacity:.7; }
+/* Studio-Geräte: blau, damit man sieht, wogegen man drückt; Ringe (Rollen, Stangenenden) hohl */
+.illu circle.ip{ fill:none; }
+.illu .gm{ stroke:var(--geraet); }
+.illu circle.ipf.gm, .illu .ipf.gm{ fill:var(--geraet); stroke:none; }
+.illu .gp{ stroke-width:7; }
+:root{ --geraet:#5b6472; }
+:root[data-theme="dark"]{ --geraet:#aab2bf; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme]){ --geraet:#aab2bf; } }
+/* im Timer liegt die Figur auf farbiger Fläche: Geräte dort in der Schriftfarbe, etwas zurückgenommen */
+.player .illu .gm{ stroke:currentColor; opacity:.7; }
+.player .illu circle.ipf.gm, .player .illu .ipf.gm{ fill:currentColor; }
+.illu.still .pose-a, .illu.illu-anim .pose-a{ animation:none; opacity:1; }
+.illu .pose-a{ animation:poseA 1.6s steps(1) infinite; }
+.illu .pose-b{ animation:poseB 1.6s steps(1) infinite; }
+@keyframes poseA{ 0%{ opacity:1; } 50%{ opacity:0; } }
+@keyframes poseB{ 0%{ opacity:0; } 50%{ opacity:1; } }
+.lib-illu{ width:76px; height:76px; flex-shrink:0; color:var(--tp-color); align-self:flex-start; background:var(--surface-2); border-radius:12px; padding:4px; }
+.pl-illu{ width:96px; height:96px; margin:-14px 0 0; opacity:.9; }
+/* genug Höhe: Figur in der Übungsphase größer - auf kleinen Handys bleibt sie kompakt, damit die Knöpfe Platz haben */
+@media (min-height:740px){ .pl-illu{ width:124px; height:124px; margin:-16px 0 -4px; opacity:.92; } }
+.ex-hint{ font-size:15px; opacity:.75; margin:6px 0 18px; }
+.block-label + .ex-hint{ margin-top:-14px; }
+@media (prefers-reduced-motion: reduce){ .illu .pose-a, .illu .pose-b{ animation:none; } .illu .pose-b{ opacity:0; } }
+.tpl-desc{ font-size:13px; color:var(--text-dim); margin-top:4px; line-height:1.35; white-space:normal; }
+.tpl-item{ align-items:flex-start; }
+.tpl-item .playbtn{ margin-top:2px; }
+.tpl-item .name{ white-space:normal; }
+.tpl-adopt{
+  display:inline-flex; align-items:center; gap:6px; margin-top:10px; border:1px solid var(--border); background:var(--surface-2); color:var(--text);
+  border-radius:100px; padding:8px 12px; font:inherit; font-size:13px; font-weight:600; cursor:pointer;
+}
+.tpl-adopt:active{ transform:scale(.95); }
+.chip.chev{ display:flex; align-items:center; padding:5px 8px; }
+.chip svg{ display:block; }
+.empty{
+  text-align:center; color:var(--text-dim); padding:60px 20px; font-size:14px;
+}
+.fab{
+  position:fixed; right:calc(16px + env(safe-area-inset-right));
+  bottom:calc(24px + env(safe-area-inset-bottom));
+  width:66px; height:66px; border-radius:50%; border:none;
+  background:var(--accent); color:var(--accent-text);
+  font-size:32px; box-shadow:var(--shadow); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; z-index:4;
+}
+.fab:active{ transform:scale(.93); }
+.fab.bl{ background:var(--bl-color); color:var(--bl-text); }
+.fab.open{ z-index:7; }
+.fab svg{ transition:transform .2s ease; }
+.fab.open svg{ transform:rotate(45deg); }
+/* Plus-Menü auf der Startseite: direkt ein Workout oder einen Block anlegen */
+.fab-backdrop{ position:fixed; inset:0; z-index:6; background:rgba(0,0,0,.2); }
+.fab-menu{
+  position:fixed; right:calc(16px + env(safe-area-inset-right));
+  bottom:calc(102px + env(safe-area-inset-bottom)); z-index:7;
+  display:flex; flex-direction:column; align-items:flex-end; gap:12px;
+}
+.fab-opt{
+  display:flex; align-items:center; gap:12px; border:none; cursor:pointer;
+  background:var(--surface); color:var(--text); border-radius:100px;
+  padding:7px 7px 7px 18px; font-size:16px; font-weight:600;
+  box-shadow:var(--shadow), 0 6px 18px rgba(0,0,0,.14);
+  animation:fabIn .18s ease both;
+}
+.fab-opt:nth-child(2){ animation-delay:.04s; }
+.fab-opt:active{ transform:scale(.97); }
+.fab-opt .ico{ width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:21px; }
+.fab-opt .ico.wo{ background:var(--wo-color); color:var(--wo-text); }
+.fab-opt .ico.bl{ background:var(--bl-color); color:var(--bl-text); }
+@keyframes fabIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+
+label{ display:block; font-size:13px; color:var(--text-dim); margin:14px 0 6px; }
+label:first-child{ margin-top:0; }
+input[type="text"], input[type="number"], select{
+  width:100%; padding:14px 16px; border-radius:12px; border:1px solid var(--border);
+  background:var(--surface-2); color:var(--text); font-size:16px; outline:none;
+}
+input:focus, select:focus{ border-color:var(--accent); }
+.row{ display:flex; gap:10px; }
+.row > *{ flex:1; }
+.numrow{ display:flex; align-items:center; gap:10px; }
+.stepper{
+  display:flex; align-items:center; background:var(--surface-2); border-radius:12px; border:1px solid var(--border);
+  overflow:hidden; flex:1;
+}
+.stepper button{
+  border:none; background:transparent; color:var(--text); font-size:24px; width:54px; height:54px; cursor:pointer;
+}
+.stepper button:active{ background:var(--border); }
+.stepper input{ border:none; background:transparent; text-align:center; width:100%; padding:0; font-size:19px; font-weight:600; }
+.btn{
+  border:none; border-radius:16px; padding:17px 20px; font-size:17px; font-weight:600;
+  cursor:pointer; width:100%; margin-top:14px;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.btn:active{ transform:scale(.98); }
+.btn-primary{ background:var(--accent); color:var(--accent-text); }
+.btn-secondary{ background:var(--surface-2); color:var(--text); }
+.btn-danger{ background:transparent; color:var(--danger); }
+.btn-row{ display:flex; gap:10px; }
+.btn-row .btn{ margin-top:0; }
+
+.block-pick{
+  background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow);
+  padding:14px 16px; margin-bottom:8px; display:flex; align-items:center; gap:10px; cursor:pointer;
+}
+.block-pick .meta{ flex:1; min-width:0; }
+.block-pick .name{ font-weight:600; flex:1; }
+.block-pick .sub{ font-size:13px; color:var(--text-dim); }
+
+.wblock{
+  background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow);
+  padding:14px 16px; margin-bottom:10px;
+}
+.wblock-top{ display:flex; align-items:center; gap:10px; }
+.wblock-top .name{ font-weight:600; flex:1; }
+.wblock-top .sub{ font-size:13px; color:var(--text-dim); }
+.wblock-actions{ display:flex; gap:6px; }
+.wblock-actions button{
+  border:none; background:var(--surface-2); color:var(--text); width:40px; height:40px; border-radius:11px; font-size:16px; cursor:pointer;
+}
+.wblock-actions button:disabled{ opacity:.3; }
+.gap-row{ display:flex; align-items:center; gap:8px; margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); font-size:13px; color:var(--text-dim); }
+.gap-row input{ width:70px; padding:9px 8px; font-size:15px; text-align:center; }
+
+.toggle-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--border); gap:12px; }
+.toggle-row:last-child{ border-bottom:none; }
+.toggle-row .label{ font-size:15px; }
+.toggle-row .desc{ font-size:12px; color:var(--text-dim); margin-top:2px; }
+.switch{ position:relative; width:54px; height:32px; flex-shrink:0; }
+.switch input{ opacity:0; width:100%; height:100%; margin:0; position:absolute; cursor:pointer; }
+.switch .track{ position:absolute; inset:0; background:var(--border); border-radius:100px; transition:.15s; }
+.switch .thumb{ position:absolute; top:4px; left:4px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.3); transition:.15s; }
+.switch input:checked + .track{ background:var(--accent); }
+.switch input:checked ~ .thumb{ transform:translateX(22px); }
+
+.range-row{ padding:14px 0; border-bottom:1px solid var(--border); }
+.range-row .label{ font-size:15px; display:flex; justify-content:space-between; margin-bottom:10px; }
+.range-row .label span{ color:var(--text-dim); font-variant-numeric:tabular-nums; }
+input[type="range"]{ width:100%; height:32px; accent-color:var(--accent); cursor:pointer; }
+.range-scale{ display:none; }
+.range-hint{ font-size:12.5px; color:var(--text-dim); line-height:1.4; margin-top:6px; }
+
+/* Auswahlknöpfe für Aussehen und Helligkeit */
+.theme-pick{ display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+.theme-pick button{
+  grid-column:span 2; min-width:0; padding:14px 6px; border-radius:12px; border:1px solid var(--border); background:var(--surface-2);
+  color:var(--text); font-size:15px; cursor:pointer;
+}
+.lang-pick button{ grid-column:span 3; }
+.theme-pick button.halb{ grid-column:span 3; }
+.theme-pick button.active{ background:var(--sel-bg); color:var(--sel-text); border-color:var(--sel-bg); }
+.theme-pick.vier{ grid-template-columns:repeat(3,1fr); }   /* System · Hell · Dunkel (Nacht entfällt seit 2026-10-23) */
+.theme-pick.vier button{ grid-column:span 1; font-size:14px; padding-left:2px; padding-right:2px; }
+
+.installtip{
+  background:var(--surface-2); border-radius:var(--radius); padding:14px 16px; margin:14px 0; font-size:13px; color:color-mix(in srgb, var(--text) 78%, var(--surface-2)); display:flex; gap:10px; align-items:flex-start;   /* Kontrast ≥ 4,5:1 auf der Zweitfläche */
+}
+.installtip a{ color:var(--link-ink, var(--accent-ink, var(--accent))); font-weight:600; text-decoration:none; }
+.installtip button{ border:none; background:transparent; color:color-mix(in srgb, var(--text) 78%, var(--surface-2)); font-size:20px; cursor:pointer; padding:0 0 0 6px; width:28px; height:28px; flex-shrink:0; }
+
+.step-row{ display:flex; gap:12px; margin-bottom:16px; }
+.step-row:last-child{ margin-bottom:0; }
+.step-num{
+  width:28px; height:28px; border-radius:50%; background:var(--accent); color:var(--accent-text);
+  display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0;
+}
+.step-text{ font-size:14.5px; line-height:1.55; padding-top:3px; }
+.step-text b{ font-weight:700; }
+
+/* ---- Player ---- */
+.player{
+  position:fixed; inset:0; background:var(--phase-bg, var(--bg)); z-index:50;
+  display:flex; flex-direction:column; color:var(--phase-text, var(--text));
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  transition:background-color .35s ease;
+}
+.player-top{ display:flex; align-items:center; justify-content:space-between; padding:16px 18px 0; }
+.player-top .exit{ background:rgba(128,128,128,.18); border:none; color:inherit; width:46px; height:46px; border-radius:50%; font-size:19px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.vol-popover{
+  margin:10px 18px 0; background:rgba(128,128,128,.16); border-radius:16px; padding:10px 16px;
+  display:flex; align-items:center; gap:12px;
+}
+.vol-popover input[type="range"]{ flex:1; height:36px; }
+.vol-popover span{ font-size:13px; opacity:.85; width:38px; text-align:right; font-variant-numeric:tabular-nums; flex-shrink:0; }
+.progressbar{ height:4px; background:rgba(128,128,128,.25); border-radius:100px; margin:14px 18px 0; overflow:hidden; }
+.progressbar-fill{ height:100%; background:currentColor; border-radius:100px; transition:width .3s linear; }
+.player-mid{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:10px 24px; }
+/* kleines BLOC-Zeichen unter der Fortschrittsleiste: Orange auf Weiß (Pause), Weiß auf Orange (Übung) */
+.pl-logo{ text-align:center; margin-top:8px; font-family:var(--f-brand, "Helvetica Neue","Arial Black",Arial,sans-serif); font-size:26px; font-weight:900; letter-spacing:.2em; line-height:1; color:var(--accent); transition:color .35s ease; }
+.player[data-phase="work"] .pl-logo{ color:#ffffff; }
+
+@media (orientation:landscape) and (max-height:520px){ .pl-logo{ display:none; } }
+.phase-label{ font-size:24px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; opacity:.85; margin-bottom:6px; }
+.block-label{ font-size:20px; font-weight:600; opacity:.75; margin-bottom:22px; min-height:26px; }
+.block-label .pl-kg{ display:block; margin-top:5px; font-size:16px; font-weight:700; font-variant-numeric:tabular-nums; }   /* Fitnessstudio: Gewicht × Wiederholungen */
+.next-up{ margin-top:26px; font-size:19px; font-weight:600; opacity:.65; min-height:24px; }
+/* Wiederholungen als große Quadrate, damit man den Fortschritt auch aus der Entfernung sieht:
+   erledigte leuchten, die aktuelle pulsiert, kommende sind blass. Die Größe setzt updateDots(). */
+.rep-dots{ display:flex; gap:10px; margin-top:24px; flex-wrap:wrap; justify-content:center; max-width:340px; }
+.rep-dots span{ width:24px; height:24px; border-radius:4px; background:currentColor; opacity:.22; }
+.rep-dots span.done{ opacity:.9; }
+.rep-dots span.now{ opacity:1; animation:repPulse 1.4s ease-in-out infinite; }
+@keyframes repPulse{ 0%,100%{ opacity:1; } 50%{ opacity:.4; } }
+/* Übungen als Kreise oben in der Mitte, über dem Zähler */
+.pl-mitte{ flex:1; min-width:0; display:flex; align-items:center; justify-content:center; padding:0 10px; }
+.ex-dots{ display:flex; align-items:center; justify-content:center; flex-wrap:nowrap; max-width:100%; min-height:20px; }
+.ex-dots span{ flex:0 0 auto; border-radius:50%; background:currentColor; opacity:.25; transition:transform .3s ease, opacity .3s ease; }
+.ex-dots span.done{ opacity:.7; }
+.ex-dots span.now{ opacity:1; transform:scale(1.3); }
+.ex-dots span.now.bald{ animation:repPulse 1.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce){ .ex-dots span.now.bald{ animation:none; } }
+@media (prefers-reduced-motion: reduce){ .rep-dots span.now{ animation:none; } }
+
+/* Modern: kreisförmiger Fortschrittsring */
+.ring-wrap{ position:relative; width:min(62vw,255px); height:min(62vw,255px); }
+.ring-wrap svg{ width:100%; height:100%; transform:rotate(-90deg); }
+.ring-bg{ fill:none; stroke:rgba(128,128,128,.2); stroke-width:6; }
+.ring-fg{ fill:none; stroke:currentColor; stroke-width:6; stroke-linecap:round; transition:stroke-dashoffset .25s linear; }
+.ring-wrap .time{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-size:min(14vw,60px); font-weight:700; font-variant-numeric:tabular-nums;
+}
+/* Pause vor einer neuen Übung: Figur groß in der Mitte des Rings, die Zeit kleiner darunter */
+.ring-wrap.mit-figur{ width:min(72vw,290px); height:min(72vw,290px); }
+.ring-wrap svg.pl-vorschau{ position:absolute; left:20%; top:10%; width:60%; height:60%; transform:none; }
+.ring-wrap.mit-figur .time{ inset:auto 0 11% 0; font-size:min(10vw,40px); }
+
+
+.time{ display:flex; align-items:center; justify-content:center; }
+
+
+/* Sichtfenster: zeigt die Ziffer vorne und oben/unten ein Stück der Nachbarziffern */
+
+
+/* Licht und Schatten der Wölbung: oben und unten dunkel, knapp über der Mitte ein Glanzstreifen;
+   an den Rändern die Schlagschatten des Fensterausschnitts */
+
+.player-controls{ display:flex; align-items:center; justify-content:center; gap:22px; padding:20px 24px calc(30px + env(safe-area-inset-bottom)); }
+.ctrl-btn{
+  border:none; background:rgba(128,128,128,.16); color:inherit; border-radius:50%;
+  width:66px; height:66px; font-size:24px; display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+.ctrl-btn.main{ width:92px; height:92px; font-size:32px; background:currentColor; }
+.ctrl-btn.main span{ color:var(--phase-bg,var(--bg)); }
+.ctrl-btn:active{ transform:scale(.92); }
+.pl-a, .pl-b{ display:contents; }
+/* Querformat (Handy gedreht): Uhr links, alles andere rechts - nichts muss scrollen */
+@media (orientation: landscape) and (max-height: 560px){
+  .player-top{ padding:8px 16px 0; }
+  .player-top .exit{ width:42px; height:42px; }
+  .progressbar{ margin-top:8px; }
+  .player-mid{ display:grid; grid-template-columns:auto minmax(0, 1fr); grid-template-rows:auto auto; align-content:center; align-items:center; column-gap:clamp(20px, 5vw, 56px); padding:4px 24px; }
+  .player-mid > .ring-wrap, .player-mid > .time{ grid-column:1; grid-row:1 / 3; }
+  .player-mid .pl-a, .player-mid .pl-b{ display:flex; flex-direction:column; align-items:center; grid-column:2; min-width:0; }
+  .player-mid .pl-a{ grid-row:1; align-self:end; }
+  .player-mid .pl-b{ grid-row:2; align-self:start; }
+  .ring-wrap{ width:min(58vh, 240px); height:min(58vh, 240px); }
+  .ring-wrap .time{ font-size:min(12vh, 56px); }
+  .ring-wrap.mit-figur{ width:min(66vh, 270px); height:min(66vh, 270px); }
+  
+  
+  .phase-label{ font-size:20px; margin-bottom:2px; }
+  .block-label{ font-size:17px; margin-bottom:8px; }
+  .player-mid .pl-illu{ display:none; }   /* Platz sparen - die Übung steht ja daneben */
+  .ex-hint{ font-size:14px; margin:2px 0 6px; }
+  .block-label + .ex-hint{ margin-top:-4px; }
+  .rep-dots{ margin-top:6px; }
+  .next-up{ margin-top:10px; font-size:16px; }
+  .player-controls{ padding:8px 0 calc(6px + env(safe-area-inset-bottom)); gap:18px; }
+  .ctrl-btn{ width:56px; height:56px; font-size:21px; }
+  .ctrl-btn.main{ width:74px; height:74px; font-size:28px; }
+}
+.done-screen{ display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center; padding:24px; }
+.done-screen h2{ font-size:26px; margin-bottom:6px; }
+.done-screen p{ color:inherit; opacity:.7; margin:0 0 24px; }
+
+.confirm-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:60; display:flex; align-items:flex-end; justify-content:center; }
+.confirm-sheet{ background:var(--surface); color:var(--text); width:100%; max-width:560px; max-height:82vh; overflow-y:auto; border-radius:20px 20px 0 0; padding:20px 20px calc(20px + env(safe-area-inset-bottom)); }
+.confirm-sheet p{ color:var(--text-dim); font-size:14px; margin:4px 0 16px; }
+.sound-tiles{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0 4px; }
+.sound-tile{
+  padding:18px 8px; border-radius:14px; border:1px solid var(--border); background:var(--surface-2);
+  color:var(--text); font-size:15px; font-weight:600; cursor:pointer;
+}
+.sound-tile.active{ background:var(--sel-bg); color:var(--sel-text); border-color:var(--sel-bg); }
+.sound-group{ font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-dim); margin:18px 2px 0; }
+.sound-group + .sound-tiles{ margin-top:10px; }
+.sound-tile:active{ transform:scale(.97); }
+
+.hidden{ display:none !important; }
+::selection{ background:var(--accent); color:var(--accent-text); }
+
+
+   /* ohne Zierleiste: links so viel Rand wie rechts */
+
+/* Kopfzeile: kursive Condensed-Überschrift mit doppelter Unterstreichung */
+/* Papierstruktur auch in der mitlaufenden Kopfzeile, sonst hebt sie sich als glatter Streifen ab */
+
+
+/* Kippschalter: rechteckig, farbiges "ON"-Feld und geriffelter Schieber */
+
+
+/* Schieberegler wie ein Mischpult-Fader */
+
+
+/* Doppelpunkt als zwei gewölbte Nieten im Gehäuse statt Schriftzeichen */
+
+
+/* Bandsorten-Anzeige: drei Kontrolllampen, „Metal“ leuchtet */
+
+
+/* BLOC-Schriftzug auf der Startseite: kräftig, Farbe je Design */
+.topbar.home h1 .ttl{
+  font-family:var(--f-brand, "Helvetica Neue","Arial Black",Arial,sans-serif) !important; font-style:normal !important;
+  font-weight:900 !important; font-size:clamp(42px,12.5vw,56px) !important; line-height:.95 !important;
+  letter-spacing:-.035em !important; text-transform:none !important; color:var(--accent) !important;
+}
+
+
+.topbar.home h1 .ttl-sub{ margin-top:6px; }
+
+
+/* ============ Neuer Aufbau 2026-09: Startseite, Kategorie-Kacheln, Filterfeld ============ */
+/* Abschnittskopf mit Link rechts („Alle anzeigen >“) */
+.sec-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.sec-head .section-title{ flex:1; }
+.sec-link{ display:inline-flex; align-items:center; gap:2px; border:none; background:none; color:var(--text-dim); font:inherit; font-size:14px; font-weight:600; padding:14px 2px 6px; cursor:pointer; }
+.sec-link-chev{ display:inline-flex; font-size:13px; transition:transform .2s ease; }
+.sec-link-chev.up{ transform:rotate(-90deg); }
+/* Favoriten-Kacheln mit Stern oben rechts */
+/* „Überrasch mich“-Karte */
+.surprise-card{
+  width:100%; display:flex; align-items:center; gap:14px; margin:14px 0 4px; padding:16px 14px 16px 16px;
+  border:none; border-radius:var(--radius); background:var(--accent); color:var(--accent-text);
+  font:inherit; text-align:left; cursor:pointer; box-shadow:var(--shadow);
+}
+.surprise-card:active{ transform:scale(.985); }
+.sc-ico{ width:30px; height:30px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.sc-ico .ico{ width:28px; height:28px; stroke-width:1.8; }
+.sc-txt{ flex:1; min-width:0; }
+.sc-txt b{ display:block; font-size:17px; }
+.sc-txt small{ display:block; font-size:13px; opacity:.78; margin-top:2px; line-height:1.3; }
+.sc-chev{ display:flex; font-size:20px; opacity:.85; }
+/* Air: „Überrasch mich“ - flach und tonal: blasse Tönung der Akzentfarbe, dunkle Schrift, Symbol in der Akzentfarbe (kein Verlauf, kein Leuchten) */
+.surprise-card.gross{ margin:0 0 12px; padding:12px 14px 12px 14px; gap:12px; color:var(--text);
+  background:color-mix(in srgb, var(--tint) 13%, var(--surface)); border:1px solid color-mix(in srgb, var(--tint) 38%, var(--border)); box-shadow:none; }
+.surprise-card.gross .sc-ico{ width:40px; height:40px; border-radius:13px; color:var(--accent); background:color-mix(in srgb, var(--tint) 20%, var(--surface)); }
+.surprise-card.gross .sc-ico .ico{ width:24px; height:24px; }
+.surprise-card.gross .sc-txt b{ font-size:17.5px; color:var(--text); }
+.surprise-card.gross .sc-txt small{ font-size:12.5px; color:var(--text-dim); opacity:1; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.surprise-card.gross .sc-chev{ width:28px; height:28px; border-radius:50%; color:var(--accent); background:color-mix(in srgb, var(--tint) 20%, var(--surface)); align-items:center; justify-content:center; font-size:15px; opacity:1; }
+/* Suche in Air: Lupe oben rechts klappt das Feld unter „Überrasch mich“ auf (bleibt offen, solange etwas gesucht wird) */
+.lib-suche{ display:none; }
+.lib-suche.offen{ display:block; }
+.lib-lupe.an{ color:var(--accent); }
+
+   /* „STANGENPARK“ passt sonst nicht in die Kachel */
+/* Ausgewählt überall gleich ruhig: Tönung + feine Kontur in der Akzentfarbe (die Farben selbst stehen oben bei --sel-*) */
+.lib-chip.active, .seg-row button.active, .theme-pick button.active, .sound-tile.active, .main-tile.on, .fc-chip.on, .fc-seg button.on{ border-color:var(--sel-border); }
+/* Timer (Blöcke und Timer-Workouts): eigener Reiter in eigenem Blau (--ti-color), in Air und im Studio */
+.lib-tabs.seg-4{ grid-template-columns:repeat(4,minmax(0,1fr)) !important; }
+.lib-tabs button.ti{ color:var(--ti-color); font-weight:600; }
+.lib-tabs button.ti.active{ background:color-mix(in srgb, var(--ti-color) 16%, var(--surface)); border-color:color-mix(in srgb, var(--ti-color) 55%, var(--border)); color:var(--text); }
+.timer-panel .list-item .playbtn, .timer-panel .list-item .playbtn.bl, .timer-panel .list-item .playbtn.wo{ background:var(--ti-color); color:var(--ti-text, #fff); }
+.fab-opt .ico.ti{ background:var(--ti-color); color:var(--ti-text, #fff); }
+/* Studio: Mein Plan */
+.plan-kopf{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:2px 4px 12px; font-size:15px; }
+.plan-edit{ display:inline-flex; align-items:center; gap:6px; padding:9px 14px; border-radius:12px; border:1px solid var(--border); background:var(--surface); color:var(--text); font:inherit; font-size:14px; cursor:pointer; }
+.plan-edit .ico{ width:16px; height:16px; }
+.plan-item{ cursor:pointer; }
+/* Einstellungen: „Stand wiederherstellen“ ersetzt alle Daten - leise statt als größter Knopf */
+.snap-zeile [data-snaprestore]{ width:auto; margin:10px 0 0; padding:9px 14px; font-size:13px; font-weight:500; background:none; color:var(--text-dim); border:1px solid var(--border); box-shadow:none; }
+/* Bereiche: zwei Kacheln nebeneinander */
+.area-grid{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:12px; }
+.area-tile{
+  position:relative; display:flex; flex-direction:column; align-items:flex-start; min-height:128px; padding:16px 16px 16px;
+  background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); cursor:pointer;
+  user-select:none; -webkit-user-select:none;
+}
+.area-tile:active{ transform:scale(.98); }
+.at-ico{ width:50px; height:50px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+  background:color-mix(in srgb, var(--c) 16%, transparent); color:var(--c); margin-bottom:14px; }
+.at-ico .ico{ width:27px; height:27px; }
+.at-name{ display:block; font-size:17px; margin-top:0; line-height:1.25; }
+.at-sub{ display:block; font-size:12.5px; color:var(--text-dim); margin-top:4px; line-height:1.35; padding-right:18px; }
+.at-chev{ position:absolute; right:12px; top:50%; transform:translateY(-50%); display:flex; font-size:18px; color:var(--text-dim); }
+.area-tile .at-chev{ top:41px; }
+.seiten-intro{ font-size:14px; color:var(--text-dim); margin:4px 4px 12px; line-height:1.45; }
+.wahl-pick{ display:flex; flex-wrap:wrap; margin-bottom:8px; }
+.wahl-pick.zwei{ margin-bottom:14px; }
+.wahl-pick button{ flex:1 1 auto; padding:11px 10px; font-size:14px; }
+.meta-zeile{ font-size:14px; color:var(--text-dim); margin:0 4px 4px; }
+  border-bottom:1px solid var(--border); color:var(--text); font-size:15px; text-align:left; cursor:pointer; }
+/* Schnappschuss in den Einstellungen */
+.snap-zeile{ font-size:14px; color:var(--text-dim); line-height:1.4; }
+.snap-zeile small{ display:block; font-size:12px; margin-top:4px; }
+/* Bibliothek: drei Reiter */
+/* Unter-Reiter: dezenter als die Hauptwahl darüber - Text mit Unterstrich statt gefüllter Fläche */
+.lib-tabs.unter-tabs{ margin-top:6px; }
+.lib-tabs.unter-tabs button{ background:transparent !important; border:none !important; border-radius:0 !important; box-shadow:none !important;
+  border-bottom:2px solid transparent !important; color:var(--text-dim) !important; font-weight:600; padding-top:9px !important; padding-bottom:7px !important; }
+.lib-tabs.unter-tabs button.active{ color:var(--text) !important; border-bottom-color:var(--text) !important; }
+.lib-tabs.seg-3{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+/* Kacheln der Hauptkategorien */
+.main-tiles{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:5px; margin:0 0 12px; }
+.main-tile{
+  display:flex; flex-direction:column; align-items:center; gap:3px; min-width:0; padding:10px 1px 8px;
+  border-radius:12px; border:1.5px solid var(--border);
+  background:var(--surface-2); color:var(--text);
+  font:inherit; cursor:pointer; transition:opacity .2s ease, transform .15s ease;
+}
+.main-tile:active{ transform:scale(.95); }
+/* Kategorien haben keine eigene Farbe mehr (sie überschnitten sich mit den Bereichsfarben) - erkennbar am Symbol */
+.main-tile .mt-ico{ display:flex; color:var(--text); }
+.main-tile .mt-ico .ico{ width:24px; height:24px; }
+.mt-name{ font-size:10.5px; font-weight:700; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; letter-spacing:-.03em; }
+@media (min-width:400px){ .mt-name{ font-size:11.5px; letter-spacing:-.01em; } }
+/* Suchfeld passend zu den übrigen Feldern */
+.lib-search input{ border-radius:12px; border:1px solid var(--border); background:var(--surface); color:var(--text); outline:none; -webkit-appearance:none; appearance:none; font:inherit; font-size:15px; }
+.lib-search input:focus{ border-color:var(--accent); }
+
+.mt-n{ font-size:12px; color:var(--text-dim); font-variant-numeric:tabular-nums; }
+/* Kategorie-Kacheln: Farbe nur im Symbol, gewählt = Akzentfarbe wie alle anderen Auswahlen */
+.main-tile.on{ border-color:var(--sel-bg); background:var(--sel-bg); color:var(--sel-text); }
+.main-tile.on .mt-ico, .main-tile.on .mt-n{ color:inherit; }
+.main-tile.off{ opacity:.5; }
+.main-dot{ display:inline-flex; margin-right:5px; vertical-align:-2px; color:var(--text-dim); }
+.main-dot .ico{ width:13px; height:13px; }
+.main-dot + .main-dot{ margin-left:-2px; }
+/* Filterfeld */
+.filter-card{ padding:14px 14px 16px; }
+.fc-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+.fc-head b{ font-size:17px; }
+.fc-reset{ display:inline-flex; align-items:center; gap:6px; border:none; background:none; color:var(--text-dim); font:inherit; font-size:14px; cursor:pointer; padding:6px 2px; }
+.fc-reset .ico{ width:16px; height:16px; }
+.fc-lbl{ font-size:14px; font-weight:700; margin:12px 0 8px; }
+.fc-lbl span{ font-weight:400; font-size:12.5px; color:var(--text-dim); margin-left:4px; }
+.fc-chips{ display:flex; flex-wrap:wrap; gap:7px; }
+.fc-chip{
+  display:inline-flex; align-items:center; gap:7px; padding:8px 12px; border-radius:10px;
+  border:1px solid var(--border); background:var(--surface-2); color:var(--text); font:inherit; font-size:14px; cursor:pointer;
+}
+.fc-chip .ico{ width:17px; height:17px; flex-shrink:0; }
+.fc-chip.on{ background:var(--sel-bg); border-color:var(--sel-bg); color:var(--sel-text); font-weight:600; }
+/* Air-Filter: eine Karte mit Kopfzeile (Zusammenfassung), aufgeklappt Training, Ausrüstung, Sortierung und Fuß mit Zurücksetzen + Anzeigen */
+.air-filter{ padding:0; overflow:hidden; }
+.af-kopf{ display:flex; align-items:center; gap:12px; width:100%; min-height:60px; padding:12px 14px; border:none; background:none; color:var(--text); font:inherit; text-align:left; cursor:pointer; }
+.af-kopf .ico{ width:22px; height:22px; flex-shrink:0; color:var(--text-dim); }
+.af-titel{ flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+.af-titel b{ font-size:17px; }
+.af-titel small{ font-size:13px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.af-n{ min-width:22px; height:22px; padding:0 6px; border-radius:11px; background:var(--sel-bg); color:var(--sel-text); font-size:12.5px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.air-filter .tpl-chev{ margin-left:0; color:var(--text-dim); }
+.af-body{ padding:2px 14px 14px; border-top:1px solid var(--border); }
+.af-lbl{ font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); margin:14px 0 8px; }
+.af-lbl span{ font-weight:400; letter-spacing:0; text-transform:none; font-size:12.5px; margin-left:4px; }
+.af-fuss{ margin-top:18px; }
+.af-fuss .btn{ padding:14px 10px; font-size:15px; white-space:nowrap; }
+.af-fuss .af-reset{ width:auto; flex:0 0 auto; padding:14px 14px; gap:6px; }
+.af-fuss .af-reset .ico{ width:17px; height:17px; }
+.af-fuss .af-reset:disabled{ opacity:.45; cursor:default; }
+.af-fuss .btn-primary{ flex:1; }
+
+.fc-seg{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.fc-seg button{ padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--surface-2); color:var(--text); font:inherit; font-size:14px; cursor:pointer; }
+.fc-seg button.on{ background:var(--sel-bg); border-color:var(--sel-bg); color:var(--sel-text); font-weight:700; }
+/* Ukraine Twist: geschwungene Ukraine-Flagge (wie eine wehende Fahne aus der Nähe) auf der Kachel,
+   im Baukasten und im Timer. Links liegt ein heller Schleier über der Flagge, damit Name und Text lesbar bleiben. */
+:root{ --ua-flag:url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"%3E%3Cdefs%3E%3ClinearGradient id="f" x1="0" y1="0" x2="1" y2=".32"%3E%3Cstop offset="0" stop-color="%23000" stop-opacity=".30"/%3E%3Cstop offset=".14" stop-color="%23fff" stop-opacity=".20"/%3E%3Cstop offset=".28" stop-color="%23000" stop-opacity=".26"/%3E%3Cstop offset=".45" stop-color="%23fff" stop-opacity=".24"/%3E%3Cstop offset=".62" stop-color="%23000" stop-opacity=".30"/%3E%3Cstop offset=".78" stop-color="%23fff" stop-opacity=".18"/%3E%3Cstop offset=".92" stop-color="%23000" stop-opacity=".24"/%3E%3Cstop offset="1" stop-color="%23fff" stop-opacity=".10"/%3E%3C/linearGradient%3E%3CradialGradient id="v" cx=".5" cy=".45" r=".75"%3E%3Cstop offset=".55" stop-color="%23000" stop-opacity="0"/%3E%3Cstop offset="1" stop-color="%23000" stop-opacity=".28"/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width="400" height="300" fill="%23ffd500"/%3E%3Cpath fill="%230057b7" d="M0 0H400V118C352 168 300 92 244 136S130 196 72 150C44 128 20 132 0 146Z"/%3E%3Crect width="400" height="300" fill="url%28%23f%29"/%3E%3Crect width="400" height="300" fill="url%28%23v%29"/%3E%3C/svg%3E'); }
+.lib-card.ua, .dz-row.ua{ overflow:hidden;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--surface) 90%, transparent) 0, color-mix(in srgb, var(--surface) 80%, transparent) 45%, color-mix(in srgb, var(--surface) 25%, transparent) 100%),
+    var(--ua-flag) center / cover no-repeat !important; }
+.dz-row.ua{ border-left-color:#0057b7; }
+.lib-card.ua .lib-illu{ background:color-mix(in srgb, var(--surface) 82%, transparent); }
+/* im Timer: Flagge als Hintergrund der ganzen Übung (Arbeit und Pausen), Schrift weiß */
+.player.ua{ color:#fff !important; }
+.player.ua .phase-label, .player.ua .block-label, .player.ua .next-up{ color:#fff !important; text-shadow:0 1px 3px rgba(0,0,0,.45); }
+
+
+/* Timer: Ring nur über transform, Phasenfarben per Überblenden (opacity) statt Farb-Transition */
+.player{ background:var(--bg); transition:none; }
+#pl-bgs{ position:absolute; inset:0; z-index:-1; pointer-events:none; }
+.pl-bg{ position:absolute; inset:0; animation:plBgIn .55s ease both; }
+@keyframes plBgIn{ from{ opacity:0; } to{ opacity:1; } }
+
+.ring-wrap svg.ring2{ transform:none; overflow:visible; }
+.ring-half{ fill:none; stroke:currentColor; stroke-width:6; }
+.ring-cap{ fill:currentColor; transition:opacity .2s ease; }
+.ring-cap.ring-seam{ transition:none; }
+.ring-wrap{ will-change:transform; }
+.ring-wrap.pulse{ animation:ringPulse 1s cubic-bezier(.2,.7,.3,1) infinite; }
+.ring-wrap.pulse .ring-bg{ animation:ringGlow 1s ease-out infinite; }
+@keyframes ringPulse{ 0%{ transform:scale(1); } 16%{ transform:scale(1.05); } 100%{ transform:scale(1); } }
+@keyframes ringGlow{ 0%{ opacity:1; } 16%{ opacity:.35; } 100%{ opacity:1; } }
+.player-mid.step-in{ animation:stepIn .35s ease both; }
+@keyframes stepIn{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:none; } }
+@media (prefers-reduced-motion: reduce){
+  .pl-bg, .ring-wrap.pulse, .ring-wrap.pulse .ring-bg, .player-mid.step-in{ animation:none; }
+}
+/* Mülleimer direkt in der Liste (eigene Workouts, Timer-Workouts, Blöcke) */
+.trash-btn{ width:44px; height:44px; flex-shrink:0; border:none; border-radius:50%; background:none; color:var(--danger);
+  display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; }
+.trash-btn svg{ width:19px; height:19px; }
+.trash-btn:active{ background:color-mix(in srgb, var(--danger) 14%, transparent); transform:scale(.92); }
+.list-item .fav-btn + .trash-btn{ margin-left:-6px; }
+.card-acts .trash-btn{ width:40px; height:40px; }
+/* + am Timer-Workout: per „Überrasch mich“ Übungen hinzufügen */
+.plus-btn{ width:44px; height:44px; flex-shrink:0; border:1.5px solid var(--border); border-radius:12px; background:var(--surface-2); color:var(--accent);
+  display:flex; align-items:center; justify-content:center; font-size:20px; cursor:pointer; padding:0; }
+.plus-btn:active{ transform:scale(.92); }
+
+/* ============ Klar: modernes, minimalistisches Design (2026-09) ============
+   Leitlinien: ruhige Fläche, flach statt Schatten (Ebenen über Farbton und feine Linien),
+   Schrift und große Zahlen führen, Tinte als Hauptfarbe. Genau eine Signalfarbe (Limette) -
+   nur für „Los“: Start-Knöpfe, Überrasch mich und die Arbeitsphase im Timer. Folgt Hell/Dunkel des Systems. */
+
+
+/* Schrift: eine klare Grotesk, etwas enger laufend, Ziffern gleich breit */
+
+
+/* BLOC-Schriftzug in Tinte mit einem kleinen Signal-Block */
+
+
+/* Flächen: flach, feine Linie statt Schatten */
+
+
+/* Knöpfe: Pillen, Hauptknopf in Tinte */
+
+
+/* „Los geht's“: der eine Startknopf in der Signalfarbe */
+
+
+/* Überrasch mich: die eine laute Fläche der Startseite */
+
+
+/* Bereiche: einfarbige Symbole */
+
+
+/* Reiter als Segment-Schalter */
+
+
+/* Kategorie-Kacheln: neutral, gewählt = Tinte */
+
+
+/* Figuren: Tinte auf hellem Grund, ausgewählt = blauer Rahmen */
+
+
+/* Woche */
+
+/* Einblendfenster */
+
+/* Timer: Arbeit = Signalfarbe, Pause = Tinte (ruhig), Blockpause und Vorbereitung = Blau */
+
+
+/* Startseite: Workouts als große Karte, darunter die übrigen Bereiche als eine Gruppe mit Zeilen */
+.area-bereiche{ display:flex; flex-direction:column; gap:12px; }
+.area-tile.gross, .area-gruppe .area-tile.zeile{ flex-direction:row; align-items:center; min-height:0; }
+.area-tile.gross{ gap:14px; padding:18px 16px; border:1px solid color-mix(in srgb, var(--c) 40%, transparent); }
+.area-tile.gross .at-ico{ width:54px; height:54px; margin-bottom:0; flex-shrink:0; }
+.area-tile.gross .at-name{ font-size:18px; }
+.area-tile .at-text{ display:flex; flex-direction:column; flex:1; min-width:0; }
+.area-tile.gross .at-chev, .area-gruppe .area-tile .at-chev{ position:static; transform:none; margin-left:auto; }
+.area-gruppe{ background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
+.area-gruppe .area-tile.zeile{ gap:12px; padding:12px 14px; background:none; box-shadow:none; border:none; border-radius:0; }
+.area-gruppe .area-tile.zeile + .area-tile.zeile{ border-top:1px solid var(--border); }
+.area-gruppe .area-tile.zeile .at-ico{ width:40px; height:40px; margin-bottom:0; flex-shrink:0; border-radius:12px; }
+.area-gruppe .area-tile.zeile .at-ico .ico{ width:22px; height:22px; }
+.area-gruppe .area-tile.zeile .at-name{ font-size:15.5px; }
+.area-gruppe .area-tile.zeile .at-sub{ margin-top:2px; padding-right:0; }
+
+/* „Überrasch mich“ in der Bibliothek: kleiner Knopf oben rechts */
+.sp-top{ display:inline-flex; align-items:center; gap:6px; flex-shrink:0; padding:8px 12px; border-radius:999px; border:1px solid var(--border);
+  background:var(--surface); color:var(--text); font:inherit; font-size:14px; font-weight:600; cursor:pointer; white-space:nowrap; }
+.sp-top .ico{ width:16px; height:16px; color:var(--accent); }
+
+
+/* Einstellungen: „Wichtig“ offen, „Mehr“ als zugeklappte Gruppen (2026-09-29) */
+.opt-label{ font-size:13px; font-weight:700; color:var(--text-dim); margin:0 0 10px; }
+.opt-mehr{ background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:10px; overflow:hidden; }
+.opt-mehr > summary, .opt-mehr > .opt-zeile{ list-style:none; display:flex; align-items:center; gap:12px; padding:14px 16px; min-height:60px; cursor:pointer; }
+.opt-mehr > summary::-webkit-details-marker{ display:none; }
+.opt-mehr > summary .meta, .opt-mehr > .opt-zeile .meta{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.opt-mehr > summary .name, .opt-mehr > .opt-zeile .name{ font-weight:600; font-size:16px; }
+.opt-mehr > summary .sub, .opt-mehr > .opt-zeile .sub{ font-size:13px; color:var(--text-dim); }
+.om-ico{ width:36px; height:36px; border-radius:11px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; flex:none; }
+.om-ico .ico{ width:20px; height:20px; }
+.om-chev{ display:flex; color:var(--text-dim); transition:transform .2s ease; }
+.opt-mehr[open] .om-chev{ transform:rotate(90deg); }
+.om-inhalt{ padding:0 16px 14px; }
+.om-inhalt .list-item{ box-shadow:none; border:1px solid var(--border); }
+
+
+/* Timer-Workouts und Blöcke gehören jetzt zu Workouts › Meine: Start-Knöpfe in der Workouts-Farbe (2026-09-29) */
+.list-item .playbtn.wo, .list-item .playbtn.bl{ background:var(--tp-color); color:var(--tp-text); }
+/* Studio: Gruppen-Kacheln und Ausrüstungs-Chips (2026-09-30) */
+.main-tiles.st-bereiche{ grid-template-columns:repeat(3, minmax(0, 1fr)); gap:6px; }
+.st-bereiche .mt-name{ font-size:11.5px; white-space:normal; line-height:1.15; min-height:2.3em; display:flex; align-items:center; text-align:center; }
+.st-arten{ margin:0 0 14px; align-items:center; }
+.st-bereiche .main-tile{ padding:7px 2px 6px; gap:1px; }
+.st-bereiche .mt-ico .ico{ width:19px; height:19px; }
+.st-bereiche .mt-name{ min-height:0; font-size:11px; }
+/* Studio: Air-Gruppen als schmale, zugeklappte Zeilen unter „Aus Air“ */
+.st-air-gr{ background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:8px; overflow:hidden; }
+.st-air-gr > summary{ list-style:none; display:flex; align-items:center; gap:12px; min-height:52px; padding:8px 14px; cursor:pointer; }
+.st-air-gr > summary::-webkit-details-marker{ display:none; }
+.st-air-gr > summary b{ flex:1; min-width:0; font-size:15px; font-weight:600; }
+.st-air-gr .tpl-chev{ margin-left:0; color:var(--text-dim); }
+.st-air-gr[open] .tpl-chev{ transform:rotate(180deg); }
+.sag-ico{ width:34px; height:34px; border-radius:10px; flex:none; display:flex; align-items:center; justify-content:center;
+  background:color-mix(in srgb, var(--tp-color) 14%, transparent); color:var(--tp-color); }
+.sag-ico .ico{ width:19px; height:19px; }
+.st-air-gr .fig-grid{ padding:6px 12px 12px; }
+/* Katalog: aufklappbare Bereiche (Übungen, fertige Workouts, Plan-Bau); „n gewählt“ zeigt im zugeklappten Bereich, dass darin etwas ausgewählt ist */
+.kat-gr > summary .lbl-hint{ margin-left:0; }
+.kat-gr .kat-inhalt{ padding:2px 10px 10px; }
+.kat-gr .kat-inhalt .list-item{ margin-bottom:6px; box-shadow:none; background:color-mix(in srgb, var(--text) 4%, var(--surface)); }
+.kat-gr .kat-inhalt .list-item:last-child{ margin-bottom:0; }
+.kat-n{ flex:none; font-size:12px; font-weight:700; padding:2px 9px; border-radius:999px; color:var(--on-accent, #fff); background:var(--accent); }
+/* Katalog: zwei Einstiege unter den Reitern (Überrasch mich, Workout planen) und der Start-Knopf im Plan */
+.kat-start{ display:flex; gap:8px; margin:0 0 10px; }
+.kat-start .sp-leiste{ flex:1; min-width:0; width:auto; margin:0; padding:0 10px; gap:8px; }
+.kat-start .sp-leiste b{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.kat-start .sp-leiste .sp-chev{ display:none; }
+.kat-start .kat-plan{ border-color:var(--border); background:var(--surface); }
+.kat-start .kat-plan .ico{ color:var(--text); }
+.plan-start{ margin:4px 0 12px; }
+/* Workout-Bereich moderner (2026-10-10): Kapsel-Reiter, Ort-Schalter, farbige Bereiche, ruhigere Karten */
+.rz.kat-rz{ gap:4px; padding:4px; margin:2px 0 12px; border:0; border-radius:14px; background:color-mix(in srgb, var(--text) 8%, transparent); }
+.rz.kat-rz button{ border-radius:11px; padding:9px 4px; font-size:14.5px; }
+.rz.kat-rz button.active{ background:var(--surface); color:var(--text); box-shadow:0 1px 3px rgba(0,0,0,.18), 0 0 0 1px color-mix(in srgb, var(--text) 6%, transparent); }
+.rz.kat-rz button.active::after{ display:none; }
+.kat-ort{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:0 0 10px; }
+.kat-ort button{ display:flex; align-items:center; gap:10px; min-height:58px; padding:8px 12px; border-radius:16px; border:1.5px solid var(--border);
+  background:var(--surface); color:var(--text-dim); font:inherit; text-align:left; cursor:pointer; min-width:0; }
+.kat-ort button .ico{ width:26px; height:26px; flex:none; }
+.kat-ort .ko-t{ display:flex; flex-direction:column; min-width:0; line-height:1.2; }
+.kat-ort .ko-t b{ font-size:15.5px; font-weight:700; color:inherit; }
+.kat-ort .ko-t small{ font-size:11.5px; opacity:.8; margin-top:1px; }
+.kat-ort button.on{ color:var(--text); border-color:var(--tp-color); background:color-mix(in srgb, var(--tp-color) 14%, var(--surface)); box-shadow:0 0 0 1px var(--tp-color) inset; }
+.kat-ort button.on .ico{ color:var(--tp-color); }
+.kat-ort button.on[data-katort="studio"] .ico, .kat-ort button.on[data-genort="studio"] .ico, .kat-ort button.on[data-bauort="studio"] .ico{ color:var(--gym-color); }   /* ausgewählt: Symbol im Orange des Ortes (nicht Blau) */
+.kat-ort [data-katort="studio"] .ico, .kat-ort [data-genort="studio"] .ico, .kat-ort [data-bauort="studio"] .ico{ color:var(--gym-color); }
+.kat-ort [data-katort="frei"] .ico, .kat-ort [data-genort="frei"] .ico, .kat-ort [data-bauort="frei"] .ico{ color:var(--tp-color); }
+.kat-ort button.on[data-katort="studio"], .kat-ort button.on[data-genort="studio"], .kat-ort button.on[data-bauort="studio"]{ border-color:var(--gym-color); background:color-mix(in srgb, var(--gym-color) 12%, var(--surface)); box-shadow:0 0 0 1px var(--gym-color) inset; }
+.kat-start .sp-leiste{ height:46px; border-radius:14px; }
+.kat-gr{ border-radius:18px; border:1px solid color-mix(in srgb, var(--text) 7%, transparent); box-shadow:none; margin-bottom:10px; }
+.kat-gr > summary{ min-height:62px; padding:10px 14px; gap:14px; }
+.kat-gr .sag-ico{ width:42px; height:42px; border-radius:14px; background:color-mix(in srgb, var(--text) 6%, transparent); color:var(--hue, var(--tp-color)); }
+.kat-gr .sag-ico .ico{ width:23px; height:23px; }
+.kat-gr > summary b{ font-size:16px; font-weight:700; }
+.kat-gr > summary .lbl-hint{ font-size:12.5px; font-weight:700; padding:3px 10px; border-radius:999px; background:color-mix(in srgb, var(--text) 8%, transparent); }
+.kat-gr[open]{ border-color:color-mix(in srgb, var(--text) 14%, transparent); }
+.kat-gr[open] > summary{ border-bottom:1px solid color-mix(in srgb, var(--text) 6%, transparent); }
+.kat-gr{ --hue:var(--text); }   /* nur Schwarz/Weiß: die Farbe tragen Ort-Schalter und Kacheln (Freiluft blau, Fitnessstudio orange) */
+.kat-gr[data-katgr="fav"]{ --hue:#f2b01e; }
+
+
+/* Studio: Filterkasten zum Einklappen */
+.st-filter{ margin-bottom:14px; }
+.st-filter .om-pfeil{ color:var(--text-dim); font-size:18px; transition:transform .2s; }
+.st-filter[open] .om-pfeil{ transform:rotate(180deg); }
+.st-filter-inhalt{ padding:0 12px 4px; }
+.st-filter-inhalt .toggle-row{ margin:0 0 12px; }
+/* Startseite: Reihenfolge der Bereiche (langes Drücken) */
+.area-tile{ -webkit-touch-callout:none; user-select:none; -webkit-user-select:none; }
+.bs-liste{ display:flex; flex-direction:column; gap:8px; margin:4px 0 16px; }
+.bs-zeile{ display:flex; align-items:center; gap:10px; padding:8px 8px 8px 10px; border-radius:14px; background:var(--surface-2); }
+.bs-zeile .at-ico{ width:36px; height:36px; border-radius:11px; display:flex; align-items:center; justify-content:center; flex:none;
+  background:color-mix(in srgb, var(--c) 16%, transparent); color:var(--c); }
+.bs-zeile .at-ico .ico{ width:20px; height:20px; }
+.bs-zeile b{ flex:1; min-width:0; font-size:16px; }
+.bs-pfeil{ width:46px; height:46px; border-radius:12px; border:0; background:var(--surface); color:var(--text); font-size:20px; flex:none; }
+.bs-pfeil:disabled{ opacity:.3; }
+.bs-hinweis{ text-transform:none; letter-spacing:0; font-weight:400; }
+/* Studio-Karte: Intervall-Timer einstellbar */
+.st-timer-hint{ margin:0 0 6px; font-size:13px; color:var(--text-dim); }
+/* Studio-Karte: Intervall-Timer zum Aufklappen */
+.st-timer-auf{ margin-bottom:12px; }
+.st-timer-auf .st-timer{ box-shadow:none; background:none; padding:0 16px 14px; margin:0; }
+/* Studio-Karte: Statistik-Knopf oben und Statistik-Fenster */
+.st-stats-leiste{ display:flex; align-items:center; gap:10px; width:100%; min-height:52px; padding:8px 6px 8px 10px; margin:0 0 10px; border:0; border-radius:14px;
+  background:color-mix(in srgb, var(--cat, var(--gym-color)) 9%, transparent); color:var(--text); font:inherit; text-align:left; cursor:pointer; }
+.st-stats-leiste:active{ transform:scale(.99); }
+.ssl-ico{ width:34px; height:34px; border-radius:10px; flex:none; display:flex; align-items:center; justify-content:center;
+  background:color-mix(in srgb, var(--cat, var(--gym-color)) 16%, transparent); color:var(--cat, var(--gym-color)); }
+.ssl-ico .ico{ width:18px; height:18px; }
+.ssl-text{ display:flex; flex-direction:column; flex:1; min-width:0; }
+.ssl-text b{ font-size:14.5px; }
+.ssl-text small{ font-size:12.5px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ssl-kurve{ width:64px; height:26px; flex:none; color:var(--cat, var(--gym-color)); }
+.ssl-chev{ flex:none; display:flex; color:var(--text-dim); }
+/* ohne Daten: gestrichelte Platzhalterlinie statt Kurve, leeres Diagramm-Gerüst im Fenster */
+.ssl-kurve.leer polyline{ stroke-dasharray:3 5; opacity:.5; }
+.wo-diagramm.leer{ opacity:.7; }
+.st-stats h3{ margin-bottom:12px; }
+.st-stats-zahlen{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:14px; }
+.st-stats-zahlen div{ background:var(--surface-2); border-radius:14px; padding:10px 8px; text-align:center; display:flex; flex-direction:column; gap:2px; }
+.st-stats-zahlen b{ font-size:18px; font-variant-numeric:tabular-nums; }
+.st-stats-zahlen span{ font-size:12px; color:var(--text-dim); }
+.st-stats-leer, .st-stats-hinweis{ color:var(--text-dim); font-size:14px; line-height:1.45; margin:6px 0; }
+.wo-diagramm{ display:block; width:100%; height:auto; margin:2px 0 8px; color:var(--cat, var(--gym-color)); }
+.wd-gitter{ fill:none; stroke:var(--border); stroke-width:1; }
+.wd-linie{ fill:none; stroke:currentColor; stroke-width:2.5; stroke-linejoin:round; stroke-linecap:round; }
+.wd-punkt{ fill:currentColor; }
+.wd-txt{ fill:var(--text-dim); font-size:10px; font-variant-numeric:tabular-nums; }
+
+/* Auswertung (Muskelgruppen) und Plan nach Gewichtung */
+.ausw{ padding:0; margin:12px 0; }
+.ausw > summary{ list-style:none; cursor:pointer; padding:12px 14px; display:flex; flex-direction:column; gap:2px; position:relative; }
+.ausw > summary::-webkit-details-marker{ display:none; }
+.ausw > summary::after{ content:"\25BE"; position:absolute; right:14px; top:14px; color:var(--text-dim); transition:transform .15s; }
+.ausw[open] > summary::after{ transform:rotate(180deg); }
+.ausw-t{ font-weight:700; }
+.ausw-s{ font-size:.85rem; color:var(--text-dim); }
+.ausw-row{ display:grid; grid-template-columns:104px 1fr 40px; gap:8px; align-items:center; padding:5px 14px; font-size:.9rem; }
+.ausw-row.null{ opacity:.45; }
+.ausw-row b{ text-align:right; font-variant-numeric:tabular-nums; }
+.ausw-bar{ height:10px; border-radius:6px; background:color-mix(in srgb, var(--text) 10%, var(--surface)); overflow:hidden; }
+.ausw-bar i{ display:block; height:100%; border-radius:6px; background:var(--bereich, var(--tp-color)); }
+.ausw-note{ padding:8px 14px 14px; font-size:.85rem; color:var(--text-dim); }
+.gen-card{ padding:8px 14px; margin-bottom:14px; }
+.gen-row{ display:grid; grid-template-columns:104px 1fr 40px; gap:8px; align-items:center; padding:9px 0; }
+.gen-row label{ margin:0; font-size:.9rem; }
+.gen-row b{ text-align:right; font-variant-numeric:tabular-nums; }
+.gen-row input[type=range]{ width:100%; accent-color:var(--gym-color); }
+.ru-felder{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:6px; }
+/* Lauf-Tracker (Beta) */
+.run-leer{ color:var(--text-dim); font-size:13px; text-align:center; padding:50px 12px; }
+.run-knoepfe{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.run-knoepfe .btn-danger{ grid-column:1 / -1; }
+.run-live{ margin-bottom:12px; }
+.run-splits td{ padding:8px 10px; } .run-splits td:last-child{ text-align:right; font-variant-numeric:tabular-nums; }
+.run-dunkel{ position:fixed; inset:0; z-index:99999; background:#000; color:#8a8a8a; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; }   /* schwarz, aber Zeit, Kilometer und Tempo gut lesbar */
+.rd-z{ font-size:56px; font-weight:600; font-variant-numeric:tabular-nums; } .rd-k{ font-size:30px; font-weight:500; font-variant-numeric:tabular-nums; } .rd-h{ font-size:13px; margin-top:40px; color:#4a4a4a; }
+.run-ansage{ margin:0 0 14px; } .run-ansage .wahl-pick{ margin:6px 0 10px; } .run-ansage .btn{ margin-top:4px; }
+.run-fertig{ text-align:center; margin-bottom:14px; border:1px solid var(--run-color, #e5573f); }
+.rf-titel{ font-size:15px; font-weight:600; color:var(--run-color, #e5573f); text-transform:uppercase; letter-spacing:.06em; }
+.rf-km{ font-size:54px; font-weight:700; font-variant-numeric:tabular-nums; line-height:1.1; margin:6px 0 2px; } .rf-km small{ font-size:20px; font-weight:500; color:var(--text-dim); }
+.rf-zeile{ color:var(--text-dim); font-size:16px; }
+.rf-liste{ list-style:none; margin:12px 0 4px; padding:0; display:grid; gap:6px; text-align:left; }
+.rf-liste li{ display:flex; align-items:center; gap:8px; background:var(--surface-2, rgba(255,255,255,.05)); border-radius:10px; padding:8px 10px; font-size:14px; }
+.rf-liste .ico{ width:18px; height:18px; color:var(--text-dim); flex:none; }
+.rf-gespeichert{ color:var(--text-dim); font-size:12px; margin-top:10px; }
+.run-splits tr.schnell td{ font-weight:700; }
+.rg-vor{ font-size:96px; }
+.run-dunkel{ touch-action:none; user-select:none; -webkit-user-select:none; }
+.rd-balken{ width:160px; height:4px; background:#1a1a1a; border-radius:2px; overflow:hidden; } .rd-balken i{ display:block; height:100%; width:0; background:#666; }
+.run-dunkel.halten .rd-balken i{ width:100%; transition:width 2s linear; }
+/* Run: „Beenden“ groß und umrahmt, damit man ihn sicher trifft (und nicht mit Pause verwechselt) */
+.run-knoepfe .run-ende{ min-height:68px; font-size:20px; font-weight:700; letter-spacing:.02em; border:3px solid var(--danger, #e5483a); border-radius:16px; margin-top:6px; }
+/* Run – moderner: große Zahlen, Kacheln, GPS-Status als Punkt, Route als eigene Fläche */
+.run-hero{ text-align:center; padding:26px 18px 20px; margin-bottom:18px; }
+.rh-km{ font-size:68px; font-weight:800; line-height:1; letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
+.rh-km small{ font-size:22px; font-weight:600; color:var(--text-dim); margin-left:6px; letter-spacing:0; }
+.rh-sub{ color:var(--text-dim); font-size:14px; margin:8px 0 18px; }
+.run-startbtn{ width:100%; min-height:60px; font-size:19px; font-weight:700; border-radius:999px; display:flex; align-items:center; justify-content:center; gap:10px; margin:0; }
+.run-gross{ text-align:center; margin:18px 0 14px; }
+.rg-label{ color:var(--text-dim); font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; }
+.rg-zeit{ font-size:88px; font-weight:800; font-variant-numeric:tabular-nums; line-height:1.02; letter-spacing:-.04em; margin:4px 0 10px; }
+.rg-vor{ font-size:140px; margin:10px 0 14px; }
+.run-raster{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:0 0 14px; text-align:center; }
+.run-raster > div{ background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px 4px 12px; }
+.run-raster b{ display:block; font-size:26px; font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+.run-raster small{ display:block; color:var(--text-dim); font-size:11px; margin-top:3px; }
+.run-gps{ display:inline-flex; align-items:center; gap:8px; color:var(--text-dim); font-size:13px; background:var(--surface-2); border-radius:999px; padding:6px 14px; }
+.run-gps::before{ content:""; width:9px; height:9px; border-radius:50%; background:var(--text-dim); flex:none; }
+.run-gps.gut::before{ background:#2fb36b; box-shadow:0 0 0 4px color-mix(in srgb, #2fb36b 22%, transparent); }
+.run-gps.mittel::before{ background:#e8a317; }
+.run-gps.aus::before{ background:#e5483a; }
+.run-gps.suche::before{ animation:runPuls 1.2s ease-in-out infinite; }
+@keyframes runPuls{ 50%{ opacity:.25; } }
+.run-karte{ background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:8px; margin-bottom:16px; }
+#run-karte .run-ring{ animation:runPuls 1.6s ease-in-out infinite; }
+.run-knoepfe{ gap:12px; }
+.run-knoepfe .btn{ min-height:56px; border-radius:16px; font-weight:600; }
+.run-item .name{ font-size:20px; font-weight:700; font-variant-numeric:tabular-nums; }
+.run-fertig{ border-radius:22px; padding:22px 18px; }
+.rf-km{ font-size:72px; font-weight:800; letter-spacing:-.03em; }
+/* Run: Optionen, Intervall-Anzeige, Pace je Kilometer, Name und Notiz */
+.run-opt{ margin:0 0 14px; }
+.run-opt .ru-felder{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:10px 0 4px; }
+.run-auto{ margin-top:14px; padding-top:12px; border-top:1px solid var(--border); }
+.run-auto .label{ display:flex; justify-content:space-between; align-items:baseline; font-weight:600; }
+.run-auto .label b{ font-weight:600; color:var(--text-dim); font-variant-numeric:tabular-nums; }
+.run-auto input[type=range]{ width:100%; margin:10px 0 6px; accent-color:var(--accent); }
+.run-auto .desc{ color:var(--text-dim); font-size:12px; line-height:1.4; }
+.run-iv{ margin-top:10px; padding:8px 16px; border-radius:999px; font-weight:700; font-size:15px; font-variant-numeric:tabular-nums; background:var(--surface-2); display:inline-block; }
+.run-iv.lauf{ background:var(--text); color:var(--bg); }
+.run-name{ font-weight:400; color:var(--text-dim); font-size:16px; }
+.run-notiz{ display:grid; gap:8px; margin-bottom:14px; }
+.run-notiz textarea{ resize:none; }
+.run-kms{ padding:10px 14px; }
+.rk{ display:grid; grid-template-columns:44px 1fr 74px; align-items:center; gap:10px; padding:7px 0; }
+.rk-n{ color:var(--text-dim); font-size:13px; font-variant-numeric:tabular-nums; }
+.rk-bar{ height:10px; border-radius:999px; background:var(--surface-2); overflow:hidden; }
+.rk-bar i{ display:block; height:100%; border-radius:999px; background:var(--text-dim); opacity:.55; }
+.rk.schnell .rk-bar i{ background:var(--text); opacity:1; }
+.rk.rest .rk-bar i{ opacity:.3; }
+.rk-p{ text-align:right; font-weight:600; font-variant-numeric:tabular-nums; }
+.rk-p small{ font-weight:400; color:var(--text-dim); font-size:11px; }
+.run-notiz input, .run-notiz textarea{ width:100%; box-sizing:border-box; font:inherit; font-weight:400; font-size:16px; padding:12px 14px; border-radius:12px; } .run-notiz textarea{ min-height:72px; }
+/* Run: Abdunkeln steht als eigener Knopf ganz oben (auch schon im Countdown) */
+.run-knoepfe .run-dunkelbtn{ grid-column:1 / -1; order:-1; display:flex; align-items:center; justify-content:center; gap:8px; }
+.run-dunkelbtn .ico{ width:20px; height:20px; }
+/* Run im Lauf: jeder Knopf löst erst nach 3 s Halten aus (füllt sich dabei) */
+.run-knoepfe .hold{ position:relative; overflow:hidden; touch-action:none; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; }
+.run-knoepfe .hold::after{ content:""; position:absolute; inset:0 auto 0 0; width:0; background:currentColor; opacity:.2; pointer-events:none; }
+.run-knoepfe .hold.halten::after{ width:100%; transition:width var(--halt, 2s) linear; }
+.run-art{ margin:12px 0 10px; }
+.run-haltehint{ text-align:center; margin:12px 4px 0; }
+/* Leiste unten: Start · Suche · Statistik · Einstellungen (nur auf den Hauptseiten) */
+.tabbar{ position:fixed; left:0; right:0; bottom:0; z-index:40; display:flex; justify-content:center; gap:4px; padding:6px 10px calc(8px + env(safe-area-inset-bottom)); background:var(--surface); border-top:1px solid var(--border); }
+.tabbar .tab{ flex:1; max-width:140px; display:flex; flex-direction:column; align-items:center; gap:3px; padding:7px 4px 6px; border:0; border-radius:14px; background:none; color:var(--text-dim); font:inherit; font-size:11px; font-weight:600; cursor:pointer; }
+.tabbar .tab .ico{ width:24px; height:24px; display:block; }
+.tabbar .tab .ico svg{ width:24px; height:24px; }
+.tabbar .tab.active{ color:var(--text); background:color-mix(in srgb, var(--text) 8%, transparent); }
+body.mit-tabs #app{ padding-bottom:calc(96px + env(safe-area-inset-bottom)); }
+.fokus-card .toggle-row{ padding:8px 0; }
+.fokus-leer{ text-align:center; display:grid; gap:12px; }
+/* Fokus kompakt: Chips in einer Zeile; Statistik: Bereichstitel mit Farbpunkt */
+.stat-bereich{ display:flex; align-items:center; gap:8px; }
+.stat-bereich i{ width:10px; height:10px; border-radius:50%; background:var(--c, var(--text-dim)); }
+/* Statistik: Hero, Balken, Kalender, Linie, Rekorde */
+.stat-hero{ text-align:center; padding:22px 18px 18px; margin-bottom:14px; }
+.sh-zahl{ font-size:76px; font-weight:800; line-height:1; letter-spacing:-.04em; font-variant-numeric:tabular-nums; }
+.sh-text{ color:var(--text-dim); font-size:14px; margin-top:6px; }
+.stat-hero.leer .sh-text{ color:var(--text); font-size:16px; line-height:1.45; margin:0 0 14px; }
+.sh-delta{ display:inline-flex; align-items:center; gap:4px; margin-top:12px; padding:6px 12px; border-radius:999px; background:var(--surface-2); color:var(--text-dim); font-size:13px; font-weight:600; }
+.sh-delta.auf{ color:var(--text); }
+.sh-delta .ico, .sh-serie .ico{ width:16px; height:16px; }
+.sh-serie{ display:inline-flex; align-items:center; gap:5px; margin:12px 0 0 8px; padding:6px 12px; border-radius:999px; background:var(--sel-bg); border:1px solid var(--sel-border); font-size:13px; font-weight:600; }
+.stat-karte{ margin-bottom:14px; }
+.sk-kopf{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; }
+.sk-sub{ color:var(--text-dim); font-size:13px; margin:-4px 0 8px; }
+.sk-unter{ color:var(--text-dim); font-size:12px; margin:10px 0 0; line-height:1.4; }
+.sk-unter.titel{ font-weight:700; letter-spacing:.08em; text-transform:uppercase; font-size:11px; margin:18px 0 8px; }
+.sb-name{ display:inline-flex; align-items:center; gap:8px; font-size:17px; }
+.sb-name i{ width:10px; height:10px; border-radius:50%; background:var(--c, var(--text-dim)); }
+.stat-seg{ display:inline-flex; background:var(--surface-2); border-radius:999px; padding:3px; }
+.stat-seg button{ border:0; background:none; color:var(--text-dim); font:inherit; font-size:12px; font-weight:600; padding:6px 12px; border-radius:999px; cursor:pointer; }
+.stat-seg button.active{ background:var(--sel-bg); color:var(--text); box-shadow:inset 0 0 0 1px var(--sel-border); }
+.bchart{ display:flex; gap:6px; align-items:flex-end; }
+.bc{ flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; min-width:0; }
+.bc .bw{ height:14px; font-size:10px; font-weight:600; color:var(--text-dim); font-variant-numeric:tabular-nums; }
+.bc.jetzt .bw{ color:var(--text); }
+.bc .bs{ width:100%; height:96px; display:flex; align-items:flex-end; }
+.bc .bs i{ display:block; width:100%; min-height:2px; border-radius:7px 7px 3px 3px; background:var(--text-dim); opacity:.4; }
+.bc.jetzt .bs i{ background:var(--text); opacity:1; }
+.bchart.farbe .bs i{ background:var(--c); opacity:.4; }
+.bchart.farbe .bc.jetzt .bs i{ opacity:1; }
+.bc small{ font-size:10px; color:var(--text-dim); white-space:nowrap; }
+.bchart.geist .bs i{ height:34% !important; opacity:.1; border:1.5px dashed var(--text-dim); background:none; }
+.bchart.geist .bc:nth-child(odd) .bs i{ height:56% !important; }
+.heat{ display:grid; gap:6px; }
+.heat-tage, .heat-raster{ display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; }
+.heat-tage small{ text-align:center; font-size:10px; color:var(--text-dim); }
+.hz{ display:block; aspect-ratio:1; border-radius:9px; background:var(--surface-2); }
+.hz.l1{ background:color-mix(in srgb, var(--text) 24%, var(--surface-2)); }
+.hz.l2{ background:color-mix(in srgb, var(--text) 50%, var(--surface-2)); }
+.hz.l3{ background:color-mix(in srgb, var(--text) 85%, var(--surface-2)); }
+.hz.z{ opacity:.35; }
+.hz.heute{ box-shadow:0 0 0 2px var(--text-dim); }
+.stat-linie{ width:100%; height:auto; display:block; color:var(--text); }
+.sl-basis{ stroke:var(--border); stroke-width:1; }
+.sl-punkt{ fill:var(--surface); stroke:currentColor; stroke-width:2; }
+.sl-jetzt{ fill:currentColor; }
+.sl-text{ fill:currentColor; font-size:11px; font-weight:700; }
+.rekorde{ display:grid; gap:2px; }
+.rekorde > div{ display:grid; grid-template-columns:1fr auto 52px; gap:10px; align-items:baseline; padding:9px 0; border-top:1px solid var(--border); }
+.rekorde > div:first-child{ border-top:0; }
+.rekorde span{ color:var(--text-dim); font-size:13px; }
+.rekorde b{ font-variant-numeric:tabular-nums; }
+.rekorde small{ text-align:right; color:var(--text-dim); font-size:11px; }
+.stat-bereichkarte .ausw{ margin:12px 0 0; padding:0; border:0; background:none; }
+/* Diagramme verschiebbar: horizontal wischen, solange Daten da sind (startet bei „jetzt“ rechts) */
+.bscroll{ overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch; scrollbar-width:none; margin:0 -4px; padding:0 4px; }
+.bscroll::-webkit-scrollbar{ display:none; }
+.bscroll .bchart{ min-width:100%; width:max-content; }
+.bscroll .bc{ flex:1 0 38px; }
+.bscroll .stat-linie{ max-width:none; }
+/* Kalender einklappbar */
+.stat-kal summary{ display:flex; align-items:baseline; gap:10px; cursor:pointer; list-style:none; }
+.stat-kal summary::-webkit-details-marker{ display:none; }
+.stat-kal summary .sk-sub{ margin:0; flex:1; text-align:right; }
+.stat-kal .sk-chev{ width:16px; height:16px; align-self:center; color:var(--text-dim); transition:transform .2s; }
+.stat-kal .sk-chev svg{ width:16px; height:16px; }
+.stat-kal[open] .sk-chev{ transform:rotate(90deg); }
+.stat-kal .heat{ margin-top:14px; }
+.heat-legende{ display:flex; align-items:center; justify-content:flex-end; gap:5px; margin-top:4px; }
+.heat-legende small{ font-size:10px; color:var(--text-dim); }
+.heat-legende .hz{ width:14px; height:14px; aspect-ratio:auto; border-radius:4px; }
+.stat-gran{ justify-content:flex-start; margin:-2px 0 12px; }
+/* Statistik lebendiger: Wochenziel-Ring, Balken in Akzentfarbe mit Aufbau-Animation, Bereichskarten mit Kennzahlen */
+.stat-hero{ background:linear-gradient(165deg, color-mix(in srgb, var(--accent) 13%, var(--surface)), var(--surface) 62%); }
+.stat-ring{ position:relative; width:190px; height:190px; margin:0 auto 8px; }
+.stat-ring svg{ width:100%; height:100%; display:block; }
+.sr-bg{ fill:none; stroke:color-mix(in srgb, var(--accent) 16%, var(--surface-2)); stroke-width:16; }
+.sr-bar{ fill:none; stroke:var(--accent); stroke-width:16; stroke-linecap:round; stroke-dasharray:var(--p) var(--u); animation:ringIn 1s cubic-bezier(.2,.8,.2,1) both; }
+.stat-hero.geschafft .sr-bar{ filter:drop-shadow(0 0 7px color-mix(in srgb, var(--accent) 55%, transparent)); }
+@keyframes ringIn{ from{ stroke-dasharray:0 var(--u); } }
+.sr-mitte{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.sr-mitte b{ font-size:62px; line-height:1; font-weight:800; letter-spacing:-.04em; color:var(--accent); font-variant-numeric:tabular-nums; }
+.sr-mitte small{ color:var(--text-dim); font-size:14px; margin-top:2px; }
+.sh-chips{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:12px; }
+.sh-chips .sh-delta, .sh-chips .sh-serie{ margin:0; }
+.sh-ziel{ display:flex; align-items:center; justify-content:center; gap:10px; margin-top:14px; color:var(--text-dim); font-size:13px; }
+.sh-ziel b{ min-width:18px; color:var(--text); font-size:15px; }
+.sh-ziel button{ width:30px; height:30px; border-radius:50%; border:1px solid var(--border); background:var(--surface); color:var(--text); font:inherit; font-size:18px; line-height:1; cursor:pointer; }
+.bc .bs i{ background:color-mix(in srgb, var(--accent) 30%, var(--surface-2)); opacity:1; transform-origin:bottom; animation:balkenHoch .7s cubic-bezier(.2,.8,.2,1) both; animation-delay:calc(var(--i, 0) * 45ms); }
+.bc.jetzt .bs i{ background:linear-gradient(180deg, color-mix(in srgb, var(--accent) 88%, #fff), var(--accent)); }
+.bchart.farbe .bs i{ background:color-mix(in srgb, var(--c) 34%, var(--surface-2)); opacity:1; }
+.bchart.farbe .bc.jetzt .bs i{ background:var(--c); }
+@keyframes balkenHoch{ from{ transform:scaleY(0); } }
+@media (prefers-reduced-motion: reduce){ .bc .bs i, .sr-bar{ animation:none; } }
+.hz.l1{ background:color-mix(in srgb, var(--accent) 24%, var(--surface-2)); }
+.hz.l2{ background:color-mix(in srgb, var(--accent) 52%, var(--surface-2)); }
+.hz.l3{ background:color-mix(in srgb, var(--accent) 92%, var(--surface-2)); }
+.stat-bereichkarte{ background:linear-gradient(165deg, color-mix(in srgb, var(--c) 9%, var(--surface)), var(--surface) 55%); border-color:color-mix(in srgb, var(--c) 24%, var(--border)); }
+.chips-stat{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin:6px 0 8px; }
+.chips-stat span{ background:color-mix(in srgb, var(--c) 11%, var(--surface-2)); border-radius:14px; padding:10px 4px; text-align:center; }
+.chips-stat b{ display:block; font-size:16px; font-variant-numeric:tabular-nums; }
+.chips-stat small{ display:block; color:var(--text-dim); font-size:11px; margin-top:2px; }
+/* Favoriten tragen die Farbe ihres Bereichs: Air blau (tp), Studio hellgrün (st), Timer hellblau (ti), Mobility grün (ws) */
+.list-item .playbtn.st, .playbtn.st{ background:var(--gym-color); color:var(--gym-text, #fff); }
+.list-item .playbtn.ti, .playbtn.ti{ background:var(--ti-color); color:var(--ti-text, #fff); }
+/* Bewegungsempfehlung in der Statistik */
+.stat-who .sk-link{ font-size:12px; color:var(--text-dim); }
+.who-zeile{ display:grid; grid-template-columns:1fr auto; gap:6px 10px; align-items:baseline; margin:10px 0 4px; }
+.who-zeile span{ color:var(--text-dim); font-size:14px; }
+.who-zeile b{ font-variant-numeric:tabular-nums; font-size:15px; }
+.who-zeile .who-bar{ grid-column:1 / -1; height:8px; border-radius:999px; background:var(--surface-2); overflow:hidden; }
+.who-zeile .who-bar u{ display:block; height:100%; border-radius:999px; background:color-mix(in srgb, var(--accent) 55%, var(--surface-2)); text-decoration:none; }
+.who-zeile.ok .who-bar u{ background:var(--accent); }
+/* „Was ist was?“, Bestleistung, Leichter/Schwerer: kleine, ruhige Ergänzungen */
+.wi-sheet h3{ margin:0 0 10px; }
+.hw-zeile{ margin:0 0 10px; font-size:15px; line-height:1.45; }
+/* Reiterzeile: schlanke Reiter mit Unterstrich in der Farbe des Bereichs (statt einer Karte mit Knöpfen) */
+.rz{ display:flex; margin:0 0 12px; border-bottom:1px solid var(--border); }
+.rz button{ flex:1; min-width:0; border:none; background:none; padding:12px 4px 11px; font:inherit; font-size:15px; font-weight:600; color:var(--text-dim); position:relative; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.rz button.active{ color:var(--text); font-weight:800; }
+.rz button.active::after{ content:""; position:absolute; left:16%; right:16%; bottom:-1px; height:3px; border-radius:3px 3px 0 0; background:var(--rz, var(--tp-color)); }
+
+.ws-art{ margin:0 0 4px; }
+/* „Überrasch mich“: schmale Leiste unter den Reitern von Air (eine Zeile) */
+.sp-leiste{ display:flex; align-items:center; gap:10px; width:100%; height:42px; margin:0 0 10px; padding:0 14px; border-radius:12px; cursor:pointer;
+  border:1px solid color-mix(in srgb, var(--accent) 34%, transparent); background:color-mix(in srgb, var(--accent) 10%, var(--surface)); color:var(--text); font:inherit; text-align:left; }
+.sp-leiste .ico{ width:20px; height:20px; color:var(--accent); flex:none; }
+.sp-leiste b{ flex:1; font-size:14.5px; font-weight:700; }
+.sp-leiste .sp-chev{ display:flex; color:var(--text-dim); font-size:16px; }
+/* Filterkarte: Kopfzeile mit dem kleinen Schalter A–Z rechts */
+.af-reihe{ display:flex; align-items:center; }
+.af-reihe .af-kopf{ flex:1; min-width:0; }
+.af-az{ flex:none; margin:0 12px 0 0; height:36px; padding:0 12px; border-radius:11px; border:1px solid var(--border); background:var(--surface-2); color:var(--text-dim); font:inherit; font-size:13px; font-weight:700; cursor:pointer; }
+.af-az.on{ background:var(--sel-bg); border-color:var(--sel-border); color:var(--text); }
+/* „?“ in der Kopfzeile: kleiner als Zurück und Lupe, damit lange Titel („Mobility & Stretch“) nicht umbrechen */
+.iconbtn[data-hinweis]{ width:44px; height:44px; border-radius:14px; box-shadow:none; }
+.iconbtn[data-hinweis] .ico{ width:22px; height:22px; color:var(--text-dim); }
+.topbar:has([data-hinweis]) h1{ font-size:18px; }
+.wi-zeile{ display:flex; gap:12px; align-items:flex-start; padding:10px 0; border-top:1px solid var(--border); }
+.wi-zeile:first-of-type{ border-top:0; }
+.wi-zeile .at-ico{ width:36px; height:36px; border-radius:11px; display:flex; align-items:center; justify-content:center; flex:none; margin:0;
+  background:color-mix(in srgb, var(--c) 16%, transparent); color:var(--c); }
+.wi-zeile .at-ico .ico{ width:20px; height:20px; }
+.wi-zeile b{ display:block; font-size:16px; }
+.wi-zeile small{ display:block; color:var(--text-dim); font-size:13.5px; line-height:1.4; }
+.st-pr{ display:flex; gap:10px; align-items:center; margin-top:10px; padding:10px 12px; border-radius:14px; background:color-mix(in srgb, #f5b82e 18%, var(--surface)); border:1px solid color-mix(in srgb, #f5b82e 45%, var(--border)); }
+.st-pr-stern{ width:30px; height:30px; border-radius:50%; background:#f5b82e; color:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; flex:none; }
+.st-pr b{ display:block; font-size:15px; }
+.st-pr small{ color:var(--text-dim); font-size:13px; }
+.info-lz{ display:flex; gap:8px; margin-bottom:14px; }
+.lz-btn{ flex:1; min-width:0; text-align:left; border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:14px; padding:9px 12px; font:inherit; cursor:pointer; }
+.lz-btn.s{ text-align:right; }
+.lz-btn small{ display:block; color:var(--text-dim); font-size:11.5px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; }
+.lz-btn b{ display:block; font-size:14.5px; }
+.lz-leer{ flex:1; }
+/* Suche: Kategorien */
+.sr-kats{ margin-top:10px; }
+
+/* Körperkarte: zwei Silhouetten (vorn/hinten), die Muskelgruppen färben sich in der Akzentfarbe, je kräftiger desto öfter */
+.kk-paar{ display:flex; justify-content:center; gap:16px; margin:2px 0 4px; }
+.kk-paar figure{ margin:0; text-align:center; }
+.kk-paar figcaption{ font-size:11px; color:var(--text-dim); margin-top:2px; }
+:root{ --kk-grau:color-mix(in srgb, var(--text) 14%, var(--bg)); }
+.kk{ width:64px; height:128px; display:block; }
+.kk .hd{ fill:var(--kk-grau); }
+.kk .z rect{ fill:color-mix(in srgb, var(--bereich, var(--accent)) var(--p, 0%), var(--kk-grau)); transition:fill .25s ease; }
+.kk .z.sel rect{ stroke:var(--bereich, var(--accent)); stroke-width:2.2; }
+.kk .z[role="button"]{ cursor:pointer; }
+.kk .z[role="button"]:focus-visible rect{ stroke:var(--text); stroke-width:2; }
+.info-mus{ display:flex; align-items:center; gap:10px; }
+.info-mus-t{ flex:1; min-width:0; }
+.info-kk{ flex:none; }
+.info-kk .kk{ width:50px; height:100px; }
+.info-kk .kk-paar{ gap:8px; margin:0; }
+.info-kk .kk-paar figcaption{ display:none; }
+.kk-summe{ padding:6px 0 10px; }
+.kk-summe .kk{ width:72px; height:144px; }
+.kk-note{ margin:4px 0 8px; font-size:13px; color:var(--text-dim); text-align:center; }
+/* Kopf eines Workouts: kleine Silhouetten links, rechts viel / nur am Rande / Lücken */
+.kk-kopf{ display:flex; align-items:center; gap:14px; margin:12px 0 6px; padding:10px 12px; border-radius:14px; background:color-mix(in srgb, var(--text) 5%, var(--surface)); }
+.kk-kopf .kk-paar{ flex:none; gap:6px; margin:0; }
+.kk-kopf .kk{ width:42px; height:84px; }
+.kk-kopf .kk-paar figcaption{ display:none; }
+.kk-kopf-txt{ flex:1; min-width:0; font-size:13.5px; line-height:1.4; }
+.kk-zeile{ margin:0 0 4px; color:var(--text); }
+.kk-zeile b{ font-weight:700; }
+.kk-zeile.viel b{ color:var(--bereich, var(--accent)); }
+.kk-zeile.luecke b{ color:#d9534f; }
+.kk-zeile.rand, .kk-zeile.ok{ color:var(--text-dim); }
+/* Filterkarte aufgeräumt: ruhige Chips ohne Symbole, klare Abschnitte, Körperkarte mit Zonenliste zum Aufklappen */
+.air-filter .af-body{ padding:4px 16px 16px; }
+.air-filter .af-lbl{ margin:22px 0 10px; padding:0; font-size:11.5px; }
+.air-filter .af-body > .af-lbl:first-child{ margin-top:14px; }
+.air-filter .fc-chips{ gap:8px; }
+.air-filter .fc-chip{ padding:7px 14px; border-radius:999px; background:transparent; font-size:14px; }
+.air-filter .fc-chip .ico{ display:none; }
+.air-filter .fc-chip.on{ background:var(--sel-bg); border-color:var(--bereich, var(--accent)); box-shadow:inset 0 0 0 1px var(--bereich, var(--accent)); font-weight:600; }
+.air-filter .af-fuss{ margin-top:22px; padding-top:16px; border-top:1px solid var(--border); }
+.kk-lblzeile{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.kk-lblzeile > span:first-child{ margin:0; font-size:11.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+.air-filter .af-fuss{ gap:8px; }
+.air-filter .af-fuss .btn{ font-size:14.5px; padding:14px 8px; min-width:0; }
+.air-filter .af-fuss .af-reset{ padding:14px 12px; }
+.kk-lblzeile .kk-modus{ margin:0; flex-basis:auto; gap:16px; text-transform:none; letter-spacing:0; }
+.kk-hinweis{ text-align:center; font-size:13px; color:var(--text-dim); min-height:18px; margin:2px 0 6px; }
+.kk-hinweis.an{ color:var(--text); font-weight:600; }
+.kk-liste-box{ margin-top:2px; }
+.kk-liste-box > summary{ list-style:none; display:flex; align-items:center; justify-content:center; gap:6px; padding:8px 4px; font-size:13.5px; color:var(--text-dim); cursor:pointer; }
+.kk-liste-box > summary::-webkit-details-marker{ display:none; }
+.kk-liste-box > summary .tpl-chev{ margin-left:0; transition:transform .2s ease; }
+.kk-liste-box[open] > summary .tpl-chev{ transform:rotate(180deg); }
+.kk-liste-box .kk-chips{ margin-top:6px; }
+/* Schalter „Detailansicht“: kleiner Kippschalter mit Beschriftung */
+.kk-modus{ display:flex; justify-content:center; margin:4px 0 6px; flex-basis:100%; }
+.kk-modus button{ display:inline-flex; align-items:center; gap:8px; border:0; background:none; padding:4px 2px; font:inherit; font-size:13.5px; font-weight:600; color:var(--text-dim); cursor:pointer; }
+.kk-modus button.on{ color:var(--text); }
+.kk-sw{ position:relative; flex:none; width:30px; height:18px; border-radius:99px; background:var(--border); transition:background .15s; }
+.kk-sw::after{ content:""; position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:#fff; box-shadow:0 1px 2px rgba(0,0,0,.3); transition:transform .15s; }
+.kk-modus button.on .kk-sw{ background:var(--bereich, var(--accent)); }
+.kk-modus button.on .kk-sw::after{ transform:translateX(12px); }
+.kk-kopf .kk-modus{ justify-content:flex-start; margin:6px 0 0; }
+/* Fein: die Silhouetten größer, damit sich die kleinen Zonen am Handy antippen lassen */
+.kk-paar.fein{ gap:10px; }
+.kk-filter .kk-paar.fein .kk{ width:140px; height:280px; }
+.kk-summe .kk-paar.fein .kk{ width:112px; height:224px; }
+.kk-kopf .kk-paar.fein .kk{ width:64px; height:128px; }
+.info-kk-knopf.fein{ flex-basis:100%; }
+.info-kk-knopf.fein .kk{ width:96px; height:192px; }
+.info-mus.gross .info-kk-knopf.fein .kk{ width:130px; height:260px; }
+.kk-filter{ margin:4px 0 6px; }
+.kk-filter .kk{ width:72px; height:144px; }
+.kk-chips{ margin-top:6px; }
+/* Suche: Körperkarte als aufklappbare Zeile unter den Kategorien */
+.sr-koerper-knopf{ display:flex; align-items:center; justify-content:space-between; gap:8px; width:100%; margin:8px 0 4px; padding:10px 14px; border:1px solid var(--border); border-radius:12px;
+  background:var(--surface); color:var(--text); font:inherit; font-size:14px; font-weight:600; text-align:left; cursor:pointer; }
+.sr-koerper{ margin:0 0 8px; padding:6px 12px 10px; border:1px solid var(--border); border-radius:12px; background:var(--surface); }
+.sr-koerper[hidden]{ display:none; }
+.sr-koerper .af-lbl{ margin-top:4px; }
+/* Übungsinfo: Silhouetten antippbar, groß mit Namen */
+.info-mus{ flex-wrap:wrap; }
+.info-kk-knopf{ flex:none; padding:0; border:0; background:none; color:inherit; font:inherit; cursor:pointer; }
+.info-kk-knopf .kk{ width:50px; height:100px; }
+.info-kk-knopf .kk-paar{ gap:8px; margin:0; }
+.info-kk-knopf .kk-paar figcaption{ display:none; }
+.info-mus.gross .info-kk-knopf{ flex-basis:100%; }
+.info-mus.gross .info-kk-knopf .kk{ width:84px; height:168px; }
+.info-mus.gross .info-kk-knopf .kk-paar{ gap:24px; }
+.info-mus.gross .info-kk-knopf .kk-paar figcaption{ display:block; }
+.info-kk-liste{ flex-basis:100%; font-size:13px; line-height:1.45; display:flex; flex-direction:column; gap:4px; }
+.info-kk-liste[hidden]{ display:none; }
+.kk-punkt{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; background:var(--bereich, var(--accent)); }
+.kk-punkt.hilfe{ background:color-mix(in srgb, var(--bereich, var(--accent)) 38%, var(--kk-grau)); }
+.info-band li::before{ content:"\2022"; }
+/* Einstellungen einheitlich: jede Gruppe mit Symbol-Kachel + Titel, Links wie die anderen Zeilen, „Alle Daten löschen“ abgesetzt am Ende */
+.opt-kopf{ display:flex; align-items:center; gap:12px; margin:0 0 14px; }
+.opt-kopf .om-ico{ width:36px; height:36px; }
+.opt-t{ font-size:16px; font-weight:600; }
+a.opt-mehr{ display:block; color:inherit; text-decoration:none; }
+.opt-mehr > .opt-zeile{ display:flex; align-items:center; gap:12px; padding:14px 16px; min-height:60px; }
+.opt-mehr > .opt-zeile .meta{ display:flex; flex-direction:column; }
+.opt-danger{ margin-top:22px; }
+.opt-danger .om-ico, .opt-danger > summary .name{ color:var(--danger); }
+.card > .btn .ico, .card > .btn svg{ flex:none; }
+.kat-start .kat-plan > svg{ width:20px; height:20px; flex:none; color:var(--text); }
+/* Workout-Bereich mit unterer Leiste: Plus-Knopf und Menü stehen darüber */
+body.mit-tabs .fab{ bottom:calc(88px + env(safe-area-inset-bottom)); }
+body.mit-tabs .fab-menu{ bottom:calc(166px + env(safe-area-inset-bottom)); }
+.cover-hero .cover-info{ font-size:13.5px; line-height:1.45; color:var(--text-dim); margin:8px 0 6px; padding:10px 12px; border-radius:12px; background:color-mix(in srgb, var(--text) 5%, transparent); }
+
+/* ===== Ruhige Farbwelt (2026-10-12) =====
+   Symbole und Bereichsfarben sind Schwarz/Weiß (Textfarbe), außer Mobility & Stretch (grün). Farbe tragen sonst nur die Hauptaktion (Akzent, Koralle) und die beiden Orte:
+   Freiluft = blau (--tp-color), Fitnessstudio = Rot (--gym-color). */
+:root:root{
+  --ti-color:var(--text); --ti-text:var(--bg);
+  --bl-color:var(--text); --bl-text:var(--bg);
+  --run-color:var(--text);
+}
+/* Startseite: alle Bereiche gleich - neutraler Symbolgrund, Symbol in der Textfarbe, der erste ohne farbige Kontur
+   (sah „vorausgewählt“ aus); der erste ist nur größer */
+.at-ico, .bs-zeile .at-ico, .wi-zeile .at-ico{ background:color-mix(in srgb, var(--text) 7%, transparent); color:var(--text); }
+.area-tile.gross{ border:none; }
+/* Plus-Menü: neutrale Kreise statt Blau */
+.fab-opt .ico.tp{ background:var(--text); color:var(--bg); }
+/* Suche: Workouts tragen den Ort als Farbe (Freiluft blau, Fitnessstudio orange) */
+.sr-welt{ width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex:none; margin-right:12px;
+  background:color-mix(in srgb, var(--w) 14%, transparent); color:var(--w); }
+.sr-welt .ico{ width:21px; height:21px; }
+/* Plan-Bau: die gewählten Übungen kleben beim Scrollen unter der Kopfzeile (top setzt der Plan-Bau nach der Höhe der Kopfzeile) */
+.plan-sticky{ position:sticky; top:82px; z-index:4; background:var(--bg); margin:0 -16px 10px; padding:6px 16px 2px; border-bottom:1px solid var(--border); }
+.plan-sticky-kopf{ display:flex; align-items:baseline; gap:8px; margin-bottom:6px; }
+.plan-sticky-kopf b{ font-size:15px; }
+.plan-sticky-kopf span{ font-size:13px; color:var(--text-dim); }
+.plan-sticky .wb-streifen{ margin-bottom:0; padding-bottom:8px; }
+
+/* Mobility & Stretch: das einzige Grün der Startseite (Listenkachel unter „Weitere Bereiche“); seine Übungen und Programme sind ebenfalls grün */
+.area-tile[data-bereich="warm"] .at-ico, .bs-zeile[data-bereich="warm"] .at-ico, .wi-zeile[data-bereich="warm"] .at-ico{
+  background:color-mix(in srgb, var(--ws-color) 14%, transparent); color:var(--ws-color); }
+/* Workout: das BLOC-Orange (Akzent) als Farbe des Bereichs - Symbol auf der Startseite, im Sortieren und in „Was ist was?“ */
+.area-tile[data-bereich="katalog"] .at-ico, .bs-zeile[data-bereich="katalog"] .at-ico, .wi-zeile[data-bereich="katalog"] .at-ico{
+  background:color-mix(in srgb, var(--accent) 14%, transparent); color:var(--accent); }
+/* Kontrast: kleine Schrift in der Akzentfarbe nimmt --accent-ink (Koralle auf Weiß hat nur 3,1:1; so 4,6:1) */
+:root{ --accent-ink:#d93a14; --link-ink:#b9330f; }   /* link-ink: Links auf grauer Zweitfläche (Hinweiskarte) mit ≥ 4,5:1 */
+:root[data-theme="dark"]{ --accent-ink:var(--accent); --link-ink:var(--accent); }
+@media (prefers-color-scheme: dark){ :root:not([data-theme]){ --accent-ink:var(--accent); --link-ink:var(--accent); } }
+
+/* Mobility & Stretch: der Schalter Mobility · Stretch ist grün getönt wie der Rest des Bereichs */
+.ws-art button.active{ background:color-mix(in srgb, var(--ws-color) 14%, var(--surface)); border-color:var(--ws-color); color:var(--text); box-shadow:inset 0 0 0 1px var(--ws-color); }
+/* Plan-Bau: ausgewählte Übung im Plan, Steuerung zum Verschieben */
+.wb-mini.sel{ box-shadow:0 0 0 2px var(--text), var(--shadow); }
+.plan-ctrl{ display:flex; gap:8px; justify-content:center; padding:0 0 8px; }
+.plan-ctrl button{ font:inherit; font-size:14px; font-weight:700; border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:12px; min-height:40px; padding:0 16px; cursor:pointer; display:flex; align-items:center; gap:6px; }
+.plan-ctrl button[disabled]{ opacity:.35; cursor:default; }
+.plan-ctrl .del{ color:var(--danger); }
+.plan-ctrl .del .ico{ width:16px; height:16px; }
+/* Timer: Satz eintragen (Fitnessstudio-Übung) */
+.pl-kg-btn{ display:inline-block; margin:-14px 0 18px; padding:8px 16px; border-radius:12px; border:1.5px solid color-mix(in srgb, var(--phase-text, #fff) 70%, transparent); background:transparent; color:var(--phase-text, #fff); font:inherit; font-size:14px; font-weight:700; cursor:pointer; }
+.pg-sheet .st-eingabe{ margin:6px 0 4px; }
+/* Katalog: Abteilungen Meine · Workout-Katalog, Karte zum Übungskatalog; Baukasten mit zwei großen Wegen */
+.seg-row.kat-abt, .seg-row.bau-modus{ margin:2px 0 10px; }
+.kat-seitentitel{ margin:4px 2px 10px; font-size:13px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--text-dim); }
+.kat-eigene{ margin:0 0 12px; display:flex; align-items:center; justify-content:center; gap:8px; }
+.kat-eigene .ico, .kat-eigene svg{ width:20px; height:20px; }
+.bau-hinweis{ font-size:13px; color:var(--text-dim); margin:0 2px 12px; }
+.bau-karte{ display:flex; align-items:center; gap:14px; width:100%; margin:0 0 12px; padding:20px 16px; min-height:96px; border-radius:20px; border:1px solid var(--border); background:var(--surface); box-shadow:var(--shadow); color:var(--text); font:inherit; text-align:left; cursor:pointer; }
+.bau-karte .bk-ico{ width:54px; height:54px; flex:none; border-radius:16px; background:color-mix(in srgb, var(--text) 8%, transparent); display:flex; align-items:center; justify-content:center; }
+.bau-karte .bk-ico .ico, .bau-karte .bk-ico svg{ width:28px; height:28px; }
+.bau-karte .bk-t{ flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
+.bau-karte .bk-t b{ font-size:20px; } .bau-karte .bk-t small{ font-size:13.5px; color:var(--text-dim); line-height:1.35; }
+.bau-karte .bk-pfeil{ color:var(--text-dim); display:flex; }
+.bau-karte.bau-sp{ border-color:color-mix(in srgb, var(--accent) 40%, transparent); background:color-mix(in srgb, var(--accent) 9%, var(--surface)); }
+.bau-karte.bau-sp .bk-ico{ background:color-mix(in srgb, var(--accent) 16%, transparent); color:var(--accent); }
+.sp-art{ margin:2px 0 12px; }
+/* Plan nach Gewichtung: Körpermodell oben, bleibt beim Scrollen sichtbar; Rot = Gewichtung */
+.gen-figur{ position:sticky; top:82px; z-index:4; background:var(--bg); margin:0 -16px 10px; padding:6px 16px 6px; border-bottom:1px solid var(--border); text-align:center; --bereich:var(--gym-color); }
+.gen-figur .kk{ width:44px; height:88px; }
+.gen-figur .kk-paar{ gap:14px; margin:0; }
+.gen-figur .kk-paar figcaption{ display:none; }
+.gen-figur small{ display:block; margin-top:2px; font-size:12px; color:var(--text-dim); }
+
+/* Mobility & Stretch: Baukasten in der Farbe des Bereichs */
+.bau-karte.bau-sp.ws-bau{ border-color:color-mix(in srgb, var(--ws-color) 40%, transparent); background:color-mix(in srgb, var(--ws-color) 9%, var(--surface)); }
+.bau-karte.ws-bau .bk-ico{ background:color-mix(in srgb, var(--ws-color) 16%, transparent); color:var(--ws-color); }
+.ws-abt button.active{ background:color-mix(in srgb, var(--ws-color) 14%, var(--surface)); border-color:var(--ws-color); color:var(--text); box-shadow:inset 0 0 0 1px var(--ws-color); }
+/* Verweis zwischen Workout und Mobility & Stretch, unter der Liste */
+.kat-link{ display:flex; align-items:center; justify-content:center; gap:8px; margin:18px 0 0; width:100%; }
+.kat-link .ico, .kat-link svg{ width:20px; height:20px; }
+/* Baukasten: das „i“ auf den Kacheln zeigt nur, dass es Infos gibt (lange drücken); ein Tipp gehört immer der Auswahl */
+.wb-kachel{ -webkit-touch-callout:none; -webkit-user-select:none; user-select:none; }
+.wb-i{ pointer-events:none; cursor:default; width:20px; height:20px; font-size:12px; line-height:20px; opacity:.75; }
+.plan-sticky-kopf .sec-link{ margin-left:auto; white-space:nowrap; }
+.plan-sticky-kopf b{ white-space:nowrap; }
+.plan-sticky-kopf span{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+/* Baukasten: drei kleine Schritte (Wo · Wie · Weg), damit der Faden sichtbar bleibt */
+.bau-schritt{ display:flex; align-items:center; gap:8px; margin:14px 2px 8px; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-dim); }
+.bau-schritt span{ width:20px; height:20px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; background:color-mix(in srgb, var(--text) 12%, transparent); color:var(--text); font-size:11px; }
+.topbar:has([data-lupe]) h1{ font-size:18px; }
+.plan-sticky .wb-mini{ width:66px; }
+.wb-mini-sub{ font-size:10.5px; font-weight:700; color:var(--text-dim); line-height:1.2; white-space:nowrap; }
+.plan-sticky .wb-mini-illu{ width:44px; height:44px; }
+
+/* ===== Start und Baukasten nach dem Mockup (Fassung 2026-10-13): Kopfblock, Fotokarten für den Ort, orange Auswahl, Leiste leuchtet orange ===== */
+/* Untere Leiste: der Bereich, in dem man sich befindet, ist orange (Symbole und Namen bleiben wie sie sind) */
+.tabbar .tab.active{ color:var(--accent-ink, var(--accent)); background:none; }
+.tabbar .tab.active > span:last-child{ font-weight:700; }
+/* Startseite: Kopfblock mit Foto und orangem Verlauf */
+/* Baukasten: Schritte mit orangem Kreis, der Ort als Fotokarten, Auswahl orange, „Überrasch mich“ als große orange Karte */
+.bau-schritt{ margin:18px 2px 10px; font-size:12.5px; color:var(--text); }
+.bau-schritt span{ width:22px; height:22px; background:var(--accent); color:var(--accent-text, #fff); font-size:12px; font-weight:800; }
+.ort-fotos{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:0 0 6px; }
+.ort-foto{ position:relative; isolation:isolate; overflow:hidden; min-height:108px; padding:0; border:2.5px solid transparent; border-radius:18px; background:#1a1a1c; color:#fff; font:inherit; text-align:left; cursor:pointer; --of:var(--tp-color); }
+.ort-foto[data-bauort="studio"], .ort-foto[data-katort="studio"], .ort-foto[data-genort="studio"]{ --of:var(--gym-color); }
+.ort-foto .of-bild{ position:absolute; inset:0; z-index:-2; width:100%; height:100%; object-fit:cover; filter:saturate(.85) brightness(.92); }
+.ort-foto::after{ content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(to top, rgba(0,0,0,.78) 0%, rgba(0,0,0,.18) 62%, rgba(0,0,0,.22) 100%); }
+.ort-foto .of-t{ position:absolute; left:12px; right:10px; bottom:9px; display:flex; flex-direction:column; line-height:1.2; text-shadow:0 1px 4px rgba(0,0,0,.55); }
+.ort-foto .of-t b{ font-size:16px; font-weight:800; }
+.ort-foto .of-t small{ font-size:12px; opacity:.92; }
+.ort-foto .of-haken{ position:absolute; top:8px; right:8px; display:none; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; background:var(--of); color:#fff; }
+.ort-foto .of-haken svg{ width:16px; height:16px; stroke-width:3; }
+.ort-foto.on{ border-color:var(--of); }
+.ort-foto.on .of-haken{ display:flex; }
+.ort-foto.on .of-bild{ filter:none; }
+:root .seg-row.bau-modus button.active{ background:var(--accent); border-color:var(--accent); color:var(--accent-text, #fff); }
+.bau-zusammen{ margin:0 0 12px; text-align:center; font-size:13.5px; color:var(--text-dim); }
+.bau-zusammen b{ color:var(--text); }
+.bau-karte.bau-sp:not(.ws-bau){ position:relative; overflow:hidden; border-color:var(--accent); background:var(--accent); color:var(--accent-text, #fff); }
+.bau-karte.bau-sp:not(.ws-bau) .bk-ico{ background:rgba(255,255,255,.22); color:inherit; }
+.bau-karte.bau-sp:not(.ws-bau) .bk-t small, .bau-karte.bau-sp:not(.ws-bau) .bk-pfeil{ color:inherit; opacity:.92; }
+.bau-karte .bk-wuerfel{ display:none; }
+.bau-karte.bau-sp:not(.ws-bau) .bk-wuerfel{ display:block; position:absolute; right:-26px; top:50%; width:118px; height:118px; transform:translateY(-50%) rotate(-10deg); opacity:.17; pointer-events:none; }
+.bau-karte .bk-wuerfel svg{ width:100%; height:100%; fill:#fff; }
+.bau-karte .bk-wuerfel rect{ fill:#fff; }
+.bau-karte .bk-wuerfel circle{ fill:var(--accent); }
+.bau-karte.bau-sp:not(.ws-bau) .bk-pfeil{ display:none; }
+/* Katalog: der Ort als flachere Fotokarten */
+.ort-fotos.kompakt{ margin:0 0 10px; }
+.ort-fotos.kompakt .ort-foto{ min-height:80px; }
+.ort-fotos.kompakt .of-t{ left:11px; bottom:8px; }
+.ort-fotos.kompakt .of-t b{ font-size:15px; }
+.ort-fotos.kompakt .of-t small{ font-size:11.5px; }
+.ort-fotos.kompakt .of-haken{ top:6px; right:6px; width:22px; height:22px; }
+.ort-fotos.kompakt .of-haken svg{ width:14px; height:14px; }
+/* Bereichsseiten (Mobility & Stretch, Timer, Run): schmales Foto unter der Kopfzeile */
+.bereich-bild{ position:relative; overflow:hidden; height:116px; margin:0 0 12px; border-radius:var(--radius); background:#222; box-shadow:var(--shadow); }
+.bereich-bild img{ display:block; width:100%; height:100%; object-fit:cover; }
+.bereich-bild::after{ content:""; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,0) 55%, rgba(0,0,0,.28)); pointer-events:none; }
+/* Timer: Symbole im Plus-Menü weiß mit dunklem Symbol und feiner Kontur (im hellen Design waren sie tiefschwarz) */
+.fab-opt .ico.ti{ background:#ffffff; color:#1c1c1e; box-shadow:inset 0 0 0 1.5px rgba(28,28,30,.22); }
+.gap-row.times-row label{ margin:0; font-size:13px; color:var(--text-dim); }
+/* Zusammenstell-Fenster (Baukasten): drei Wege Zufall · Nach Gewichtung · Selber bauen; bei „Nach Gewichtung“ stehen Körpermodell und Regler im Fenster */
+.sp-wege button{ padding:10px 2px; font-size:12.5px; white-space:nowrap; }
+.sp-sheet .gen-figur{ position:static; margin:0 0 6px; padding:2px 0 4px; border:0; background:none; }
+.sp-sheet .gen-figur .kk{ width:38px; height:76px; }
+.sp-sheet .sp-gen-hint{ margin:0 0 8px; }
+.sp-sheet .gen-card{ box-shadow:none; border:1px solid var(--border); margin:0 0 4px; }
+/* Play-Knöpfe überall (Favoriten, Listen, Übungskacheln): weißer Kreis mit Rand und Dreieck in der Farbe des Bereichs statt gefüllter Farbfläche.
+   Die Farbe kommt aus --pb; die Reihenfolge der Regeln ist wichtig (später und spezifischer gewinnt). */
+:root:root .playbtn, :root:root .list-item .playbtn, :root:root .air-start{
+  --pb:var(--accent); background:var(--surface); color:var(--pb); box-shadow:inset 0 0 0 2px var(--pb); }
+:root:root .air-start{ --pb:var(--cat, var(--accent)); }
+:root:root .playbtn.wo{ --pb:var(--wo-color); }
+:root:root .playbtn.bl{ --pb:var(--bl-color); }
+:root:root .playbtn.tp, :root:root .playbtn.cat{ --pb:var(--tp-color); }
+:root:root .playbtn.cat{ --pb:var(--cat); }
+:root:root .playbtn.ws{ --pb:var(--ws-color); }
+:root:root .playbtn.st{ --pb:var(--gym-color); }
+:root:root .playbtn.ti{ --pb:var(--ti-color); }
+:root:root .list-item .playbtn.wo, :root:root .list-item .playbtn.bl{ --pb:var(--tp-color); }
+:root:root .list-item .playbtn.st{ --pb:var(--gym-color); }
+:root:root .list-item .playbtn.ti, :root:root .timer-panel .list-item .playbtn, :root:root .timer-panel .list-item .playbtn.bl, :root:root .timer-panel .list-item .playbtn.wo{ --pb:var(--ti-color); }
+/* Ort: beide Karten können zugleich gewählt sein (Hinweis darunter, Haken an jeder gewählten Karte) */
+.bau-ort-hinweis{ font-size:12.5px; color:var(--text-dim); margin:4px 2px 0; }
+/* Meine › Trainingsplan: Muskelgruppen und Ort unter dem Namen */
+.pl-gruppen{ font-weight:600; color:var(--text); }
+.plan-item .pl-namen{ opacity:.85; }
+/* Plan als Programm (2026-10-14): je Übung eine Zeile mit Sätzen, Wiederholungen, Gewicht und Pause zum schnellen Einstellen, darunter das letzte Mal */
+.pz-liste{ display:flex; flex-direction:column; gap:10px; margin:0 0 14px; }
+.pz-zeile{ background:var(--surface); border-radius:16px; box-shadow:var(--shadow); padding:10px 12px 12px; border-left:4px solid var(--cat, var(--accent)); }
+.pz-kopf{ display:flex; align-items:center; gap:10px; cursor:pointer; margin-bottom:8px; border-radius:10px; }
+.pz-bild{ flex:0 0 auto; width:54px; height:54px; display:flex; align-items:center; justify-content:center; }
+.pz-illu{ width:54px; height:54px; color:var(--cat); }
+.pz-text{ flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+.pz-name{ font-weight:700; font-size:15px; line-height:1.25; }
+.pz-name i{ font-style:normal; color:var(--text-dim); font-weight:700; margin-right:2px; }
+.pz-letzte{ font-size:12.5px; color:var(--text-dim); font-variant-numeric:tabular-nums; }
+.pz-letzte.an{ color:var(--text); }
+.pz-pfeil{ flex:0 0 auto; color:var(--text-dim); display:flex; }
+.pz-pfeil svg{ width:18px; height:18px; }
+.pz-felder{ margin-bottom:0; gap:8px; }
+.pz-felder.drei{ grid-template-columns:1fr 1fr 1fr; }
+.pz-zeile .st-feld label{ font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pz-zeile .stepper button{ width:38px; height:44px; font-size:20px; flex:0 0 auto; }
+.pz-zeile .st-step input{ font-size:17px; min-width:0; }
+/* Übungskarte: letztes Mal, Umschalter Satz für Satz ↔ Timer */
+.st-letzte{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; align-items:center; font-size:13px; color:var(--text-dim); margin:0 0 10px; }
+.st-letzte b{ font-weight:700; }
+.st-uebernehmen{ border:0; font:inherit; font-weight:600; color:var(--text); cursor:pointer; font-variant-numeric:tabular-nums; }
+.st-uebernehmen:active{ background:var(--border); }
+.st-modus{ margin:2px 0 12px; }
+.st-modus button{ display:inline-flex; align-items:center; justify-content:center; gap:6px; }
+.st-modus button .ico, .st-modus button svg{ width:14px; height:14px; }
+.st-hero .st-timer{ text-align:left; }
+.pg-letzte{ margin:0 0 8px; }
+.pz-notiz{ font-size:12.5px; color:var(--text-dim); font-style:italic; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+/* Satztypen, Plattenrechner, Statistik-Sichten */
+.st-typen{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:0 0 10px; font-size:13px; color:var(--text-dim); align-items:center; }
+.st-schritt{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; align-items:center; margin:0 0 10px; font-size:13px; color:var(--text-dim); }
+.st-scheiben{ border:0; background:none; color:var(--text-dim); font:inherit; font-size:13px; text-decoration:underline; cursor:pointer; padding:4px 6px; }
+.sch-sheet .sch-zeile{ display:flex; justify-content:space-between; gap:10px; padding:8px 0; border-top:1px solid var(--border); font-size:15px; }
+.sch-sheet .sch-zeile:first-of-type{ border-top:0; }
+.sch-sheet .sch-gross{ font-size:20px; font-weight:700; text-align:center; margin:10px 0; font-variant-numeric:tabular-nums; }
+.sch-sheet .sch-bar{ display:flex; gap:6px; flex-wrap:wrap; margin:6px 0 10px; }
+.st-stats .st-sicht{ margin:0 0 12px; }
+.st-stats .st-stats-zahlen{ margin-bottom:12px; }
+.st-v-zeile .st-rekord{ color:var(--accent); margin-left:6px; }
+/* Plan-Zeile: je Übung Satz für Satz oder Timer, Start nur dieser Übung */
+.pz-modus{ margin:0 0 8px; }
+.pz-modus button{ display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:7px 6px; font-size:13px; }
+.pz-modus button svg{ width:12px; height:12px; }
+.pz-start{ margin-top:10px; padding:11px 14px; font-size:15px; }
+/* Training speichern: Leiste, Fenster, Liste in der Statistik */
+.tr-sheet{ max-height:88vh; overflow:auto; }
+.tr-sheet .st-v-zeile span{ white-space:normal; }
+.tr-sheet textarea{ width:100%; }
+.tr-schon{ margin:0 0 10px; font-size:13px; color:var(--text-dim); }
+.tr-notiz{ margin:12px 0 0; font-style:italic; color:var(--text-dim); font-size:14px; }
+.st-rekord{ font-style:normal; color:var(--accent); margin-left:6px; }
+.tr-zeile{ display:flex; justify-content:space-between; align-items:center; gap:10px; width:100%; padding:10px 0; border:0; border-top:1px solid var(--border); background:none; color:var(--text); font:inherit; text-align:left; cursor:pointer; }
+.tr-zeile:first-of-type{ border-top:0; }
+.tr-zeile > span:first-child{ display:flex; flex-direction:column; min-width:0; }
+.tr-zeile small{ color:var(--text-dim); font-size:12.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tr-rechts{ font-size:13px; color:var(--text-dim); text-align:right; font-variant-numeric:tabular-nums; }
+/* Übungen ohne Gewicht: nur ein Feld für die Wiederholungen */
+.st-eingabe.eins{ grid-template-columns:1fr; }
+/* RPE/RIR */
+.st-rpe span{ font-weight:700; color:var(--text); }
+.rpe-wahl{ margin:0 0 6px; }
+/* Supersätze und Zirkel im Plan */
+.pz-verbinder{ display:flex; justify-content:center; margin:-4px 0 -4px; }
+.pz-link{ display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border:1px dashed var(--border); border-radius:999px; background:var(--surface); color:var(--text-dim); font:inherit; font-size:12.5px; cursor:pointer; }
+.pz-link svg{ width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+.pz-link.an{ border-style:solid; color:var(--text); }
+.pz-block{ border-radius:20px; padding:8px; background:color-mix(in srgb, var(--accent) 10%, transparent); box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 45%, transparent); display:flex; flex-direction:column; gap:10px; }
+.pz-blockkopf{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; padding:2px 6px 0; font-size:13px; }
+.pz-blockkopf b{ font-size:14px; }
+.pz-blockkopf span{ color:var(--text-dim); text-align:right; }
+.pz-block .pz-verbinder{ margin:-6px 0 -6px; }
+.pz-bm{ font-size:12px; font-weight:700; color:var(--accent); }
+/* Übungskarte im Block */
+.st-block{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 0 12px; padding:10px 12px; border-radius:14px; text-align:left;
+  background:color-mix(in srgb, var(--accent) 12%, transparent); font-size:14px; }
+.st-block small{ display:block; color:var(--text-dim); font-size:12.5px; margin-top:1px; }
+.st-block .btn{ width:auto; margin:0; padding:10px 14px; font-size:14px; flex:0 0 auto; }
+/* Bereichs-Symbole (Startseite, Sortieren, „Was ist was?“): ein Rahmen in der Farbe des Bereichs (Mobility & Stretch grün, Workout orange, die übrigen
+   schwarz bzw. weiß) statt des grauen Grundes - innen bleibt es frei */
+.at-ico, .bs-zeile .at-ico, .wi-zeile .at-ico,
+.area-tile[data-bereich="warm"] .at-ico, .bs-zeile[data-bereich="warm"] .at-ico, .wi-zeile[data-bereich="warm"] .at-ico,
+.area-tile[data-bereich="katalog"] .at-ico, .bs-zeile[data-bereich="katalog"] .at-ico, .wi-zeile[data-bereich="katalog"] .at-ico{
+  background:transparent; box-shadow:inset 0 0 0 2px currentColor; }
+/* Plan-Seite oben: Für alle gleich und Zeiten */
+.pz-kopfkarte{ margin:0 0 12px; }
+.pz-kopfkarte > label{ margin-top:0; }
+.pz-zeiten{ margin-top:12px; border-top:1px solid var(--border); }
+.pz-zeiten .opt-head{ padding-left:0; padding-right:0; }
+.pz-zeiten .opt-body{ padding:0 0 4px; }
+/* Band befestigen: aufklappbare Karte unter den Figuren (Info-Fenster, Übungskarte) mit Skizze */
+.info-anker{ margin:10px 0 12px; border-radius:14px; background:var(--surface-2); border:1px solid var(--border); }
+.info-anker summary{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 14px; cursor:pointer; list-style:none; }
+.info-anker summary::-webkit-details-marker{ display:none; }
+.info-anker .ia-t{ display:flex; flex-direction:column; min-width:0; text-align:left; }
+.info-anker .ia-t small{ color:var(--text-dim); font-size:13px; margin-top:1px; }
+.info-anker .tpl-chev{ transition:transform .15s; }
+.info-anker[open] .tpl-chev{ transform:rotate(180deg); }
+.info-anker .ia-body{ padding:0 14px 12px; text-align:left; }
+.band-skizze{ display:block; width:100%; max-width:300px; height:auto; margin:2px auto 10px; }
+.band-skizze .bs-k{ fill:none; stroke:var(--text-dim); stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round; }
+.band-skizze .bs-b{ fill:none; stroke:var(--accent); stroke-width:2.8; stroke-linecap:round; stroke-linejoin:round; }
+.band-skizze circle.bs-b{ fill:var(--surface-2); }
+.info-anker .info-steps{ margin-bottom:8px; }
+/* Workout › Meine: aufklappbare Abschnitte (Nach Zeit · Nach Sätzen · Gespeicherte Trainings) und Orts-Fotos an den Einträgen */
+.kat-sek{ margin:0 0 14px; --sk:var(--accent); }
+.kat-sek-zeit{ --sk:var(--accent); }
+.kat-sek-saetze{ --sk:var(--tp-color, #3b6cf6); }
+.kat-sek-training{ --sk:var(--ws-color, #2fb67c); }
+.kat-sek > summary{ display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:16px; background:var(--surface); box-shadow:var(--shadow); cursor:pointer;
+  list-style:none; border-left:4px solid var(--sk); }
+.kat-sek > summary::-webkit-details-marker{ display:none; }
+.kat-sek[open] > summary{ margin-bottom:10px; }
+.ks-ico{ flex:none; width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--sk); box-shadow:inset 0 0 0 2px var(--sk); }
+.ks-ico svg{ width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.ks-t{ flex:1; min-width:0; display:flex; flex-direction:column; text-align:left; }
+.ks-t b{ font-size:16px; }
+.ks-t small{ color:var(--text-dim); font-size:12.5px; margin-top:1px; }
+.ks-n{ flex:none; min-width:26px; padding:3px 9px; border-radius:999px; background:color-mix(in srgb, var(--sk) 16%, transparent); color:var(--text); font-weight:700; font-size:13px; text-align:center; }
+.kat-sek .tpl-chev{ transition:transform .15s; color:var(--text-dim); }
+.kat-sek[open] .tpl-chev{ transform:rotate(180deg); }
+.ort-thumb{ flex:none; display:flex; width:52px; height:52px; border-radius:13px; overflow:hidden; background:#222; margin-right:12px; }
+.ort-thumb img{ width:100%; height:100%; object-fit:cover; display:block; filter:saturate(.9) brightness(.95); }
+.ort-thumb.zwei img{ width:50%; }
+.list-item .ort-thumb{ order:0; }
+.tr-zeile .ort-thumb{ width:44px; height:44px; border-radius:11px; margin-right:10px; }
+.tr-zeile .tr-links{ display:flex; flex-direction:column; min-width:0; flex:1; }
+.tr-zeile > .ort-thumb:first-child{ flex-direction:row; }
+.tr-mehr{ width:100%; margin-top:8px; }
+.sr-arten{ margin-top:6px; }
+.plan-entwurf{ margin:2px 4px 10px; }
+/* Große Bestätigung nach „Satz eintragen“ */
+.satz-fb{ position:fixed; left:50%; top:42%; z-index:9999; transform:translate(-50%,-50%) scale(.6); opacity:0; pointer-events:none; display:flex; flex-direction:column; align-items:center; gap:10px;
+  padding:22px 30px; border-radius:24px; background:rgba(20,20,22,.88); color:#fff; box-shadow:0 12px 40px rgba(0,0,0,.35); animation:satzFbEin .28s cubic-bezier(.2,1.4,.4,1) forwards; text-align:center; }
+.satz-fb.weg{ animation:satzFbAus .4s ease forwards; }
+.sfb-haken{ width:84px; height:84px; border-radius:50%; background:#1f9d63; color:#fff; font-size:52px; line-height:84px; font-weight:700; }
+.satz-fb.rekord .sfb-haken{ background:#f5b82e; color:#2a2200; }
+.sfb-text{ display:flex; flex-direction:column; gap:2px; } .sfb-text b{ font-size:22px; } .sfb-text span{ font-size:20px; font-variant-numeric:tabular-nums; opacity:.9; }
+.sfb-text em{ font-style:normal; font-weight:700; color:#f5b82e; margin-top:4px; }
+@keyframes satzFbEin{ to{ opacity:1; transform:translate(-50%,-50%) scale(1); } }
+@keyframes satzFbAus{ from{ opacity:1; transform:translate(-50%,-50%) scale(1); } to{ opacity:0; transform:translate(-50%,-56%) scale(.95); } }
+@media (prefers-reduced-motion: reduce){ .satz-fb, .satz-fb.weg{ animation:none; opacity:1; transform:translate(-50%,-50%); } .satz-fb.weg{ opacity:0; } }
+/* Statistik: einklappbare Karten und Fortschritt je Übung */
+.stat-falt > summary{ cursor:pointer; }
+.stat-falt > summary + *{ margin-top:12px; }
+.stat-falt .sb-name{ display:flex; align-items:center; gap:8px; }
+.stat-fort .sk-kopf{ margin-bottom:6px; }
+.sf-zeile{ display:grid; grid-template-columns:minmax(0,1fr) 56px auto; gap:10px; align-items:center; width:100%; text-align:left; background:none; border:0; border-top:1px solid var(--border); padding:10px 0; color:inherit; font:inherit; cursor:pointer; }
+.sf-zeile:first-of-type{ border-top:0; }
+.sf-links b{ display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .sf-links small, .sf-rechts small{ color:var(--text-dim); font-size:12px; }
+.sf-rechts{ text-align:right; } .sf-rechts b{ display:block; font-variant-numeric:tabular-nums; font-size:14px; } .sf-rechts small.auf{ color:var(--ok, #1f9d63); font-weight:600; } .sf-rechts small.ab{ color:var(--danger, #d6453d); }
+.sf-kurve{ width:56px; height:24px; color:var(--accent); fill:none; stroke:currentColor; }
+/* Einzeiler zu Gesten (langes Drücken) */
+.tipp-zeile{ display:flex; align-items:center; gap:8px; margin:2px 0 10px; padding:7px 8px 7px 10px; border-radius:12px; background:color-mix(in srgb, var(--accent) 9%, var(--surface)); color:var(--text-dim); font-size:13px; line-height:1.3; }
+.tipp-zeile .tipp-ico{ width:18px; height:18px; flex:none; color:var(--accent); }
+.tipp-zeile span{ flex:1; min-width:0; }
+.tipp-x{ flex:none; width:28px; height:28px; border:0; border-radius:50%; background:transparent; color:var(--text-dim); font-size:20px; line-height:1; cursor:pointer; }
+
+/* Trainingskalender */
+.kal-nav{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin:6px 0 4px; }
+.kal-nav .iconbtn{ width:44px; height:44px; font-size:30px; line-height:1; }
+.kn-mitte{ display:flex; align-items:center; gap:10px; font-size:18px; flex-wrap:wrap; justify-content:center; }
+.kn-kw{ background:var(--text); color:var(--bg); font-size:12px; font-weight:700; padding:3px 10px; border-radius:999px; letter-spacing:.04em; }
+.kal-summe{ text-align:center; color:var(--text-dim); font-size:14px; margin:0 0 12px; }
+.kal-tag{ display:grid; grid-template-columns:56px minmax(0,1fr); gap:10px; padding:12px 12px; margin:0 0 10px; border-radius:var(--radius); background:var(--surface); border:2px solid transparent; transition:border-color .12s, background .12s; }
+.kal-tag.heute{ border-color:color-mix(in srgb, var(--accent) 55%, transparent); }
+.kal-tag.vorbei{ opacity:.82; }
+
+.kt-kopf{ display:flex; flex-direction:column; align-items:center; gap:6px; padding-top:4px; color:var(--text-dim); font-size:12px; font-weight:600; text-transform:uppercase; }
+.kt-nr{ width:38px; height:38px; display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:18px; color:var(--text); }
+.kal-tag.heute .kt-nr{ background:var(--text); color:var(--bg); }
+.kt-liste{ display:flex; flex-direction:column; gap:8px; min-width:0; }
+.kal-eintrag{ position:relative; display:flex; align-items:center; gap:12px; padding:12px 12px 12px 18px; border-radius:14px; background:var(--surface-2, color-mix(in srgb, var(--text) 6%, var(--surface))); box-shadow:var(--shadow); cursor:pointer; user-select:none; -webkit-user-select:none; touch-action:pan-y; }
+.ke-balken{ position:absolute; left:0; top:0; bottom:0; width:6px; border-radius:14px 0 0 14px; background:var(--kc); }
+.ke-text{ display:flex; flex-direction:column; min-width:0; flex:1; }
+.ke-text b{ font-size:16px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ke-text small{ color:var(--text-dim); font-size:13px; margin-top:2px; }
+.ke-ok{ flex:none; width:40px; height:40px; border-radius:50%; border:2px solid var(--border); background:transparent; color:transparent; display:flex; align-items:center; justify-content:center; padding:0; }
+.ke-ok svg{ width:22px; height:22px; }
+.kal-eintrag.erledigt .ke-ok{ background:#1f9d63; border-color:#1f9d63; color:#fff; }
+.kal-eintrag.erledigt .ke-text b{ text-decoration:line-through; opacity:.7; }
+.kal-eintrag.fehlt{ opacity:.6; }
+.kt-add{ display:flex; align-items:center; gap:8px; align-self:flex-start; padding:10px 6px; border:0; background:none; color:var(--text-dim); font:inherit; font-size:15px; cursor:pointer; }
+.kt-add svg{ width:20px; height:20px; }
+.kal-monat{ margin-bottom:12px; }
+.km-namen, .km-raster{ display:grid; grid-template-columns:repeat(7, minmax(0,1fr)); gap:4px; }
+.km-namen small{ text-align:center; color:var(--text-dim); font-size:12px; padding:4px 0; }
+.km-zelle{ min-height:74px; display:flex; flex-direction:column; align-items:center; gap:6px; padding:8px 2px; border-radius:12px; border:2px solid transparent; background:var(--surface); color:inherit; font:inherit; cursor:pointer; }
+.km-zelle b{ font-size:15px; }
+.km-zelle.aus{ opacity:.45; }
+.km-zelle.heute{ border-color:color-mix(in srgb, var(--accent) 55%, transparent); }
+.km-balken{ display:flex; flex-direction:column; gap:3px; width:76%; }
+.km-balken i{ display:block; height:5px; border-radius:3px; background:var(--kc); }
+.km-balken i.ok{ opacity:.35; }
+.km-balken em{ font-style:normal; font-size:10px; color:var(--text-dim); text-align:center; }
+.km-zelle.gewaehlt{ border-color:var(--text); }
+.kp-titel{ font-weight:600; margin:4px 0 2px; }
+
+/* Meine Woche ↔ Kalender: gleiche Karte, Ring = geplant, Tipp führt in den Kalender */
+.woche-link{ cursor:pointer; }
+.woche-link .wo-chev{ color:var(--text-dim); font-size:22px; line-height:1; margin-left:-4px; }
+.wo-tag.plan i{ background:transparent; box-shadow:inset 0 0 0 2.5px var(--accent); }
+.woche-kal .wo-tag{ cursor:pointer; }
+.woche-kal .wo-tag i{ width:16px; height:16px; }
+.woche-kal .wo-tag small{ font-size:11px; }
+.kal-kopieren{ display:flex; align-items:center; justify-content:center; gap:8px; margin:0 0 14px; }
+.kal-kopieren .ico{ width:18px; height:18px; }
+.kal-heutebtn{ display:flex; align-items:center; gap:6px; height:44px; padding:0 14px; border:0; border-radius:14px; background:var(--surface); color:var(--text); font:inherit; font-size:14px; font-weight:600; cursor:pointer; box-shadow:var(--shadow); }
+.kal-heutebtn svg{ width:20px; height:20px; }
+.kh-mehr{ width:100%; border:0; background:none; color:var(--text-dim); font:inherit; font-size:14px; font-weight:600; padding:10px 6px 2px; cursor:pointer; text-align:center; }
+.run-geplant{ display:flex; flex-direction:column; gap:6px; align-items:stretch; text-align:center; border:2px solid var(--accent); }
+.run-geplant small{ color:var(--text-dim); font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
+.run-geplant b{ font-size:22px; }
+.run-geplant .ghost{ border:0; background:none; color:var(--text-dim); font:inherit; padding:8px; cursor:pointer; }
+.run-ziel{ color:var(--text-dim); font-size:14px; font-weight:600; margin-top:4px; }
+.my-edit{ font-size:20px; }
+/* Körperdaten (Einstellungen): Beschriftung links, Zahl rechts */
+.koerper-feld{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:6px 0; font-size:15px; }
+.koerper-feld input{ width:110px; text-align:right; padding:8px 10px; border-radius:10px; border:1px solid var(--border); background:var(--surface); color:var(--text); font:inherit; }
+/* Band befestigen: Übersicht aller Arten mit Bildern */
+.band-uebersicht .bu-art{ border:1px solid var(--border); border-radius:14px; padding:10px 12px 4px; margin:12px 0; text-align:left; }
+.band-uebersicht .bu-t{ font-weight:700; margin-bottom:6px; }
+
+/* ---------- Fragen & Antworten (Seite Training, 2026-10-19): aufklappbare Fragen mit <details>, Hinweis immer sichtbar ---------- */
+.faq{ margin-top:8px; }
+.faq-hinweis{ background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin:0 0 6px; font-size:14px; line-height:1.5; color:var(--text); }
+.faq-gruppe{ margin:18px 4px 8px; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-dim); }
+.faq-q{ background:var(--surface); border:1px solid var(--border); border-radius:14px; margin:0 0 8px; }
+.faq-q summary{ list-style:none; display:flex; align-items:flex-start; gap:12px; min-height:48px; padding:14px; cursor:pointer; font-weight:600; line-height:1.35; }
+.faq-q summary::-webkit-details-marker{ display:none; }
+.faq-q summary::after{ content:""; flex:none; width:8px; height:8px; margin:6px 2px 0 auto; border-right:2px solid var(--text-dim); border-bottom:2px solid var(--text-dim); transform:rotate(45deg); transition:transform .15s; }
+.faq-q[open] summary::after{ transform:rotate(-135deg); margin-top:10px; }
+.faq-q summary:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:14px; }
+.faq-nr{ flex:none; min-width:22px; color:var(--text-dim); font-variant-numeric:tabular-nums; }
+.faq-a{ padding:0 14px 14px 48px; font-size:15px; line-height:1.55; }
+.faq-a p{ margin:0 0 10px; }
+.faq-a ul{ margin:0 0 10px; padding-left:18px; }
+.faq-a li{ margin-bottom:6px; }
+.faq-a .faq-quellen{ margin:0; font-size:13px; color:var(--text-dim); }
+.faq-verz .faq-a{ padding-left:14px; }
+.faq-refs{ margin:0; padding:0; list-style:none; font-size:13px; line-height:1.5; }
+.faq-refs li{ margin-bottom:10px; }
+.faq-refs a{ color:inherit; text-decoration:underline; word-break:break-all; }
+.faq-refnr{ font-weight:700; }
+@media (prefers-reduced-motion: reduce){ .faq-q summary::after{ transition:none; } }
+
+/* ---------- Einführung (2026-10-19): Sprache, „Über dich“, Schaubild Aufbau ---------- */
+.intro-sprache{ margin-top:18px; width:100%; max-width:280px; }
+.intro-profil{ width:100%; max-width:300px; margin-top:16px; text-align:left; }
+.intro-profil .koerper-feld input[type=text]{ width:150px; text-align:right; padding:8px 10px; border-radius:10px; border:1px solid var(--border); background:var(--surface); color:var(--text); font:inherit; }
+.intro-schaubild{ width:100%; max-width:340px; height:auto; margin:16px 0 4px; }
+.intro-schaubild .sb-kasten{ fill:var(--surface-2); stroke:var(--border); stroke-width:1.2; }
+.intro-schaubild .sb-bloc{ fill:var(--surface); stroke:var(--accent); stroke-width:1.4; }
+.intro-schaubild .sb-linie{ fill:none; stroke:var(--text-dim); stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
+.intro-schaubild text{ fill:var(--text); font-size:11px; }
+.intro-schaubild .sb-t{ font-size:12.5px; font-weight:600; letter-spacing:.02em; }
+.intro-schaubild .sb-bt{ fill:var(--accent); font-size:14px; font-weight:800; letter-spacing:.04em; }
+.intro-schaubild .sb-ex{ fill:var(--text-dim); font-size:11px; }
+.intro-seite .intro-kette{ margin-top:10px; max-width:none; font-size:13px; font-weight:600; color:var(--text-dim); }
+.intro-sheet.kompakt .intro-ico{ width:60px; height:60px; border-radius:18px; margin-bottom:12px; }
+.intro-sheet.kompakt .intro-ico .ico{ width:32px; height:32px; }
+.intro-sheet.kompakt .intro-seite{ padding-bottom:10px; }
+.intro-sheet.kompakt .intro-seite h2{ font-size:22px; margin-bottom:8px; }
+
+/* Muskel: Chips und Figur sind eine Auswahl; Cardio & Ausdauer lässt die Figur orange leuchten (Glow dahinter) */
+.kk-grp-chips{ margin:6px 0 4px; }
+.kk-filter{ position:relative; }
+.kk-filter .kk-paar{ position:relative; z-index:1; }
+.kk-filter.kk-glow::before{ content:""; position:absolute; left:50%; top:50%; width:78%; height:92%; transform:translate(-50%,-50%); border-radius:50%;
+  background:radial-gradient(closest-side, color-mix(in srgb, var(--accent) 70%, transparent), color-mix(in srgb, var(--accent) 22%, transparent) 62%, transparent 100%);
+  filter:blur(16px); opacity:.85; pointer-events:none; z-index:0; }
+/* FAQ: Begriffe kurz erklärt (2026-10-20) */
+.faq-begriffe{ margin:10px 0; padding:10px 12px; border-radius:12px; background:var(--surface-2); }
+.faq-begriffe p{ margin:0 0 6px; font-size:13px; }
+.faq-begriffe dl{ margin:0; font-size:14px; line-height:1.5; }
+.faq-begriffe dt{ font-weight:700; margin-top:6px; }
+.faq-begriffe dd{ margin:0 0 0 0; color:var(--text-dim); }
+.rz.koerper-rz button{ font-size:13.5px; padding-left:4px; padding-right:4px; white-space:nowrap; }
+.tp-name{ margin:4px 0 10px; } .tp-name input{ width:100%; }
+.plan-item .trash-btn, .my-item .trash-btn{ display:none; }
+.plan-kopf-re{ display:flex; align-items:center; gap:6px; }
+/* Arena: Trainingsplan-Karten (zugeklappt, Antippen klappt auf) */
+.pg-liste-karten{ display:flex; flex-direction:column; gap:10px; }
+.pg-karte{ border-radius:20px; background:var(--surface); border:1px solid var(--border); box-shadow:var(--shadow); overflow:hidden; }
+.pg-karte > summary{ display:flex; align-items:center; gap:12px; padding:14px 14px; cursor:pointer; list-style:none; -webkit-tap-highlight-color:transparent; }
+.pg-karte > summary::-webkit-details-marker, .pg-woche > summary::-webkit-details-marker{ display:none; }
+.pg-farben{ display:flex; flex-direction:column; gap:3px; width:6px; align-self:stretch; min-height:34px; }
+.pg-farben i{ flex:1; border-radius:3px; background:var(--border); }
+.pg-kt{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.pg-kt b{ font-size:17px; letter-spacing:-.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pg-kt small{ color:var(--text-dim); font-size:12.5px; }
+.pg-pfeil{ width:22px; height:22px; flex:none; color:var(--text-dim); transition:transform .2s ease; }
+.pg-pfeil svg{ width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+details[open] > summary > .pg-pfeil{ transform:rotate(180deg); }
+.pg-innen{ padding:0 14px 14px; display:flex; flex-direction:column; gap:10px; }
+.pg-name{ width:100%; font-size:15px; font-weight:700; background:color-mix(in srgb, var(--text) 6%, transparent); border:0; border-radius:12px; padding:10px 12px; color:var(--text); }
+.pg-liste{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+.pg-eintrag{ display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:14px; background:color-mix(in srgb, var(--kc, var(--accent)) 12%, transparent); cursor:pointer; -webkit-user-select:none; user-select:none; }
+.pg-eintrag.fehlt{ opacity:.5; }
+.pg-nr{ font-style:normal; font-weight:800; width:26px; height:26px; border-radius:50%; border:2px solid var(--kc, var(--accent)); color:var(--text); box-sizing:border-box; display:flex; align-items:center; justify-content:center; font-size:13px; flex:none; }
+.pg-text{ flex:1; min-width:0; display:flex; flex-direction:column; } .pg-text b{ font-size:15px; } .pg-text small{ color:var(--text-dim); font-size:12.5px; }
+.pg-los{ width:30px; height:30px; flex:none; border-radius:50%; background:color-mix(in srgb, var(--text) 10%, transparent); display:flex; align-items:center; justify-content:center; }
+.pg-los svg{ width:14px; height:14px; fill:currentColor; }
+.pg-plus{ width:100%; padding:11px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:14px; border:1.5px dashed var(--border); background:none; color:var(--text); font:inherit; font-weight:700; cursor:pointer; }
+.pg-woche{ border-top:1px solid var(--border); padding-top:6px; }
+.pg-woche > summary{ display:flex; align-items:center; gap:8px; cursor:pointer; list-style:none; font-weight:700; padding:6px 0; }
+.pg-woche > summary small{ flex:1; text-align:right; color:var(--text-dim); font-weight:500; }
+.pg-woche .kp-chips{ margin:6px 0; }
+.pg-neu{ width:100%; display:flex; align-items:center; justify-content:center; gap:8px; margin-top:14px; border-radius:16px; padding:14px; }
+.pg-leerseite{ text-align:center; color:var(--text-dim); padding:36px 20px; }
+.pg-leerseite svg{ width:56px; height:56px; fill:none; stroke:currentColor; stroke-width:1.5; opacity:.6; }
+.pg-leer{ color:var(--text-dim); font-size:13.5px; padding:6px 2px; }
+.pg-rub{ display:grid; grid-template-columns:repeat(4, 1fr); gap:4px; padding:4px; margin:4px 0 8px; border-radius:14px; background:color-mix(in srgb, var(--text) 8%, transparent); }
+.pg-rub button{ border:0; background:none; color:var(--text); font:inherit; font-size:13px; font-weight:600; padding:8px 2px; border-radius:11px; cursor:pointer; }
+.pg-rub button.active{ background:var(--surface); box-shadow:0 1px 3px rgba(0,0,0,.18); color:var(--accent); }
+.bloc-sheet .kat-gr{ margin:0 0 6px; }
+.bloc-sheet .kat-inhalt{ padding:4px 0 2px; }
+.cover-acts [data-savemy], .cover-acts [data-share], .cover-acts [data-coverhide]{ display:none; }
+.lib-card [data-womore]{ display:none; }
+.nm-weg{ display:none; }
+.pg-figs{ display:flex; align-items:center; gap:2px; margin-top:6px; min-height:34px; }
+.pg-fig{ width:34px; height:34px; flex:none; color:var(--text); }
+.pg-mehr{ font-style:normal; font-size:12px; color:var(--text-dim); margin-left:4px; }
+.bloc-sheet .bloc-opt .pg-figs{ width:100%; flex-direction:row; flex-wrap:wrap; }
+/* Training im Trainingsplan: kleine Zeile oben */
+.pl-prog, .satz-root .pl-prog{ display:flex; align-items:center; gap:6px; margin:6px auto 0; padding:5px 12px; border-radius:99px; border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.12); color:#fff; font:inherit; font-size:12.5px; font-weight:700; cursor:pointer; position:relative; z-index:3; }
+.pl-prog svg{ width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2; }
+.pg-go{ width:100%; border-radius:14px; padding:13px; display:flex; align-items:center; justify-content:center; gap:8px; font-weight:800; letter-spacing:.04em; }
+:root[data-layout="new"] body.mit-tabs .topbar .back.zeigen{ display:flex; }
+.pg-sek{ margin:0 0 6px; } .pg-sek > summary{ display:flex; align-items:center; gap:8px; padding:10px 4px; cursor:pointer; list-style:none; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); }
+.pg-sek > summary::-webkit-details-marker{ display:none; } .pg-sek > summary b{ flex:1; font-weight:800; }
+.bloc-sheet .bloc-opt[style*="--oc"]{ border:2px solid var(--oc); }   /* Umrandung in der Farbe des Ortes: Fitnessstudio rot, Freiluft blau, Mobility & Stretch grün (direkte Unterscheidung wie bei den Übungskarten) */
+
+/* Eigene Übungen: Symbol der Kategorie statt Figur */
+.ex-symbol{ display:flex; align-items:center; justify-content:center; color:var(--cat, var(--text)); }
+.ex-symbol svg{ width:100%; height:100%; }
+.ex-symbol.big{ width:110px; height:110px; margin:6px auto; }
+.ex-symbol.mini{ width:34px; height:34px; margin:0 auto 4px; }
+.fig-bild .st-ohne svg{ width:46px; height:46px; }
+.fig-karte .st-ohne{ color:var(--cat, var(--text)); opacity:.9; }

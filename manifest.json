@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "BLOC – Modular Training Builder",
+  "short_name": "BLOC",
+  "description": "Intervall-Timer und Trainings-Baukasten für Workouts. Keine Konten, kein Tracking – alle Daten bleiben auf dem Gerät.",
+  "lang": "de",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#121214",
+  "theme_color": "#121214",
+  "categories": ["health", "fitness", "sports"],
+  "icons": [
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ]
+}

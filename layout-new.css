@@ -1,0 +1,1373 @@
+/* BLOC - Aussehen „New“ (seit 2026-10-15), zusätzlich zu „Klassik“.
+   Alles steht unter :root[data-layout="new"]; ohne das Attribut ändert sich nichts. Farben kommen weiter aus den Designs
+   (System, Hell, Dunkel), hier ändern sich nur Formen, Flächen und die untere Leiste.
+   Grundsätze: ruhige Flächen, große Rundungen mit einer kleinen Ecke oben links, Milchglas nur auf der unteren Leiste (mit deckendem
+   Rückfall), dazu die Navigation „Heute · Training · Kalender · Fortschritt“ mit Hauptknopf (js/03-router.js). Funktionen bleiben. */
+
+:root[data-layout="new"]{
+  --radius:24px;
+  --ecke:8px;                       /* kleine Ecke oben links */
+  --nl-linie:color-mix(in srgb, var(--text) 9%, transparent);
+}
+
+/* ---------- Flächen ---------- */
+:root[data-layout="new"] .card,
+:root[data-layout="new"] .list-item,
+:root[data-layout="new"] .area-tile,
+:root[data-layout="new"] .installtip,
+:root[data-layout="new"] .woche{
+  border:1px solid var(--nl-linie);
+  border-top-left-radius:var(--ecke);
+}
+:root[data-layout="new"] .list-item{ padding:16px 18px; }
+
+/* ---------- Knöpfe ---------- */
+/* :where: Spezifität 0, damit Kompaktregeln (Knopfleisten in Studio, Plan, Lauf) weiter gewinnen */
+:where(:root[data-layout="new"]) .btn{ border-radius:28px; border-top-left-radius:var(--ecke); padding:18px 22px; }
+:root[data-layout="new"] .btn-secondary{ border:1px solid var(--nl-linie); }
+:root[data-layout="new"] .playbtn{ border-radius:50%; }
+:root[data-layout="new"] .iconbtn{ width:52px; height:52px; border-radius:50%; border:1px solid var(--nl-linie); }
+:root[data-layout="new"] .fab{ border-radius:50%; width:64px; height:64px; }
+
+/* ---------- Auswahl: Pillen statt Kästen ---------- */
+:root[data-layout="new"] .seg-row button,
+:root[data-layout="new"] .theme-pick button,
+:root[data-layout="new"] .lib-chip,
+:root[data-layout="new"] .fc-chip,
+:root[data-layout="new"] .fc-seg button{ border-radius:999px; }
+:root[data-layout="new"] .chip{ border:1px solid var(--nl-linie); }
+
+/* ---------- Überschriften ---------- */
+:root[data-layout="new"] .section-title{ letter-spacing:.09em; font-weight:600; }
+
+/* ---------- Wochenpunkte: weiß = frei, orange = trainiert, Ring = geplant ---------- */
+:root[data-layout="new"] .wo-tag i{ width:13px; height:13px; background:#fff; box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--text) 45%, transparent); }
+:root[data-layout="new"] .woche-kal .wo-tag i{ width:16px; height:16px; }
+:root[data-layout="new"] .wo-tag small{ font-size:11px; }
+:root[data-layout="new"] .wo-tag.an i{ background:var(--accent); box-shadow:none; }
+:root[data-layout="new"] .wo-tag.plan i{ background:transparent; box-shadow:inset 0 0 0 2.5px var(--accent); }
+:root[data-layout="new"] .wo-tag.heute i{ outline:2px solid var(--text); outline-offset:2px; }
+
+/* ---------- Untere Leiste: schwebende Pille, aktiver Reiter in Orange ---------- */
+/* Die Leiste besteht aus der Pille mit den vier Reitern und - je nach Seite - einem runden Hauptknopf rechts daneben (wie im Entwurf) */
+:root[data-layout="new"] .tabbar{
+  left:50%; right:auto; transform:translateX(-50%);
+  width:calc(100% - 28px); max-width:532px;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  padding:0; gap:10px; align-items:center; justify-content:stretch;
+  border:0; background:none; box-shadow:none;
+}
+:root[data-layout="new"] .tabbar .pille{
+  flex:1; min-width:0; display:flex; justify-content:space-around; gap:2px; padding:6px;
+  border:1px solid color-mix(in srgb, var(--text) 14%, transparent);
+  border-radius:999px;
+  background:var(--surface); border-color:var(--border);   /* Rückfall für Browser ohne color-mix */
+  background:color-mix(in srgb, var(--surface) 96%, transparent);   /* ohne Blur deckend genug für den Kontrast */
+  box-shadow:0 10px 30px rgba(0,0,0,.18);
+}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  :root[data-layout="new"] .tabbar .pille{
+    background:color-mix(in srgb, var(--surface) 91%, transparent);
+    -webkit-backdrop-filter:blur(20px) saturate(150%); backdrop-filter:blur(20px) saturate(150%);
+  }
+}
+@media (prefers-reduced-transparency: reduce){
+  :root[data-layout="new"] .tabbar .pille{ background:var(--surface); -webkit-backdrop-filter:none; backdrop-filter:none; }
+}
+:root[data-layout="new"] .tabbar .hauptknopf{
+  flex:none; width:64px; height:64px; border-radius:50%; border:0; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--accent-ink, var(--accent)); color:var(--accent-text); box-shadow:0 10px 28px rgba(0,0,0,.28);
+}
+:root[data-layout="new"] .tabbar .hauptknopf:active{ transform:scale(.94); }
+:root[data-layout="new"] .tabbar .hauptknopf svg{ width:28px; height:28px; }
+:root[data-layout="new"] .tabbar .tab{ flex:1; min-width:0; max-width:none; border-radius:999px; padding:8px 2px 7px; }
+:root[data-layout="new"] .tabbar .tab > span:last-child{ max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+@media (max-width:359px){ :root[data-layout="new"] .tabbar .tab{ font-size:10px; } }
+/* Hauptseiten haben in New keinen Zurück-Pfeil (sie sind über die Leiste erreichbar) */
+:root[data-layout="new"] body.mit-tabs .topbar .back{ display:none; }
+:root[data-layout="new"] .tabbar .tab.active{ color:var(--accent-ink, var(--accent)); background:color-mix(in srgb, var(--accent) 11%, transparent); }   /* accent-ink: in Hell dunkleres Orange (Kontrast) */
+:root[data-layout="new"] .tabbar .tab.active > span:last-child{ font-weight:700; }
+:root[data-layout="new"] body.mit-tabs #app{ padding-bottom:calc(112px + env(safe-area-inset-bottom)); }
+:root[data-layout="new"] body.mit-tabs .fab{ bottom:calc(98px + env(safe-area-inset-bottom)); }
+:root[data-layout="new"] body.mit-tabs .fab-menu{ bottom:calc(176px + env(safe-area-inset-bottom)); }
+
+/* ---------- Fenster (Sheets) ---------- */
+:root[data-layout="new"] .confirm-sheet{ border-radius:32px 32px 0 0; border-top-left-radius:32px; border:1px solid var(--nl-linie); border-bottom:0; }
+
+@media (prefers-reduced-motion: reduce){
+  :root[data-layout="new"] *{ transition-duration:0s !important; }
+}
+
+/* ---------- Seite „Training“ und Workout-Builder auf Heute (nur New) ---------- */
+:root[data-layout="new"] .topbar .kopf-sym{ width:48px; height:48px; margin-left:2px; }
+:root[data-layout="new"] .suchfeld-neu{
+  display:flex; align-items:center; gap:12px; width:100%; margin:6px 0 16px; padding:15px 18px;
+  border:1px solid var(--nl-linie); border-radius:999px; background:var(--surface); color:var(--text-dim);
+  font:inherit; font-size:15px; text-align:left; cursor:pointer; box-shadow:var(--shadow);
+}
+:root[data-layout="new"] .suchfeld-neu svg{ width:20px; height:20px; flex:none; color:var(--text); }
+
+/* Bereiche als Fotokarten */
+:root[data-layout="new"] .training-seite .area-bereiche{ gap:0; }
+:root[data-layout="new"] .training-seite .area-gruppe{ background:none; box-shadow:none; border-radius:0; overflow:visible; display:grid; gap:12px; }
+:root[data-layout="new"] .training-seite .area-tile.zeile{
+  position:relative; isolation:isolate; overflow:hidden; min-height:124px; padding:16px 16px; gap:14px; align-items:flex-end;
+  border:1px solid var(--nl-linie); border-radius:var(--radius); border-top-left-radius:var(--ecke); color:#fff;
+  background-color:#2a2a2e; background-size:cover; background-position:50% 45%;
+}
+:root[data-layout="new"] .training-seite .area-tile.zeile::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(180deg, rgba(8,9,11,.20) 0%, rgba(8,9,11,.50) 40%, rgba(8,9,11,.86) 100%);
+}
+:root[data-layout="new"] .training-seite .area-tile.zeile + .area-tile.zeile{ border-top:1px solid var(--nl-linie); }
+:root[data-layout="new"] .training-seite .area-tile .at-ico{ background:rgba(255,255,255,.16); color:#fff; border:1px solid rgba(255,255,255,.26); }
+:root[data-layout="new"] .training-seite .area-tile .at-name{ color:#fff; font-size:18px; }
+:root[data-layout="new"] .training-seite .area-tile .at-sub{ color:rgba(255,255,255,.92); font-size:13px; }
+:root[data-layout="new"] .training-seite .area-tile .at-name, :root[data-layout="new"] .training-seite .area-tile .at-sub{ text-shadow:0 1px 6px rgba(0,0,0,.55); }
+:root[data-layout="new"] .training-seite .area-tile .at-ico{ box-shadow:none; }
+:root[data-layout="new"] .training-seite .area-tile .at-chev{ color:#fff; }
+:root[data-layout="new"] .training-seite .area-tile[data-bereich="katalog"]{ background-image:url("img/neu-workout.jpg"); }
+:root[data-layout="new"] .training-seite .area-tile[data-bereich="warm"]{ background-image:url("img/neu-mobility.jpg"); }
+:root[data-layout="new"] .training-seite .area-tile[data-bereich="intervall"]{ background-image:url("img/neu-timer.jpg"); }
+:root[data-layout="new"] .training-seite .area-tile[data-bereich="run"]{ background-image:url("img/bereich-run.jpg"); background-position:50% 50%; }
+
+/* Workout-Builder */
+:root[data-layout="new"] .builder-neu{
+  position:relative; isolation:isolate; overflow:hidden; min-height:200px; padding:18px; margin:0 0 14px; color:#fff;
+  border:1px solid var(--nl-linie); border-radius:var(--radius); border-top-left-radius:var(--ecke); box-shadow:var(--shadow);
+  background:#2a2a2e;
+  display:flex; flex-direction:column; gap:14px;
+}
+:root[data-layout="new"] .builder-neu::after{ content:""; position:absolute; inset:-6px; z-index:-2; background:url("img/neu-builder.webp") 50% 38%/cover; filter:blur(1.5px); }
+:root[data-layout="new"] .builder-neu::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(180deg, rgba(8,9,11,.14) 0%, rgba(8,9,11,.36) 45%, rgba(8,9,11,.80) 100%);
+}
+:root[data-layout="new"] .bn-text{ display:flex; flex-direction:column; gap:4px; margin-top:auto; }
+:root[data-layout="new"] .bn-kicker{ font-size:12px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:rgba(255,255,255,.82); }
+:root[data-layout="new"] .bn-text b{ font-size:22px; line-height:1.2; }
+:root[data-layout="new"] .bn-text small{ font-size:13.5px; color:rgba(255,255,255,.86); }
+:root[data-layout="new"] .bn-knoepfe{ display:flex; gap:10px; }
+:root[data-layout="new"] .bn-knoepfe .btn{ margin-top:0; padding:14px 12px; font-size:15px; }
+:root[data-layout="new"] .bn-knoepfe .btn-secondary{ background:rgba(255,255,255,.16); color:#fff; border:1px solid rgba(255,255,255,.3); }
+
+/* Kopfblock auf Heute: oben links dunkler, damit das Logo ruhig steht; Farbverlauf kommt von rechts unten */
+
+/* ---------- Heute wie im Entwurf: Foto-Kopf, Woche darüber, „Heute geplant“, Favoriten als Fotokarten ---------- */
+:root[data-layout="new"] .kopf-neu{
+  position:relative; isolation:isolate; overflow:hidden; margin:0 -16px 0; min-height:300px;
+  padding:calc(env(safe-area-inset-top) + 14px) 20px 58px; display:flex; flex-direction:column; justify-content:space-between;
+  background:var(--bg); color:#fff;
+}
+:root[data-layout="new"] .kn-bild{ position:absolute; inset:0; z-index:-3; width:100%; height:100%; object-fit:cover; object-position:50% 38%; }
+:root[data-layout="new"] .kn-tint{ position:absolute; inset:0; z-index:-2;
+  background:linear-gradient(to top left, rgba(255,86,44,.82) 0%, rgba(255,140,60,.5) 34%, rgba(255,160,80,0) 72%); }
+:root[data-layout="new"] .kopf-neu::before{ content:""; position:absolute; inset:0; z-index:-1;
+  background:radial-gradient(ellipse 85% 62% at 0% 0%, rgba(6,7,9,.82) 0%, rgba(6,7,9,.58) 38%, rgba(6,7,9,0) 78%); }
+:root[data-layout="new"] .kopf-neu::after{ content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(180deg, rgba(8,9,11,0) 55%, var(--bg) 100%); }
+:root[data-layout="new"] .kn-zeile{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+:root[data-layout="new"] .kn-sym{ display:flex; gap:8px; }
+:root[data-layout="new"] .kn-sym .iconbtn{ width:48px; height:48px; margin:0; background:rgba(20,22,26,.46); color:#fff; border:1px solid rgba(255,255,255,.2);
+  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
+:root[data-layout="new"] .marke-neu b{ display:block; font-family:"Helvetica Neue","Arial Black",Roboto,Arial,sans-serif; font-weight:900;
+  font-size:clamp(42px,12.5vw,56px); line-height:.95; letter-spacing:-.035em; color:#ff5a36; }
+:root[data-layout="new"] .marke-neu small{ display:block; margin-top:6px; font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.9); }
+:root[data-layout="new"] .kn-gruss{ display:flex; flex-direction:column; gap:2px; margin-top:auto; }
+:root[data-layout="new"] .kn-gruss span{ font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.82); }
+:root[data-layout="new"] .kn-gruss b{ font-size:24px; line-height:1.2; }
+
+:root[data-layout="new"] .woche-neu{ position:relative; z-index:2; margin:-44px 0 14px; }
+:root[data-layout="new"] .woche-neu .woche{
+  margin:0; background:color-mix(in srgb, var(--surface) 80%, transparent); border:1px solid var(--nl-linie);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); box-shadow:0 6px 18px rgba(0,0,0,.16);
+}
+
+:root[data-layout="new"] .geplant-neu{ margin:0 0 6px; }
+:root[data-layout="new"] .gn-main{
+  display:flex; align-items:center; gap:14px; width:100%; padding:14px 16px; text-align:left; font:inherit; color:var(--text); cursor:pointer;
+  background:var(--surface); border:1px solid var(--nl-linie); border-radius:var(--radius); border-top-left-radius:var(--ecke); box-shadow:var(--shadow);
+}
+:root[data-layout="new"] .gn-play{ flex:none; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:var(--accent-ink, var(--accent)); color:var(--accent-text); font-size:18px; }
+:root[data-layout="new"] .gn-text{ flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+:root[data-layout="new"] .gn-text small{ font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--text-dim); }
+:root[data-layout="new"] .gn-text b{ font-size:17px; line-height:1.25; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+:root[data-layout="new"] .gn-text span{ font-size:13px; color:var(--text-dim); }
+:root[data-layout="new"] .gn-chev{ flex:none; color:var(--text-dim); display:flex; }
+
+:root[data-layout="new"] .fav-fotos{ display:flex; gap:12px; overflow-x:auto; margin:0 -16px 8px; padding:0 16px 4px; scrollbar-width:none; scroll-snap-type:x proximity; scroll-padding-left:16px; }
+:root[data-layout="new"] .fav-fotos::-webkit-scrollbar{ display:none; }
+:root[data-layout="new"] .fav-foto{
+  position:relative; isolation:isolate; overflow:hidden; flex:none; width:156px; height:196px; padding:12px; scroll-snap-align:start;
+  display:flex; flex-direction:column; justify-content:flex-end; color:#fff; cursor:pointer;
+  background-color:#2a2a2e; background-size:cover; background-position:50% 45%;
+  border:1px solid var(--nl-linie); border-radius:var(--r-m, 20px); border-top-left-radius:var(--ecke);
+}
+:root[data-layout="new"] .fav-foto::before{ content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(180deg, rgba(8,9,11,.12) 0%, rgba(8,9,11,.45) 50%, rgba(8,9,11,.86) 100%); }
+:root[data-layout="new"] .fav-foto[aria-disabled]{ opacity:.5; }
+:root[data-layout="new"] .ff-stern{ position:absolute; top:10px; right:10px; width:18px; height:18px; color:#f0a020; display:flex; }
+:root[data-layout="new"] .ff-stern svg{ width:18px; height:18px; }
+:root[data-layout="new"] .ff-text{ display:flex; flex-direction:column; gap:2px; min-width:0; text-shadow:0 1px 6px rgba(0,0,0,.55); }
+:root[data-layout="new"] .ff-bereich{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.85); }
+:root[data-layout="new"] .ff-name{ font-size:16px; line-height:1.2; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+:root[data-layout="new"] .ff-sub{ font-size:12.5px; color:rgba(255,255,255,.9); }
+
+/* ---------- Training: ein Hauch Farbe im bisherigen dunklen Stil - Symbolfeld und ein zarter Schimmer pro Bereich ---------- */
+:root[data-layout="new"] .training-seite .area-tile[data-bereich="katalog"]{ --nc:#ff5a36; }
+:root[data-layout="new"] .training-seite .area-tile[data-bereich="warm"]{ --nc:#1fa56f; }
+:root[data-layout="new"] .training-seite .area-tile[data-bereich="intervall"]{ --nc:#2a8fe0; }
+:root[data-layout="new"] .training-seite .area-tile[data-bereich="run"]{ --nc:#8a6cf0; }
+:root[data-layout="new"] .training-seite .area-tile.zeile::before{
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--nc, #444) 20%, transparent) 0%, color-mix(in srgb, var(--nc, #444) 0%, transparent) 70%),
+    linear-gradient(180deg, rgba(8,9,11,.20) 0%, rgba(8,9,11,.50) 40%, rgba(8,9,11,.86) 100%);
+}
+:root[data-layout="new"] .training-seite .area-tile .at-ico{
+  background:color-mix(in srgb, var(--nc, #fff) 78%, #000); color:#fff; border:1px solid rgba(255,255,255,.3); box-shadow:none;
+}
+
+/* Favoriten: gleiche Bereichsfarben, nur als zarter Schimmer von unten */
+:root[data-layout="new"] .fav-foto[data-art="tp"], :root[data-layout="new"] .fav-foto[data-art="st"]{ --nc:#ff5a36; }
+:root[data-layout="new"] .fav-foto[data-art="ws"]{ --nc:#1fa56f; }
+:root[data-layout="new"] .fav-foto[data-art="ti"]{ --nc:#2a8fe0; }
+:root[data-layout="new"] .fav-foto[data-art="rep"]{ --nc:#d99a12; }
+:root[data-layout="new"] .fav-foto::before{
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--nc, #444) 0%, transparent) 40%, color-mix(in srgb, var(--nc, #444) 22%, transparent) 100%),
+    linear-gradient(180deg, rgba(8,9,11,.12) 0%, rgba(8,9,11,.45) 50%, rgba(8,9,11,.86) 100%);
+}
+/* Symbolfelder: einfarbig, nur Workout (orange) und Mobility (grün) behalten ihre Farbe */
+:root[data-layout="new"] .training-seite .area-tile[data-bereich="intervall"] .at-ico,
+:root[data-layout="new"] .training-seite .area-tile[data-bereich="run"] .at-ico{
+  background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.26);
+}
+
+/* ---------- Minimal: leiser, nach der Durchsicht des UX-Designers (Fassung 2026-10-16-10) ----------
+   Ein Foto-Verlauf, Schatten nur für Schwebendes (Pille, Hauptknopf), keine Ränder auf Fotos, kein Textschatten,
+   Farbe nur im Orange und bei Workout und Mobility. */
+:root[data-layout="new"]{
+  --foto-fuss:linear-gradient(180deg, rgba(8,9,11,0) 0%, rgba(8,9,11,.55) 55%, rgba(8,9,11,.80) 100%);
+}
+:root[data-layout="new"] .training-seite .area-tile.zeile::before,
+:root[data-layout="new"] .fav-foto::before,
+:root[data-layout="new"] .builder-neu::before{ background:var(--foto-fuss); }
+:root[data-layout="new"] .training-seite .area-tile.zeile,
+:root[data-layout="new"] .fav-foto,
+:root[data-layout="new"] .builder-neu{ border:0; box-shadow:none; }
+:root[data-layout="new"] .fav-foto{ border-radius:var(--radius); border-top-left-radius:var(--ecke); }
+:root[data-layout="new"] .training-seite .area-tile.zeile{ min-height:112px; }
+:root[data-layout="new"] .ff-stern{ color:rgba(255,255,255,.9); }
+:root[data-layout="new"] .ff-text,
+:root[data-layout="new"] .training-seite .area-tile .at-name,
+:root[data-layout="new"] .training-seite .area-tile .at-sub{ text-shadow:none; }
+:root[data-layout="new"] .training-seite .area-tile .at-chev{ background:none; width:auto; height:auto; border-radius:0; }
+
+/* Symbolfelder: nur Workout (orange) und Mobility (grün) farbig, die übrigen ein ruhiges neutrales Feld */
+:root[data-layout="new"] .training-seite .area-tile .at-ico{ border:0; background:rgba(255,255,255,.14); box-shadow:none; }
+:root[data-layout="new"] .training-seite .area-tile[data-bereich="katalog"] .at-ico{ background:color-mix(in srgb, #ff5a36 78%, #000); }
+:root[data-layout="new"] .training-seite .area-tile[data-bereich="warm"] .at-ico{ background:color-mix(in srgb, #1fa56f 78%, #000); }
+
+/* Heute: Kopf mit zwei Lagen, Kopfsymbole ohne Blur, Woche ohne Glas, nur ein gefüllter Kreis (der Hauptknopf) */
+:root[data-layout="new"] .kn-tint{ background:linear-gradient(to top left, rgba(255,90,54,.45) 0%, rgba(255,90,54,0) 55%); }
+:root[data-layout="new"] .kopf-neu::before{ background:radial-gradient(ellipse 85% 62% at 0% 0%, rgba(6,7,9,.66) 0%, rgba(6,7,9,.40) 40%, rgba(6,7,9,0) 78%); }
+:root[data-layout="new"] .kopf-neu::after{ background:linear-gradient(180deg, rgba(8,9,11,0) 40%, rgba(8,9,11,.6) 78%, var(--bg) 100%); }
+:root[data-layout="new"] .kn-sym .iconbtn{ -webkit-backdrop-filter:none; backdrop-filter:none; background:rgba(20,22,26,.55); border:0; }
+:root[data-layout="new"] .woche-neu .woche{ background:var(--surface); -webkit-backdrop-filter:none; backdrop-filter:none; box-shadow:none; }
+:root[data-layout="new"] .gn-main, :root[data-layout="new"] .suchfeld-neu{ box-shadow:none; }
+:root[data-layout="new"] .gn-play{ width:auto; height:auto; background:none; color:var(--accent-ink, var(--accent)); font-size:22px; }
+:root[data-layout="new"] .builder-neu::after{ inset:0; filter:none; }
+
+
+/* ---------- Timer-Seite wie im Entwurf: Foto-Kopf, große Abschnittstitel, flache Zeilen mit großem Play-Kreis ---------- */
+:root[data-layout="new"] .kopf-bereich{
+  position:relative; isolation:isolate; overflow:hidden; margin:0 -16px 6px; min-height:228px;
+  padding:calc(env(safe-area-inset-top) + 12px) 16px 18px; display:flex; flex-direction:column; justify-content:space-between;
+  border-radius:0 0 var(--r-sheet, 28px) var(--r-sheet, 28px); background:var(--surface); color:#fff;
+}
+:root[data-layout="new"] .kb-bild{ position:absolute; inset:0; z-index:-2; width:100%; height:100%; object-fit:cover; object-position:50% 40%; }
+:root[data-layout="new"] .kopf-bereich::after{ content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(180deg, rgba(8,9,11,.25) 0%, rgba(8,9,11,0) 35%, rgba(8,9,11,.72) 100%); }
+:root[data-layout="new"] .kb-zeile{ display:flex; justify-content:space-between; }
+:root[data-layout="new"] .kb-rund{ width:48px; height:48px; border-radius:50%; background:rgba(20,22,26,.55); color:#fff; border:0; box-shadow:none; }
+:root[data-layout="new"] .kb-text{ display:flex; flex-direction:column; gap:4px; }
+:root[data-layout="new"] .kb-kicker{ font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.88); }
+:root[data-layout="new"] .kb-text h1{ margin:0; font-size:34px; line-height:1.1; letter-spacing:-.02em; }
+
+:root[data-layout="new"] .timer-panel{ display:flex; flex-direction:column; }
+:root[data-layout="new"] .timer-panel .page-hint{ order:99; margin-top:18px; font-size:13px; color:var(--text-dim); }
+:root[data-layout="new"] .timer-panel .section-title{
+  font-size:22px; font-weight:700; letter-spacing:-.01em; text-transform:none; color:var(--text); margin:24px 2px 8px;
+}
+:root[data-layout="new"] .timer-panel .list-item.entry{
+  background:none; box-shadow:none; border:0; border-radius:0; border-bottom:1px solid var(--nl-linie); margin:0; padding:12px 2px; gap:14px;
+}
+:root[data-layout="new"] .timer-panel .list-item.entry:last-of-type{ border-bottom:0; }
+:root[data-layout="new"] .timer-panel .playbtn{ width:52px; height:52px; font-size:20px; background:var(--text); color:var(--bg); }
+:root[data-layout="new"] .timer-panel [data-playblock]{ width:44px; height:44px; font-size:17px; background:color-mix(in srgb, var(--text) 10%, transparent); color:var(--text); }
+:root[data-layout="new"] .timer-panel .name{ font-size:17px; }
+:root[data-layout="new"] .timer-panel .fav-empty{ border-radius:var(--radius); border-top-left-radius:var(--ecke); }
+:root[data-layout="new"] .kb-rechts{ display:flex; gap:8px; }
+:root[data-layout="new"] .kb-rechts .iconbtn:not(.kb-rund), :root[data-layout="new"] .kb-rechts .hint-btn{ width:48px; height:48px; border-radius:50%; background:rgba(20,22,26,.55); color:#fff; border:0; box-shadow:none; }
+
+/* ---------- Reiter als Pille (Mobility, Workout) wie im Entwurf ---------- */
+:root[data-layout="new"] .rz{ gap:2px; padding:4px; margin:12px 0 12px; border:1px solid var(--nl-linie); border-radius:999px;
+  background:color-mix(in srgb, var(--text) 5%, transparent); }
+:root[data-layout="new"] .rz button{ border-radius:999px; padding:11px 6px; font-size:14.5px; }
+:root[data-layout="new"] .rz button.active{ background:color-mix(in srgb, var(--accent) 16%, var(--surface)); color:var(--text); font-weight:700;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent); }
+:root[data-layout="new"] .rz button.active::after{ display:none; }
+/* Karten dieser Seiten: eine Spur größer gerundet mit der kleinen Ecke, ohne Schatten */
+:root[data-layout="new"] .lib-card, :root[data-layout="new"] .list-item.entry.lib-card{ box-shadow:none; }
+:root[data-layout="new"] .kopf-bereich ~ .bereich-bild{ display:none; }   /* der Foto-Kopf ersetzt das Bild der Seite */
+
+/* Favoriten auf Heute: etwas kleinere Fotokarten (Rückmeldung) */
+:root[data-layout="new"] .fav-foto{ width:132px; height:156px; padding:10px; }
+:root[data-layout="new"] .fav-fotos{ gap:10px; }
+:root[data-layout="new"] .ff-name{ font-size:15px; -webkit-line-clamp:2; }
+:root[data-layout="new"] .ff-sub{ font-size:12px; }
+:root[data-layout="new"] .ff-stern{ top:8px; right:8px; width:16px; height:16px; }
+:root[data-layout="new"] .ff-stern svg{ width:16px; height:16px; }
+
+/* Heute: Kopf mit Foto etwas niedriger (Rückmeldung) */
+:root[data-layout="new"] .kopf-neu{ min-height:228px; padding-bottom:50px; }
+:root[data-layout="new"] .kn-gruss b{ font-size:22px; }
+:root[data-layout="new"] .woche-neu{ margin-top:-38px; }
+
+/* Meine Woche auf Heute: weniger tief ins Foto hinein, dafür etwas größer */
+:root[data-layout="new"] .woche-neu{ margin-top:-18px; }
+:root[data-layout="new"] .woche-neu .woche{ padding:16px 18px; gap:14px; }
+:root[data-layout="new"] .woche-neu .wo-titel{ font-size:16px; }
+:root[data-layout="new"] .woche-neu .wo-summe{ font-size:13.5px; }
+:root[data-layout="new"] .woche-neu .wo-tag{ gap:5px; }
+:root[data-layout="new"] .woche-neu .wo-tag i{ width:17px; height:17px; }
+:root[data-layout="new"] .woche-neu .wo-tag small{ font-size:11.5px; }
+:root[data-layout="new"] .woche-neu .wo-tage{ gap:8px; }
+
+/* ---------- Mehr Luft zwischen den Karten (Training) ---------- */
+:root[data-layout="new"] .training-seite .area-gruppe{ gap:20px; }
+
+/* ---------- Run-Seite: so ruhig wie im Entwurf - keine Karte um die Zahl, flache Verlaufszeilen ---------- */
+:root[data-layout="new"] .run-hero{ background:none; border:0; box-shadow:none; padding:10px 0 6px; margin-bottom:14px; }
+:root[data-layout="new"] .run-gross{ margin:6px 0 10px; }
+:root[data-layout="new"] .run-item.list-item.entry{
+  background:none; box-shadow:none; border:0; border-radius:0; border-bottom:1px solid var(--nl-linie); margin:0; padding:14px 2px;
+}
+:root[data-layout="new"] .trash-btn{ color:var(--text-dim); }
+:root[data-layout="new"] .timer-panel .trash-btn{ color:var(--text-dim); }
+
+/* Heute, Kopf im hellen Modus (Hell oder System bei hellem Gerät): helles Foto statt des dunklen Studios, Schrift dunkel, Verlauf nach unten in die helle Fläche.
+   Zwei gleiche Regelsätze, weil „System“ kein data-theme setzt und nur per prefers-color-scheme erkannt wird. */
+:root[data-layout="new"] .kn-hell{ display:none; }
+:root[data-layout="new"][data-theme="light"] .kn-hell{ display:block; object-position:50% 76%; }
+:root[data-layout="new"][data-theme="light"] .kn-bild:not(.kn-hell){ display:none; }
+:root[data-layout="new"][data-theme="light"] .kopf-neu{ color:var(--text); }
+:root[data-layout="new"][data-theme="light"] .kn-tint{ background:linear-gradient(to top left, rgba(255,90,54,.30) 0%, rgba(255,90,54,0) 52%); }
+:root[data-layout="new"][data-theme="light"] .kopf-neu::before{ background:radial-gradient(ellipse 85% 62% at 0% 0%, rgba(255,255,255,.62) 0%, rgba(255,255,255,.3) 42%, rgba(255,255,255,0) 78%), radial-gradient(ellipse 75% 45% at 0% 80%, rgba(255,255,255,.72) 0%, rgba(255,255,255,.4) 50%, rgba(255,255,255,0) 100%); }
+:root[data-layout="new"][data-theme="light"] .kopf-neu::after{ background:linear-gradient(180deg, rgba(245,245,242,0) 45%, rgba(245,245,242,.7) 80%, var(--bg) 100%); }
+:root[data-layout="new"][data-theme="light"] .marke-neu small,
+:root[data-layout="new"][data-theme="light"] .kn-gruss span{ color:var(--text); opacity:.78; }
+@media (prefers-color-scheme: light){
+  :root[data-layout="new"]:not([data-theme]) .kn-hell{ display:block; object-position:50% 76%; }
+  :root[data-layout="new"]:not([data-theme]) .kn-bild:not(.kn-hell){ display:none; }
+  :root[data-layout="new"]:not([data-theme]) .kopf-neu{ color:var(--text); }
+  :root[data-layout="new"]:not([data-theme]) .kn-tint{ background:linear-gradient(to top left, rgba(255,90,54,.30) 0%, rgba(255,90,54,0) 52%); }
+  :root[data-layout="new"]:not([data-theme]) .kopf-neu::before{ background:radial-gradient(ellipse 85% 62% at 0% 0%, rgba(255,255,255,.62) 0%, rgba(255,255,255,.3) 42%, rgba(255,255,255,0) 78%), radial-gradient(ellipse 75% 45% at 0% 80%, rgba(255,255,255,.72) 0%, rgba(255,255,255,.4) 50%, rgba(255,255,255,0) 100%); }
+  :root[data-layout="new"]:not([data-theme]) .kopf-neu::after{ background:linear-gradient(180deg, rgba(245,245,242,0) 45%, rgba(245,245,242,.7) 80%, var(--bg) 100%); }
+  :root[data-layout="new"]:not([data-theme]) .marke-neu small,
+  :root[data-layout="new"]:not([data-theme]) .kn-gruss span{ color:var(--text); opacity:.78; }
+}
+
+/* ---------- Hell (2026-10-16): Karten auf Training und Favoriten als helle Karte - Foto oben, unten warm-heller Verlauf, dunkle Schrift;
+   dazu helle Fotos aus FOTO_POOL_HELL (js/03-router.js). Baukasten und Titelbilder bleiben unveraendert. "System" hat kein data-theme,
+   deshalb steht jede Regel zweimal (data-theme="light" und prefers-color-scheme). Dazu Lesbarkeit im Heute-Kopf. ---------- */:root[data-layout="new"][data-theme="light"] .training-seite .area-tile.zeile::before{ background:linear-gradient(180deg, rgba(255,250,244,0) 18%, rgba(255,250,244,.80) 64%, rgba(255,250,244,.94) 100%); }
+:root[data-layout="new"][data-theme="light"] .fav-foto::before{ background:linear-gradient(180deg, rgba(255,250,244,0) 16%, rgba(255,250,244,.88) 56%, rgba(255,250,244,.96) 100%); }
+:root[data-layout="new"][data-theme="light"] .training-seite .area-tile .at-name, :root[data-layout="new"][data-theme="light"] .training-seite .area-tile .at-chev, :root[data-layout="new"][data-theme="light"] .ff-name{ color:var(--text); }
+:root[data-layout="new"][data-theme="light"] .training-seite .area-tile .at-sub, :root[data-layout="new"][data-theme="light"] .ff-bereich, :root[data-layout="new"][data-theme="light"] .ff-sub{ color:var(--text-dim); }
+:root[data-layout="new"][data-theme="light"] .ff-stern{ color:#c98200; }
+:root[data-layout="new"][data-theme="light"] .training-seite .area-tile[data-bereich="intervall"] .at-ico,
+:root[data-layout="new"][data-theme="light"] .training-seite .area-tile[data-bereich="run"] .at-ico{ background:rgba(28,28,30,.1); color:var(--text); }
+:root[data-layout="new"][data-theme="light"] .marke-neu b{ color:#df4a22; }
+:root[data-layout="new"][data-theme="light"] .kn-sym .iconbtn{ background:rgba(255,255,255,.66); color:var(--text); border-color:rgba(0,0,0,.1); }
+:root[data-layout="new"][data-theme="light"] .kn-gruss span, :root[data-layout="new"][data-theme="light"] .kn-gruss b{ text-shadow:0 0 10px rgba(255,255,255,.95), 0 0 3px rgba(255,255,255,.85); }
+@media (prefers-color-scheme: light){
+  :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile.zeile::before{ background:linear-gradient(180deg, rgba(255,250,244,0) 18%, rgba(255,250,244,.80) 64%, rgba(255,250,244,.94) 100%); }
+  :root[data-layout="new"]:not([data-theme]) .fav-foto::before{ background:linear-gradient(180deg, rgba(255,250,244,0) 16%, rgba(255,250,244,.88) 56%, rgba(255,250,244,.96) 100%); }
+  :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile .at-name, :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile .at-chev, :root[data-layout="new"]:not([data-theme]) .ff-name{ color:var(--text); }
+  :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile .at-sub, :root[data-layout="new"]:not([data-theme]) .ff-bereich, :root[data-layout="new"]:not([data-theme]) .ff-sub{ color:var(--text-dim); }
+  :root[data-layout="new"]:not([data-theme]) .ff-stern{ color:#c98200; }
+  :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile[data-bereich="intervall"] .at-ico,
+  :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile[data-bereich="run"] .at-ico{ background:rgba(28,28,30,.1); color:var(--text); }
+  :root[data-layout="new"]:not([data-theme]) .marke-neu b{ color:#df4a22; }
+  :root[data-layout="new"]:not([data-theme]) .kn-sym .iconbtn{ background:rgba(255,255,255,.66); color:var(--text); border-color:rgba(0,0,0,.1); }
+  :root[data-layout="new"]:not([data-theme]) .kn-gruss span, :root[data-layout="new"]:not([data-theme]) .kn-gruss b{ text-shadow:0 0 10px rgba(255,255,255,.95), 0 0 3px rgba(255,255,255,.85); }
+}
+/* Meine Woche: der Untertitel darf umbrechen statt mit ... abzuschneiden (auch im Dunkeln) */
+:root[data-layout="new"] .woche-neu .wo-summe{ white-space:normal; overflow:visible; text-overflow:clip; line-height:1.3; }
+
+/* ---------- Run-Seite (Modern, 2026-10-16): das Läuferfoto liegt geblurrt hinter der ganzen Seite (dunkel: Gegenlicht-Läufer, hell: Waldweg),
+   darüber weiße Karten; während des Laufens steht alles in einer weißen Karte. Der Kopf hat kein eigenes Foto mehr. ---------- */
+:root[data-layout="new"] .run-bg{ position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
+:root[data-layout="new"] .run-bg i{ position:absolute; inset:-40px; background-size:cover; background-position:50% 45%; filter:blur(26px) brightness(.66) saturate(1.25); }
+:root[data-layout="new"] .run-bg::after{ content:""; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(10,10,12,.62), rgba(10,10,12,.42) 45%, rgba(10,10,12,.68)); }
+:root[data-layout="new"] .kopf-bereich.klar{ min-height:0; background:none; border-radius:0; padding:calc(env(safe-area-inset-top) + 12px) 16px 10px; gap:14px; }
+:root[data-layout="new"] .kopf-bereich.klar::after{ display:none; }
+:root[data-layout="new"] .run-hero{ background:var(--surface); border:0; border-radius:var(--radius); border-top-left-radius:var(--ecke); padding:18px 16px 16px; margin-bottom:14px; }
+:root[data-layout="new"] .run-item.list-item.entry{ background:var(--surface); border:0; border-radius:16px; margin:0 0 8px; padding:14px; }
+:root[data-layout="new"] .run-weiss{ background:var(--surface); border-radius:var(--radius); border-top-left-radius:var(--ecke); padding:18px 14px 12px; margin-bottom:14px; }
+:root[data-layout="new"] .run-weiss .run-karte{ background:none; border:0; padding:0; }
+:root[data-layout="new"] .run-bg ~ .section-title, :root[data-layout="new"] .run-bg ~ .page-hint{ color:rgba(255,255,255,.88); }:root[data-layout="new"][data-theme="light"] .run-bg::after{ background:linear-gradient(180deg, rgba(245,245,242,.44), rgba(245,245,242,.2) 45%, rgba(245,245,242,.6)); }
+:root[data-layout="new"][data-theme="light"] .kopf-bereich.klar{ color:var(--text); }
+:root[data-layout="new"][data-theme="light"] .kopf-bereich.klar .kb-kicker{ color:var(--text-dim); }
+:root[data-layout="new"][data-theme="light"] .kopf-bereich.klar .kb-rund, :root[data-layout="new"][data-theme="light"] .kopf-bereich.klar .kb-rechts .iconbtn{ background:rgba(255,255,255,.7); color:var(--text); }
+:root[data-layout="new"][data-theme="light"] .run-bg ~ .section-title, :root[data-layout="new"][data-theme="light"] .run-bg ~ .page-hint{ color:var(--text); }
+@media (prefers-color-scheme: light){
+  :root[data-layout="new"]:not([data-theme]) .run-bg::after{ background:linear-gradient(180deg, rgba(245,245,242,.44), rgba(245,245,242,.2) 45%, rgba(245,245,242,.6)); }
+  :root[data-layout="new"]:not([data-theme]) .kopf-bereich.klar{ color:var(--text); }
+  :root[data-layout="new"]:not([data-theme]) .kopf-bereich.klar .kb-kicker{ color:var(--text-dim); }
+  :root[data-layout="new"]:not([data-theme]) .kopf-bereich.klar .kb-rund, :root[data-layout="new"]:not([data-theme]) .kopf-bereich.klar .kb-rechts .iconbtn{ background:rgba(255,255,255,.7); color:var(--text); }
+  :root[data-layout="new"]:not([data-theme]) .run-bg ~ .section-title, :root[data-layout="new"]:not([data-theme]) .run-bg ~ .page-hint{ color:var(--text); }
+}
+/* Während des Laufens im dunklen Modus bleibt die Karte weiß (minimalistisch, gut lesbar im Hellen unterwegs) */
+:root[data-layout="new"][data-theme="dark"] .run-weiss{ --text:#1c1c1e; --text-dim:#6c6c70; --surface:#fff; --surface-2:#ececea; --border:#e2e1dd; background:#fff; color:#1c1c1e; }
+@media (prefers-color-scheme: dark){
+  :root[data-layout="new"]:not([data-theme]) .run-weiss{ --text:#1c1c1e; --text-dim:#6c6c70; --surface:#fff; --surface-2:#ececea; --border:#e2e1dd; background:#fff; color:#1c1c1e; }
+}
+:root[data-layout="new"] .run-bg ~ .topbar{ background:transparent; box-shadow:none; border:0; }
+
+/* ---------- Run (Modern), Stil nach einer Vorlage von Kevin (nur Stil und Aufbau, alles selbst gezeichnet): Höhenlinien, Glas-Kacheln,
+   großer weißer Start-Knopf, Strecke als weiße Linie mit Zwischenwerten. Glas = halbtransparent mit Blur; ohne backdrop-filter bleibt es eine
+   deckendere Fläche. ---------- */
+:root[data-layout="new"]{ --glas:rgba(255,255,255,.14); --glas-rand:rgba(255,255,255,.22); --glas-text:#fff; --glas-dim:rgba(255,255,255,.78); --linie:#fff; }
+:root[data-layout="new"] .run-hoehen{ position:absolute; inset:0; width:100%; height:100%; stroke:rgba(255,255,255,.3); }
+:root[data-layout="new"] .run-bg ~ .run-hero{ background:none; border:0; padding:0; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:10px; color:var(--glas-text); }
+:root[data-layout="new"] .run-bg ~ .run-hero .rh-km,
+:root[data-layout="new"] .run-bg ~ .run-hero .rh-sub,
+:root[data-layout="new"] .run-bg ~ .run-hero .run-art,
+:root[data-layout="new"] .run-bg ~ .run-raster > div,
+:root[data-layout="new"] .rs-chip{
+  background:rgba(34,36,40,.72); border:1px solid var(--glas-rand); color:var(--glas-text);
+}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  :root[data-layout="new"] .run-bg ~ .run-hero .rh-km,
+  :root[data-layout="new"] .run-bg ~ .run-hero .rh-sub,
+  :root[data-layout="new"] .run-bg ~ .run-hero .run-art,
+  :root[data-layout="new"] .run-bg ~ .run-raster > div,
+  :root[data-layout="new"] .rs-chip,
+  :root[data-layout="new"] .run-strecke{ background:var(--glas); -webkit-backdrop-filter:blur(16px) saturate(140%); backdrop-filter:blur(16px) saturate(140%); }
+}
+:root[data-layout="new"] .run-bg ~ .run-hero .rh-km{ grid-column:1; margin:0; padding:16px 16px 14px; border-radius:24px; font-size:36px; line-height:1; text-align:left; display:flex; align-items:baseline; gap:6px; }
+:root[data-layout="new"] .run-bg ~ .run-hero .rh-km small{ font-size:15px; color:var(--glas-dim); }
+:root[data-layout="new"] .run-bg ~ .run-hero .rh-sub{ grid-column:2; margin:0; padding:16px; border-radius:24px; font-size:14px; line-height:1.3; color:var(--glas-dim); display:flex; align-items:center; }
+:root[data-layout="new"] .run-bg ~ .run-hero .run-art{ grid-column:1 / -1; margin:0; border-radius:999px; padding:4px; }
+:root[data-layout="new"] .run-bg ~ .run-hero .run-art button{ border-radius:999px; color:var(--glas-text); background:none; }
+:root[data-layout="new"] .run-bg ~ .run-hero .run-art button.active{ background:rgba(255,255,255,.92); color:#1c1c1e; box-shadow:none; }
+:root[data-layout="new"] .run-bg ~ .run-hero .run-startbtn{ grid-column:1 / -1; margin:2px 0 0; height:76px; border-radius:28px; font-size:22px; font-weight:800;
+  background:#fff; color:#111; box-shadow:0 12px 30px rgba(0,0,0,.28); }
+:root[data-layout="new"] .run-bg ~ .run-hero .run-startbtn svg{ color:var(--accent-ink, var(--accent)); }
+/* Lauf-Details: Strecke als Linie mit Zwischenwerten */
+:root[data-layout="new"] .run-strecke{ position:relative; margin:0 0 16px; border-radius:24px; border:1px solid var(--glas-rand); color:var(--linie); background:rgba(34,36,40,.72); overflow:hidden; }
+:root[data-layout="new"] .run-strecke svg{ display:block; width:100%; height:auto; }
+:root[data-layout="new"] .rs-punkt{ fill:var(--linie); opacity:.9; }
+:root[data-layout="new"] .rs-start{ fill:var(--linie); }
+:root[data-layout="new"] .rs-ring{ fill:none; stroke:var(--linie); opacity:.5; stroke-width:2; }
+:root[data-layout="new"] .rs-ziel{ fill:var(--accent); }
+:root[data-layout="new"] .rs-chip{ position:absolute; transform:translate(10px,-50%); display:flex; flex-direction:column; padding:4px 9px; border-radius:12px; font-size:12px; line-height:1.15; white-space:nowrap; }
+:root[data-layout="new"] .rs-chip b{ font-size:12.5px; }
+:root[data-layout="new"] .rs-chip small{ font-size:11px; color:var(--glas-dim); }
+:root[data-layout="new"] .run-bg ~ .run-raster > div{ border-radius:18px; }
+:root[data-layout="new"] .run-bg ~ .run-raster small{ color:var(--glas-dim); }
+:root[data-layout="new"] .run-bg ~ .run-raster b{ color:var(--glas-text); }:root[data-layout="new"][data-theme="light"]{ --glas:rgba(255,255,255,.66); --glas-rand:rgba(255,255,255,.85); --glas-text:#1c1c1e; --glas-dim:#55555a; --linie:#1c1c1e; }
+:root[data-layout="new"][data-theme="light"] .run-hoehen{ stroke:rgba(255,255,255,.75); }
+:root[data-layout="new"][data-theme="light"] .run-bg ~ .run-hero .rh-km, :root[data-layout="new"][data-theme="light"] .run-bg ~ .run-hero .rh-sub, :root[data-layout="new"][data-theme="light"] .run-bg ~ .run-hero .run-art, :root[data-layout="new"][data-theme="light"] .run-bg ~ .run-raster > div, :root[data-layout="new"][data-theme="light"] .rs-chip, :root[data-layout="new"][data-theme="light"] .run-strecke{ background:rgba(255,255,255,.86); }
+:root[data-layout="new"][data-theme="light"] .run-bg ~ .run-hero .run-art button.active{ background:#1c1c1e; color:#fff; }
+:root[data-layout="new"][data-theme="light"] .run-bg ~ .run-hero .run-startbtn{ border:1px solid rgba(0,0,0,.08); }
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  :root[data-layout="new"][data-theme="light"] .run-bg ~ .run-hero .rh-km, :root[data-layout="new"][data-theme="light"] .run-bg ~ .run-hero .rh-sub, :root[data-layout="new"][data-theme="light"] .run-bg ~ .run-hero .run-art,
+  :root[data-layout="new"][data-theme="light"] .run-bg ~ .run-raster > div, :root[data-layout="new"][data-theme="light"] .rs-chip, :root[data-layout="new"][data-theme="light"] .run-strecke{ background:var(--glas); }
+}@media (prefers-color-scheme: light){
+  :root[data-layout="new"]:not([data-theme]){ --glas:rgba(255,255,255,.66); --glas-rand:rgba(255,255,255,.85); --glas-text:#1c1c1e; --glas-dim:#55555a; --linie:#1c1c1e; }
+  :root[data-layout="new"]:not([data-theme]) .run-hoehen{ stroke:rgba(255,255,255,.75); }
+  :root[data-layout="new"]:not([data-theme]) .run-bg ~ .run-hero .rh-km, :root[data-layout="new"]:not([data-theme]) .run-bg ~ .run-hero .rh-sub, :root[data-layout="new"]:not([data-theme]) .run-bg ~ .run-hero .run-art, :root[data-layout="new"]:not([data-theme]) .run-bg ~ .run-raster > div, :root[data-layout="new"]:not([data-theme]) .rs-chip, :root[data-layout="new"]:not([data-theme]) .run-strecke{ background:rgba(255,255,255,.86); }
+  :root[data-layout="new"]:not([data-theme]) .run-bg ~ .run-hero .run-art button.active{ background:#1c1c1e; color:#fff; }
+  :root[data-layout="new"]:not([data-theme]) .run-bg ~ .run-hero .run-startbtn{ border:1px solid rgba(0,0,0,.08); }
+}
+:root[data-layout="new"] .rs-chip.links{ transform:translate(calc(-100% - 10px), -50%); }
+:root[data-layout="new"] .run-hoehen{ stroke:rgba(255,255,255,.5); }
+
+/* ---------- Körper (Plan · Fortschritt) ---------- */
+:root[data-layout="new"] .koerper-rz{ margin:4px 0 14px; }
+:root[data-layout="new"] .kp-titel{ font-weight:700; font-size:15px; margin:0 0 8px; }
+:root[data-layout="new"] .kp-tipps ul{ margin:0 0 8px; padding-left:18px; display:flex; flex-direction:column; gap:6px; font-size:14px; line-height:1.4; }
+:root[data-layout="new"] .kp-fuss{ font-size:12.5px; color:var(--text-dim); margin-top:6px; line-height:1.35; }
+:root[data-layout="new"] .kp-bau .kp-titel{ margin-top:14px; }
+:root[data-layout="new"] .kp-bau .kp-titel:first-child{ margin-top:0; }
+:root[data-layout="new"] .kp-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+:root[data-layout="new"] .kp-chip{ min-width:46px; padding:10px 14px; border-radius:999px; border:1px solid var(--nl-linie); background:color-mix(in srgb, var(--text) 5%, transparent); color:var(--text); font:inherit; font-size:14.5px; cursor:pointer; }
+:root[data-layout="new"] .kp-chip.an{ background:color-mix(in srgb, var(--accent) 16%, var(--surface)); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent); font-weight:700; }
+:root[data-layout="new"] .kp-zeilen{ display:flex; flex-direction:column; gap:8px; margin-top:14px; }
+:root[data-layout="new"] .kp-zeile{ display:grid; grid-template-columns:44px 1fr; gap:10px; align-items:center; font-size:14px; }
+:root[data-layout="new"] .kp-zeile select{ width:100%; min-width:0; padding:11px 10px; border-radius:14px; border:1px solid var(--nl-linie); background:var(--surface); color:var(--text); font:inherit; font-size:14.5px; }
+:root[data-layout="new"] .kp-leer{ margin-top:14px; font-size:14px; color:var(--text-dim); }
+:root[data-layout="new"] .kp-ok{ margin-top:16px; width:100%; }
+:root[data-layout="new"] .kp-ok[disabled]{ opacity:.45; }
+:root[data-layout="new"] .kp-text{ font-size:14px; line-height:1.45; color:var(--text-dim); }
+/* Favoriten ohne Katalog-Foto: ruhige Glas-Kachel mit Name */
+:root[data-layout="new"] .fav-foto.ohne{ background-image:none; background-color:rgba(255,255,255,.07); border:1px solid var(--nl-linie); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
+:root[data-layout="new"] .fav-foto.ohne::before{ display:none; }
+:root[data-layout="new"] .fav-foto.ohne .ff-name, :root[data-layout="new"] .fav-foto.ohne .ff-stern{ color:var(--text); }
+:root[data-layout="new"] .fav-foto.ohne .ff-bereich, :root[data-layout="new"] .fav-foto.ohne .ff-sub{ color:var(--text-dim); }
+:root[data-layout="new"][data-theme="light"] .fav-foto.ohne{ background-color:var(--surface); }
+@media (prefers-color-scheme: light){ :root[data-layout="new"]:not([data-theme]) .fav-foto.ohne{ background-color:var(--surface); } }
+
+/* Baukasten: „Überrasch mich“ dezenter (wie „Selber bauen“, nur mit kleinem orangen Rahmen); auf Heute beide Knöpfe als Glas, „Überrasch mich“ mit orangem Rahmen */
+:root[data-layout="new"] .bau-karte.bau-sp:not(.ws-bau){ background:var(--surface); border:1.5px solid color-mix(in srgb, var(--accent) 75%, transparent); color:var(--text); }
+:root[data-layout="new"] .bau-karte.bau-sp:not(.ws-bau) .bk-ico{ background:color-mix(in srgb, var(--accent) 14%, transparent); color:var(--accent-ink, var(--accent)); }
+:root[data-layout="new"] .bau-karte.bau-sp:not(.ws-bau) .bk-t small, :root[data-layout="new"] .bau-karte.bau-sp:not(.ws-bau) .bk-pfeil{ color:var(--text-dim); opacity:1; }
+:root[data-layout="new"] .bn-knoepfe .btn-primary{ background:var(--accent); color:#fff; border:1.5px solid var(--accent); box-shadow:0 4px 14px rgba(255,90,54,.35); }
+/* gewählte Übungen im Baukasten: statt grauer ein leichter grüner Rahmen */
+:root[data-layout="new"] .wb-kachel.gewaehlt{ box-shadow:0 0 0 3px color-mix(in srgb, #2fa88a 70%, transparent), var(--shadow); background:color-mix(in srgb, #2fa88a 7%, var(--surface)); }
+:root[data-layout="new"] .wb-kachel.gewaehlt .fig-bild{ background:color-mix(in srgb, #2fa88a 14%, transparent); color:#2fa88a; }
+
+/* ---------- Training (Timer-Player), Modern: dunkles Glas in allen Phasen, Texte schweben ohne Kachel, kein Trennstreifen ---------- */
+:root[data-layout="new"] .player{ background:#0b0d10; color:#f4f4f6; }
+:root[data-layout="new"] .player::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:radial-gradient(120% 60% at 90% -5%, rgba(255,120,70,.20), transparent 62%), radial-gradient(100% 55% at 5% 105%, rgba(90,130,255,.14), transparent 60%); }
+:root[data-layout="new"] .player .progressbar{ display:none; }
+:root[data-layout="new"] .player .pl-logo, :root[data-layout="new"] .player[data-phase] .pl-logo{ color:var(--accent); margin-top:10px; font-size:48px; letter-spacing:.22em; text-indent:.22em; text-shadow:0 2px 14px rgba(0,0,0,.35); }
+:root[data-layout="new"] .player-top .exit{ background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.16); color:#fff; -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
+:root[data-layout="new"] .player .ctrl-btn{ background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.16); color:#fff; -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
+:root[data-layout="new"] .player .ctrl-btn.main{ background:#fff; border-color:#fff; color:#111; }
+:root[data-layout="new"] .player .ctrl-btn.main span{ color:#111; }
+:root[data-layout="new"] .player .ring-bg{ stroke:rgba(255,255,255,.14); }
+:root[data-layout="new"] .player .phase-label{ font-size:15px; letter-spacing:.24em; opacity:.7; margin-bottom:8px; }
+:root[data-layout="new"] .player .block-label{ font-size:27px; font-weight:700; opacity:1; margin-bottom:14px; line-height:1.15; }
+:root[data-layout="new"] .player .next-up{ opacity:.6; font-size:16px; }
+:root[data-layout="new"] .player .player-mid .pl-illu{ width:min(54vw,220px); height:min(54vw,220px); margin:0 0 2px; opacity:1; }
+:root[data-layout="new"] .player .player-mid .pl-illu{ width:min(31vw,120px); height:min(31vw,120px); }   /* 30 % kleiner (2026-10-23), damit Figur, Ring und Knöpfe auf dem Handy passen */
+:root[data-layout="new"] .player[data-phase="work"] .ring-wrap{ width:min(54vw,214px); height:min(54vw,214px); }
+:root[data-layout="new"] .player[data-phase="work"] .block-label{ margin-bottom:6px; }
+:root[data-layout="new"] .player .rep-dots{ margin-top:16px; }
+/* FAQ-Bereich als Ganzes einklappbar (zu beim Öffnen der Seite) */
+:root[data-layout="new"] .faq-kopf{ cursor:pointer; display:flex; align-items:center; justify-content:space-between; width:100%; background:none; border:0; color:var(--text); font:inherit; padding:0; }
+:root[data-layout="new"] .faq-kopf::after{ content:"▾"; color:var(--text-dim); transition:transform .2s; }
+:root[data-layout="new"] .faq-kopf[aria-expanded="true"]::after{ transform:rotate(180deg); }
+
+/* ---------- Run (Modern), Aufzeichnung: schwebende Texte auf dem geblurrten Foto, Glas-Knöpfe (statt weißer Karte); weniger Text auf der Start-Seite ---------- */
+:root[data-layout="new"] .run-weiss{ background:none; padding:4px 0 8px; color:#fff; --text:#fff; --text-dim:rgba(255,255,255,.75); --surface:rgba(255,255,255,.14); --surface-2:rgba(255,255,255,.12); --border:rgba(255,255,255,.2); }
+:root[data-layout="new"][data-theme="dark"] .run-weiss{ --text:#fff; --text-dim:rgba(255,255,255,.75); --surface:rgba(255,255,255,.14); --surface-2:rgba(255,255,255,.12); --border:rgba(255,255,255,.2); background:none; color:#fff; }
+:root[data-layout="new"] .run-weiss .rg-zeit{ font-size:min(22vw,92px); text-shadow:0 2px 18px rgba(0,0,0,.35); }
+:root[data-layout="new"] .run-weiss .run-raster{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+:root[data-layout="new"] .run-weiss .run-raster > div{ background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.2); border-radius:20px; color:#fff; -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
+:root[data-layout="new"] .run-weiss .run-raster small{ color:rgba(255,255,255,.75); }
+:root[data-layout="new"] .run-weiss .run-karte{ background:none; border:0; color:#fff; }
+:root[data-layout="new"] .run-weiss .btn-secondary{ background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.22); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
+:root[data-layout="new"] .run-weiss .btn-danger{ background:rgba(255,255,255,.06); color:#ff8a7a; border:1px solid rgba(255,138,122,.55); }
+:root[data-layout="new"] .run-weiss .run-haltehint{ display:none; }
+:root[data-layout="new"] .run-laut{ background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.2); }
+:root[data-layout="new"] .run-laut.aus{ opacity:.55; }
+:root[data-layout="new"] .run-bg ~ .run-eigen, :root[data-layout="new"] .run-bg ~ .run-opt, :root[data-layout="new"] .run-bg ~ .run-ansage{ background:rgba(34,36,40,.72); border:1px solid rgba(255,255,255,.18); color:#f4f4f6; --text:#f4f4f6; --text-dim:rgba(255,255,255,.72); --surface:rgba(255,255,255,.1); --border:rgba(255,255,255,.2); }
+:root[data-layout="new"] .run-bg ~ .run-opt .desc, :root[data-layout="new"] .run-bg ~ .run-opt .toggle-row .desc, :root[data-layout="new"] .run-bg ~ .run-ansage .tm-hint, :root[data-layout="new"] .run-bg ~ .page-hint{ display:none; }
+:root[data-layout="new"] .run-bg ~ .run-eigen .kp-chip{ color:#f4f4f6; background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.2); }
+:root[data-layout="new"] .run-bg ~ .run-eigen .kp-chip.an{ background:rgba(255,255,255,.92); color:#111; }
+:root[data-layout="new"] .run-bg ~ .run-eigen .kp-titel{ color:rgba(255,255,255,.85); }
+:root[data-layout="new"] .run-weiss .run-knoepfe{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+:root[data-layout="new"] .run-weiss .run-knoepfe .run-ende{ grid-column:auto; }
+/* Hintergrundfoto (geblurrt, abgedunkelt) hinter dem Training in Modern */
+:root[data-layout="new"] .player::after{ content:""; position:absolute; inset:-30px; z-index:-1; pointer-events:none; background:var(--pl-foto) center/cover no-repeat; filter:blur(24px) brightness(.66) saturate(1.25); opacity:.95; }
+
+/* Plan: einklappbare Tipps, mehrere Workouts je Tag, Überblick als Raster (Wochen × Tage) */
+:root[data-layout="new"] .kp-klapp > summary{ list-style:none; display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer; font-weight:700; font-size:15px; }
+:root[data-layout="new"] .kp-klapp > summary::-webkit-details-marker{ display:none; }
+:root[data-layout="new"] .kp-klapp[open] > summary{ margin-bottom:10px; }
+:root[data-layout="new"] .kp-klapp[open] > summary .tpl-chev{ transform:rotate(180deg); }
+:root[data-layout="new"] .kp-klapp .kp-text{ margin-top:8px; }
+:root[data-layout="new"] .kp-faq{ margin-top:12px; width:100%; }
+:root[data-layout="new"] .kp-zeile{ align-items:start; }
+:root[data-layout="new"] .kp-zeile > span{ padding-top:11px; font-weight:600; }
+:root[data-layout="new"] .kp-tag{ display:flex; flex-direction:column; gap:6px; min-width:0; }
+:root[data-layout="new"] .kp-wahl{ display:flex; align-items:center; gap:8px; padding:8px 8px 8px 12px; border-radius:14px; border:1px solid var(--nl-linie, var(--border)); background:color-mix(in srgb, var(--surface) 80%, transparent); min-width:0; }
+:root[data-layout="new"] .kp-wahl b{ flex:1; min-width:0; font-weight:600; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+:root[data-layout="new"] .kp-wahl button{ flex:none; width:28px; height:28px; border-radius:50%; border:0; background:rgba(127,127,127,.18); color:inherit; font-size:18px; line-height:1; cursor:pointer; }
+.kv-p{ display:inline-block; flex:none; width:9px; height:9px; border-radius:50%; background:var(--accent); }
+.kv-p.run{ background:#4aa3ff; }
+.kv-p.zufall{ background:#f5b84a; }
+.kv-p.kraft{ background:var(--accent); }
+.kp-vis{ display:flex; flex-direction:column; gap:5px; margin:6px 0 4px; }
+.kv-reihe{ display:grid; grid-template-columns:22px repeat(7, 1fr); gap:5px; align-items:center; }
+.kv-kopf{ font-size:11px; color:var(--text-dim); text-align:center; text-transform:uppercase; letter-spacing:.04em; }
+.kv-kopf .an{ color:var(--text); font-weight:700; }
+.kv-w{ font-size:11px; color:var(--text-dim); text-align:center; }
+.kv-z{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:3px; min-height:30px; padding:4px; border-radius:9px; }
+.kv-z.aus{ background:transparent; }
+.kv-z.leer{ border:1.5px dashed rgba(127,127,127,.4); }
+.kv-z.an{ background:color-mix(in srgb, var(--accent) 14%, transparent); border:1px solid color-mix(in srgb, var(--accent) 40%, transparent); }
+.kv-legende{ display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin-top:8px; font-size:12px; color:var(--text-dim); }
+.kv-legende span{ display:inline-flex; align-items:center; gap:5px; }
+
+/* Favoriten ohne Foto: großes ruhiges Symbol statt leerer Fläche (Farbe der Art) */
+:root[data-layout="new"] .fav-foto.ohne .ff-ico{ position:absolute; left:16px; top:14px; width:37px; height:37px; display:grid; place-items:center; border-radius:14px;
+  background:color-mix(in srgb, var(--nc, var(--accent)) 16%, transparent); color:var(--nc, var(--accent)); }
+:root[data-layout="new"] .fav-foto.ohne .ff-ico .ico, :root[data-layout="new"] .fav-foto.ohne .ff-ico svg{ width:21px; height:21px; }
+
+/* Run: Live-Karte als Glasfläche (Kulisse aus Straßen und Bäumen, leuchtende Strecke, pulsierender Standort) */
+:root[data-layout="new"] .run-weiss .run-karte{ margin:12px 0 10px; border-radius:26px; overflow:hidden; aspect-ratio:1 / 1; max-height:340px; width:100%;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); box-shadow:0 10px 30px rgba(0,0,0,.25); }
+.run-karte svg{ display:block; width:100%; height:100%; }
+.rk-kulisse path{ fill:none; stroke:rgba(255,255,255,.2); stroke-linecap:round; }
+.rk-kulisse .rk-str{ stroke-width:2.2; stroke:rgba(255,255,255,.26); }
+.rk-kulisse .rk-neben{ stroke-width:1.2; }
+.rk-baum circle{ fill:rgba(255,255,255,.07); stroke:rgba(255,255,255,.3); stroke-width:1.2; }
+.rk-baum path{ stroke:rgba(255,255,255,.3); stroke-width:1.4; fill:none; stroke-linecap:round; }
+.rk-glow{ fill:none; stroke:#fff; stroke-width:9; stroke-linecap:round; stroke-linejoin:round; opacity:.55; }
+.rk-weg{ fill:none; stroke:#fff; stroke-width:3.4; stroke-linecap:round; stroke-linejoin:round; }
+.rk-start{ fill:rgba(255,255,255,.35); stroke:#fff; stroke-width:1.4; }
+.rk-pos{ fill:#fff; stroke:var(--accent); stroke-width:3; }
+.rk-puls{ fill:rgba(255,255,255,.35); transform-box:fill-box; transform-origin:center; animation:rk-puls 1.8s ease-out infinite; }
+@keyframes rk-puls{ 0%{ transform:scale(.6); opacity:.9; } 100%{ transform:scale(3.2); opacity:0; } }
+@media (prefers-reduced-motion: reduce){ .rk-puls{ animation:none; opacity:.5; } }
+
+/* Run-Start: Strecke per Regler, gespeicherte Lauf-Workouts, lesbare Chips auf dem dunklen Glas */
+:root[data-layout="new"] .run-ziel-kopf{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
+:root[data-layout="new"] .run-ziel-kopf b{ font-size:17px; color:var(--accent-ink, var(--accent)); }
+:root[data-layout="new"] .run-eigen input[type=range]{ width:100%; accent-color:var(--accent); margin:6px 0 2px; }
+:root[data-layout="new"] .run-ziel-marken{ display:flex; justify-content:space-between; font-size:11.5px; opacity:.7; }
+:root[data-layout="new"] .run-wo-sp{ width:100%; margin-top:14px; }
+:root[data-layout="new"] .run-wos{ display:flex; flex-direction:column; gap:8px; }
+:root[data-layout="new"] .run-wo{ display:flex; gap:8px; }
+:root[data-layout="new"] .run-wo-go{ flex:1; display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:16px; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.1); color:inherit; font:inherit; text-align:left; cursor:pointer; }
+:root[data-layout="new"] .run-wo-go svg{ width:16px; height:16px; color:var(--accent); flex:none; }
+:root[data-layout="new"] .run-wo-weg{ flex:none; width:44px; border-radius:16px; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.06); color:inherit; font-size:20px; cursor:pointer; }
+:root[data-layout="new"] .run-bg ~ .run-ansage .theme-pick button{ background:rgba(255,255,255,.1); color:#f4f4f6; border:1px solid rgba(255,255,255,.22); }
+:root[data-layout="new"] .run-bg ~ .run-ansage .theme-pick button.active{ background:rgba(255,255,255,.92); color:#111; border-color:transparent; }
+:root[data-layout="new"] .run-bg ~ .run-ansage label{ color:rgba(255,255,255,.85); }
+:root[data-layout="new"] .run-bg ~ .run-ansage .btn-secondary{ background:rgba(255,255,255,.12); color:#f4f4f6; border:1px solid rgba(255,255,255,.22); }
+:root[data-layout="new"] .run-bg ~ .run-opt .toggle-row, :root[data-layout="new"] .run-bg ~ .run-opt label{ color:#f4f4f6; }
+:root[data-layout="new"] .run-bg ~ .run-eigen .btn-secondary{ background:rgba(255,255,255,.12); color:#f4f4f6; border:1px solid rgba(255,255,255,.22); }
+
+/* Workout-Planer (BLOC-Seite): ein großes „Los geht’s“, Favorit · Kopie · Teilen, weitere BLOCs */
+:root[data-layout="new"] .plan-start{ width:100%; height:64px; border-radius:22px; font-size:19px; font-weight:800; letter-spacing:.04em; margin:6px 0 10px; display:flex; align-items:center; justify-content:center; gap:10px; }
+:root[data-layout="new"] .pz-akt{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin:0 0 14px; }
+:root[data-layout="new"] .pz-akt button{ display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 4px; border-radius:16px; border:1px solid var(--nl-linie, var(--border)); background:color-mix(in srgb, var(--surface) 80%, transparent); color:inherit; font:inherit; font-size:12.5px; cursor:pointer; }
+:root[data-layout="new"] .pz-akt button svg{ width:20px; height:20px; }
+:root[data-layout="new"] .pz-akt button.on{ color:var(--accent); border-color:var(--accent); }
+:root[data-layout="new"] .pz-folge{ margin-top:16px; }
+:root[data-layout="new"] .pz-fl{ display:flex; flex-direction:column; gap:8px; margin:8px 0 10px; }
+:root[data-layout="new"] .pz-fz{ display:flex; gap:8px; }
+:root[data-layout="new"] .pz-fz-go{ flex:1; display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:16px; border:1px solid var(--nl-linie, var(--border)); background:color-mix(in srgb, var(--surface) 80%, transparent); color:inherit; font:inherit; text-align:left; cursor:pointer; }
+:root[data-layout="new"] .pz-fz-go i{ font-style:normal; width:26px; height:26px; border-radius:50%; display:grid; place-items:center; background:var(--accent); color:#fff; font-size:13px; font-weight:700; flex:none; }
+:root[data-layout="new"] .pz-fz-go span{ flex:1; min-width:0; display:flex; flex-direction:column; }
+:root[data-layout="new"] .pz-fz-go small{ opacity:.7; }
+:root[data-layout="new"] .pz-fz-weg{ flex:none; width:44px; border-radius:16px; border:1px solid var(--nl-linie, var(--border)); background:none; color:inherit; font-size:20px; cursor:pointer; }
+:root[data-layout="new"] .pz-folge-plus{ width:100%; }
+.bloc-sheet .bloc-opt{ display:flex; align-items:center; gap:12px; width:100%; padding:12px 14px; margin:6px 0; border-radius:16px; border:1px solid var(--border); background:var(--surface); color:inherit; font:inherit; text-align:left; cursor:pointer; }
+.bloc-sheet .bloc-opt span{ display:flex; flex-direction:column; }
+.bloc-sheet .bloc-opt small{ opacity:.7; }
+.bloc-sheet select{ width:100%; margin:6px 0 12px; }
+
+/* Workout-Listen (Meine, Workoutkatalog): kompakter - kleineres Foto, kleine Symbole, weniger Zeilen, der Name bekommt Platz */
+:root[data-layout="new"] .tpl-item.lib-card{ padding:8px 6px 8px 10px; align-items:center; }
+:root[data-layout="new"] .lib-card:has(.ort-thumb) > .playbtn{ display:none; }
+:root[data-layout="new"] .lib-card > .playbtn{ width:36px; height:36px; margin:0 10px 0 0; flex:none; }
+:root[data-layout="new"] .lib-card > .playbtn svg{ width:15px; height:15px; }
+:root[data-layout="new"] .lib-card .ort-thumb{ width:46px; height:46px; margin-right:10px; border-radius:11px; }
+:root[data-layout="new"] .lib-card .meta{ padding-top:0; min-width:0; flex:1; }
+:root[data-layout="new"] .lib-card .name{ font-size:15px; line-height:1.2; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+:root[data-layout="new"] .lib-card .sub{ font-size:12px; line-height:1.3; }
+:root[data-layout="new"] .lib-card .pl-gruppen{ display:none; }
+:root[data-layout="new"] .lib-card .card-acts .fav-btn, :root[data-layout="new"] .lib-card .card-acts .trash-btn{ width:32px; height:32px; font-size:16px; }
+
+/* Neuer Timer: drei Stufen (Zirkel › Runden › Übungen) mit je Anzahl, Zeit, Pause */
+.tp-sheet{ max-height:88vh; overflow-y:auto; }
+.tp-gruppe{ margin:10px 0; padding:12px; border-radius:18px; border:1px solid var(--border); background:color-mix(in srgb, var(--surface) 70%, transparent); }
+.tp-kopf{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.tp-kopf i{ font-style:normal; width:26px; height:26px; border-radius:50%; display:grid; place-items:center; background:var(--accent); color:#fff; font-size:13px; font-weight:700; flex:none; }
+.tp-kopf span{ display:flex; flex-direction:column; }
+.tp-kopf small{ opacity:.7; font-size:12px; }
+.tp-zeile{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:4px 0; }
+.tp-zeile label{ margin:0; font-size:14px; }
+.tp-zeile .stepper{ width:150px; flex:none; }
+.tp-summe{ text-align:center; font-weight:600; margin:10px 0 4px; }
+:root[data-layout="new"] .cover-info-klapp{ margin:8px 0; }
+:root[data-layout="new"] .cover-info-klapp > summary{ list-style:none; display:flex; align-items:center; justify-content:space-between; cursor:pointer; font-weight:600; font-size:14px; padding:6px 0; }
+:root[data-layout="new"] .cover-info-klapp > summary::-webkit-details-marker{ display:none; }
+:root[data-layout="new"] .cover-info-klapp[open] > summary .tpl-chev{ transform:rotate(180deg); }
+:root[data-layout="new"] .pz-art{ margin:6px 0 8px; }
+:root[data-layout="new"] .pz-art + .plan-start{ margin-top:0; }
+
+/* Run während des Laufens: alles auf einem Bildschirm (kleinere Zeit, vier Werte in einer Reihe, flachere Karte, drei Knöpfe nebeneinander) */
+:root[data-layout="new"] .run-weiss:has(#run-karte) .rg-zeit{ font-size:min(15vw, 62px); line-height:1.05; }
+:root[data-layout="new"] .run-weiss:has(#run-karte) .run-gross{ margin:0 0 6px; }
+:root[data-layout="new"] .run-weiss:has(#run-karte) .run-raster{ grid-template-columns:repeat(4, 1fr); gap:6px; }
+:root[data-layout="new"] .run-weiss:has(#run-karte) .run-raster > div{ padding:8px 4px; border-radius:14px; min-width:0; }
+:root[data-layout="new"] .run-weiss:has(#run-karte) .run-raster b{ font-size:17px; }
+:root[data-layout="new"] .run-weiss:has(#run-karte) .run-raster small{ font-size:9.5px; line-height:1.15; display:block; }
+:root[data-layout="new"] .run-weiss .run-karte{ aspect-ratio:auto; height:min(30vh, 250px); max-height:none; margin:8px 0; border-radius:20px; }
+:root[data-layout="new"] .run-weiss:has(#run-karte) .run-knoepfe{ grid-template-columns:repeat(3, 1fr); gap:6px; }
+:root[data-layout="new"] .run-weiss:has(#run-karte) .run-knoepfe .btn{ padding:11px 4px; font-size:13.5px; margin:0; min-width:0; }
+:root[data-layout="new"] .run-weiss:has(#run-karte) .run-knoepfe .btn svg{ width:15px; height:15px; }
+:root[data-layout="new"] .run-weiss:has(#run-karte) .run-knoepfe .run-dunkelbtn{ grid-column:auto; order:0; }
+:root[data-layout="new"] .run-weiss:has(#run-karte) + div{ height:8px !important; }
+:root[data-layout="new"] .run-weiss .run-karte{ height:min(36vh, 300px); }
+.run-karte svg{ overflow:visible; }
+/* Run-Einstellungen auf dunklem Glas: Zähler (Intervall-Lauf) auch im Hellen lesbar */
+:root[data-layout="new"] .run-bg ~ .run-opt .stepper{ background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22); }
+:root[data-layout="new"] .run-bg ~ .run-opt .stepper button, :root[data-layout="new"] .run-bg ~ .run-opt .stepper input{ background:transparent; color:#f4f4f6; -webkit-text-fill-color:#f4f4f6; }
+:root[data-layout="new"] .run-bg ~ .run-opt .ru-felder label{ color:rgba(255,255,255,.8); }
+:root[data-layout="new"] .run-bg ~ .run-eigen input[type=range], :root[data-layout="new"] .run-bg ~ .run-ansage input[type=range]{ width:100%; accent-color:var(--accent); margin:6px 0 2px; }
+:root[data-layout="new"] .run-bg ~ .run-ansage .run-ziel-kopf b{ color:var(--accent-ink, var(--accent)); }
+:root[data-layout="new"] .run-bg ~ .run-eigen .run-ziel-kopf b, :root[data-layout="new"] .run-bg ~ .run-ansage .run-ziel-kopf b{ color:#ff8f6b; }
+
+/* ---------- Training nach Sätzen (js/22-satz-training.js): Glas-Bereich, nach links/rechts wischen ---------- */
+.satz-root{ position:fixed; inset:0; z-index:60; display:flex; flex-direction:column; color:#f4f4f6; background:#0b0d10; overflow:hidden; }
+.satz-bg{ position:absolute; inset:-30px; z-index:0; background:url(img/neu-p-freiluft-meer.jpg) center/cover no-repeat; filter:blur(26px) brightness(.55) saturate(1.2); }
+.satz-root > *:not(.satz-bg){ position:relative; z-index:1; }
+.satz-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:max(14px, env(safe-area-inset-top)) 14px 6px; }
+.satz-top .exit{ width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.12); color:#fff; font-size:24px; display:grid; place-items:center; -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); cursor:pointer; }
+.satz-top .exit svg{ width:20px; height:20px; }
+.satz-punkte{ flex:1; display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap; }
+.satz-punkt{ width:10px; height:10px; padding:0; border-radius:50%; border:0; background:rgba(255,255,255,.35); cursor:pointer; transition:transform .2s, background .2s; }
+.satz-punkt.an{ background:#fff; transform:scale(1.5); }
+.satz-logo{ text-align:center; font-size:12px; font-weight:800; letter-spacing:.22em; opacity:.85; margin:2px 0 6px; }
+.satz-wisch{ flex:1; min-height:0; display:flex; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+.satz-wisch::-webkit-scrollbar{ display:none; }
+.satz-karte{ flex:0 0 100%; scroll-snap-align:center; scroll-snap-stop:always; overflow-y:auto; padding:6px 14px calc(18px + env(safe-area-inset-bottom)); }
+.satz-glas{ background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); border-radius:28px; padding:16px; -webkit-backdrop-filter:blur(18px) saturate(140%); backdrop-filter:blur(18px) saturate(140%); box-shadow:0 14px 40px rgba(0,0,0,.28); }
+.satz-name{ margin:0; font-size:24px; line-height:1.15; display:flex; align-items:center; gap:10px; }
+.satz-mus{ opacity:.8; font-size:13px; margin-top:2px; }
+.satz-figur{ display:flex; justify-content:center; margin:8px 0 2px; color:#fff; }
+.satz-illu{ width:min(52vw, 190px); height:auto; max-height:22vh; }
+.satz-ziel{ text-align:center; opacity:.9; margin:4px 0 10px; font-size:14px; }
+.satz-zeile{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:6px 0; font-size:13px; }
+.satz-zeile > span:first-child{ opacity:.75; margin-right:2px; }
+.satz-chip{ padding:5px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.1); color:#fff; font:inherit; font-size:13px; }
+button.satz-chip{ cursor:pointer; }
+.satz-chip.an{ background:rgba(255,255,255,.92); color:#101214; border-color:transparent; }
+.satz-leer{ opacity:.6; }
+.satz-eingabe{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0 10px; }
+.satz-eingabe.eins{ grid-template-columns:1fr; }
+.satz-feld label{ display:block; font-size:12px; opacity:.75; margin:0 0 4px; text-align:center; }
+.satz-zaehler{ display:flex; align-items:center; border-radius:20px; border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.1); overflow:hidden; }
+.satz-zaehler button{ flex:none; width:52px; height:58px; border:0; background:transparent; color:#fff; font-size:26px; cursor:pointer; }
+.satz-zaehler button:active{ background:rgba(255,255,255,.2); }
+.satz-zaehler input{ flex:1; min-width:0; width:100%; text-align:center; border:0; background:transparent; color:#fff; -webkit-text-fill-color:#fff; font-size:26px; font-weight:800; padding:0; }
+.satz-los{ width:100%; height:64px; border:0; border-radius:22px; background:#fff; color:#101214; font-size:18px; font-weight:800; cursor:pointer; }
+.satz-los:active{ transform:scale(.98); }
+.satz-pause{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:10px; padding:10px 14px; border-radius:18px; background:rgba(255,255,255,.14); }
+.satz-pause[hidden]{ display:none; }
+.satz-pause b{ font-size:22px; }
+.satz-pause.vorbei{ background:color-mix(in srgb, var(--accent) 55%, transparent); }
+.satz-pause button, .satz-undo, .satz-weiter{ border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.1); color:#fff; border-radius:14px; padding:8px 12px; font:inherit; cursor:pointer; }
+.satz-undo{ display:block; margin:10px auto 0; font-size:13px; }
+.satz-weiter{ display:block; width:100%; margin-top:10px; padding:14px; font-weight:700; background:color-mix(in srgb, var(--accent) 70%, transparent); border-color:transparent; }
+.satz-info{ margin-top:12px; border-top:1px solid rgba(255,255,255,.18); padding-top:8px; font-size:14px; }
+.satz-info > summary{ list-style:none; display:flex; justify-content:space-between; cursor:pointer; font-weight:600; }
+.satz-info > summary::-webkit-details-marker{ display:none; }
+.satz-info[open] > summary .tpl-chev{ transform:rotate(180deg); }
+.satz-info ol, .satz-info ul{ margin:8px 0 0; padding-left:20px; }
+body:has(.satz-root) .fab, body:has(.satz-root) #tabbar{ display:none; }
+.satz-mus, .satz-mus *{ color:rgba(255,255,255,.85) !important; }
+
+
+/* BLOC-Zeichen im Training: orange und größer (Timer und Satz-Training) */
+.satz-logo{ display:flex; align-items:baseline; justify-content:center; gap:12px; margin:2px 0 8px; }
+.satz-logo b{ font-family:var(--f-brand, "Helvetica Neue","Arial Black",Arial,sans-serif); font-size:24px; font-weight:900; letter-spacing:.22em; color:var(--accent); text-shadow:0 2px 14px rgba(0,0,0,.35); }
+.satz-logo span{ font-size:12px; font-weight:700; letter-spacing:.12em; opacity:.85; }
+/* mehr Rückmeldung beim Eintragen */
+.satz-saetze{ display:flex; justify-content:center; gap:7px; margin:8px 0 2px; }
+.satz-saetze i{ width:14px; height:14px; border-radius:50%; border:2px solid rgba(255,255,255,.4); }
+.satz-saetze i.an{ background:var(--accent); border-color:var(--accent); }
+.satz-saetze i.jetzt{ border-color:#fff; box-shadow:0 0 0 3px rgba(255,255,255,.18); }
+.satz-saetze i.pop{ animation:satz-pop .5s cubic-bezier(.2,1.6,.4,1); }
+@keyframes satz-pop{ 0%{ transform:scale(.3); } 100%{ transform:scale(1); } }
+.satz-punkt.fertig{ background:var(--accent); }
+.satz-los{ transition:transform .12s, background .2s, color .2s; }
+.satz-los.ok{ background:var(--accent); color:#fff; animation:satz-ok .5s ease-out; }
+@keyframes satz-ok{ 0%{ transform:scale(.96); } 50%{ transform:scale(1.03); } 100%{ transform:scale(1); } }
+.satz-zaehler button:active{ transform:scale(.9); }
+.satz-ende{ position:absolute; inset:0; z-index:5; display:grid; place-items:center; padding:20px; background:rgba(5,8,12,.55); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); animation:satz-ein .3s ease-out; }
+@keyframes satz-ein{ from{ opacity:0; } to{ opacity:1; } }
+.satz-ende-glas{ width:min(100%, 380px); text-align:center; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25); border-radius:30px; padding:26px 20px 20px; box-shadow:0 20px 60px rgba(0,0,0,.4); }
+.satz-ende-glas h2{ margin:10px 0 4px; font-size:26px; }
+.satz-ende-glas p{ margin:0 0 16px; opacity:.85; }
+.satz-haken{ width:72px; height:72px; margin:0 auto; border-radius:50%; display:grid; place-items:center; font-size:38px; background:var(--accent); color:#fff; animation:satz-pop .6s cubic-bezier(.2,1.6,.4,1); }
+.satz-ende-glas .satz-weiter, .satz-ende-glas .satz-undo{ width:100%; margin-top:10px; }
+@media (prefers-reduced-motion: reduce){ .satz-saetze i.pop, .satz-los.ok, .satz-haken, .satz-ende{ animation:none; } }
+.satz-root > .satz-ende{ position:absolute; inset:0; z-index:5; }
+/* Fertig-Knopf unten im Satz-Training: grau, bis der letzte Satz eingetragen ist */
+.satz-fuss{ padding:0 14px calc(14px + env(safe-area-inset-bottom)); }
+.satz-fertig{ width:100%; height:58px; border-radius:20px; font-size:18px; font-weight:800; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.08); color:rgba(255,255,255,.4); transition:background .3s, color .3s, transform .2s; }
+.satz-fertig:disabled{ cursor:not-allowed; }
+.satz-fertig.bereit{ background:var(--accent); color:#fff; border-color:transparent; cursor:pointer; }
+.satz-fertig.leuchtet{ animation:satz-ok .6s ease-out 2; box-shadow:0 0 0 6px color-mix(in srgb, var(--accent) 35%, transparent); }
+.satz-karte{ padding-bottom:12px; }
+.satz-illu{ max-height:17vh; }
+.satz-fuss{ background:linear-gradient(to top, rgba(0,0,0,.35), rgba(0,0,0,0)); padding-top:8px; }
+/* Run-Aufnahme bei Systemdesign „hell“ (ohne gewählte Helligkeit): trotzdem dunkles Glas auf dem Foto, nicht die weiße Karte */
+@media (prefers-color-scheme: light){
+  :root[data-layout="new"]:not([data-theme]) .run-weiss{ --text:#fff; --text-dim:rgba(255,255,255,.75); --surface:rgba(255,255,255,.14); --surface-2:rgba(255,255,255,.12); --border:rgba(255,255,255,.2); background:none; color:#fff; }
+}
+@media (prefers-color-scheme: dark){
+  :root[data-layout="new"]:not([data-theme]) .run-weiss{ --text:#fff; --text-dim:rgba(255,255,255,.75); --surface:rgba(255,255,255,.14); --surface-2:rgba(255,255,255,.12); --border:rgba(255,255,255,.2); background:none; color:#fff; }
+}
+/* Satz-Training: Steigerungs-Vorschlag und Zusammenfassung mit Vergleich zur Einheit davor */
+.satz-tipp{ display:flex; align-items:center; gap:10px; margin:6px 0 10px; padding:10px 12px; border-radius:16px; background:color-mix(in srgb, var(--accent) 22%, transparent); border:1px solid color-mix(in srgb, var(--accent) 55%, transparent); font-size:13px; line-height:1.3; }
+.satz-tipp span{ flex:1; }
+.satz-tipp button{ flex:none; border:0; border-radius:12px; padding:8px 12px; background:var(--accent); color:#fff; font:inherit; font-weight:700; cursor:pointer; }
+.satz-ende-glas{ max-height:86vh; overflow-y:auto; }
+.satz-vgls{ text-align:left; margin:0 0 14px; max-height:34vh; overflow-y:auto; }
+.satz-vgl{ display:grid; grid-template-columns:1fr auto; gap:2px 10px; padding:8px 0; border-top:1px solid rgba(255,255,255,.14); font-size:14px; }
+.satz-vgl-n{ font-weight:700; grid-column:1; }
+.satz-vgl-w{ grid-column:1; opacity:.8; font-size:13px; }
+.satz-vgl-b{ grid-column:2; grid-row:1 / span 2; align-self:center; padding:5px 10px; border-radius:999px; font-size:12.5px; font-weight:700; background:rgba(255,255,255,.14); white-space:nowrap; }
+.satz-vgl-b.hoch{ background:#2fb36b; color:#fff; }
+.satz-vgl-b.runter{ background:rgba(255,180,160,.3); }
+.satz-vgl-b.neu{ background:var(--accent); color:#fff; }
+:root[data-layout="new"] .pz-tipp{ display:flex; align-items:center; gap:8px; margin-top:4px; font-size:12.5px; color:var(--accent-ink, var(--accent)); font-weight:600; }
+:root[data-layout="new"] .pz-tipp button{ border:1px solid var(--accent); background:transparent; color:var(--accent-ink, var(--accent)); border-radius:10px; padding:3px 9px; font:inherit; font-size:12px; cursor:pointer; }
+
+/* Run während des Laufens: guter Kontrast auf jedem Foto und in jedem Design - dunkle Abdeckung, dunkles Glas, helle Schrift */
+:root[data-layout="new"]:has(.run-weiss) .run-bg::after{ background:linear-gradient(180deg, rgba(6,8,12,.62), rgba(6,8,12,.5) 50%, rgba(6,8,12,.72)) !important; }
+:root[data-layout="new"] .run-weiss .run-raster > div{ background:rgba(255,255,255,.13); border-color:rgba(255,255,255,.22); }
+:root[data-layout="new"] .run-weiss .run-raster small, :root[data-layout="new"] .run-weiss .rg-label{ color:rgba(255,255,255,.88); }
+:root[data-layout="new"] .run-weiss .run-ziel, :root[data-layout="new"] .run-weiss .run-gps{ color:#fff; text-shadow:0 1px 8px rgba(0,0,0,.6); }
+:root[data-layout="new"] .run-weiss .run-gps{ background:rgba(8,10,14,.55); border:1px solid rgba(255,255,255,.2); }
+:root[data-layout="new"] .run-weiss .run-iv{ background:rgba(8,10,14,.55); color:#fff; border:1px solid rgba(255,255,255,.28); }
+:root[data-layout="new"] .run-weiss .run-iv.lauf{ background:var(--accent); color:#fff; border-color:transparent; }
+:root[data-layout="new"] .run-weiss .run-karte{ background:rgba(255,255,255,.13); border-color:rgba(255,255,255,.22); }
+:root[data-layout="new"] .run-weiss .btn-secondary{ background:rgba(255,255,255,.13); color:#fff; border-color:rgba(255,255,255,.3); }
+:root[data-layout="new"] .run-weiss .btn-danger{ background:rgba(255,255,255,.13); color:#ffb4a8; border-color:rgba(255,160,145,.7); }
+:root[data-layout="new"] .run-weiss .rg-zeit{ text-shadow:0 2px 22px rgba(0,0,0,.6); }
+.rk-kulisse .rk-str{ stroke:rgba(255,255,255,.4); }
+.rk-kulisse .rk-neben{ stroke:rgba(255,255,255,.28); }
+/* Run-Aufnahme im hellen Design: Titel und Zurück-Knopf in heller Schrift auf dem dunklen Foto */
+:root[data-layout="new"]:has(.run-weiss) .topbar h1, :root[data-layout="new"]:has(.run-weiss) .topbar .ttl{ color:#fff; text-shadow:0 1px 10px rgba(0,0,0,.5); }
+:root[data-layout="new"]:has(.run-weiss) .topbar .iconbtn{ background:rgba(255,255,255,.13); color:#fff; border:1px solid rgba(255,255,255,.28); }
+/* Run: derselbe geblurrte, dunkle Hintergrund wie beim Timer - in jedem Design (auch Hell); Überschriften und Hinweise darauf hell */
+:root[data-layout="new"] .run-bg::after{ background:linear-gradient(180deg, rgba(8,10,14,.5), rgba(8,10,14,.34) 45%, rgba(8,10,14,.6)) !important; }
+:root[data-layout="new"] .run-bg ~ .section-title, :root[data-layout="new"] .run-bg ~ .page-hint, :root[data-layout="new"] .run-bg ~ .empty{ color:rgba(255,255,255,.9) !important; }
+:root[data-layout="new"] .run-bg ~ .kopf-bereich .kb-text h1, :root[data-layout="new"] .run-bg ~ .kopf-bereich .kb-kicker{ color:#fff !important; text-shadow:0 1px 10px rgba(0,0,0,.5); }
+:root[data-layout="new"] .run-bg ~ .kopf-bereich .kb-rund{ background:rgba(255,255,255,.13); color:#fff; border:1px solid rgba(255,255,255,.28); }
+:root[data-layout="new"] .run-bg ~ .run-hero .rh-km, :root[data-layout="new"] .run-bg ~ .run-hero .rh-sub, :root[data-layout="new"] .run-bg ~ .run-hero .run-art{ background:rgba(255,255,255,.13) !important; color:#fff !important; border:1px solid rgba(255,255,255,.25) !important; }
+:root[data-layout="new"] .run-bg ~ .run-hero .rh-km small, :root[data-layout="new"] .run-bg ~ .run-hero .rh-sub{ color:rgba(255,255,255,.9) !important; }
+:root[data-layout="new"] .run-bg ~ .run-hero .run-art button{ color:#fff !important; }
+:root[data-layout="new"] .run-bg ~ .run-hero .run-art button.active{ background:#fff !important; color:#101214 !important; }
+/* Kalender: beim Wischen gleitet die neue Woche bzw. der neue Monat von der Seite herein */
+#app.kal-gleit-vor > *{ animation:kal-vor .28s ease-out; }
+#app.kal-gleit-zurueck > *{ animation:kal-zurueck .28s ease-out; }
+@keyframes kal-vor{ from{ opacity:.2; transform:translateX(34px); } to{ opacity:1; transform:none; } }
+@keyframes kal-zurueck{ from{ opacity:.2; transform:translateX(-34px); } to{ opacity:1; transform:none; } }
+@media (prefers-reduced-motion: reduce){ #app.kal-gleit-vor > *, #app.kal-gleit-zurueck > *{ animation:none; } }
+body:has(.kal-nav) #app{ touch-action:pan-y; }   /* waagerechte Wischer gehören dem Kalender, senkrecht scrollt die Seite */
+.kn-mitte{ flex-direction:column; gap:1px; } .kn-mitte small{ font-size:12.5px; opacity:.75; font-weight:500; }
+/* Run-Karte: Umschalter Norden oben / Fahrtrichtung oben */
+.run-karte-wrap{ position:relative; }
+.rk-modus{ position:absolute; top:16px; right:10px; z-index:2; width:40px; height:40px; border-radius:50%; border:1px solid rgba(255,255,255,.3); background:rgba(8,10,14,.6); color:#fff; display:grid; place-items:center; cursor:pointer; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); }
+.rk-modus svg{ width:22px; height:22px; }
+.rk-pfeil{ fill:#fff; stroke:var(--accent); stroke-width:2.5; stroke-linejoin:round; }
+.rk-nord path{ fill:#ff8f6b; }
+.rk-nord text{ fill:#fff; font-size:11px; font-weight:800; }
+/* Hell: dunkle Schrift auf den (jetzt klareren) Fotos bekommt einen hellen Hof, damit sie lesbar bleibt */
+:root[data-layout="new"][data-theme="light"] .training-seite .area-tile .at-name, :root[data-layout="new"][data-theme="light"] .training-seite .area-tile .at-sub,
+:root[data-layout="new"][data-theme="light"] .fav-foto:not(.ohne) .ff-name, :root[data-layout="new"][data-theme="light"] .fav-foto:not(.ohne) .ff-sub, :root[data-layout="new"][data-theme="light"] .fav-foto:not(.ohne) .ff-bereich{ text-shadow:0 0 8px rgba(255,250,244,.95), 0 0 2px rgba(255,250,244,.9); }
+@media (prefers-color-scheme: light){
+  :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile .at-name, :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile .at-sub,
+  :root[data-layout="new"]:not([data-theme]) .fav-foto:not(.ohne) .ff-name, :root[data-layout="new"]:not([data-theme]) .fav-foto:not(.ohne) .ff-sub, :root[data-layout="new"]:not([data-theme]) .fav-foto:not(.ohne) .ff-bereich{ text-shadow:0 0 8px rgba(255,250,244,.95), 0 0 2px rgba(255,250,244,.9); }
+}
+/* Run: exakt derselbe Ausschnitt wie hinter dem Timer (zentriert, gleiche Unschärfe, Helligkeit und Sättigung); nur eine hauchzarte Abdeckung */
+:root[data-layout="new"] .run-bg{ background:#0b0d10; }
+:root[data-layout="new"] .run-bg i{ inset:-30px; background-position:center; background-repeat:no-repeat; filter:blur(11px) brightness(.66) saturate(1.25); opacity:.95; }
+:root[data-layout="new"] .run-bg::after, :root[data-layout="new"]:has(.run-weiss) .run-bg::after{ background:rgba(8,10,14,.1) !important; }
+/* Run-Start: Eigener Lauf und Intervall-Lauf einklappbar, Kalorien in der Kachel oben rechts */
+:root[data-layout="new"] details.run-klapp > summary{ list-style:none; cursor:pointer; margin:0; }
+:root[data-layout="new"] details.run-klapp > summary::-webkit-details-marker{ display:none; }
+:root[data-layout="new"] details.run-klapp > summary span:first-child{ flex:1; }
+:root[data-layout="new"] details.run-klapp > summary .tpl-chev{ margin-left:6px; opacity:.8; transition:transform .2s; }
+:root[data-layout="new"] details.run-klapp[open] > summary .tpl-chev{ transform:rotate(180deg); }
+:root[data-layout="new"] details.run-klapp[open] > summary{ margin-bottom:10px; }
+:root[data-layout="new"] .run-hero .rh-kcal{ flex-direction:column; align-items:flex-start; justify-content:center; gap:2px; }
+:root[data-layout="new"] .run-hero .rh-kcal b{ font-size:24px; line-height:1.05; }
+:root[data-layout="new"] .run-hero .rh-kcal small{ font-size:12px; opacity:.85; }
+:root[data-layout="new"] .run-bg ~ .run-opt .run-ziel-kopf b{ color:#ff8f6b; }
+/* Hell: kein heller Schleier mehr - Fotos wie im Dunkel (Verlauf von unten in Schwarz, weisse Schrift) */
+:root[data-layout="new"][data-theme="light"] .training-seite .area-tile.zeile::before{ background:linear-gradient(180deg, rgba(8,9,11,.20) 0%, rgba(8,9,11,.50) 40%, rgba(8,9,11,.86) 100%); }
+:root[data-layout="new"][data-theme="light"] .fav-foto:not(.ohne)::before{ background:linear-gradient(180deg, color-mix(in srgb, var(--nc, #444) 0%, transparent) 40%, color-mix(in srgb, var(--nc, #444) 22%, transparent) 100%), linear-gradient(180deg, rgba(8,9,11,.12) 0%, rgba(8,9,11,.45) 50%, rgba(8,9,11,.86) 100%); }
+:root[data-layout="new"][data-theme="light"] .training-seite .area-tile .at-name, :root[data-layout="new"][data-theme="light"] .training-seite .area-tile .at-chev, :root[data-layout="new"][data-theme="light"] .fav-foto:not(.ohne) .ff-name{ color:#fff; }
+:root[data-layout="new"][data-theme="light"] .training-seite .area-tile .at-sub, :root[data-layout="new"][data-theme="light"] .fav-foto:not(.ohne) .ff-bereich, :root[data-layout="new"][data-theme="light"] .fav-foto:not(.ohne) .ff-sub{ color:rgba(255,255,255,.9); }
+:root[data-layout="new"][data-theme="light"] .training-seite .area-tile .at-name, :root[data-layout="new"][data-theme="light"] .training-seite .area-tile .at-sub, :root[data-layout="new"][data-theme="light"] .fav-foto:not(.ohne) .ff-name, :root[data-layout="new"][data-theme="light"] .fav-foto:not(.ohne) .ff-sub, :root[data-layout="new"][data-theme="light"] .fav-foto:not(.ohne) .ff-bereich{ text-shadow:0 1px 6px rgba(0,0,0,.55); }
+:root[data-layout="new"][data-theme="light"] .fav-foto:not(.ohne) .ff-stern{ color:#f0a020; }
+:root[data-layout="new"][data-theme="light"] .training-seite .area-tile[data-bereich="intervall"] .at-ico, :root[data-layout="new"][data-theme="light"] .training-seite .area-tile[data-bereich="run"] .at-ico{ background:rgba(255,255,255,.16); color:#fff; }
+@media (prefers-color-scheme: light){
+  :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile.zeile::before{ background:linear-gradient(180deg, rgba(8,9,11,.20) 0%, rgba(8,9,11,.50) 40%, rgba(8,9,11,.86) 100%); }
+  :root[data-layout="new"]:not([data-theme]) .fav-foto:not(.ohne)::before{ background:linear-gradient(180deg, color-mix(in srgb, var(--nc, #444) 0%, transparent) 40%, color-mix(in srgb, var(--nc, #444) 22%, transparent) 100%), linear-gradient(180deg, rgba(8,9,11,.12) 0%, rgba(8,9,11,.45) 50%, rgba(8,9,11,.86) 100%); }
+  :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile .at-name, :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile .at-chev, :root[data-layout="new"]:not([data-theme]) .fav-foto:not(.ohne) .ff-name{ color:#fff; }
+  :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile .at-sub, :root[data-layout="new"]:not([data-theme]) .fav-foto:not(.ohne) .ff-bereich, :root[data-layout="new"]:not([data-theme]) .fav-foto:not(.ohne) .ff-sub{ color:rgba(255,255,255,.9); }
+  :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile .at-name, :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile .at-sub, :root[data-layout="new"]:not([data-theme]) .fav-foto:not(.ohne) .ff-name, :root[data-layout="new"]:not([data-theme]) .fav-foto:not(.ohne) .ff-sub, :root[data-layout="new"]:not([data-theme]) .fav-foto:not(.ohne) .ff-bereich{ text-shadow:0 1px 6px rgba(0,0,0,.55); }
+  :root[data-layout="new"]:not([data-theme]) .fav-foto:not(.ohne) .ff-stern{ color:#f0a020; }
+  :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile[data-bereich="intervall"] .at-ico, :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile[data-bereich="run"] .at-ico{ background:rgba(255,255,255,.16); color:#fff; }
+}
+/* Ukraine Twist: die wehende Flagge liegt auch hinter der Figur in den Kacheln (Suche, Katalog, Air); ein heller Hauch hält die Figur lesbar */
+.fig-karte.ua-kachel .fig-bild{ background:linear-gradient(rgba(255,255,255,.22), rgba(255,255,255,.22)), var(--ua-flag) center / cover no-repeat !important; border-radius:inherit; }
+.fig-karte.ua-kachel .fig-name{ font-weight:700; }
+/* Überrasch mich: Dauer als Schieberegler */
+.sp-dur{ margin:2px 0 6px; }
+.sp-dur-kopf{ display:flex; align-items:baseline; justify-content:space-between; }
+.sp-dur-kopf b{ color:var(--accent); font-size:15px; }
+.sp-dur input[type=range]{ width:100%; margin:6px 0 2px; accent-color:var(--accent); }
+.sp-dur .run-ziel-marken{ display:flex; justify-content:space-between; font-size:11px; color:var(--text-dim); }
+/* Leichter Schleier nur in der oberen Hälfte der Fotokarten (Training, Favoriten): die Schrift unten bleibt unberührt, das Foto bleibt scharf */
+:root[data-layout="new"] .training-seite .area-tile.zeile::after, :root[data-layout="new"] .fav-foto:not(.ohne)::after{
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:linear-gradient(180deg, rgba(255,250,244,.30) 0%, rgba(255,250,244,.16) 28%, rgba(255,250,244,0) 54%); }
+/* Run: alle Karten der Startseite in Glas-Optik (halbtransparent, Blur, heller Rand) wie die Kacheln oben */
+:root[data-layout="new"] .run-bg ~ .run-eigen, :root[data-layout="new"] .run-bg ~ .run-opt, :root[data-layout="new"] .run-bg ~ .run-ansage,
+:root[data-layout="new"] .run-bg ~ .run-item.list-item.entry, :root[data-layout="new"] .run-bg ~ .run-geplant, :root[data-layout="new"] .run-bg ~ .run-live{
+  background:var(--glas); border:1px solid var(--glas-rand); box-shadow:0 8px 26px rgba(0,0,0,.18); color:var(--glas-text); }
+:root[data-layout="new"] .run-bg ~ .run-eigen .tm-hint, :root[data-layout="new"] .run-bg ~ .run-ansage .tm-hint, :root[data-layout="new"] .run-bg ~ .run-item .sub{ color:var(--glas-dim); }
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  :root[data-layout="new"] .run-bg ~ .run-eigen, :root[data-layout="new"] .run-bg ~ .run-opt, :root[data-layout="new"] .run-bg ~ .run-ansage,
+  :root[data-layout="new"] .run-bg ~ .run-item.list-item.entry, :root[data-layout="new"] .run-bg ~ .run-geplant, :root[data-layout="new"] .run-bg ~ .run-live{
+    -webkit-backdrop-filter:blur(18px) saturate(140%); backdrop-filter:blur(18px) saturate(140%); }
+}
+:root[data-layout="new"] .run-bg ~ .run-hero .rh-km, :root[data-layout="new"] .run-bg ~ .run-hero .rh-sub, :root[data-layout="new"] .run-bg ~ .run-hero .run-art,
+:root[data-layout="new"] .run-bg ~ .run-raster > div, :root[data-layout="new"] .rs-chip{ background:var(--glas); border:1px solid var(--glas-rand); box-shadow:0 8px 26px rgba(0,0,0,.18); }
+/* Run-Startseite: der Hintergrund ist in jedem Modus dunkel, also auch das Glas und die Schrift in jedem Modus gleich (hell auf dunklem Glas) */
+:root[data-layout="new"]:has(.run-bg){ --glas:rgba(255,255,255,.13); --glas-rand:rgba(255,255,255,.24); --glas-text:#fff; --glas-dim:rgba(255,255,255,.78); --text:#fff; --text-dim:rgba(255,255,255,.76); }
+:root[data-layout="new"]:has(.run-bg) .run-bg ~ .run-hero .run-art button.active{ background:rgba(255,255,255,.92); color:#1c1c1e; }
+:root[data-layout="new"]:has(.run-bg) .topbar .iconbtn{ background:rgba(255,255,255,.13); color:#fff; border:1px solid rgba(255,255,255,.24); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
+/* Querformat: das BLOC-Zeichen bleibt sichtbar - im Timer und beim Laufen (oben neben den runden Knöpfen) */
+.bloc-quer{ display:none; }
+@media (orientation: landscape) and (max-height: 560px){
+  /* Querformat: das Zeichen (doppelt so groß) steht mittig zwischen dem Kreis und den Kästchen, weiter oben */
+  :root[data-layout="new"] .player .pl-logo, :root[data-layout="new"] .player[data-phase] .pl-logo{ display:block; position:absolute; top:30%; left:calc(24px + min(58vh, 240px) + (100vw - 48px - min(58vh, 240px))*.2); transform:translate(-50%, -50%); margin:0; font-size:36px; z-index:3; }
+  :root[data-layout="new"] .bloc-quer{ display:block; position:fixed; top:24px; right:76px; z-index:5; pointer-events:none; font-family:var(--f-brand, "Helvetica Neue","Arial Black",Arial,sans-serif); font-size:20px; font-weight:900; letter-spacing:.22em; line-height:1; color:var(--accent); text-shadow:0 2px 14px rgba(0,0,0,.35); }
+}
+/* Training: leichter Schimmer auf den Fotokarten - feine helle Kante und ein weicher Lichtstreifen, der beim Öffnen einmal darüber gleitet */
+:root[data-layout="new"] .training-seite .area-tile.zeile{ box-shadow:inset 0 1px 0 rgba(255,255,255,.26), inset 0 0 0 1px rgba(255,255,255,.07); }
+:root[data-layout="new"] .training-seite .area-tile.zeile::after{
+  background:
+    linear-gradient(112deg, rgba(255,255,255,0) 38%, rgba(255,255,255,.2) 50%, rgba(255,255,255,0) 62%),
+    linear-gradient(180deg, rgba(255,250,244,.30) 0%, rgba(255,250,244,.16) 28%, rgba(255,250,244,0) 54%);
+  background-size:260% 100%, 100% 100%; background-position:130% 0, 0 0; background-repeat:no-repeat;
+  animation:kachel-schimmer 2.4s ease-out .35s 1 both; }
+:root[data-layout="new"] .training-seite .area-tile.zeile:nth-child(2)::after{ animation-delay:.55s; }
+:root[data-layout="new"] .training-seite .area-tile.zeile:nth-child(3)::after{ animation-delay:.75s; }
+:root[data-layout="new"] .training-seite .area-tile.zeile:nth-child(4)::after{ animation-delay:.95s; }
+:root[data-layout="new"] .training-seite .area-tile.zeile:nth-child(5)::after{ animation-delay:1.15s; }
+:root[data-layout="new"] .training-seite .area-tile.zeile:nth-child(6)::after{ animation-delay:1.35s; }
+@keyframes kachel-schimmer{ from{ background-position:130% 0, 0 0; } to{ background-position:-30% 0, 0 0; } }
+@media (prefers-reduced-motion: reduce){ :root[data-layout="new"] .training-seite .area-tile.zeile::after{ animation:none; background-position:50% 0, 0 0; } }
+/* Run-Startseite: Hintergrundfoto weniger weichgezeichnet (Timer und Lauf behalten die stärkere Unschärfe) */
+:root[data-layout="new"]:has(.run-hero) .run-bg i{ filter:blur(11px) brightness(.66) saturate(1.25); }
+/* Timer (Liste): derselbe Hintergrund und dieselbe Glas-Optik wie auf Run - Karten halbtransparent mit Blur, helle Schrift in jedem Modus */
+:root[data-layout="new"]:has(.run-bg){ --surface:rgba(255,255,255,.12); --surface-2:rgba(255,255,255,.14); --border:rgba(255,255,255,.22); }
+:root[data-layout="new"]:has(.run-bg) #app .card, :root[data-layout="new"]:has(.run-bg) #app .list-item.entry, :root[data-layout="new"]:has(.run-bg) #app .tpl-item,
+:root[data-layout="new"]:has(.run-bg) #app .filter-karte, :root[data-layout="new"]:has(.run-bg) #app .fc-card{
+  background:var(--glas); border:1px solid var(--glas-rand); box-shadow:0 8px 26px rgba(0,0,0,.18); color:var(--glas-text);
+  -webkit-backdrop-filter:blur(18px) saturate(140%); backdrop-filter:blur(18px) saturate(140%); }
+:root[data-layout="new"]:has(.run-bg) #app .section-title, :root[data-layout="new"]:has(.run-bg) #app .page-hint{ color:rgba(255,255,255,.88); }
+:root[data-layout="new"]:has(.run-bg) .kopf-bereich.klar .kb-rund, :root[data-layout="new"]:has(.run-bg) .kopf-bereich.klar .kb-rechts .iconbtn{ background:rgba(255,255,255,.13); color:#fff; border:1px solid rgba(255,255,255,.24); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
+/* Start-Knöpfe (Run, Timer) als helles Glas statt voll weiß: durchscheinend, weißes Symbol bzw. weiße Schrift */
+:root[data-layout="new"] .run-bg ~ .run-hero .run-startbtn, :root[data-layout="new"]:has(.run-bg) #app .playbtn{
+  background:rgba(255,255,255,.2) !important; color:#fff !important; border:1px solid rgba(255,255,255,.4) !important; box-shadow:0 8px 26px rgba(0,0,0,.2);
+  -webkit-backdrop-filter:blur(16px) saturate(140%); backdrop-filter:blur(16px) saturate(140%); }
+:root[data-layout="new"] .run-bg ~ .run-hero .run-startbtn svg{ color:#ff8f6b; }
+:root[data-layout="new"]:has(.run-bg) #app .playbtn svg{ color:#fff; fill:#fff; }
+:root[data-layout="new"]:has(.run-bg) #app .run-hero{ background:none !important; border:0 !important; box-shadow:none !important; -webkit-backdrop-filter:none; backdrop-filter:none; }
+/* Griff / Aufsatz bei Kabelzug- und Stangenübungen */
+.info-griff{ margin:8px 0 2px; padding:8px 12px; border-radius:12px; background:var(--surface-2, rgba(128,128,128,.12)); font-size:14px; line-height:1.35; }
+.info-griff b{ color:var(--accent); }
+.satz-glas .info-griff{ background:rgba(255,255,255,.12); color:#fff; margin:6px 0; font-size:13px; }
+/* Fenster, Menüs und Auswahlblätter über den Glas-Seiten (Run, Timer): undurchsichtig, damit die Karten dahinter nicht durchscheinen */
+:root[data-layout="new"]:has(.run-bg) #overlayRoot, :root[data-layout="new"]:has(.run-bg) .fab-menu, :root[data-layout="new"]:has(.run-bg) .vol-popover{
+  --surface:#1d2025; --surface-2:#292d33; --border:rgba(255,255,255,.16); --text:#f4f4f6; --text-dim:rgba(255,255,255,.72); }
+:root[data-layout="new"]:has(.run-bg) .confirm-sheet{ background:#1d2025; color:#f4f4f6; -webkit-backdrop-filter:none; backdrop-filter:none; }
+:root[data-layout="new"]:has(.run-bg) .confirm-overlay{ background:rgba(0,0,0,.6); }
+:root[data-layout="new"]:has(.run-bg) .fab-menu .fab-opt{ background:#1d2025; color:#f4f4f6; border:1px solid rgba(255,255,255,.16); -webkit-backdrop-filter:none; backdrop-filter:none; }
+:root[data-layout="new"]:has(.run-bg) .vol-popover{ background:#1d2025; }
+/* Heute ohne Scrollen: kompakterer Kopf, kleinere Favoriten-Karten, kürzerer Workout-Builder (Hell und Dunkel) */
+:root[data-layout="new"] .kopf-neu{ min-height:0; padding:calc(env(safe-area-inset-top) + 10px) 20px 44px; gap:6px; }
+:root[data-layout="new"] .kn-sym .iconbtn{ width:40px; height:40px; }
+:root[data-layout="new"] .marke-neu b{ font-size:clamp(34px,10vw,42px); }
+:root[data-layout="new"] .marke-neu small{ margin-top:3px; font-size:11px; }
+:root[data-layout="new"] .kn-gruss b{ font-size:20px; }
+:root[data-layout="new"] .kn-gruss span{ font-size:11px; }
+:root[data-layout="new"] .woche-neu{ margin:-34px 0 8px; }
+:root[data-layout="new"] .woche-neu .woche{ padding-top:10px; padding-bottom:10px; }
+:root[data-layout="new"] .fav-foto{ width:102px; height:90px; padding:7px; }   /* 20 % kleiner (2026-10-21) */
+:root[data-layout="new"] .ff-name{ font-size:11.5px; -webkit-line-clamp:2; }
+:root[data-layout="new"] .ff-sub{ font-size:10px; }
+:root[data-layout="new"] .ff-bereich{ font-size:8.5px; }
+:root[data-layout="new"] .fav-foto .ff-stern, :root[data-layout="new"] .ff-stern{ top:6px; right:6px; width:13px; height:13px; }
+:root[data-layout="new"] .fav-fotos{ gap:10px; margin-bottom:4px; }
+:root[data-layout="new"] .builder-neu{ min-height:0; padding:14px; margin:0 0 8px; gap:10px; }
+:root[data-layout="new"] .bn-text b{ font-size:19px; }
+:root[data-layout="new"] .bn-text small{ font-size:12.5px; }
+:root[data-layout="new"] .bn-knoepfe .btn{ padding:10px 12px; font-size:14.5px; }
+:root[data-layout="new"] .kopf-neu{ min-height:150px; }
+:root[data-layout="new"] .kn-gruss{ margin-top:10px; }
+/* Run: Verlauf einklappbar */
+:root[data-layout="new"] details.run-verlauf > summary{ list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; }
+:root[data-layout="new"] details.run-verlauf > summary::-webkit-details-marker{ display:none; }
+:root[data-layout="new"] details.run-verlauf > summary .tpl-chev{ opacity:.8; transition:transform .2s; }
+:root[data-layout="new"] details.run-verlauf[open] > summary .tpl-chev{ transform:rotate(180deg); }
+/* Heute: Maße wachsen mit der Bildschirmhöhe, damit die Seite den Bildschirm füllt, ohne zu scrollen (auf kleinen Handys bleibt es kompakt) */
+:root[data-layout="new"] .kopf-neu{ min-height:clamp(150px, 25vh, 250px); padding-bottom:clamp(44px, 6vh, 56px); }
+:root[data-layout="new"] .marke-neu b{ font-size:clamp(36px, 11vw, 50px); }
+:root[data-layout="new"] .kn-gruss b{ font-size:clamp(20px, 3vh, 26px); }
+:root[data-layout="new"] .woche-neu{ margin:-40px 0 clamp(8px, 1.6vh, 16px); }
+:root[data-layout="new"] .woche-neu .woche{ padding-top:clamp(10px, 1.6vh, 16px); padding-bottom:clamp(10px, 1.6vh, 16px); }
+:root[data-layout="new"] .fav-foto{ width:clamp(102px, 29vw, 130px); height:clamp(90px, 15.6vh, 152px); padding:clamp(7px, 1.1vh, 10px); }   /* 20 % kleiner als vorher (128-162 x 112-190) */
+:root[data-layout="new"] .ff-name{ font-size:clamp(11.5px, 1.7vh, 13px); }
+:root[data-layout="new"] .ff-sub{ font-size:clamp(10px, 1.4vh, 11px); }
+:root[data-layout="new"] .builder-neu{ min-height:clamp(0px, 23vh, 230px); padding:clamp(14px, 2.2vh, 20px); gap:clamp(10px, 1.6vh, 16px); margin-bottom:clamp(8px, 1.6vh, 16px); }
+:root[data-layout="new"] .bn-text b{ font-size:clamp(19px, 2.9vh, 24px); }
+:root[data-layout="new"] .bn-text small{ font-size:clamp(12.5px, 1.8vh, 14px); }
+:root[data-layout="new"] .bn-knoepfe .btn{ padding:clamp(10px, 1.7vh, 15px) 12px; font-size:clamp(14.5px, 2vh, 16px); }
+/* BLOC-Zeichen beim Laufen immer sichtbar (auch im Hochformat, oben in der Mitte) */
+:root[data-layout="new"] .bloc-quer{ display:block; position:fixed; top:calc(env(safe-area-inset-top) + 22px); left:50%; right:auto; transform:translateX(-50%); z-index:5; pointer-events:none;
+  font-family:var(--f-brand, "Helvetica Neue","Arial Black",Arial,sans-serif); font-size:20px; font-weight:900; letter-spacing:.22em; line-height:1; color:var(--accent); text-shadow:0 2px 14px rgba(0,0,0,.35); }
+@media (orientation: landscape) and (max-height: 560px){
+  :root[data-layout="new"] .bloc-quer{ left:auto; right:76px; transform:none; top:24px; }
+}
+/* Hinweisfenster (Toast) auf den Glas-Seiten: dunkel mit heller Schrift statt weiß auf weiß */
+:root[data-layout="new"]:has(.run-bg) .toast{ background:rgba(22,25,30,.94); color:#fff; border:1px solid rgba(255,255,255,.18); }
+
+/* Abschlusskarte „Training geschafft“: ruhiger (Glas, Weiß), nur das BLOC-Zeichen trägt die Akzentfarbe; Statistik mit Zahlen und Balken */
+.satz-ende-logo{ font-family:var(--f-brand, "Helvetica Neue","Arial Black",Arial,sans-serif); font-size:20px; font-weight:900; letter-spacing:.22em; color:var(--accent); margin:0 0 12px; text-indent:.22em; }
+.satz-haken{ width:56px; height:56px; font-size:30px; background:rgba(255,255,255,.14); border:1.5px solid rgba(255,255,255,.55); color:#fff; box-shadow:none; }
+.satz-ende-glas h2{ font-size:22px; margin:12px 0 14px; }
+.satz-stat{ margin:0 0 14px; text-align:center; }
+.satz-stat-zahlen{ display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-bottom:12px; }
+.satz-stat-zahlen b{ display:block; font-size:16px; font-weight:800; }
+.satz-stat-zahlen span{ display:block; font-size:10.5px; opacity:.7; margin-top:2px; }
+.satz-stat-balken{ height:54px; display:flex; align-items:flex-end; justify-content:center; gap:7px; padding:0 8px; border-bottom:1px solid rgba(255,255,255,.2); }
+.satz-stat-balken i{ display:block; width:22px; max-width:22%; border-radius:5px 5px 0 0; background:rgba(255,255,255,.28); }
+.satz-stat-balken i.jetzt{ background:rgba(255,255,255,.85); }
+.satz-stat small{ display:block; margin-top:6px; font-size:11.5px; opacity:.7; }
+.satz-vgl-b, .satz-vgl-b.hoch, .satz-vgl-b.runter, .satz-vgl-b.neu, .satz-vgl-b.gleich{ background:rgba(255,255,255,.12); color:inherit; }
+.satz-ende-glas .satz-weiter{ background:transparent; border:1px solid rgba(255,255,255,.35); color:inherit; }
+
+/* Studio-Geräte unter der gewohnten Ausrüstung: leicht abgesetzt */
+.af-gym{ margin-top:14px; padding-top:12px; border-top:1px dashed var(--line, rgba(128,128,128,.35)); }
+
+/* Satztyp (Normal · Aufwärmen · Drop · Versagen) eingeklappt: eine Zeile mit der aktuellen Wahl */
+.st-typ-box{ margin:8px 0; }
+.st-typ-box > summary{ list-style:none; display:flex; align-items:center; gap:10px; cursor:pointer; padding:8px 4px; font-size:13px; }
+.st-typ-box > summary::-webkit-details-marker{ display:none; }
+.st-typ-box > summary span:first-child{ opacity:.7; }
+.st-typ-box > summary b{ font-weight:700; }
+.st-typ-box > summary .tpl-chev{ margin-left:auto; transition:transform .2s; }
+.st-typ-box[open] > summary .tpl-chev{ transform:rotate(180deg); }
+.st-typ-faq{ display:block; margin:6px 0 2px; padding:4px 2px; background:none; border:0; color:inherit; opacity:.7; font-size:12.5px; text-decoration:underline; text-underline-offset:3px; cursor:pointer; text-align:left; }
+/* Trainingsgeräte-Symbole (Kurzhantel, Stange, Band, Gerät …) in Orange: auf den Kacheln, im Info-Fenster, in Filtern und beim Erstellen */
+:root[data-layout="new"] .air-gear, :root[data-layout="new"] .gchip .ico, :root[data-layout="new"] .sub-ico,
+:root[data-layout="new"] [data-spequip] svg, :root[data-layout="new"] [data-start] svg, :root[data-layout="new"] [data-srart] svg,
+:root[data-layout="new"] [data-xequip] svg, :root[data-layout="new"] [data-bfequip] svg, :root[data-layout="new"] [data-fequip] svg, :root[data-layout="new"] [data-ffequip] svg, :root[data-layout="new"] [data-sfequip] svg{
+  color:var(--accent-ink, var(--accent)); stroke:currentColor; }
+:root[data-layout="new"] .air-gear{ background:color-mix(in srgb, var(--accent) 16%, var(--surface)); }
+:root[data-layout="new"] .fc-chip.on [data-spequip] svg, :root[data-layout="new"] [data-spequip].on svg, :root[data-layout="new"] [data-start].active svg, :root[data-layout="new"] [data-srart].active svg{ color:inherit; }
+/* Foto-Köpfe der Bereiche (Workout, Mobility & Stretch, Timer …): untere Kante gerade statt abgerundet */
+:root[data-layout="new"] .kopf-bereich{ border-radius:0; }
+/* Studio-Karte clean: die Sätze von heute stehen nicht mehr auf der Karte, sondern in der Statistik (Zeile „Heute“) */
+:root[data-layout="new"] .st-heute{ display:none; }
+.satz-std{ margin:10px 0 4px; padding:10px 12px; border-radius:16px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); display:flex; flex-direction:column; gap:4px; }
+.satz-std b{ color:#8fe3a8; font-size:14px; }
+.satz-std small{ color:rgba(255,255,255,.75); font-size:12px; margin-bottom:4px; }
+/* Lauf-Details: Strecke immer als weiße Linie auf dunklem Glas (auch bei heller Helligkeit) */
+:root[data-layout="new"][data-layout="new"][data-layout="new"] .run-strecke{ --linie:#fff; color:#fff; background:rgba(34,36,40,.72); }
+/* Ende eines BLOCs: ruhig, eine Hauptaktion; Auswertung zum Wischen */
+.satz-fertigkarte{ padding:28px 22px 22px; }
+.satz-fertigkarte h2{ margin:12px 0 4px; font-size:24px; }
+.satz-fertigkarte .satz-kurz{ margin:0 0 22px; opacity:.8; font-size:14px; }
+.satz-fertigkarte .satz-los{ margin:0; padding:16px; font-size:17px; }
+.satz-fertigkarte .satz-weiter{ margin-top:14px; border:0; background:none; text-decoration:underline; opacity:.8; }
+.satz-aw .satz-ende-logo{ margin-bottom:0; }
+.satz-aw h2{ font-size:20px; margin:6px 0 10px; }
+.satz-aw-wisch{ display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:12px; margin:0 -6px 8px; padding:0 6px; scrollbar-width:none; }
+.satz-aw-wisch::-webkit-scrollbar{ display:none; }
+.satz-aw-karte{ flex:0 0 100%; scroll-snap-align:center; max-height:52vh; overflow-y:auto; text-align:center; }
+.satz-aw-karte h3{ margin:0 0 10px; font-size:16px; opacity:.9; }
+.satz-aw-punkte{ display:flex; justify-content:center; gap:6px; margin:4px 0 12px; }
+.satz-aw-punkte i{ width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.3); }
+.satz-aw-punkte i.an{ background:#fff; }
+
+/* ---------- Path › Deep Dive (2026-10-23): Muskelgruppen auf der Körperfigur, pro Woche und pro Workout ---------- */
+:root[data-layout="new"] .koerper-rz.drei button{ font-size:12.5px; padding:11px 2px; }
+:root[data-layout="new"] .dd-nav{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:2px 0 10px; }
+:root[data-layout="new"] .dd-nav b{ font-size:15px; font-weight:700; text-align:center; flex:1; }
+:root[data-layout="new"] .dd-nav .iconbtn{ width:40px; height:40px; font-size:22px; line-height:1; }
+:root[data-layout="new"] .dd-nav .iconbtn:disabled{ opacity:.35; }
+:root[data-layout="new"] .dd-karte{ margin:0 0 12px; padding:14px 14px 12px; }
+:root[data-layout="new"] .dd-karte .kk-kopf{ margin:8px 0 0; padding:0; background:none; }
+:root[data-layout="new"] .dd-titel{ font-size:16px; font-weight:700; }
+:root[data-layout="new"] .dd-sub{ font-size:13px; color:var(--text-dim); margin-top:2px; }
+:root[data-layout="new"] .dd-leer{ margin:8px 0 0; color:var(--text-dim); font-size:14px; }
+
+/* ---------- Katalog: kleine Körperfigur auf den Workout-Karten ---------- */
+:root[data-layout="new"] .kk-mini{ flex:none; display:flex; align-items:center; margin:0 8px 0 4px; }
+:root[data-layout="new"] .kk-mini .kk-paar{ gap:3px; margin:0; }
+:root[data-layout="new"] .kk-mini .kk{ width:22px; height:44px; }
+:root[data-layout="new"] .kk-mini figcaption{ display:none; }
+
+/* ---------- Glas-Design (Modern, Dunkel; 2026-10-23) ----------
+   Gilt, wenn applyTheme das Attribut data-glas setzt (Dunkel, oder System bei dunklem Gerät). Hell bleibt unverändert.
+   Das Foto der Run-Seite liegt geblurrt und abgedunkelt hinter allen Seiten (div.glas-bg in index.html, dieselben Werte wie .run-bg), die Karten sind
+   Glas (--surface halbtransparent). Timer, Satz-Training und Run behalten ihr eigenes dunkles Aussehen. Farben nach Ort: Fitnessstudio rot, Freiluft blau,
+   Mobility & Stretch grün; Figuren und Symbole sind weiß, Orange bleibt der Hauptaktion. */
+.glas-bg{ display:none; }
+:root[data-layout="new"][data-glas]{ --surface:rgba(255,255,255,.14); --surface-2:rgba(255,255,255,.12); --border:rgba(255,255,255,.2); --text:#fff; --text-dim:rgba(255,255,255,.75); background:#0a0a0c; }
+:root[data-layout="new"][data-glas] body{ background:transparent; }
+:root[data-layout="new"][data-glas] .glas-bg{ display:block; position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
+:root[data-layout="new"][data-glas] body:has(#app .run-bg) .glas-bg{ display:none; }   /* die Run-Seite bringt ihren eigenen Hintergrund mit */
+:root[data-layout="new"][data-glas] .glas-bg{ background:#0b0d10; }
+:root[data-layout="new"][data-glas] .glas-bg i{ position:absolute; inset:-30px; background:url("img/neu-p-freiluft-meer.jpg") center/cover no-repeat; filter:blur(11px) brightness(.52) saturate(1.25); opacity:.95; }   /* im Dunkel etwas ruhiger (2026-10-24): brightness .66 → .52; Timer, Satz-Training und Run haben eigene, unveränderte Hintergründe */
+:root[data-layout="new"][data-glas] .glas-bg::after{ content:""; position:absolute; inset:0; background:rgba(8,10,14,.2); }
+/* Kopfzeilen ohne dunklen Schleier (auch auf Training, dort mit Zurück-Knopf) */
+:root[data-layout="new"][data-glas] .topbar{ background:linear-gradient(rgba(12,14,18,.86) 62%, rgba(12,14,18,0)); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); -webkit-mask-image:linear-gradient(#000 82%, transparent); mask-image:linear-gradient(#000 82%, transparent); box-shadow:none; border:0; }   /* weich und leicht verwischt: beim Scrollen scheint kein Text durch, ohne harte Kante */
+/* Wochenkarte fast deckend, damit die Kante des Foto-Kopfs darunter nicht durchscheint */
+:root[data-layout="new"][data-glas] .woche-neu .woche{ background:rgba(28,28,31,.92); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); }
+/* Symbole ruhiger: weiß auf Glas statt Orange; Workout (orange) und Mobility & Stretch (grün) behalten ihre Bereichsfarbe */
+:root[data-layout="new"][data-glas] .wi-zeile .at-ico{ background:rgba(255,255,255,.1); color:rgba(255,255,255,.9); border:1px solid rgba(255,255,255,.2); box-shadow:none; }
+:root[data-layout="new"][data-glas] .wi-zeile[data-bereich="warm"] .at-ico{ color:var(--ws-color); }
+:root[data-layout="new"][data-glas] .wi-zeile[data-bereich="katalog"] .at-ico{ color:var(--accent); }   /* Workout orange, Mobility & Stretch grün */
+:root[data-layout="new"][data-glas] .tabbar .tab.active{ color:#fff; background:rgba(255,255,255,.14); }
+/* Übungen: Figuren weiß ohne farbigen Schimmer, Umrandung nach Ort (Fitnessstudio rot, Freiluft blau, Mobility grün) */
+:root[data-layout="new"][data-glas] .fig-bild, :root[data-layout="new"][data-glas] .wb-kachel.gewaehlt .fig-bild{ --geraet:#fff; color:#fff; background:none; }
+:root[data-layout="new"][data-glas] .wb-kachel[style*="--gym-color"], :root[data-layout="new"][data-glas] .wb-mini[style*="--gym-color"]{ border:2px solid #e5484d; }
+:root[data-layout="new"][data-glas] .wb-kachel:not([style*="--gym-color"]), :root[data-layout="new"][data-glas] .wb-mini:not([style*="--gym-color"]){ border:2px solid #6a86f5; }
+:root[data-layout="new"][data-glas] .wb-kachel[style*="--c-stretch"], :root[data-layout="new"][data-glas] .wb-mini[style*="--c-stretch"]{ border:2px solid var(--c-stretch); }
+:root[data-layout="new"][data-glas] .wb-mini-illu, :root[data-layout="new"][data-glas] .wb-mini-illu *{ color:#fff; }
+:root[data-layout="new"] .dd-chips{ margin:0 0 10px; }
+:root[data-layout="new"] .dd-unter{ font-size:13px; font-weight:700; margin:12px 0 6px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; }
+:root[data-layout="new"] .dd-verteilung .ausw-row{ display:grid; grid-template-columns:92px 1fr 40px 34px; align-items:center; gap:8px; }
+:root[data-layout="new"] .dd-delta{ font-size:12px; font-weight:700; text-align:right; color:var(--text-dim); }
+:root[data-layout="new"] .dd-delta.plus{ color:#5fd39a; }
+:root[data-layout="new"] .dd-delta.minus{ color:#ff8f6b; }
+:root[data-layout="new"] .dd-fussnote{ font-size:11.5px; color:var(--text-dim); margin-top:6px; }
+:root[data-layout="new"] .dd-vorschlag{ display:flex; align-items:center; gap:12px; width:100%; text-align:left; margin:0 0 12px; padding:14px; cursor:pointer; color:var(--text); font:inherit; flex-wrap:wrap; }
+:root[data-layout="new"] .dd-vs-kicker{ flex-basis:100%; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-dim); }
+:root[data-layout="new"] .dd-vs-name{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+:root[data-layout="new"] .dd-vs-name b{ font-size:16px; }
+:root[data-layout="new"] .dd-vs-name small{ font-size:13px; color:var(--text-dim); }
+:root[data-layout="new"] .dd-vs-play{ flex:none; width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,.9); color:#1c1c1e; display:grid; place-items:center; }
+:root[data-layout="new"] .dd-vs-play svg{ width:20px; height:20px; }
+:root[data-layout="new"][data-glas] .kopf-neu{ -webkit-mask-image:linear-gradient(180deg, #000 78%, transparent 100%); mask-image:linear-gradient(180deg, #000 78%, transparent 100%); }   /* Foto-Kopf von Heute läuft unten weich aus, keine harte Kante hinter der Wochenkarte */
+
+/* ---------- Path › Deep Dive: Häufigkeit pro Muskelgruppe, Woche im Überblick, Balance (2026-10-23) ---------- */
+:root[data-layout="new"] .dd-modus{ margin:0 0 10px; }
+:root[data-layout="new"] .dd-freq .kk-kopf{ margin:8px 0 0; padding:0; background:none; }
+:root[data-layout="new"] .dd-legende{ font-size:12px; color:var(--text-dim); margin-top:10px; line-height:1.4; }
+:root[data-layout="new"] .dd-who{ display:flex; gap:10px; align-items:center; margin-top:12px; font-size:13.5px; line-height:1.35; }
+:root[data-layout="new"] .dd-who-m{ flex:none; min-width:44px; text-align:center; padding:5px 8px; border-radius:999px; font-weight:800; font-size:13px; background:color-mix(in srgb, var(--text) 10%, transparent); color:var(--text-dim); }
+:root[data-layout="new"] .dd-who-m.ok{ background:color-mix(in srgb, var(--accent) 24%, transparent); color:var(--text); }
+:root[data-layout="new"] .dd-kal{ margin-top:8px; }
+:root[data-layout="new"] .dd-kal-zeile{ display:grid; grid-template-columns:84px repeat(7, 1fr) 34px; align-items:center; gap:6px; padding:6px 0; }
+:root[data-layout="new"] .dd-kal-kopf{ padding:0 0 2px; }
+:root[data-layout="new"] .dd-kal-kopf small{ text-align:center; font-size:11px; font-weight:700; color:var(--text-dim); }
+:root[data-layout="new"] .dd-kal-n{ font-size:13.5px; }
+:root[data-layout="new"] .dd-punkt{ justify-self:center; width:15px; height:15px; border-radius:50%; border:1.5px solid color-mix(in srgb, var(--text) 24%, transparent); box-sizing:border-box; }
+:root[data-layout="new"] .dd-punkt.an{ background:var(--accent); border-color:var(--accent); }
+:root[data-layout="new"] .dd-punkt.plan{ border-color:var(--accent); background:transparent; }
+:root[data-layout="new"] .dd-haeufig{ text-align:right; font-size:13px; }
+:root[data-layout="new"] .dd-haeufig.f0{ color:var(--text-dim); font-weight:600; }
+:root[data-layout="new"] .dd-haeufig.f1{ color:var(--accent); opacity:.7; }
+:root[data-layout="new"] .dd-haeufig.f2{ color:var(--accent); }
+:root[data-layout="new"] .dd-plan-btn{ margin-top:10px; }
+:root[data-layout="new"] .dd-bal{ margin:12px 0 4px; }
+:root[data-layout="new"] .dd-bal-k, :root[data-layout="new"] .dd-bal-z{ display:flex; justify-content:space-between; font-size:13px; }
+:root[data-layout="new"] .dd-bal-k{ color:var(--text-dim); margin-bottom:5px; }
+:root[data-layout="new"] .dd-bal-z{ margin-top:4px; }
+:root[data-layout="new"] .dd-split{ height:10px; border-radius:999px; background:color-mix(in srgb, var(--text) 16%, transparent); overflow:hidden; }
+:root[data-layout="new"] .dd-split i{ display:block; height:100%; background:var(--accent); }
+:root[data-layout="new"] .dd-split.leer i{ background:transparent; }
+:root[data-layout="new"] .info-historie{ font-size:13px; color:var(--text-dim); margin-top:10px; }
+
+/* Glas-Design: die orangen Hauptknöpfe werden Glas wie „Lauf starten“ (Fläche durchscheinend, Rand, weiße Schrift, Symbol in Orange) */
+:root[data-layout="new"][data-glas] .btn-primary{
+  background:rgba(255,255,255,.2); color:#fff; border:1px solid rgba(255,255,255,.4); box-shadow:0 8px 26px rgba(0,0,0,.2);
+  -webkit-backdrop-filter:blur(16px) saturate(140%); backdrop-filter:blur(16px) saturate(140%); }
+:root[data-layout="new"][data-glas] .btn-primary svg{ color:#ff8f6b; }
+/* „Überrasch mich“ vorne auf Heute (Workout-Builder) und alle „LOS GEHTS“ bleiben orange (Path, BLOC-Seite, Deckblatt, Einführung) */
+:root[data-layout="new"][data-glas] .bn-knoepfe .btn-primary,
+:root[data-layout="new"][data-glas] .btn-primary.pg-go,
+:root[data-layout="new"][data-glas] .btn-primary[data-planlos],
+:root[data-layout="new"][data-glas] .btn-primary[data-go],
+:root[data-layout="new"][data-glas] .btn-primary[data-introweiter]{ background:var(--accent); color:#fff; border:1.5px solid var(--accent); box-shadow:0 4px 14px rgba(255,90,54,.35); -webkit-backdrop-filter:none; backdrop-filter:none; }
+:root[data-layout="new"][data-glas] .btn-primary.pg-go svg, :root[data-layout="new"][data-glas] .btn-primary[data-planlos] svg, :root[data-layout="new"][data-glas] .btn-primary[data-go] svg{ color:#fff; }
+:root[data-layout="new"][data-glas] .btn-primary:disabled{ opacity:.45; }
+:root[data-layout="new"][data-glas] .bau-karte.bau-sp:not(.ws-bau){ background:rgba(255,255,255,.2); color:#fff; border:1px solid rgba(255,255,255,.4); box-shadow:0 8px 26px rgba(0,0,0,.2); -webkit-backdrop-filter:blur(16px) saturate(140%); backdrop-filter:blur(16px) saturate(140%); }
+:root[data-layout="new"][data-glas] .seg-row.bau-modus button.active{ background:rgba(255,255,255,.92); color:#1c1c1e; border-color:transparent; }
+:root[data-layout="new"] .dd-link{ display:flex; width:100%; align-items:center; justify-content:space-between; gap:12px; margin:12px 0 0; padding:14px 16px; border-radius:var(--radius); background:var(--surface); border:1px solid var(--border); color:var(--text); font:inherit; font-weight:600; font-size:14px; line-height:1.35; text-align:left; cursor:pointer; }
+:root[data-layout="new"] .dd-link span:last-child{ font-size:22px; color:var(--text-dim); }
+:root[data-layout="new"] .bloc-fz{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 0; border-top:1px solid var(--border); }
+:root[data-layout="new"] .bloc-fz:first-of-type{ border-top:0; }
+:root[data-layout="new"] .bf-name{ display:flex; flex-direction:column; min-width:0; }
+:root[data-layout="new"] .bf-name b{ font-size:15px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+:root[data-layout="new"] .bf-name small{ font-size:12.5px; color:var(--text-dim); }
+:root[data-layout="new"] .bf-trend{ flex:none; font-size:13px; font-weight:800; color:var(--text-dim); }
+:root[data-layout="new"] .bf-trend.plus{ color:#5fd39a; }
+:root[data-layout="new"] .bf-trend.minus{ color:#ff8f6b; }
+
+/* Glas-Design: Fenster, Menüs und Auswahlblätter undurchsichtig wie auf Run und Timer, damit nichts durchscheint */
+:root[data-layout="new"][data-glas] #overlayRoot, :root[data-layout="new"][data-glas] .fab-menu, :root[data-layout="new"][data-glas] .vol-popover{
+  --surface:#1d2025; --surface-2:#292d33; --border:rgba(255,255,255,.16); --text:#f4f4f6; --text-dim:rgba(255,255,255,.72); }
+:root[data-layout="new"][data-glas] .confirm-sheet{ background:#1d2025; color:#f4f4f6; -webkit-backdrop-filter:none; backdrop-filter:none; }
+:root[data-layout="new"][data-glas] .confirm-overlay{ background:rgba(0,0,0,.6); }
+:root[data-layout="new"][data-glas] .fab-menu .fab-opt{ background:#1d2025; color:#f4f4f6; border:1px solid rgba(255,255,255,.16); -webkit-backdrop-filter:none; backdrop-filter:none; }
+:root[data-layout="new"][data-glas] .vol-popover{ background:#1d2025; }
+/* Untere Leiste im Glas-Design deckender, damit darunter scrollender Text nicht durchscheint */
+:root[data-layout="new"][data-glas] .tabbar .pille{ background:rgba(24,27,32,.84); -webkit-backdrop-filter:blur(20px) saturate(150%); backdrop-filter:blur(20px) saturate(150%); }
+
+/* Fortschritt › Gespeicherte Trainings: eingeklappt, innen nach Muskelgruppe und Übung */
+:root[data-layout="new"] .stat-trainings .tr-gr{ margin:8px 0 0; border-top:1px solid var(--border); padding-top:6px; }
+:root[data-layout="new"] .stat-trainings .tr-gr > summary{ display:flex; align-items:center; gap:10px; list-style:none; cursor:pointer; padding:8px 0; }
+:root[data-layout="new"] .stat-trainings .tr-gr > summary::-webkit-details-marker{ display:none; }
+:root[data-layout="new"] .stat-trainings .tr-gr > summary b{ flex:1; font-size:15px; }
+:root[data-layout="new"] .tr-ex{ display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; padding:10px 4px; background:none; border:0; border-top:1px solid color-mix(in srgb, var(--border) 60%, transparent); color:var(--text); font:inherit; text-align:left; cursor:pointer; }
+:root[data-layout="new"] .te-name{ display:flex; flex-direction:column; min-width:0; }
+:root[data-layout="new"] .te-name b{ font-size:14.5px; font-weight:600; }
+:root[data-layout="new"] .te-name small{ font-size:12.5px; color:var(--text-dim); }
+:root[data-layout="new"] .te-best{ flex:none; font-size:13.5px; font-weight:700; }
+
+/* Katalog: die Übungen der Workouts als kleine Figuren unter dem Namen (wie in der Auswahl bei Path) */
+:root[data-layout="new"] .lib-card{ flex-wrap:wrap; }
+:root[data-layout="new"] .lib-card > .pg-figs{ flex:0 0 100%; order:9; margin:4px 0 0; padding:6px 0 0 4px; min-height:36px; border-top:1px solid var(--border); flex-wrap:wrap; }
+:root[data-layout="new"] .lib-card .pg-fig{ width:32px; height:32px; }
+/* Idee für die nächste Einheit: Name (öffnet das Workout), darunter In Kalender einfügen · Stern · Ansehen */
+:root[data-layout="new"] .dd-vorschlag{ cursor:default; }
+:root[data-layout="new"] .dd-vs-name{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; background:none; border:0; padding:0; color:var(--text); font:inherit; text-align:left; cursor:pointer; }
+:root[data-layout="new"] .dd-vs-akt{ flex-basis:100%; display:flex; align-items:center; gap:8px; margin-top:10px; }
+:root[data-layout="new"] .dd-vs-kal{ flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:11px 12px; font-size:14px; }
+:root[data-layout="new"] .dd-vs-akt .fav-btn{ flex:none; font-size:26px; padding:4px 8px; }
+:root[data-layout="new"] .dd-vs-play{ border:0; cursor:pointer; }
+/* Runder Hauptknopf: Symbol im Dunkel weiß (wie im Hellen) statt dunkel auf Orange */
+:root[data-layout="new"][data-glas] .tabbar .hauptknopf, :root[data-layout="new"][data-glas] .fab{ color:#fff; }
+:root[data-layout="new"][data-glas] .tabbar .hauptknopf svg{ color:#fff; stroke:#fff; }
+
+/* Kopfzeilen-Streifen über die ganze Breite des Bildschirms (bis an die Ränder, auch auf breiten Geräten wie Klapphandys und Tablets), Inhalt bleibt in der Spalte */
+:root[data-layout="new"] .topbar{ margin-inline:calc(50% - 50vw); padding-inline:calc(50vw - 50%); }
+
+/* Timer-Seite: Workout-Zeilen als runde Glas-Karten wie auf Training (statt eckiger Zeilen mit Trennlinie) */
+:root[data-layout="new"]:has(.run-bg) #app .timer-panel .list-item.entry{
+  border:1px solid var(--glas-rand); border-radius:var(--radius); border-top-left-radius:var(--ecke); margin:0 0 10px; padding:12px 8px 12px 16px; gap:8px; }
+:root[data-layout="new"]:has(.run-bg) #app .timer-panel .list-item.entry:last-of-type{ border-bottom:1px solid var(--glas-rand); }
+
+/* Timer-Zeile: Stift zum Bearbeiten (Textfarbe statt Orange des früheren Plus) */
+:root[data-layout="new"] .plus-btn.bearb-btn{ color:var(--text); }
+:root[data-layout="new"] .plus-btn.bearb-btn svg{ width:20px; height:20px; }
+
+/* Logo auf Heute weiter nach oben (näher an die Statusleiste) */
+:root[data-layout="new"] .kopf-neu{ padding-top:calc(env(safe-area-inset-top) + 0px); }
+:root[data-layout="new"] .kopf-neu .kn-zeile{ margin-top:2px; }
+
+/* Glas-Karten im Dunkel etwas dunkler (2026-10-23): dunkle statt weißer Tönung, damit Text und Symbole mehr Kontrast haben. Die Run-Seite selbst bleibt wie sie ist. */
+:root[data-layout="new"][data-glas], :root[data-layout="new"][data-glas]:has(.run-bg){ --surface:rgba(18,20,24,.5); --surface-2:rgba(18,20,24,.42); --glas:rgba(18,20,24,.5); }
+:root[data-layout="new"][data-glas] .fav-foto.ohne{ background-color:rgba(18,20,24,.5); }
+
+/* Symbole in den Karten weiß (Kontrast): Baukasten-Karten und Favoriten ohne Foto */
+:root[data-layout="new"][data-glas] .bau-karte .bk-ico, :root[data-layout="new"][data-glas] .bau-karte.bau-sp:not(.ws-bau) .bk-ico,
+:root[data-layout="new"][data-glas] .bau-karte.ws-bau .bk-ico{ color:#fff; background:rgba(255,255,255,.16); }
+:root[data-layout="new"][data-glas] .fav-foto.ohne .ff-ico{ color:#fff; background:color-mix(in srgb, var(--nc, var(--accent)) 38%, rgba(255,255,255,.08)); }
+
+/* Eigene Übung anlegen: letzte Kachel im Baukasten, stärker verwischt und gestrichelt, damit sie sich von den Wegen darüber abhebt */
+.bau-karte.bau-eigen{ border-style:dashed; background:color-mix(in srgb, var(--text) 5%, transparent); box-shadow:none; }
+:root[data-layout="new"][data-glas] .bau-karte.bau-eigen{ background:rgba(18,20,24,.38); border:1.5px dashed rgba(255,255,255,.4); -webkit-backdrop-filter:blur(28px) saturate(130%); backdrop-filter:blur(28px) saturate(130%); box-shadow:none; }
+:root[data-layout="new"][data-glas] .bau-karte.bau-eigen .bk-ico{ background:transparent; border:1.5px dashed rgba(255,255,255,.5); }
+
+/* Eigene Übung anlegen: gestrichelte Linie auch im Hellen */
+:root[data-layout="new"] .bau-karte.bau-eigen{ border:1.5px dashed var(--text-dim); background:transparent; }
+:root[data-layout="new"] .bau-karte.bau-eigen .bk-ico{ background:transparent; border:1.5px dashed var(--text-dim); color:var(--text); }
+:root[data-layout="new"][data-glas] .bau-karte.bau-eigen{ background:rgba(18,20,24,.38); border:1.5px dashed rgba(255,255,255,.4); }
+:root[data-layout="new"][data-glas] .bau-karte.bau-eigen .bk-ico{ border:1.5px dashed rgba(255,255,255,.5); color:#fff; }
+
+/* Kopfzeilen-Streifen im Dunkel ganz entfernt (kein Verlauf, kein Blur, keine Maske hinter Zurück-Knopf und Titel) */
+:root[data-layout="new"][data-glas] .topbar{ background:none; -webkit-backdrop-filter:none; backdrop-filter:none; -webkit-mask-image:none; mask-image:none; box-shadow:none; border:0; }
+
+/* Kopfzeilen-Streifen auch im Hellen entfernt */
+:root[data-layout="new"] .topbar{ background:none; -webkit-backdrop-filter:none; backdrop-filter:none; -webkit-mask-image:none; mask-image:none; box-shadow:none; border:0; }
+
+/* Kopf auf Heute: Logo „BLOC Modular Training Builder“ und Einstellungs-Icons etwa 2 mm weiter nach unten (vorher zu nah am Rand, 2026-10-24) */
+:root[data-layout="new"] .kopf-neu .kn-zeile{ margin-top:9px; }
+
+/* ---------- Protein-Seite (js/23-protein.js, 2026-10-24): Glas-Karten wie auf den übrigen Seiten ---------- */
+.prot-seite{ padding:0 0 40px; }
+.prot-karte{ background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:16px; margin:12px 0; color:var(--text); }
+.prot-karte h3{ margin:0 0 6px; font-size:15px; color:var(--text); }
+.prot-hint-txt{ color:var(--text-dim); font-size:13px; margin:0 0 10px; }
+.prot-gross{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
+.prot-gross b{ font-size:36px; font-weight:800; line-height:1; }
+.prot-gross span{ color:var(--text-dim); font-size:15px; }
+.prot-bar{ height:10px; border-radius:999px; background:color-mix(in srgb, var(--text) 12%, transparent); overflow:hidden; margin:12px 0 6px; }
+.prot-bar i{ display:block; height:100%; background:var(--accent); border-radius:999px; }
+.prot-zeile{ font-size:13px; color:var(--text-dim); }
+.prot-raster{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.prot-kn{ width:100%; text-align:left; border:1px solid var(--border); background:color-mix(in srgb, var(--text) 5%, transparent); color:var(--text); border-radius:14px; padding:10px 12px; font:inherit; cursor:pointer; display:grid; gap:2px; }
+.prot-kn:active{ transform:scale(.97); }
+.prot-kn b{ font-size:14px; }
+.prot-kn small{ color:var(--text-dim); font-size:12px; }
+.prot-kn em{ font-style:normal; color:var(--accent); font-weight:800; font-size:14px; }
+.prot-form{ display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:end; }
+.prot-form .voll{ grid-column:1 / -1; }
+.prot-form label{ display:block; font-size:12px; color:var(--text-dim); margin:0 0 3px; }
+.prot-form input{ width:100%; }
+.prot-btn{ border:0; border-radius:14px; background:var(--accent); color:#fff; font:inherit; font-weight:700; padding:12px 16px; cursor:pointer; }
+.prot-btn.ghost{ background:transparent; color:var(--accent); border:1px solid var(--accent); }
+.prot-x{ border:0; background:none; color:var(--text-dim); font-size:20px; line-height:1; padding:4px 8px; cursor:pointer; }
+.prot-eintrag{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border); }
+.prot-eintrag:last-of-type{ border-bottom:0; }
+.prot-e-links{ display:flex; flex-direction:column; min-width:0; }
+.prot-e-links small{ color:var(--text-dim); font-size:12px; }
+.prot-e-rechts{ display:flex; align-items:center; gap:4px; font-weight:700; white-space:nowrap; }
+.prot-leer{ color:var(--text-dim); font-size:14px; margin:6px 0; }
+.prot-wochen{ position:relative; display:grid; grid-template-columns:repeat(7,1fr); gap:6px; height:150px; margin-top:12px; }
+.prot-saeule{ position:relative; height:100%; }
+.prot-s-bal{ position:absolute; left:14%; right:14%; bottom:22px; background:var(--accent); border-radius:6px 6px 0 0; }
+.prot-s-bal.leer{ background:color-mix(in srgb, var(--text) 16%, transparent); }
+.prot-saeule small{ position:absolute; bottom:0; left:0; right:0; text-align:center; font-size:11px; color:var(--text-dim); }
+.prot-ziel{ position:absolute; left:0; right:0; border-top:2px dashed var(--text); opacity:.5; pointer-events:none; }
+.prot-stufen{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin:10px 0; }
+.prot-stufe{ border:1px solid var(--border); background:transparent; color:var(--text); border-radius:12px; padding:9px 4px; font:inherit; font-weight:600; cursor:pointer; }
+.prot-stufe small{ display:block; font-size:11px; font-weight:400; color:var(--text-dim); }
+.prot-stufe.an{ border-color:var(--accent); background:color-mix(in srgb, var(--accent) 18%, transparent); font-weight:700; }
+.prot-tip{ background:color-mix(in srgb, var(--accent) 14%, transparent); border-radius:12px; padding:10px 12px; font-size:14px; margin-top:10px; color:var(--text); }
+.prot-info summary{ cursor:pointer; font-weight:700; color:var(--text); }
+.prot-info ul{ padding-left:18px; margin:10px 0 0; color:var(--text-dim); font-size:13px; }
+.prot-info li{ margin:6px 0; }
+
+/* Timer-Seite (Blöcke und Workouts aufbauen, unter Tools): im Dunkel derselbe Hintergrund wie die übrigen Seiten (2026-10-24); Run und das laufende Training bleiben wie sie sind */
+:root[data-layout="new"] .run-bg.timer-bg i{ inset:-30px; background-position:center; filter:blur(11px) brightness(.52) saturate(1.25); opacity:.95; }
+:root[data-layout="new"] .run-bg.timer-bg::after{ background:rgba(8,10,14,.2); }
+.prot-verteil{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:6px; }
+.prot-verteil div{ background:color-mix(in srgb, var(--text) 6%, transparent); border-radius:12px; padding:8px; text-align:center; }
+.prot-verteil b{ display:block; font-size:16px; }
+.prot-verteil small{ color:var(--text-dim); font-size:12px; }
+.prot-hint-txt:empty{ display:none; }
+.prot-karte h4{ margin:16px 0 6px; font-size:13px; color:var(--text); }
+.prot-karte h4:first-child{ margin-top:0; }
+.prot-kcal{ margin-top:12px; padding-top:10px; border-top:1px solid var(--border); }
+.prot-kcal b{ display:block; font-size:16px; }
+.prot-kcal small{ color:var(--text-dim); font-size:12px; }
+.prot-zeile-flex{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.prot-treffer{ flex:1; min-width:0; text-align:left; background:none; border:0; color:var(--text); font:inherit; cursor:pointer; display:flex; flex-direction:column; padding:0; }
+.prot-treffer small{ color:var(--text-dim); font-size:12px; }
+.prot-onb-knoepfe{ display:flex; gap:8px; margin-top:12px; }
+.prot-onb-knoepfe .prot-btn{ flex:1; }
+.seg-pal{ flex-wrap:wrap; }
+.seg-pal button{ flex:1 1 45%; }
+.prot-seite .koerper-form input{ width:100%; }
+.prot-seite summary{ list-style:none; }
+.prot-seite .koerper-form > div[style*="font-size:12px"]{ display:none; }
+/* Protein-Seite, Feinschliff nach UX-Prüfung (2026-10-24): Foto zeigt Schale und Dotter, größere Touch-Ziele, größere Zahl oben */
+.prot-heute{ position:relative; border-color:color-mix(in srgb, var(--accent) 45%, var(--border)); }
+.prot-heute .prot-gross b{ font-size:44px; }
+.prot-rueck{ position:absolute; top:12px; right:12px; min-height:44px; padding:0 8px; border:0; background:none; color:var(--accent); font:inherit; font-weight:700; cursor:pointer; }
+.prot-rueck:disabled{ opacity:.35; cursor:default; }
+.prot-kcal small:empty{ display:none; }
+.prot-btn{ min-height:44px; }
+.prot-stufe{ min-height:44px; }
+.prot-x{ min-width:44px; min-height:44px; margin-left:4px; }
+.prot-saeule small, .prot-kn small, .prot-stufe small{ font-size:12px; }

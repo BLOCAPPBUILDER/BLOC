@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BLOC Einheitstest</title>
+<style>
+  :root { --bg:#f5f5f2; --text:#1d1d1f; --dim:#6b6b70; --ok:#1f9d63; --fail:#d6453d; --rule:#e2e2dd; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#121214; --text:#f2f2f2; --dim:#a0a0a6; --rule:#2e2e33; } }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; padding:16px; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  p { color:var(--dim); margin:0 0 12px; max-width:70ch; }
+  button { font:inherit; padding:10px 16px; border-radius:10px; border:0; background:#ff5a36; color:#fff; font-weight:600; cursor:pointer; }
+  button:disabled { opacity:.5; }
+  #summe { font-weight:700; margin:12px 0; }
+  #summe.ok { color:var(--ok); } #summe.fail { color:var(--fail); }
+  ol { padding-left:22px; margin:0; }
+  li { margin:4px 0; }
+  li.ok::marker { color:var(--ok); } li.fail { color:var(--fail); }
+  li small { display:block; color:var(--dim); }
+  iframe { position:absolute; left:-9999px; width:390px; height:780px; border:0; }
+</style>
+</head>
+<body>
+<h1>BLOC Einheitstest</h1>
+<p>Prüft die Rechenregeln der App einzeln (Gewicht und Volumen, Rekorde, Wochenwerte, Muskelverteilung, Suche, Mengen, Zeitformate, Lauf: Strecke, Pace,
+  Ansagen, Besonderheiten). Ergänzt den Schnelltest, der die Wege durch die Oberfläche klickt. Läuft nur lokal (localhost); dein gespeicherter Stand wird
+  vorher beiseitegelegt und danach wiederhergestellt.</p>
+<button id="los" type="button">Test starten</button>
+<div id="summe"></div>
+<ol id="liste"></ol>
+<iframe id="app" title="App im Test"></iframe>
+<script>
+(function () {
+  "use strict";
+  var KEY = "sporttimer-data-v1";
+  var iframe = document.getElementById("app"), liste = document.getElementById("liste"), summe = document.getElementById("summe");
+  var W = null;
+  var lokal = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === "file:";
+  function warte(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function gleich(ist, soll, was) {
+    var a = JSON.stringify(ist), b = JSON.stringify(soll);
+    if (a !== b) throw new Error((was || "Wert") + ": erwartet " + b + ", war " + a);
+  }
+  function nah(ist, soll, tol, was) {
+    if (!(Math.abs(ist - soll) <= tol)) throw new Error((was || "Wert") + ": erwartet " + soll + " ± " + tol + ", war " + ist);
+  }
+  function wahr(b, was) { if (!b) throw new Error(was); }
+  function laden() {
+    return new Promise(function (ok, nein) {
+      iframe.onload = function () {
+        W = iframe.contentWindow;
+        var t0 = Date.now();
+        (function pruefen() {
+          if (W.studioVolumen && W.state && W.state.db) return ok();
+          if (Date.now() - t0 > 8000) return nein(new Error("App nicht geladen"));
+          setTimeout(pruefen, 100);
+        })();
+      };
+      iframe.src = "index.html?schnelltest=" + Date.now() + "&lang=de#home";
+    });
+  }
+  var T = [];
+  function test(name, fn) { T.push([name, fn]); }
+
+  /* ---------- Training: Gewicht, Volumen, Rekorde ---------- */
+  test("Arbeitssätze: Aufwärmsätze zählen nicht in Volumen und Wiederholungen", function () {
+    var l = { s: [[20, 10, "w"], [40, 10], [40, 8]] };
+    gleich(W.studioVolumen(l), 720, "Volumen");
+    gleich(W.studioWdhSumme(l), 18, "Wiederholungen");
+    gleich(W.arbeitsSaetze(l).length, 2, "Arbeitssätze");
+    gleich(W.satzTyp([40, 10, "d"]), "d", "Drop-Satz"); gleich(W.satzTyp([40, 10, "x"]), "n", "unbekannter Typ");
+  });
+  test("Geschätztes 1RM (Epley): eine Wiederholung = das Gewicht, sonst Gewicht × (1 + Wdh/30)", function () {
+    gleich(W.satzSchaetzung1RM([60, 1]), 60, "1 Wdh.");
+    nah(W.satzSchaetzung1RM([60, 10]), 80, 0.001, "10 Wdh.");
+    nah(W.satzSchaetzung1RM([100, 3]), 110, 0.001, "3 Wdh.");
+  });
+  test("Bestwerte über alle Einheiten (nur Arbeitssätze), auch „bis zur Einheit i“", function () {
+    var log = [{ s: [[40, 10]] }, { s: [[50, 5]] }, { s: [[20, 20, "w"], [45, 8]] }];
+    var b = W.studioBestwerte(log);
+    gleich(b.kg, 50, "Bestgewicht"); nah(b.rm, 58.333, 0.01, "1RM"); gleich(b.vol, 400, "Volumen"); gleich(b.wdh, 10, "Wdh. im Satz"); gleich(b.wsum, 10, "Wdh. je Einheit");
+    gleich(W.studioBestwerte(log, 1).kg, 40, "nur die erste Einheit");
+    gleich(W.studioBestwerte([]).kg, 0, "leeres Protokoll");
+  });
+  test("Rekord: mehr Gewicht oder höheres 1RM; ohne Gewicht mehr Wiederholungen; Gleichstand ist kein Rekord", function () {
+    wahr(W.studioIstRekord({ kg: 50, rm: 58.3, wdh: 5 }, { kg: 40, rm: 53.3, wdh: 10 }), "mehr Gewicht");
+    wahr(!W.studioIstRekord({ kg: 40, rm: 53.3, wdh: 10 }, { kg: 40, rm: 53.3, wdh: 10 }), "Gleichstand");
+    wahr(W.studioIstRekord({ kg: 40, rm: 56, wdh: 12 }, { kg: 40, rm: 53.3, wdh: 10 }), "gleiches Gewicht, mehr Wiederholungen = höheres 1RM");
+    wahr(W.studioIstRekord({ kg: 0, rm: 0, wdh: 12 }, { kg: 0, rm: 0, wdh: 10 }), "ohne Gewicht: mehr Wiederholungen");
+    wahr(!W.studioIstRekord({ kg: 0, rm: 0, wdh: 10 }, { kg: 0, rm: 0, wdh: 10 }), "ohne Gewicht: Gleichstand");
+    wahr(!W.studioIstRekord({ kg: 30, rm: 40, wdh: 10 }, { kg: 40, rm: 53, wdh: 10 }), "weniger ist kein Rekord");
+  });
+  test("1RM-Schätzung rechnet höchstens mit 10 Wiederholungen; mehr Wiederholungen bei gleichem Gewicht bleibt ein Rekord", function () {
+    gleich(W.satzSchaetzung1RM([60, 15]), W.satzSchaetzung1RM([60, 10]), "15 Wdh. zählen wie 10");
+    nah(W.satzSchaetzung1RM([60, 10]), 80, 0.01, "60 kg × 10 = 80 kg");
+    gleich(W.satzSchaetzung1RM([100, 1]), 100, "1 Wdh. = das Gewicht selbst");
+    var vor = W.studioBestwerte([{ s: [[60, 10], [60, 10]] }]);
+    var jetzt = W.studioBestwerte([{ s: [[60, 10], [60, 10]] }, { s: [[60, 12]] }]);
+    gleich(vor.wBest, 10, "Wiederholungen beim Bestgewicht davor"); gleich(jetzt.wBest, 12, "danach");
+    wahr(W.studioIstRekord(jetzt, vor), "60 kg × 12 nach 60 kg × 10 ist ein Rekord, obwohl das 1RM gleich bleibt");
+    wahr(!W.studioIstRekord(vor, vor), "Gleichstand ist kein Rekord");
+  });
+  test("Frühere Designs: C60 und Retro werden zu Hell, Tapedeck und Nacht zu Dunkel, Klar zu System", function () {
+    gleich(W.migrateTheme("kodak"), "light", "kodak"); gleich(W.migrateTheme("retro"), "light", "retro");
+    gleich(W.migrateTheme("tapedeck"), "dark", "tapedeck"); gleich(W.migrateTheme("nacht"), "dark", "nacht"); gleich(W.migrateTheme("klar"), "system", "klar");
+    gleich(W.migrateTheme("dark"), "dark", "Dunkel bleibt");
+  });
+  test("Kalorien: Radfahrten rechnen mit Rad-Werten nach Tempo (Compendium), nicht wie Läufe", function () {
+    var alt = W.state.db.settings.koerper; W.state.db.settings.koerper = { kg: 80 };
+    try {
+      gleich(W.runKcal(10000, 3600, true), 320, "10 km/h Freizeit: MET 4,0");
+      gleich(W.runKcal(17000, 3600, true), 544, "17 km/h: MET 6,8");
+      gleich(W.runKcal(20000, 3600, true), 640, "20 km/h: MET 8,0");
+      gleich(W.runKcal(24000, 3600, true), 800, "24 km/h: MET 10,0");
+      gleich(W.runKcal(30000, 3600, true), 960, "30 km/h: MET 12,0");
+      wahr(W.runKcal(20000, 3600, false) !== W.runKcal(20000, 3600, true), "Fahrt und Lauf werden verschieden gerechnet");
+      gleich(W.runKcal(20000, 3600, true), 640, "dieselbe Fahrt gibt immer dasselbe");
+    } finally { W.state.db.settings.koerper = alt; }
+  });
+  test("Wochenwerte: je Kalenderwoche (Montag) der beste Wert, der niedrigste bei Zeiten, die Summe beim Volumen", function () {
+    var mo = new Date(2026, 9, 5, 10).getTime(), mi = new Date(2026, 9, 7, 18).getTime(), naechste = new Date(2026, 9, 12, 9).getTime();
+    var l = [[mo, 40], [mi, 50], [naechste, 30]];
+    gleich(W.wochenWerte(l, false).map(function (x) { return x.v; }), [50, 30], "höchster Wert");
+    gleich(W.wochenWerte(l, true).map(function (x) { return x.v; }), [40, 30], "niedrigster Wert");
+    gleich(W.wochenWerte(l, false, true).map(function (x) { return x.v; }), [90, 30], "Summe");
+    var so = new Date(2026, 9, 11, 22).getTime();   // Sonntag gehört noch zur Woche davor
+    gleich(W.wochenWerte([[mo, 1], [so, 2]], false).length, 1, "Sonntag zur selben Woche wie Montag");
+    gleich(W.wochenWerte([]).length, 0, "leer");
+  });
+  test("Satztext: Gewicht × Wiederholungen, ohne Gewicht „Wdh.“, besondere Sätze mit Kürzel, mit Anstrengung", function () {
+    gleich(W.satzText([40, 12]), "40×12", "normal");
+    wahr(W.satzText([0, 12]).indexOf("12") === 0 && W.satzText([0, 12]).indexOf("×") < 0, "ohne Gewicht: " + W.satzText([0, 12]));
+    wahr(/20×10/.test(W.satzText([20, 10, "w"])) && W.satzText([20, 10, "w"]) !== "20×10", "Aufwärmsatz mit Kürzel: " + W.satzText([20, 10, "w"]));
+    wahr(/40×12 @ RPE 8/.test(W.satzText([40, 12, "n", 8])), "mit RPE: " + W.satzText([40, 12, "n", 8]));
+  });
+  test("Zahlen: Kilogramm ohne überflüssige Nachkommastellen", function () {
+    gleich(W.studioKg(40), "40", "ganze Zahl"); gleich(W.studioKg(42.5), "42,5", "halbe Kilogramm"); gleich(W.studioKg(22.255), "22,26", "auf zwei Stellen");
+  });
+
+  /* ---------- Auswertung, Suche, Auswahl ---------- */
+  test("Muskelverteilung: Summe immer 100, Dehnübungen und leere Pläne zählen nicht", function () {
+    var r = W.mgProzent(["push-ups", "air-squats", "pull-ups", "plank"]);
+    gleich(r.rows.reduce(function (a, x) { return a + x.pct; }, 0), 100, "Summe");
+    gleich(r.leer, false, "nicht leer");
+    gleich(r.rows.every(function (x) { return x.pct === Math.floor(x.pct) && x.pct >= 0; }), true, "ganze, nicht negative Prozent");
+    gleich(W.mgProzent([]).leer, true, "leer");
+    gleich(W.mgProzent(["cobra-lift"]).leer, true, "nur Dehnen");
+    var einzel = W.mgProzent(["push-ups"]);
+    gleich(einzel.rows.reduce(function (a, x) { return a + x.pct; }, 0), 100, "eine Übung: Summe");
+  });
+  test("Suche: Groß/klein, Bindestrich, Umlaute, Wortreihenfolge und Mehrzahl-s egal", function () {
+    wahr(W.suchPasst("Pull-ups", "pull ups"), "pull ups");
+    wahr(W.suchPasst("Pull-Up", "pullups"), "pullups");
+    wahr(W.suchPasst("Liegestütz", "liegestutz"), "Umlaut");
+    wahr(W.suchPasst("Klimmzug breit", "breit klimmzug"), "Reihenfolge");
+    wahr(W.suchPasst("irgendwas", ""), "leere Suche findet alles");
+    wahr(!W.suchPasst("Bankdrücken", "kniebeuge"), "kein Treffer");
+    gleich(W.suchNorm("  Große Äpfel! "), "grosse apfel", "Normalisierung");
+  });
+  test("Auswahlhelfer: selArr, selToggle, clamp", function () {
+    gleich(W.selArr("all"), [], "all"); gleich(W.selArr("x"), ["x"], "einzelner Wert"); gleich(W.selArr(["a", "b"]), ["a", "b"], "Liste");
+    gleich(W.selToggle([], "a"), ["a"], "hinzufügen"); gleich(W.selToggle(["a", "b"], "a"), ["b"], "entfernen");
+    gleich(W.clamp(5, 1, 3), 3, "oben"); gleich(W.clamp(-1, 0, 3), 0, "unten"); gleich(W.clamp(2, 0, 3), 2, "innen");
+  });
+  test("Plan: doppelte und unbekannte Übungen fallen heraus, Reihenfolge bleibt", function () {
+    gleich(W.stPlanIds({ ids: ["push-ups", "push-ups", "gibt-es-nicht", "air-squats"] }), ["push-ups", "air-squats"], "bereinigt");
+    gleich(W.stPlanIds({}), [], "ohne ids");
+  });
+  test("Figuren: jede Übung der Studio-Gruppen und der Hauptgruppen (Ausdauer, Rumpf, Stange, Dehnen) hat eine Strichfigur", function () {
+    var OHNE_FIGUR = [];   // Dehnungen, bei denen eine Figur ausdrücklich fehlt (derzeit keine)
+    var ids = {}, fehlt = [];
+    W.STUDIO_GRUPPEN.forEach(function (g) { g.ids.split(" ").forEach(function (id) { if (id) ids[id] = 1; }); });
+    Object.keys(W.EX_MAIN_ROWS).forEach(function (k) { String(W.EX_MAIN_ROWS[k]).split(" ").forEach(function (id) { if (id) ids[id] = 1; }); });
+    Object.keys(ids).forEach(function (id) { if (OHNE_FIGUR.indexOf(id) < 0 && !(W.ILLU[id] && W.ILLU[id][0])) fehlt.push(id); });
+    wahr(Object.keys(ids).length > 200, "zu wenige Übungen gefunden: " + Object.keys(ids).length);
+    wahr(!fehlt.length, "ohne Figur: " + fehlt.join(", "));
+  });
+  test("Studio-Geräte: Smith, Kabelzug, Langhantel, Kurzhantel, Maschine; Wahl und Ausrüstung gelten zusammen (eins von beiden reicht)", function () {
+    gleich(W.STUDIO_GERAET["smith-squat"], "smith", "Smith");
+    gleich(W.STUDIO_GERAET["cable-row"], "kabel", "Kabel");
+    gleich(W.STUDIO_GERAET["front-squat"], "lh", "Langhantel");
+    gleich(W.STUDIO_GERAET["arnold-press"], "kh", "Kurzhantel");
+    gleich(W.STUDIO_GERAET["leg-press"], "maschine", "Maschine");
+    wahr(W.studioAusrOk("front-squat", [], ["lh"]) && !W.studioAusrOk("leg-press", [], ["lh"]), "Gerätewahl");
+    wahr(W.studioAusrOk("arnold-press", ["frei"], ["maschine"]) && W.studioAusrOk("leg-press", ["frei"], ["maschine"]) && !W.studioAusrOk("cable-row", ["frei"], ["maschine"]), "Ausrüstung oder Gerät");
+    wahr(W.studioAusrOk("cable-row", [], []), "ohne Wahl passt alles");
+  });
+  test("Ausrüstungsart: Gerät, Stange, Band, Körpergewicht", function () {
+    gleich(W.studioArt("leg-press"), "geraet", "Beinpresse");
+    gleich(W.studioArt("pull-ups"), "stange", "Klimmzüge");
+    gleich(W.studioArt("push-ups"), "koerper", "Liegestütze");
+    gleich(W.studioArt("band-squat"), "band", "Band-Kniebeuge");
+  });
+  test("Geräte-Chip im Info-Fenster: Symbol und Name je Ausrüstung, im Timer (live) keiner", function () {
+    var band = W.gearChipsHTML(W.findExercise("band-standing-row"), false);
+    wahr(band.indexOf("gchip") > -1 && band.indexOf(W.equipName("band")) > -1 && band.indexOf("<svg") > -1, "Band: Chip mit Symbol und Name");
+    gleich(W.gearChipsHTML(W.findExercise("goblet-squat"), false).split("gchip").length - 1, 2, "zwei Geräte = zwei Chips");
+    gleich(W.gearChipsHTML(W.findExercise("pull-ups"), true), "", "live: nichts");
+    gleich(W.gearChipsHTML(null, false), "", "ohne Übung");
+  });
+  test("Foto-Thema eines Workouts: Name zuerst, sonst größte Muskelgruppe, gemischt = ganz", function () {
+    gleich(W.workoutThema([], "Bauch & Core Basis"), "core", "Bauch → Core");
+    gleich(W.workoutThema([], "Rücken Zugkraft"), "ruecken", "Rücken");
+    gleich(W.workoutThema(["push-ups"], "Brust (ohne Geräte)"), "brust", "Brust");
+    gleich(W.workoutThema(["air-squats", "air-squats"], ""), "beine", "Kniebeugen ohne Namenshinweis");
+    gleich(W.workoutThema(["air-squats"], "Cardio Express"), "ganz", "Cardio = ganz");
+    gleich(W.workoutThema([], ""), "ganz", "ohne Übungen");
+  });
+  test("Trainingsplan: Wochen × Trainingstage ergeben Kalender-Einträge an den gewählten Wochentagen, der Reihe nach", function () {
+    var s = W.state.db.settings, alt = s.kalender;
+    try {
+      s.kalender = { e: [] };
+      var p = { id: "test-plan", name: "Test", items: ["run", "zufall"], tage: [0, 2], wochen: 2, pos: 0 };
+      gleich(W.programmUebernehmen(p), 4, "2 Wochen × 2 Tage, je ein Baustein");
+      var e = W.kalListe().filter(function (x) { return x.prog && x.prog.id === "test-plan"; });
+      var tage = {};
+      e.forEach(function (x) { tage[x.tag] = (tage[x.tag] || []).concat([x.art]); });
+      gleich(Object.keys(tage).length, 4, "vier Tage");
+      gleich(Object.keys(tage).every(function (k) { return tage[k].join() === "programm"; }), true, "jeder Tag bekommt genau einen TrainingsBLOC");
+      gleich(Object.keys(tage).map(function (k) { return W.kalTagDatum(k).getDay(); }).filter(function (d, i, all) { return all.indexOf(d) === i; }).sort(), [1, 3], "nur Montag und Mittwoch");
+    } finally { s.kalender = alt; }
+  });
+  test("Trainingsplan: erneutes Übernehmen ersetzt die offenen Termine, ohne Doppeltes", function () {
+    var s = W.state.db.settings, alt = s.kalender;
+    try {
+      s.kalender = { e: [] };
+      var p = { id: "test-plan2", name: "Test", items: ["run", "zufall", "run"], tage: [0, 3], wochen: 1, pos: 0 };
+      gleich(W.programmUebernehmen(p), 2, "zwei Tage, je ein Baustein");
+      gleich(W.programmUebernehmen(p), 2, "nochmal übernommen");
+      gleich(W.kalListe().filter(function (x) { return x.prog && x.prog.id === "test-plan2"; }).length, 2, "keine Doppelten");
+    } finally { s.kalender = alt; }
+  });
+  test("Trainingsplan: Aus Kalender nehmen entfernt nur offene Termine dieses Plans", function () {
+    var s = W.state.db.settings, alt = s.kalender;
+    try {
+      s.kalender = { e: [] };
+      var p = { id: "test-plan3", name: "Test", items: ["run", "zufall"], tage: [0], wochen: 1, pos: 0 };
+      gleich(W.programmUebernehmen(p), 1, "ein Tag, ein Baustein");
+      var andere = W.kalHinzu(W.kalTagKey(new Date()), { art: "run" });
+      gleich(W.programmAusKalender(p), 1, "der offene Termin wird entfernt");
+      gleich(W.kalListe().filter(function (x) { return x.prog && x.prog.id === "test-plan3"; }).length, 0, "keine Termine dieses Plans mehr");
+      gleich(W.kalListe().length, 1, "fremder Termin bleibt");
+    } finally { s.kalender = alt; }
+  });
+  test("Muskel: Chip und Figur sind eine Auswahl (Gruppe wählt alle Zonen, nochmal antippen nimmt sie wieder raus)", function () {
+    var an = W.kkGrpToggle([], "brust");
+    gleich(an.length > 0 && W.kkGrpAn(an, "brust"), true, "Brust gewählt");
+    gleich(W.kkGrpAn(an, "beine"), false, "Beine nicht");
+    gleich(W.kkGrpToggle(an, "brust"), [], "zweites Antippen nimmt alles wieder raus");
+    var zwei = W.kkGrpToggle(W.kkGrpToggle([], "brust"), "beine");
+    gleich(W.kkGrpAn(zwei, "brust") && W.kkGrpAn(zwei, "beine"), true, "mehrere Gruppen zugleich");
+  });
+  test("Timer: Sätze × Runden ergeben die Gesamtzeit", function () {
+    gleich(W.timerPlusSekunden({ rn: 3, rp: 30, en: 5, ew: 30, ep: 10 }), 3*(5*30 + 4*10) + 2*30, "drei Runden à fünf Sätze");
+    gleich(W.timerPlusSekunden({ rn: 1, rp: 0, en: 2, ew: 20, ep: 0 }), 40, "eine Runde, zwei Sätze ohne Pause");
+  });
+  test("Run: Pace-Vorgabe sagt nach jedem Kilometer, wie weit man vom Ziel liegt", function () {
+    gleich(W.runPaceHinweis({ ziel: { pace: 330 }, art: "lauf", splits: [342000] }, 1), "12 Sekunden zu langsam.", "zu langsam");
+    gleich(W.runPaceHinweis({ ziel: { pace: 330 }, art: "lauf", splits: [342000, 660000] }, 2), "12 Sekunden schneller als geplant.", "schneller");
+    gleich(W.runPaceHinweis({ ziel: { pace: 330 }, art: "lauf", splits: [331000] }, 1), "Im Plan.", "im Plan");
+    gleich(W.runPaceHinweis({ ziel: null, art: "lauf", splits: [1] }, 1), "", "ohne Vorgabe");
+    gleich(W.runPaceHinweis({ ziel: { pace: 330 }, art: "rad", splits: [342000] }, 1), "", "Rad: keine Pace");
+  });
+  test("Aussehen ist immer Modern (Classic entfernt), auch mit ?schnelltest", function () {
+    gleich(W.document.documentElement.getAttribute("data-layout"), "new", "data-layout");
+  });
+
+  /* ---------- Zeiten ---------- */
+  test("Speicherformat: Version, Summit wird vollständig entfernt", function () {
+    W.localStorage.setItem(W.SUMMIT_ARCHIV, "{}");
+    var db = W.dbAusRoh({ v: 1, settings: { myReps: [{ id: "c1" }], repBest: { x: { best: 1 } }, favs: ["rep:c1", "lib:x"], kalender: { e: [{ id: "k", art: "summit" }, { id: "k2", art: "run" }] } }, history: [{ at: Date.now(), b: "reps" }] });
+    gleich(db.v, W.DB_VERSION, "Version gesetzt");
+    gleich(db.settings.myReps, undefined, "eigene Challenges gelöscht"); gleich(db.settings.favs.join(), "lib:x", "Summit-Favorit entfernt");
+    gleich(db.settings.kalender.e.length, 1, "Summit-Kalendereintrag entfernt"); gleich(db.history.length, 0, "Summit-Verlauf entfernt");
+    gleich(W.localStorage.getItem(W.SUMMIT_ARCHIV), null, "früherer Zwischenspeicher gelöscht");
+  });
+  test("Zeitformate: Stoppuhr, Dauer, Kurzdauer", function () {
+    gleich(W.fmtUhr(0), "0:00", "null"); gleich(W.fmtUhr(65000), "1:05", "Minuten"); gleich(W.fmtUhr(3725000), "1:02:05", "Stunden");
+    gleich(W.fmtUhr(-500), "0:00", "negativ");
+    var m = W.t("unitMin"), s = W.t("unitSec"), h = W.t("unitH");
+    gleich(W.fmtDuration(59), "59 " + s, "Sekunden"); gleich(W.fmtDuration(125), "2 " + m + " 5 " + s, "Minuten und Sekunden");
+    gleich(W.fmtDuration(120), "2 " + m, "volle Minuten"); gleich(W.fmtDuration(3600), "1 " + h + " 0 " + m, "Stunde"); gleich(W.fmtDuration(-5), "0 " + s, "negativ");
+    gleich(W.fmtDauerKurz(125).replace(/ /g, " "), "2:05 " + m, "Kurzform (mit geschütztem Leerzeichen)");
+  });
+
+  /* ---------- Run: Strecke, Pace, Ansagen, Besonderheiten ---------- */
+  test("Kacheln: keine Voreinstellung „3 Sätze × 12“, nur letzter Satz oder selbst gesetztes Ziel", function () {
+    var s = W.state.db.settings, alt = s.studio, n = Date.now();
+    try {
+      s.studio = {};
+      gleich(W.gymSatzKachel("leg-press"), "", "ohne Eintrag leer");
+      gleich(W.zielGesetzt("leg-press"), false, "Ziel nicht gesetzt");
+      s.studio = { "leg-press": { ziel: { saetze: 4, wdh: 10 } } };
+      gleich(W.zielGesetzt("leg-press"), true, "Ziel gesetzt");
+      wahr(/4/.test(W.gymSatzKachel("leg-press")) && /10/.test(W.gymSatzKachel("leg-press")), "selbst gesetztes Ziel: " + W.gymSatzKachel("leg-press"));
+      s.studio = { "leg-press": { ziel: { saetze: 4, wdh: 10 }, log: [{ at: n, s: [[80, 8], [80, 8]] }] } };
+      wahr(/80 kg/.test(W.gymSatzKachel("leg-press")) && /8/.test(W.gymSatzKachel("leg-press")), "letzter Satz hat Vorrang: " + W.gymSatzKachel("leg-press"));
+      gleich(W.gymSatzKachel("push-ups"), "", "Freiluft-Übung hat hier keinen Text");
+    } finally { s.studio = alt; }
+  });
+  test("Tipp-Zeilen entfallen auf allen Seiten (weniger Text)", function () {
+    var s = W.state.db.settings, alt = s.tippAus;
+    try {
+      s.tippAus = {};
+      gleich(W.tippZeileHTML("uebung", "tippUebung"), "", "Tipp-Zeile leer");
+      gleich(W.tippZeileHTML("workout", "tippWorkout"), "", "auch ohne Ausblenden leer");
+    } finally { s.tippAus = alt; }
+  });
+  test("Kalender: Wochenbeginn Montag, Kalenderwoche (ISO), Tagesschlüssel", function () {
+    gleich(W.kalTagKey(W.kalMontag(new Date(2026, 9, 14, 8))), "2026-10-12", "Mittwoch → Montag");
+    gleich(W.kalTagKey(W.kalMontag(new Date(2026, 9, 18, 23))), "2026-10-12", "Sonntag gehört zur Woche davor");
+    gleich(W.kalTagKey(W.kalMontag(new Date(2026, 9, 12, 0, 5))), "2026-10-12", "Montag früh bleibt Montag");
+    gleich(W.kalTagKey(W.kalMontag(new Date(2026, 10, 1, 12))), "2026-10-26", "über die Monatsgrenze");
+    gleich(W.kalKW(new Date(2026, 0, 5)), 2, "5. Januar 2026 = KW 2");
+    gleich(W.kalKW(new Date(2026, 9, 14)), 42, "14. Oktober 2026 = KW 42");
+    gleich(W.kalKW(new Date(2027, 0, 3)), 53, "3. Januar 2027 gehört noch zu KW 53");
+    gleich(W.kalTagKey(W.kalPlus(new Date(2026, 9, 28, 12), 5)), "2026-11-02", "plus Tage über Sommerzeit-Ende");
+    gleich(W.kalTagKey(W.kalTagDatum("2026-03-29")), "2026-03-29", "Tag der Sommerzeit-Umstellung bleibt derselbe Tag");
+  });
+  test("Wochenkarte: eine beliebige Woche (Start Montag), heute nur in der aktuellen, Geplantes als Ring", function () {
+    var w = W.wocheDaten(new Date(2026, 9, 14, 15));
+    gleich(W.kalTagKey(new Date(w.start)), "2026-10-12", "Montag der Woche");
+    gleich(w.tage.length, 7, "sieben Tage");
+    gleich(W.wocheDaten(new Date(2020, 0, 15)).heute, -1, "frühere Woche: kein heute");
+    var jetzt = W.wocheDaten();
+    wahr(jetzt.heute >= 0 && jetzt.heute <= 6, "aktuelle Woche: heute ist ein Wochentag");
+    var s = W.state.db.settings, alt = s.kalender;
+    try {
+      var mo = W.kalMontag(new Date());
+      s.kalender = { e: [] };
+      W.kalHinzu(W.kalTagKey(W.kalPlus(mo, 2)), { art: "zufall" });
+      var e2 = W.kalHinzu(W.kalTagKey(W.kalPlus(mo, 4)), { art: "run", name: "Lauf", km: 5 });
+      var d = document.createElement("div"); d.innerHTML = W.wocheHTML();
+      gleich(d.querySelectorAll(".wo-tag.plan").length, 2, "zwei geplante Tage als Ring");
+      wahr(/2 geplant/.test(d.textContent), "Summe nennt das Geplante: " + d.textContent);
+      wahr(d.querySelector(".woche-link[data-wocheauf]") && !d.querySelector("[aria-expanded]"), "Startseiten-Karte führt in den Kalender und klappt nicht auf");
+      e2.erledigt = true;
+      d.innerHTML = W.wocheHTML({ kal: true, basis: mo });
+      gleich(d.querySelectorAll(".wo-tag.plan").length, 1, "Erledigtes zählt nicht mehr als geplant");
+      wahr(d.querySelector("[data-kalgoto]") && !d.querySelector(".woche-link"), "im Kalender: Tage springen statt zu verlinken");
+    } finally { s.kalender = alt; }
+  });
+  test("Kalender: Erledigt ergibt sich automatisch, Handentscheid gewinnt", function () {
+    var s = W.state.db.settings, alt = s.kalender, h = W.state.db.history, altH = h.slice();
+    try {
+      var tag = W.kalTagKey(new Date());
+      s.kalender = { e: [] };
+      var r = W.kalHinzu(tag, { art: "run", name: "Lauf", km: 5 });
+      gleich(W.kalErledigt(r), false, "ohne Run nicht erledigt");
+      h.push({ b: "run", at: Date.now(), id: "kt" + Date.now() });
+      gleich(W.kalErledigt(r), true, "Run gespeichert: automatisch erledigt");
+      r.erledigt = false;
+      gleich(W.kalErledigt(r), false, "zurückgenommen bleibt offen");
+    } finally { s.kalender = alt; h.length = 0; altH.forEach(function (x) { h.push(x); }); }
+  });
+  test("Kalender: Einträge hinzufügen, verschieben, abhaken, löschen, Summen", function () {
+    var s = W.state.db.settings, alt = s.kalender;
+    try {
+      s.kalender = undefined;
+      gleich(W.kalListe().length, 0, "leer");
+      var a = W.kalHinzu("2026-10-12", { art: "run", name: "Dauerlauf", km: 7.5 });
+      var b = W.kalHinzu("2026-10-12", { art: "zufall" });
+      var c = W.kalHinzu("2026-10-14", { art: "run", name: "Intervalle", km: 5 });
+      gleich(W.kalAn("2026-10-12").length, 2, "zwei am Montag");
+      gleich(W.kalAn("2026-10-12")[0].id, a.id, "Reihenfolge nach Anlage");
+      gleich(W.kalSumme(["2026-10-12", "2026-10-13", "2026-10-14"]), { n: 3, km: 12.5, ok: 0 }, "Summe vor dem Abhaken");
+      b.erledigt = true;
+      gleich(W.kalSumme(["2026-10-12", "2026-10-14"]).ok, 1, "erledigt gezählt");
+      wahr(W.kalVerschiebe(c.id, "2026-10-16"), "verschieben meldet Änderung");
+      gleich(W.kalAn("2026-10-14").length, 0, "weg vom alten Tag"); gleich(W.kalAn("2026-10-16")[0].id, c.id, "auf dem neuen Tag");
+      wahr(!W.kalVerschiebe(c.id, "2026-10-16"), "gleicher Tag: keine Änderung");
+      W.kalEntferne(a.id);
+      gleich(W.kalListe().length, 2, "nach dem Löschen");
+    } finally { s.kalender = alt; }
+  });
+  test("Kalender: Woche kopieren auf die nächsten Wochen, ohne Doppeltes", function () {
+    var s = W.state.db.settings, alt = s.kalender;
+    try {
+      s.kalender = { e: [] };
+      var woche = ["2026-10-12", "2026-10-13", "2026-10-14", "2026-10-15", "2026-10-16", "2026-10-17", "2026-10-18"];
+      W.kalHinzu("2026-10-12", { art: "run", name: "Dauerlauf", km: 7.5 });
+      W.kalHinzu("2026-10-14", { art: "zufall" }).erledigt = true;
+      W.kalHinzu("2026-10-18", { art: "run", name: "Tour", km: 40, rad: true });
+      gleich(W.kalWocheKopieren(woche, 3), 9, "drei Einträge auf drei Wochen");
+      gleich(W.kalAn("2026-10-19").length, 1, "Montag der nächsten Woche"); gleich(W.kalAn("2026-11-02").length, 1, "Montag der dritten Woche");
+      gleich(W.kalAn("2026-10-21")[0].erledigt, undefined, "Erledigt-Haken wird nicht mitkopiert");
+      gleich(W.kalAn("2026-10-25")[0].rad, true, "Rad bleibt Rad"); gleich(W.kalAn("2026-10-25")[0].km, 40, "Strecke bleibt");
+      gleich(W.kalWocheKopieren(woche, 3), 0, "zweites Kopieren legt nichts doppelt an");
+      gleich(W.kalWocheKopieren(woche, 4), 3, "eine weitere Woche kommt dazu");
+      gleich(W.kalAn("2026-10-12").length, 1, "die Ausgangswoche bleibt unverändert");
+    } finally { s.kalender = alt; }
+  });
+  test("Timer-Ton: Abweichung zwischen Audio-Takt und Wanduhr wird erkannt", function () {
+    var altCtx = W.actx, altRef = W.sched.ref;
+    try {
+      W.actx = { state: "running", currentTime: 100 };
+      W.sched.ref = { ct: 90, wall: Date.now() - 10000 };
+      nah(W.audioAbweichung(), 0, 0.05, "Takt läuft mit der Wanduhr");
+      W.sched.ref = { ct: 85, wall: Date.now() - 10000 };
+      nah(W.audioAbweichung(), 5, 0.05, "Takt ist 5 s vorgelaufen");
+      W.sched.ref = { ct: 90, wall: Date.now() - 20000 };
+      nah(W.audioAbweichung(), -10, 0.05, "Takt stand 10 s still (App im Hintergrund)");
+      W.actx.state = "suspended";
+      gleich(W.audioAbweichung(), 0, "angehaltener Context: keine Aussage");
+      W.sched.ref = undefined; W.actx.state = "running";
+      gleich(W.audioAbweichung(), 0, "ohne Plan: keine Abweichung");
+    } finally { W.actx = altCtx; W.sched.ref = altRef; }
+  });
+  test("Run: Rad zeigt Tempo in km/h und eigene Ansage", function () {
+    gleich(W.runKmh(3600, 25000), "25,0", "25 km in einer Stunde");
+    gleich(W.runKmh(0, 1000), "–,–", "ohne Zeit"); gleich(W.runKmh(60, 10), "–,–", "zu kurze Strecke");
+    gleich(W.runTempo({ art: "rad" }, 3600, 25000), "25,0", "Rad: km/h"); gleich(W.runTempo({}, 300, 1000), "5:00", "Lauf: Pace");
+    gleich(W.runTempoEinheit({ art: "rad" }), "km/h", "Einheit Rad"); gleich(W.runTempoEinheit({}), "/km", "Einheit Lauf");
+    var t = W.runAnsageText(2, [150000, 300000], { every: 1, was: "pace" }, true, true);
+    gleich(t, "2 Kilometer. Tempo 24,0 Kilometer pro Stunde.", "Ansage auf dem Rad");
+  });
+  test("Kalender: Anzeige der Einträge (Name, Zeile, fehlende Ziele)", function () {
+    var s = W.state.db.settings, alt = s.kalender;
+    try {
+      s.kalender = { e: [] };
+      var run = W.kalAufloesen({ art: "run", name: "Dauerlauf", km: 7.5 });
+      gleich(run.name, "Dauerlauf", "Name"); wahr(/7,50 km/.test(run.sub), "Strecke in der Zeile: " + run.sub);
+      wahr(/Frei|Free/.test(W.kalAufloesen({ art: "run", name: "Lauf", km: 0 }).sub), "ohne Ziel: frei");
+      gleich(W.kalAufloesen({ art: "zufall" }).name, W.t("kalZufall"), "Zufallstraining");
+      var fehlt = W.kalAufloesen({ art: "workout", ref: "gibt-es-nicht", name: "Alt" });
+      gleich(fehlt.ok, false, "gelöschtes Workout erkannt");
+    } finally { s.kalender = alt; }
+  });
+  test("Run: Strecke zwischen zwei Punkten (Haversine)", function () {
+    nah(W.runMeter([48, 11], [48.009, 11]), 1001, 8, "0,009° Breite ≈ 1 km");
+    gleich(W.runMeter([48, 11], [48, 11]), 0, "gleicher Punkt");
+    nah(W.runMeter([0, 0], [0, 0.01]), 1113, 6, "am Äquator");
+  });
+  test("Run: Pace und Kilometer-Text", function () {
+    gleich(W.runPace(300, 1000), "5:00", "5:00"); gleich(W.runPace(330, 1000), "5:30", "5:30");
+    gleich(W.runPace(359.6, 1000), "6:00", "Rundung auf die volle Minute");
+    gleich(W.runPace(100, 10), "–:––", "zu kurze Strecke"); gleich(W.runPace(0, 1000), "–:––", "ohne Zeit"); gleich(W.runPace(4000, 1000), "–:––", "über 59 min/km");
+    gleich(W.runKm(1259), "1,26", "Kilometer, deutsch");
+  });
+  test("Run: Ansagetexte (nur km · km + Pace · alles), auch alle 2 km", function () {
+    var sp = [370000, 740000, 1110000];
+    gleich(W.runAnsageText(3, sp, { every: 1, was: "km" }, true), "3 Kilometer.", "nur km");
+    gleich(W.runAnsageText(3, sp, { every: 1, was: "pace" }, true), "3 Kilometer. Pace 6 Minuten 10 Sekunden pro Kilometer.", "km + Pace");
+    gleich(W.runAnsageText(2, sp, { every: 2, was: "pace" }, true), "2 Kilometer. Pace 6 Minuten 10 Sekunden pro Kilometer.", "alle 2 km");
+    var voll = W.runAnsageText(3, sp, { every: 1, was: "alles" }, true);
+    wahr(/Zeit 18 Minuten 30 Sekunden/.test(voll) && /Durchschnitt 6 Minuten 10 Sekunden/.test(voll), "alles: " + voll);
+    var en = W.runAnsageText(1, [372000], { every: 1, was: "pace" }, false);
+    gleich(en, "1 kilometre. Pace 6 minutes 12 seconds per kilometre.", "Englisch");
+  });
+  test("Run: Besonderheiten nach dem Lauf (erster, längster, schnellster Kilometer, Meilensteine)", function () {
+    var s = W.state.db.settings, alt = s.runs;
+    try {
+      var x = { id: "b", dist: 5200, dur: 1800000, splits: [350000, 700000, 1050000, 1400000, 1750000] };
+      s.runs = [x];
+      gleich(W.runHighlights(x), [W.t("runErster"), W.t("runM5")], "erster Lauf (mit 5 km)");
+      var a = { id: "a", dist: 3000, dur: 1200000, splits: [400000, 800000, 1200000] };
+      s.runs = [a, x];
+      var h = W.runHighlights(x);
+      wahr(h.indexOf(W.t("runLaengster")) > -1, "längster Lauf");
+      wahr(h.indexOf(W.t("runSchnellsterKm", { z: W.fmtUhr(350000) })) > -1, "schnellster Kilometer: " + h.join(" | "));
+      wahr(h.indexOf(W.t("runSchnellstePace")) > -1, "schnellste Pace");
+      wahr(h.indexOf(W.t("runM5")) > -1, "Meilenstein 5 km");
+      gleich(h.indexOf(W.t("runErster")), -1, "nicht mehr „erster Lauf“");
+      s.runs = [a, x, { id: "c", dist: 6000, dur: 3000000, splits: [500000] }];
+      wahr(W.runHighlights(x).indexOf(W.t("runM5")) < 0, "kein Meilenstein, wenn schon ein Lauf über 5 km da war");
+      wahr(W.runHighlights(x).indexOf(W.t("runLaengster")) < 0, "nicht der längste, wenn ein längerer existiert");
+    } finally { s.runs = alt; }
+  });
+  test("Run: schnellster Kilometer und Datumsschlüssel", function () {
+    gleich(W.runBesterKm({ splits: [400000, 700000, 1200000] }), 300000, "schnellster Abschnitt");
+    gleich(W.runBesterKm({ splits: [] }), null, "ohne Kilometer");
+    gleich(W.einheitTagKey(new Date(2026, 9, 5, 23, 59).getTime()), "2026-10-05", "Datum mit führenden Nullen");
+  });
+
+  test("Kalorien: Lauf und Rad nach Körperdaten (ohne gültiges Gewicht keine Schätzung)", function () {
+    var s = W.state.db.settings, alt = s.koerper;
+    try {
+      s.koerper = { kg: 80 };
+      gleich(W.runKcal(10000, 3600, false), 909, "Lauf 10 km in 1 h: 1,036 kcal je kg und km + Ruheumsatz (80 kcal je Stunde)");
+      gleich(W.runKcal(20000, 3600, true), 640, "Rad 20 km/h: 8 MET");
+      gleich(W.runKcal(30, 3600, false), 0, "zu kurze Strecke: keine Schätzung");
+      s.koerper = { kg: 80, cm: 180, alter: 30, sex: "m" };
+      var m = W.runKcal(10000, 3600, false);
+      s.koerper = { kg: 80, cm: 180, alter: 30, sex: "w" };
+      var f = W.runKcal(10000, 3600, false);
+      wahr(m > f && m > 800 && m < 1000, "gleiche Daten: Mann höher als Frau (Ruheumsatz), plausibel: " + m + " / " + f);
+      s.koerper = { kg: 20, cm: 180 };
+      gleich(W.koerperDaten(), null, "Gewicht außerhalb 30-250 kg: keine Schätzung");
+      gleich(W.runKcal(10000, 3600, false), 0, "ohne Körperdaten 0");
+      s.koerper = { kg: 70 };
+      gleich(W.koerperDaten().kg, 70, "gültiges Gewicht");
+    } finally { s.koerper = alt; }
+  });
+  test("Protein: Favoriten aus dem Katalog per Stern ein- und ausschalten, Katalog ist A–Z sortiert", function () {
+    var s = W.state.db.settings, alt = s.protein;
+    try {
+      s.protein = { stufe: 1.6, kg: 80, knoepfe: [], favs: [], tage: {} };
+      gleich(W.protIstFav("Skyr"), false, "zu Beginn kein Favorit");
+      W.protFavWechseln("Skyr");
+      gleich(W.protIstFav("Skyr"), true, "Stern gesetzt");
+      W.protFavWechseln("Skyr");
+      gleich(W.protIstFav("Skyr"), false, "Stern wieder entfernt");
+      var namen = W.PROT_FOODS.map(function (f) { return f[0]; });
+      gleich(namen.slice().sort(function (a, b) { return a.localeCompare(b, "de"); }), namen, "Katalog alphabetisch");
+      gleich(W.PROT_FOODS.length >= 200, true, "Katalog hat mindestens 200 Lebensmittel");
+    } finally { s.protein = alt; }
+  });
+  test("Protein: Ziel nach Gewicht und Stufe, Tagessumme, Schnellbuttons nach Nutzung", function () {
+    var s = W.state.db.settings, alt = s.protein, altK = s.koerper;
+    try {
+      s.koerper = {};
+      s.protein = { stufe: 1.6, kg: 80, knoepfe: [{ id: "a", n: "A", a: 100, p: 10, nutz: 0 }, { id: "b", n: "B", a: 100, p: 30, nutz: 2 }], tage: {} };
+      gleich(W.protZiel(), 128, "80 kg × 1,6 g/kg");
+      s.protein.stufe = 0.83; gleich(W.protZiel(), 66, "Basis: 80 × 0,83");
+      s.protein.stufe = 1.6;
+      W.protEintragen("Test", 25, 100);
+      gleich(W.protSumme(W.protTag(W.kalTagKey(Date.now()))), 25, "Summe heute");
+      gleich(W.protKnoepfe()[0].id, "b", "häufig genutzter Button steht vorn");
+      s.koerper = { kg: 80, cm: 180, alter: 30, sex: "m", pal: 1.65 };
+      gleich(W.protKcal(), 2900, "Mann 30 J., 180 cm, 80 kg, Faktor 1,65: (1780 × 1,65) auf 100 gerundet");
+      s.koerper.sex = "";
+      gleich(W.protKcal(), 2800, "ohne Geschlecht: Mittelwert beider Formeln");
+      s.koerper = { kg: 80 };
+      gleich(W.protKcal(), 0, "ohne Größe und Alter keine Kalorienschätzung");
+      s.koerper = { kg: 80, cm: 180, alter: 30, sex: "m", pal: 1.65 };
+      s.protein.ziel = "ab";
+      gleich(W.protKcalZiel(), 2500, "Abnehmen: 15 % unter der Erhaltung, auf 100 gerundet");
+      gleich(W.protZiel(), 160, "Abnehmen: mindestens 2,0 g/kg");
+      s.protein.ziel = "auf";
+      gleich(W.protKcalZiel(), 3100, "Aufbauen: etwa 8 % mehr");
+      s.protein.ziel = "halten";
+      gleich(W.protKcalZiel(), 2900, "Halten: Erhaltung");
+      s.koerper = { kg: 60, cm: 170, alter: 16, sex: "m", pal: 1.55 };
+      gleich(W.protKcal(), 0, "unter 18: keine Kalorienschätzung");
+      s.koerper = { kg: 100, cm: 170, alter: 30, sex: "m", pal: 1.55 };
+      gleich(W.protZiel(), 116, "ab BMI 30 zählt das Gewicht bei BMI 25: 72,3 kg × 1,6");
+      s.protein.stufe = 0.83; s.koerper = { kg: 70, cm: 170, alter: 70, sex: "w", pal: 1.4 };
+      gleich(W.protStufe(), 1, "ab 65 mindestens 1,0 g/kg");
+      s.protein.stufe = 1.6;
+      s.protein.kg = 0; s.koerper = {};
+      gleich(W.protZiel(), 0, "ohne Gewicht kein Ziel");
+    } finally { s.protein = alt; s.koerper = altK; }
+  });
+  test("Statistik: Fortschritt je Übung (erstes gegen bestes Gewicht, ohne Gewicht Wiederholungen, nur ab zwei Einheiten)", function () {
+    var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();
+    try {
+      s.studio = {
+        "leg-press": { log: [{ at: n - 20*tag, s: [[60, 10], [60, 9]] }, { at: n - 2*tag, s: [[20, 12, "w"], [80, 8]] }] },
+        "push-ups": { log: [{ at: n - 14*tag, s: [[0, 12], [0, 10]] }, { at: n - 3*tag, s: [[0, 18]] }] },
+        "air-squats": { log: [{ at: n - 1*tag, s: [[0, 20]] }] }   // nur eine Einheit: erscheint nicht
+      };
+      var h = W.statFortschrittHTML(), d = document.createElement("div"); d.innerHTML = h;
+      var zeilen = d.querySelectorAll(".sf-zeile");
+      gleich(zeilen.length, 2, "Übungen mit mindestens zwei Einheiten");
+      wahr(/60 → 80 kg/.test(h) && /\+20 kg \(\+33 %\)/.test(h), "Beinpresse: 60 → 80 kg, +20 kg (+33 %): " + d.textContent.slice(0, 200));
+      wahr(/12 → 18 Wdh\./.test(h) && /\+6 Wdh\. \(\+50 %\)/.test(h), "Liegestütze: 12 → 18 Wdh.");
+      wahr(h.indexOf("air-squats") < 0, "Übung mit einer Einheit darf nicht erscheinen");
+      s.studio = {};
+      wahr(/stat-fort/.test(W.statFortschrittHTML()) && W.statFortschrittHTML().indexOf("sf-zeile") < 0, "ohne Daten ein Hinweis statt Zeilen");
+    } finally { s.studio = alt; }
+  });
+
+  /* ---------- Start und Speichern: Stand beim Laden, kaputte Daten, volles Gerät ---------- */
+  /* Startet die App frisch in einem eigenen Rahmen mit dem übergebenen Rohtext im Speicher (so läuft loadDB wirklich beim Laden
+     der Skripte, nicht erst danach wie im Haupt-Rahmen) und gibt das Fenster zurück. */
+  function startMit(roh) {
+    return new Promise(function (ok, nein) {
+      var vorher = localStorage.getItem(KEY), f = document.createElement("iframe");
+      function aufraeumen() {
+        f.src = "about:blank"; f.remove();
+        if (vorher === null) localStorage.removeItem(KEY); else localStorage.setItem(KEY, vorher);
+        localStorage.removeItem(KEY + "-defekt");
+      }
+      localStorage.removeItem(KEY + "-defekt");
+      localStorage.setItem(KEY, roh);
+      f.title = "App im Test (Start)";
+      f.onload = function () {
+        var w = f.contentWindow, t0 = Date.now();
+        (function pruefen() {
+          if (w.state && w.state.db && w.save) { var erg = { w: w, defekt: localStorage.getItem(KEY + "-defekt") }; aufraeumen(); return ok(erg); }
+          if (Date.now() - t0 > 8000) { aufraeumen(); return nein(new Error("App nicht geladen")); }
+          setTimeout(pruefen, 100);
+        })();
+      };
+      f.src = "index.html?schnelltest=" + Date.now() + "&lang=de#home";
+      document.body.appendChild(f);
+    });
+  }
+  test("Start mit altem Stand (Bereiche-Version 2): nichts geht verloren, die Reihenfolge wird übernommen", function () {
+    var alt = { blocks: [{ id: "b1", name: "Block" }], workouts: [], myWorkouts: [], customEx: [], history: [],
+      settings: { bereicheV: 2, bereiche: ["run", "lib", "timer"] } };
+    return startMit(JSON.stringify(alt)).then(function (e) {
+      var d = e.w.state.db;
+      gleich(d.blocks.length, 1, "Block bleibt erhalten (nicht auf leeren Stand zurückgesetzt)");
+      gleich(d.settings.bereicheV, 4, "auf die aktuelle Version gehoben");
+      wahr(d.settings.bereiche.indexOf("run") > -1 && d.settings.bereiche.indexOf("run") < d.settings.bereiche.indexOf("lib"), "eigene Reihenfolge bleibt: Run vor Workout");
+      wahr(d.settings.bereiche.indexOf("intervall") > -1 && d.settings.bereiche.indexOf("warm") > -1, "neue Bereiche sind ergänzt");
+      gleich(e.w.DB_GERETTET, false, "nichts musste gerettet werden");
+    });
+  });
+  test("Start mit unlesbarem Stand: Rohtext wird beiseitegelegt, die App startet leer", function () {
+    return startMit("{kaputt").then(function (e) {
+      gleich(e.defekt, "{kaputt", "Rohtext unter dem Rettungsschlüssel");
+      gleich(e.w.DB_GERETTET, true, "Kennzeichen gesetzt");
+      gleich(e.w.state.db.blocks.length, 0, "frischer Stand");
+    });
+  });
+  test("Speichern: scheitert der Gerätespeicher, kommt false und ein Hinweis statt stillem „gespeichert“", function () {
+    var proto = W.Storage.prototype, orig = proto.setItem;
+    W.speichernWarnung = 0;
+    var alt = W.document.getElementById("toast"); if (alt) alt.remove();
+    var r;
+    try {
+      proto.setItem = function () { throw new Error("QuotaExceededError"); };
+      r = W.save();
+    } finally { proto.setItem = orig; }
+    gleich(r, false, "save() meldet den Fehler");
+    var toast = W.document.getElementById("toast");
+    wahr(toast && toast.textContent === W.t("speichernFehler"), "Hinweis sichtbar");
+    if (toast) toast.remove();
+    gleich(W.save(), true, "danach wieder normal");
+  });
+
+  /* ---------- Fragen & Antworten (faq.js): Daten vollständig und zweisprachig, Anzeige zugeklappt, Links nur https ---------- */
+  test("FAQ: Fragen in Deutsch und Englisch vollständig (Antwort, Begriffe, Quellen), alle Quellen vorhanden, Gruppen lückenlos", function () {
+    var F = W.BLOC_FAQ;
+    wahr(F && F.fragen && F.quellen, "faq.js geladen");
+    wahr(F.fragen.length >= 10, "mindestens 10 Fragen: " + F.fragen.length);
+    var gr = F.fragen.map(function (f) { return f.g; });
+    var k = F.gruppen.de.length;
+    gleich(gr.filter(function (g, i) { return i === 0 || g !== gr[i - 1]; }), Array.apply(null, Array(k)).map(function (_, i) { return i; }), "Gruppen lückenlos nacheinander");
+    ["de", "en"].forEach(function (sp) {
+      gleich(F.gruppen[sp].length, k, "Gruppennamen " + sp); wahr(F.hinweis[sp].length > 100, "Hinweis " + sp);
+      F.fragen.forEach(function (f, i) {
+        var x = f[sp];
+        /* Pflicht: Titel und mindestens ein Absatz; die Kurzantwort k, „Wie sicher ist das?“ s und die Begriffe b sind optional */
+        wahr(x && x.t && x.p && x.p.length >= 1 && x.p.every(function (p) { return typeof p === "string" && p.length > 0; }), "Frage " + (i + 1) + " " + sp + " vollständig");
+        if (x.k !== undefined) wahr(typeof x.k === "string" && x.k.length > 0, "Frage " + (i + 1) + " " + sp + ": Kurzantwort nicht leer");
+        if (x.s !== undefined) wahr(typeof x.s === "string" && x.s.length > 0, "Frage " + (i + 1) + " " + sp + ": „Wie sicher ist das?“ nicht leer");
+        if (x.b !== undefined) wahr(x.b.length >= 1 && x.b.every(function (e) { return e.length === 2 && e[0] && e[1]; }), "Frage " + (i + 1) + " " + sp + ": Begriffe als [Begriff, Erklärung]");
+        wahr(f.q && f.q.length >= 1 && f.q.every(function (n) { return F.quellen[n] && F.quellen[n].de && F.quellen[n].en; }), "Frage " + (i + 1) + ": Quellen im Verzeichnis");
+      });
+    });
+    F.fragen.forEach(function (f, i) { wahr(!!f.de.b === !!f.en.b, "Frage " + (i + 1) + ": Begriffe in beiden Sprachen oder in keiner"); });
+    wahr(Object.keys(F.quellen).length >= 10, "Quellenverzeichnis vorhanden: " + Object.keys(F.quellen).length);
+  });
+  test("FAQ: Anzeige – Hinweis vor den Fragen und nie in einer zugeklappten Frage, alles zugeklappt, Links nur https mit noopener", function () {
+    var F = W.BLOC_FAQ, n = F.fragen.length;
+    var d = document.createElement("div"); d.innerHTML = W.faqHTML();
+    var h = d.querySelector(".faq-hinweis"), erste = d.querySelector("details.faq-q");
+    wahr(h && !h.closest("details.faq-q"), "Hinweis „keine Beratung“ steht nicht in einer zugeklappten Frage");
+    wahr(h && erste && (h.compareDocumentPosition(erste) & 4), "Hinweis steht vor der ersten Frage (sichtbar, sobald Fragen zu sehen sind)");
+    gleich(d.querySelectorAll("details.faq-q").length, n + 1, "alle Fragen + Quellenverzeichnis");
+    gleich(d.querySelectorAll("details[open]").length, 0, "alles zugeklappt");
+    gleich(d.querySelectorAll("details.faq-q > summary").length, n + 1, "jede Frage hat eine Kopfzeile");
+    var links = d.querySelectorAll("a");
+    wahr(links.length >= 10, "Links im Verzeichnis: " + links.length);
+    var mitB = F.fragen.filter(function (f) { return f[W.currentLang()].b && f[W.currentLang()].b.length; }).length;
+    gleich(d.querySelectorAll(".faq-begriffe").length, mitB, "Begriffe werden bei genau den Fragen angezeigt, die welche haben");
+    gleich(d.querySelectorAll("details.faq-q:not(.faq-verz) .faq-a").length, n, "jede Frage hat eine Antwort");
+    wahr(!/undefined|null/.test(d.textContent), "kein „undefined“ oder „null“ im angezeigten Text");
+    for (var i = 0; i < links.length; i++) {
+      wahr(/^https:\/\//.test(links[i].getAttribute("href")), "Link nur https: " + links[i].getAttribute("href"));
+      wahr(/noopener/.test(links[i].getAttribute("rel") || "") && links[i].getAttribute("target") === "_blank", "Link mit noopener: " + links[i].getAttribute("href"));
+    }
+    wahr(!d.querySelector("img, script, iframe, link, [src]"), "nichts wird nachgeladen oder eingebettet");
+  });
+
+  test("FAQ: Anzeige verträgt beide Datenformate – ohne Kurzantwort und ohne „Wie sicher ist das?“, mit Begriffen", function () {
+    var alt = W.BLOC_FAQ;
+    try {
+      var q = { de: "Quelle <a href=\"https://example.org/\" target=\"_blank\" rel=\"noopener noreferrer\">Link</a>", en: "Source" };
+      W.BLOC_FAQ = { hinweis: { de: "Hinweis", en: "Note" }, gruppen: { de: ["Gruppe"], en: ["Group"] }, quellen: { 1: q },
+        fragen: [
+          { g: 0, q: [1], id: "a", de: { t: "Frage A", p: ["Absatz eins", "Absatz zwei"], b: [["MET", "Maß für Anstrengung"]] }, en: { t: "Question A", p: ["Paragraph one"], b: [["MET", "Measure of effort"]] } },
+          { g: 0, q: [1], de: { t: "Frage B", k: "Kurz", p: ["Punkt"], s: "Gut belegt" }, en: { t: "Question B", k: "Short", p: ["Point"], s: "Well supported" } }
+        ] };
+      var d = document.createElement("div"); d.innerHTML = W.faqHTML();
+      var a = d.querySelectorAll("details.faq-q:not(.faq-verz)");
+      gleich(a.length, 2, "zwei Fragen");
+      gleich(a[0].querySelectorAll(".faq-a > p").length >= 2 && !a[0].querySelector("ul"), true, "ohne Kurzantwort: Absätze als Fließtext, keine Liste");
+      wahr(!/Kurzantwort|Wie sicher/.test(a[0].textContent), "ohne k und s erscheinen weder Kurzantwort noch „Wie sicher ist das?“");
+      wahr(a[0].querySelector(".faq-begriffe dt") && a[0].querySelector(".faq-begriffe dt").textContent === "MET", "Begriffe angezeigt");
+      wahr(a[1].querySelector("ul li") && /Kurzantwort/.test(a[1].textContent) && /Wie sicher/.test(a[1].textContent), "mit k und s wie bisher");
+      wahr(!/undefined|null/.test(d.textContent), "kein „undefined“ im Text");
+    } finally { W.BLOC_FAQ = alt; }
+  });
+
+  /* ---------- Einführung, Klänge, Namen, Sicherungs-Erinnerung (2026-10-19) ---------- */
+  test("Klänge: nur Klangschale und Triangel; frühere Klänge werden zur Klangschale (Xylophon bleibt bei der Triangel)", function () {
+    gleich(Object.keys(W.SOUND_STYLES), ["klangschale", "triangel"], "vorhandene Klänge");
+    ["sanft", "arcade", "klatschen", "weich", "gong", "unbekannt", "", undefined].forEach(function (k) { gleich(W.migrateSound(k), "klangschale", "Klang " + k); });
+    gleich(W.migrateSound("xylophon"), "triangel", "Xylophon"); gleich(W.migrateSound("triangel"), "triangel", "Triangel bleibt");
+    gleich(W.defaultDB().settings.soundStyle, "klangschale", "Standard");
+    var s = W.state.db.settings, alt = s.soundStyle;
+    try { s.soundStyle = "arcade"; gleich(W.currentSoundStyle(), W.SOUND_STYLES.klangschale, "ein unbekannter gespeicherter Klang fällt auf die Klangschale"); } finally { s.soundStyle = alt; }
+  });
+  test("Namen: neue Pläne heißen BLOC 1, BLOC 2 … (Deutsch und Englisch)", function () {
+    gleich(W.t("planDefault", { n: 1 }), "BLOC 1", "Name"); gleich(W.t("planDefault", { n: 12 }), "BLOC 12", "Name zweistellig");
+    gleich(W.BLOC_TEXTE.en.planDefault, "BLOC {n}", "Englisch");
+  });
+  test("Einführung: Name, Gewicht, Größe werden geprüft und gespeichert (ungültige Werte überschreiben nichts)", function () {
+    var s = W.state.db.settings, altName = s.name, altK = s.koerper;
+    try {
+      s.name = ""; s.koerper = {};
+      var d = document.createElement("div"); d.innerHTML = W.introProfilHTML();
+      d.querySelector("#i-name").value = "  Kevin   Test  "; d.querySelector("#i-kg").value = "82.5"; d.querySelector("#i-cm").value = "181";
+      W.introProfilSpeichern(d);
+      gleich(s.name, "Kevin Test", "Name ohne doppelte Leerzeichen"); gleich(s.koerper.kg, 82.5, "Gewicht"); gleich(s.koerper.cm, 181, "Größe");
+      d.querySelector("#i-kg").value = "5"; d.querySelector("#i-cm").value = "999"; d.querySelector("#i-name").value = new Array(60).join("x");
+      W.introProfilSpeichern(d);
+      gleich(s.koerper.kg, 82.5, "unplausibles Gewicht ändert nichts"); gleich(s.koerper.cm, 181, "unplausible Größe ändert nichts"); gleich(s.name.length, 30, "Name höchstens 30 Zeichen");
+      gleich(W.koerperDaten().kg, 82.5, "die Kalorien-Schätzung nutzt das Gewicht");
+      var leer = document.createElement("div"); W.introProfilSpeichern(leer);   // Seite nicht sichtbar: nichts passiert
+      gleich(s.name.length, 30, "ohne Formular bleibt alles");
+    } finally { s.name = altName; s.koerper = altK; }
+  });
+  test("Einführung: Sprache, Über dich und Aufbau stehen vorn; das Schaubild hat eine Beschriftung für Screenreader", function () {
+    var seiten = W.introSeiten();
+    gleich(seiten.slice(0, 3).map(function (x) { return x.art; }), ["sprache", "profil", "aufbau"], "Reihenfolge");
+    var d = document.createElement("div"); d.innerHTML = seiten[2].extra;
+    wahr(d.querySelector("svg[role=img][aria-label]"), "Schaubild mit Beschriftung für Screenreader");
+    wahr(/BLOC/.test(d.querySelector("svg").textContent) && /Trainingsplan/.test(d.querySelector("svg").textContent), "Schaubild nennt Trainingsplan und BLOC");
+  });
+  test("Sicherungs-Erinnerung: selten (60 Tage ohne Datei, Schnappschuss vorhanden, × ruht 30 Tage)", function () {
+    var s = W.state.db.settings, tag = 86400000, alt = { z: W.snapZeit, ex: s.lastExport, bis: s.backupTipBis, bl: W.state.db.blocks, it: W.installTipHTML };
+    try {
+      W.installTipHTML = function () { return ""; };   // der Installationshinweis hat Vorrang und hängt vom Browser ab
+      W.state.db.blocks = [{ id: "t" }]; W.snapZeit = Date.now(); s.backupTipBis = 0;
+      s.lastExport = Date.now() - 20 * tag; gleich(W.backupTipHTML(), "", "vor 20 Tagen gesichert: keine Karte");
+      s.lastExport = Date.now() - 70 * tag; wahr(/data-backup-now/.test(W.backupTipHTML()), "70 Tage ohne Datei: Karte");
+      s.backupTipBis = Date.now() + 10 * tag; gleich(W.backupTipHTML(), "", "weggeklickt: ruht");
+      s.backupTipBis = 0; W.snapZeit = 0; gleich(W.backupTipHTML(), "", "noch kein Schnappschuss: keine Karte");
+      W.snapZeit = Date.now(); W.state.db.blocks = []; gleich(W.backupTipHTML(), "", "ohne eigene Inhalte: keine Karte");
+    } finally { W.installTipHTML = alt.it; W.snapZeit = alt.z; s.lastExport = alt.ex; s.backupTipBis = alt.bis; W.state.db.blocks = alt.bl; }
+  });
+
+  test("Neue Studio-Übungen (Cardio, Griffe): vollständig und zweisprachig, Griff-Angabe als Paar, keine Doppelten", function () {
+    var cardio = W.STUDIO_GRUPPEN.filter(function (g) { return g.id === "cardio"; })[0];
+    wahr(cardio && cardio.ids.split(" ").length >= 9, "Gruppe Cardio mit den Battle Ropes");
+    cardio.ids.split(" ").forEach(function (id) {
+      var ex = W.findExercise(id), i = W.EX_INFO[id], p = W.EX_POSTURE[id], m = W.EX_MUSCLES[id];
+      wahr(ex && ex.name.de && ex.name.en, id + ": Name in zwei Sprachen");
+      wahr(i && i[0].split("|").length === 3 && i[1].split("|").length === 3, id + ": drei Schritte DE und EN");
+      wahr(p && p.length === 4 && p.every(function (x) { return x; }), id + ": Haltung und Vermeiden DE und EN");
+      wahr(m && m.length === 4 && m[0] && m[2], id + ": Muskeln DE und EN");
+    });
+    Object.keys(W.EX_GRIFF).forEach(function (id) { var g = W.EX_GRIFF[id]; wahr(g.length === 2 && g[0] && g[1], id + ": Griff DE und EN"); wahr(W.findExercise(id), id + ": Übung zum Griff existiert"); });
+    var ids = W.EXERCISES.map(function (e) { return e.id; });
+    gleich(ids.length, ids.filter(function (x, k) { return ids.indexOf(x) === k; }).length, "keine doppelte Übungs-ID");
+    wahr(W.griffHTML("rope-triceps-pushdown").indexOf("Seilaufsatz") > -1 && W.griffHTML("plank") === "", "Griff wird gezeigt, wo es einen gibt");
+  });
+
+  /* zuletzt: dieser Test schreibt Sätze und einen Verlaufseintrag und würde die Wochen- und Sicherungs-Prüfungen verändern */
+  test("Satz-Training: nach dem Speichern beginnt es von vorn, es zählen nur die neuen Sätze", function () {
+    W.studioSatzLog("leg-press", 20, 10); W.studioSatzLog("leg-press", 20, 10);
+    gleich(W.satzHeute("leg-press").s.length, 2, "zwei Sätze heute");
+    W.satzBasisSetzen(["leg-press"]);
+    gleich(W.satzHeute("leg-press"), null, "nach dem Speichern leer");
+    W.studioSatzLog("leg-press", 25, 8);
+    gleich(W.satzHeute("leg-press").s.length, 1, "nur der neue Satz");
+  });
+
+  test("Neuer Standard: 4 statt 3 Sätze, 10 % mehr Gewicht oder Wiederholungen werden das neue Ziel (nie gesenkt, einmal je Einheit)", function () {
+    var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now(), id = "chest-press-machine";
+    try {
+      s.studio = {}; s.studio[id] = { kg:7.5, log:[{ at:n - 8*tag, s:[[7.5, 12], [7.5, 12], [7.5, 12]] }, { at:n - 1*tag, s:[[7.5, 12], [7.5, 12], [7.5, 12], [7.5, 12]] }] };
+      var c = W.studioStandardPruefen(id, false);
+      gleich(W.studioZiel(id).saetze, 4, "vier Sätze gemacht: Ziel 4 Sätze"); gleich(c.neu.saetze, 4, "Änderung gemeldet");
+      gleich(W.studioStandardPruefen(id, false), null, "dieselbe Einheit wird nicht noch einmal ausgewertet");
+      s.studio[id].log.push({ at:n, s:[[8.5, 14], [8.5, 14], [8.5, 14], [8.5, 14]] });
+      gleich(W.studioStandardPruefen(id, false), null, "heute zählt erst beim Abschluss");
+      var c2 = W.studioStandardPruefen(id, true);
+      gleich(W.studioZiel(id).wdh, 14, "mindestens 10 % mehr Wiederholungen (14 statt 12): Ziel 14"); gleich(c2.kgNeu, 8.5, "mindestens 10 % mehr Gewicht"); gleich(s.studio[id].kg, 8.5, "Arbeitsgewicht angehoben");
+      s.studio[id].log.push({ at:n + 1000, s:[[8.5, 14]] });
+      gleich(W.studioZiel(id).saetze, 4, "weniger Sätze senken das Ziel nicht");
+      var id2 = "leg-press"; s.studio[id2] = { kg:60, log:[{ at:n - 8*tag, s:[[60, 12], [60, 12], [60, 12]] }, { at:n - 1*tag, s:[[80, 12], [60, 12], [60, 12]] }] };
+      gleich(W.studioStandardPruefen(id2, false), null, "ein einzelner schwerer Satz zählt nicht");
+      gleich(s.studio[id2].kg, 60, "Arbeitsgewicht bleibt");
+      s.studio[id] = { kg:7.5, ziel:{ saetze:3, wdh:12 }, manuell:n, log:[{ at:n - 8*tag, s:[[7.5, 12], [7.5, 12], [7.5, 12]] }, { at:n - 2*tag, s:[[7.5, 12], [7.5, 12], [7.5, 12], [7.5, 12]] }] };
+      gleich(W.studioStandardPruefen(id, false), null, "von Hand zurückgestellt: die frühere Einheit hebt das Ziel nicht wieder an"); gleich(W.studioZiel(id).saetze, 3, "Handeinstellung gilt");
+    } finally { s.studio = alt; }
+  });
+
+  function eintrag(name) { var li = document.createElement("li"); li.textContent = name + " …"; liste.appendChild(li); return li; }
+  document.getElementById("los").addEventListener("click", async function () {
+    var knopf = this;
+    if (!lokal) { summe.className = "fail"; summe.textContent = "Nur lokal ausführen (localhost) – sonst würde der Test deinen echten Stand anfassen."; return; }
+    knopf.disabled = true; liste.innerHTML = ""; summe.textContent = "";
+    var gesichert = localStorage.getItem(KEY), ss = {};
+    for (var i = 0; i < sessionStorage.length; i++) { var k = sessionStorage.key(i); ss[k] = sessionStorage.getItem(k); }
+    localStorage.removeItem(KEY);
+    var ok = 0, schlecht = 0;
+    try {
+      await laden();
+      for (var n = 0; n < T.length; n++) {
+        var li = eintrag(T[n][0]);
+        try { var erg = T[n][1](); if (erg && erg.then) { await erg; await warte(250); } li.className = "ok"; li.textContent = "✓ " + T[n][0]; ok++; }
+        catch (e) {
+          li.className = "fail"; li.textContent = "✗ " + T[n][0];
+          var sm = document.createElement("small"); sm.textContent = e && e.message ? e.message : String(e); li.appendChild(sm);
+          schlecht++;
+        }
+      }
+    } catch (e) {
+      schlecht++; var f = eintrag("App laden"); f.className = "fail"; f.textContent = "✗ App laden: " + (e && e.message ? e.message : e);
+    } finally {
+      iframe.src = "about:blank";
+      await warte(200);
+      if (gesichert === null) localStorage.removeItem(KEY); else localStorage.setItem(KEY, gesichert);
+      sessionStorage.clear(); Object.keys(ss).forEach(function (k) { sessionStorage.setItem(k, ss[k]); });
+      var gesamt = ok + schlecht;
+      summe.className = schlecht ? "fail" : "ok";
+      summe.textContent = schlecht ? schlecht + " von " + gesamt + " Prüfungen fehlgeschlagen" : "Alles in Ordnung: " + ok + " von " + gesamt + " Prüfungen bestanden";
+      document.title = (schlecht ? "✗ " : "✓ ") + "BLOC Einheitstest";
+      knopf.disabled = false;
+    }
+  });
+  if (/[?&]auto\b/.test(location.search)) document.getElementById("los").click();
+})();
+</script>
+</body>
+</html>
