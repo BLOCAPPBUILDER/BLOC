@@ -95,7 +95,7 @@ Design C60 (Kassetten-Look mit Walzenzähler) gibt es nicht mehr; gespeicherte S
 
 1. `FASSUNG` in `sw.js` erhöhen und dieselbe Nummer als `?v=…` an `app.css`, `texte.js`, `daten.js` und alle `js/…`-Dateien in `index.html` (ein `sed` über die alte Nummer genügt); neue Teile in `js/` außerdem in `sw.js` (`GRUNDGERUEST`) eintragen.
 2. Schnelltest laufen lassen (siehe unten).
-3. Alle geänderten Dateien gemeinsam hochladen bzw. committen und nach `main` pushen. GitHub Pages: <https://kevinhbrck.github.io/BLOC/>
+3. Alle geänderten Dateien gemeinsam hochladen bzw. committen und nach `main` pushen. GitHub Pages: <https://blocappbuilder.github.io/BLOC/>
    (nach dem Push dauert die Auslieferung eine Minute).
 4. In `VERLAUF.md` kurz festhalten, was sich geändert hat.
 

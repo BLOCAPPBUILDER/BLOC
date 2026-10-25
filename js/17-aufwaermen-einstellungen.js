@@ -191,7 +191,7 @@ function renderWarmStretch(){
 
 /* Adresse der App ohne # und Parameter - die Seite, die man weitergeben kann */
 /* Als Datei geöffnet (file://) gibt es keine teilbare Adresse - dann die veröffentlichte App */
-var APP_PUBLIC_URL = "https://kevinhbrck.github.io/BLOC/";
+var APP_PUBLIC_URL = "https://blocappbuilder.github.io/BLOC/";
 /* Versionsnummer steht nur in sw.js: die App fragt den Service Worker danach und zeigt sie unten in den
    Einstellungen. Keine Antwort (als Datei geöffnet, Service Worker noch nicht aktiv): Zeile bleibt leer. */
 var appFassung = "";

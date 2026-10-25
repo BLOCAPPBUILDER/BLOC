@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-10-25 · Umzug auf BLOCAPPBUILDER (Fassung 2026-10-25-9)
+
+- Feste App-Adresse (`APP_PUBLIC_URL`, gilt nur außerhalb von http/https) und README zeigen jetzt auf <https://blocappbuilder.github.io/BLOC/>. Im Browser nimmt „Link kopieren“ (Einstellungen › Mehr › App) wie bisher die Adresse, unter der die App läuft.
+- Nicht getestet: Schnelltest und Einheitstest (nur Adresse und Fassung geändert).
+
 ## 2026-10-24 (nachts) · Wissensaustausch im Magazinstil (Fassung 2026-10-24-7)
 
 - **Umbenannt**: „Fragen & Antworten“ heißt jetzt **Wissensaustausch** (Tools-Kachel „25 Beiträge mit Quellen“, Seitentitel, Verweise in der App, quellen.html).
