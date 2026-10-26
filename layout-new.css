@@ -1371,3 +1371,38 @@ body:has(.kal-nav) #app{ touch-action:pan-y; }   /* waagerechte Wischer gehören
 .prot-stufe{ min-height:44px; }
 .prot-x{ min-width:44px; min-height:44px; margin-left:4px; }
 .prot-saeule small, .prot-kn small, .prot-stufe small{ font-size:12px; }
+
+/* ---------- Protein-Seite, Umbau (2026-10-26): Reiter statt Klappkarten, „Eigenes“ im Sheet; nur Katalog und Info klappen noch auf ---------- */
+.prot-seite{ padding:0 0 calc(40px + env(safe-area-inset-bottom)); }
+.prot-panel[hidden], .prot-sheet[hidden], [data-psubp][hidden]{ display:none !important; }
+.prot-panel > .prot-karte:first-child{ margin-top:0; }
+.prot-tabs{ margin:4px 0 12px; gap:6px; }
+.prot-tabs button, .prot-sub button{ min-height:44px; }
+.prot-sub{ margin:0 0 12px; }
+.prot-sub button{ font-size:13px; padding:8px 4px; }
+.prot-seite button:focus-visible, .prot-seite input:focus-visible, .prot-seite summary:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.prot-btn{ color:var(--accent-text, #fff); }
+.prot-btn.ghost{ color:var(--accent); }
+.prot-kopfzeile{ display:flex; justify-content:space-between; align-items:center; min-height:44px; margin:-8px 0 4px; }
+.prot-label{ font-size:13px; font-weight:600; color:var(--text-dim); letter-spacing:.02em; }
+.prot-rueck{ position:static; min-width:44px; padding:0 4px; }
+.prot-heute .prot-gross b{ font-variant-numeric:tabular-nums; }
+.prot-bar{ height:12px; }
+.prot-bar i{ transition:width .25s ease; }
+.prot-menge-zeile{ display:flex; gap:12px; align-items:flex-end; margin-bottom:16px; }
+.prot-menge-feld{ flex:1; min-width:0; }
+.prot-menge-feld label{ display:block; font-size:12px; color:var(--text-dim); margin:0 0 4px; }
+.prot-menge-feld input{ width:100%; min-height:44px; font-size:18px; font-weight:700; }
+.prot-menge-zeile .prot-btn{ flex:none; white-space:nowrap; }
+.prot-kn{ min-height:64px; }
+.prot-kn em{ font-variant-numeric:tabular-nums; }
+.prot-schnitt{ margin-top:16px; padding-top:12px; border-top:1px solid var(--border); }
+.prot-schnitt > span{ font-size:13px; color:var(--text-dim); }
+.prot-info summary{ min-height:44px; display:flex; align-items:center; }
+.prot-info summary::after{ content:"›"; margin-left:auto; color:var(--text-dim); transition:transform .2s; }
+.prot-info[open] summary::after{ transform:rotate(90deg); }
+.prot-keine-beratung{ text-align:center; margin:4px 0 0; }
+.prot-sheet .confirm-sheet{ max-height:88dvh; }
+.prot-sheet .prot-form input{ min-height:44px; }
+body.prot-sheet-offen{ overflow:hidden; }
+@media (prefers-reduced-motion:reduce){ .prot-bar i, .prot-info summary::after{ transition:none; } .prot-kn:active{ transform:none; } }

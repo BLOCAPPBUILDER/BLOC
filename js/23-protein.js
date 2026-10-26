@@ -9,6 +9,8 @@ var PROT_T = {
     titel:"Protein-Tracker", kachelSub:"Tagesziel, Kalorienbedarf, Schnellbuttons", heute:"Heute", von:"von {g} g", noch:"noch {g} g", erreicht:"Ziel erreicht",
     rueck:"Rückgängig", schnell:"Schnellbuttons", schnellHint:"", katalog:"Katalog", favoriten:"Favoriten", favLeer:"Noch keine Favoriten. Tippe im Katalog auf ☆, dann steht das Lebensmittel hier.", favStern:"Als Favorit", katalogHint:"Ein Tipp trägt die Menge oben ein (Basis 100 g: je 100 g steht die Protein-Menge in der Zeile). ＋ speichert das Lebensmittel als eigenen Schnellbutton.",
     rub_milch:"Milch & Quark", rub_kaese:"Käse", rub_wurst:"Wurst & Aufschnitt", rub_fleisch:"Fleisch & Geflügel", rub_fisch:"Fisch", rub_eier:"Eier", rub_huelsen:"Hülsenfrüchte & vegan", rub_getreide:"Getreide & Brot", rub_nuss:"Nüsse & Samen", rub_shake:"Shakes & Riegel", rub_weitere:"Weitere", azTitel:"A–Z durchblättern",
+    tabWoche:"Woche", tabBedarf:"Bedarf", koerper:"Körperdaten", eigenBtn:"＋ Eigenes", subGramm:"Gramm", subEigen:"Eigener Button", subKombi:"Kombi", kombiLeer:"Lege zuerst einen eigenen Button an.",
+    bedarfOnb:"Trage deine Daten oben in der Einrichtung ein oder tippe auf „Später“.", keineBeratung:"Keine medizinische Beratung.", schliessen:"Schließen",
     onbTitel:"Dein Bedarf", onbText:"Für dein Proteinziel und deinen Kalorienbedarf.",
     onbFertig:"Fertig", onbSpaeter:"Später", onbFehl:"Bitte mindestens das Gewicht eintragen.", onbOffen:"Bedarf noch offen",
     kcal:"Kalorienbedarf", kcalWert:"Bedarf ca. {k} kcal pro Tag", kcalHint:"Schätzung, 10–20 % Abweichung möglich.",
@@ -67,6 +69,8 @@ var PROT_T = {
     titel:"Protein Tracker", kachelSub:"Daily goal, calorie need, quick buttons", heute:"Today", von:"of {g} g", noch:"{g} g to go", erreicht:"Goal reached",
     rueck:"Undo", schnell:"Quick buttons", schnellHint:"", katalog:"Catalogue", favoriten:"Favourites", favLeer:"No favourites yet. Tap ☆ in the catalogue and the food appears here.", favStern:"Mark as favourite", katalogHint:"One tap logs the amount above (base 100 g: each row shows protein per 100 g). ＋ saves the food as your own quick button.",
     rub_milch:"Milk & quark", rub_kaese:"Cheese", rub_wurst:"Sausage & cold cuts", rub_fleisch:"Meat & poultry", rub_fisch:"Fish", rub_eier:"Eggs", rub_huelsen:"Legumes & vegan", rub_getreide:"Grains & bread", rub_nuss:"Nuts & seeds", rub_shake:"Shakes & bars", rub_weitere:"Other", azTitel:"Browse A–Z",
+    tabWoche:"Week", tabBedarf:"Needs", koerper:"Body data", eigenBtn:"＋ Custom", subGramm:"Grams", subEigen:"Own button", subKombi:"Combo", kombiLeer:"Create your own button first.",
+    bedarfOnb:"Enter your data in the setup above or tap “Later”.", keineBeratung:"No medical advice.", schliessen:"Close",
     onbTitel:"Your needs", onbText:"For your protein goal and calorie need.",
     onbFertig:"Done", onbSpaeter:"Later", onbFehl:"Please enter at least your weight.", onbOffen:"Needs not set yet",
     kcal:"Calorie need", kcalWert:"Need about {k} kcal per day", kcalHint:"Estimate, 10–20 % deviation possible.",
@@ -241,9 +245,6 @@ function protKopfHTML(summe){
               '<small>'+esc(protZielArt() === "halten" ? protT("kcalHint") : protT("kcalErhalt", { k:zahl(erh) }))+'</small></div>'
           : kd ? '<div class="prot-kcal"><small>'+esc(protT(kd.alter > 0 && kd.alter < 18 ? "kcalMinder" : "kcalOffen"))+'</small></div>' : '');
 }
-function protKarte(key, titel, inhalt){
-  return '<details class="prot-karte prot-info" data-pdet="'+key+'"'+(protOffen[key] ? ' open' : '')+'><summary>'+esc(titel)+'</summary>'+inhalt+'</details>';
-}
 /* Favoriten: Namen aus dem Katalog (settings.protein.favs), per Stern im Katalog gesetzt */
 function protIstFav(name){ return protDaten().favs.indexOf(name) > -1; }
 function protFavWechseln(name){
@@ -280,6 +281,7 @@ PROT_RUBRIKEN.forEach(function(k){
 function protRubrik(name){ return PROT_RUBRIK_SATZ[name] || ["weitere"]; }
 /* Katalog nach Rubriken, zugeklappt. Suche (protSuchText) prüft Name und Rubrik; passende Rubriken öffnen sich */
 var protSuchText = "";
+var protTab = "heute";   // sichtbarer Reiter (heute · woche · bedarf), nur im Arbeitsspeicher
 /* Eine Zeile im Katalog: ein Tipp trägt die Menge aus „Menge (g)“ ein (Basis 100 g); der Stern macht ein Lebensmittel zum Favoriten */
 function protKatalogZeile(f, idx){
   var an = protIstFav(f[0]);
@@ -348,8 +350,8 @@ function renderProtein(){
   var linie = ziel ? '<div class="prot-ziel" style="bottom:calc(22px + (100% - 22px) * '+(ziel / max).toFixed(3)+')"></div>' : "";
   var vt = [0, 0, 0];
   eint.forEach(function(e){ var h = new Date(e.at).getHours(); vt[h < 11 ? 0 : h < 16 ? 1 : 2] += e.p; });
-  var verteil = eint.length > 1 ? '<h3 style="margin-top:14px">'+esc(protT("verteilung"))+'</h3><div class="prot-verteil">'+
-    ["morgens", "mittags", "abends"].map(function(k2, i2){ return '<div><b>'+vt[i2]+' g</b><small>'+esc(protT(k2))+'</small></div>'; }).join("")+'</div>' : "";
+  var verteil = eint.length > 1 ? '<section class="prot-karte"><h3>'+esc(protT("verteilung"))+'</h3><div class="prot-verteil">'+
+    ["morgens", "mittags", "abends"].map(function(k2, i2){ return '<div><b>'+vt[i2]+' g</b><small>'+esc(protT(k2))+'</small></div>'; }).join("")+'</div></section>' : "";
   var favHTML = protFavoritenHTML(protMengeMerk), katHTML = protKatalogHTML(protSuchText);
   var liste = eint.length ? eint.slice().reverse().map(function(e){
     return '<div class="prot-eintrag"><div class="prot-e-links"><b>'+esc(e.n)+'</b><small>'+protZeit(e.at)+(e.a ? ' · '+e.a+' g' : '')+'</small></div>'+
@@ -365,50 +367,96 @@ function renderProtein(){
   }).join("")+'</div>';
   var sonder = '<p class="prot-hint-txt" style="margin-top:12px">'+esc(protT("sonder"))+'</p>';
   var onb = onboarding
-    ? '<details class="prot-karte prot-onb prot-info" data-pdet="onb"'+(protOffen.onb === false ? '' : ' open')+'><summary>'+esc(protT("onbTitel"))+'</summary><p class="prot-hint-txt">'+esc(protT("onbText"))+'</p>'+profilForm+zielChips+sonder+
+    ? '<section class="prot-karte prot-onb"><h3>'+esc(protT("onbTitel"))+'</h3><p class="prot-hint-txt">'+esc(protT("onbText"))+'</p>'+profilForm+zielChips+sonder+
       '<div class="prot-onb-knoepfe"><button type="button" class="prot-btn" data-ponbfertig>'+esc(protT("onbFertig"))+'</button>'+
-      '<button type="button" class="prot-btn ghost" data-ponbspaeter>'+esc(protT("onbSpaeter"))+'</button></div></details>' : '';
-  var eigenes =
-    '<h4>'+esc(protT("manuell"))+'</h4><p class="prot-hint-txt">'+esc(protT("manuellHint"))+'</p>'+
+      '<button type="button" class="prot-btn ghost" data-ponbspaeter>'+esc(protT("onbSpaeter"))+'</button></div></section>' : '';
+  /* „Eigenes hinzufügen“ liegt in einem Sheet mit drei Formularen (Gramm · Eigener Button · Kombi), immer nur eines sichtbar */
+  var eiGramm = '<p class="prot-hint-txt">'+esc(protT("manuellHint"))+'</p>'+
     '<div class="prot-form"><div class="voll"><label>'+esc(protT("name"))+'</label><input id="pManN" maxlength="40"></div>'+
     '<div><label>g</label><input id="pManG" type="number" inputmode="decimal" min="1" max="300" placeholder="25"></div>'+
-    '<button type="button" class="prot-btn" data-pmanu>'+esc(protT("hinzu"))+'</button></div>'+
-    '<h4>'+esc(protT("eigen"))+'</h4><p class="prot-hint-txt">'+esc(protT("eigenHint"))+'</p>'+
+    '<button type="button" class="prot-btn" data-pmanu>'+esc(protT("hinzu"))+'</button></div>';
+  var eiEigen = '<p class="prot-hint-txt">'+esc(protT("eigenHint"))+'</p>'+
     '<div class="prot-form"><div class="voll"><label>'+esc(protT("name"))+'</label><input id="pEN" maxlength="40"></div>'+
     '<div><label>'+esc(protT("portion"))+'</label><input id="pEA" type="number" inputmode="decimal" placeholder="200"></div>'+
     '<div><label>'+esc(protT("je100"))+'</label><input id="pEP" type="number" inputmode="decimal" placeholder="12"></div>'+
     '<div class="voll prot-zeile-flex"><span class="prot-hint-txt" id="pEVor" style="margin:0">'+esc(protT("vorschau", { g:"–" }))+'</span>'+
-    '<button type="button" class="prot-btn" data-peneu>'+esc(protT("anlegen"))+'</button></div></div>'+
-    '<h4>'+esc(protT("kombi"))+'</h4><p class="prot-hint-txt">'+esc(protT("kombiHint"))+'</p>'+
+    '<button type="button" class="prot-btn" data-peneu>'+esc(protT("anlegen"))+'</button></div></div>';
+  var eiKombi = '<p class="prot-hint-txt">'+esc(protT("kombiHint"))+'</p>'+
     '<div class="prot-form"><div class="voll"><label>'+esc(protT("name"))+'</label><input id="pKN" maxlength="40"></div></div>'+
-    '<p class="prot-hint-txt" style="margin:10px 0 6px">'+esc(protT("kombiWahl"))+'</p>'+
-    '<div class="prot-stufen" style="grid-template-columns:repeat(2,1fr)">'+p.knoepfe.map(function(b){
-      return '<button type="button" class="prot-stufe" data-pkc="'+esc(b.id)+'" aria-pressed="false">'+esc(b.n)+'<small>+'+b.p+' g</small></button>'; }).join("")+'</div>'+
-    '<button type="button" class="prot-btn" data-pkombi>'+esc(protT("kombiAnlegen"))+'</button>';
-  var woche = '<div class="prot-wochen">'+saeulen+linie+'</div>'+
-    '<div class="prot-gross" style="margin-top:14px"><span>'+esc(protT("schnitt"))+'</span></div>'+
-    '<div class="prot-gross"><b>'+(avg ? avg : '–')+' g</b>'+(avgKg ? '<span>'+avgKg.toFixed(2).replace('.', ',')+' '+esc(protT("gkg"))+'</span>' : '')+'</div>'+hinweis+verteil;
-  var bedarf = '<p class="prot-hint-txt">'+esc(protT("bedarfHint"))+'</p>'+(onboarding ? '' : profilForm+zielChips)+
-    '<h4>'+esc(protT("stufeTitel"))+'</h4><div class="prot-stufen">'+stufen+'</div>'+proMahl+sonder;
+    (p.knoepfe.length
+      ? '<p class="prot-hint-txt" style="margin:10px 0 6px">'+esc(protT("kombiWahl"))+'</p>'+
+        '<div class="prot-stufen" style="grid-template-columns:repeat(2,1fr)">'+p.knoepfe.map(function(b){
+          return '<button type="button" class="prot-stufe" data-pkc="'+esc(b.id)+'" aria-pressed="false">'+esc(b.n)+'<small>+'+b.p+' g</small></button>'; }).join("")+'</div>'+
+        '<button type="button" class="prot-btn" data-pkombi>'+esc(protT("kombiAnlegen"))+'</button>'
+      : '<p class="prot-leer">'+esc(protT("kombiLeer"))+'</p>');
+  /* Reiter: Heute (Standard) · Woche · Bedarf; alle drei Bereiche werden immer gezeichnet, nur einer ist sichtbar (so finden die Handler unten alle Felder) */
+  if(onboarding) protTab = "heute";
+  var reiter = [["heute", protT("heute")], ["woche", protT("tabWoche")], ["bedarf", protT("tabBedarf")]];
+  function panel(k){ return ' data-ppanel="'+k+'" role="tabpanel"'+(protTab === k ? '' : ' hidden'); }
+  var woche = '<section class="prot-karte"><h3>'+esc(protT("woche"))+'</h3><div class="prot-wochen">'+saeulen+linie+'</div>'+
+    '<div class="prot-schnitt"><span>'+esc(protT("schnitt"))+'</span>'+
+    '<div class="prot-gross"><b>'+(avg ? avg : '–')+' g</b>'+(avgKg ? '<span>'+avgKg.toFixed(2).replace('.', ',')+' '+esc(protT("gkg"))+'</span>' : '')+'</div></div>'+hinweis+'</section>'+verteil;
+  var bedarf = '<section class="prot-karte"><h3>'+esc(protT("koerper"))+'</h3>'+(onboarding ? '<p class="prot-hint-txt">'+esc(protT("bedarfOnb"))+'</p>' : profilForm)+'</section>'+
+    '<section class="prot-karte">'+(onboarding ? '' : zielChips)+
+      '<h4>'+esc(protT("stufeTitel"))+'</h4><div class="prot-stufen">'+stufen+'</div>'+proMahl+sonder+'</section>'+
+    '<details class="prot-karte prot-info" data-pdet="info"'+(protOffen.info ? ' open' : '')+'><summary>'+esc(protT("info"))+'</summary>'+
+      '<ul>'+protT("infoListe").map(function(z){ return '<li>'+esc(z)+'</li>'; }).join("")+'</ul><h4>'+esc(protT("quellenTitel"))+'</h4><ul>'+protT("quellen").map(function(z){ return '<li>'+esc(z)+'</li>'; }).join("")+'</ul></details>'+
+    '<p class="prot-hint-txt prot-keine-beratung">'+esc(protT("keineBeratung"))+'</p>';
   app.innerHTML = topbar(protT("titel"), { back:"#training", right:kopfSymboleNeu("training") }) +
     '<div class="prot-seite">'+
-      onb+
-      '<section class="prot-karte prot-heute" aria-label="'+esc(protT("heute"))+'"><div id="pKopf">'+protKopfHTML(summe)+'</div>'+
-        '<button type="button" class="prot-rueck" data-prueck'+(eint.length ? '' : ' disabled')+'>'+esc(protT("rueck"))+'</button></section>'+
-      '<section class="prot-karte prot-menge"><div class="prot-form"><div class="voll"><label for="pFG">'+esc(protT("menge"))+'</label><input id="pFG" type="number" inputmode="decimal" value="'+protMengeMerk+'" min="1" max="2000"></div></div></section>'+
-      '<section class="prot-karte"><h3>'+esc(protT("favoriten"))+'</h3>'+favHTML+'</section>'+
-      '<details class="prot-karte prot-katalog" data-pdet="katalog"'+(protOffen.katalog === true ? ' open' : '')+'><summary>'+esc(protT("katalog"))+'</summary>'+
-        '<p class="prot-hint-txt">'+esc(protT("katalogHint"))+'</p>'+
-        '<div class="prot-form"><div class="voll"><label for="pSuche">'+esc(protT("suche"))+'</label><input id="pSuche" type="search" maxlength="40" placeholder="'+esc(protT("suchePh"))+'" value="'+esc(protSuchText)+'"></div></div>'+
-        '<div id="pKat" style="margin-top:8px">'+(katHTML || '<p class="prot-leer">'+esc(protT("sucheLeer"))+'</p>')+'</div></details>'+
-      '<section class="prot-karte"><h3>'+esc(protT("liste"))+'</h3>'+liste+'</section>'+
-      protKarte("eigen", protT("eigenDetails"), eigenes)+
-      protKarte("woche", protT("wocheDetails"), woche)+
-      protKarte("bedarf", protT("bedarf"), bedarf)+
-      protKarte("info", protT("info"), '<ul>'+protT("infoListe").map(function(z){ return '<li>'+esc(z)+'</li>'; }).join("")+'</ul><h4>'+esc(protT("quellenTitel"))+'</h4><ul>'+protT("quellen").map(function(z){ return '<li>'+esc(z)+'</li>'; }).join("")+'</ul>')+
+      '<div class="seg-row prot-tabs" role="tablist" aria-label="'+esc(protT("titel"))+'">'+reiter.map(function(r){
+        return '<button type="button" role="tab" data-ptab="'+r[0]+'" class="'+(protTab === r[0] ? 'active' : '')+'" aria-selected="'+(protTab === r[0])+'">'+esc(r[1])+'</button>'; }).join("")+'</div>'+
+      '<div class="prot-panel"'+panel("heute")+'>'+
+        onb+
+        '<section class="prot-karte prot-heute" aria-label="'+esc(protT("heute"))+'">'+
+          '<div class="prot-kopfzeile"><span class="prot-label">'+esc(protT("heute"))+'</span>'+
+          '<button type="button" class="prot-rueck" data-prueck'+(eint.length ? '' : ' disabled')+'>'+esc(protT("rueck"))+'</button></div>'+
+          '<div id="pKopf">'+protKopfHTML(summe)+'</div></section>'+
+        '<section class="prot-karte prot-erfassen"><div class="prot-menge-zeile"><div class="prot-menge-feld"><label for="pFG">'+esc(protT("menge"))+'</label>'+
+          '<input id="pFG" type="number" inputmode="decimal" value="'+protMengeMerk+'" min="1" max="2000"></div>'+
+          '<button type="button" class="prot-btn ghost" data-peigenauf aria-haspopup="dialog">'+esc(protT("eigenBtn"))+'</button></div>'+
+          '<h3>'+esc(protT("favoriten"))+'</h3>'+favHTML+'</section>'+
+        '<details class="prot-karte prot-katalog" data-pdet="katalog"'+(protOffen.katalog === true ? ' open' : '')+'><summary>'+esc(protT("katalog"))+'</summary>'+
+          '<p class="prot-hint-txt">'+esc(protT("katalogHint"))+'</p>'+
+          '<div class="prot-form"><div class="voll"><label for="pSuche">'+esc(protT("suche"))+'</label><input id="pSuche" type="search" maxlength="40" placeholder="'+esc(protT("suchePh"))+'" value="'+esc(protSuchText)+'"></div></div>'+
+          '<div id="pKat" style="margin-top:8px">'+(katHTML || '<p class="prot-leer">'+esc(protT("sucheLeer"))+'</p>')+'</div></details>'+
+        '<section class="prot-karte"><h3>'+esc(protT("liste"))+'</h3>'+liste+'</section>'+
+      '</div>'+
+      '<div class="prot-panel"'+panel("woche")+'>'+woche+'</div>'+
+      '<div class="prot-panel"'+panel("bedarf")+'>'+bedarf+'</div>'+
+      '<div class="confirm-overlay prot-sheet" data-psheet hidden><div class="confirm-sheet" role="dialog" aria-modal="true" aria-label="'+esc(protT("eigenDetails"))+'">'+
+        '<h3>'+esc(protT("eigenDetails"))+'</h3>'+
+        '<div class="seg-row prot-sub" role="tablist">'+[["gramm", "subGramm"], ["eigen", "subEigen"], ["kombi", "subKombi"]].map(function(x, i){
+          return '<button type="button" role="tab" data-psub="'+x[0]+'" class="'+(i ? '' : 'active')+'">'+esc(protT(x[1]))+'</button>'; }).join("")+'</div>'+
+        '<div data-psubp="gramm">'+eiGramm+'</div><div data-psubp="eigen" hidden>'+eiEigen+'</div><div data-psubp="kombi" hidden>'+eiKombi+'</div>'+
+        '<div class="btn-row"><button type="button" class="btn btn-secondary" data-peigenzu>'+esc(protT("schliessen"))+'</button></div>'+
+      '</div></div>'+
     '</div>';
   bindCommon();
   function neu(){ var y = window.scrollY; renderProtein(); window.scrollTo(0, y); }
+  /* Reiter wechseln, ohne neu zu zeichnen (Eingaben bleiben stehen) */
+  app.querySelectorAll("[data-ptab]").forEach(function(b){
+    b.addEventListener("click", function(){
+      protTab = b.getAttribute("data-ptab");
+      app.querySelectorAll("[data-ptab]").forEach(function(x){ var an = x === b; x.classList.toggle("active", an); x.setAttribute("aria-selected", an); });
+      app.querySelectorAll("[data-ppanel]").forEach(function(pn){ pn.hidden = pn.getAttribute("data-ppanel") !== protTab; });
+      window.scrollTo(0, 0);
+    });
+  });
+  /* Sheet „Eigenes hinzufügen“ */
+  var sheet = app.querySelector("[data-psheet]");
+  function sheetZu(){ sheet.hidden = true; document.body.classList.remove("prot-sheet-offen"); }
+  app.querySelector("[data-peigenauf]").addEventListener("click", function(){ sheet.hidden = false; document.body.classList.add("prot-sheet-offen"); });
+  sheet.querySelector("[data-peigenzu]").addEventListener("click", sheetZu);
+  sheet.addEventListener("click", function(e){ if(e.target === sheet) sheetZu(); });
+  sheet.addEventListener("keydown", function(e){ if(e.key === "Escape") sheetZu(); });
+  sheet.querySelectorAll("[data-psub]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var k = b.getAttribute("data-psub");
+      sheet.querySelectorAll("[data-psub]").forEach(function(x){ x.classList.toggle("active", x === b); });
+      sheet.querySelectorAll("[data-psubp]").forEach(function(pn){ pn.hidden = pn.getAttribute("data-psubp") !== k; });
+    });
+  });
   app.querySelectorAll("[data-pdet]").forEach(function(d){ d.addEventListener("toggle", function(){ protOffen[d.getAttribute("data-pdet")] = d.open; }); });
   /* Körperdaten (Gewicht, Größe, Alter, Geschlecht, Aktivität): gemeinsam mit Fortschritt; nach jeder Änderung nur die Kopfkarte aktualisieren (Eingabe behält den Fokus) */
   koerperBinden(app);
@@ -493,7 +541,7 @@ function renderProtein(){
     if(!n || ids.length < 2){ showToast(protT("kombiFehl")); return; }
     var teile = protDaten().knoepfe.filter(function(x){ return ids.indexOf(x.id) > -1; });
     protDaten().knoepfe.unshift({ id:uid(), n:n, a:teile.reduce(function(sum, x){ return sum + x.a; }, 0), p:teile.reduce(function(sum, x){ return sum + x.p; }, 0), nutz:0 });
-    save(); neu();
+    save(); neu(); showToast(protT("angelegt"));
   });
   app.querySelectorAll("[data-pdel]").forEach(function(b){
     b.addEventListener("click", function(){
@@ -522,7 +570,7 @@ function renderProtein(){
     var a = +eA.value, per = +eP.value, n = eN.value.trim();
     if(!n || !(a > 0) || !(per > 0)){ showToast(protT("fehlEingabe")); return; }
     protDaten().knoepfe.unshift({ id:uid(), n:n, a:Math.round(a), p:Math.round(a * per / 100), nutz:0 });
-    save(); neu();
+    save(); neu(); showToast(protT("angelegt"));
   });
   app.querySelectorAll("[data-pziel]").forEach(function(b){
     b.addEventListener("click", function(){ protDaten().ziel = b.getAttribute("data-pziel"); save(); neu(); });
