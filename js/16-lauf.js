@@ -41,6 +41,7 @@ function runTempo(x, sek, m){ return runIstRad(x) ? runKmh(sek, m) : runPace(sek
 function runTempoEinheit(x){ return runIstRad(x) ? "km/h" : "/km"; }
 function runZeit(r){ return (r.pauseAb || Date.now()) - r.start - r.pausenMs; }
 function runWachen(an){
+  if(nativWach("lauf", an)) return;   // App: Display-an-Dienst statt Wake Lock des Browsers
   if(!an){ if(runWake){ try{ runWake.release(); }catch(e){} runWake = null; } return; }
   if(!("wakeLock" in navigator)) return;
   navigator.wakeLock.request("screen").then(function(wl){ runWake = wl; }).catch(function(){});
@@ -189,11 +190,11 @@ var RUN_VORLAUF = 20;
 var runGeplant = null;   // aus dem Kalender: { name, km, t } - die Lauf-Seite zeigt es startklar, „Start“ übernimmt Name und Ziel
 var runVor = null;   // { ende (ms), uhr, watch, gps, fehler, piep }
 function runStart(){
-  if(!navigator.geolocation){ showToast(t("runNoGps")); return; }
+  if(!gpsVorhanden()){ showToast(t("runNoGps")); return; }
   if(runAnsageEinst().every && window.speechSynthesis){ try{ var u0 = new SpeechSynthesisUtterance(" "); u0.volume = 0; speechSynthesis.speak(u0); }catch(e){} }   // Sprache im Tipp freischalten (iOS)
   runVor = { ende:Date.now() + RUN_VORLAUF*1000, gps:null, fehler:0, piep:null };
-  runVor.watch = navigator.geolocation.watchPosition(function(pos){ if(runVor){ runVor.gps = pos.coords.accuracy; runVor.fehler = 0; } },
-    function(err){ if(runVor) runVor.fehler = err && err.code || 2; }, { enableHighAccuracy:true, maximumAge:1000, timeout:20000 });
+  runVor.watch = gpsWatch(function(pos){ if(runVor){ runVor.gps = pos.coords.accuracy; runVor.fehler = 0; } },
+    function(err){ if(runVor) runVor.fehler = err && err.code || 2; });
   runWachen(true);
   runVor.uhr = setInterval(runVorTick, 250);
   renderRun();
@@ -201,7 +202,7 @@ function runStart(){
 function runVorStop(){
   if(!runVor) return;
   if(runVor.uhr) clearInterval(runVor.uhr);
-  if(runVor.watch != null) try{ navigator.geolocation.clearWatch(runVor.watch); }catch(e){}
+  if(runVor.watch != null) gpsClear(runVor.watch);
   runVor = null;
 }
 function runVorText(){
@@ -238,14 +239,14 @@ function runLosgehts(){
 }
 function runLauschen(){
   var r = run;
-  r.watch = navigator.geolocation.watchPosition(function(pos){
+  r.watch = gpsWatch(function(pos){
     runPunkt(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy, pos.timestamp || Date.now(), pos.coords.speed);
     runAnzeige();
-  }, function(err){ r.fehler = err && err.code || 2; runAnzeige(); }, { enableHighAccuracy:true, maximumAge:1000, timeout:20000 });
+  }, function(err){ r.fehler = err && err.code || 2; runAnzeige(); });
 }
 function runStopWatch(){
   if(!run) return;
-  if(run.watch != null) try{ navigator.geolocation.clearWatch(run.watch); }catch(e){}
+  if(run.watch != null) gpsClear(run.watch);
   if(run.uhr) clearInterval(run.uhr);
   run.watch = null; run.uhr = 0;
 }
@@ -808,10 +809,7 @@ function renderRunDetail(id){
   nm.addEventListener("input", function(){ x.name = nm.value.trim(); if(!x.name) delete x.name; save(); });
   nt.addEventListener("input", function(){ x.note = nt.value.trim(); if(!x.note) delete x.note; save(); });
   app.querySelector("[data-rungpx]").addEventListener("click", function(){
-    var blob = new Blob([runGpxText(x)], { type:"application/gpx+xml" }), a = document.createElement("a");
-    a.href = URL.createObjectURL(blob); a.download = "bloc-lauf-"+new Date(x.at).toISOString().slice(0, 10)+".gpx";
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+    dateiAusgeben("bloc-lauf-"+new Date(x.at).toISOString().slice(0, 10)+".gpx", runGpxText(x), "application/gpx+xml").catch(function(e){ if(!nativAbbruch(e)) showToast(t("dateiFehler")); });
   });
 }
 

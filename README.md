@@ -108,3 +108,20 @@ python -m http.server 8788
 Dann `http://localhost:8788/schnelltest.html?auto` öffnen. Der Test klickt sich durch alle Bereiche (inkl. Run mit
 simuliertem GPS, Auto-Pause, Intervall, Statistik, Fokus), legt den gespeicherten Stand vorher beiseite und stellt ihn danach
 wieder her. Was er **nicht** prüfen kann (echte Töne, echtes GPS, Wake Lock), steht in [docs/TESTPLAN.md](docs/TESTPLAN.md).
+
+## Android-App (Capacitor)
+
+Die Web-App steckt unverändert in einer Android-Hülle (Capacitor 8). Der Web-Code bleibt die einzige Quelle; `js/00-native.js` ist die Brücke zu Gerätefunktionen und fällt im Browser auf die Web-Varianten zurück (`IST_NATIV` ist dort `false`).
+
+**Was die App anders macht:** GPS läuft als Vordergrund-Dienst (Hinweis in der Statusleiste), damit der Lauf auch bei gesperrtem Bildschirm zählt · Display-an über das Plugin statt Wake Lock · Sicherung und GPX gehen über das Teilen-Menü (Drive, Dateien, Mail) · kein Service Worker, die Dateien liegen im Paket · kein Installationshinweis. Plugins: Filesystem, Share, KeepAwake, BackgroundGeolocation, LocalNotifications (nur die Erlaubnis für den Hinweis).
+
+**Voraussetzungen (einmalig):** Node 22 oder neuer, JDK 21, Android Studio (bringt SDK 36 mit). Danach im Projektordner `npm install`.
+
+**Bauen und testen**
+1. `npm run sync` baut `www/` (nur die nötigen Dateien, siehe `scripts/www-bauen.mjs`) und gleicht das Android-Projekt ab.
+2. `npm run android` öffnet Android Studio; dort ▶ auf einem echten Gerät (USB-Debugging) starten.
+3. Prüfen auf dem Gerät: Lauf mit gesperrtem Bildschirm (Strecke zählt weiter, Hinweis in der Statusleiste), Timer-Töne bei gesperrtem Bildschirm, Display bleibt im Timer an, Sicherung exportieren und wieder importieren, GPX teilen, Vibration.
+
+**Neue Fassung für die App:** wie bei der Web-App `FASSUNG` in `sw.js` und `?v=` in `index.html` erhöhen (die App zeigt die Nummer aus dem `?v=`), dann `npm run sync` und neu bauen. Für den Play Store braucht jede Veröffentlichung zusätzlich eine höhere `versionCode` in `android/app/build.gradle`.
+
+**Wichtig:** App-ID `io.github.blocappbuilder.bloc` ist nach der ersten Veröffentlichung im Play Store nicht mehr änderbar. Der Signaturschlüssel (`*.jks`, ist in `.gitignore`) muss sicher gesichert werden, ohne ihn gibt es keine Updates. Daten der Web-Version wandern nicht automatisch in die App (andere Adresse): in der Web-Version unter Einstellungen sichern, in der App importieren.

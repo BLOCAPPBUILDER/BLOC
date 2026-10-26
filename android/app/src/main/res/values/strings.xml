@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">BLOC</string>
+    <string name="title_activity_main">BLOC</string>
+    <string name="package_name">io.github.blocappbuilder.bloc</string>
+    <string name="custom_url_scheme">io.github.blocappbuilder.bloc</string>
+</resources>

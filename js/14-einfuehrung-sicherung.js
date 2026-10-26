@@ -157,8 +157,18 @@ function backupTeilDatei(){
   }catch(e){}
   return null;
 }
-function kannBackupTeilen(){ return !!(navigator.share && backupTeilDatei()); }
+/* App (Android): Sicherungsdatei über das Teilen-Menü ausgeben (Drive, Dateien, Mail …); ein Abbruch dort ist kein Fehler */
+function backupNativ(danach){
+  dateiAusgeben("bloc-sicherung-"+new Date().toISOString().slice(0,10)+".json", JSON.stringify(state.db,null,2), "application/json").then(function(){
+    state.db.settings.lastExport = Date.now();
+    save();
+    showToast(t("backupShared"));
+    if(danach) danach();
+  }).catch(function(e){ if(!nativAbbruch(e)) showToast(t("dateiFehler")); });
+}
+function kannBackupTeilen(){ return IST_NATIV || !!(navigator.share && backupTeilDatei()); }
 function shareBackup(danach){
+  if(IST_NATIV){ backupNativ(danach); return; }
   var f = backupTeilDatei();
   if(!f || !navigator.share){ exportBackup(); if(danach) danach(); return; }
   navigator.share({ files:[f], title:"BLOC" }).then(function(){
@@ -172,6 +182,7 @@ function shareBackup(danach){
   });
 }
 function exportBackup(){
+  if(IST_NATIV){ backupNativ(); return; }
   var blob = new Blob([JSON.stringify(state.db,null,2)], {type:"application/json"});
   var url = URL.createObjectURL(blob);
   var a = document.createElement("a");

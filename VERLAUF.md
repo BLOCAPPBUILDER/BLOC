@@ -3,6 +3,13 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-10-26 (Android) · Capacitor-Hülle für Android (Fassung 2026-10-26-4)
+
+- Neues Projekt-Gerüst: `package.json`, `capacitor.config.json`, `android/`, `scripts/www-bauen.mjs`, `assets/` (Icon-Quellen). `npm run sync` baut `www/` und gleicht ab.
+- Neu: `js/00-native.js` (Brücke zu Gerätefunktionen, im Browser wirkungslos): GPS als Vordergrund-Dienst, Display-an-Plugin, Sicherung/GPX über das Teilen-Menü, kein Service Worker und kein Installationshinweis in der App. Texte `runBgTitel`, `runBgText`, `dateiFehler`.
+- Geprüft: Einheitstest 61/61, Schnelltest 45/45 (Web-Weg unverändert), native Wege mit simulierten Plugins im Browser. **Nicht geprüft:** Bauen und Lauf auf einem echten Android-Gerät (Hintergrund-GPS, Töne bei gesperrtem Bildschirm, Vibration, Dateiausgabe).
+- Entscheidungen: App-ID `io.github.blocappbuilder.bloc`, Android-Auto-Backup aus (Daten bleiben auf dem Gerät), Berechtigung INTERNET bleibt aus der Capacitor-Vorlage.
+
 ## 2026-10-26 · Protein-Katalog nach Rubriken, A–Z, Trainingsmythen, neue Einführung (Fassung 2026-10-26-3)
 
 - **Protein-Tracker**: Reihenfolge jetzt Tageskarte, Menge (g), Favoriten, Katalog, Heute erfasst, dann Eigenes/Woche/Bedarf/Info. Der Katalog ist standardmäßig zugeklappt und nach zehn Rubriken geordnet (Milch & Quark, Käse, Wurst & Aufschnitt, Fleisch & Geflügel, Fisch, Eier, Hülsenfrüchte & vegan, Getreide & Brot, Nüsse & Samen, Shakes & Riegel, Weitere). Suche über Name und Rubrik, Umlaute und ß werden gleich behandelt, passende Rubriken öffnen sich. Ein Eintrag kann in mehreren Rubriken stehen (Hüttenkäse in Milch & Quark und Käse). Jedes der 230 Lebensmittel ist geprüft einer Rubrik zugeordnet.

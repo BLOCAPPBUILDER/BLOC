@@ -198,6 +198,7 @@ var appFassung = "";
 function fassungZeigen(){
   var el = document.getElementById("app-version");
   if(!el) return;
+  if(IST_NATIV && NATIV_FASSUNG) appFassung = NATIV_FASSUNG;
   if(appFassung){ el.textContent = "Version "+appFassung; return; }
   var sw = navigator.serviceWorker && navigator.serviceWorker.controller;
   if(!sw || !window.MessageChannel) return;
