@@ -32,7 +32,7 @@ function introProfilSpeichern(wurzel){
   if(cm) kk.cm = Math.round(cm);
   save();
 }
-/* Seite 3: Aufbau als kleines selbstgezeichnetes Schaubild (nur Stil nach der Vorlage von Kevin): Trainingsplan → Workouts → BLOCs mit Übungen.
+/* Seite 3: Aufbau als kleines selbstgezeichnetes Schaubild (nur Stil nach der Vorlage von Kevin): Trainingsplan → Trainingstage (Tag A/B) → BLOCs mit Übungen.
    Die Beschriftungen kommen aus texte.js, die Zeichnung selbst ist reines SVG ohne Bilddatei. */
 function introSchaubildHTML(){
   function box(x, y, w, h, cls){ return '<rect class="'+cls+'" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="8"/>'; }
@@ -44,8 +44,8 @@ function introSchaubildHTML(){
   return '<svg class="intro-schaubild" viewBox="0 0 340 208" role="img" aria-label="'+esc(t("inSchaubildAlt"))+'">'+
     '<path class="sb-linie" d="M170 38V54M60 54H280M60 54V70M170 54V70M280 54V70M60 100V118M170 100V118"/>'+
     box(100, 8, 140, 30, "sb-kasten")+txt(170, 28, t("inDPlan"), "sb-t")+
-    box(10, 70, 100, 30, "sb-kasten")+txt(60, 90, t("inDWorkout")+" A", "sb-t")+
-    box(120, 70, 100, 30, "sb-kasten")+txt(170, 90, t("inDWorkout")+" B", "sb-t")+
+    box(10, 70, 100, 30, "sb-kasten")+txt(60, 90, t("inDTag")+" A", "sb-t")+
+    box(120, 70, 100, 30, "sb-kasten")+txt(170, 90, t("inDTag")+" B", "sb-t")+
     box(230, 70, 100, 30, "sb-kasten")+txt(280, 90, "Run", "sb-t")+
     bloc(10, a)+bloc(120, b)+'</svg>'+
     '<p class="intro-kette">'+esc(t("inKette"))+'</p>';

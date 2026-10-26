@@ -721,7 +721,9 @@
     gleich(seiten.slice(0, 3).map(function (x) { return x.art; }), ["sprache", "profil", "aufbau"], "Reihenfolge");
     var d = document.createElement("div"); d.innerHTML = seiten[2].extra;
     wahr(d.querySelector("svg[role=img][aria-label]"), "Schaubild mit Beschriftung für Screenreader");
-    wahr(/BLOC/.test(d.querySelector("svg").textContent) && /Trainingsplan/.test(d.querySelector("svg").textContent), "Schaubild nennt Trainingsplan und BLOC");
+    var sv = d.querySelector("svg").textContent;
+    wahr(/BLOC/.test(sv) && /Trainingsplan/.test(sv) && /Tag A/.test(sv) && !/Workout/.test(sv), "Schaubild nennt Trainingsplan, Tag A und BLOC, ohne Workout");
+    wahr(/TrainingsBLOC/.test(d.querySelector(".intro-kette").textContent), "Kette nennt TrainingsBLOC");
   });
   test("Sicherungs-Erinnerung: selten (60 Tage ohne Datei, Schnappschuss vorhanden, × ruht 30 Tage)", function () {
     var s = W.state.db.settings, tag = 86400000, alt = { z: W.snapZeit, ex: s.lastExport, bis: s.backupTipBis, bl: W.state.db.blocks, it: W.installTipHTML };

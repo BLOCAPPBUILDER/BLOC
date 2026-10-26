@@ -277,7 +277,7 @@ function faqHTML(){
     if(f.g !== gruppe){
       if(gruppe >= 0) h += '</div>';
       gruppe = f.g;
-      h += '<h3 class="faq-gruppe">'+F.gruppen[sp][gruppe]+'</h3><div class="faq-liste">';
+      h += '<h3 class="faq-gruppe">'+F.gruppen[sp][gruppe]+'</h3>'+(F.gruppenHinweis && F.gruppenHinweis[gruppe] ? '<p class="dim faq-gruppen-hinweis">'+F.gruppenHinweis[gruppe][sp]+'</p>' : '')+'<div class="faq-liste">';
     }
     /* Felder: t Titel · k Kurzantwort (optional; mit k stehen die Absätze p als Stichpunkte, ohne k als Fließtext) · p Absätze · s „Wie sicher ist das?“ (optional) ·
        b Begriffe [[Begriff, Erklärung], …] (optional) · q Quellen-Nummern */
