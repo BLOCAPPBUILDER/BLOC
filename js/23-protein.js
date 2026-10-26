@@ -8,7 +8,7 @@ var PROT_T = {
   de: {
     titel:"Protein-Tracker", kachelSub:"Tagesziel, Kalorienbedarf, Schnellbuttons", heute:"Heute", von:"von {g} g", noch:"noch {g} g", erreicht:"Ziel erreicht",
     rueck:"Rückgängig", schnell:"Schnellbuttons", schnellHint:"", katalog:"Katalog", favoriten:"Favoriten", favLeer:"Noch keine Favoriten. Tippe im Katalog auf ☆, dann steht das Lebensmittel hier.", favStern:"Als Favorit", katalogHint:"Ein Tipp trägt die Menge oben ein (Basis 100 g: je 100 g steht die Protein-Menge in der Zeile). ＋ speichert das Lebensmittel als eigenen Schnellbutton.",
-    rub_milch:"Milch & Quark", rub_kaese:"Käse", rub_wurst:"Wurst & Aufschnitt", rub_fleisch:"Fleisch & Geflügel", rub_fisch:"Fisch", rub_eier:"Eier", rub_huelsen:"Hülsenfrüchte & vegan", rub_getreide:"Getreide & Brot", rub_nuss:"Nüsse & Samen", rub_shake:"Shakes & Riegel", rub_weitere:"Weitere",
+    rub_milch:"Milch & Quark", rub_kaese:"Käse", rub_wurst:"Wurst & Aufschnitt", rub_fleisch:"Fleisch & Geflügel", rub_fisch:"Fisch", rub_eier:"Eier", rub_huelsen:"Hülsenfrüchte & vegan", rub_getreide:"Getreide & Brot", rub_nuss:"Nüsse & Samen", rub_shake:"Shakes & Riegel", rub_weitere:"Weitere", azTitel:"A–Z durchblättern",
     onbTitel:"Dein Bedarf", onbText:"Für dein Proteinziel und deinen Kalorienbedarf.",
     onbFertig:"Fertig", onbSpaeter:"Später", onbFehl:"Bitte mindestens das Gewicht eintragen.", onbOffen:"Bedarf noch offen",
     kcal:"Kalorienbedarf", kcalWert:"Bedarf ca. {k} kcal pro Tag", kcalHint:"Schätzung, 10–20 % Abweichung möglich.",
@@ -66,7 +66,7 @@ var PROT_T = {
   en: {
     titel:"Protein Tracker", kachelSub:"Daily goal, calorie need, quick buttons", heute:"Today", von:"of {g} g", noch:"{g} g to go", erreicht:"Goal reached",
     rueck:"Undo", schnell:"Quick buttons", schnellHint:"", katalog:"Catalogue", favoriten:"Favourites", favLeer:"No favourites yet. Tap ☆ in the catalogue and the food appears here.", favStern:"Mark as favourite", katalogHint:"One tap logs the amount above (base 100 g: each row shows protein per 100 g). ＋ saves the food as your own quick button.",
-    rub_milch:"Milk & quark", rub_kaese:"Cheese", rub_wurst:"Sausage & cold cuts", rub_fleisch:"Meat & poultry", rub_fisch:"Fish", rub_eier:"Eggs", rub_huelsen:"Legumes & vegan", rub_getreide:"Grains & bread", rub_nuss:"Nuts & seeds", rub_shake:"Shakes & bars", rub_weitere:"Other",
+    rub_milch:"Milk & quark", rub_kaese:"Cheese", rub_wurst:"Sausage & cold cuts", rub_fleisch:"Meat & poultry", rub_fisch:"Fish", rub_eier:"Eggs", rub_huelsen:"Legumes & vegan", rub_getreide:"Grains & bread", rub_nuss:"Nuts & seeds", rub_shake:"Shakes & bars", rub_weitere:"Other", azTitel:"Browse A–Z",
     onbTitel:"Your needs", onbText:"For your protein goal and calorie need.",
     onbFertig:"Done", onbSpaeter:"Later", onbFehl:"Please enter at least your weight.", onbOffen:"Needs not set yet",
     kcal:"Calorie need", kcalWert:"Need about {k} kcal per day", kcalHint:"Estimate, 10–20 % deviation possible.",
@@ -142,13 +142,14 @@ var PROT_FOODS_BASIS = ("Magerquark|12;Quark 20 % Fett|11;Skyr|11;Griechischer J
 var PROT_FOODS_MEHR = ("Appenzeller|27;Bergkäse|30;Brie|18;Butter|0,7;Butterkäse|23;Cheddar|25;Cottage Cheese|11;Edamer|25;Frischkäse light|8;Halloumi|22;Hirtenkäse|15;Mascarpone|4;Mozzarella light|20;Ricotta|9;Schafskäse|18;Schmelzkäse|15;Schweizer Käse|28;Tilsiter|27;Ziegenkäse|20;Schmand|3;Sahne|2,5;Margarine|0,3;Veganer Käse|2;"+
   "Bierschinken|13;Bockwurst|12;Cervelatwurst|22;Chorizo|24;Corned Beef|22;Fleischkäse|14;Fleischwurst|12;Frikadelle|15;Geflügelwurst|14;Gelbwurst|12;Krakauer|14;Kochschinken mager|18;Landjäger|28;Leberwurst|12;Lyoner|11;Mettwurst|16;Mortadella|15;Putenwurst|16;Rohschinken|27;Serranoschinken|28;Teewurst|22;Wiener Würstchen|12;"+
   "Vegane Wurst|14;Vegane Salami|15;Vegane Mortadella|13;Veggie-Aufschnitt|14;Sojawurst|13;Seitan-Aufschnitt|18;Lupinen-Aufschnitt|15;Tofu-Würstchen|13;Veggie-Frikadelle|12;Vegane Bratwurst|13;Veganes Hack|16;Sojageschnetzeltes|13;"+
-  "Dinkelnudeln|12;Vollkornnudeln|13;Hartweizennudeln|12;Eiernudeln|13;Linsennudeln|23;Kichererbsennudeln|19;Protein-Nudeln|35;Reisnudeln|7;Glasnudeln|0,5;Spätzle|12;Lasagneplatten|12;Vollkornnudeln gekocht|5;"+
+  "Dinkelnudeln, gekocht|5;Vollkornnudeln, gekocht|5;Hartweizennudeln, gekocht|5;Eiernudeln, gekocht|5;Linsennudeln, gekocht|9;Kichererbsennudeln, gekocht|8;Protein-Nudeln, gekocht|14;Reisnudeln, gekocht|2;Glasnudeln, gekocht|0,2;Spätzle, gekocht|6;Lasagneplatten, gekocht|5;"+
   "Proteinriegel Schoko|25;Proteinriegel Erdnuss|27;Eiweißriegel|35;Protein-Waffel|20;Müsliriegel|6;Haferriegel|8;Reiswaffel|8;Beef Jerky|33;Protein-Chips|30;"+
   "Rinderfilet|21;Rindergulasch|21;Rinderbraten|23;Kalbfleisch|20;Kalbsschnitzel|21;Hirsch|22;Wildschwein|21;Entenbrust|20;Schweinebraten|21;Schweinenacken|19;Kasseler|20;Putenhack|20;Hähnchenbrust gekocht|30;Hähnchenschnitzel|23;Hühnchenkeule ohne Haut|18;Gänsebrust|18;Hackfleisch gemischt|18;"+
   "Hecht|19;Zander|19;Karpfen|17;Dorade|19;Pangasius|16;Shrimps gekocht|24;Lachs geräuchert|24;Heringsfilet|16;Thunfisch in Öl|23;Forelle geräuchert|23;Saibling|20;Rotbarsch|17;Scampi|20;Muscheln|12;Tintenfisch|16;Sardellen|25;"+
-  "Kidneybohnen trocken|22;Kichererbsen trocken|19;Linsen rot trocken|24;Bohnen rot gekocht|8;Schwarze Bohnen gekocht|8;Falafel|13;Tofu seidig|8;Sojajoghurt|3,5;Veganer Quark|8;Lupinenjoghurt|10;Sojaschnetzel|50;Mandelmus|21;Tahini|17;"+
+  "Kidneybohnen trocken|22;Kichererbsen trocken|19;Linsen rot trocken|24;Bohnen rot gekocht|8;Schwarze Bohnen gekocht|8;Falafel|13;Tofu seidig|8;Sojajoghurt|3,5;Veganer Quark|8;Lupinenjoghurt|10;Sojaschnetzel, trocken|50;Mandelmus|21;Tahini|17;"+
   "Ei gekocht|13;Eigelb|16;Vollmilch|3,4;Kondensmilch|7;Milchreis|3;"+
-  "Roggenbrot|8;Knäckebrot|10;Vollkornbrötchen|9;Haferkleie|17;Weizenkleie|15;Buchweizen gekocht|4;Hirse gekocht|3;Bulgur gekocht|3;Polenta|3;Haferbrei|4").split(";").map(function(z){
+  "Roggenbrot|8;Knäckebrot|10;Vollkornbrötchen|9;Haferkleie|17;Weizenkleie|15;Buchweizen gekocht|4;Hirse gekocht|3;Bulgur gekocht|3;Polenta|3;Haferbrei|4;"+
+  "Milch 3,5 %|3,4;Laktosefreie Milch|3,4;Joghurt 1,5 %|4;Quark 40 % Fett|10;Rührei|10;Putenschnitzel|24;Rinderleber|21;Pistazien|20;Paranüsse|14;Pinienkerne|14;Lupinen, gekocht|16;Pumpernickel|6;Protein-Brot|25").split(";").map(function(z){
   var x = z.split("|"); return [x[0], parseFloat(x[1].replace(",", "."))];
 });
 /* Katalog: alle Lebensmittel alphabetisch (deutsche Sortierung), gleiche Namen nur einmal */
@@ -258,15 +259,15 @@ function protFold(s){
    Hüttenkäse etwa in Milch und Käse). Was in keiner Liste steht, landet in „weitere“. Vegetarisches und Veganes steht nur in „huelsen“, nicht in Käse oder Wurst. */
 var PROT_RUBRIKEN = ["milch", "kaese", "wurst", "fleisch", "fisch", "eier", "huelsen", "getreide", "nuss", "shake", "weitere"];
 var PROT_RUBRIK_LISTEN = {
-  milch:"Magerquark;Quark 20 % Fett;Skyr;Griechischer Joghurt 10 %;Naturjoghurt 3,5 %;Joghurt fettarm;Hüttenkäse;Cottage Cheese;Milch 1,5 %;Vollmilch;Buttermilch;Kefir;Kondensmilch;Milchreis;Sahne;Schmand;Butter;Margarine",
+  milch:"Magerquark;Quark 20 % Fett;Skyr;Griechischer Joghurt 10 %;Naturjoghurt 3,5 %;Joghurt fettarm;Hüttenkäse;Cottage Cheese;Milch 1,5 %;Vollmilch;Buttermilch;Kefir;Kondensmilch;Milchreis;Sahne;Schmand;Butter;Margarine;Milch 3,5 %;Laktosefreie Milch;Joghurt 1,5 %;Quark 40 % Fett",
   kaese:"Gouda;Emmentaler;Mozzarella;Mozzarella light;Parmesan;Feta;Harzer Käse;Camembert;Hüttenkäse;Cottage Cheese;Frischkäse;Frischkäse light;Appenzeller;Bergkäse;Brie;Butterkäse;Cheddar;Edamer;Halloumi;Hirtenkäse;Mascarpone;Ricotta;Schafskäse;Schmelzkäse;Schweizer Käse;Tilsiter;Ziegenkäse",
   wurst:"Putenaufschnitt;Salami;Schinken, gekocht;Leberkäse;Bratwurst;Bierschinken;Bockwurst;Cervelatwurst;Chorizo;Corned Beef;Fleischkäse;Fleischwurst;Frikadelle;Geflügelwurst;Gelbwurst;Krakauer;Kochschinken mager;Landjäger;Leberwurst;Lyoner;Mettwurst;Mortadella;Putenwurst;Rohschinken;Serranoschinken;Teewurst;Wiener Würstchen",
-  fleisch:"Hähnchenbrust, roh;Hähnchenschenkel;Putenbrust;Rinderhack, mager;Rindersteak;Schweinefilet;Schweinehack;Lammfleisch;Rinderfilet;Rindergulasch;Rinderbraten;Kalbfleisch;Kalbsschnitzel;Hirsch;Wildschwein;Entenbrust;Schweinebraten;Schweinenacken;Kasseler;Putenhack;Hähnchenbrust gekocht;Hähnchenschnitzel;Hühnchenkeule ohne Haut;Gänsebrust;Hackfleisch gemischt;Beef Jerky",
+  fleisch:"Hähnchenbrust, roh;Hähnchenschenkel;Putenbrust;Rinderhack, mager;Rindersteak;Schweinefilet;Schweinehack;Lammfleisch;Rinderfilet;Rindergulasch;Rinderbraten;Kalbfleisch;Kalbsschnitzel;Hirsch;Wildschwein;Entenbrust;Schweinebraten;Schweinenacken;Kasseler;Putenhack;Hähnchenbrust gekocht;Hähnchenschnitzel;Hühnchenkeule ohne Haut;Gänsebrust;Hackfleisch gemischt;Beef Jerky;Putenschnitzel;Rinderleber",
   fisch:"Lachs;Thunfisch, abgetropft;Forelle;Kabeljau;Seelachs;Garnelen;Hering;Makrele;Sardinen, Dose;Hecht;Zander;Karpfen;Dorade;Pangasius;Shrimps gekocht;Lachs geräuchert;Heringsfilet;Thunfisch in Öl;Forelle geräuchert;Saibling;Rotbarsch;Scampi;Muscheln;Tintenfisch;Sardellen",
-  eier:"Ei;Eiklar;Ei gekocht;Eigelb",
-  huelsen:"Tofu;Räuchertofu;Tempeh;Seitan;Sojagranulat, trocken;Edamame;Sojabohnen, gekocht;Quorn;Linsen, gekocht;Linsen, trocken;Kichererbsen, gekocht;Kidneybohnen, gekocht;Weiße Bohnen, gekocht;Erbsen;Hummus;Kidneybohnen trocken;Kichererbsen trocken;Linsen rot trocken;Bohnen rot gekocht;Schwarze Bohnen gekocht;Falafel;Tofu seidig;Sojajoghurt;Veganer Quark;Lupinenjoghurt;Sojaschnetzel;Sojadrink;Haferdrink;Veganer Käse;Vegane Wurst;Vegane Salami;Vegane Mortadella;Veggie-Aufschnitt;Sojawurst;Seitan-Aufschnitt;Lupinen-Aufschnitt;Tofu-Würstchen;Veggie-Frikadelle;Vegane Bratwurst;Veganes Hack;Sojageschnetzeltes;Linsennudeln;Kichererbsennudeln",
-  getreide:"Haferflocken;Müsli;Vollkornbrot;Weißbrot;Toast;Brötchen;Nudeln, trocken;Nudeln, gekocht;Reis, gekocht;Quinoa, gekocht;Couscous, gekocht;Dinkelnudeln;Vollkornnudeln;Hartweizennudeln;Eiernudeln;Linsennudeln;Kichererbsennudeln;Protein-Nudeln;Reisnudeln;Glasnudeln;Spätzle;Lasagneplatten;Vollkornnudeln gekocht;Roggenbrot;Knäckebrot;Vollkornbrötchen;Haferkleie;Weizenkleie;Buchweizen gekocht;Hirse gekocht;Bulgur gekocht;Polenta;Haferbrei",
-  nuss:"Erdnüsse;Erdnussmus;Mandeln;Walnüsse;Cashews;Haselnüsse;Kürbiskerne;Sonnenblumenkerne;Chiasamen;Leinsamen;Hanfsamen;Mandelmus;Tahini",
+  eier:"Ei;Eiklar;Ei gekocht;Eigelb;Rührei",
+  huelsen:"Tofu;Räuchertofu;Tempeh;Seitan;Sojagranulat, trocken;Edamame;Sojabohnen, gekocht;Quorn;Linsen, gekocht;Linsen, trocken;Kichererbsen, gekocht;Kidneybohnen, gekocht;Weiße Bohnen, gekocht;Erbsen;Hummus;Kidneybohnen trocken;Kichererbsen trocken;Linsen rot trocken;Bohnen rot gekocht;Schwarze Bohnen gekocht;Falafel;Tofu seidig;Sojajoghurt;Veganer Quark;Lupinenjoghurt;Sojaschnetzel, trocken;Sojadrink;Haferdrink;Veganer Käse;Vegane Wurst;Vegane Salami;Vegane Mortadella;Veggie-Aufschnitt;Sojawurst;Seitan-Aufschnitt;Lupinen-Aufschnitt;Tofu-Würstchen;Veggie-Frikadelle;Vegane Bratwurst;Veganes Hack;Sojageschnetzeltes;Linsennudeln, gekocht;Kichererbsennudeln, gekocht;Lupinen, gekocht",
+  getreide:"Haferflocken;Müsli;Vollkornbrot;Weißbrot;Toast;Brötchen;Nudeln, trocken;Nudeln, gekocht;Reis, gekocht;Quinoa, gekocht;Couscous, gekocht;Dinkelnudeln, gekocht;Vollkornnudeln, gekocht;Hartweizennudeln, gekocht;Eiernudeln, gekocht;Linsennudeln, gekocht;Kichererbsennudeln, gekocht;Protein-Nudeln, gekocht;Reisnudeln, gekocht;Glasnudeln, gekocht;Spätzle, gekocht;Lasagneplatten, gekocht;Roggenbrot;Knäckebrot;Vollkornbrötchen;Haferkleie;Weizenkleie;Buchweizen gekocht;Hirse gekocht;Bulgur gekocht;Polenta;Haferbrei;Pumpernickel;Protein-Brot",
+  nuss:"Erdnüsse;Erdnussmus;Mandeln;Walnüsse;Cashews;Haselnüsse;Kürbiskerne;Sonnenblumenkerne;Chiasamen;Leinsamen;Hanfsamen;Mandelmus;Tahini;Pistazien;Paranüsse;Pinienkerne",
   shake:"Whey-Pulver;Casein-Pulver;Erbsenprotein-Pulver;Proteinriegel;Protein-Shake fertig;Proteinriegel Schoko;Proteinriegel Erdnuss;Eiweißriegel;Protein-Waffel;Müsliriegel;Haferriegel;Reiswaffel;Protein-Chips;Proteinpudding",
   weitere:"Kartoffeln;Brokkoli;Spinat;Mais"
 };
@@ -296,7 +297,21 @@ function protKatalogHTML(suche){
     html += '<details class="prot-karte prot-rub" data-pdet="rub_'+r+'"'+(offen ? ' open' : '')+'><summary>'+esc(protT("rub_" + r))+'</summary>'+
       treffer.map(function(x){ return protKatalogZeile(x.f, x.idx); }).join("")+'</details>';
   });
-  return html;
+  /* A–Z zum Durchblättern (ohne Suche): zugeklappt, je Buchstabe eine eigene Gruppe, steht vor den Rubriken */
+  var az = "";
+  if(!q){
+    var buch = {}, folge = [];
+    PROT_FOODS.forEach(function(f, idx){
+      var b = f[0].charAt(0).toUpperCase();
+      if(!buch[b]){ buch[b] = []; folge.push(b); }
+      buch[b].push(protKatalogZeile(f, idx));
+    });
+    az = '<details class="prot-karte prot-rub prot-az" data-pdet="az"'+(protOffen.az === true ? ' open' : '')+'><summary>'+esc(protT("azTitel"))+'</summary>'+
+      folge.map(function(b){
+        return '<details class="prot-karte prot-rub" data-pdet="az_'+b+'"'+(protOffen["az_" + b] === true ? ' open' : '')+'><summary>'+esc(b)+'</summary>'+buch[b].join("")+'</details>';
+      }).join("")+'</details>';
+  }
+  return az + html;
 }
 /* Favoriten unter dem Katalog: Katalog-Favoriten (Menge aus „Menge (g)“) und eigene Buttons aus Kombi und Eigener Button */
 function protFavoritenHTML(menge){

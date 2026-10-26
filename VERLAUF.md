@@ -3,9 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
-## 2026-10-26 · Protein-Katalog nach Rubriken, Trainingsmythen, neue Einführung (Fassung 2026-10-26-1)
+## 2026-10-26 · Protein-Katalog nach Rubriken, A–Z, Trainingsmythen, neue Einführung (Fassung 2026-10-26-2)
 
 - **Protein-Tracker**: Reihenfolge jetzt Tageskarte, Menge (g), Favoriten, Katalog, Heute erfasst, dann Eigenes/Woche/Bedarf/Info. Der Katalog ist standardmäßig zugeklappt und nach zehn Rubriken geordnet (Milch & Quark, Käse, Wurst & Aufschnitt, Fleisch & Geflügel, Fisch, Eier, Hülsenfrüchte & vegan, Getreide & Brot, Nüsse & Samen, Shakes & Riegel, Weitere). Suche über Name und Rubrik, Umlaute und ß werden gleich behandelt, passende Rubriken öffnen sich. Ein Eintrag kann in mehreren Rubriken stehen (Hüttenkäse in Milch & Quark und Käse). Jedes der 230 Lebensmittel ist geprüft einer Rubrik zugeordnet.
+- **Protein-Katalog Nachtrag**: zugeklappter Bereich „A–Z durchblättern“ ganz oben im Katalog (je Buchstabe eine Gruppe, ohne Suche), 13 neue Lebensmittel (u. a. Milch 3,5 %). Nudeln und andere Gekochte stehen im zubereiteten Zustand („Nudeln, gekocht“, Werte grob aus den Trockenwerten umgerechnet); Trockenware heißt ausdrücklich „trocken“. Dadurch umbenannte Einträge verlieren ggf. ihren Favoriten-Stern.
 - **Einführung**: fünf statt vier Schritte. Die Kette heißt jetzt Übung → BLOC → TrainingsBLOC (Trainingstag) → Trainingsplan; das Schaubild zeigt „Tag A/B“ statt „Workout A/B“. Der Begriff Workout bleibt im Katalog.
 - **Wissensaustausch**: neue Gruppe „Trainingsmythen“ mit zehn Beiträgen, jeweils mit Kennzeichnung (Stimmt nicht / Differenziert / Studienlage unklar) und Hinweis auf gesunde Erwachsene. Quellen F24 bis F36 neu, auch in quellen.html.
 - Nicht geprüft: F24 bis F35 nur gegen die vorgegebenen Angaben, nicht gegen die Originale. Bei F36 wurden Titel, DOI, Erstautor und Band (6) über eine Suche bestätigt; die übrigen Autoren sind mit „et al.“ abgekürzt.
