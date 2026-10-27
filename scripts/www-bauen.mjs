@@ -19,5 +19,9 @@ cpSync(kern, `${ziel}/capacitor.js`);
 const marke = '<script src="./js/00-native.js';
 const html = readFileSync(`${ziel}/index.html`, "utf8");
 if (!html.includes(marke)) throw new Error("index.html: Platz für capacitor.js nicht gefunden");
-writeFileSync(`${ziel}/index.html`, html.replace(marke, '<script src="./capacitor.js"></script>\n' + marke));
+/* viewport-fit=cover nur in der Web-Version: In der App liegt der WebView sonst unter der Statusleiste und der Abstand oben käme doppelt
+   (Statusleiste + env(safe-area-inset-top)). Mit „auto“ sieht die App oben so aus wie die Web-App. */
+const mitKern = html.replace(marke, '<script src="./capacitor.js"></script>\n' + marke).replace("viewport-fit=cover", "viewport-fit=auto");
+if (mitKern.includes("viewport-fit=cover")) throw new Error("index.html: viewport-fit nicht ersetzt");
+writeFileSync(`${ziel}/index.html`, mitKern);
 console.log("www/ gebaut");

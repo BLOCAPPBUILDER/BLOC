@@ -64,7 +64,8 @@ function runPunkt(lat, lon, acc, ts, speed){
   var dt = (ts - r.letzte.ts)/1000;
   if(dt <= 0) return;
   var d = runMeter(r.letzte.p, p);
-  if(d < Math.max(3, acc*0.5)) return;   // Rauschen im Stand
+  var laeuft = speed != null && speed >= 1.2;   // meldet das Gerät selbst Bewegung, reicht eine kleinere Schwelle: so bleiben Kurven erhalten
+  if(d < (laeuft ? Math.max(2, acc*0.3) : Math.max(3, acc*0.5))) return;   // Rauschen im Stand
   if(d/dt > (r.art === "rad" ? RUN_MAX_RAD : RUN_MAX_MS)) return;           // Sprung
   var vor = r.dist, nun = runZeit(r);
   if(speed == null || speed >= 0.5) r.lastMove = Date.now();   // Zittern im Stand (Tempo ~0) zählt nicht als Bewegung
@@ -75,7 +76,7 @@ function runPunkt(lat, lon, acc, ts, speed){
     runAnsage(k);
   }
   r.tZ = nun;
-  if(!r.pts.length || runMeter(r.pts[r.pts.length-1], p) >= 5) r.pts.push(p);
+  if(!r.pts.length || runMeter(r.pts[r.pts.length-1], p) >= 3) r.pts.push(p);   // alle 3 m ein Routenpunkt (vorher 5 m), damit Kurven nicht abgeschnitten werden
   r.verlauf.push({ t:nun, d:r.dist });
   while(r.verlauf.length > 2 && nun - r.verlauf[1].t > 60000) r.verlauf.shift();   // nur die letzte Minute für „Tempo jetzt“
 }
