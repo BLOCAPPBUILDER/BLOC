@@ -15,6 +15,35 @@ function runMeter(a, b){   // Haversine
   var h = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dLon/2)*Math.sin(dLon/2);
   return 2*R*Math.asin(Math.min(1, Math.sqrt(h)));
 }
+/* Glättung der GPS-Punkte: Kalman-Filter (Ort und Geschwindigkeit, je Achse) in Metern um den ersten Punkt. Ungenaue Fixes zählen weniger,
+   dadurch zittert die Strecke weniger und Kurven werden runder, ohne dass die Linie hinterherhinkt. Nach Pausen oder Lücken (> 15 s) beginnt der Filter neu. */
+var RUN_KALMAN_BESCHL = 1.5;   // erwartete Änderung der Geschwindigkeit (m/s²): größer = folgt Kurven schneller, kleiner = glatter
+function runKalman(r, lat, lon, acc, ts){
+  var k = r.kal, my = 111320, mx = my*Math.cos(lat*Math.PI/180), R2 = Math.pow(Math.max(acc, 3), 2);
+  if(!k || ts <= k.ts || ts - k.ts > 15000){
+    r.kal = { lat0:lat, lon0:lon, mx:mx, ts:ts, x:{ p:0, v:0, a:R2, b:0, c:4 }, y:{ p:0, v:0, a:R2, b:0, c:4 } };
+    return [lat, lon];
+  }
+  var dt = (ts - k.ts)/1000, q = RUN_KALMAN_BESCHL*RUN_KALMAN_BESCHL, z = [(lon - k.lon0)*k.mx, (lat - k.lat0)*my];
+  [k.x, k.y].forEach(function(s, i){
+    s.p += s.v*dt;   // Vorhersage
+    var a = s.a + dt*(2*s.b + dt*s.c) + q*Math.pow(dt, 4)/4, b = s.b + dt*s.c + q*Math.pow(dt, 3)/2, c = s.c + q*dt*dt;
+    var S = a + R2, k0 = a/S, k1 = b/S, e = z[i] - s.p;   // Messung
+    s.p += k0*e; s.v += k1*e;
+    s.a = (1 - k0)*a; s.b = (1 - k0)*b; s.c = c - k1*b;
+  });
+  k.ts = ts;
+  return [k.lat0 + k.y.p/my, k.lon0 + k.x.p/k.mx];
+}
+/* Gerundete Strecke: aus Punkten „x,y x,y …“ wird ein weicher Pfad (Catmull-Rom als Bézier-Kurve), damit Kurven rund statt eckig wirken */
+function runKurve(pl){
+  var q = pl.split(" ").map(function(s){ var a = s.split(","); return [+a[0], +a[1]]; }), d = "M" + q[0][0] + " " + q[0][1], i;
+  for(i = 0; i < q.length - 1; i++){
+    var p0 = q[i - 1] || q[i], p1 = q[i], p2 = q[i + 1], p3 = q[i + 2] || q[i + 1];
+    d += "C" + (p1[0] + (p2[0] - p0[0])/6).toFixed(1) + " " + (p1[1] + (p2[1] - p0[1])/6).toFixed(1) + " " + (p2[0] - (p3[0] - p1[0])/6).toFixed(1) + " " + (p2[1] - (p3[1] - p1[1])/6).toFixed(1) + " " + p2[0] + " " + p2[1];
+  }
+  return d;
+}
 function runPace(sek, m){   // „5:32“ min/km
   if(!m || m < 20 || !sek) return "–:––";
   var p = sek/(m/1000), min = Math.floor(p/60), s = Math.round(p%60);
@@ -59,7 +88,8 @@ function runPunkt(lat, lon, acc, ts, speed){
   r.gps = acc; r.fehler = 0; r.n++; r.sumAcc += acc;
   if(acc > RUN_GENAU) return;
   if(speed != null && speed >= 1) r.lastMove = Date.now();   // das Gerät meldet selbst Bewegung
-  var p = [Math.round(lat*1e5)/1e5, Math.round(lon*1e5)/1e5];
+  var kf = runKalman(r, lat, lon, acc, ts); lat = kf[0]; lon = kf[1];   // geglätteter Ort
+  var p = [Math.round(lat*1e6)/1e6, Math.round(lon*1e6)/1e6];   // 0,1 m genau (vorher 1 m), sonst wirkt die gerundete Kurve stufig
   if(!r.letzte){ r.letzte = { p:p, ts:ts }; if(!r.pts.length) r.pts.push(p); return; }
   var dt = (ts - r.letzte.ts)/1000;
   if(dt <= 0) return;
@@ -96,7 +126,7 @@ function runAutoWeiter(lat, lon, acc, speed){
   if(acc > RUN_GENAU) return;
   var weg = r.pausePos ? runMeter(r.pausePos, [lat, lon]) : 0;
   if(weg < Math.max(10, acc) && !(speed != null && speed >= 1.5)) return;
-  r.pausenMs += Date.now() - r.pauseAb; r.pauseAb = 0; r.auto = false; r.letzte = null; r.lastMove = Date.now();
+  r.pausenMs += Date.now() - r.pauseAb; r.pauseAb = 0; r.auto = false; r.letzte = null; r.kal = null; r.lastMove = Date.now();
   vibrate(120);
   runAnzeige();
 }
@@ -253,7 +283,7 @@ function runStopWatch(){
 }
 function runPause(){
   if(!run) return;
-  if(run.pauseAb){ run.pausenMs += Date.now() - run.pauseAb; run.pauseAb = 0; run.auto = false; run.letzte = null; run.lastMove = Date.now(); runWachen(true); }   // Lücke zählt nicht als Strecke
+  if(run.pauseAb){ run.pausenMs += Date.now() - run.pauseAb; run.pauseAb = 0; run.auto = false; run.letzte = null; run.kal = null; run.lastMove = Date.now(); runWachen(true); }   // Lücke zählt nicht als Strecke
   else { run.pauseAb = Date.now(); run.auto = false; }
   renderRun();
 }
@@ -475,7 +505,7 @@ function runLiveKarte(r){
     var fx = function(p){ var dx = (p[1] - zp[1])*mx, dy = (p[0] - zp[0])*my, x2 = dx*cs - dy*sn, y2 = dx*sn + dy*cs; return [W/2 + x2*sk2, cy2 - y2*sk2]; };
     var plf = pts.map(function(p){ var q = fx(p); return q[0].toFixed(1)+","+q[1].toFixed(1); }).join(" "), a1 = fx(pts[0]);
     var svgF = svg.replace('<g class="rk-kulisse">', '<g class="rk-kulisse" transform="rotate('+(-kurs).toFixed(1)+' '+(W/2)+' '+cy2.toFixed(1)+')">');
-    return svgF+(pts.length > 1 ? '<polyline class="rk-glow" points="'+plf+'" filter="url(#rk-glow)"/><polyline class="rk-weg" points="'+plf+'"/>' : '')+
+    return svgF+(pts.length > 1 ? '<path class="rk-glow" d="'+runKurve(plf)+'" filter="url(#rk-glow)"/><path class="rk-weg" d="'+runKurve(plf)+'"/>' : '')+
       '<circle class="rk-start" cx="'+a1[0].toFixed(1)+'" cy="'+a1[1].toFixed(1)+'" r="4.5"/>'+
       '<circle class="rk-puls" cx="'+(W/2)+'" cy="'+cy2.toFixed(1)+'" r="10"/><path class="rk-pfeil" transform="translate('+(W/2)+' '+cy2.toFixed(1)+')" d="M0 -11L8.5 9 0 4.5-8.5 9z"/>'+
       '<g class="rk-nord" transform="translate(30 34) rotate('+(-kurs).toFixed(1)+')"><path d="M0 -13L5 3 0 0-5 3z"/><text y="-16" text-anchor="middle">N</text></g></svg>';
@@ -487,7 +517,7 @@ function runLiveKarte(r){
   var sk = Math.min((W - 2*pad)/(2*halbLo*kx), (H - 2*pad)/(2*halbLa));
   function xy(p){ return [W/2 + (p[1] - mLo)*kx*sk, H/2 - (p[0] - mLa)*sk]; }
   var pl = pts.map(function(p){ var q = xy(p); return q[0].toFixed(1)+","+q[1].toFixed(1); }).join(" "), a0 = xy(pts[0]), z0 = xy(pts[pts.length-1]);
-  return svg+(pts.length > 1 ? '<polyline class="rk-glow" points="'+pl+'" filter="url(#rk-glow)"/><polyline class="rk-weg" points="'+pl+'"/>' : '')+
+  return svg+(pts.length > 1 ? '<path class="rk-glow" d="'+runKurve(pl)+'" filter="url(#rk-glow)"/><path class="rk-weg" d="'+runKurve(pl)+'"/>' : '')+
     '<circle class="rk-start" cx="'+a0[0].toFixed(1)+'" cy="'+a0[1].toFixed(1)+'" r="4.5"/>'+
     '<circle class="rk-puls" cx="'+z0[0].toFixed(1)+'" cy="'+z0[1].toFixed(1)+'" r="10"/><circle class="rk-pos" cx="'+z0[0].toFixed(1)+'" cy="'+z0[1].toFixed(1)+'" r="6.5"/></svg>';
 }
@@ -617,7 +647,7 @@ function runStreckeNeu(x){
   });
   var a = xy(pts[0]), z = xy(pts[pts.length-1]);
   return '<div class="run-strecke"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(t("runRoute"))+'">'+
-    '<polyline points="'+pl+'" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>'+punkte+
+    '<path d="'+runKurve(pl)+'" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>'+punkte+
     '<circle cx="'+a[0].toFixed(1)+'" cy="'+a[1].toFixed(1)+'" r="5.5" class="rs-start"/><circle cx="'+z[0].toFixed(1)+'" cy="'+z[1].toFixed(1)+'" r="9" class="rs-ring"/><circle cx="'+z[0].toFixed(1)+'" cy="'+z[1].toFixed(1)+'" r="5" class="rs-ziel"/></svg>'+chips+'</div>';
 }
 function renderRun(){

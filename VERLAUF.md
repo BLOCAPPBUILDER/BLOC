@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-10-27 · Run: GPS-Glättung, App an Web-Aussehen angepasst (Fassung 2026-10-27-3)
+
+- **Kalman-Filter** (Ort und Geschwindigkeit, ungenaue Fixes zählen weniger) glättet die aufgezeichnete Strecke; Karte und Streckenbild zeichnen sie als gerundete Kurve statt als Eckenlinie. Routenpunkte alle 3 m, auf 0,1 m genau gespeichert. In einer Simulation (5 m Rauschen) sinkt der mittlere Fehler um etwa 30 bis 40 %, auch in engen Kurven. **Nicht geprüft:** echter Lauf auf dem Handy.
+- App: Abstand oben und Schriftgröße wie in der Web-Version (viewport-fit nur in der Web-Fassung, WebView-Textzoom 100). Capacitor-Kern wird als capacitor.js mitgegeben (Behebung für „Standort nicht ermittelbar“).
+
 ## 2026-10-26 (Android) · Capacitor-Hülle für Android (Fassung 2026-10-26-4)
 
 - Neues Projekt-Gerüst: `package.json`, `capacitor.config.json`, `android/`, `scripts/www-bauen.mjs`, `assets/` (Icon-Quellen). `npm run sync` baut `www/` und gleicht ab.
