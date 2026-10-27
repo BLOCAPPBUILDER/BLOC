@@ -7,7 +7,11 @@ var IST_NATIV = !!(window.Capacitor && typeof window.Capacitor.isNativePlatform 
 var nativPlugins = {};
 function nativPlugin(name){
   if(!IST_NATIV) return null;
-  if(!nativPlugins[name]){ try{ nativPlugins[name] = window.Capacitor.registerPlugin(name); }catch(e){ nativPlugins[name] = null; } }
+  if(!nativPlugins[name]){
+    try{ nativPlugins[name] = typeof window.Capacitor.registerPlugin === "function" ? window.Capacitor.registerPlugin(name) : (window.Capacitor.Plugins && window.Capacitor.Plugins[name]) || null; }
+    catch(e){ nativPlugins[name] = null; }
+    if(!nativPlugins[name]) console.error("BLOC: Plugin " + name + " nicht verfügbar (capacitor.js geladen? npm run sync gelaufen?)");
+  }
   return nativPlugins[name];
 }
 /* Version der App-Fassung (in der Web-App kommt sie vom Service Worker, hier aus dem ?v= an diesem Skript) */

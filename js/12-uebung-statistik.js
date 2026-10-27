@@ -415,7 +415,7 @@ function renderStats(){
       Object.keys(zaehlR).forEach(function(id){ if(findExercise(id) && (!bestR || zaehlR[id] > zaehlR[bestR])) bestR = id; });
       einheitenListe().forEach(function(x){ if(x.at >= jetzt - 28*tag) rekR += +x.rek || 0; });
       var meil = [5, 10, 25, 50, 75, 100, 150, 200, 250, 300, 400, 500, 750, 1000].filter(function(m){ return gesamt >= m && gesamt - m <= 2; }).pop();
-      var satzR = tgV && tgR > tgV ? t("statRueckPlus", { n:tgR - tgV }) : tgV && tgR === tgV ? t("statRueckGleich") : t("statRueckBasis", { n:tgR });
+      var satzR = tgV && tgR > tgV ? (tgR - tgV === 1 ? t("statRueckPlus1") : t("statRueckPlus", { n:tgR - tgV })) : tgV && tgR === tgV ? t("statRueckGleich") : (tgR === 1 ? t("statRueckBasis1") : t("statRueckBasis", { n:tgR }));
       var chipsR = [[String(tgR), t("statRueckTage")], [dauer(sumS(w4)), t("statRueckZeit")]];
       if(r28.length >= 3) chipsR.push([wtN[wtI] || "–", t("statRueckTag")]);
       var kd = koerperDaten(), kcalR = 0;
