@@ -3,6 +3,12 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-10-28 · Wissensaustausch: Mind-Muscle-Connection, Hinweis gekürzt (Fassung 2026-10-28-1)
+
+- **Trainingsmythen**: neuer Beitrag „Mind-Muscle-Connection“ (Differenziert). Gezielte Konzentration erhöht die Muskelaktivität bei leichten bis mittleren Lasten; für langfristig mehr Muskelwachstum fehlt ein belastbarer Beleg. Quellen F37 bis F39 neu, auch in quellen.html.
+- Hinweis über der Gruppe „Trainingsmythen“ auf zwei Sätze gekürzt.
+- Nicht geprüft: F37 bis F39 nur über Suchergebnisse und Zusammenfassungen abgeglichen, nicht gegen die Originale. Angaben zu Calatayud 2016 (Abstract), Schoenfeld 2018 und Grgic 2021 jeweils aus einer Suche. Am Gerät nicht gesehen.
+
 ## 2026-10-27 · Run: GPS-Glättung, App an Web-Aussehen angepasst (Fassung 2026-10-27-3)
 
 - **Kalman-Filter** (Ort und Geschwindigkeit, ungenaue Fixes zählen weniger) glättet die aufgezeichnete Strecke; Karte und Streckenbild zeichnen sie als gerundete Kurve statt als Eckenlinie. Routenpunkte alle 3 m, auf 0,1 m genau gespeichert. In einer Simulation (5 m Rauschen) sinkt der mittlere Fehler um etwa 30 bis 40 %, auch in engen Kurven. **Nicht geprüft:** echter Lauf auf dem Handy.
