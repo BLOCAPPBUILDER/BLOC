@@ -1310,14 +1310,16 @@
       await bis(function () { return $(".sr-welt"); }, 3000, "Suche zeigt den Ort bei Workouts");
       var farben = $$(".sr-welt").map(function (e) { return e.style.getPropertyValue("--w"); });
       pruefe(farben.length > 0 && farben.every(function (f) { return /gym-color|tp-color/.test(f); }), "Ort-Zeichen in der Suche: " + farben.join(", "));
-      klick('[data-srort="studio"]');   // Ort-Filter der Suche: nur Fitnessstudio
-      await bis(function () { var z = $$(".sr-welt"); return z.length > 0 && z.every(function (e) { return /gym-color/.test(e.style.getPropertyValue("--w")); }); }, 3000, "Ort-Filter Fitnessstudio in der Suche");
-      klick('[data-srort=""]');
+      var vorher = $$("#gs-res .list-item").length, stVor = JSON.stringify(W.studioTrainWahl());
+      klick('[data-srtrain="studio"]');   // Trainingsart-Filter der Suche: Fitnessstudio (Workouts: zwei Drittel der Übungen)
+      await bis(function () { var n = $$("#gs-res .list-item").length; return n > 0 && n < vorher && !/High Pulse/.test($("#gs-res").textContent); }, 3000, "Trainingsart Fitnessstudio grenzt die Treffer der Suche ein");
+      pruefe(W.suchTrain.indexOf("studio") > -1 && JSON.stringify(W.studioTrainWahl()) === stVor, "Suche hat die Trainingsart nur im Speicher");
+      klick('[data-srtrain="studio"]');
       eingeben($("#gs-q"), "");   // Ausrüstungs-Filter der Suche: nur noch Übungen und Workouts mit dem Band
-      klick('[data-srart="band"]');
+      klick('[data-srausr="band"]');
       await bis(function () { return $$("#gs-res .fig-grid > *").length >= 3; }, 3000, "Ausrüstungs-Filter Band zeigt Übungen");
       pruefe($$("#gs-res .section-title").every(function (e) { return !/Neu anlegen|Create/.test(e.textContent); }), "Aktionen bei gewähltem Ausrüstungs-Filter");
-      klick('[data-srart="band"]');
+      klick('[data-srausr="band"]');
     }],
     ["Kleine Hilfen: „Was ist was?“, Bestleistung, Leichter/Schwerer", async function () {
       function daten() { return JSON.parse(W.localStorage.getItem(KEY)); }
