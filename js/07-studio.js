@@ -151,7 +151,7 @@ var STUDIO_ARTEN = ["geraet", "frei", "stange", "band", "koerper"];
    2 Ausrüstung (Geräte, Kurzhantel, Kettlebell, Widerstandsband), 3 Muskel. Gespeichert in settings.stTrain und settings.stAusr; leer = alles. */
 function studioTrainWahl(){ return selArr(state.db.settings.stTrain).filter(function(a){ return TRAIN_ARTEN.indexOf(a) > -1; }); }
 function studioAusrWahl(){ return selArr(state.db.settings.stAusr).filter(function(a){ return AUSR_IDS.indexOf(a) > -1; }); }
-function trainPasst(ex, fTrain){ return !fTrain.length || fTrain.indexOf(exTrainArt(ex)) > -1; }
+function trainPasst(ex, fTrain){ return !fTrain.length || exTrainArten(ex).some(function(a){ return fTrain.indexOf(a) > -1; }); }
 function ausrPasst(ex, fAusr){ return !fAusr.length || exAusr(ex).some(function(a){ return fAusr.indexOf(a) > -1; }); }
 /* Trainingsart und Ausrüstung zusammen: beide müssen passen (innerhalb einer Gruppe genügt eine) */
 function studioFilterOk(id, fTrain, fAusr){ var ex = findExercise(id); return !!ex && trainPasst(ex, fTrain) && ausrPasst(ex, fAusr); }
@@ -217,7 +217,7 @@ function studioAnzahl(gruppen, fGr, artOk){
 var TRAIN_FOTO = { studio:"img/ort-fitnessstudio.jpg", cali:"img/ort-freiluft.jpg", body:"img/neu-h-brust-2.jpg" };
 function trainZahlen(){
   var n = { studio:0, cali:0, body:0 };
-  EXERCISES.forEach(function(ex){ if(ex.main === "stretch" || libHidden("ex:"+ex.id)) return; n[exTrainArt(ex)]++; });
+  EXERCISES.forEach(function(ex){ if(ex.main === "stretch" || libHidden("ex:"+ex.id)) return; exTrainArten(ex).forEach(function(a){ n[a]++; }); });
   return n;
 }
 /* Die drei Trainingsarten als Fotokarten nebeneinander (Mehrfachwahl); attr = Attribut der Knöpfe (data-sttrain im Filter) */

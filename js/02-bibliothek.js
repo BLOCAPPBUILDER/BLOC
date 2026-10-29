@@ -116,6 +116,12 @@ function exTrainArt(ex){
   if(eq.some(function(e){ return e === "bar" || e === "dip"; })) return "cali";
   return "body";
 }
+/* Im Filter zählt eine Übung zu allen passenden Arten: Übungen mit Widerstandsband stehen zusätzlich im Calisthenic-Park (Band geht auch an der Stange und im Park);
+   Farbe und Zuordnung der Kachel bleiben bei exTrainArt */
+function exTrainArten(ex){
+  var a = exTrainArt(ex);
+  return a === "studio" && ((ex && ex.equip) || []).indexOf("band") > -1 ? ["studio", "cali"] : [a];
+}
 /* Ausrüstung im Filter (Schritt 2): die fünf Geräte-Arten des Fitnessstudios plus Kettlebell und Widerstandsband */
 var AUSR_IDS = ["smith", "kabel", "lh", "kh", "maschine", "kb", "band"];
 function exAusr(ex){
