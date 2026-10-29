@@ -221,21 +221,21 @@ function trainZahlen(){
   return n;
 }
 /* Die drei Trainingsarten als Fotokarten nebeneinander (Mehrfachwahl); attr = Attribut der Knöpfe (data-sttrain im Filter) */
-function trainFotosHTML(attr, fTrain){
-  var n = trainZahlen();
+function trainFotosHTML(attr, fTrain, n, textKey){
+  n = n || trainZahlen();
   return '<div class="ort-fotos kompakt drei" role="group" aria-label="'+esc(t("trSchritt1"))+'">'+TRAIN_ARTEN.map(function(a){
     var an = fTrain.indexOf(a) > -1;
     return '<button type="button" '+attr+'="'+a+'" class="ort-foto'+(an ? ' on' : '')+'" aria-pressed="'+an+'">'+
       '<img class="of-bild" src="'+TRAIN_FOTO[a]+'" alt="" draggable="false">'+
       '<span class="of-haken" aria-hidden="true">'+svgIcon('<path d="M5 12.5l4.5 4.5L19 7.5"/>')+'</span>'+
-      '<span class="of-t"><b>'+esc(t("trArt_"+a))+'</b><small>'+esc(t("katOrtUebAnz", { n:n[a] }))+'</small></span></button>';
+      '<span class="of-t"><b>'+esc(t("trArt_"+a))+'</b><small>'+esc(t(textKey || "katOrtUebAnz", { n:n[a] }))+'</small></span></button>';
   }).join("")+'</div>';
 }
 function filterSchrittHTML(nr, titel){ return '<div class="bau-schritt af-schritt"><span>'+nr+'</span>'+esc(titel)+'</div>'; }
 function studioFilterHTML(gruppen, fGr, fTrain, fAusr, anzahl, zonen, opt){
   var s = state.db.settings;
   opt = opt || {};
-  var mitTrain = opt.art !== "Wo";
+  var mitTrain = true;
   var namen = fGr.map(function(id){ var g = gruppen.filter(function(x){ return x.id === id; })[0]; return g ? g.name : id; })
     .concat(mitTrain ? fTrain.map(function(a){ return t("trArt_"+a); }) : [], fAusr.map(function(g){ return t("stGer_"+g); }), zonen.map(kkName));
   /* Muskel (Chips + Figur, eine Auswahl); außer Muskeln gibt es nur noch Cardio & Ausdauer (orangenes Leuchten hinter der Figur) und Eigene Übungen */
@@ -244,7 +244,7 @@ function studioFilterHTML(gruppen, fGr, fTrain, fAusr, anzahl, zonen, opt){
   return filterKarteHTML({ offen:!!s.stFilterOpen, toggle:"data-sttoggle", reset:"data-streset", n:namen.length,
     summe:namen.length ? namen.join(", ") : t(opt.art === "Wo" ? "afAlleWo" : "afAlleEx"),
     zeigen:filterZeigenText(anzahl, opt.art || "Ex"), extra:opt.extra,
-    inhalt:(mitTrain ? filterSchrittHTML(1, t("trSchritt1"))+trainFotosHTML("data-sttrain", fTrain) : '')+
+    inhalt:(mitTrain ? filterSchrittHTML(1, t("trSchritt1"))+trainFotosHTML("data-sttrain", fTrain, opt.trainZahlen, opt.art === "Wo" ? "katOrtAnz" : "") : '')+
       filterSchrittHTML(mitTrain ? 2 : 1, t("stGerKopf"))+
       '<div class="fc-chips af-ausr">'+AUSR_IDS.map(function(g){
         return filterChip("data-stausr", g, fAusr.indexOf(g) > -1, svgIcon(STUDIO_GERAET_ICON[g] || STUDIO_AUSR_ICON[g]), t("stGer_"+g)); }).join("")+'</div>'+

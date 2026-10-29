@@ -132,42 +132,15 @@ function katKopfHTML(tab, right){
     '<div class="rz kat-rz" style="--rz:var(--text)">'+b("baukasten", t("katTabBaukasten"))+b("blocs", t("katTabBlocs"))+'</div>'+
     (tab !== "katalog" ? '<p class="dd-fussnote kat-fav-hinweis">'+esc(t("katFavHinweis"))+'</p>' : '');
   if(tab !== "katalog") return kopf;
-  // Katalog (Seite hinter dem Baukasten): ganz vorn der Ort (Fitnessstudio · Freiluft), mit der Zahl der Workouts bzw. Übungen
-  var abt = katAbt();
-  return kopf + '<div class="kat-seitentitel">'+esc(t("katTabKatalog"))+'</div>' +
-    (abt === "workouts" ? ortFotosHTML("data-katort", katOrtZahlenWo(), "katOrtAnz", "kompakt") :
-     '');   // Übungskatalog: Trainingsart steht im Filter
+  // Katalog (Seite hinter dem Baukasten): Trainingsart, Ausrüstung und Muskel stehen im Filter
+  return kopf + '<div class="kat-seitentitel">'+esc(t("katTabKatalog"))+'</div>';
 }
 /* Ort: Fitnessstudio (Workouts mit Geräten oder Langhantel) oder Freiluft (alles andere: zuhause, draußen, mit Kurzhantel, Band, Stange) */
 var KAT_ICON_STUDIO = '<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/>';
 var KAT_ICON_FREI = '<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/>';
-/* Ort (settings.katOrt): "studio", "frei" oder "beide" (Burpees und Geräte am selben Ort). katOrt() liefert einen einzelnen Ort: "studio" nur bei reinem
-   Fitnessstudio, sonst "frei" (bei „beide“ gelten Freiluft-Regeln wie die Ausrüstungsauswahl); katOrtPasst(o) fragt, ob der Ort o gewählt ist. */
-function katOrt(){ return state.db.settings.katOrt === "studio" ? "studio" : "frei"; }
-function katOrte(){ var o = state.db.settings.katOrt; return o === "beide" ? ["studio", "frei"] : o === "studio" ? ["studio"] : ["frei"]; }
-function katOrtPasst(o){ return katOrte().indexOf(o) > -1; }
-function katOrtSchluessel(){ var o = state.db.settings.katOrt; return o === "beide" || o === "studio" ? o : "frei"; }
-function katOrtText(){ var l = katOrte(); return l.length > 1 ? t("katOrtBeide") : t(l[0] === "studio" ? "katOrtStudio" : "katOrtFrei"); }
-/* Antippen schaltet einen Ort zu oder ab; mindestens einer bleibt gewählt. Gibt zurück, ob sich etwas geändert hat. */
-function katOrtUmschalten(o){
-  var l = katOrte().slice(), i = l.indexOf(o);
-  if(i > -1){ if(l.length < 2) return false; l.splice(i, 1); } else l.push(o);
-  var s = state.db.settings;
-  s.katOrt = l.length > 1 ? "beide" : l[0];
-  delete s.bauModusOrt; save();
-  return true;
-}
+/* Ort eines Workouts für Farbe und Anzeige in Suche, Kalender und Heute: Fitnessstudio, sonst Freiluft */
 function katWoOrt(exs){ return exs.some(exIstStudio) ? "studio" : "frei"; }
-/* Schalter Fitnessstudio · Freiluft. Ohne Angaben: der Ort des Katalogs mit der Zahl der Workouts je Ort; für „Plan nach Gewichtung“ mit
-   eigenem Ort (attr = "data-genort") und Zahl der Übungen */
-function katOrtZahlenWo(){
-  var n = { studio:0, frei:0 };
-  LIB_WORKOUTS.forEach(function(lw){
-    if(libIstWarmDehn(lw) || libHidden("wo:"+lw.id)) return;
-    n[katWoOrt(lw.exercises.map(findExercise).filter(Boolean))]++;
-  });
-  return n;
-}
+var KAT_FOTO = { studio:"img/ort-fitnessstudio.jpg", frei:"img/ort-freiluft.jpg" };   // Fotos für Pläne in „Meine“ (Fitnessstudio, Freiluft; Pexels, siehe quellen.html)
 /* Beim Bauen gibt es keinen Ort mehr (alles ist fließend): gewählt wird die Trainingsart im Filter (settings.stTrain, Mehrfachwahl, leer = alles).
    Schon gewählte Übungen bleiben im Plan, auch wenn sie nicht zur Wahl passen. */
 function bauTrainHTML(){ return trainFotosHTML("data-bauort", studioTrainWahl()); }   // Karten der Trainingsart außerhalb des Filters (Auswahl im Workout-Entwurf)
@@ -175,19 +148,6 @@ function bauTrainBinden(neu, box){
   (box || app).querySelectorAll("[data-bauort]").forEach(function(b){
     b.addEventListener("click", function(){ state.db.settings.stTrain = selToggle(studioTrainWahl(), b.getAttribute("data-bauort")); save(); neu(); });
   });
-}
-/* Der Ort als zwei Fotokarten (Baukasten Schritt 1 und Kopf des Workoutkatalogs): gleiche Knöpfe wie der kleine Schalter (attr = `data-bauort` bzw.
-   `data-katort`), gleiche Zahlen. klasse „kompakt“ = flachere Karten. Fotos: Pexels, siehe quellen.html */
-var KAT_FOTO = { studio:"img/ort-fitnessstudio.jpg", frei:"img/ort-freiluft.jpg" };
-function ortFotosHTML(attr, n, textKey, klasse){
-  function k(id, label){
-    var an = katOrtPasst(id);   // beide Orte können zugleich gewählt sein
-    return '<button type="button" '+attr+'="'+id+'" class="ort-foto'+(an ? ' on' : '')+'" aria-pressed="'+an+'">'+
-      '<img class="of-bild" src="'+KAT_FOTO[id]+'" alt="" draggable="false">'+
-      '<span class="of-haken" aria-hidden="true">'+svgIcon('<path d="M5 12.5l4.5 4.5L19 7.5"/>')+'</span>'+
-      '<span class="of-t"><b>'+esc(label)+'</b><small>'+esc(t(textKey, { n:n[id] }))+'</small></span></button>';
-  }
-  return '<div class="ort-fotos'+(klasse ? ' '+klasse : '')+'" role="group" aria-label="'+esc(t("katOrt"))+'">'+k("studio", t("katOrtStudio"))+k("frei", t("katOrtFrei"))+'</div>';
 }
 /* Neuer Plan: wird erst mit „Speichern“ (unten im Plan-Bau) in „Meine“ aufgenommen; bis dahin ist er ein Entwurf (p.entwurf), den die Listen nicht zeigen.
    Beim Verlassen fragt BLOC nach (Speichern oder Verwerfen); ein leerer Entwurf verschwindet ohne Frage. */
@@ -235,13 +195,6 @@ function katKopfBinden(){
       var a = b.getAttribute("data-katabt");
       if(a === katAbt()) return;
       state.db.settings.katAbt = a; save(); katOffen = {};
-      renderKatalog(); window.scrollTo(0, 0);
-    });
-  });
-  app.querySelectorAll("[data-katort]").forEach(function(b){
-    b.addEventListener("click", function(){
-      if(!katOrtUmschalten(b.getAttribute("data-katort"))) return;
-      katOffen = {};
       renderKatalog(); window.scrollTo(0, 0);
     });
   });
@@ -561,6 +514,17 @@ function katWoBereich(lw, exs){
   // klar vorn: mindestens 40 % und mehr als der zweite - sonst ein Workout für den ganzen Körper
   return exs.length && bn >= exs.length*0.4 && bn > zweit && KAT_WO_BEREICHE.indexOf(best) > -1 ? best : "ganz";
 }
+/* Zahl der fertigen Workouts je Trainingsart (alle Übungen passen dazu) für die Karten im Filter */
+function katTrainZahlenWo(){
+  var n = { studio:0, cali:0, body:0 };
+  LIB_WORKOUTS.forEach(function(lw){
+    if(libIstWarmDehn(lw) || libHidden("wo:"+lw.id)) return;
+    var exs = lw.exercises.map(findExercise).filter(Boolean);
+    if(!exs.length) return;
+    TRAIN_ARTEN.forEach(function(a){ if(exs.every(function(ex){ return trainPasst(ex, [a]); })) n[a]++; });
+  });
+  return n;
+}
 function katWoPasst(exs, fGr, fAusr, zonen){
   var n = exs.length;
   if(!n) return false;
@@ -577,8 +541,9 @@ function renderKatalogWorkouts(){
   gruppen.forEach(function(g){ gueltig[g.id] = true; });
   var fGr = selArr(s.stGruppen).filter(function(id){ return gueltig[id]; });
   var fAusr = studioAusrWahl();
-  var zonen = kkNorm(s.stZonen), ort = katOrt();
-  var filterAn = !!(fGr.length || fAusr.length || zonen.length);
+  var fTrain = studioTrainWahl();
+  var zonen = kkNorm(s.stZonen);
+  var filterAn = !!(fGr.length || fTrain.length || fAusr.length || zonen.length);
   var woSort = s.libWoSort === "az" ? "az" : "dur";
   var hw = hinweise("katwo", ["katWoHint"]);
 
@@ -587,9 +552,9 @@ function renderKatalogWorkouts(){
     if(libIstWarmDehn(lw)) return;
     var exs = lw.exercises.map(findExercise).filter(Boolean);
     rows.push({ lw:lw, exs:exs, name:tplText(lw.name), dur:workoutDuration(libWorkoutRun(lw)), hidden:libHidden("wo:"+lw.id),
-      ort:katWoOrt(exs), bereich:katWoBereich(lw, exs), mains:woMains(exs) });
+      bereich:katWoBereich(lw, exs), mains:woMains(exs) });
   });
-  var sichtbar = rows.filter(function(r){ return !r.hidden && katOrtPasst(r.ort) && katWoPasst(r.exs, fGr, fAusr, zonen); });
+  var sichtbar = rows.filter(function(r){ return !r.hidden && r.exs.every(function(ex){ return trainPasst(ex, fTrain); }) && katWoPasst(r.exs, fGr, fAusr, zonen); });   // jede Übung passt zur gewählten Trainingsart
   var versteckt = rows.filter(function(r){ return r.hidden; });
   libWoSort(sichtbar, woSort);
   var je = {};
@@ -602,7 +567,7 @@ function renderKatalogWorkouts(){
   KAT_WO_BEREICHE.forEach(function(b){
     if(!je[b]) return;
     var name = b === "ganz" ? t("katGanz") : t(KAT_GRUPPEN.filter(function(g){ return g.id === b; })[0].key);
-    liste += katZeileHTML("wo-"+b, b === "ganz" ? HOME_ICON.katalog : katIcon(b), name, je[b].length, '<div class="kat-inhalt">'+je[b].join("")+'</div>', katOffenStd("wo-"+b, false), "", ort === "studio");
+    liste += katZeileHTML("wo-"+b, b === "ganz" ? HOME_ICON.katalog : katIcon(b), name, je[b].length, '<div class="kat-inhalt">'+je[b].join("")+'</div>', katOffenStd("wo-"+b, false), "", fTrain.length === 1 && fTrain[0] === "studio");
   });
   if(!liste) liste = '<div class="empty" style="padding:34px 20px;">'+esc(t("katWoNone"))+'</div>';
   liste += '<div class="empty" data-noresult style="display:none;padding:30px 20px;">'+esc(t("noResult"))+'</div>';
@@ -613,7 +578,7 @@ function renderKatalogWorkouts(){
     katKopfHTML("katalog", hw.knopf + lupeHTML("l", libQuery)) +
     suchFeldHTML(libQuery, "l", t("searchWoPh")) +
     tippZeileHTML("workout", "tippWorkout") + hw.z(0, "page-hint") +
-    studioFilterHTML(gruppen, fGr, [], fAusr, sichtbar.length, zonen, { art:"Wo", extra:az }) +
+    studioFilterHTML(gruppen, fGr, fTrain, fAusr, sichtbar.length, zonen, { art:"Wo", extra:az, trainZahlen:katTrainZahlenWo() }) +
     liste +
     hiddenBlockHTML(versteckt.length, versteckt.map(function(r){ return libWoCard(r.lw, r.exs, true, r.dur, r.mains); }).join("")) +
     '<div style="height:60px"></div>';
@@ -621,7 +586,7 @@ function renderKatalogWorkouts(){
   katKopfBinden();
   function neu(){ var y = window.scrollY; renderKatalog(); window.scrollTo(0, y); }
   function on(sel, fn){ app.querySelectorAll(sel).forEach(function(el){ el.addEventListener("click", function(e){ e.stopPropagation(); fn(el, e); }); }); }
-  studioFilterBinden(fGr, [], fAusr, zonen, neu);
+  studioFilterBinden(fGr, fTrain, fAusr, zonen, neu);
   on("[data-stnew3]", function(){ go("#exedit/new"); });
   app.querySelectorAll("[data-studio]").forEach(function(b){   // Eigene Übungen in der Rubrik: öffnen, lange drücken = in ein Workout legen
     function oeffnen(){ go("#studio/"+b.getAttribute("data-studio")); }

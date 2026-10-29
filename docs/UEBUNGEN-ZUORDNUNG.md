@@ -119,7 +119,7 @@ Regel: Gerät, Hantel, Kettlebell oder Widerstandsband → **Fitnessstudio**; nu
 | ring-push-up | Ring-Liegestütze | bar | – | Brust |
 | neutral-grip-pull-up | Klimmzug mit neutralem Griff | bar | – | Breiter Rückenmuskel |
 
-## Fitnessstudio (207)
+## Fitnessstudio (195)
 
 | ID | Name | Ausrüstung (Daten) | Filter „Ausrüstung“ | Hauptmuskel |
 |---|---|---|---|---|
@@ -301,23 +301,11 @@ Regel: Gerät, Hantel, Kettlebell oder Widerstandsband → **Fitnessstudio**; nu
 | cable-lift | Kabel-Lift (von unten nach oben) | gym | Kabelzug | Schräge Bauchmuskeln |
 | cable-twist | Rumpfdrehung am Kabel | gym | Kabelzug | Schräge Bauchmuskeln |
 | cable-reverse-crunch | Reverse Crunch am Kabel | gym | Kabelzug | Gerader Bauch (unterer Anteil) |
-| ab-wheel-rollout | Bauchroller (Ab Wheel) | gym | – | Gerader Bauch |
 | wrist-curl | Handgelenkcurl | gym+db | Kurzhantel | Unterarme |
 | reverse-curl | Reverse Curl | gym | Langhantel | Unterarme |
 | wrist-pronation | Unterarm drehen nach innen (Pronation) | gym+db | Kurzhantel | Unterarme (Griff) |
 | wrist-supination | Unterarm drehen nach außen (Supination) | gym+db | Kurzhantel | Unterarme (Griff) |
-| wrist-roller | Unterarm-Roller | gym | – | Unterarme |
 | plate-pinch-hold | Scheibenklemme (Plate Pinch) | gym | – | Unterarme (Griff) |
-| battle-rope-alternating-waves | Battle Rope: Wechselwellen | gym | – | Schultern |
-| battle-rope-double-waves | Battle Rope: Doppelwellen | gym | – | Schultern |
-| battle-rope-slams | Battle Rope: Slams | gym | – | Schultern |
-| battle-rope-side-to-side | Battle Rope: Seitliche Wellen | gym | – | Schräge Bauchmuskeln |
-| battle-rope-jumping-jacks | Battle Rope: Jumping Jacks | gym | – | Ausdauer |
-| battle-rope-circles | Battle Rope: Kreise | gym | – | Schultern |
-| battle-rope-snakes | Battle Rope: Schlangen | gym | – | Schultern |
-| battle-rope-squat-waves | Battle Rope: Kniebeuge mit Wellen | gym | – | Oberschenkel vorn |
-| battle-rope-in-out-waves | Battle Rope: In-and-Out-Wellen | gym | – | Schultern |
-| battle-rope-power-pull | Battle Rope: Seil heranziehen | gym | – | Breiter Rückenmuskel |
 | smith-overhead-press | Schulterdrücken an der Multipresse | gym | Smith | Vordere Schulter |
 | smith-incline-press | Schrägbankdrücken an der Multipresse | gym | Smith | Obere Brust |
 | smith-bent-over-row | Vorgebeugtes Rudern an der Multipresse | gym | Smith | Breiter Rückenmuskel |

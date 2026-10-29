@@ -2344,13 +2344,11 @@ EQUIPS.splice(3, 0, { id:"band", de:"Widerstandsband", en:"Resistance band" });
     ["gym-shoulders-cable","Schultern Kabel & Langhantel (Fitnessstudio)","Shoulders Cable & Barbell (Gym)","weight","barbell-overhead-press cable-shoulder-press cable-lateral-raise seated-rear-delt-fly smith-shrug",60],
     ["bw-shoulders","Schultern ohne Geräte","Shoulders without Equipment","bw","pike-push-ups scapular-push-ups bear-crawl skin-the-cat",30],
     ["band-shoulders","Schultern mit Band","Shoulders with Band","mix","band-shoulder-press band-lateral-raise band-front-raise band-upright-row band-reverse-fly band-one-arm-press",20,"3/40/20"],
-    ["gym-ropes-intervals","Battle Rope Intervalle (Fitnessstudio)","Battle Rope Intervals (Gym)","cardio","battle-rope-alternating-waves battle-rope-double-waves battle-rope-slams battle-rope-side-to-side battle-rope-jumping-jacks battle-rope-circles",45],
-    ["gym-ropes-power","Battle Rope Power (Fitnessstudio)","Battle Rope Power (Gym)","cardio","battle-rope-snakes battle-rope-squat-waves battle-rope-in-out-waves battle-rope-power-pull battle-rope-slams",45],
     ["gym-back-cable","Rücken am Kabel (Fitnessstudio)","Back with Cables (Gym)","back","rope-lat-pulldown wide-grip-cable-row underhand-cable-row one-arm-cable-row straight-arm-pulldown",60],
     ["gym-back-free-weights","Rücken mit Langhantel & Kurzhantel (Fitnessstudio)","Back with Barbell & Dumbbell (Gym)","back","barbell-row t-bar-row chest-supported-row meadows-row one-arm-row",60],
     ["gym-biceps","Bizeps (Fitnessstudio)","Biceps (Gym)","arms","db-curl incline-db-curl preacher-curl concentration-curl spider-curl zottman-curl",60],
     ["gym-triceps","Trizeps (Fitnessstudio)","Triceps (Gym)","arms","close-grip-db-press db-skull-crusher rope-triceps-pushdown one-arm-cable-triceps-extension lying-cable-triceps-extension tate-press",60],
-    ["gym-core-cable","Rumpf am Kabel (Fitnessstudio)","Core with Cables (Gym)","core","pallof-press standing-cable-crunch cable-lift cable-twist cable-reverse-crunch ab-wheel-rollout",60],
+    ["gym-core-cable","Rumpf am Kabel (Fitnessstudio)","Core with Cables (Gym)","core","pallof-press standing-cable-crunch cable-lift cable-twist cable-reverse-crunch",60],
     ["gym-core-crunch","Bauch: Crunch-Varianten (Fitnessstudio)","Core: Crunch Variations (Gym)","core","crunch crunch-arms-straight crunch-hands-overhead cross-body-crunch judo-flip",45]
   );
   /* Programme fürs Fitnessstudio (2026-10-10), nach Empfehlungen aus der Trainingswissenschaft (siehe quellen.html):
@@ -3155,14 +3153,6 @@ G("cross-body-crunch", "Cross-Body-Crunch", "Cross-Body Crunch", "core", 3, 40, 
   "Drehung aus dem Rumpf, Nacken lang.|Ruhiges Tempo.", "Mit den Händen am Kopf ziehen.",
   "Rotate from the torso, neck long.|Steady tempo.", "Pulling on your head with your hands.",
   "bauch", null, "gegenüber ellbogen knie schräg crunch drehcrunch");
-G("ab-wheel-rollout", "Bauchroller (Ab Wheel)", "Ab Wheel Rollout", "core", 3, 20, 0,
-  "Aus dem Kniestand das Rad nach vorn rollen und wieder zurückziehen", "From your knees roll the wheel out and pull it back", 90, 3, 3, "gym",
-  ["Gerader Bauch", "Tiefe Bauchmuskeln, Schultern, Breiter Rückenmuskel", "Rectus abdominis", "Deep abs, shoulders, lats"],
-  "In den Kniestand gehen, das Rad mit beiden Händen unter den Schultern greifen.|Das Rad langsam nach vorn rollen, der Rücken bleibt gerade und das Becken unter Spannung.|Mit dem Bauch wieder zurückziehen.",
-  "Kneel and hold the wheel with both hands under your shoulders.|Roll the wheel slowly forward with a straight back and your pelvis under tension.|Pull yourself back with your abs.",
-  "Becken leicht untergerollt, Bauch fest.|Nur so weit, wie der Rücken gerade bleibt.", "Ins Hohlkreuz durchhängen oder zu weit ausrollen. Zu Beginn nur kurze Strecke rollen (bis zur Mitte); bei Rückenschmerzen weglassen.",
-  "Pelvis slightly tucked, abs firm.|Only as far as your back stays straight.", "Sagging into a hollow back or rolling out too far. Start with a short distance (halfway); skip it with back pain.",
-  "bauch", null, "ab roller rollout bauchrad");
 
 /* ---------- Körpergewicht-Ergänzung (2026-10-29): Texte in eigenen Worten ---------- */
 G("bear-plank-rockback-push-up", "Bear Plank Rockback Push-up", "Bear Plank Rockback Push-up", "arms", 3, 30, 0,
@@ -3215,14 +3205,6 @@ G("wrist-supination", "Unterarm drehen nach außen (Supination)", "Wrist Supinat
   "Nur der Unterarm dreht, der Ellbogen bleibt.|Sehr leichtes Gewicht.", "Zu schwer wählen oder aus dem Ellbogen schwingen.",
   "Only the forearm rotates, the elbow stays.|Very light weight.", "Going too heavy or swinging from the elbow.",
   "arme", null, "supination unterarm drehen");
-G("wrist-roller", "Unterarm-Roller", "Wrist Roller", "weight arms", 3, 30, 0,
-  "Seil mit einem Gewicht abwechselnd auf- und abrollen", "Roll a weighted rope up and down by turning your wrists", 60, 2, 2, "gym",
-  ["Unterarme", "Unterarme (Griff)", "Forearms", "Forearms (grip)"],
-  "Den Roller mit beiden Händen im Obergriff vor dir auf Schulterhöhe halten, das Gewicht hängt am Seil.|Durch Drehen der Handgelenke das Seil aufrollen, bis das Gewicht oben ist.|Genauso kontrolliert wieder abrollen.",
-  "Hold the roller overhand in front of you at shoulder height with the weight hanging on the rope.|Turn your wrists to roll the rope up until the weight reaches the top.|Roll it back down just as slowly.",
-  "Arme bleiben auf Schulterhöhe, Schultern tief.|Leichtes Gewicht zum Einstieg.", "Das Gewicht fallen lassen oder die Schultern hochziehen. Sätze kurz halten, bei Schmerz im Handgelenk beenden.",
-  "Arms stay at shoulder height, shoulders low.|Start light.", "Dropping the weight or shrugging. Keep sets short and stop if your wrist hurts.",
-  "arme", null, "roller handgelenk seil unterarm");
 G("plate-pinch-hold", "Scheibenklemme (Plate Pinch)", "Plate Pinch Hold", "weight arms", 3, 30, 0,
   "Zwei Scheiben mit den Fingern halten, glatte Seiten nach außen", "Pinch two plates between your fingers and thumb, smooth sides out", 60, 2, 2, "gym",
   ["Unterarme (Griff)", "Unterarme", "Forearms (grip)", "Forearms"],
@@ -3259,86 +3241,6 @@ G("cross-jacks", "Cross Jacks", "Cross Jacks", "cardio", 4, 30, 0,
   "air-ausdauer", null, "kreuz hampelmann jumping jack variante");
 
 /* ---------- Battle Rope (Fitnessstudio, Cardio & Ausdauer) ---------- */
-G("battle-rope-alternating-waves", "Battle Rope: Wechselwellen", "Battle Rope Alternating Waves", "cardio", 4, 30, 0,
-  "Die Seilenden abwechselnd schnell auf und ab bewegen", "Move the rope ends alternately up and down, fast", 30, 2, 3, "gym",
-  ["Schultern", "Rumpf, Unterarme (Griff), Trizeps", "Shoulders", "Core, forearms (grip), triceps"],
-  "Das Seil mittig an einem Anker einhängen, die Enden greifen und leicht in die Knie gehen.|Die Arme abwechselnd schnell nach oben und unten schlagen, sodass Wellen zum Anker laufen.|Den Rumpf stabil halten und gleichmäßig weiterarbeiten.",
-  "Anchor the rope in the middle, grip the ends and sit slightly into your knees.|Whip your arms alternately up and down so waves run to the anchor.|Keep your torso stable and work steadily.",
-  "Knie leicht gebeugt, Rücken gerade, Blick nach vorn.|Wellen aus Schulter und Rumpf, nicht nur aus den Händen.", "Mit rundem Rücken arbeiten oder die Atmung anhalten.",
-  "Knees slightly bent, back straight, eyes forward.|Create waves from shoulders and torso, not just your hands.", "Working with a rounded back or holding your breath.",
-  "cardio", ["Seilenden im Hammergriff (Daumen oben)", "Rope ends in a neutral grip (thumbs up)"], "battle rope wellen wechselnd tau");
-G("battle-rope-double-waves", "Battle Rope: Doppelwellen", "Battle Rope Double Waves", "cardio", 4, 30, 0,
-  "Beide Arme schlagen gleichzeitig nach oben und unten", "Both arms whip up and down at the same time", 30, 2, 3, "gym",
-  ["Schultern", "Rumpf, Gesäß, Unterarme (Griff)", "Shoulders", "Core, glutes, forearms (grip)"],
-  "Das Seil am Anker einhängen, in die Hocke gehen und beide Enden greifen.|Mit beiden Armen gleichzeitig kräftig nach oben schwingen und wieder nach unten schlagen.|Das Tempo gleichmäßig halten, die Beine arbeiten leicht mit.",
-  "Anchor the rope, sit into a squat and grip both ends.|Swing both arms up together and then whip them down.|Keep the tempo steady while your legs help slightly.",
-  "Brust offen, Knie über den Füßen.|Atem fließen lassen.", "Die Knie nach innen fallen lassen oder zu hoch auf den Zehen stehen.",
-  "Chest open, knees over your feet.|Let your breath flow.", "Letting your knees cave in or rising onto your toes.",
-  "cardio", ["Seilenden im Hammergriff", "Rope ends in a neutral grip"], "doppelwellen battle rope beidarmig");
-G("battle-rope-slams", "Battle Rope: Slams", "Battle Rope Slams", "cardio", 4, 30, 0,
-  "Seil über den Kopf heben und kraftvoll auf den Boden schlagen", "Lift the rope overhead and slam it down hard", 30, 3, 3, "gym",
-  ["Schultern", "Rumpf, Gesäß, Breiter Rückenmuskel", "Shoulders", "Core, glutes, lats"],
-  "Das Seil am Anker einhängen, hüftbreit stehen und die Enden greifen.|Beide Arme über den Kopf heben und das Seil mit einer Kniebeuge kraftvoll nach unten schlagen.|Sofort wieder anheben und den Rhythmus halten.",
-  "Anchor the rope, stand hip-width apart and grip the ends.|Raise both arms overhead and slam the rope down while sinking into a squat.|Immediately lift again and keep the rhythm.",
-  "Kraft kommt aus Hüfte und Beinen.|Rücken gerade, Bauch fest.", "Mit dem Rücken nach vorn kippen oder nur mit den Armen schlagen.",
-  "Power comes from hips and legs.|Back straight, abs firm.", "Tipping forward with your back or slamming with your arms only.",
-  "cardio", ["Seilenden im Hammergriff", "Rope ends in a neutral grip"], "slam schlag battle rope");
-G("battle-rope-side-to-side", "Battle Rope: Seitliche Wellen", "Battle Rope Side-to-Side Waves", "cardio", 4, 30, 0,
-  "Beide Seilenden schwingen waagerecht von Seite zu Seite", "Swing both rope ends horizontally from side to side", 30, 2, 3, "gym",
-  ["Schräge Bauchmuskeln", "Schultern, Rumpf, Unterarme (Griff)", "Obliques", "Shoulders, core, forearms (grip)"],
-  "Das Seil am Anker einhängen, in leichter Hocke stehen und beide Enden greifen.|Die Enden zur einen Seite schwingen, sodass seitliche Wellen entstehen, dann zur anderen Seite.|Die Hüfte dreht leicht mit, der Rumpf bleibt stabil.",
-  "Anchor the rope, stand in a light squat and grip both ends.|Swing the ends to one side so lateral waves form, then to the other side.|Let your hips turn slightly while your torso stays stable.",
-  "Füße fest, Rumpf aktiv.|Gleichmäßiger Rhythmus.", "Mit dem ganzen Oberkörper herumschleudern.",
-  "Feet planted, core active.|Steady rhythm.", "Whipping your whole upper body around.",
-  "cardio", ["Seilenden im Hammergriff", "Rope ends in a neutral grip"], "seitliche wellen side to side");
-G("battle-rope-jumping-jacks", "Battle Rope: Jumping Jacks", "Battle Rope Jumping Jacks", "cardio", 4, 30, 0,
-  "Hampelmann-Sprünge, die Arme schlagen das Seil dabei mit", "Jumping jacks while your arms whip the rope", 30, 3, 3, "gym",
-  ["Ausdauer", "Schultern, Waden, Rumpf", "Cardio", "Shoulders, calves, core"],
-  "Das Seil am Anker einhängen, die Enden greifen und aufrecht stehen.|Mit einem Hampelmann-Sprung die Füße öffnen und die Arme nach oben schlagen.|Beim Zusammenspringen die Arme wieder nach unten schlagen und im Rhythmus bleiben.",
-  "Anchor the rope, grip the ends and stand tall.|Jump your feet apart and whip your arms up.|As you jump back in, whip your arms down and keep the rhythm.",
-  "Weiche Landung, Knie locker.|Bauch angespannt.", "Hart landen oder den Rücken ins Hohlkreuz ziehen.",
-  "Soft landing, soft knees.|Abs braced.", "Landing hard or arching your back.",
-  "cardio", ["Seilenden im Hammergriff", "Rope ends in a neutral grip"], "hampelmann battle rope jumping jacks");
-G("battle-rope-circles", "Battle Rope: Kreise", "Battle Rope Circles", "cardio", 4, 30, 0,
-  "Die Seilenden in großen Kreisen nach außen oder innen führen", "Move the rope ends in big circles outward or inward", 30, 2, 3, "gym",
-  ["Schultern", "Rumpf, Unterarme (Griff), Brust", "Shoulders", "Core, forearms (grip), chest"],
-  "Das Seil am Anker einhängen, in leichter Hocke stehen und beide Enden greifen.|Die Enden gleichzeitig in großen gegenläufigen Kreisen nach außen führen.|Nach der Hälfte der Zeit die Richtung wechseln.",
-  "Anchor the rope, stand in a light squat and grip both ends.|Move both ends at the same time in big opposing circles outward.|Switch direction halfway through.",
-  "Schultern tief, Kreise groß und gleichmäßig.|Rumpf ruhig.", "Mit den Handgelenken statt aus der Schulter kreisen.",
-  "Shoulders low, circles big and even.|Torso still.", "Circling with your wrists instead of your shoulders.",
-  "cardio", ["Seilenden im Hammergriff", "Rope ends in a neutral grip"], "kreise außen innen battle rope");
-G("battle-rope-snakes", "Battle Rope: Schlangen", "Battle Rope Snakes", "cardio", 4, 30, 0,
-  "Die Seile auf dem Boden seitlich wellenförmig bewegen", "Move the ropes sideways along the floor in a snake-like wave", 30, 2, 3, "gym",
-  ["Schultern", "Rumpf, Unterarme (Griff), Gesäß", "Shoulders", "Core, forearms (grip), glutes"],
-  "Das Seil am Anker einhängen, in leichter Hocke stehen und beide Enden greifen.|Die Enden dicht über dem Boden seitlich hin und her bewegen, sodass das Seil schlängelt.|Gleichmäßig weiterarbeiten und den Rumpf stabil halten.",
-  "Anchor the rope, stand in a light squat and grip both ends.|Move the ends sideways just above the floor so the rope snakes.|Keep working evenly with a stable torso.",
-  "Brust offen, Rücken gerade.|Tiefe Hocke halten.", "Das Seil zu hoch halten oder die Hocke aufgeben.",
-  "Chest open, back straight.|Hold a low squat.", "Holding the rope too high or standing up out of the squat.",
-  "cardio", ["Seilenden im Hammergriff", "Rope ends in a neutral grip"], "schlange seitlich wellen boden");
-G("battle-rope-squat-waves", "Battle Rope: Kniebeuge mit Wellen", "Battle Rope Squat Waves", "cardio", 4, 30, 0,
-  "In der Kniebeuge bleiben und dabei Wellen schlagen", "Stay in a squat while whipping waves", 30, 3, 3, "gym",
-  ["Oberschenkel vorn", "Gesäß, Schultern, Rumpf", "Quads", "Glutes, shoulders, core"],
-  "Das Seil am Anker einhängen, in eine tiefe Kniebeuge gehen und die Enden greifen.|In der Hocke bleiben und abwechselnd oder gleichzeitig Wellen schlagen.|Die Zeit durchhalten, ohne dass Knie oder Rücken nachgeben.",
-  "Anchor the rope, sink into a deep squat and grip the ends.|Stay in the squat and whip waves alternately or together.|Hold on for the time without your knees or back giving way.",
-  "Knie folgen den Zehen, Rücken gerade.|Gewicht auf den Fersen.", "Mit den Knien nach innen fallen oder aus der Hocke hochkommen.",
-  "Knees track your toes, back straight.|Weight on your heels.", "Letting your knees cave in or rising out of the squat.",
-  "cardio", ["Seilenden im Hammergriff", "Rope ends in a neutral grip"], "kniebeuge wellen battle rope squat");
-G("battle-rope-in-out-waves", "Battle Rope: In-and-Out-Wellen", "Battle Rope In-and-Out Waves", "cardio", 4, 30, 0,
-  "Die Arme schlagen die Seile abwechselnd nach innen und außen", "Your arms whip the ropes alternately inward and outward", 30, 2, 3, "gym",
-  ["Schultern", "Brust, Rumpf, Unterarme (Griff)", "Shoulders", "Chest, core, forearms (grip)"],
-  "Das Seil am Anker einhängen, in leichter Hocke stehen und beide Enden greifen.|Die Enden schlagen gegenläufig: erst zueinander, dann auseinander.|Den Rhythmus halten, der Rumpf bleibt ruhig.",
-  "Anchor the rope, stand in a light squat and grip both ends.|Whip the ends in opposing patterns: first together, then apart.|Keep the rhythm while your torso stays still.",
-  "Ellbogen locker, Schultern tief.|Gleichmäßig atmen.", "Mit steifen Armen schlagen oder die Schultern hochziehen.",
-  "Elbows loose, shoulders low.|Breathe evenly.", "Whipping with stiff arms or shrugging.",
-  "cardio", ["Seilenden im Hammergriff", "Rope ends in a neutral grip"], "innen außen in out wellen");
-G("battle-rope-power-pull", "Battle Rope: Seil heranziehen", "Battle Rope Power Pull", "cardio", 3, 30, 0,
-  "Mit den Händen über Hand das Seil zu dir ziehen", "Pull the rope towards you hand over hand", 45, 2, 3, "gym",
-  ["Breiter Rückenmuskel", "Bizeps, Unterarme (Griff), Rumpf", "Lats", "Biceps, forearms (grip), core"],
-  "Das Seil an einem festen Anker einhängen, in Kniebeugehaltung stehen und das Seil greifen.|Das Seil Hand über Hand zu dir ziehen, die Ellbogen führen nach hinten.|Das Seil kontrolliert wieder auslaufen lassen oder neu ansetzen.",
-  "Anchor the rope at a fixed point, stand in a half-squat and grip the rope.|Pull the rope hand over hand towards you with your elbows driving back.|Let the rope out under control or reset.",
-  "Hüfte tief, Rücken gerade.|Zug aus dem Rücken.", "Mit rundem Rücken ziehen oder das Seil ruckartig reißen.",
-  "Hips low, back straight.|Pull from your back.", "Pulling with a rounded back or yanking the rope.",
-  "cardio", ["Seil im Obergriff, Hand über Hand", "Rope, overhand, hand over hand"], "heranziehen seil rope pull");
 
 /* ---------- Multipresse und Langhantel: Ergänzungen (2026-10-20) ---------- */
 var SMITH_NOTE = [" An der Multipresse die Sicherungshaken passend einstellen; im Notfall die Handgelenke drehen, die Stange hakt ein.", " On the Smith machine set the safety stops to suit you; in an emergency rotate your wrists and the bar hooks in."];
@@ -3444,22 +3346,6 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
 /* Gruppen im Studio-Reiter und Bereichszuordnung: Studio-Übungen kommen in ihre Gruppe, „Cardio & Ausdauer“ ist neu (Battle Rope);
    Übungen ohne Gerät (air-…) laufen über die Hauptgruppen von Air. Battle Ropes und Haltegriffe zählen nach Zeit: Ziel in Sekunden statt Wiederholungen. */
 (function(){
-  /* Fachprüfung (Sportwissenschaft): Sicherheit der Battle Ropes, Pausen, Hilfsmuskeln */
-  var BR = ["alternating-waves","double-waves","slams","side-to-side","jumping-jacks","circles","snakes","squat-waves","in-out-waves","power-pull"].map(function(x){ return "battle-rope-" + x; });
-  BR.forEach(function(id){
-    EX_POSTURE[id][1] += " Der Anker muss belastbar sein, das Seil nie um Hand oder Handgelenk wickeln, genug Abstand zum Anker halten, rutschfester Boden.";
-    EX_POSTURE[id][3] += " Use a secure anchor, never wrap the rope around your hand or wrist, keep enough distance to the anchor, non-slip floor.";
-  });
-  ["battle-rope-snakes", "battle-rope-squat-waves"].forEach(function(id){
-    EX_POSTURE[id][1] += " Nicht tiefer in die Hocke gehen, als Knie und Rücken sauber bleiben.";
-    EX_POSTURE[id][3] += " Do not squat lower than your knees and back stay in good shape.";
-  });
-  ["battle-rope-slams", "battle-rope-jumping-jacks", "battle-rope-squat-waves"].forEach(function(id){
-    EXERCISE_ROWS.forEach(function(r){ if(r[0] === id) r[9] = 45; });
-  });
-  ["battle-rope-alternating-waves", "battle-rope-double-waves"].forEach(function(id){
-    EX_MUSCLES[id][1] += ", Beine"; EX_MUSCLES[id][3] += ", legs";
-  });
   /* Griffe an vorhandenen Kabelzug- und Stangenübungen */
   var GRIFF_ALT = {
     "lat-pulldown":["Latstange, weiter Obergriff","Lat bar, wide overhand grip"],
@@ -3488,7 +3374,7 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
   STUDIO_GRUPPEN.forEach(function(g){ if(g.id === "cardio") g.ids = g.ids.trim(); });
   /* Zuordnung nach der Prüfung (2026-10-29): Klimmzug an parallelen Griffen, Ringe und Kraftstation ohne Zusatzgewicht gehören zum Calisthenic-Park */
   EX_EQUIP["neutral-grip-pull-up"] = "bar"; EX_EQUIP["ring-push-up"] = "bar"; EX_EQUIP["captains-chair"] = "dip";
-  ["battle-rope-alternating-waves","battle-rope-double-waves","battle-rope-slams","battle-rope-side-to-side","battle-rope-jumping-jacks","battle-rope-circles","battle-rope-snakes","battle-rope-squat-waves","battle-rope-in-out-waves","battle-rope-power-pull","plate-pinch-hold","wrist-roller"].forEach(function(id){ STUDIO_ZIEL[id] = [4, 30, 0]; });
+  ["plate-pinch-hold"].forEach(function(id){ STUDIO_ZIEL[id] = [4, 30, 0]; });
 })();
 
 /* ---------- Figuren der Studio-Erweiterung (2026-10-20) ----------
@@ -3704,8 +3590,6 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
   P["cross-body-crunch"] = [Q([14,83],[24,84],[46,86],[[60,70,70,89,78,89],[62,72,72,89,80,89]],[[23,73,14,78]]),
                             Q([27,63],[26,71],[46,86],[[52,68,66,74,72,72],[60,70,70,89,78,89]],[[40,68,32,63]])];
   var WHEEL_X = function(x, y){ return gHand(x, y, '<circle class="ip" cx="'+x+'" cy="'+(y+3)+'" r="5"/>'); };
-  P["ab-wheel-rollout"] = [Q(null,[66,52],[40,64],[[42,87,24,88,18,89]],[[63,68,64,81]], WHEEL_X(64,81)),
-                           Q(null,[72,77],[46,79],[[27,88,12,89,8,89]],[[80,79,90,81]], WHEEL_X(90,81))];
 
   var WS = gLinie("M26 67H60M43 67V89");
   var WL = [[62,62,60,84,67,88]];
@@ -3725,8 +3609,6 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
   P["wrist-pronation"] = [Q(null,[58,44],[42,64],WL,WR_ARM, WS+dbDreh(66,58,-55)), Q(null,[58,44],[42,64],WL,WR_ARM, WS+dbDreh(66,58,55))];
   P["wrist-supination"] = [Q(null,[58,44],[42,64],WL,WR_ARM, WS+dbDreh(66,58,55)), Q(null,[58,44],[42,64],WL,WR_ARM, WS+dbDreh(66,58,-55))];
   var WRR = '<circle class="ip" cx="78" cy="25" r="2.8"/>';
-  P["wrist-roller"] = [Q(null,[50,20],[50,50],STAND,[[63,25,76,25]], WRR+gLinie("M78 28V62")+'<circle class="ipf" cx="78" cy="66" r="4"/>'),
-                       Q(null,[50,20],[50,50],STAND,[[63,25,76,25]], WRR+gLinie("M78 28V42")+'<circle class="ipf" cx="78" cy="46" r="4"/>')];
   P["plate-pinch-hold"] = [Q(null,[50,20],[50,50],STAND,[[52,34,53,47]], gHand(53,47,'<circle class="ip" cx="53" cy="54" r="6.5"/><circle class="ipf" cx="53" cy="54" r="1.8"/>')), null];
 
   /* ---------- Dehnen / Cardio ---------- */
@@ -3758,26 +3640,17 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
   var UP = [56,30,67,33], DN = [51,43,58,54];
   function br(n, p, l, a){ return Q(null, n, p, l, a); }
   var AW_A = br([46,28],[40,58],BR_L,[UP,DN]), AW_B = br([46,28],[40,58],BR_L,[DN,UP]);
-  P["battle-rope-alternating-waves"] = [brSeile(AW_A,93,64,[-5,5]), brSeile(AW_B,93,64,[5,-5])];
   var UP2 = [55,37,66,38], DN2 = [51,48,58,59];
   var DW_A = br([46,28],[40,58],BR_L,[UP,[55,31,66,35]]), DW_B = br([46,28],[40,58],BR_L,[DN,[52,44,59,55]]);
-  P["battle-rope-double-waves"] = [brSeile(DW_A,93,66,[-5,-4]), brSeile(DW_B,93,66,[5,4])];
   var SL_A = br([50,26],[50,56],[[50,73,50,89,58,89]],[[53,19,55,7],[52,20,54,8]]);
   var SL_B = br([46,38],[36,64],BR_TL,[[53,51,60,62],[52,52,59,63]]);
-  P["battle-rope-slams"] = [brSeile(SL_A,93,72,[8,6],1.5), brSeile(SL_B,93,72,[5,4],1.5)];
   var SQ_A = br([46,28],[40,58],BR_L,[UP,DN]), SQ_B = br([46,36],[36,64],BR_TL,[DN2,UP2]);
-  P["battle-rope-squat-waves"] = [brSeile(SQ_A,93,66,[-5,5]), brSeile(SQ_B,93,66,[5,-5])];
   var SN_ARM = [[52,45,59,56],[51,46,58,57]];
   var SN_Q = br([46,28],[40,58],BR_L,SN_ARM);
-  P["battle-rope-snakes"] = [brSeile(SN_Q,93,84,[4,-4],2), brSeile(SN_Q,93,84,[-4,4],2)];
 
   var FR_B = [[37,70,31,89,25,89],[63,70,69,89,75,89]];
   function frb(a){ return fr([50,26],[50,56],FR_B,a); }
   function brFront(q, amps){ return brSeile(q, 50, 86, amps, 1); }
-  P["battle-rope-side-to-side"] = [brFront(frb([[40,38,30,46],[42,40,32,48]]), [3,-3]), brFront(frb([[60,38,70,46],[58,40,68,48]]), [-3,3])];
-  P["battle-rope-circles"] = [brFront(frb([[38,26,27,22],[62,26,73,22]]), [3,-3]), brFront(frb([[44,42,48,53],[56,42,52,53]]), [-3,3])];
-  P["battle-rope-in-out-waves"] = [brFront(frb([[44,38,48,48],[56,38,52,48]]), [3,-3]), brFront(frb([[38,34,27,38],[62,34,73,38]]), [-3,3])];
-  P["battle-rope-jumping-jacks"] = [brFront(CJ_AUF, [3,-3]), brFront(qScale(fr([50,20],[50,52],FRONT,[[44,34,42,48],[56,34,58,48]]), .86), [-3,3])];
 
   function pull(F, R, tausch){
     var q = br([46,28],[40,58],BR_L,tausch ? [R, F] : [F, R]);
@@ -3785,7 +3658,6 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
     var s = anker(93,64) + seil(f[0], f[1], 93, 64, 2.5, 1.5) + gLinie("M"+f[0]+" "+f[1]+"L"+r[0]+" "+r[1]) + gLinie("M"+r[0]+" "+r[1]+"L"+(r[0]-1)+" "+(r[1]+16));
     return qWith(q, { x:s });
   }
-  P["battle-rope-power-pull"] = [pull([55,41,67,47],[50,44,54,54],false), pull([55,41,67,47],[50,44,54,54],true)];
 
   /* ---------- Multipresse und Langhantel (Ergänzungen) ---------- */
   var SM_R = gLinie("M24 0V89M72 0V89");
