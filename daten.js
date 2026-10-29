@@ -3557,6 +3557,14 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
   function tpVorn(a, d){ return Q([50,54],[50,60],[50,66],[[33,76,30,87,26,89],[67,76,70,87,74,89]], a, TP_BANK+gDB(d[0],d[1])+gDB(d[2],d[3]), true); }
   /* oben: beide Arme gestreckt nach oben; unten: die Ellbogen zeigen zur Seite, die Hanteln sinken neben den Kopf (der abgewinkelte Arm ist nur von vorn zu sehen) */
   P["tate-press"] = [tpVorn([[43,40,38,20],[57,40,62,20]], [38,18,62,18]), tpVorn([[27,58,35,46],[73,58,65,46]], [35,44,65,44])];   // nur diese Ansicht: von der Seite wäre der abgewinkelte Arm irreführend
+  /* Zweite Ansichten nach der Prüfung (2026-10-29): Prone T-/Y-Raise von oben (die Form T bzw. Y ist von der Seite nicht zu sehen), Face Pull und Upright Row von vorn (Ellbogen hoch und nach außen) */
+  function tyOben(a){ return Q(null,[50,32],[50,64],[[48,79,47,94],[52,79,53,94]], a, "", true); }
+  V2["prone-t-raise"] = { typ:"top", p:[tyOben([[62,34,76,35],[38,34,24,35]]), tyOben([[61,34,73,34],[39,34,27,34]])] };
+  V2["prone-y-raise"] = { typ:"top", p:[tyOben([[60,28,68,14],[40,28,32,14]]), tyOben([[59,28,65,17],[41,28,35,17]])] };
+  V2["face-pull"] = { typ:"front", p:[fr([50,20],[50,52],FRONT,[[40,44,43,52],[60,44,57,52]], gLinie("M43 52H57")+gGriff(43,52)+gGriff(57,52)),
+                                       fr([50,20],[50,52],FRONT,[[33,28,41,21],[67,28,59,21]], gLinie("M41 21H59")+gGriff(41,21)+gGriff(59,21))] };
+  V2["upright-row"] = { typ:"front", p:[fr([50,20],[50,52],FRONT,[[41,44,41,58],[59,44,59,58]], gLinie("M34 58H66M34 54V62M66 54V62")+gGriff(41,58)+gGriff(59,58)),
+                                         fr([50,20],[50,52],FRONT,[[33,34,42,42],[67,34,58,42]], gLinie("M34 42H66M34 38V46M66 38V46")+gGriff(42,42)+gGriff(58,42))] };
   /* Kurzhantel-Bankdrücken: zweite Ansicht von vorn (Blick vom Kopfende) - Ellbogen etwa 45° zum Körper, Hanteln über der Brust bzw. an der Brust */
   V2["db-bench-press"] = { typ:"front", p:[tpVorn([[44,40,42,20],[56,40,58,20]], [42,18,58,18]), tpVorn([[33,57,44,56],[67,57,56,56]], [44,54,56,54])] };
 
