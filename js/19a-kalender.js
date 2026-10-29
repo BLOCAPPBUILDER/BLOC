@@ -10,7 +10,7 @@
 var kalAnsicht = "woche";      // "woche" | "monat"
 var kalBasis = null;           // ein Tag der angezeigten Woche bzw. des Monats
 var kalAuswahl = null;         // im Monat gewählter Tag (Einträge stehen unter dem Raster)
-var KAL_FARBE = { workout:"var(--tp-color)", plan:"var(--gym-color, var(--bl-color))", lib:"var(--tp-color)", run:"var(--run-color, #e5573f)", zufall:"var(--accent)", programm:"var(--accent)" };
+var KAL_FARBE = { workout:"var(--tp-color)", plan:"var(--gym-color, var(--bl-color))", lib:"var(--tp-color)", timer:"var(--accent)", run:"var(--run-color, #e5573f)", zufall:"var(--accent)", programm:"var(--accent)" };
 
 /* ---------- Daten ---------- */
 function kalListe(){
@@ -106,6 +106,9 @@ function kalAufloesen(e){
       o.name = tplText(lw.name); o.sub = exAnz(le, workoutDuration(libWorkoutRun(lw)));
       o.farbe = libIstWarmDehn(lw) ? "var(--ws-color)" : kalOrtFarbe(le);
     }
+  } else if(e.art === "timer"){   // Timer-Workout aus Tools › Timer
+    var tw = findWorkout(e.ref);
+    if(!tw) o.ok = false; else { o.name = tw.name || t("untitled"); o.sub = t("timerEintrag")+" · "+fmtDuration(workoutDuration(tw)); }
   } else if(e.art === "programm"){   // ganzer Trainingsplan aus der Arena
     var pg = programmFinde(e.ref);
     if(!pg) o.ok = false; else { o.name = pg.name; o.sub = pg.items.length === 1 ? t("progMeta1") : t("progMeta", { n:pg.items.length }); }
@@ -126,6 +129,7 @@ function kalStarten(e){
   if(e.art === "programm"){ var pgm = programmFinde(e.ref); if(pgm && pgm.items.length) programmOeffnen(pgm, (pgm.pos || 0) % pgm.items.length); }   // Trainingsplan: die Einträge laufen der Reihe nach (Weiter mit …)
   else if(e.art === "workout"){ coverDraft = null; go("#cover/my/"+e.ref); }
   else if(e.art === "lib"){ coverDraft = null; go("#cover/lib/"+e.ref); }
+  else if(e.art === "timer"){ if(findWorkout(e.ref)) go("#play/"+e.ref); }
   else if(e.art === "plan"){ var pl = stPlanFind(e.ref); if(pl && stPlanIds(pl).length) planAlsWorkout(pl); else go("#studioplan/"+e.ref); }
   else if(e.art === "run"){ state.db.settings.runArt = e.rad ? "rad" : "lauf"; save(); runGeplant ={ name:e.name || t(e.rad ? "kalRadName" : "kalRunName"), km:e.km || 0, rad:!!e.rad, t:Date.now() }; go("#run"); }
   else openSurprise();
@@ -441,6 +445,9 @@ function kalDauerOrt(e){
   } else if(e.art === "lib"){
     var lw = findLibWorkout(e.ref);
     if(lw){ r.sek = workoutDuration(libWorkoutRun(lw)); r.ort = libIstWarmDehn(lw) ? t("warmTitle") : ortName(lw.exercises.map(findExercise).filter(Boolean)); }
+  } else if(e.art === "timer"){
+    var tw2 = findWorkout(e.ref);
+    if(tw2) r.sek = workoutDuration(tw2);
   } else if(e.art === "plan"){
     var p = stPlanFind(e.ref);
     if(p){ var ids = stPlanIds(p); r.ort = ortName(ids.map(findExercise).filter(Boolean)); r.sub = planAnzahl(ids.length)+" · "+r.ort; }
