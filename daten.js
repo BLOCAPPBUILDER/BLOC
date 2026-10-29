@@ -3557,6 +3557,8 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
   function tpVorn(a, d){ return Q([50,54],[50,60],[50,66],[[33,76,30,87,26,89],[67,76,70,87,74,89]], a, TP_BANK+gDB(d[0],d[1])+gDB(d[2],d[3]), true); }
   /* oben: beide Arme gestreckt nach oben; unten: die Ellbogen zeigen zur Seite, die Hanteln sinken neben den Kopf (der abgewinkelte Arm ist nur von vorn zu sehen) */
   P["tate-press"] = [tpVorn([[43,40,38,20],[57,40,62,20]], [38,18,62,18]), tpVorn([[27,58,35,46],[73,58,65,46]], [35,44,65,44])];   // nur diese Ansicht: von der Seite wäre der abgewinkelte Arm irreführend
+  /* Kurzhantel-Bankdrücken: zweite Ansicht von vorn (Blick vom Kopfende) - Ellbogen etwa 45° zum Körper, Hanteln über der Brust bzw. an der Brust */
+  V2["db-bench-press"] = { typ:"front", p:[tpVorn([[44,40,42,20],[56,40,58,20]], [42,18,58,18]), tpVorn([[33,57,44,56],[67,57,56,56]], [44,54,56,54])] };
 
   /* ---------- Beine, Core, Unterarme ---------- */
   var BS_B = gBench(24,46,67);
