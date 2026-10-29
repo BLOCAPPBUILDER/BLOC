@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BLOC – Figuren-Prüfliste</title>
+<meta name="description" content="Training, Timer und GPS-Lauf in einer App: Workouts aus Übungen und Blöcken zusammenstellen. Keine Konten, kein Tracking – alle Daten bleiben auf dem Gerät.">
+<meta name="theme-color" content="#121214">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icon.png">
+<link rel="apple-touch-icon" href="./icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BLOC">
+<!-- ?v= gehört zu FASSUNG in sw.js: bei jeder neuen Fassung beide ändern -->
+<link rel="stylesheet" href="./app.css?v=2026-10-29-26">
+<link rel="stylesheet" href="./layout-new.css?v=2026-10-29-26">
+</head>
+<style>
+body{ background:#16161a; color:#eee; font:14px/1.4 system-ui,sans-serif; padding:12px; }
+h1{ font-size:20px; margin:4px 0 2px; } .sub{ color:#aaa; margin-bottom:12px; }
+.leg{ display:flex; gap:14px; flex-wrap:wrap; margin:8px 0 14px; font-size:13px; }
+.grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:10px; }
+.k{ background:#232329; border-radius:12px; padding:10px; border:2px solid transparent; }
+.k.unsicher{ border-color:#e5a400; } .k.offen{ border-color:#e5484d; }
+.k h3{ margin:0 0 2px; font-size:15px; } .k small{ color:#999; display:block; margin-bottom:6px; }
+.f{ display:flex; gap:4px; flex-wrap:wrap; } .f svg{ width:110px; height:110px; background:#2e2e35; border-radius:8px; color:#fff; }
+.f .l{ font-size:11px; color:#aaa; width:100%; margin-top:4px; }
+.grund{ margin-top:6px; font-size:12.5px; color:#f2c230; } .offen .grund{ color:#ff7a7f; }
+</style>
+</head>
+<body>
+<div id="app"></div><div id="playerRoot"></div><div id="overlayRoot"></div><nav id="tabbar" class="tabbar hidden"></nav>
+<script src="./texte.js?v=2026-10-29-26"></script>
+<script src="./daten.js?v=2026-10-29-26"></script>
+<script src="./faq.js?v=2026-10-29-26"></script>
+<script src="./js/00-native.js?v=2026-10-29-26"></script>
+<script src="./js/01-basis.js?v=2026-10-29-26"></script>
+<script src="./js/02-bibliothek.js?v=2026-10-29-26"></script>
+<script src="./js/03-router.js?v=2026-10-29-26"></script>
+<script src="./js/04-start.js?v=2026-10-29-26"></script>
+<script src="./js/05-suche.js?v=2026-10-29-26"></script>
+<script src="./js/06-timer-listen.js?v=2026-10-29-26"></script>
+<script src="./js/07-studio.js?v=2026-10-29-26"></script>
+<script src="./js/08-koerperkarte.js?v=2026-10-29-26"></script>
+<script src="./js/09-studio-karte.js?v=2026-10-29-26"></script>
+<script src="./js/10-gemeinsam.js?v=2026-10-29-26"></script>
+<script src="./js/11-bibliothek-seite.js?v=2026-10-29-26"></script>
+<script src="./js/11b-katalog.js?v=2026-10-29-26"></script>
+<script src="./js/12-uebung-statistik.js?v=2026-10-29-26"></script>
+<script src="./js/13-teilen-editor.js?v=2026-10-29-26"></script>
+<script src="./js/14-einfuehrung-sicherung.js?v=2026-10-29-26"></script>
+<script src="./js/16-lauf.js?v=2026-10-29-26"></script>
+<script src="./js/17-aufwaermen-einstellungen.js?v=2026-10-29-26"></script>
+<script src="./js/18-audio.js?v=2026-10-29-26"></script>
+<script src="./js/19-timer-motor.js?v=2026-10-29-26"></script>
+<script src="./js/19a-kalender.js?v=2026-10-29-26"></script>
+<script src="./js/20-walzen-start.js?v=2026-10-29-26"></script>
+<script src="./js/21-koerper.js?v=2026-10-29-26"></script>
+<script src="./js/22-satz-training.js?v=2026-10-29-26"></script>
+<script src="./js/23-protein.js?v=2026-10-29-26"></script>
+<script>
+/* Figuren-Prüfliste: alle Übungen mit ihren Figuren (Pose A und B, zweite Ansicht); gelb = unsicher, rot = bekannt unzureichend (noch offen) */
+var UNSICHER = {
+  "tate-press":"Nur Ansicht von vorn, nach deiner Skizze gezeichnet (Blick von den Füßen, Bank von vorn).",
+  "db-bench-press":"Zweite Ansicht von vorn: Arme und Bank mit Tate-Press-Zeichnung abgeleitet.",
+  "prone-t-raise":"Zweite Ansicht von oben: wirkt eher wie ein Stehender von vorn; die Anhebung ist nur seitlich zu sehen.",
+  "prone-y-raise":"Zweite Ansicht von oben: wie T-Raise, Form Y erkennbar, Bauchlage unklar.",
+  "face-pull":"Zweite Ansicht von vorn: Anfangspose (Arme vorn) wenig eindeutig.",
+  "upright-row":"Zweite Ansicht von vorn: Stange schlecht erkennbar.",
+  "pallof-press":"Zweite Ansicht von vorn: Kabel von der Seite, Widerstand gegen die Drehung kaum zu sehen.",
+  "cable-woodchop":"Neu gezeichnet mit Rolle, Zugseil und Knoten; Seilknoten klein.",
+  "cable-crunch":"Seil ergänzt; zweite Pose (Kopf am Boden-nah) wirkt gedrungen.",
+  "rotary-torso":"Neu gezeichnet: die Drehung ist nur eine leichte Neigung, kein echtes Drehen.",
+  "bear-plank-rockback-push-up":"Neu: Rockback und Liegestütz-unten wirken gedrungen.",
+  "plank-toe-touch":"Neu: Hand zum Fuß schwer als Berührung erkennbar.",
+  "around-world-pullover":"Zweite Ansicht von oben ist eine Kopie vom Pullover, nicht eigens gezeichnet.",
+  "hammer-curl":"Zweite Ansicht von vorn ist die vom normalen Curl: der Neutralgriff ist nicht zu sehen.",
+  "cross-body-hammer-curl":"Wie Hammer Curl: Neutralgriff und Diagonale nicht zu sehen."
+};
+var OFFEN = {
+  "swimmers":"Seitenansicht zeigt die wechselnde Arm-/Bein-Bewegung nicht eindeutig; Ansicht von oben nicht überzeugend, daher noch nicht gezeichnet.",
+  "plank-shoulder-taps":"Seitenansicht zeigt die Hüftstabilität nicht; zweite Ansicht fehlt.",
+  "side-jackknives":"Seitliche Rumpfbeuge fehlt in der Seitenansicht; zweite Ansicht fehlt.",
+  "copenhagen-plank":"Seitstütz mit Obenbein schlecht lesbar; zweite Ansicht fehlt.",
+  "bicycle-crunches":"Ellbogen zum Gegenknie nicht sichtbar; zweite Ansicht fehlt.",
+  "band-clamshell":"Öffnen des Knies von der Seite fast unsichtbar; zweite Ansicht fehlt.",
+  "wide-grip-cable-row":"Weite Griffbreite nicht sichtbar; zweite Ansicht fehlt."
+};
+window.addEventListener("load", function(){ setTimeout(function(){
+  ["app","playerRoot","overlayRoot","tabbar"].forEach(function(i){ var e=document.getElementById(i); if(e) e.remove(); }); document.body.className = ""; document.body.style.cssText = "background:#16161a;color:#eee;padding:12px;min-height:0";
+  var bg=document.querySelector(".glas-bg"); if(bg) bg.remove();
+  function svg(p, i, top){ if(!p || !p[i]) return ""; return '<svg class="illu still" viewBox="0 0 100 100">'+(top?ILLU_MATTE:'<path class="illu-floor" d="M6 91h88"/>')+'<g class="pose-a">'+illuIds(p[i])+'</g></svg>'; }
+  var ex = EXERCISES.filter(function(e){ return e.main !== "stretch" && ILLU[e.id]; });
+  function rang(e){ return OFFEN[e.id] ? 0 : UNSICHER[e.id] ? 1 : 2; }
+  ex.sort(function(a,b){ return rang(a)-rang(b) || tplText(a.name).localeCompare(tplText(b.name), "de"); });
+  var n1=0,n0=0; ex.forEach(function(e){ if(UNSICHER[e.id]) n1++; if(OFFEN[e.id]) n0++; });
+  var h='<h1>Figuren-Prüfliste</h1><div class="sub">'+ex.length+' Übungen mit Figur · Fassung '+(window.NATIV_FASSUNG||"")+'</div>'+
+    '<div class="leg"><span style="color:#ff7a7f">■ rot: bekannt unzureichend, noch offen ('+n0+')</span><span style="color:#f2c230">■ gelb: unsicher, bitte prüfen ('+n1+')</span><span>■ ohne Rahmen: nicht beanstandet</span></div><div class="grid">';
+  ex.forEach(function(e){
+    var cls = OFFEN[e.id] ? "offen" : UNSICHER[e.id] ? "unsicher" : "", v2 = ILLU2[e.id], top = v2 && ILLU_VIEW2[e.id] && ILLU_VIEW2[e.id].typ==="top";
+    h+='<div class="k '+cls+'"><h3>'+tplText(e.name)+'</h3><small>'+e.id+'</small><div class="f">'+svg(ILLU[e.id],0)+svg(ILLU[e.id],1)+
+      (v2 ? svg(v2,0,top)+svg(v2,1,top)+'<div class="l">links Hauptansicht (A, B), rechts zweite Ansicht ('+(ILLU_VIEW2[e.id].typ)+')</div>' : '')+'</div>'+
+      (cls ? '<div class="grund">'+(OFFEN[e.id]||UNSICHER[e.id])+'</div>' : '')+'</div>';
+  });
+  document.body.insertAdjacentHTML("beforeend", h+'</div>');
+}, 600); });
+</script>
+</body>
+</html>
