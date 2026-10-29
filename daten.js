@@ -3565,6 +3565,23 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
                                        fr([50,20],[50,52],FRONT,[[33,28,41,21],[67,28,59,21]], gLinie("M41 21H59")+gGriff(41,21)+gGriff(59,21))] };
   V2["upright-row"] = { typ:"front", p:[fr([50,20],[50,52],FRONT,[[41,44,41,58],[59,44,59,58]], gLinie("M34 58H66M34 54V62M66 54V62")+gGriff(41,58)+gGriff(59,58)),
                                          fr([50,20],[50,52],FRONT,[[33,34,42,42],[67,34,58,42]], gLinie("M34 42H66M34 38V46M66 38V46")+gGriff(42,42)+gGriff(58,42))] };
+  /* Weitere Figuren nach der Prüfung (2026-10-29): Seil am Kabelzug mit Rolle, Zugseil und zwei Knoten; Ansichten von vorn bzw. oben, wo die Seite die Bewegung nicht zeigt */
+  function kabelSeil(px, py, hx, hy){ return gRolle(px, py)+gLinie("M"+px+" "+py+"L"+hx+" "+hy)+knoten(hx-3, hy-2)+knoten(hx+3, hy+2); }   // Rolle (px,py) -> Hand (hx,hy), Knoten am Griff
+  P["cable-woodchop"] = [fr([50,22],[50,52],FRONT,[[38,32,31,18],[40,34,33,20]], gLinie("M12 0V89")+kabelSeil(14,4,32,17)),
+                         fr([50,22],[50,52],FRONT,[[52,46,61,58],[54,44,63,56]], gLinie("M12 0V89")+kabelSeil(14,4,62,57))];
+  /* Rotary Torso: aufrecht sitzen, beide Hände am Polster vor der Brust (keine gekreuzten Arme), der Oberkörper dreht sich aus dem Rumpf */
+  var RT_STUETZE = gLinie("M36 62H64M50 62V89");
+  P["rotary-torso"] = [Q(null,[50,30],[50,60],[[43,64,40,82,36,86],[57,64,60,82,64,86]],[[44,42,50,46],[56,42,50,46]], RT_STUETZE+gQuer(50,46,6), true),
+                       Q(null,[43,31],[50,60],[[43,64,40,82,36,86],[57,64,60,82,64,86]],[[38,42,44,46],[50,42,44,46]], RT_STUETZE+gQuer(44,46,6), true)];
+  /* Pallof Press von vorn: das Kabel zieht von der Seite, die Hände drücken vor der Brust gerade nach vorn und halten gegen die Drehung */
+  var PL_K = gLinie("M10 0V89")+gRolle(14,40);
+  V2["pallof-press"] = { typ:"front", p:[fr([50,20],[50,52],FRONT,[[41,40,47,38],[59,40,53,38]], PL_K+gLinie("M14 40L50 38")+gGriff(50,38)), fr([50,20],[50,52],FRONT,[[48,36,50,34],[52,36,50,34]], PL_K+gLinie("M14 40L50 34")+gGriff(50,34))] };
+  /* Cable Crunch: Zugseil von der oberen Rolle zu den Händen am Kopf */
+  P["cable-crunch"] = [Q(null,[52,34],[49,62],[[50,87,30,88,24,89]],[[62,40,56,30]], gLinie("M90 0V89")+kabelSeil(86,6,56,30)),
+                       Q(null,[64,70],[48,62],[[50,87,30,88,24,89]],[[64,56,58,66]], gLinie("M90 0V89")+kabelSeil(86,6,58,66))];
+  V2["around-world-pullover"] = V2["pullover"];
+  V2["hammer-curl"] = V2["db-curl"];
+  V2["cross-body-hammer-curl"] = V2["db-curl"];
   /* Kurzhantel-Bankdrücken: zweite Ansicht von vorn (Blick vom Kopfende) - Ellbogen etwa 45° zum Körper, Hanteln über der Brust bzw. an der Brust */
   V2["db-bench-press"] = { typ:"front", p:[tpVorn([[44,40,42,20],[56,40,58,20]], [42,18,58,18]), tpVorn([[33,57,44,56],[67,57,56,56]], [44,54,56,54])] };
 
