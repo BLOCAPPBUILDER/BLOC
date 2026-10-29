@@ -614,12 +614,12 @@ function bindFavItems(refresh){
 
 
 /* Satz eintragen aus dem Timer: kleines Fenster mit Gewicht und Wiederholungen (vorausgefüllt), schreibt in dasselbe Protokoll wie die Übungs-Karte */
-function studioSatzLog(id, kg, w){
+function studioSatzLog(id, kg, w, zeit){   // zeit: w sind Sekunden (Satz mit Zeit statt Wiederholungen)
   var alle = studioAlle(), en = alle[id] || (alle[id] = { log:[] }), jetzt = Date.now();
   if(!en.log) en.log = [];
   var l = en.log.length && studioTag(en.log[en.log.length-1].at) === studioTag(jetzt) ? en.log[en.log.length-1] : null;
   if(!l){ l = { at:jetzt, s:[] }; en.log.push(l); if(en.log.length > 200) en.log = en.log.slice(-200); }
-  l.s.push([kg, w]);
+  l.s.push(zeit ? [kg, w, "n", 0, 1] : [kg, w]);
   en.kg = kg; en.zuletzt = jetzt;
   studioVerlauf(id, jetzt);
   trainingNachSatz(id);

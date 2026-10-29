@@ -322,8 +322,8 @@ function renderDraftPage(d, cfg){
       bauTrainHTML()+
       (cfg.cover ? '' : bauArtHTML("timer", false))+
       tippZeileHTML("info", "tippInfo")+hw.z(0, "page-hint")+
-      suchFeldHTML(buildQuery, "b")+
       airFilterHTML("b", !!s.buildFilterOpen, cat, equip, sort, [["std", t("sortStd")], ["az", "A&ndash;Z"]], palListe.length, true, zonen)+
+      suchFeldHTML(buildQuery, "b", "", true)+
       '<div id="dz-pal">'+(bereichHTML || '<div class="empty" style="padding:20px;">'+t("libEmpty")+'</div>')+'</div>'+
       '<div class="empty" data-noresult style="display:none;padding:20px;">'+t("noResult")+'</div>';
   }
@@ -868,11 +868,6 @@ function openSurprise(twId, modusStart){
         '<div class="tm-hint">'+esc(t("spRules"))+'</div>'+
       '</div>' : '');
   }
-  /* Steht der Baukasten (Art in Schritt 1) direkt hinter dem Fenster, zeigt das Fenster die Art nur als Zeile */
-  var seiteDahinter = !tw && parseHash()[0] === "katalog" && katTab() === "baukasten" && !stPlanAktiv;
-  function wahlZeile(){
-    return '<div class="bau-zusammen sp-wahl"><b>'+esc(t(bauModus() === "timer" ? "bauArtZeit" : "bauArtSaetze"))+'</b></div>';
-  }
   function draw(){
     // Neu zeichnen ohne Springen: die Scrollposition im Fenster bleibt erhalten
     var alt = root.querySelector(".sp-sheet"), scrollAlt = alt ? alt.scrollTop : 0;
@@ -881,7 +876,6 @@ function openSurprise(twId, modusStart){
       '<h3>'+svgIcon(ICON_UEBERRASCH, "ico sp-h-ico")+' '+esc(t(tw ? "surprise" : "bauFensterTitel"))+'</h3>'+
       (tw ? '' : '<div class="seg-row sp-art sp-wege" role="group">'+wege.map(function(m){
         return '<button type="button" data-spmodus="'+m[0]+'" class="'+(modus === m[0] ? 'active' : '')+'" aria-pressed="'+(modus === m[0])+'">'+esc(t(m[1]))+'</button>'; }).join("")+'</div>')+
-      (seiteDahinter ? wahlZeile() : '')+
       (modus === "gewicht" ? trainAusrHTML()+filterSchrittHTML(3, t("trSchritt3"))+genReglerHTML(g) : zufallHTML())+
       '<div class="btn-row sp-foot"><button class="btn btn-secondary" data-cancel>'+t("cancel")+'</button>'+
       '<button class="btn btn-primary" data-spgo>'+esc(t(modus === "gewicht" ? "genMake" : "spGo"))+'</button></div>'+

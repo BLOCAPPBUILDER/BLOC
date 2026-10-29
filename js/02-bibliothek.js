@@ -392,8 +392,8 @@ function lupeHTML(pre, q){
   return '<button type="button" class="iconbtn lib-lupe'+(q ? ' an' : '')+'" data-lupe="'+pre+'" title="'+esc(t("search"))+'" aria-label="'+esc(t("search"))+'">'+
     svgIcon('<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5l5 5"/>')+'</button>';
 }
-function suchFeldHTML(q, pre, ph){
-  return '<div class="lib-suche'+(q ? ' offen' : '')+'" data-lsw="'+pre+'">'+searchHTML(q, pre, ph)+'</div>';
+function suchFeldHTML(q, pre, ph, immer){   // immer: Suchfeld steht dauerhaft da (unter dem Filter), nicht erst nach der Lupe
+  return '<div class="lib-suche'+(q || immer ? ' offen' : '')+'" data-lsw="'+pre+'">'+searchHTML(q, pre, ph)+'</div>';
 }
 /* Suche tolerant: Groß/klein, Bindestriche, Leerzeichen und Umlaute egal („pull ups“ = „Pull-ups“ = „pullups“,
    „liegestutz“ = „Liegestütz“), jedes Wort für sich (Reihenfolge egal), Mehrzahl-s egal („pullups“ findet „Pull-Up“) */
