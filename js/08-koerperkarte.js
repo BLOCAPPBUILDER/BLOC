@@ -187,6 +187,8 @@ function kkZonenVon(text, gew, unb, schulter){
   return res;
 }
 var KK_GRUPPE_ZONEN = { brust:["brust_o", "brust"], ruecken:["trapez_o", "rauten", "lat", "ruecken_u"], schulter:["schulter_v", "schulter_s"], arme:["bizeps", "trizeps", "unterarm"], rumpf:["bauch", "schraeg"], beine:["quad", "hamstring", "gesaess", "waden"] };
+/* „Core“ im Muskel-Filter ist der Oberbegriff für „Bauch & Rumpf“ und „Beine & Po“ (der Übergang ist fließend); beide bleiben einzeln wählbar */
+KK_GRUPPE_ZONEN.core = KK_GRUPPE_ZONEN.rumpf.concat(KK_GRUPPE_ZONEN.beine);
 /* Haupt- und Hilfszonen (fein) einer Übung; ohne Muskeltext entscheidet die grobe Gruppe (Kategorie) */
 function kkFein(ex){
   var m = EX_MUSCLES[ex.id], haupt = {}, hilfe = {}, sch = KK_AUSNAHME[ex.id];
@@ -363,10 +365,11 @@ function kkMuskelHTML(attrZone, attrGrp, sel, opt){
   var w = {};
   sel.forEach(function(z){ w[z] = 1; });
   var chips = MUSKEL_GRP.map(function(g){
-    return filterChip(attrGrp, g.id, kkGrpAn(sel, g.id), svgIcon(STUDIO_GRUPPEN_ICON[g.id] || CAT_ICON.weight), t(g.key));
+    return (g.id === "rumpf" ? filterChip(attrGrp, "core", kkGrpAn(sel, "core"), svgIcon(CAT_ICON.core), t("mgCore")) : "")+
+      filterChip(attrGrp, g.id, kkGrpAn(sel, g.id), svgIcon(STUDIO_GRUPPEN_ICON[g.id] || CAT_ICON.weight), t(g.key));
   }).join("")+(opt.extra || "");
   var auf = !!state.db.settings.kkListeAuf;
-  return '<div class="af-lbl kk-lblzeile"><span>'+esc(t("kkMuskel"))+'</span>'+kkModusHTML()+'</div>'+
+  return '<div class="af-lbl kk-lblzeile'+(opt.ohneLabel ? ' kk-nur-schalter' : '')+'">'+(opt.ohneLabel ? '' : '<span>'+esc(t("kkMuskel"))+'</span>')+kkModusHTML()+'</div>'+
     '<div class="fc-chips kk-grp-chips">'+chips+'</div>'+
     '<div class="kk-filter'+(opt.glow ? ' kk-glow' : '')+'">'+koerperPaar(w, { sel:sel, attr:attrZone })+'</div>'+
     '<div class="kk-hinweis'+(sel.length ? ' an' : '')+'">'+esc(sel.length ? sel.map(kkName).join(", ") : t("kkTippen"))+'</div>'+

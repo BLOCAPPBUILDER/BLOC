@@ -3164,6 +3164,24 @@ G("ab-wheel-rollout", "Bauchroller (Ab Wheel)", "Ab Wheel Rollout", "core", 3, 2
   "Pelvis slightly tucked, abs firm.|Only as far as your back stays straight.", "Sagging into a hollow back or rolling out too far. Start with a short distance (halfway); skip it with back pain.",
   "bauch", null, "ab roller rollout bauchrad");
 
+/* ---------- Körpergewicht-Ergänzung (2026-10-29): Texte in eigenen Worten ---------- */
+G("bear-plank-rockback-push-up", "Bear Plank Rockback Push-up", "Bear Plank Rockback Push-up", "arms", 3, 30, 0,
+  "Aus dem Bärenstütz mit der Hüfte weit nach hinten, vorschieben, Liegestütz", "From the bear plank rock your hips far back, shift forward, push-up", 60, 3, 3, "none",
+  ["Brust", "Trizeps, vordere Schulter, Rumpf, Oberschenkel vorn", "Chest", "Triceps, front delts, core, quads"],
+  "Im Bärenstütz auf Händen und Füßen, die Knie schweben knapp über dem Boden. Weit mit der Hüfte nach hinten schaukeln (Rockback), die Arme bleiben lang.|Das Körpergewicht nach vorn über die Hände verlagern.|Den Körper absenken und wieder hochdrücken (Push-up), danach zurück in den Rockback.",
+  "From the bear plank on hands and toes with your knees hovering just above the floor, rock your hips far back (rockback) with long arms.|Shift your body weight forward over your hands.|Lower your body and press back up (push-up), then rock back again.",
+  "Knie bleiben knapp über dem Boden, Rücken lang, Nacken in Verlängerung.|Hände schulterbreit, Handgelenke gerade.", "Mit rundem Rücken nach hinten fallen lassen, die Hüfte weiter zurückschieben, als die Arme lang bleiben, oder die Knie absetzen. Erst Bärenstütz halten und normale Liegestütze beherrschen; bei Handgelenk- oder Schulterschmerz weglassen (oder auf den Fäusten arbeiten).",
+  "Knees stay just above the floor, back long, neck in line.|Hands shoulder-width, wrists straight.", "Dropping back with a rounded back, pushing the hips back further than your arms stay long, or resting the knees. Master the bear hold and regular push-ups first; skip it with wrist or shoulder pain (or work on your fists).",
+  "brust", null, "bär bärenstütz rockback liegestütz bear plank");
+G("plank-toe-touch", "Plank Toe Touch", "Plank Toe Touch", "core", 3, 30, 0,
+  "Hoher Stütz, die Hüfte hoch, die Hand tippt den Fuß der Gegenseite an", "High plank, hips up, the hand taps the opposite foot", 45, 2, 2, "none",
+  ["Tiefe Bauchmuskeln, Schultern", "Schräge Bauchmuskeln, Gesäß, Oberschenkel hinten", "Deep core, shoulders", "Obliques, glutes, hamstrings"],
+  "Im hohen Stütz mit den Händen unter den Schultern, Körper in einer Linie.|Die Hüfte nach oben und hinten Richtung Pike schieben und die rechte Hand zum linken Fuß führen.|Zurück in den Stütz, dann linke Hand zum rechten Fuß; abwechselnd wiederholen.",
+  "In a high plank with your hands under your shoulders, body in one line.|Push your hips up and back towards a pike and bring your right hand to your left foot.|Return to the plank, then left hand to right foot; alternate.",
+  "Das Becken schwankt wenig, Bauch und Gesäß fest.|Handgelenke gerade, Schultern aktiv wegdrücken, Beine möglichst gestreckt.", "Die Hüfte absinken lassen oder hektisch tippen. Das Standbein nicht einknicken lassen.",
+  "Pelvis stays steady, abs and glutes tight.|Wrists straight, push the floor away actively, legs as straight as possible.", "Letting the hips sag or tapping in a rush. Do not let the support leg buckle.",
+  "bauch", null, "plank toe touch pike zehen antippen stütz");
+
 /* ---------- Unterarme & Griffkraft ---------- */
 G("wrist-curl", "Handgelenkcurl", "Wrist Curl", "weight arms", 3, 40, 0,
   "Unterarme aufgelegt, die Hantel nur mit dem Handgelenk nach oben rollen", "Forearms supported, curl the weight up using only your wrists", 45, 1, 1, "gym db",
@@ -3468,6 +3486,8 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
     for(var i = 0; i < STUDIO_GRUPPEN.length; i++) if(STUDIO_GRUPPEN[i].id === x.gr){ STUDIO_GRUPPEN[i].ids += (STUDIO_GRUPPEN[i].ids ? " " : "") + x.id; return; }
   });
   STUDIO_GRUPPEN.forEach(function(g){ if(g.id === "cardio") g.ids = g.ids.trim(); });
+  /* Zuordnung nach der Prüfung (2026-10-29): Klimmzug an parallelen Griffen, Ringe und Kraftstation ohne Zusatzgewicht gehören zum Calisthenic-Park */
+  EX_EQUIP["neutral-grip-pull-up"] = "bar"; EX_EQUIP["ring-push-up"] = "bar"; EX_EQUIP["captains-chair"] = "dip";
   ["battle-rope-alternating-waves","battle-rope-double-waves","battle-rope-slams","battle-rope-side-to-side","battle-rope-jumping-jacks","battle-rope-circles","battle-rope-snakes","battle-rope-squat-waves","battle-rope-in-out-waves","battle-rope-power-pull","plate-pinch-hold","wrist-roller"].forEach(function(id){ STUDIO_ZIEL[id] = [4, 30, 0]; });
 })();
 
@@ -3509,6 +3529,11 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
   var BANK_HOCH = gBench(62,90,72);
   P["incline-push-up"] = [Q(null,[74,42],[51,61],[[35,75,21,87,15,89]],[[72,58,73,71]], BANK_HOCH),
                           Q(null,[73,50],[48,66],[[33,78,20,87,14,89]],[[63,63,73,71]], BANK_HOCH)];
+  /* Bear Plank Rockback Push-up: Rockback (Hüfte weit nach hinten, Arme lang) und unten im Liegestütz mit schwebenden Knien */
+  P["bear-plank-rockback-push-up"] = [Q(null,[66,70],[22,78],[[34,87,22,88,18,89]],[[70,80,74,89]]),
+                                      Q(null,[70,80],[46,76],[[46,86,30,88,26,89]],[[60,76,68,89]])];
+  /* Plank Toe Touch: hoher Stütz, dann Hüfte hoch (Pike) und eine Hand zum Fuß der Gegenseite */
+  P["plank-toe-touch"] = [P_PH, Q(null,[60,60],[40,40],[[34,64,28,87,25,89]],[[63,76,66,89],[50,62,40,78]])];
   var DEF_X = gLinie("M62 89V81H78V89");
   P["deficit-push-up"] = [Q(null,[71,56],[44,70],[[28,78,12,86,9,89]],[[68,69,70,81]], DEF_X),
                           Q(null,[72,84],[44,83],[[28,86,12,88,9,89]],[[60,77,70,81]], DEF_X)];
@@ -3640,9 +3665,12 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
                                    qWith(stLiegen([27,55,19,61], gDB(19,59)), { a:[[27,55,19,61],[24,58,28,50]] })];
   P["supinated-triceps-extension"] = [Q(null,[50,20],[50,50],STAND,[[52,32,62,31]], PD_T+gQuer(62,31,4)), Q(null,[50,20],[50,50],STAND,[[52,32,54,44]], PD_T+gQuer(54,44,4))];
   P["ez-jm-press"] = [stLiegen([29,56,30,44], gScheibe(30,42,3)), stLiegen([38,60,28,57], gScheibe(28,56,3))];
-  P["tate-press"] = [stLiegen([27,55,28,43], gDB(28,41)), stLiegen([27,55,30,66], gDB(30,64))];
-  V2["tate-press"] = { typ:"top", p:[qWith(V_ARCH,{ a:[[54,38,52,42],[46,38,48,42]], x:V_BANK+gDB(52,42)+gDB(48,42) }),
-                                     qWith(V_ARCH,{ a:[[62,38,54,45],[38,38,46,45]], x:V_BANK+gDB(54,45)+gDB(46,45) })] };
+  /* Seitenansicht: die Ellbogen zeigen zur Seite, der Oberarm ist von der Seite kaum zu sehen - gezeigt wird nur der Unterarm mit der Hantel; den abgewinkelten Arm zeigt die Ansicht von vorn */
+  P["tate-press"] = [stLiegen([28,57,28,43], gDB(28,41)), stLiegen([28,62,30,67], gDB(30,65))];
+  /* Tate Press von vorn (Blick vom Kopfende): Ellbogen zeigen nach oben und außen, die Hanteln gehen von der Brust nach oben über die Ellbogen */
+  var TP_BANK = gLinie("M32 84H68");   // Bankpolster unter dem Kopf
+  function tpVorn(a, d){ return Q([50,76],[50,67],[50,61],[], a, TP_BANK+gDB(d[0],d[1])+gDB(d[2],d[3]), true); }   // Blick vom Kopfende: Kopf vorn, der Körper läuft nach hinten weg
+  V2["tate-press"] = { typ:"front", p:[tpVorn([[33,48,40,31],[67,48,60,31]], [40,29,60,29]), tpVorn([[31,52,44,60],[69,52,56,60]], [44,62,56,62])] };
 
   /* ---------- Beine, Core, Unterarme ---------- */
   var BS_B = gBench(24,46,67);

@@ -19,6 +19,7 @@
   --wo-text:var(--accent-text);
   --bl-color:#7a4fd6;
   --bl-text:#ffffff;
+  --train-gelb:#d9a400;   /* Körpergewicht: Gelb (Trainingsart) */
   --gym-color:#c9201a;   /* Fitnessstudio: tiefes Rot, von der Akzent-Koralle gut zu unterscheiden */
   --gym-text:#ffffff;
   --tp-color:#3867e8;
@@ -57,6 +58,7 @@
   --danger:#ff5c60;
   --bl-color:#a98bff;
   --bl-text:#170b33;
+  --train-gelb:#f2c230;
   --gym-color:#ff4f45;   /* Fitnessstudio im Dunkeln: helleres Rot für Kontrast */
   --gym-text:#ffffff;
   --tp-color:#6f92ff;
@@ -1103,7 +1105,7 @@ input[type="range"]{ width:100%; height:32px; accent-color:var(--accent); cursor
 .af-lbl{ font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); margin:14px 0 8px; }
 .af-lbl span{ font-weight:400; letter-spacing:0; text-transform:none; font-size:12.5px; margin-left:4px; }
 .af-fuss{ margin-top:18px; }
-.af-fuss .btn{ padding:14px 10px; font-size:15px; white-space:nowrap; }
+.af-fuss .btn{ padding:14px 8px; font-size:14.5px; white-space:normal; line-height:1.2; }
 .af-fuss .af-reset{ width:auto; flex:0 0 auto; padding:14px 14px; gap:6px; }
 .af-fuss .af-reset .ico{ width:17px; height:17px; }
 .af-fuss .af-reset:disabled{ opacity:.45; cursor:default; }
@@ -2240,3 +2242,22 @@ details[open] > summary > .pg-pfeil{ transform:rotate(180deg); }
 .ex-symbol.mini{ width:34px; height:34px; margin:0 auto 4px; }
 .fig-bild .st-ohne svg{ width:46px; height:46px; }
 .fig-karte .st-ohne{ color:var(--cat, var(--text)); opacity:.9; }
+
+/* Trainingsart im Filter und im Überrasch-mich-Fenster: drei Fotokarten nebeneinander; rot = Fitnessstudio, blau = Calisthenic-Park, gelb = Körpergewicht */
+.ort-fotos.drei{ grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px; }
+.ort-fotos.drei .ort-foto{ min-height:92px; border-radius:14px; }
+.ort-fotos.drei .of-t{ left:8px; right:6px; bottom:7px; }
+.ort-fotos.drei .of-t b{ font-size:10.5px; line-height:1.15; letter-spacing:-.01em; overflow-wrap:break-word; }
+.ort-fotos.drei .of-t small{ font-size:10.5px; }
+.ort-fotos.drei .of-haken{ top:5px; right:5px; width:20px; height:20px; }
+.ort-fotos.drei .of-haken svg{ width:12px; height:12px; }
+.ort-foto[data-sttrain="studio"], .ort-foto[data-sptrain="studio"]{ --of:var(--gym-color); }
+.ort-foto[data-sttrain="cali"], .ort-foto[data-sptrain="cali"], .ort-foto[data-bauort="cali"]{ --of:var(--tp-color); }
+.ort-foto[data-sttrain="body"], .ort-foto[data-sptrain="body"], .ort-foto[data-bauort="body"]{ --of:var(--train-gelb); }
+.ort-foto[data-sttrain="body"] .of-haken, .ort-foto[data-sptrain="body"] .of-haken, .ort-foto[data-bauort="body"] .of-haken{ color:#241c00; }
+.af-schritt{ margin:16px 0 8px; }
+.af-body > .af-schritt:first-child{ margin-top:14px; }
+.af-ausr{ margin-bottom:2px; }
+.kk-lblzeile.kk-nur-schalter{ justify-content:flex-end; margin:0 0 4px; }
+/* lange Wörter in Kachelnamen (z. B. „Konzentrationscurl“) laufen nicht über den Rand */
+.fig-name, .wb-mini-name{ overflow-wrap:break-word; hyphens:auto; }

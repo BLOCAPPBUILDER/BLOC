@@ -622,7 +622,7 @@
 .rk-kulisse .rk-neben{ stroke-width:1.2; }
 .rk-baum circle{ fill:rgba(255,255,255,.07); stroke:rgba(255,255,255,.3); stroke-width:1.2; }
 .rk-baum path{ stroke:rgba(255,255,255,.3); stroke-width:1.4; fill:none; stroke-linecap:round; }
-.rk-glow{ fill:none; stroke:#fff; stroke-width:9; stroke-linecap:round; stroke-linejoin:round; opacity:.55; }
+.rk-glow{ fill:none; stroke:#fff; stroke-width:7; stroke-linecap:round; stroke-linejoin:round; opacity:.3; }
 .rk-weg{ fill:none; stroke:#fff; stroke-width:3.4; stroke-linecap:round; stroke-linejoin:round; }
 .rk-start{ fill:rgba(255,255,255,.35); stroke:#fff; stroke-width:1.4; }
 .rk-pos{ fill:#fff; stroke:var(--accent); stroke-width:3; }
@@ -1138,7 +1138,8 @@ body:has(.kal-nav) #app{ touch-action:pan-y; }   /* waagerechte Wischer gehören
 /* Übungen: Figuren weiß ohne farbigen Schimmer, Umrandung nach Ort (Fitnessstudio rot, Freiluft blau, Mobility grün) */
 :root[data-layout="new"][data-glas] .fig-bild, :root[data-layout="new"][data-glas] .wb-kachel.gewaehlt .fig-bild{ --geraet:#fff; color:#fff; background:none; }
 :root[data-layout="new"][data-glas] .wb-kachel[style*="--gym-color"], :root[data-layout="new"][data-glas] .wb-mini[style*="--gym-color"]{ border:2px solid #e5484d; }
-:root[data-layout="new"][data-glas] .wb-kachel:not([style*="--gym-color"]), :root[data-layout="new"][data-glas] .wb-mini:not([style*="--gym-color"]){ border:2px solid #6a86f5; }
+:root[data-layout="new"][data-glas] .wb-kachel:not([style*="--gym-color"]):not([style*="--train-gelb"]), :root[data-layout="new"][data-glas] .wb-mini:not([style*="--gym-color"]):not([style*="--train-gelb"]){ border:2px solid #6a86f5; }
+:root[data-layout="new"][data-glas] .wb-kachel[style*="--train-gelb"], :root[data-layout="new"][data-glas] .wb-mini[style*="--train-gelb"]{ border:2px solid var(--train-gelb); }   /* Körpergewicht gelb */
 :root[data-layout="new"][data-glas] .wb-kachel[style*="--c-stretch"], :root[data-layout="new"][data-glas] .wb-mini[style*="--c-stretch"]{ border:2px solid var(--c-stretch); }
 :root[data-layout="new"][data-glas] .wb-mini-illu, :root[data-layout="new"][data-glas] .wb-mini-illu *{ color:#fff; }
 :root[data-layout="new"] .dd-chips{ margin:0 0 10px; }

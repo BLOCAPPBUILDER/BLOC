@@ -1,5 +1,8 @@
 {
   "appId": "io.github.blocappbuilder.bloc",
   "appName": "BLOC",
-  "webDir": "www"
+  "webDir": "www",
+  "android": {
+    "useLegacyBridge": true
+  }
 }

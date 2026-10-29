@@ -343,8 +343,8 @@ function render(){
     stPlanAktiv = null; stPlanBauen = false;   // ein zuletzt geöffneter Plan gilt nicht weiter (Satz-/Timer-Wahl und Training speichern folgen sonst einem alten Plan)
     var sz = state.db.settings; delete sz.libFilterOpen; delete sz.stFilterOpen; delete sz.wsFilterOpen; delete sz.buildFilterOpen; delete sz.stTimerAuf;
     /* Gewählte Filter (Gruppe, Ausrüstung, Körperkarte; Mobility & Stretch; Übungsauswahl) werden nicht aufbewahrt: jeder neue Besuch beginnt ohne Filter.
-       Ort, Sortierung A–Z und die Art des Bauens bleiben als Einstellungen stehen. */
-    ["stGruppen", "stArten", "stGeraete", "stZonen", "wsRegionen", "wsZonen", "buildCats", "buildCat", "buildEquips", "buildZonen"].forEach(function(k){ delete sz[k]; });
+       Sortierung A–Z und die Art des Bauens bleiben als Einstellungen stehen. */
+    ["stGruppen", "stArten", "stGeraete", "stTrain", "stAusr", "stZonen", "wsRegionen", "wsZonen", "buildCats", "buildCat", "buildEquips", "buildZonen"].forEach(function(k){ delete sz[k]; });
     hinweisBesucht = {};   // Erklärtexte: der nächste Besuch einer Seite zählt wieder
     katOffen = {};         // Katalog: beim nächsten Besuch stehen wieder nur die Überschriften
   }

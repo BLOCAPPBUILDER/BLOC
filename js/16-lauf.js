@@ -75,12 +75,13 @@ function runWachen(an){
   if(!("wakeLock" in navigator)) return;
   navigator.wakeLock.request("screen").then(function(wl){ runWake = wl; }).catch(function(){});
 }
-document.addEventListener("visibilitychange", function(){ if(document.visibilityState === "visible" && run && !run.pauseAb) runWachen(true); });
+document.addEventListener("visibilitychange", function(){ if(document.visibilityState === "visible" && run){ if(!run.pauseAb) runWachen(true); runAnzeige(); } });   // nach dem Entsperren sofort nachziehen (Zeit, Strecke, Karte)
 
 /* Ein GPS-Punkt: filtert Ungenaues, Stillstand-Rauschen und Sprünge, zählt Strecke und Kilometer-Zwischenzeiten */
 function runPunkt(lat, lon, acc, ts, speed){
   var r = run;
   if(!r) return;
+  r.fixAm = Date.now();   // letzter Standort: Auto-Pause braucht frische Punkte (siehe runAutoPruefen)
   if(r.pauseAb){
     if(r.auto){ r.gps = acc; r.fehler = 0; runAutoWeiter(lat, lon, acc, speed); }
     return;
@@ -117,6 +118,7 @@ function runAutoPruefen(){
   var r = run, sek = runAutoSek();
   if(!r || !sek || r.pauseAb || !r.letzte || r.fehler) return;
   if(Date.now() - r.lastMove < sek*1000) return;
+  if(Date.now() - (r.fixAm || 0) > 3000) return;   // kaum Standorte (Bildschirm dunkel, Sparmodus, schwaches Signal) heißt nicht „steht still“: dann nicht pausieren
   r.pauseAb = r.lastMove; r.auto = true; r.pausePos = r.letzte.p;
   vibrate(120);
   runAnzeige();
@@ -125,7 +127,7 @@ function runAutoWeiter(lat, lon, acc, speed){
   var r = run;
   if(acc > RUN_GENAU) return;
   var weg = r.pausePos ? runMeter(r.pausePos, [lat, lon]) : 0;
-  if(weg < Math.max(10, acc) && !(speed != null && speed >= 1.5)) return;
+  if(weg < Math.max(8, acc) && !(speed != null && speed >= 1.2)) return;
   r.pausenMs += Date.now() - r.pauseAb; r.pauseAb = 0; r.auto = false; r.letzte = null; r.kal = null; r.lastMove = Date.now();
   vibrate(120);
   runAnzeige();
@@ -493,7 +495,7 @@ function runLiveKarte(r){
     var tx = 24 + zuf(50 + i)*(W - 48), ty = 30 + zuf(70 + i)*(H - 60);
     kulisse += '<g class="rk-baum"><circle cx="'+tx.toFixed(1)+'" cy="'+(ty - 8).toFixed(1)+'" r="8"/><path d="M'+tx.toFixed(1)+' '+(ty).toFixed(1)+'v10"/></g>';
   }
-  var svg = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(t("runRoute"))+'"><defs><filter id="rk-glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"/></filter>'+
+  var svg = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(t("runRoute"))+'"><defs><filter id="rk-glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3"/></filter>'+
     '<radialGradient id="rk-rand" cx="50%" cy="50%" r="60%"><stop offset="55%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient></defs>'+
     '<g class="rk-kulisse">'+kulisse+'</g>';   // ohne Raster, ohne dunklen Block: nur Bäume hinter der Strecke
   var fahrt = state.db.settings.runKarte === "fahrt";   // Karte nach Fahrtrichtung ausgerichtet (sonst Norden oben)
@@ -504,8 +506,7 @@ function runLiveKarte(r){
     var sk2 = (W/2 - pad)/120, cy2 = H*0.64;
     var fx = function(p){ var dx = (p[1] - zp[1])*mx, dy = (p[0] - zp[0])*my, x2 = dx*cs - dy*sn, y2 = dx*sn + dy*cs; return [W/2 + x2*sk2, cy2 - y2*sk2]; };
     var plf = pts.map(function(p){ var q = fx(p); return q[0].toFixed(1)+","+q[1].toFixed(1); }).join(" "), a1 = fx(pts[0]);
-    var svgF = svg.replace('<g class="rk-kulisse">', '<g class="rk-kulisse" transform="rotate('+(-kurs).toFixed(1)+' '+(W/2)+' '+cy2.toFixed(1)+')">');
-    return svgF+(pts.length > 1 ? '<path class="rk-glow" d="'+runKurve(plf)+'" filter="url(#rk-glow)"/><path class="rk-weg" d="'+runKurve(plf)+'"/>' : '')+
+    return svg+(pts.length > 1 ? '<path class="rk-glow" d="'+runKurve(plf)+'" filter="url(#rk-glow)"/><path class="rk-weg" d="'+runKurve(plf)+'"/>' : '')+
       '<circle class="rk-start" cx="'+a1[0].toFixed(1)+'" cy="'+a1[1].toFixed(1)+'" r="4.5"/>'+
       '<circle class="rk-puls" cx="'+(W/2)+'" cy="'+cy2.toFixed(1)+'" r="10"/><path class="rk-pfeil" transform="translate('+(W/2)+' '+cy2.toFixed(1)+')" d="M0 -11L8.5 9 0 4.5-8.5 9z"/>'+
       '<g class="rk-nord" transform="translate(30 34) rotate('+(-kurs).toFixed(1)+')"><path d="M0 -13L5 3 0 0-5 3z"/><text y="-16" text-anchor="middle">N</text></g></svg>';
