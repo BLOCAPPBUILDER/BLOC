@@ -133,6 +133,9 @@
     wahr(W.satzText([0, 12]).indexOf("12") === 0 && W.satzText([0, 12]).indexOf("×") < 0, "ohne Gewicht: " + W.satzText([0, 12]));
     wahr(/20×10/.test(W.satzText([20, 10, "w"])) && W.satzText([20, 10, "w"]) !== "20×10", "Aufwärmsatz mit Kürzel: " + W.satzText([20, 10, "w"]));
     wahr(/40×12 @ RPE 8/.test(W.satzText([40, 12, "n", 8])), "mit RPE: " + W.satzText([40, 12, "n", 8]));
+    gleich(W.satzText([40, 30, "n", 0, 1]), "40×30 s", "Zeit-Satz mit Gewicht (Flag 1): Gewicht × Sekunden");
+    gleich(W.satzText([0, 40, "n", 0, 1]), "40 s", "Zeit-Satz ohne Gewicht: nur „40 s“");
+    wahr(W.satzText([0, 40, "n", 0, 1]).indexOf("Wdh") < 0, "Zeit-Satz zeigt kein „Wdh.“: " + W.satzText([0, 40, "n", 0, 1]));
   });
   test("Zahlen: Kilogramm ohne überflüssige Nachkommastellen", function () {
     gleich(W.studioKg(40), "40", "ganze Zahl"); gleich(W.studioKg(42.5), "42,5", "halbe Kilogramm"); gleich(W.studioKg(22.255), "22,26", "auf zwei Stellen");

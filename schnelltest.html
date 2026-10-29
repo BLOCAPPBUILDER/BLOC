@@ -125,10 +125,7 @@
     var b = await bis(function () { return $('[data-kattab="baukasten"]'); }, 3000, "Reiter Baukasten");
     if (!b.classList.contains("active")) klick(b);
     await bis(function () { return $("[data-bauselber]"); }, 3000, "Baukasten");
-    if (modus) {   // die Art stellt man mit den zwei Knöpfen um (kein Ort mehr)
-      var art = await bis(function () { return $('[data-bauart="' + modus + '"]'); }, 2000, "Knopf Nach Zeit / Nach Sätzen");
-      if (!art.classList.contains("active")) { klick(art); await bis(function () { return $('[data-bauart="' + modus + '"].active'); }, 2000, "Art gestellt"); }
-    }
+    // modus wird ignoriert: Zeit oder Sätze wählt man erst auf der Plan-Seite
   }
 
   var TESTS = [
@@ -219,8 +216,8 @@
       pruefe($("#tabbar").classList.contains("hidden"), "Im Baukasten gibt es keine untere Leiste");
       // Baukasten ohne Ort: nur „1 Wie willst du trainieren?“ (Nach Zeit / Nach Sätzen, Standard Nach Zeit) und „2 Wie willst du dein Workout bauen?“
       pruefe(!$(".ort-foto") && !$(".ort-fotos") && !$("[data-bauort]") && !$("[data-katort]"), "Baukasten: Ort-Fotokarten gibt es nicht mehr");
-      pruefe($$(".bau-schritt").length === 2 && /^1/.test($$(".bau-schritt")[0].textContent) && /^2/.test($$(".bau-schritt")[1].textContent), "Baukasten: zwei Schritte erwartet, gefunden " + $$(".bau-schritt").length);
-      pruefe($$("[data-bauart]").length === 2 && $('[data-bauart="timer"].active') && /Nach Zeit/.test($('[data-bauart="timer"]').textContent) && /Nach Sätzen/.test($('[data-bauart="gewicht"]').textContent), "Baukasten: Nach Zeit / Nach Sätzen mit Standard Nach Zeit fehlen");
+      pruefe($$(".bau-schritt").length === 1 && !/[0-9]/.test($(".bau-schritt").textContent), "Baukasten: nur eine Überschrift ohne Zahl erwartet, gefunden " + $$(".bau-schritt").length);
+      pruefe(!$("[data-bauart]") && /Wie willst du/.test($(".bau-schritt").textContent), "Baukasten: keine Knöpfe Nach Zeit / Nach Sätzen mehr, nur die Überschrift „Wie willst du dein Workout bauen?“");
       // Übungskatalog: eigene Seite, alle Übungen zugeklappt nach Bereichen, „Eigene Übung anlegen“ oben
       await zuUebungskatalog();
       pruefe($("[data-stnew2]") && /Eigene Übung/.test($("[data-stnew2]").textContent), "„Eigene Übung anlegen“ fehlt im Übungskatalog");
@@ -486,6 +483,21 @@
       pruefe($('[data-studio="plank"]:not([data-ortfremd])') && $('[data-studio="ab-crunch-machine"]:not([data-ortfremd])') && !$('[data-studio="air-squats"]:not([data-ortfremd])') && !$('[data-studio="push-ups"]:not([data-ortfremd])'), "Core (Bauch, Hüfte, unterer Rücken) zeigt nicht Planke und Bauchmaschine ohne Kniebeuge und Liegestütze");
       klick('[data-streset]');
       await bis(function () { return !$('[data-stgrp].on') && !$('[data-stzone].on'); }, 2000, "Übungen: Zurücksetzen (Core)");
+      // Chip „Bauch“ wählt nur die Zone bauch (nicht mehr schraeg), Core (rumpf) bleibt die Körpermitte
+      klick('[data-stgrp="bauch"]');
+      await bis(function () { return $('[data-stgrp="bauch"].on') && $$("[data-stzone].on").length >= 1; }, 2000, "Übungen: Chip Bauch wählt die Zone");
+      var gz = W.KK_GRUPPE_ZONEN;
+      pruefe(gz.bauch.join() === "bauch" && gz.rumpf.indexOf("schraeg") > -1 && gz.rumpf.indexOf("bauch") > -1, "Gruppen: Bauch = nur die Zone bauch, Core (rumpf) = Bauch, Schräge, Hüfte, unterer Rücken: " + gz.bauch.join() + " / " + gz.rumpf.join());
+      klick('[data-streset]');
+      await bis(function () { return !$('[data-stgrp].on') && !$('[data-stzone].on'); }, 2000, "Übungen: Zurücksetzen (Bauch grob)");
+      W.state.db.settings.kkFein = true; W.save(); W.renderKatalog();   // feine Karte: der Chip Bauch wählt genau die Zone bauch
+      await bis(function () { return $('[data-stgrp="bauch"]') && !$('[data-stgrp="bauch"].on'); }, 2000, "Übungen: feine Karte");
+      klick('[data-stgrp="bauch"]');
+      await bis(function () { return $('[data-stgrp="bauch"].on') && $('[data-stzone="bauch"].on'); }, 2000, "Übungen: Chip Bauch wählt die Zone bauch");
+      pruefe($$("[data-stzone].on").length === 1 && !$('[data-stzone="schraeg"].on') && !$('[data-stgrp="rumpf"].on'), "Chip Bauch soll nur die Zone bauch wählen: " + $$("[data-stzone].on").map(function (e) { return e.getAttribute("data-stzone"); }).join());
+      klick('[data-streset]');
+      await bis(function () { return !$('[data-stgrp].on') && !$('[data-stzone].on'); }, 2000, "Übungen: Zurücksetzen (Bauch)");
+      delete W.state.db.settings.kkFein; W.save(); W.renderKatalog();
       // Studio-, Hantel- und Bandübungen gemeinsam: ein Chip „Widerstandsband“ zeigt alle Band-Übungen, offen
       klick('[data-stausr="band"]');
       await bis(function () { return $('[data-stausr="band"].on') && $$("[data-studio]:not([data-ortfremd])").length >= 30; }, 2000, "Übungen: Chip „Widerstandsband“ zeigt die Band-Übungen offen");
@@ -679,7 +691,7 @@
       var vor = zaehle();
       zuWorkout();
       await zuBaukasten("timer");
-      pruefe($$(".bau-schritt").length === 2 && $('[data-bauart="timer"].active'), "Baukasten: zwei Schritte und die Art „Nach Zeit“ fehlen");
+      pruefe($$(".bau-schritt").length === 1 && !$("[data-bauart]"), "Baukasten: nur eine Überschrift, keine Knöpfe Nach Zeit/Sätzen");
       W.go("#mybuild/new");
       await bis(function () { return $$("[data-wbex]").length > 50; }, 3000, "Übungskacheln");
       pruefe(!$("button[data-exinfo]") && $(".wb-kachel .wb-i"), "Das „i“ soll nur ein Hinweis sein, kein Knopf");
@@ -692,7 +704,7 @@
       klick('[data-wbex="plank"]');
       var st = $("#plan-sticky");
       pruefe(st && W.getComputedStyle(st).position === "sticky" && $$("#plan-sticky .wb-mini").length === 2, "Der Ablauf soll beim Scrollen unter der Kopfzeile kleben");
-      // Nach Sätzen: dieselben Übungen im Plan, das beim Bauen angelegte Workout wandert
+      // Nach Sätzen: im Workout-Bau (nicht im Baukasten) wandern dieselben Übungen in einen Plan
       klick('[data-bauart="gewicht"]');
       await bis(function () { return $("[data-plandone]") && $("#plan-name"); }, 3000, "Plan-Bau");
       pruefe(!$("[data-bauart]") && $$("#plan-sticky .wb-mini").length === 2, "Plan: Übungen fehlen oder die Frage Zeit/Sätze steht noch da: " + $$("#plan-sticky .wb-mini").length);
@@ -824,14 +836,10 @@
       await heim();
       zuWorkout();
       await zuBaukasten("gewicht");
-      // Art: Standard ist immer „Nach Zeit“ (nicht mehr vom Ort oder der Trainingsart abhängig); die zwei Knöpfe stellen um und die Wahl bleibt
+      // Die Art (Zeit oder Sätze) wählt man erst auf der Plan-Seite; der Baukasten fragt sie nicht mehr
       delete W.state.db.settings.bauModus; W.state.db.settings.stTrain = ["studio"]; W.save(); W.renderKatalog();
-      await bis(function () { return $('[data-bauart="timer"].active') && !$('[data-bauart="gewicht"].active'); }, 2000, "Nach Zeit ist der Standard, auch wenn im Filter Fitnessstudio steht");
-      pruefe(!$(".ort-foto") && !$("[data-bauort]") && !$(".bau-zusammen") && $$(".bau-schritt").length === 2, "Baukasten: Ort-Karten oder Zusammenfassung mit Ort stehen noch da");
-      klick('[data-bauart="gewicht"]');
-      await bis(function () { return $('[data-bauart="gewicht"].active') && !$('[data-bauart="timer"].active'); }, 2000, "Nach Sätzen umgestellt");
-      klick('[data-bauart="timer"]');
-      await bis(function () { return $('[data-bauart="timer"].active'); }, 2000, "wieder Nach Zeit");
+      await bis(function () { return $("[data-bauselber]"); }, 2000, "Baukasten");
+      pruefe(!$(".ort-foto") && !$("[data-bauort]") && !$(".bau-zusammen") && !$("[data-bauart]") && $$(".bau-schritt").length === 1, "Baukasten: Ort-Karten, Zusammenfassung oder Zeit/Sätze-Knöpfe stehen noch da");
       await zuBaukasten("gewicht");
       pruefe($(".bau-karte[data-surprise]") && $("[data-bauselber]"), "Die beiden Wege im Baukasten (Überrasch mich, Selber bauen) fehlen");
       var plaene0 = (JSON.parse(W.localStorage.getItem(KEY)).settings.stPlaene || []).length;
@@ -1344,7 +1352,7 @@
       await bis(function () { return $("#plan-name") && $("[data-plandone]"); }, 3000, "Selber bauen (Nach Zeit) führt in den Plan-Bau");
       pruefe(!$("[data-bauart]") && !$("#overlayRoot .sp-sheet"), "Plan-Bau fragt nicht mehr nach Zeit oder Sätzen");
       var plN = W.stPlaene().filter(function (x) { return x.entwurf; })[0];
-      pruefe(plN && plN.standard === "timer", "Nach Zeit soll die Voreinstellung Timer setzen: " + JSON.stringify(plN && plN.standard));
+      pruefe(plN && !plN.standard, "Selber bauen setzt keine Voreinstellung (standard) mehr: " + JSON.stringify(plN && plN.standard));
       await trainNur(["studio", "body"]);   // Fitnessstudio und Körpergewicht zugleich (Mehrfachwahl)
       pruefe(W.state.db.settings.stTrain.join() === "studio,body" || W.state.db.settings.stTrain.slice().sort().join() === "body,studio", "Mehrfachwahl der Trainingsart nicht gespeichert: " + JSON.stringify(W.state.db.settings.stTrain));
       klick(await bis(function () { return $('[data-planex="air-squats"]'); }, 2000, "Air Squats"));
@@ -1362,6 +1370,69 @@
       var mwN = (W.state.db.myWorkouts || []).filter(function (m) { return m.fromPlan === pl2.id; })[0];
       pruefe(mwN && mwN.blockRest === 60, "Pause zwischen den Übungen kommt im Workout nicht an: " + JSON.stringify(mwN && mwN.blockRest));
       W.exitPlayer();
+    }],
+    ["Plan-Seite: Wiederholungen oder Zeit je Übung, Satz für Satz mit Sekunden; Suche steht dauerhaft unter dem Filter", async function () {
+      function suchSichtbar(pre) { var w = $('.lib-suche[data-lsw="' + pre + '"]'); return !!(w && w.classList.contains("offen") && w.getBoundingClientRect().height > 0 && $("#" + pre + "-q")); }
+      function feld(id, f) { return $('[data-pz="' + id + '"] [data-feld="' + f + '"]'); }
+      function einheit(id, u) { return $('[data-pz="' + id + '"] [data-pzeinheit="' + u + '"]'); }
+      await heim();
+      zuWorkout();
+      // Workoutkatalog und Übungskatalog: die Suche steht ohne Lupen-Klick sichtbar da
+      W.state.db.settings.katTab = "katalog"; W.state.db.settings.katAbt = "workouts"; W.renderKatalog();
+      await bis(function () { return $(".lib-suche"); }, 3000, "Workoutkatalog");
+      pruefe(suchSichtbar("l"), "Workoutkatalog: das Suchfeld soll dauerhaft sichtbar sein (.lib-suche.offen)");
+      await zuUebungskatalog();
+      pruefe(suchSichtbar("st"), "Übungskatalog: das Suchfeld soll dauerhaft sichtbar sein");
+      // Workout-Entwurf
+      W.go("#mybuild/new");
+      await bis(function () { return $$("[data-wbex]").length > 50; }, 3000, "Workout-Entwurf");
+      pruefe(suchSichtbar("b"), "Workout-Entwurf: das Suchfeld soll dauerhaft sichtbar sein");
+      klick("button.back");
+      await bis(function () { return $("[data-kattab]") && !$("#wb-name"); }, 3000, "zurück");
+      // Plan-Bau
+      await zuBaukasten();
+      klick(await bis(function () { return $("[data-bauselber]"); }, 3000, "Selber bauen"));
+      await bis(function () { return $("#plan-name") && $('[data-planex="air-squats"]'); }, 3000, "Plan-Bau");
+      pruefe(suchSichtbar("pl"), "Plan-Bau: das Suchfeld soll dauerhaft sichtbar sein");
+      pruefe(!$('.lib-suche[data-lsw="pl"]').closest(".topbar") && $('.lib-suche[data-lsw="pl"]').getBoundingClientRect().top > $("#plan-sticky").getBoundingClientRect().top, "Plan-Bau: die Suche steht unter dem Ablauf und dem Filter");
+      klick('[data-planex="air-squats"]'); klick('[data-planex="leg-press"]');
+      klick(await bis(function () { return $("[data-plandone]:not([disabled])"); }, 2000, "Weiter"));
+      await bis(function () { return $$(".pz-zeile").length === 2; }, 3000, "Plan-Seite mit zwei Zeilen");
+      var pl = W.stPlaene().filter(function (x) { return x.id === W.stPlanAktiv; })[0];
+      pruefe(!pl.standard && W.planStartArt(pl) === "saetze", "Plan mit Gewichtsübung ohne Wahl soll Satz für Satz laufen: " + W.planStartArt(pl));
+      // Standard: Übung ohne Gewicht = Zeit (Feld Arbeit (s), kein Gewicht), Übung mit Gewicht = Wiederholungen
+      pruefe($$("[data-pzeinheit]").length === 4, "Je Übung zwei Knöpfe Wiederholungen/Zeit erwartet: " + $$("[data-pzeinheit]").length);
+      pruefe(einheit("air-squats", "zeit").classList.contains("active") && !einheit("air-squats", "wdh").classList.contains("active") && W.studioEinheit("air-squats") === "zeit", "Air Squats (ohne Gewicht) sollen standardmäßig in Zeit laufen");
+      pruefe(feld("air-squats", "work") && !feld("air-squats", "wdh") && !feld("air-squats", "kg") && /Arbeit \(s\)/.test($('[data-pz="air-squats"]').textContent), "Zeit ohne Gewicht: Feld „Arbeit (s)“ statt „Wdh.“, kein Gewicht");
+      pruefe(einheit("leg-press", "wdh").classList.contains("active") && W.studioEinheit("leg-press") === "wdh" && feld("leg-press", "wdh") && feld("leg-press", "kg") && !feld("leg-press", "work"), "Beinpresse soll standardmäßig Wiederholungen und Gewicht zeigen");
+      pruefe(/^\d+×\d+$/.test(W.satzKurz("leg-press")) && /^\d+×\d+ s$/.test(W.satzKurz("air-squats")), "satzKurz: Wdh. „3×12“, Zeit „3×40 s“: " + W.satzKurz("leg-press") + " / " + W.satzKurz("air-squats"));
+      // Umschalten: Beinpresse auf Zeit behält das Gewicht
+      klick(einheit("leg-press", "zeit"));
+      await bis(function () { return feld("leg-press", "work"); }, 2000, "Beinpresse: Zeit");
+      pruefe(feld("leg-press", "kg") && !feld("leg-press", "wdh") && einheit("leg-press", "zeit").classList.contains("active") && W.studioEinheit("leg-press") === "zeit" && /^\d+×\d+ s$/.test(W.satzKurz("leg-press")), "Beinpresse in Zeit: Arbeit (s) und Gewicht, satzKurz mit „s“: " + W.satzKurz("leg-press"));
+      pruefe(/ s$/.test(W.satzZiel("leg-press")), "satzZiel in Zeit: " + W.satzZiel("leg-press"));
+      klick(einheit("air-squats", "wdh"));
+      await bis(function () { return feld("air-squats", "wdh"); }, 2000, "Air Squats: Wiederholungen");
+      pruefe(!feld("air-squats", "work") && !feld("air-squats", "kg") && W.studioEinheit("air-squats") === "wdh" && /^\d+×\d+$/.test(W.satzKurz("air-squats")), "Air Squats in Wiederholungen: Feld Wdh., kein Gewicht");
+      klick(einheit("air-squats", "zeit"));
+      await bis(function () { return feld("air-squats", "work"); }, 2000, "Air Squats: wieder Zeit");
+      // Satz für Satz mit Zeit: Sekunden als [kg, sek, "n", 0, 1]
+      klick(await bis(function () { return $('[data-planart="saetze"]'); }, 3000, "Satz für Satz"));
+      klick($("[data-planlos]")); await warte(150); if ($("#overlayRoot [data-act]")) klick($("#overlayRoot [data-act]"));
+      await bis(function () { return /^#satz\//.test(W.location.hash) && $$(".satz-karte").length === 2; }, 3000, "Wisch-Bereich");
+      var k0 = $$(".satz-karte")[0];
+      pruefe(/Arbeit \(s\)/.test(k0.textContent) && !/Wdh/.test(k0.querySelector(".satz-feld:last-child label").textContent), "Satz für Satz: die Zeit-Übung zeigt „Arbeit (s)“ statt Wiederholungen");
+      var vorher = ((W.studioEintrag("air-squats") || {}).log || []).length;
+      klick(k0.querySelector("[data-satzset]"));
+      await bis(function () { var e = W.studioEintrag("air-squats"); return e && e.log && e.log.length && e.log[e.log.length - 1].s.length >= 1; }, 3000, "Zeit-Satz gespeichert");
+      var en = W.studioEintrag("air-squats"), sz = en.log[en.log.length - 1].s[en.log[en.log.length - 1].s.length - 1];
+      pruefe(sz.length === 5 && sz[2] === "n" && sz[3] === 0 && sz[4] === 1 && sz[1] > 0, "Zeit-Satz soll als [kg, sek, \"n\", 0, 1] stehen: " + JSON.stringify(sz));
+      pruefe(/^\d+ s$/.test(W.satzText(sz)) || /^[0-9,.]+×\d+ s$/.test(W.satzText(sz)), "Anzeige des Zeit-Satzes mit „s“: " + W.satzText(sz));
+      // aufräumen: Eintrag und Einheiten zurück, damit spätere Tests unverändert starten
+      en.log.pop(); if (!en.log.length) delete en.log; delete en.einheit;
+      var el = W.studioEintrag("leg-press"); if (el) delete el.einheit;
+      W.save();
+      await heim();
     }],
     ["Plan als Programm: Sätze, Gewicht, Pause je Übung, Letztes Mal, Timer-Umschalter, Statistik", async function () {
       function daten() { return JSON.parse(W.localStorage.getItem(KEY)); }
