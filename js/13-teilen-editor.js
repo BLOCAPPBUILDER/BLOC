@@ -834,7 +834,7 @@ function openSurprise(twId, modusStart){
   var p = spNormalize(JSON.parse(JSON.stringify(s.surprise || { dur:20, mains:["kraft","rumpf"], cats:[], level:2, equips:["none"] })));
   if(tw) p.anzahl = s.surpriseAnzahl || 8; else delete p.anzahl;
   var modus = !tw && modusStart === "gewicht" ? "gewicht" : "zufall";
-  var g = { w:{ brust:15, ruecken:15, schulter:10, arme:10, rumpf:15, beine:35 }, n:8 };   // Regler von „Nach Gewichtung“
+  var g = { w:{ brust:15, ruecken:15, schulter:10, arme:10, bauch:8, rumpf:8, beine:24, po:12 }, n:8 };   // Regler von „Nach Gewichtung“
   var root = document.getElementById("overlayRoot");
   var fokusCats = LIB_CATS.filter(function(c){ return c.id!=="stretch" && c.id!=="calis"; });
   function feinText(){   // Zusammenfassung der zugeklappten Feinauswahl

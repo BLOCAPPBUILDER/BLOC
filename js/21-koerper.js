@@ -176,7 +176,7 @@ function renderDeepDive(){
   // Idee für die nächste Einheit: ein Workout aus dem Katalog für die Gruppe mit dem geringsten Anteil (wechselt von Woche zu Woche)
   var vorschlag = '';
   if(!r.leer){
-    var luecke = r.rows.slice().sort(function(a, b){ return a.pct - b.pct; })[0], bereich = luecke.g === "rumpf" ? "bauch" : luecke.g;
+    var luecke = r.rows.slice().sort(function(a, b){ return a.pct - b.pct; })[0], bereich = luecke.g === "rumpf" ? "core" : luecke.g;
     var treffer = LIB_WORKOUTS.filter(function(lw){
       if(libIstWarmDehn(lw) || libHidden("wo:"+lw.id)) return false;
       var exs = lw.exercises.map(findExercise).filter(Boolean);

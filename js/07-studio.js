@@ -169,7 +169,7 @@ var STUDIO_ART_ICON = { geraet:CAT_ICON.weight, frei:EQUIP_ICON.kb, stange:EQUIP
    die früheren Chips „Kabel“ und „Langhantel“ stehen jetzt unter „Fitnessstudio“ */
 function studioFilterAlt(){
   var s = state.db.settings, umzug = { lh:"geraet", frei:"frei", stange:"stange", air:"koerper" }, gr = selArr(s.stGruppen), neu = [], arten = selArr(s.stArten), geaendert = false;
-  var muskel = { brust:1, ruecken:1, schulter:1, arme:1, bauch:"rumpf", beine:1 }, zonen = selArr(s.stZonen);
+  var muskel = { brust:1, ruecken:1, schulter:1, arme:1, bauch:1, beine:1 }, zonen = selArr(s.stZonen);
   gr.forEach(function(id){
     if(umzug[id]){ if(arten.indexOf(umzug[id]) < 0) arten.push(umzug[id]); geaendert = true; }
     else if(muskel[id]){   // Muskelgruppen sind jetzt Teil der Muskel-Auswahl (Chips + Figur): in Zonen umrechnen
@@ -194,7 +194,7 @@ function studioFilterAlt(){
 }
 var STUDIO_GRUPPEN_ICON = { beine:CAT_ICON.legs, brust:'<path d="M4 8c2.5-2 5.5-2 8 0 2.5-2 5.5-2 8 0v5c-2 3-5.5 4-8 1.5C9.5 17 6 16 4 13z"/>',
   ruecken:CAT_ICON.back, schulter:'<circle cx="12" cy="6" r="2.5"/><path d="M4 18c0-5 3.5-8.5 8-8.5s8 3.5 8 8.5"/>', arme:CAT_ICON.arms,
-  bauch:CAT_ICON.core, lh:CAT_ICON.weight, frei:EQUIP_ICON.kb, stange:EQUIP_ICON.bar, band:EQUIP_ICON.band, air:HOME_ICON.lib, eigene:'<path d="M12 5v14M5 12h14"/>' };
+  bauch:'<circle cx="12" cy="12" r="8.5"/><path d="M8.5 12h7M12 8.5v7"/>', rumpf:CAT_ICON.core, po:'<path d="M5 14c0-4 3-7 7-7s7 3 7 7c0 3-3 5-7 3-4 2-7 0-7-3z"/>', lh:CAT_ICON.weight, frei:EQUIP_ICON.kb, stange:EQUIP_ICON.bar, band:EQUIP_ICON.band, air:HOME_ICON.lib, eigene:'<path d="M12 5v14M5 12h14"/>' };
 function studioKachel(id){
   var ex = findExercise(id);
   if(!ex) return "";

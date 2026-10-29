@@ -36,9 +36,9 @@ function katTabSetzen(tab){
    Ausdauerübungen bilden den Bereich Cardio. So steht jede Übung genau einmal da, und die Gruppen-Chips des Filters gelten für alle. */
 var KAT_GRUPPEN = [
   { id:"brust", key:"mgBrust" }, { id:"ruecken", key:"mgRuecken" }, { id:"schulter", key:"mgSchulter" }, { id:"arme", key:"mgArme" },
-  { id:"bauch", key:"mgRumpf" }, { id:"beine", key:"mgBeine" }, { id:"cardio", key:"katCardio" }
+  { id:"bauch", key:"mgBauch" }, { id:"core", key:"mgRumpf" }, { id:"beine", key:"mgBeine" }, { id:"po", key:"mgPo" }, { id:"cardio", key:"katCardio" }
 ];
-var KAT_VON_MUSKEL = { brust:"brust", ruecken:"ruecken", schulter:"schulter", arme:"arme", rumpf:"bauch", beine:"beine" };
+var KAT_VON_MUSKEL = { brust:"brust", ruecken:"ruecken", schulter:"schulter", arme:"arme", bauch:"bauch", rumpf:"core", beine:"beine", po:"po" };
 var katKurat = null;
 function katKuratiert(){
   if(!katKurat){ katKurat = {}; STUDIO_GRUPPEN.forEach(function(g){ g.ids.split(" ").forEach(function(id){ katKurat[id] = g.id; }); }); }
@@ -53,7 +53,7 @@ function katBereichEigene(ex){
 function katGruppeVon(ex){
   if(ex.custom) return "eigene";
   var k = katKuratiert()[ex.id];
-  if(k) return k;
+  if(k && k !== "beine" && k !== "bauch") return k;   // Beine und Bauch der Studio-Liste werden unten nach Hauptmuskel auf Bauch, Core, Beine und Po verteilt
   if(ex.main === "ausdauer") return "cardio";
   var m = EX_MUSCLES[ex.id], griff = "";
   if(m && m[0]){
@@ -63,6 +63,8 @@ function katGruppeVon(ex){
         if(!MUSKEL_GRP[j].re.test(teile[i])) continue;
         // „Unterarme (Griff)“ allein macht eine Übung nicht zur Armübung, solange etwas Besseres folgt
         if(MUSKEL_GRP[j].id === "arme" && /unterarm|griff/.test(teile[i]) && !/bizeps|trizeps/.test(teile[i])){ griff = "arme"; break; }
+        // Bauch plus ein anderer Hauptmuskel (z. B. „Tiefe Bauchmuskeln, Schultern“) = Mischübung: steht unter Core
+        if(MUSKEL_GRP[j].id === "bauch" && teile.some(function(x, n){ return n !== i && MUSKEL_GRP.some(function(g){ return g.id !== "bauch" && g.re.test(x); }); })) return "core";
         return KAT_VON_MUSKEL[MUSKEL_GRP[j].id];
       }
     }
@@ -70,7 +72,7 @@ function katGruppeVon(ex){
   }
   var v = mgVerteilung(ex), best = "", bw = 0;
   Object.keys(v).forEach(function(g){ if(v[g] > bw){ bw = v[g]; best = g; } });
-  return KAT_VON_MUSKEL[best] || (ex.main === "rumpf" ? "bauch" : "beine");
+  return KAT_VON_MUSKEL[best] || k || (ex.main === "rumpf" ? "bauch" : "beine");
 }
 var KAT_ICON_UHR = '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>';
 function katIcon(id){ return STUDIO_GRUPPEN_ICON[id] || CAT_ICON[id] || CAT_ICON.weight; }
@@ -503,7 +505,7 @@ function katPlanGenNeu(){ openSurprise(null, "gewicht"); }
    - Gruppe und Körperkarte: mindestens ein Drittel der Übungen passt
    - Ausrüstung: jede Übung geht mit der gewählten Ausrüstung (Körpergewicht braucht nichts) - „was hast du dabei?“ */
 var KAT_WO_FOKUS_BEREICH = { cardio:"cardio", legs:"beine", back:"ruecken", arms:"arme", core:"bauch" };
-var KAT_WO_BEREICHE = ["ganz", "brust", "ruecken", "schulter", "arme", "bauch", "beine", "cardio"];
+var KAT_WO_BEREICHE = ["ganz", "brust", "ruecken", "schulter", "arme", "bauch", "core", "beine", "po", "cardio"];
 function katWoBereich(lw, exs){
   var f = KAT_WO_FOKUS_BEREICH[lw.focus];
   if(f) return f;
