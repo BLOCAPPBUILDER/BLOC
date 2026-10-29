@@ -270,6 +270,7 @@ function progEintrag(ref){
   if(ref.indexOf("my:") === 0) return { art:"workout", ref:ref.slice(3) };
   if(ref.indexOf("lib:") === 0) return { art:"lib", ref:ref.slice(4) };
   if(ref.indexOf("plan:") === 0) return { art:"plan", ref:ref.slice(5) };
+  if(ref.indexOf("tw:") === 0) return { art:"timer", ref:ref.slice(3) };   // Timer-Workout (Tools › Timer)
   if(ref === "run") return { art:"run" };
   return { art:"zufall" };
 }
@@ -338,6 +339,7 @@ function programmOeffnen(p, i){
     if(pl){ stPlanHerkunft = "#koerper"; stPlanAktiv = pl.id; stPlanBauen = false; stPlanQuery = ""; stPlanSel = -1; katZuMeine(); go("#katalog"); return; }
   } else if(o.art === "workout"){ coverDraft = null; go("#cover/my/"+o.ref); return; }
   else if(o.art === "lib"){ coverDraft = null; go("#cover/lib/"+o.ref); return; }
+  else if(o.art === "timer"){ go("#play/"+o.ref); return; }
   progDirektStarten(o);
 }
 /* Ein Eintrag eines Trainingsplans startet gleich (ohne Deckblatt, ohne Umweg über Workout › BLOCs): BLOC als Timer oder Satz-Training, Workouts direkt, Run und Zufall wie im Kalender */
@@ -348,6 +350,7 @@ function progDirektStarten(o){
     if(pl && stPlanIds(pl).length){ if(planStartArt(pl) === "timer") planAlsWorkout(pl, true); else go("#satz/"+pl.id+"/0"); return; }
   } else if(o.art === "workout"){ go("#playmy/"+o.ref); return; }
   else if(o.art === "lib"){ go("#playlib/"+o.ref); return; }
+  else if(o.art === "timer"){ go("#play/"+o.ref); return; }
   kalStarten(o);
 }
 /* Gehört ref zum Eintrag? Gleich, oder ref ist ein BLOC (plan:), der aus diesem Workout entstanden ist (Train by sets auf dem Deckblatt) */
@@ -567,6 +570,7 @@ function pgListen(rub){
   var favs = (state.db.settings.favs || []).filter(function(k){ return /^(my|lib|plan):/.test(k) && kalAufloesen(progEintrag(k)).ok && passt(k); });
   var blocs = [];
   if(rub === "workout") stPlaene().forEach(function(p){ if(!p.entwurf && stPlanIds(p).length) blocs.push("plan:"+p.id); });
+  if(rub === "workout") (state.db.workouts || []).forEach(function(w){ if(w.items && w.items.length) blocs.push("tw:"+w.id); });   // Timer-Workouts aus Tools › Timer
   (state.db.myWorkouts || []).map(normMy).forEach(function(mw){ if(mw.items.length && passt("my:"+mw.id)) blocs.push("my:"+mw.id); });
   var katalog = [];   // [{ name, ico, refs }]
   if(rub === "workout"){
