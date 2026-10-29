@@ -3,7 +3,7 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
-## 2026-10-29 · Baukasten: Trainingsart statt Ort, Core, neue Übungen; Lauf bei dunklem Display (Fassung 2026-10-29-12)
+## 2026-10-29 · Baukasten: Trainingsart statt Ort, Core, neue Übungen; Lauf bei dunklem Display (Fassung 2026-10-29-13)
 
 - **Baukasten ohne Ort**: Fitnessstudio · Freiluft entfällt in Baukasten, Plan-Bau, Übungskatalog und Überrasch-mich-Fenster (auch der Workoutkatalog: dort zählt ein Workout, wenn mindestens zwei Drittel seiner Übungen zur gewählten Trainingsart passen). Im Filter stehen jetzt **1 Trainingsart** (Fitnessstudio, Calisthenic-Park, Körpergewicht; drei Fotokarten, Mehrfachwahl, Körpergewicht in Gelb), **2 Ausrüstung** (Smith, Kabelzug, Langhantel, Kurzhantel, Maschine, dazu Kettlebell und Widerstandsband) und **3 Muskel**. Alte Filter-Einstellungen werden übernommen (`stArten`/`stGeraete` → `stTrain`/`stAusr`, altes „Überrasch mich“ mit Ort → Trainingsart).
 - **Baukasten-Seite ohne „Wie willst du trainieren?“**: Satz für Satz oder mit Timer wird erst auf der Plan-Seite (nach „Weiter: Sätze, Gewicht & Zeiten“) gewählt; ohne Wahl laufen Pläne mit Gewichtsübungen Satz für Satz, reine Körpergewichts-Pläne mit Timer. Je Übung im Plan **Wiederholungen oder Zeit** (mit Sätzen); Übungen mit Gerät zusätzlich mit Gewicht. Satz für Satz mit Zeit trägt Sekunden ein. Die Übungskarte selbst loggt weiter Wiederholungen.

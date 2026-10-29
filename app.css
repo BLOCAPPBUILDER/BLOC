@@ -2265,3 +2265,10 @@ details[open] > summary > .pg-pfeil{ transform:rotate(180deg); }
 /* Plan-Zeile: Wiederholungen oder Zeit (mit Sätzen) */
 .pz-einheit{ margin:10px 0 6px; }
 .pz-einheit button{ padding:8px 10px; font-size:13px; }
+
+/* Nach UX-Prüfung: Trainingsart-Karten besser lesbar, nicht gewählte Karten treten zurück; Wiederholungen/Zeit je Übung dezenter als der Kopfschalter */
+.ort-fotos.drei .ort-foto::after{ background:linear-gradient(to top, rgba(0,0,0,.86) 0%, rgba(0,0,0,.4) 55%, rgba(0,0,0,.22) 100%); }
+.ort-fotos.drei .of-t b{ font-size:11.5px; }
+.ort-fotos:has(.ort-foto.on) .ort-foto:not(.on){ opacity:.72; }
+.pz-einheit{ margin:8px 0 4px; }
+.pz-einheit button{ padding:0 10px; min-height:32px; font-size:12.5px; font-weight:600; }
