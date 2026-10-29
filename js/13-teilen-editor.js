@@ -207,15 +207,14 @@ function wbTauschKandidat(d, i){
   var alt = findExercise(d.items[i].ex);
   if(!alt) return null;
   var drin = {}; d.items.forEach(function(it){ drin[it.ex] = true; });
-  var p = d._params, equips = p && p.equips ? p.equips : null, reg = exProfile(alt).region;
+  var p = d._params, reg = exProfile(alt).region;
   var pool = EXERCISES.filter(function(ex){
-    return !drin[ex.id] && fuerBau(ex) && exIstStudio(ex) === exIstStudio(alt) && !libHidden("ex:"+ex.id) && ex.main === alt.main && (!equips || equipMatch(equips, ex));   // Fitnessstudio tauscht gegen Fitnessstudio, Freiluft gegen Freiluft
+    return !drin[ex.id] && fuerBau(ex) && exTrainArt(ex) === exTrainArt(alt) && !libHidden("ex:"+ex.id) && ex.main === alt.main && (!p || !p.train || studioFilterOk(ex.id, p.train, p.ausr || []));   // jede Trainingsart tauscht gegen dieselbe, Ausrüstung wie bei der Auswahl
   });
   var gleich = pool.filter(function(ex){ return exProfile(ex).region === reg; });
   var wahl = gleich.length ? gleich : pool;
   return wahl.length ? wahl[Math.floor(Math.random()*wahl.length)] : null;
 }
-var bauOrtEntwurf = null;   // der Entwurf, dessen Ort schon aus den Übungen übernommen wurde
 function renderDraftPage(d, cfg){
   var s = state.db.settings;
   // Dehn- und Mobility-Übungen stehen immer am Ende
@@ -223,18 +222,9 @@ function renderDraftPage(d, cfg){
   if(geordnet.some(function(it, i){ return it !== d.items[i]; })){
     d.items = geordnet;
   }
-  /* Beim ersten Öffnen eines Entwurfs: der Ort richtet sich nach seinen Übungen (überwiegend Fitnessstudio = Fitnessstudio), sonst bleibt der gewählte */
-  if(bauOrtEntwurf !== d){
-    bauOrtEntwurf = d;
-    var oEx = d.items.map(function(it){ return findExercise(it.ex); }).filter(function(ex){ return ex && fuerBau(ex); });
-    if(oEx.length){
-      var oNeu = oEx.filter(exIstStudio).length*2 > oEx.length ? "studio" : "frei";
-      if(!katOrtPasst(oNeu)){ s.katOrt = oNeu; save(); }
-    }
-  }
   function ohne(l, x){ return l.filter(function(v){ return v !== x; }); }
   var cat = selArr(s.buildCats || s.buildCat).filter(function(c){ return c === "cardio"; }), sort = s.libSort === "az" ? "az" : "std";
-  var equip = selArr(s.buildEquips).filter(function(e){ return e !== "gym"; });   // „Fitnessstudio“ regelt der Ort-Schalter
+  var equip = selArr(s.buildEquips).filter(function(e){ return e !== "gym"; });   // „Fitnessstudio“ regelt die Trainingsart darüber
   var zonen = kkNorm(s.buildZonen);
   var run = draftRun(d);
   var exs = d.items.map(function(it){ return findExercise(it.ex); }).filter(Boolean);
@@ -314,8 +304,9 @@ function renderDraftPage(d, cfg){
         '<div class="empty" style="padding:20px;">'+t("libEmpty")+'</div>')+'</div>'+
       '<div class="empty" data-noresult style="display:none;padding:20px;">'+t("noResult")+'</div>';
   } else if(palOpen){
-    // beim Bauen immer nach Ort getrennt: nur Übungen des gewählten Ortes (Fitnessstudio oder Freiluft), schon Gewähltes bleibt im Ablauf
-    var palListe = sortedExercises(cat, sort, equip, [], zonen).filter(function(ex){ return fuerBau(ex) && katOrtPasst(exOrt(ex)); });
+    // nur Übungen der gewählten Trainingsarten (nichts gewählt = alle), schon Gewähltes bleibt im Ablauf
+    var palTrain = studioTrainWahl();
+    var palListe = sortedExercises(cat, sort, equip, [], zonen).filter(function(ex){ return fuerBau(ex) && trainPasst(ex, palTrain); });
     hw = hinweise("bau", ["wbTippen"]);
     // Nach Körperregionen geordnet wie im Katalog und im Plan-Bau: Brust, Rücken, Schultern, Arme, Bauch & Rumpf, Beine & Po, Cardio, Eigene
     var je = {};
@@ -328,7 +319,7 @@ function renderDraftPage(d, cfg){
         gew ? '<span class="kat-n">'+esc(t("katGewaehlt", { n:gew }))+'</span>' : '', je[b.id].every(exIstStudio));
     }).join("");
     palHTML = '<div class="section-title">'+t("wbWaehlen")+'</div>'+
-      bauOrtHTML()+
+      bauTrainHTML()+
       (cfg.cover ? '' : bauArtHTML("timer", false))+
       tippZeileHTML("info", "tippInfo")+hw.z(0, "page-hint")+
       suchFeldHTML(buildQuery, "b")+
@@ -491,7 +482,7 @@ function renderDraftPage(d, cfg){
   on("[data-wbordnen]", function(){ d.items = wbSinnvollOrdnen(d.items); speichern(); neu(); showToast(t("wbGeordnet")); });
 
   on("[data-btoggle]", function(){ s.buildFilterOpen = !s.buildFilterOpen; save(); neu(); });
-  bauOrtBinden(neu);
+  bauTrainBinden(neu);
   if(!cfg.cover) bauArtBinden("timer", function(){ bauNachSaetzen(cfg.bau); });   // nach Sätzen: dieselben Übungen als Plan (Gewicht × Wiederholungen)
   on("[data-bfcat]", function(el){ s.buildCats = selToggle(cat, el.getAttribute("data-bfcat")); save(); neu(); });
   on("[data-bfequip]", function(el){ s.buildEquips = selToggle(equip, el.getAttribute("data-bfequip")); save(); neu(); });
@@ -663,11 +654,29 @@ function spNormalize(p){
   p.mains = [];   // die Kategorie-Kacheln gibt es nicht mehr: gewählt wird nach Muskel (Zonen), Cardio und Ausrüstung
   p.cats = selArr(p.cats).filter(function(c){ return c === "cardio"; });
   p.zonen = selArr(p.zonen);
-  if(!p.equips) p.equips = selArr(p.equip && p.equip!=="all" ? [p.equip] : ["none"]);
+  if(!Array.isArray(p.train)){   // ältere Fassungen: Ort + Ausrüstung -> Trainingsart + Ausrüstung
+    if(!p.equips) p.equips = selArr(p.equip && p.equip!=="all" ? [p.equip] : ["none"]);
+    var orte = Array.isArray(p.orte) && p.orte.length ? p.orte : (p.ort === "studio" || p.ort === "frei" ? [p.ort] : ["frei"]), eq = selArr(p.equips), tr = [], au = [];
+    if(orte.indexOf("studio") > -1) tr.push("studio");
+    if(orte.indexOf("frei") > -1){
+      if(!eq.length || eq.indexOf("none") > -1) tr.push("body");
+      if(eq.indexOf("bar") > -1 || eq.indexOf("dip") > -1) tr.push("cali");
+      if(eq.indexOf("db") > -1){ if(tr.indexOf("studio") < 0) tr.push("studio"); au.push("kh"); }
+      if(eq.indexOf("kb") > -1){ if(tr.indexOf("studio") < 0) tr.push("studio"); au.push("kb"); }
+      if(eq.indexOf("band") > -1){ if(tr.indexOf("studio") < 0) tr.push("studio"); au.push("band"); }
+    }
+    p.train = tr.length ? tr : ["body"]; p.ausr = au;
+  }
+  p.train = selArr(p.train).filter(function(a){ return TRAIN_ARTEN.indexOf(a) > -1; });
+  p.ausr = selArr(p.ausr).filter(function(a){ return AUSR_IDS.indexOf(a) > -1; });
   return p;
 }
-/* Welche Übungen „Überrasch mich“ ziehen darf: alles außer Dehnen; Fitnessstudio-Übungen nur, wenn „Fitnessstudio“ bei der Ausrüstung gewählt ist */
-function spErlaubt(ex, equips){ return fuerBau(ex) && (!STUDIO_NUR[ex.id] || selArr(equips).indexOf("gym") > -1); }
+/* Welche Übungen „Überrasch mich“ ziehen darf: alles außer Dehnen, was zur gewählten Trainingsart und Ausrüstung passt (nichts gewählt = alles).
+   Stangen- und Barrenübungen (Calisthenic-Park) nur, wenn der Park gewählt ist - sonst rutschen bei „Rücken“ lauter Klimmzug-Varianten herein. */
+function spErlaubt(ex, p){
+  if(!fuerBau(ex) || !studioFilterOk(ex.id, p.train, p.ausr)) return false;
+  return exTrainArt(ex) !== "cali" || p.train.indexOf("cali") > -1 || selArr(p.cats).indexOf("calis") > -1;
+}
 function spDuration(it){ return it.reps*it.work + Math.max(0, it.reps-1)*it.rest; }
 function buildSurprise(p){
   p = spNormalize(p);
@@ -677,17 +686,6 @@ function buildSurprise(p){
   var zonen = kkNorm(p.zonen);   // gewählte Muskel-Zonen (Figur und Chips)
   var wantStretch = mains.indexOf("stretch") > -1 || p.cats.indexOf("stretch") > -1;
   var trainMains = mains.filter(function(m){ return m !== "stretch"; });
-  // Ort: Fitnessstudio zieht nur Studio-Übungen, Freiluft nur alles andere (Ausrüstung ohne „Fitnessstudio“), beide Orte zusammen beides
-  // (p.orte = Liste der gewählten Orte; ältere Fassungen speicherten ein einzelnes p.ort)
-  var orte = Array.isArray(p.orte) && p.orte.length ? p.orte : (p.ort === "studio" || p.ort === "frei" ? [p.ort] : null);
-  var mitStudio = !!orte && orte.indexOf("studio") > -1, mitFrei = !!orte && orte.indexOf("frei") > -1;
-  var equips = p.equips;
-  if(mitStudio && !mitFrei) equips = ["gym"];
-  else if(mitFrei){
-    equips = selArr(p.equips).filter(function(e){ return e !== "gym"; });
-    if(!equips.length) equips = ["none"];
-    if(mitStudio) equips = equips.concat(["gym"]);   // beide Orte: Geräteübungen sind erlaubt, die übrigen folgen der gewählten Ausrüstung
-  }
   var recent = p.avoid === false ? {} : recentExercises(7);
   var total = p.dur*60;
 
@@ -704,8 +702,7 @@ function buildSurprise(p){
     var trainSec = Math.max(block, total - stretchBudget);
     var n = anzahl ? Math.max(1, anzahl - stretchAnzahl) : Math.max(2, Math.round((trainSec + tm.blockRest) / (block + tm.blockRest)));
     var pool = EXERCISES.filter(function(ex){
-      return !libHidden("ex:"+ex.id) && spErlaubt(ex, equips) && (!orte || orte.indexOf(exOrt(ex)) > -1) && trainMains.indexOf(ex.main) > -1 && ((!zonen.length && !fokus.length) || (zonen.length && zonePasst(ex, zonen)) || (fokus.length && catMatch(fokus, ex.cats))) &&
-        ((mitStudio && exOrt(ex) === "studio") || (equipMatch(equips, ex) && gearOk(ex, fokus, equips, trainMains)));
+      return !libHidden("ex:"+ex.id) && spErlaubt(ex, p) && trainMains.indexOf(ex.main) > -1 && ((!zonen.length && !fokus.length) || (zonen.length && zonePasst(ex, zonen)) || (fokus.length && catMatch(fokus, ex.cats)));
     });
     if(!pool.length && !stretchPool.length) return null;
     var fresh = pool.filter(function(ex){ return !recent[ex.id]; }).length;
@@ -760,7 +757,7 @@ function buildSurprise(p){
     var istBurpee = function(ex){ return /burpee/.test(ex.id); };
     if(st.spZahl % 2 === 0 && !zonen.length && !picked.some(istBurpee)){
       var bur = EXERCISES.filter(function(ex){
-        return istBurpee(ex) && spErlaubt(ex, equips) && !libHidden("ex:"+ex.id) && equipMatch(equips, ex) && gearOk(ex, fokus, equips, trainMains) &&
+        return istBurpee(ex) && spErlaubt(ex, p) && !libHidden("ex:"+ex.id) &&
           (p.level !== 1 || (EX_INT[ex.id] || 2) < 3);   // locker: nur die sanften
       });
       var frisch = bur.filter(function(ex){ return !recent[ex.id]; });
@@ -837,7 +834,7 @@ function openSurprise(twId, modusStart){
   var p = spNormalize(JSON.parse(JSON.stringify(s.surprise || { dur:20, mains:["kraft","rumpf"], cats:[], level:2, equips:["none"] })));
   if(tw) p.anzahl = s.surpriseAnzahl || 8; else delete p.anzahl;
   var modus = !tw && modusStart === "gewicht" ? "gewicht" : "zufall";
-  var g = { w:{ brust:15, ruecken:15, schulter:10, arme:10, rumpf:15, beine:35 }, n:8 };   // Regler von „Nach Gewichtung“
+  var g = { w:{ brust:15, ruecken:15, schulter:10, arme:10, bauch:8, rumpf:8, beine:24, po:12 }, n:8 };   // Regler von „Nach Gewichtung“
   var root = document.getElementById("overlayRoot");
   var fokusCats = LIB_CATS.filter(function(c){ return c.id!=="stretch" && c.id!=="calis"; });
   function feinText(){   // Zusammenfassung der zugeklappten Feinauswahl
@@ -847,15 +844,20 @@ function openSurprise(twId, modusStart){
     root.innerHTML = "";
     if(!tw && parseHash()[0] === "katalog" && !stPlanAktiv) renderKatalog();   // die Seite dahinter zeigt den evtl. geänderten Ort
   }
+  /* Trainingsart (Fotokarten, Mehrfachwahl) und Ausrüstung: dieselben Schritte 1 und 2 wie im Filter des Baukastens */
+  function trainAusrHTML(){
+    return filterSchrittHTML(1, t("trSchritt1"))+trainFotosHTML("data-sptrain", p.train)+
+      filterSchrittHTML(2, t("stGerKopf"))+'<div class="fc-chips af-ausr">'+AUSR_IDS.map(function(g){
+        return filterChip("data-spausr", g, p.ausr.indexOf(g) > -1, svgIcon(STUDIO_GERAET_ICON[g] || STUDIO_AUSR_ICON[g]), t("stGer_"+g)); }).join("")+'</div>';
+  }
   function zufallHTML(){
     return (tw ? '<div class="tm-hint" style="margin-top:0">'+esc(t("spFillHint", { n:tw.name || t("untitled") }))+'</div>'+
             '<label>'+t("spCount")+'</label><div class="sp-chips">'+[4,6,8,10,12,15].map(function(v){
         return '<button type="button" class="fc-chip'+(p.anzahl===v?' on':'')+'" data-spanz="'+v+'">'+v+' '+t("spCountUnit")+'</button>'; }).join("")+'</div>'
           : '<div class="sp-dur"><div class="sp-dur-kopf"><label>'+t("spDur")+'</label><b id="sp-dur-wert">'+p.dur+' Min</b></div><input type="range" id="sp-dur" min="10" max="60" step="5" value="'+p.dur+'" aria-label="'+esc(t("spDur"))+'"><div class="run-ziel-marken" aria-hidden="true"><span>10</span><span>30</span><span>60 Min</span></div></div>')+
-      kkMuskelHTML("data-spzone", "data-spgrp", p.zonen, { glow:p.cats.indexOf("cardio") > -1,
+      trainAusrHTML()+filterSchrittHTML(3, t("trSchritt3"))+
+      kkMuskelHTML("data-spzone", "data-spgrp", p.zonen, { glow:p.cats.indexOf("cardio") > -1, ohneLabel:true,
         extra:filterChip("data-spcat", "cardio", p.cats.indexOf("cardio") > -1, catIcon("cardio"), t("katCardio")) })+
-      (katOrt() === "studio" ? '' : '<label>'+t("equipHave")+'</label><div class="sp-chips">'+EQUIPS.filter(function(e){ return e.id !== "gym"; }).map(function(e){
-        return '<button type="button" class="fc-chip'+(p.equips.indexOf(e.id)>-1?' on':'')+'" data-spequip="'+e.id+'">'+svgIcon(EQUIP_ICON[e.id])+esc(tplText(e))+'</button>'; }).join("")+'</div>')+
       // Fokus, Intensität und die Regeln sind selten nötig: zugeklappt, die Zusammenfassung zeigt die aktuelle Wahl
       '<button type="button" class="sp-more'+(spFeinOffen?' open':'')+'" data-spmore aria-expanded="'+spFeinOffen+'">'+
         '<span><b>'+t("spMore")+'</b><small>'+esc(feinText())+'</small></span>'+ICON_CHEV+'</button>'+
@@ -866,11 +868,10 @@ function openSurprise(twId, modusStart){
         '<div class="tm-hint">'+esc(t("spRules"))+'</div>'+
       '</div>' : '');
   }
-  /* Steht der Baukasten (Ort in Schritt 1, Art in Schritt 2) direkt hinter dem Fenster, fragt das Fenster den Ort nicht noch einmal, sondern zeigt
-     nur die Wahl als Zeile; von anderen Stellen aus (Suche, Timer) bleibt der Ort-Schalter im Fenster */
+  /* Steht der Baukasten (Art in Schritt 1) direkt hinter dem Fenster, zeigt das Fenster die Art nur als Zeile */
   var seiteDahinter = !tw && parseHash()[0] === "katalog" && katTab() === "baukasten" && !stPlanAktiv;
   function wahlZeile(){
-    return '<div class="bau-zusammen sp-wahl">'+esc(katOrtText())+' · <b>'+esc(t(bauModus() === "timer" ? "bauArtZeit" : "bauArtSaetze"))+'</b></div>';
+    return '<div class="bau-zusammen sp-wahl"><b>'+esc(t(bauModus() === "timer" ? "bauArtZeit" : "bauArtSaetze"))+'</b></div>';
   }
   function draw(){
     // Neu zeichnen ohne Springen: die Scrollposition im Fenster bleibt erhalten
@@ -880,8 +881,8 @@ function openSurprise(twId, modusStart){
       '<h3>'+svgIcon(ICON_UEBERRASCH, "ico sp-h-ico")+' '+esc(t(tw ? "surprise" : "bauFensterTitel"))+'</h3>'+
       (tw ? '' : '<div class="seg-row sp-art sp-wege" role="group">'+wege.map(function(m){
         return '<button type="button" data-spmodus="'+m[0]+'" class="'+(modus === m[0] ? 'active' : '')+'" aria-pressed="'+(modus === m[0])+'">'+esc(t(m[1]))+'</button>'; }).join("")+'</div>')+
-      (seiteDahinter ? wahlZeile() : bauOrtHTML())+
-      (modus === "gewicht" ? genReglerHTML(g) : zufallHTML())+
+      (seiteDahinter ? wahlZeile() : '')+
+      (modus === "gewicht" ? trainAusrHTML()+filterSchrittHTML(3, t("trSchritt3"))+genReglerHTML(g) : zufallHTML())+
       '<div class="btn-row sp-foot"><button class="btn btn-secondary" data-cancel>'+t("cancel")+'</button>'+
       '<button class="btn btn-primary" data-spgo>'+esc(t(modus === "gewicht" ? "genMake" : "spGo"))+'</button></div>'+
     '</div></div>';
@@ -892,7 +893,6 @@ function openSurprise(twId, modusStart){
       if(sh && mb) sh.scrollTop += mb.getBoundingClientRect().top - sh.getBoundingClientRect().top - 72;
     }
     function on(sel, fn){ root.querySelectorAll(sel).forEach(function(b){ b.addEventListener("click", function(){ fn(b); draw(); }); }); }
-    bauOrtBinden(function(){ draw(); }, root);
     root.querySelectorAll("[data-kkmodus]").forEach(function(b){ b.addEventListener("click", function(){ setTimeout(draw, 0); }); });   // Detailansicht: erst speichert der globale Handler, dann zeichnet das Fenster neu
     on("[data-spmodus]", function(b){ modus = b.getAttribute("data-spmodus"); });
     on("[data-spmore]", function(){ spFeinOffen = !spFeinOffen; spFeinZeigen = spFeinOffen; });
@@ -904,7 +904,8 @@ function openSurprise(twId, modusStart){
     on("[data-spzone]", function(b){ p.zonen = selToggle(kkNorm(p.zonen), b.getAttribute("data-spzone")); });
     on("[data-spcat]", function(b){ p.cats = selToggle(p.cats, b.getAttribute("data-spcat")); });
     on("[data-splevel]", function(b){ p.level = parseInt(b.getAttribute("data-splevel")); });
-    on("[data-spequip]", function(b){ p.equips = selToggle(p.equips, b.getAttribute("data-spequip")); });
+    on("[data-sptrain]", function(b){ p.train = selToggle(p.train, b.getAttribute("data-sptrain")); });
+    on("[data-spausr]", function(b){ p.ausr = selToggle(p.ausr, b.getAttribute("data-spausr")); });
     if(modus === "gewicht") genReglerBinden(root, g);
     var avoid = root.querySelector("#sp-avoid");
     if(avoid) avoid.addEventListener("change", function(e){ p.avoid = e.target.checked; });
@@ -912,13 +913,13 @@ function openSurprise(twId, modusStart){
     root.querySelector(".confirm-overlay").addEventListener("click", function(e){ if(e.target.classList.contains("confirm-overlay")) schliessen(); });
     root.querySelector("[data-spgo]").addEventListener("click", function(){
       if(modus === "gewicht"){   // Plan aus den Reglern
-        if(genPlanErstellen(g)) root.innerHTML = "";
+        if(genPlanErstellen(g, p)) root.innerHTML = "";
         return;
       }
       if(tw){ s.surpriseAnzahl = p.anzahl; var q = JSON.parse(JSON.stringify(p)); delete q.anzahl; s.surprise = q; }
       else s.surprise = p;
       save();
-      p.orte = katOrte().slice(); delete p.ort; if(!tw) s.surprise = p; else { var q2 = JSON.parse(JSON.stringify(p)); delete q2.anzahl; s.surprise = q2; }
+      delete p.orte; delete p.ort; delete p.equips; if(!tw) s.surprise = p; else { var q2 = JSON.parse(JSON.stringify(p)); delete q2.anzahl; s.surprise = q2; }
       save();
       var d = buildSurprise(p);
       if(!d){ showToast(t("spNone")); return; }

@@ -99,16 +99,47 @@ function mainMatch(sel, main){ sel = selArr(sel); return !sel.length || sel.inde
 /* Dehn- und Mobility-Übungen stehen in gemischten Workouts immer am Ende (Reihenfolge sonst unverändert) */
 /* fuerWorkout: ohne Fitnessstudio-Übungen (für die Air-Gruppen) und ohne Dehnen; Workouts mit Timer und Pläne nehmen alles außer Dehnen (fuerBau) */
 var STUDIO_NUR = {};
-STUDIO_GRUPPEN.forEach(function(g){ g.ids.split(" ").forEach(function(id){ STUDIO_NUR[id] = true; }); });
+/* Nur was wirklich Gerät, Hantel oder Kettlebell braucht: Übungen ohne Ausrüstung (Crunch, Judo Flip, erhöhte Liegestütze …) stehen zwar in einem Bereich der Studio-Liste,
+   zählen aber nicht als Studio-Übung - sonst bekommen sie Gewichtseingabe und den roten Studio-Rahmen */
+STUDIO_GRUPPEN.forEach(function(g){ g.ids.split(" ").forEach(function(id){ if(id && /(^| )(gym|db|kb)( |$)/.test(EX_EQUIP[id] || "")) STUDIO_NUR[id] = true; }); });
 function fuerWorkout(ex){ return !STUDIO_NUR[ex.id] && ex.main !== "stretch"; }
 /* Freiluft-Übungen (ohne Ausrüstung „Fitnessstudio“) */
 function fuerAir(ex){ return fuerWorkout(ex) && ex.equip.indexOf("gym") < 0; }
 /* Fitnessstudio-Übungen (Geräte, Kabel, Langhantel, alles mit Ausrüstung „Fitnessstudio“): hier stehen Gewicht × Wiederholungen vorn, ein Timer ist optional */
-function exIstStudio(ex){ return !!ex && (!!STUDIO_NUR[ex.id] || (ex.equip || []).indexOf("gym") > -1 || (ex.equip || []).indexOf("db") > -1); }   // Kurzhantel-Training gehört zum Fitnessstudio (Gym)
+function exIstStudio(ex){ return !!ex && (!!STUDIO_NUR[ex.id] || (ex.equip || []).indexOf("gym") > -1 || (ex.equip || []).indexOf("db") > -1 || (ex.equip || []).indexOf("kb") > -1); }   // Kurzhantel und Kettlebell gehören zum Fitnessstudio (Gym)
+/* Trainingsart einer Übung (Filter im Baukasten): Fitnessstudio (alles mit Gerät, Hantel, Kettlebell oder Widerstandsband), Calisthenic-Park (Stange, Barren)
+   oder Körpergewicht (ganz ohne Ausrüstung). Jede Übung hat genau eine Art; ohne Gewichte und Geräte ist sie nie Fitnessstudio. */
+var TRAIN_ARTEN = ["studio", "cali", "body"];
+function exTrainArt(ex){
+  var eq = (ex && ex.equip) || [];
+  if(eq.some(function(e){ return e === "gym" || e === "db" || e === "kb" || e === "band"; })) return "studio";
+  if(eq.some(function(e){ return e === "bar" || e === "dip"; })) return "cali";
+  return "body";
+}
+/* Im Filter zählt eine Übung zu allen passenden Arten: Übungen mit Widerstandsband stehen zusätzlich im Calisthenic-Park (Band geht auch an der Stange und im Park);
+   Farbe und Zuordnung der Kachel bleiben bei exTrainArt */
+function exTrainArten(ex){
+  var a = exTrainArt(ex);
+  return a === "studio" && ((ex && ex.equip) || []).indexOf("band") > -1 ? ["studio", "cali"] : [a];
+}
+/* Ausrüstung im Filter (Schritt 2): die fünf Geräte-Arten des Fitnessstudios plus Kettlebell und Widerstandsband */
+var AUSR_IDS = ["smith", "kabel", "lh", "kh", "maschine", "kb", "band"];
+function exAusr(ex){
+  var out = [], g = ex && STUDIO_GERAET[ex.id], eq = (ex && ex.equip) || [];
+  if(g) out.push(g);
+  if(eq.indexOf("db") > -1 && out.indexOf("kh") < 0) out.push("kh");
+  if(eq.indexOf("kb") > -1) out.push("kb");
+  if(eq.indexOf("band") > -1) out.push("band");
+  return out;
+}
 /* Was in Workouts mit Timer, Plänen und Überrasch mich vorkommen darf: alle Übungen außer Dehnen (die haben ihren eigenen Bereich) */
 function fuerBau(ex){ return ex.main !== "stretch"; }
 /* Farbe der Kachel: Fitnessstudio hellgrün, sonst Air blau (bzw. die Farbe des Bereichs, z. B. Mobility & Stretch) */
-function exFarbe(ex){ return exIstStudio(ex) ? "var(--gym-color)" : 'var(--bereich, '+catVar(ex.cats[0])+')'; }
+function exFarbe(ex){
+  if(ex.main === "stretch") return 'var(--bereich, '+catVar(ex.cats[0])+')';
+  var a = exTrainArt(ex);   // Trainingsart: Fitnessstudio rot, Calisthenic-Park blau, Körpergewicht gelb
+  return a === "studio" ? "var(--gym-color)" : 'var(--bereich, '+(a === "cali" ? "var(--tp-color)" : "var(--train-gelb)")+')';
+}
 function exIsMobility(id){ var ex = id && findExercise(id); return !!(ex && ex.main === "stretch"); }
 function stretchLast(items, idOf){
   var a = [], b = [];
@@ -308,7 +339,7 @@ var coverDraft = null;   // das Workout auf dem Deckblatt - Änderungen gelten n
 function exIsStretch(id){ var ex = id && findExercise(id); return !!(ex && ex.cats.indexOf("stretch") > -1); }
 function catVar(id){ return id==="mix" || id==="all" ? "var(--tp-color)" : "var(--c-"+id+")"; }
 /* Farbe einer Übung im Studio: Geräte und eigene Studio-Übungen violett, Air-Übungen (z. B. mit ★) in Air-Blau */
-function studioFarbe(ex){ return exIstStudio(ex) ? "var(--gym-color)" : catVar(ex.cats[0]); }
+function studioFarbe(ex){ return ex.main === "stretch" ? catVar(ex.cats[0]) : exFarbe(ex); }
 var CAT_ICON = {
   cardio:'<path d="M3 12h4l2-5 4 10 2-5h6"/>',
   weight:'<path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/>',

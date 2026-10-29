@@ -3,6 +3,15 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-10-29 · Baukasten: Trainingsart statt Ort, Core, neue Übungen; Lauf bei dunklem Display (Fassung 2026-10-29-9)
+
+- **Baukasten ohne Ort**: Fitnessstudio · Freiluft entfällt in Baukasten, Plan-Bau, Übungskatalog und Überrasch-mich-Fenster (auch der Workoutkatalog: dort zählt ein Workout, wenn alle seine Übungen zur gewählten Trainingsart passen). Im Filter stehen jetzt **1 Trainingsart** (Fitnessstudio, Calisthenic-Park, Körpergewicht; drei Fotokarten, Mehrfachwahl, Körpergewicht in Gelb), **2 Ausrüstung** (Smith, Kabelzug, Langhantel, Kurzhantel, Maschine, dazu Kettlebell und Widerstandsband) und **3 Muskel**. Alte Filter-Einstellungen werden übernommen (`stArten`/`stGeraete` → `stTrain`/`stAusr`, altes „Überrasch mich“ mit Ort → Trainingsart).
+- **Zuordnung**: eine Trainingsart je Übung aus der Ausrüstung (Gerät, Hantel, Kettlebell, Band = Fitnessstudio; Stange/Barren = Calisthenic-Park; nichts = Körpergewicht). Sieben Übungen ohne Gewichte (Crunch-Varianten, Judo Flip, erhöhte Liegestütze) standen fälschlich im Fitnessstudio. Dadurch kommt bei „Überrasch mich“ mit Körpergewicht + Bauch keine Bauchmaschine mehr. Übungen mit Widerstandsband zählen im Filter zusätzlich zum Calisthenic-Park. Rahmenfarben der Kacheln: Fitnessstudio rot, Calisthenic-Park blau, Körpergewicht gelb. Liste aller Übungen: `docs/UEBUNGEN-ZUORDNUNG.md`.
+- **Muskelgruppen getrennt** (Filter, Bereiche im Katalog, Auswertung, Regler): Bauch · Core (die frühere Gruppe „Bauch & Rumpf“, jetzt für Mischübungen wie Plank mit Schultern; als Zone zusätzlich unterer Rücken und Hüfte) · Beine · Po getrennt, dazu wie bisher Brust, Rücken, Schultern, Arme.
+- **Entfernt** (auf Wunsch): Battle Ropes (10 Übungen, zwei Workouts), Bauchroller, Unterarm-Roller.
+- **Übungen**: neu Bear Plank Rockback Push-up und Plank Toe Touch (Körpergewicht); Tate Press mit zweiter Ansicht von vorn; Single-Leg-RDL gab es schon. Die Zielzeile „Ziel 3 Sätze × 12“ steht nicht mehr auf der Übungsseite. Lange Kachelnamen brechen um statt überzustehen.
+- **Lauf**: (1) Auto-Pause pausiert nur noch bei frischen Standorten; bei dunklem Display kamen seltener Punkte, der Lauf blieb dann auf „Auto-Pause“ stehen und Zeit, Strecke und Karte standen still. (2) Beim Entsperren wird die Anzeige sofort nachgezogen. (4) Karte: Bäume bleiben immer aufrecht (drehen nicht mehr mit), Leuchten der Strecke schwächer. **Nicht am Gerät geprüft.**
+
 ## 2026-10-28 · Wissensaustausch: Mind-Muscle-Connection, Hinweis gekürzt (Fassung 2026-10-28-1)
 
 - **Trainingsmythen**: neuer Beitrag „Mind-Muscle-Connection“ (Differenziert). Gezielte Konzentration erhöht die Muskelaktivität bei leichten bis mittleren Lasten; für langfristig mehr Muskelwachstum fehlt ein belastbarer Beleg. Quellen F37 bis F39 neu, auch in quellen.html.

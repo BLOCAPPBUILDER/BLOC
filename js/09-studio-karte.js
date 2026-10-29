@@ -1,21 +1,22 @@
 "use strict";
-/* Plan nach Gewichtung: Reglerwerte je Muskelgruppe (zusammen 100 %), Anzahl der Übungen und Ort; verteilt nach größtem Rest und zieht passende Übungen (Fitnessstudio oder Freiluft) */
-/* Übungen, aus denen „Plan nach Gewichtung“ zieht: Fitnessstudio = Geräte, Kabel, Langhantel (und eigene Studio-Übungen), Freiluft = alles andere;
+/* Plan nach Gewichtung: Reglerwerte je Muskelgruppe (zusammen 100 %), Anzahl der Übungen, Trainingsart und Ausrüstung; verteilt nach größtem Rest und zieht passende Übungen */
+/* Übungen, aus denen „Plan nach Gewichtung“ zieht: alles, was zur gewählten Trainingsart und Ausrüstung passt (nichts gewählt = alles);
    ohne Dehnübungen und ausgeblendete */
-function stGenPool(orte){   // orte: Liste der gewählten Orte ("studio", "frei" oder beide)
-  orte = Array.isArray(orte) ? orte : [orte];
+function stGenPool(f){   // f: { train:[...], ausr:[...] }
+  f = f || {};
+  var train = selArr(f.train), ausr = selArr(f.ausr);
   return EXERCISES.filter(function(ex){
-    return ex.main !== "stretch" && !libHidden("ex:"+ex.id) && orte.indexOf(exIstStudio(ex) ? "studio" : "frei") > -1;
+    return ex.main !== "stretch" && !libHidden("ex:"+ex.id) && trainPasst(ex, train) && ausrPasst(ex, ausr);
   });
 }
-function stGenBauen(w, n, ort){
+function stGenBauen(w, n, f){
   var tot = MUSKEL_GRP.reduce(function(a, g){ return a + (w[g.id] || 0); }, 0);
   if(!tot) return [];
   var q = MUSKEL_GRP.map(function(g){ var raw = (w[g.id] || 0)*n/tot; return { g:g.id, k:Math.floor(raw), rest:raw - Math.floor(raw) }; });
   var diff = n - q.reduce(function(a, x){ return a + x.k; }, 0);
   q.slice().sort(function(a, b){ return b.rest - a.rest; }).slice(0, diff).forEach(function(x){ x.k++; });
   var pools = {};
-  stGenPool(ort).forEach(function(ex){
+  stGenPool(f).forEach(function(ex){
     var v = mgVerteilung(ex), best = null;
     Object.keys(v).forEach(function(g){ if(best === null || v[g] > v[best]) best = g; });
     if(best) (pools[best] = pools[best] || []).push(ex.id);
@@ -74,8 +75,8 @@ function genReglerBinden(root, g){
   if(nn) nn.addEventListener("input", function(){ g.n = +nn.value; var gn = root.querySelector("[data-gn]"); if(gn) gn.textContent = nn.value; });
 }
 /* Plan aus den Reglern anlegen und öffnen (Katalog › Meine ist sein Ort; er steht sofort dort) */
-function genPlanErstellen(g){
-  var ids = stGenBauen(g.w, g.n, katOrte());
+function genPlanErstellen(g, f){
+  var ids = stGenBauen(g.w, g.n, f);
   if(!ids.length){ showToast(t("genZero")); return false; }
   var p = { id:uid(), name:t("genName"), ids:ids, updatedAt:Date.now() };
   stPlaene().push(p); save();
@@ -367,8 +368,7 @@ function renderStudioKarte(id){
       (ILLU[id] ? '<div class="st-figur">'+illuHTML(id, "st-illu")+'</div>' : (ex.custom ? '<div class="st-figur"><span class="ex-symbol big">'+exSymbol(ex)+'</span></div>' : ''))+
       bandAnkerHTML(id)+   // Band-Übung: „Band befestigen“ gehört direkt unter die bewegte Figur
       griffHTML(id)+
-      '<div class="st-ziel">'+esc(t("stGoal"))+' '+satzName(z.saetze)+' × '+z.wdh+
-        (e.kg != null && !koerper ? SEP+esc(t("stWeight"))+' '+studioKg(e.kg)+' kg' : '')+'</div>'+
+      (e.kg != null && !koerper ? '<div class="st-ziel">'+esc(t("stWeight"))+' '+studioKg(e.kg)+' kg</div>' : '')+   // das Ziel „3 Sätze × 12“ steht nicht mehr da (zu spezifisch)
       // Werte vom letzten Mal: ein Tipp auf einen Satz übernimmt Gewicht und Wiederholungen in die Eingabe (nur im Satz-Modus)
       (letzte ? '<div class="st-letzte"><b>'+esc(t("stLetztes"))+'</b> <span>'+esc(studioTagText(letzte.at))+'</span> '+
         letzte.s.map(function(x){

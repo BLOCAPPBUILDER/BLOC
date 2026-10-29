@@ -147,16 +147,15 @@ function studioArtPasst(id, fArt){
   });
 }
 var STUDIO_ARTEN = ["geraet", "frei", "stange", "band", "koerper"];
-/* Gewählte Ausrüstungs-Chips der Filterkarte. „Fitnessstudio“ (geraet) regelt der Ort-Schalter und ist kein Chip mehr (sonst stünde es doppelt);
-   im Fitnessstudio gibt es keine Ausrüstungswahl (alles dort ist Gerät), die Chips gelten also nur bei Freiluft. */
-function studioArtenWahl(){
-  return selArr(state.db.settings.stArten).filter(function(a){ return STUDIO_ARTEN.indexOf(a) > -1 && a !== "geraet"; });
-}
-/* Gerät im Fitnessstudio (nur dort): Smith, Kabelzug, Langhantel, Kurzhantel, Maschine; Auswahl in settings.stGeraete */
-function studioGeraetWahl(){
-  if(katOrte().indexOf("studio") < 0) return [];
-  return selArr(state.db.settings.stGeraete).filter(function(g){ return STUDIO_GERAETE.indexOf(g) > -1; });
-}
+/* Filter im Baukasten, auf der Übungsseite und im Plan-Bau: 1 Trainingsart (Fitnessstudio · Calisthenic-Park · Körpergewicht, Mehrfachwahl),
+   2 Ausrüstung (Geräte, Kurzhantel, Kettlebell, Widerstandsband), 3 Muskel. Gespeichert in settings.stTrain und settings.stAusr; leer = alles. */
+function studioTrainWahl(){ return selArr(state.db.settings.stTrain).filter(function(a){ return TRAIN_ARTEN.indexOf(a) > -1; }); }
+function studioAusrWahl(){ return selArr(state.db.settings.stAusr).filter(function(a){ return AUSR_IDS.indexOf(a) > -1; }); }
+function trainPasst(ex, fTrain){ return !fTrain.length || exTrainArten(ex).some(function(a){ return fTrain.indexOf(a) > -1; }); }
+function ausrPasst(ex, fAusr){ return !fAusr.length || exAusr(ex).some(function(a){ return fAusr.indexOf(a) > -1; }); }
+/* Trainingsart und Ausrüstung zusammen: beide müssen passen (innerhalb einer Gruppe genügt eine) */
+function studioFilterOk(id, fTrain, fAusr){ var ex = findExercise(id); return !!ex && trainPasst(ex, fTrain) && ausrPasst(ex, fAusr); }
+/* Gerät im Fitnessstudio: Smith, Kabelzug, Langhantel, Kurzhantel, Maschine; Auswahl in settings.stGeraete (nur noch für die Suche und Tests) */
 function studioGeraetOk(id, fGer){ return !fGer.length || fGer.indexOf(STUDIO_GERAET[id]) > -1; }
 /* Ausrüstung und Studio-Geräte zusammen: wer beides wählt, bekommt Übungen, die zu einer der Wahlen passen */
 function studioAusrOk(id, fArt, fGer){
@@ -164,12 +163,13 @@ function studioAusrOk(id, fArt, fGer){
   return (fArt.length > 0 && studioArtPasst(id, fArt)) || (fGer.length > 0 && studioGeraetOk(id, fGer));
 }
 var STUDIO_GERAET_ICON = { smith:'<path d="M6 3v18M18 3v18M6 10h12"/>', kabel:'<path d="M12 3v6M8 3h8"/><circle cx="12" cy="12" r="3"/><path d="M12 15v6"/>', lh:EQUIP_ICON.bar, kh:EQUIP_ICON.db, maschine:EQUIP_ICON.gym };
+var STUDIO_AUSR_ICON = { kb:EQUIP_ICON.kb, band:EQUIP_ICON.band };
 var STUDIO_ART_ICON = { geraet:CAT_ICON.weight, frei:EQUIP_ICON.kb, stange:EQUIP_ICON.bar, band:EQUIP_ICON.band, koerper:EQUIP_ICON.none };
 /* Frühere Gruppen-Chips, die jetzt zur Ausrüstung gehören (Langhantel, Kurzhantel & Kettlebell, Stange & Barren, Körpergewicht), in die Ausrüstung umziehen;
    die früheren Chips „Kabel“ und „Langhantel“ stehen jetzt unter „Fitnessstudio“ */
 function studioFilterAlt(){
   var s = state.db.settings, umzug = { lh:"geraet", frei:"frei", stange:"stange", air:"koerper" }, gr = selArr(s.stGruppen), neu = [], arten = selArr(s.stArten), geaendert = false;
-  var muskel = { brust:1, ruecken:1, schulter:1, arme:1, bauch:"rumpf", beine:1 }, zonen = selArr(s.stZonen);
+  var muskel = { brust:1, ruecken:1, schulter:1, arme:1, bauch:1, beine:1 }, zonen = selArr(s.stZonen);
   gr.forEach(function(id){
     if(umzug[id]){ if(arten.indexOf(umzug[id]) < 0) arten.push(umzug[id]); geaendert = true; }
     else if(muskel[id]){   // Muskelgruppen sind jetzt Teil der Muskel-Auswahl (Chips + Figur): in Zonen umrechnen
@@ -181,10 +181,20 @@ function studioFilterAlt(){
   var arten2 = [];
   arten.forEach(function(a){ var n = (a === "kabel" || a === "lh") ? "geraet" : a; if(n !== a) geaendert = true; if(arten2.indexOf(n) < 0) arten2.push(n); });
   if(geaendert){ s.stGruppen = neu; s.stArten = arten2; save(); }
+  if(!s.stFilterV2){   // früher: Ausrüstungs-Chips und Studio-Geräte -> jetzt Trainingsart und Ausrüstung
+    var tr = selArr(s.stTrain), au = selArr(s.stAusr);
+    function dazu(l, x){ if(l.indexOf(x) < 0) l.push(x); }
+    arten2.forEach(function(a){
+      if(a === "geraet") dazu(tr, "studio"); else if(a === "stange") dazu(tr, "cali"); else if(a === "koerper") dazu(tr, "body");
+      else if(a === "band") dazu(au, "band"); else if(a === "frei"){ dazu(au, "kh"); dazu(au, "kb"); }
+    });
+    selArr(s.stGeraete).forEach(function(g){ dazu(au, g); });
+    s.stTrain = tr; s.stAusr = au; s.stArten = []; s.stGeraete = []; s.stFilterV2 = 1; save();
+  }
 }
 var STUDIO_GRUPPEN_ICON = { beine:CAT_ICON.legs, brust:'<path d="M4 8c2.5-2 5.5-2 8 0 2.5-2 5.5-2 8 0v5c-2 3-5.5 4-8 1.5C9.5 17 6 16 4 13z"/>',
   ruecken:CAT_ICON.back, schulter:'<circle cx="12" cy="6" r="2.5"/><path d="M4 18c0-5 3.5-8.5 8-8.5s8 3.5 8 8.5"/>', arme:CAT_ICON.arms,
-  bauch:CAT_ICON.core, lh:CAT_ICON.weight, frei:EQUIP_ICON.kb, stange:EQUIP_ICON.bar, band:EQUIP_ICON.band, air:HOME_ICON.lib, eigene:'<path d="M12 5v14M5 12h14"/>' };
+  bauch:'<circle cx="12" cy="12" r="8.5"/><path d="M8.5 12h7M12 8.5v7"/>', rumpf:CAT_ICON.core, po:'<path d="M5 14c0-4 3-7 7-7s7 3 7 7c0 3-3 5-7 3-4 2-7 0-7-3z"/>', lh:CAT_ICON.weight, frei:EQUIP_ICON.kb, stange:EQUIP_ICON.bar, band:EQUIP_ICON.band, air:HOME_ICON.lib, eigene:'<path d="M12 5v14M5 12h14"/>' };
 function studioKachel(id){
   var ex = findExercise(id);
   if(!ex) return "";
@@ -202,36 +212,56 @@ function studioAnzahl(gruppen, fGr, artOk){
   gruppen.forEach(function(g){ if(!fGr.length || fGr.indexOf(g.id) > -1) n += g.ids.filter(artOk).length; });
   return n;
 }
-/* Filter der Studio-Übungen (Gruppen inkl. der Air-Gruppen, Ausrüstung) - auch beim Zusammenstellen eines Plans; dieselbe Filterkarte wie in Air */
-function studioFilterHTML(gruppen, fGr, fArt, anzahl, zonen, opt){
+/* Filter der Übungen (Baukasten-Plan, Übungsseite, Workoutkatalog): in der Karte 1 Trainingsart · 2 Ausrüstung · 3 Muskel (Chips + Figur).
+   opt.art: "Wo" für die fertigen Workouts (Katalog, dort ohne Trainingsart: das regelt der Ort oben), opt.extra: Schalter neben der Kopfzeile (A–Z) */
+var TRAIN_FOTO = { studio:"img/ort-fitnessstudio.jpg", cali:"img/ort-freiluft.jpg", body:"img/neu-h-brust-2.jpg" };
+function trainZahlen(){
+  var n = { studio:0, cali:0, body:0 };
+  EXERCISES.forEach(function(ex){ if(ex.main === "stretch" || libHidden("ex:"+ex.id)) return; exTrainArten(ex).forEach(function(a){ n[a]++; }); });
+  return n;
+}
+/* Die drei Trainingsarten als Fotokarten nebeneinander (Mehrfachwahl); attr = Attribut der Knöpfe (data-sttrain im Filter) */
+function trainFotosHTML(attr, fTrain, n, textKey){
+  n = n || trainZahlen();
+  return '<div class="ort-fotos kompakt drei" role="group" aria-label="'+esc(t("trSchritt1"))+'">'+TRAIN_ARTEN.map(function(a){
+    var an = fTrain.indexOf(a) > -1;
+    return '<button type="button" '+attr+'="'+a+'" class="ort-foto'+(an ? ' on' : '')+'" aria-pressed="'+an+'">'+
+      '<img class="of-bild" src="'+TRAIN_FOTO[a]+'" alt="" draggable="false">'+
+      '<span class="of-haken" aria-hidden="true">'+svgIcon('<path d="M5 12.5l4.5 4.5L19 7.5"/>')+'</span>'+
+      '<span class="of-t"><b>'+esc(t("trArt_"+a))+'</b><small>'+esc(t(textKey || "katOrtUebAnz", { n:n[a] }))+'</small></span></button>';
+  }).join("")+'</div>';
+}
+function filterSchrittHTML(nr, titel){ return '<div class="bau-schritt af-schritt"><span>'+nr+'</span>'+esc(titel)+'</div>'; }
+function studioFilterHTML(gruppen, fGr, fTrain, fAusr, anzahl, zonen, opt){
   var s = state.db.settings;
-  opt = opt || {};   // opt.art: "Wo" für die fertigen Workouts (Katalog), opt.extra: Schalter neben der Kopfzeile (A–Z)
+  opt = opt || {};
+  var mitTrain = true;
   var namen = fGr.map(function(id){ var g = gruppen.filter(function(x){ return x.id === id; })[0]; return g ? g.name : id; })
-    .concat(fArt.map(function(a){ return t("stArt_"+a); }), studioGeraetWahl().map(function(g){ return t("stGer_"+g); }), zonen.map(kkName));
+    .concat(mitTrain ? fTrain.map(function(a){ return t("trArt_"+a); }) : [], fAusr.map(function(g){ return t("stGer_"+g); }), zonen.map(kkName));
   /* Muskel (Chips + Figur, eine Auswahl); außer Muskeln gibt es nur noch Cardio & Ausdauer (orangenes Leuchten hinter der Figur) und Eigene Übungen */
   var extra = gruppen.filter(function(g){ return g.ids.length && !g.air && (g.id === "cardio" || g.id === "eigene"); }).map(function(g){
     return filterChip("data-stgr", g.id, fGr.indexOf(g.id) > -1, svgIcon(STUDIO_GRUPPEN_ICON[g.id] || CAT_ICON.weight), g.name); }).join("");
   return filterKarteHTML({ offen:!!s.stFilterOpen, toggle:"data-sttoggle", reset:"data-streset", n:namen.length,
     summe:namen.length ? namen.join(", ") : t(opt.art === "Wo" ? "afAlleWo" : "afAlleEx"),
     zeigen:filterZeigenText(anzahl, opt.art || "Ex"), extra:opt.extra,
-    inhalt:kkMuskelHTML("data-stzone", "data-stgrp", zonen, { extra:extra, glow:fGr.indexOf("cardio") > -1 })+
-      // die gewohnte Ausrüstung immer; ist das Fitnessstudio mit dabei, darunter abgesetzt die fünf Studio-Geräte
-      filterChipsHTML(t("equipHave"), "", STUDIO_ARTEN.filter(function(a){ return a !== "geraet"; }).map(function(a){
-        return filterChip("data-start", a, fArt.indexOf(a) > -1, STUDIO_ART_ICON[a] ? svgIcon(STUDIO_ART_ICON[a]) : "", t("stArt_"+a)); }).join(""))+
-      (katOrte().indexOf("studio") > -1 ? '<div class="af-gym">'+filterChipsHTML(t("stGerKopf"), "", STUDIO_GERAETE.map(function(g){
-        return filterChip("data-stger", g, studioGeraetWahl().indexOf(g) > -1, svgIcon(STUDIO_GERAET_ICON[g]), t("stGer_"+g)); }).join(""))+'</div>' : "") });
+    inhalt:(mitTrain ? filterSchrittHTML(1, t("trSchritt1"))+trainFotosHTML("data-sttrain", fTrain, opt.trainZahlen, opt.art === "Wo" ? "katOrtAnz" : "") : '')+
+      filterSchrittHTML(mitTrain ? 2 : 1, t("stGerKopf"))+
+      '<div class="fc-chips af-ausr">'+AUSR_IDS.map(function(g){
+        return filterChip("data-stausr", g, fAusr.indexOf(g) > -1, svgIcon(STUDIO_GERAET_ICON[g] || STUDIO_AUSR_ICON[g]), t("stGer_"+g)); }).join("")+'</div>'+
+      filterSchrittHTML(mitTrain ? 3 : 2, t("trSchritt3"))+
+      kkMuskelHTML("data-stzone", "data-stgrp", zonen, { extra:extra, glow:fGr.indexOf("cardio") > -1, ohneLabel:true }) });
 }
-function studioFilterBinden(fGr, fArt, zonen, neuZeichnen){
+function studioFilterBinden(fGr, fTrain, fAusr, zonen, neuZeichnen){
   var s = state.db.settings;
   app.querySelectorAll("[data-stzone]").forEach(function(b){ b.addEventListener("click", function(){ s.stZonen = selToggle(zonen, b.getAttribute("data-stzone")); save(); neuZeichnen(); }); });
   app.querySelectorAll("[data-stgrp]").forEach(function(b){ b.addEventListener("click", function(){ s.stZonen = kkGrpToggle(zonen, b.getAttribute("data-stgrp")); save(); neuZeichnen(); }); });
   app.querySelectorAll("[data-stgr]").forEach(function(b){ b.addEventListener("click", function(){ s.stGruppen = selToggle(fGr, b.getAttribute("data-stgr")); save(); neuZeichnen(); }); });
-  app.querySelectorAll("[data-stger]").forEach(function(b){ b.addEventListener("click", function(){ s.stGeraete = selToggle(studioGeraetWahl(), b.getAttribute("data-stger")); save(); neuZeichnen(); }); });
-  app.querySelectorAll("[data-start]").forEach(function(b){ b.addEventListener("click", function(){ s.stArten = selToggle(fArt, b.getAttribute("data-start")); save(); neuZeichnen(); }); });
+  app.querySelectorAll("[data-sttrain]").forEach(function(b){ b.addEventListener("click", function(){ s.stTrain = selToggle(fTrain, b.getAttribute("data-sttrain")); save(); neuZeichnen(); }); });
+  app.querySelectorAll("[data-stausr]").forEach(function(b){ b.addEventListener("click", function(){ s.stAusr = selToggle(fAusr, b.getAttribute("data-stausr")); save(); neuZeichnen(); }); });
   // Auf/zu steht in den Einstellungen, damit die Karte beim Neuzeichnen (nach jedem Antippen) offen bleibt - Mehrfachauswahl ohne ständiges Aufklappen
   app.querySelectorAll("[data-sttoggle]").forEach(function(b){ b.addEventListener("click", function(){ s.stFilterOpen = !s.stFilterOpen; save(); neuZeichnen(); }); });
   var zur = app.querySelector("[data-streset]");
-  if(zur) zur.addEventListener("click", function(){ s.stGruppen = []; s.stArten = []; s.stZonen = []; s.stGeraete = []; save(); neuZeichnen(); });
+  if(zur) zur.addEventListener("click", function(){ s.stGruppen = []; s.stTrain = []; s.stAusr = []; s.stZonen = []; save(); neuZeichnen(); });
 }
 /* Studio und Air sind der Katalog (js/11b-katalog.js): renderStudio zeigt den Reiter bzw. die Plan-Seite, die gerade dran ist */
 function renderStudio(){ return renderKatalog(); }
@@ -345,7 +375,6 @@ function renderIntervall(){
    Mehrere eigene Pläne aus Studio-Übungen: settings.stPlaene = [{ id, name, ids:[Übungs-IDs in Reihenfolge], updatedAt }].
    Das Plus legt einen neuen Plan an; Übungen werden wie im Workout-Baukasten von Air durch Antippen gewählt (Nummer = Reihenfolge,
    nochmal antippen = raus). Ein Tipp auf eine Übung im fertigen Plan öffnet ihre Karte zum Eintragen. */
-var stPlanOrtFuer = null;   // der Plan, dessen Ort schon aus den Übungen übernommen wurde
 var stPlanHerkunft = null;   // '''#koerper''', wenn der BLOC aus einem Trainingsplan der Arena geöffnet wurde: Zurück führt dorthin
 var stPlanAktiv = null, stPlanBauen = false, stPlanQuery = "", stPlanSel = -1;   // stPlanSel: im Plan-Bau ausgewählte Übung des Plans (zum Verschieben)
 function stPlaene(){ var s = state.db.settings; if(!Array.isArray(s.stPlaene)) s.stPlaene = []; return s.stPlaene; }
@@ -693,17 +722,11 @@ function renderStudioPlan(){
     var gruppen = katalogGruppen(), da = katGruppeIds(gruppen), gueltig = {};
     gruppen.forEach(function(g){ gueltig[g.id] = true; });
     var s = state.db.settings; studioFilterAlt();
-    if(stPlanOrtFuer !== p.id){
-      stPlanOrtFuer = p.id;
-      var oEx = ids.map(findExercise).filter(Boolean);
-      if(oEx.length){ var oNeu = oEx.filter(exIstStudio).length*2 > oEx.length ? "studio" : "frei"; if(!katOrtPasst(oNeu)){ s.katOrt = oNeu; save(); } }
-    }
     var fGr = selArr(s.stGruppen).filter(function(id){ return gueltig[id]; });
-    var fArt = studioArtenWahl();
-    var fGer = studioGeraetWahl();
-    var zonen = kkNorm(s.stZonen), filterAn = !!(fGr.length || fArt.length || fGer.length || zonen.length);
-    // beim Bauen immer nach Ort getrennt (Fitnessstudio oder Freiluft, derselbe Schalter wie im Baukasten)
-    function artOk(id){ var ex = findExercise(id); return !!ex && katOrtPasst(exOrt(ex)) && studioAusrOk(id, fArt, fGer) && (!zonen.length || zonePasst(ex, zonen)); }
+    var fTrain = studioTrainWahl(), fAusr = studioAusrWahl();
+    var zonen = kkNorm(s.stZonen), filterAn = !!(fGr.length || fTrain.length || fAusr.length || zonen.length);
+    // Trainingsart, Ausrüstung und Muskel stehen im Filter (leer = alles)
+    function artOk(id){ var ex = findExercise(id); return !!ex && studioFilterOk(id, fTrain, fAusr) && (!zonen.length || zonePasst(ex, zonen)); }
     var rest = ids.filter(function(id){ return !da[id]; });   // Übungen im Plan, die in keinem Bereich stehen (z. B. ausgeblendete)
     html += '<div class="card nm-weg"><label for="plan-name">'+t("name")+'</label><input type="text" id="plan-name" value="'+esc(p.name)+'" maxlength="60"></div>'+
       (ids.length ? kkKopfHTML(ids) : '')+
@@ -718,8 +741,8 @@ function renderStudioPlan(){
           (stPlanSel > -1 && stPlanSel < ids.length ? '<div class="plan-ctrl"><button type="button" data-planmv="-1" aria-label="'+esc(t("moveLeft"))+'"'+(stPlanSel === 0 ? ' disabled' : '')+'>&#9664;</button>'+
             '<button type="button" class="del" data-plandelsel>'+ICON_TRASH+' '+esc(t("planRaus"))+'</button>'+
             '<button type="button" data-planmv="1" aria-label="'+esc(t("moveRight"))+'"'+(stPlanSel === ids.length-1 ? ' disabled' : '')+'>&#9654;</button></div>' : '') : '')+'</div>'+
-      bauOrtHTML()+tippZeileHTML("info", "tippInfo")+hw.z(0, "page-hint")+suchFeldHTML(stPlanQuery, "pl", t("stSearch"))+
-      studioFilterHTML(gruppen, fGr, fArt, studioAnzahl(gruppen, fGr, artOk), zonen);
+      tippZeileHTML("info", "tippInfo")+hw.z(0, "page-hint")+suchFeldHTML(stPlanQuery, "pl", t("stSearch"))+
+      studioFilterHTML(gruppen, fGr, fTrain, fAusr, studioAnzahl(gruppen, fGr, artOk), zonen);
     if(rest.length) gruppen = gruppen.concat([{ id:"rest", name:t("planSonst"), ids:rest, immer:true }]);
     function planKachel(id){
       var ex = findExercise(id);
@@ -825,7 +848,6 @@ function renderStudioPlan(){
     p.ids = l; p.updatedAt = Date.now(); save(); ankerNeuZeichnen("data-planex", id, neu);   // die Kachel bleibt, wo sie ist (oben kommen Körperkarte und Plan dazu)
   });
   // Plan oben: Übung antippen = auswählen, ◀ ▶ verschieben, Papierkorb nimmt sie heraus
-  bauOrtBinden(neu);
   app.querySelectorAll("[data-plansel]").forEach(function(b){
     b.addEventListener("click", function(){ var i = +b.getAttribute("data-plansel"); stPlanSel = stPlanSel === i ? -1 : i; neu(); });
   });
@@ -852,9 +874,9 @@ function renderStudioPlan(){
     if(stPl && tbPl) stPl.style.top = Math.max(0, Math.round(tbPl.getBoundingClientRect().height) - 2)+"px";
     var sb = state.db.settings, gb = katalogGruppen(), gv = {}, filterB;
     gb.forEach(function(g){ gv[g.id] = true; });
-    var fgB = selArr(sb.stGruppen).filter(function(id){ return gv[id]; }), faB = studioArtenWahl();
-    filterB = !!(fgB.length || faB.length || kkNorm(sb.stZonen).length);
-    studioFilterBinden(fgB, faB, kkNorm(sb.stZonen), neu);
+    var fgB = selArr(sb.stGruppen).filter(function(id){ return gv[id]; });
+    filterB = !!(fgB.length || studioTrainWahl().length || studioAusrWahl().length || kkNorm(sb.stZonen).length);
+    studioFilterBinden(fgB, studioTrainWahl(), studioAusrWahl(), kkNorm(sb.stZonen), neu);
     katBinden(function(){ return stPlanQuery; });
     var q = app.querySelector("#pl-q");
     if(q){

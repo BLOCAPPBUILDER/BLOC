@@ -7,10 +7,12 @@ var MUSKEL_GRP = [
   { id:"ruecken",  key:"mgRuecken", re:/rücken|latissimus|rauten|trapez|nacken/ },
   { id:"schulter", key:"mgSchulter", re:/schulter/ },
   { id:"arme",     key:"mgArme",    re:/bizeps|trizeps|unterarm|griff/ },
-  { id:"rumpf",    key:"mgRumpf",   re:/bauch|rumpf|schräg|core/ },
-  { id:"beine",    key:"mgBeine",   re:/gesäß|oberschenkel|waden|adduktor|abduktor|hüft|schienbein|fuß|bein/ }
+  { id:"bauch",    key:"mgBauch",   re:/bauch|schräg/ },
+  { id:"rumpf",    key:"mgRumpf",   re:/rumpf|core/ },   // „Core“: die Mischübungen für die Körpermitte (Bauch, Rücken unten, Hüfte)
+  { id:"beine",    key:"mgBeine",   re:/oberschenkel|waden|adduktor|abduktor|hüft|schienbein|fuß|bein/ },
+  { id:"po",       key:"mgPo",      re:/gesäß/ }
 ];
-var MUSKEL_KAT = { chest:"brust", back:"ruecken", arms:"arme", core:"rumpf", legs:"beine" };
+var MUSKEL_KAT = { chest:"brust", back:"ruecken", arms:"arme", core:"bauch", legs:"beine" };
 function mgVerteilung(ex){
   var res = {}, m = EX_MUSCLES[ex.id];
   function add(text, w){
@@ -36,7 +38,7 @@ function workoutThema(ids, name){
     var ex = findExercise(typeof x === "string" ? x : x && x.ex);
     if(!ex || ex.main === "stretch") return;
     var v = mgVerteilung(ex);
-    Object.keys(v).forEach(function(g){ sum[g] = (sum[g] || 0) + v[g]; tot += v[g]; });
+    Object.keys(v).forEach(function(g){ var z = g === "bauch" ? "rumpf" : g === "po" ? "beine" : g; sum[z] = (sum[z] || 0) + v[g]; tot += v[g]; });   // für das Foto zählen Bauch und Core zusammen, Po zu den Beinen
   });
   if(!tot) return "ganz";
   var mx = 0, best = "";
@@ -186,7 +188,8 @@ function kkZonenVon(text, gew, unb, schulter){
   });
   return res;
 }
-var KK_GRUPPE_ZONEN = { brust:["brust_o", "brust"], ruecken:["trapez_o", "rauten", "lat", "ruecken_u"], schulter:["schulter_v", "schulter_s"], arme:["bizeps", "trizeps", "unterarm"], rumpf:["bauch", "schraeg"], beine:["quad", "hamstring", "gesaess", "waden"] };
+var KK_GRUPPE_ZONEN = { brust:["brust_o", "brust"], ruecken:["trapez_o", "rauten", "lat", "ruecken_u"], schulter:["schulter_v", "schulter_s"], arme:["bizeps", "trizeps", "unterarm"], bauch:["bauch", "schraeg"], rumpf:["bauch", "schraeg", "huefte", "ruecken_u"], beine:["quad", "hamstring", "waden"], po:["gesaess"] };
+/* Muskel-Filter: Bauch = nur die Bauchmuskeln; Core = Körpermitte (Bauch, Hüfte, unterer Rücken, also auch die Mischübungen); Beine und Po getrennt (der Übergang ist fließend) */
 /* Haupt- und Hilfszonen (fein) einer Übung; ohne Muskeltext entscheidet die grobe Gruppe (Kategorie) */
 function kkFein(ex){
   var m = EX_MUSCLES[ex.id], haupt = {}, hilfe = {}, sch = KK_AUSNAHME[ex.id];
@@ -366,7 +369,7 @@ function kkMuskelHTML(attrZone, attrGrp, sel, opt){
     return filterChip(attrGrp, g.id, kkGrpAn(sel, g.id), svgIcon(STUDIO_GRUPPEN_ICON[g.id] || CAT_ICON.weight), t(g.key));
   }).join("")+(opt.extra || "");
   var auf = !!state.db.settings.kkListeAuf;
-  return '<div class="af-lbl kk-lblzeile"><span>'+esc(t("kkMuskel"))+'</span>'+kkModusHTML()+'</div>'+
+  return '<div class="af-lbl kk-lblzeile'+(opt.ohneLabel ? ' kk-nur-schalter' : '')+'">'+(opt.ohneLabel ? '' : '<span>'+esc(t("kkMuskel"))+'</span>')+kkModusHTML()+'</div>'+
     '<div class="fc-chips kk-grp-chips">'+chips+'</div>'+
     '<div class="kk-filter'+(opt.glow ? ' kk-glow' : '')+'">'+koerperPaar(w, { sel:sel, attr:attrZone })+'</div>'+
     '<div class="kk-hinweis'+(sel.length ? ' an' : '')+'">'+esc(sel.length ? sel.map(kkName).join(", ") : t("kkTippen"))+'</div>'+
