@@ -192,6 +192,71 @@
     gleich(W.studioArt("push-ups"), "koerper", "Liegestütze");
     gleich(W.studioArt("band-squat"), "band", "Band-Kniebeuge");
   });
+  test("Trainingsart: Fitnessstudio (Gerät, Hantel, Kettlebell, Band), Calisthenic-Park (Stange, Barren), Körpergewicht (ohne Ausrüstung)", function () {
+    function art(id) { var ex = W.findExercise(id); wahr(ex, "Übung fehlt: " + id); return W.exTrainArt(ex); }
+    gleich(art("leg-press"), "studio", "Beinpresse");
+    gleich(art("band-squat"), "studio", "Kniebeuge mit Band");
+    gleich(art("pull-ups"), "cali", "Klimmzüge");
+    gleich(art("push-ups"), "body", "Liegestütze");
+    ["crunch", "judo-flip", "incline-push-up"].forEach(function (id) { gleich(art(id), "body", id + " braucht nichts"); });
+    gleich(W.TRAIN_ARTEN, ["studio", "cali", "body"], "die drei Trainingsarten");
+    gleich(W.exTrainArt(null), "body", "ohne Übung");
+  });
+  test("Fitnessstudio-Übung (exIstStudio): Gerät, Hantel oder Kettlebell; Übungen ohne Ausrüstung („none“) nie", function () {
+    var fehl = [];
+    W.EXERCISES.forEach(function (ex) {
+      var eq = ex.equip || [];
+      if (!eq.length || eq.every(function (e) { return e === "none"; })) { if (W.exIstStudio(ex)) fehl.push(ex.id); }
+    });
+    wahr(!fehl.length, "ohne Ausrüstung, aber als Studio-Übung gezählt: " + fehl.join(", "));
+    ["incline-push-up", "deficit-push-up", "judo-flip", "crunch", "crunch-arms-straight", "crunch-hands-overhead", "cross-body-crunch"].forEach(function (id) {
+      var ex = W.findExercise(id);
+      wahr(ex && !W.exIstStudio(ex), id + " ist ohne Ausrüstung und gehört nicht zum Fitnessstudio");
+    });
+    wahr(W.exIstStudio(W.findExercise("leg-press")) && W.exIstStudio(W.findExercise("goblet-squat")), "Gerät und Kettlebell/Kurzhantel bleiben Studio");
+    wahr(W.EXERCISES.some(function (ex) { return (ex.equip || []).indexOf("kb") > -1 && W.exIstStudio(ex); }), "Kettlebell zählt zum Fitnessstudio");
+    wahr(!W.exIstStudio(null), "ohne Übung");
+  });
+  test("Jede Übung (außer Dehnen) hat genau eine Trainingsart (exTrainArt); im Filter zählt Band zusätzlich zum Calisthenic-Park (exTrainArten)", function () {
+    var n = { studio: 0, cali: 0, body: 0 }, zahlKarte = { studio: 0, cali: 0, body: 0 };
+    W.EXERCISES.forEach(function (ex) {
+      if (ex.main === "stretch") return;
+      var art = W.exTrainArt(ex), arten = W.exTrainArten(ex);
+      wahr(W.TRAIN_ARTEN.indexOf(art) > -1, "Art von " + ex.id + ": " + art);
+      n[art]++;
+      wahr(arten.indexOf(art) > -1, "exTrainArten von " + ex.id + " enthält die eigene Art nicht");
+      var band = (ex.equip || []).indexOf("band") > -1;
+      gleich(arten, band ? ["studio", "cali"] : [art], "exTrainArten von " + ex.id);
+      // trainPasst folgt exTrainArten: genau die Karten der Liste lassen die Übung durch
+      gleich(W.TRAIN_ARTEN.filter(function (a) { return W.trainPasst(ex, [a]); }), W.TRAIN_ARTEN.filter(function (a) { return arten.indexOf(a) > -1; }), "trainPasst von " + ex.id);
+      if (!W.libHidden("ex:" + ex.id)) arten.forEach(function (a) { zahlKarte[a]++; });
+      if (art === "body") wahr(!(ex.equip || []).some(function (e) { return e !== "none"; }) && !W.exAusr(ex).length && !W.STUDIO_GERAET[ex.id], ex.id + " ist Körpergewicht, hat aber Ausrüstung " + ex.equip + " oder ein Studio-Gerät");
+      if (art === "cali") wahr(!(ex.equip || []).some(function (e) { return e === "gym" || e === "db" || e === "kb" || e === "band"; }), ex.id + " ist Calisthenic-Park, braucht aber Studio-Ausrüstung");
+    });
+    wahr(n.studio > 20 && n.cali > 5 && n.body > 20, "jede Art ist besetzt: " + JSON.stringify(n));
+    gleich(W.exTrainArten(W.findExercise("band-squat")), ["studio", "cali"], "Kniebeuge mit Band: Fitnessstudio und Calisthenic-Park");
+    gleich(W.exTrainArt(W.findExercise("band-squat")), "studio", "Kniebeuge mit Band: Farbe und Zuordnung bleiben Fitnessstudio");
+    gleich(W.exTrainArten(W.findExercise("leg-press")), ["studio"], "Beinpresse");
+    gleich(W.exTrainArten(W.findExercise("pull-ups")), ["cali"], "Klimmzüge");
+    gleich(W.exTrainArten(W.findExercise("push-ups")), ["body"], "Liegestütze");
+    wahr(W.studioFilterOk("band-squat", ["cali"], []) && W.studioFilterOk("band-squat", ["studio"], []) && !W.studioFilterOk("band-squat", ["body"], []), "Band-Übung passt zu Fitnessstudio und Calisthenic-Park, nicht zu Körpergewicht");
+    var zahl = W.trainZahlen();
+    gleich([zahl.studio, zahl.cali, zahl.body], [zahlKarte.studio, zahlKarte.cali, zahlKarte.body], "Zahlen auf den Karten (Band zählt bei beiden)");
+  });
+  test("Filter Trainingsart + Ausrüstung (studioFilterOk): beide müssen passen, leer = alles, innerhalb einer Gruppe genügt eine", function () {
+    wahr(W.studioFilterOk("leg-press", [], []), "ohne Wahl passt alles");
+    wahr(W.studioFilterOk("leg-press", ["studio"], []) && !W.studioFilterOk("leg-press", ["body"], []), "Trainingsart Fitnessstudio");
+    wahr(W.studioFilterOk("push-ups", ["body"], []) && !W.studioFilterOk("push-ups", ["studio"], []), "Trainingsart Körpergewicht");
+    wahr(W.studioFilterOk("pull-ups", ["cali"], []) && !W.studioFilterOk("pull-ups", ["body"], []), "Trainingsart Calisthenic-Park");
+    wahr(W.studioFilterOk("pull-ups", ["body", "cali"], []) && W.studioFilterOk("push-ups", ["body", "cali"], []) && !W.studioFilterOk("leg-press", ["body", "cali"], []), "Mehrfachwahl: eine Art genügt");
+    wahr(W.studioFilterOk("leg-press", ["studio"], ["maschine"]) && !W.studioFilterOk("cable-row", ["studio"], ["maschine"]), "Ausrüstung Maschine");
+    wahr(W.studioFilterOk("cable-row", ["studio"], ["maschine", "kabel"]), "zwei Geräte: eins genügt");
+    wahr(!W.studioFilterOk("leg-press", ["body"], ["maschine"]), "Trainingsart und Ausrüstung gelten zusammen");
+    wahr(W.studioFilterOk("band-squat", ["studio"], ["band"]) && !W.studioFilterOk("leg-press", [], ["band"]), "Widerstandsband");
+    wahr(!W.studioFilterOk("push-ups", [], ["maschine"]), "Körpergewicht hat kein Gerät");
+    wahr(!W.studioFilterOk("gibt-es-nicht", [], []), "unbekannte Übung");
+    gleich(W.AUSR_IDS, ["smith", "kabel", "lh", "kh", "maschine", "kb", "band"], "sieben Ausrüstungs-Chips");
+  });
   test("Geräte-Chip im Info-Fenster: Symbol und Name je Ausrüstung, im Timer (live) keiner", function () {
     var band = W.gearChipsHTML(W.findExercise("band-standing-row"), false);
     wahr(band.indexOf("gchip") > -1 && band.indexOf(W.equipName("band")) > -1 && band.indexOf("<svg") > -1, "Band: Chip mit Symbol und Name");
@@ -738,9 +803,13 @@
     } finally { W.installTipHTML = alt.it; W.snapZeit = alt.z; s.lastExport = alt.ex; s.backupTipBis = alt.bis; W.state.db.blocks = alt.bl; }
   });
 
-  test("Neue Studio-Übungen (Cardio, Griffe): vollständig und zweisprachig, Griff-Angabe als Paar, keine Doppelten", function () {
-    var cardio = W.STUDIO_GRUPPEN.filter(function (g) { return g.id === "cardio"; })[0];
-    wahr(cardio && cardio.ids.split(" ").length >= 9, "Gruppe Cardio mit den Battle Ropes");
+  test("Cardio und Griffe: die Gruppe Cardio & Ausdauer besteht aus den Ausdauerübungen (Battle Ropes sind entfernt), alles vollständig und zweisprachig, Griff-Angabe als Paar, keine Doppelten", function () {
+    var studioCardio = W.STUDIO_GRUPPEN.filter(function (g) { return g.id === "cardio"; })[0];
+    wahr(studioCardio && !studioCardio.ids.trim(), "Die Studio-Gruppe Cardio ist leer (Battle Ropes entfernt)");
+    var cardio = { ids: W.katalogGruppen().filter(function (g) { return g.id === "cardio"; })[0].ids.join(" ") };
+    wahr(cardio.ids.split(" ").length >= 10, "Gruppe Cardio & Ausdauer bleibt über die Ausdauerübungen: " + cardio.ids.split(" ").length);
+    var weg = W.EXERCISES.filter(function (e) { return e.id === "ab-wheel-rollout" || e.id === "wrist-roller" || /battle/i.test(e.id + " " + e.name.de + " " + e.name.en); }).map(function (e) { return e.id; });
+    wahr(!weg.length, "Entfernte Übungen (Battle Ropes, Ab-Wheel, Wrist Roller) sind noch da: " + weg.join(", "));
     cardio.ids.split(" ").forEach(function (id) {
       var ex = W.findExercise(id), i = W.EX_INFO[id], p = W.EX_POSTURE[id], m = W.EX_MUSCLES[id];
       wahr(ex && ex.name.de && ex.name.en, id + ": Name in zwei Sprachen");
