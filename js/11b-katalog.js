@@ -516,14 +516,18 @@ function katWoBereich(lw, exs){
   // klar vorn: mindestens 40 % und mehr als der zweite - sonst ein Workout für den ganzen Körper
   return exs.length && bn >= exs.length*0.4 && bn > zweit && KAT_WO_BEREICHE.indexOf(best) > -1 ? best : "ganz";
 }
-/* Zahl der fertigen Workouts je Trainingsart (alle Übungen passen dazu) für die Karten im Filter */
+/* Ein Workout gehört zur Trainingsart, wenn mindestens zwei Drittel seiner Übungen dazu passen (ein Fitnessstudio-Programm mit einer Übung ohne Gerät bleibt Fitnessstudio) */
+function katWoTrainOk(exs, fTrain){
+  return !fTrain.length || exs.filter(function(ex){ return trainPasst(ex, fTrain); }).length*3 >= exs.length*2;
+}
+/* Zahl der fertigen Workouts je Trainingsart (zwei Drittel passen) für die Karten im Filter */
 function katTrainZahlenWo(){
   var n = { studio:0, cali:0, body:0 };
   LIB_WORKOUTS.forEach(function(lw){
     if(libIstWarmDehn(lw) || libHidden("wo:"+lw.id)) return;
     var exs = lw.exercises.map(findExercise).filter(Boolean);
     if(!exs.length) return;
-    TRAIN_ARTEN.forEach(function(a){ if(exs.every(function(ex){ return trainPasst(ex, [a]); })) n[a]++; });
+    TRAIN_ARTEN.forEach(function(a){ if(katWoTrainOk(exs, [a])) n[a]++; });
   });
   return n;
 }
@@ -556,7 +560,7 @@ function renderKatalogWorkouts(){
     rows.push({ lw:lw, exs:exs, name:tplText(lw.name), dur:workoutDuration(libWorkoutRun(lw)), hidden:libHidden("wo:"+lw.id),
       bereich:katWoBereich(lw, exs), mains:woMains(exs) });
   });
-  var sichtbar = rows.filter(function(r){ return !r.hidden && r.exs.every(function(ex){ return trainPasst(ex, fTrain); }) && katWoPasst(r.exs, fGr, fAusr, zonen); });   // jede Übung passt zur gewählten Trainingsart
+  var sichtbar = rows.filter(function(r){ return !r.hidden && katWoTrainOk(r.exs, fTrain) && katWoPasst(r.exs, fGr, fAusr, zonen); });   // mindestens zwei Drittel der Übungen passen zur gewählten Trainingsart
   var versteckt = rows.filter(function(r){ return r.hidden; });
   libWoSort(sichtbar, woSort);
   var je = {};
