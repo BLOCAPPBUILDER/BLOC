@@ -414,7 +414,8 @@ function studioEinheit(id){
   var e = studioEintrag(id);
   if(e && (e.einheit === "wdh" || e.einheit === "zeit")) return e.einheit;
   var p = studioModusPlan(id);
-  return studioNurBlock(findExercise(id)) || (p && planStartArt(p) === "timer") ? "zeit" : "wdh";
+  if(p) return planStartArt(p) === "timer" ? "zeit" : "wdh";   // im Plan: Satz für Satz = Wiederholungen, Mit Timer = Zeit
+  return studioNurBlock(findExercise(id)) ? "zeit" : "wdh";
 }
 /* Läuft eine Übung in Wiederholungen mit dem Timer, rechnet er etwa 3 Sekunden je Wiederholung */
 function studioWdhDauer(id){ return clamp(studioZiel(id).wdh*3, 15, 120); }
@@ -793,7 +794,7 @@ function renderStudioPlan(){
     html += '<div class="plan-kopf"><b id="plan-summe">'+esc(planSummeText(ids))+'</b><span class="plan-kopf-re">'+favBtn("plan:"+p.id)+'<button type="button" class="ghost plan-edit" data-planedit>'+svgIcon(ICON_EDIT)+' '+t("planEdit")+'</button></span></div>'+
       (ids.length ? hw.z(0, "page-hint") : '')+
       (ids.length ? '<div class="seg-row pz-art" role="group" aria-label="'+esc(t("planArtFrage"))+'">'+
-          ['saetze', 'timer'].map(function(m){ var an = planStartArt(p) === m; return '<button type="button" data-planart="'+m+'" class="'+(an ? 'active' : '')+'" aria-pressed="'+an+'">'+(m === 'timer' ? ICON_PLAY+' ' : '')+esc(t(m === 'timer' ? 'stModusTimer' : 'stModusSaetze'))+'</button>'; }).join("")+'</div>'+
+          ['saetze', 'timer'].map(function(m){ var an = planStartArt(p) === m; return '<button type="button" data-planart="'+m+'" class="'+(an ? 'active' : '')+'" aria-pressed="'+an+'">'+(m === 'timer' ? ICON_PLAY+' ' : '')+esc(t(m === 'timer' ? 'stModusTimer' : 'planArtWdh'))+'</button>'; }).join("")+'</div>'+
         '' : '')+
       (ids.length ? planKopfKarteHTML(p, ids) : '')+
       (ids.length ? auswertungHTML(ids) : '')+   // erst die Übersicht über die Übungen im Ganzen, dann die Zeilen
@@ -831,7 +832,7 @@ function renderStudioPlan(){
   });
   /* Plan als Workout mit Timer: Air- und Studio-Übungen laufen hintereinander (Studio-Übungen mit ihren Satz- und Pausenwerten);
      eine Kopie unter Meine, die beim erneuten Starten aktualisiert wird */
-  app.querySelectorAll("[data-planart]").forEach(function(b){ b.addEventListener("click", function(){ p.startArt = b.getAttribute("data-planart"); p.updatedAt = Date.now(); save(); neu(); }); });
+  app.querySelectorAll("[data-planart]").forEach(function(b){ b.addEventListener("click", function(){ p.startArt = b.getAttribute("data-planart"); stPlanIds(p).forEach(function(id){ var en = studioEintrag(id); if(en) delete en.einheit; }); p.updatedAt = Date.now(); save(); neu(); }); });   // Umschalten setzt alle Übungen auf die Einheit der Art zurück (Satz für Satz = Wiederholungen, Timer = Zeit)
   function planLos(){   // erst die Wahl darüber (nach Sätzen oder mit Timer), dann ein einziges Los geht’s in den passenden Bereich
     if(planStartArt(p) === "timer") planAlsWorkout(p, true);
     else go("#satz/"+p.id+"/0");   // nach Sätzen: Glas-Bereich zum Wischen, je Satz Gewicht × Wiederholungen eintragen

@@ -3551,12 +3551,12 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
                                    qWith(stLiegen([27,55,19,61], gDB(19,59)), { a:[[27,55,19,61],[24,58,28,50]] })];
   P["supinated-triceps-extension"] = [Q(null,[50,20],[50,50],STAND,[[52,32,62,31]], PD_T+gQuer(62,31,4)), Q(null,[50,20],[50,50],STAND,[[52,32,54,44]], PD_T+gQuer(54,44,4))];
   P["ez-jm-press"] = [stLiegen([29,56,30,44], gScheibe(30,42,3)), stLiegen([38,60,28,57], gScheibe(28,56,3))];
-  /* Seitenansicht: die Ellbogen zeigen zur Seite, der Oberarm ist von der Seite kaum zu sehen - gezeigt wird nur der Unterarm mit der Hantel; den abgewinkelten Arm zeigt die Ansicht von vorn */
-  P["tate-press"] = [stLiegen([28,57,28,43], gDB(28,41)), stLiegen([28,62,30,67], gDB(30,65))];
+  /* Tate Press: nur die Ansicht von vorn (siehe unten) */
   /* Tate Press von vorn (Blick vom Kopfende): Ellbogen zeigen nach oben und außen, die Hanteln gehen von der Brust nach oben über die Ellbogen */
-  var TP_BANK = gLinie("M32 84H68");   // Bankpolster unter dem Kopf
-  function tpVorn(a, d){ return Q([50,76],[50,67],[50,61],[], a, TP_BANK+gDB(d[0],d[1])+gDB(d[2],d[3]), true); }   // Blick vom Kopfende: Kopf vorn, der Körper läuft nach hinten weg
-  V2["tate-press"] = { typ:"front", p:[tpVorn([[33,48,40,31],[67,48,60,31]], [40,29,60,29]), tpVorn([[31,52,44,60],[69,52,56,60]], [44,62,56,62])] };
+  var TP_BANK = gLinie("M34 68H66M38 68V87M62 68V87");   // Bank von vorn (Blick von den Füßen): Polster und zwei Beine, die Füße stehen links und rechts daneben
+  function tpVorn(a, d){ return Q([50,54],[50,60],[50,66],[[33,76,30,87,26,89],[67,76,70,87,74,89]], a, TP_BANK+gDB(d[0],d[1])+gDB(d[2],d[3]), true); }
+  /* oben: beide Arme gestreckt nach oben; unten: die Ellbogen zeigen zur Seite, die Hanteln sinken neben den Kopf (der abgewinkelte Arm ist nur von vorn zu sehen) */
+  P["tate-press"] = [tpVorn([[43,40,38,20],[57,40,62,20]], [38,18,62,18]), tpVorn([[27,58,35,46],[73,58,65,46]], [35,44,65,44])];   // nur diese Ansicht: von der Seite wäre der abgewinkelte Arm irreführend
 
   /* ---------- Beine, Core, Unterarme ---------- */
   var BS_B = gBench(24,46,67);

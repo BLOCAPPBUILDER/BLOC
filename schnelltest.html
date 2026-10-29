@@ -1402,10 +1402,10 @@
       pruefe(!pl.standard && W.planStartArt(pl) === "saetze", "Plan mit Gewichtsübung ohne Wahl soll Satz für Satz laufen: " + W.planStartArt(pl));
       // Standard: Übung ohne Gewicht = Zeit (Feld Arbeit (s), kein Gewicht), Übung mit Gewicht = Wiederholungen
       pruefe($$("[data-pzeinheit]").length === 4, "Je Übung zwei Knöpfe Wiederholungen/Zeit erwartet: " + $$("[data-pzeinheit]").length);
-      pruefe(einheit("air-squats", "zeit").classList.contains("active") && !einheit("air-squats", "wdh").classList.contains("active") && W.studioEinheit("air-squats") === "zeit", "Air Squats (ohne Gewicht) sollen standardmäßig in Zeit laufen");
-      pruefe(feld("air-squats", "work") && !feld("air-squats", "wdh") && !feld("air-squats", "kg") && /Arbeit \(s\)/.test($('[data-pz="air-squats"]').textContent), "Zeit ohne Gewicht: Feld „Arbeit (s)“ statt „Wdh.“, kein Gewicht");
+      pruefe(einheit("air-squats", "wdh").classList.contains("active") && !einheit("air-squats", "zeit").classList.contains("active") && W.studioEinheit("air-squats") === "wdh", "Air Squats sollen im Plan Satz für Satz standardmäßig in Wiederholungen laufen");
+      pruefe(feld("air-squats", "wdh") && !feld("air-squats", "work") && !feld("air-squats", "kg"), "Wiederholungen ohne Gewicht: Feld „Wdh.“, kein Gewicht");
       pruefe(einheit("leg-press", "wdh").classList.contains("active") && W.studioEinheit("leg-press") === "wdh" && feld("leg-press", "wdh") && feld("leg-press", "kg") && !feld("leg-press", "work"), "Beinpresse soll standardmäßig Wiederholungen und Gewicht zeigen");
-      pruefe(/^\d+×\d+$/.test(W.satzKurz("leg-press")) && /^\d+×\d+ s$/.test(W.satzKurz("air-squats")), "satzKurz: Wdh. „3×12“, Zeit „3×40 s“: " + W.satzKurz("leg-press") + " / " + W.satzKurz("air-squats"));
+      pruefe(/^\d+×\d+$/.test(W.satzKurz("leg-press")) && /^\d+×\d+$/.test(W.satzKurz("air-squats")), "satzKurz: Wdh. „3×12“: " + W.satzKurz("leg-press") + " / " + W.satzKurz("air-squats"));
       // Umschalten: Beinpresse auf Zeit behält das Gewicht
       klick(einheit("leg-press", "zeit"));
       await bis(function () { return feld("leg-press", "work"); }, 2000, "Beinpresse: Zeit");
@@ -1417,7 +1417,10 @@
       klick(einheit("air-squats", "zeit"));
       await bis(function () { return feld("air-squats", "work"); }, 2000, "Air Squats: wieder Zeit");
       // Satz für Satz mit Zeit: Sekunden als [kg, sek, "n", 0, 1]
-      klick(await bis(function () { return $('[data-planart="saetze"]'); }, 3000, "Satz für Satz"));
+      klick(await bis(function () { return $('[data-planart="saetze"]'); }, 3000, "Satz für Satz"));   // setzt die Einheiten auf Wiederholungen zurück
+      await bis(function () { return feld("air-squats", "wdh"); }, 2000, "Satz für Satz: Wiederholungen als Standard");
+      klick(einheit("air-squats", "zeit"));
+      await bis(function () { return feld("air-squats", "work"); }, 2000, "Air Squats: Zeit gewählt");
       klick($("[data-planlos]")); await warte(150); if ($("#overlayRoot [data-act]")) klick($("#overlayRoot [data-act]"));
       await bis(function () { return /^#satz\//.test(W.location.hash) && $$(".satz-karte").length === 2; }, 3000, "Wisch-Bereich");
       var k0 = $$(".satz-karte")[0];
@@ -1582,7 +1585,7 @@
       W.go("#studioplan/p-koerper");
       await bis(function () { return $('.pz-zeile[data-pz="push-ups"]'); }, 3000, "Plan mit Übung ohne Gewicht");
       var zk = $('.pz-zeile[data-pz="push-ups"]');
-      pruefe(zk.querySelector('[data-feld="work"]') && !zk.querySelector('[data-feld="kg"]') && !zk.querySelector('[data-pzstart]'), "Ohne Gewicht: Arbeit statt Wiederholungen, kein Gewichtsfeld, kein Timer-Start je Übung erwartet");
+      pruefe(zk.querySelector('[data-feld="wdh"]') && !zk.querySelector('[data-feld="kg"]') && !zk.querySelector('[data-pzstart]'), "Ohne Gewicht im Plan Satz für Satz: Wiederholungen, kein Gewichtsfeld, kein Timer-Start je Übung erwartet");
       W.studioModusSetzen("push-ups", "saetze");   // die Übungskarte darf weiter Satz für Satz oder mit Timer laufen; hier Satz für Satz
       W.go("#studio/push-ups");
       await bis(function () { return $("#st-w"); }, 3000, "Karte im Satz-Modus ohne Gewichtsfeld");
