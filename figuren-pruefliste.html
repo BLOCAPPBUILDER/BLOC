@@ -95,12 +95,13 @@ window.addEventListener("load", function(){ setTimeout(function(){
   function rang(e){ return OFFEN[e.id] ? 0 : UNSICHER[e.id] ? 1 : 2; }
   ex.sort(function(a,b){ return rang(a)-rang(b) || tplText(a.name).localeCompare(tplText(b.name), "de"); });
   var n1=0,n0=0; ex.forEach(function(e){ if(UNSICHER[e.id]) n1++; if(OFFEN[e.id]) n0++; });
-  var h='<h1>Figuren-Prüfliste</h1><div class="sub">'+ex.length+' Übungen mit Figur · Fassung '+(window.NATIV_FASSUNG||"")+'</div>'+
+  var STILL = /[?&]still=1/.test(location.search);   /* Standard: dieselbe Animation wie in der App (illuHTML, die App setzt sichtbare Figuren selbst in Bewegung); ?still=1 zeigt Standbilder A und B */
+  var h='<h1>Figuren-Prüfliste</h1><div class="sub">'+ex.length+' Übungen mit Figur · <a style="color:#8ab4ff" href="'+(STILL ? '?' : '?still=1')+'">'+(STILL ? 'in Bewegung zeigen' : 'Standbilder A/B zeigen')+'</a></div>'+
     '<div class="leg"><span style="color:#ff7a7f">■ rot: bekannt unzureichend, noch offen ('+n0+')</span><span style="color:#f2c230">■ gelb: unsicher, bitte prüfen ('+n1+')</span><span>■ ohne Rahmen: nicht beanstandet</span></div><div class="grid">';
   ex.forEach(function(e){
     var cls = OFFEN[e.id] ? "offen" : UNSICHER[e.id] ? "unsicher" : "", v2 = ILLU2[e.id], top = v2 && ILLU_VIEW2[e.id] && ILLU_VIEW2[e.id].typ==="top";
-    h+='<div class="k '+cls+'"><h3>'+tplText(e.name)+'</h3><small>'+e.id+'</small><div class="f">'+svg(ILLU[e.id],0)+svg(ILLU[e.id],1)+
-      (v2 ? svg(v2,0,top)+svg(v2,1,top)+'<div class="l">links Hauptansicht (A, B), rechts zweite Ansicht ('+(ILLU_VIEW2[e.id].typ)+')</div>' : '')+'</div>'+
+    h+='<div class="k '+cls+'"><h3>'+tplText(e.name)+'</h3><small>'+e.id+'</small><div class="f">'+(STILL ? svg(ILLU[e.id],0)+svg(ILLU[e.id],1) : illuHTML(e.id, "", false))+
+      (v2 ? (STILL ? svg(v2,0,top)+svg(v2,1,top) : illuHTML(e.id, "", true))+'<div class="l">links Hauptansicht, rechts zweite Ansicht ('+(ILLU_VIEW2[e.id].typ)+')</div>' : '')+'</div>'+
       (cls ? '<div class="grund">'+(OFFEN[e.id]||UNSICHER[e.id])+'</div>' : '')+'</div>';
   });
   document.body.insertAdjacentHTML("beforeend", h+'</div>');
