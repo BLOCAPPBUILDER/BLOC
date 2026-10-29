@@ -772,8 +772,8 @@
       await filterAuf();
       var zahlen = W.katTrainZahlenWo();
       pruefe(ARTEN.every(function (a) { return new RegExp("^" + zahlen[a] + " Workouts$").test($('[data-sttrain="' + a + '"] small').textContent.trim()); }), "Karten zeigen „n Workouts“ (Fitnessstudio " + zahlen.studio + ", Calisthenic-Park " + zahlen.cali + ", Körpergewicht " + zahlen.body + "): " + $$("[data-sttrain] small").map(function (e) { return e.textContent; }).join(" | "));
-      // ein Workout steht, wenn ALLE seine Übungen zur gewählten Trainingsart passen
-      function alleUebungenPassen(art) { return W.LIB_WORKOUTS.filter(function (lw) { return !W.libIstWarmDehn(lw) && !W.libHidden("wo:" + lw.id) && lw.exercises.map(W.findExercise).filter(Boolean).every(function (e) { return W.trainPasst(e, art); }); }).length; }
+      // ein Workout steht, wenn mindestens zwei Drittel seiner Übungen zur gewählten Trainingsart passen
+      function alleUebungenPassen(art) { return W.LIB_WORKOUTS.filter(function (lw) { return !W.libIstWarmDehn(lw) && !W.libHidden("wo:" + lw.id) && W.katWoTrainOk(lw.exercises.map(W.findExercise).filter(Boolean), art); }).length; }
       await trainNur(["body"]);
       var frei = $$(".lib-card").length;
       pruefe(frei >= 30 && frei === alleUebungenPassen(["body"]) && frei === zahlen.body && !$('[data-cover="lib/gym-legday"]') && $('[data-cover="lib/leg-day"]'), "Körpergewicht zeigt " + frei + " Workouts oder ein Fitnessstudio-Programm");
