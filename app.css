@@ -2261,3 +2261,7 @@ details[open] > summary > .pg-pfeil{ transform:rotate(180deg); }
 .kk-lblzeile.kk-nur-schalter{ justify-content:flex-end; margin:0 0 4px; }
 /* lange Wörter in Kachelnamen (z. B. „Konzentrationscurl“) laufen nicht über den Rand */
 .fig-name, .wb-mini-name{ overflow-wrap:break-word; hyphens:auto; }
+
+/* Plan-Zeile: Wiederholungen oder Zeit (mit Sätzen) */
+.pz-einheit{ margin:10px 0 6px; }
+.pz-einheit button{ padding:8px 10px; font-size:13px; }

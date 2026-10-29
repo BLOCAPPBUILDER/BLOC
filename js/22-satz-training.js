@@ -68,9 +68,10 @@ function satzKarteHTML(id, i, n){
   var ex = findExercise(id);
   if(!ex) return "";
   var koerper = studioNurBlock(ex), z = studioZiel(id), e = studioEintrag(id) || {}, log = e.log || [], heute = studioTag(Date.now());
-  var h = satzHeute(id);
+  var h = satzHeute(id), zeitE = studioEinheit(id) === "zeit";
   var v = studioVorschlag(id), letzte = studioLetzte(id, false), fertig = h && h.s.length >= z.saetze, lang = currentLang() === "en" ? 1 : 0;
   if(e.kg != null && !h) v.kg = e.kg;
+  var zeitStart = h && h.s.length && h.s[h.s.length-1][4] === 1 ? v.wdh : studioTimer(id).work;   // Zeit: Sekunden des letzten Satzes heute, sonst die Arbeitszeit der Übung
   var info = EX_INFO[id], post = EX_POSTURE[id];
   return '<section class="satz-karte" data-satzk="'+i+'" data-id="'+esc(id)+'" aria-label="'+esc((i+1)+"/"+n+" "+tplText(ex.name))+'">'+
     '<div class="satz-glas">'+
@@ -87,8 +88,8 @@ function satzKarteHTML(id, i, n){
       '<div class="satz-eingabe'+(koerper ? ' eins' : '')+'">'+
         (koerper ? '' : '<div class="satz-feld"><label>'+esc(t("stKg"))+'</label><div class="satz-zaehler"><button type="button" data-kgminus aria-label="&minus;">&minus;</button>'+
           '<input type="text" inputmode="decimal" class="satz-kg" value="'+studioKg(v.kg)+'" aria-label="'+esc(t("stKg"))+'"><button type="button" data-kgplus aria-label="&plus;">&plus;</button></div></div>')+
-        '<div class="satz-feld"><label>'+esc(t("stReps"))+'</label><div class="satz-zaehler"><button type="button" data-wminus aria-label="&minus;">&minus;</button>'+
-          '<input type="number" inputmode="numeric" class="satz-w" value="'+v.wdh+'" aria-label="'+esc(t("stReps"))+'"><button type="button" data-wplus aria-label="&plus;">&plus;</button></div></div>'+
+        '<div class="satz-feld"><label>'+esc(t(zeitE ? "planArbeit" : "stReps"))+'</label><div class="satz-zaehler"><button type="button" data-wminus aria-label="&minus;">&minus;</button>'+
+          '<input type="number" inputmode="numeric" class="satz-w" value="'+(zeitE ? zeitStart : v.wdh)+'" aria-label="'+esc(t(zeitE ? "planArbeit" : "stReps"))+'"><button type="button" data-wplus aria-label="&plus;">&plus;</button></div></div>'+
       '</div>'+
       '<button type="button" class="satz-los" data-satzset>✓ '+esc(t("stSetDone"))+' '+((h ? h.s.length : 0)+1)+'</button>'+
       '<div class="satz-pause" hidden><span>'+esc(t("stPause"))+'</span><b></b><button type="button" data-satzskip>'+esc(t("stSkip"))+'</button></div>'+
@@ -238,16 +239,17 @@ function renderSatzTraining(planId, start){
     var a;
     if((a = k.querySelector("[data-kgminus]"))) a.addEventListener("click", function(){ tipp(); kgIn.value = studioKg(Math.max(0, kgWert() - z.schritt)); });
     if((a = k.querySelector("[data-kgplus]"))) a.addEventListener("click", function(){ tipp(); kgIn.value = studioKg(kgWert() + z.schritt); });
-    k.querySelector("[data-wminus]").addEventListener("click", function(){ tipp(); wIn.value = Math.max(1, (parseInt(wIn.value) || 0) - 1); });
-    k.querySelector("[data-wplus]").addEventListener("click", function(){ tipp(); wIn.value = Math.min(100, (parseInt(wIn.value) || 0) + 1); });
+    var zeitE = studioEinheit(id) === "zeit", wSchritt = zeitE ? 5 : 1, wMax = zeitE ? 600 : 100;   // Zeit: Sekunden in Fünferschritten
+    k.querySelector("[data-wminus]").addEventListener("click", function(){ tipp(); wIn.value = Math.max(1, (parseInt(wIn.value) || 0) - wSchritt); });
+    k.querySelector("[data-wplus]").addEventListener("click", function(){ tipp(); wIn.value = Math.min(wMax, (parseInt(wIn.value) || 0) + wSchritt); });
     [kgIn, wIn].forEach(function(f){ if(f) f.addEventListener("focus", function(){ f.select(); }); });
     k.querySelectorAll("[data-ukg]").forEach(function(b){ b.addEventListener("click", function(){ tipp(); if(kgIn) kgIn.value = studioKg(+b.getAttribute("data-ukg")); wIn.value = b.getAttribute("data-uw"); }); });
     k.querySelector("[data-satzset]").addEventListener("click", function(){
-      var kg = koerper ? 0 : kgWert(), w = Math.max(1, Math.min(100, parseInt(wIn.value) || 1)), e = studioEintrag(id) || {};
-      studioSatzLog(id, kg, w);
+      var kg = koerper ? 0 : kgWert(), w = Math.max(1, Math.min(wMax, parseInt(wIn.value) || 1)), e = studioEintrag(id) || {};
+      studioSatzLog(id, kg, w, zeitE);
       vibrate([40, 30, 70]);
       var h = (studioEintrag(id).log || []).slice(-1)[0], nSatz = h ? h.s.length : 1;
-      satzFeedback(nSatz, satzText([kg, w]), false);
+      satzFeedback(nSatz, satzText(zeitE ? [kg, w, "n", 0, 1] : [kg, w]), false);
       var pause = e.pause || (koerper ? 60 : 90);
       studioPauseStart(id, pause);
       karteNeu(i); pauseZeigen(); punkteFertig();

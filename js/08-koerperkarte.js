@@ -188,8 +188,8 @@ function kkZonenVon(text, gew, unb, schulter){
   });
   return res;
 }
-var KK_GRUPPE_ZONEN = { brust:["brust_o", "brust"], ruecken:["trapez_o", "rauten", "lat", "ruecken_u"], schulter:["schulter_v", "schulter_s"], arme:["bizeps", "trizeps", "unterarm"], bauch:["bauch", "schraeg"], rumpf:["bauch", "schraeg", "huefte", "ruecken_u"], beine:["quad", "hamstring", "waden"], po:["gesaess"] };
-/* Muskel-Filter: Bauch = nur die Bauchmuskeln; Core = Körpermitte (Bauch, Hüfte, unterer Rücken, also auch die Mischübungen); Beine und Po getrennt (der Übergang ist fließend) */
+var KK_GRUPPE_ZONEN = { brust:["brust_o", "brust"], ruecken:["trapez_o", "rauten", "lat", "ruecken_u"], schulter:["schulter_v", "schulter_s"], arme:["bizeps", "trizeps", "unterarm"], bauch:["bauch"], rumpf:["bauch", "schraeg", "huefte", "ruecken_u"], beine:["quad", "hamstring", "waden"], po:["gesaess"] };
+/* Muskel-Filter: Bauch = nur die Bauchmitte (leuchtet, sobald sie an der Figur getippt ist); Core = Körpermitte (Bauch, Hüfte, unterer Rücken, also auch die Mischübungen); Beine und Po getrennt (der Übergang ist fließend) */
 /* Haupt- und Hilfszonen (fein) einer Übung; ohne Muskeltext entscheidet die grobe Gruppe (Kategorie) */
 function kkFein(ex){
   var m = EX_MUSCLES[ex.id], haupt = {}, hilfe = {}, sch = KK_AUSNAHME[ex.id];

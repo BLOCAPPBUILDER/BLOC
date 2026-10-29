@@ -81,7 +81,7 @@ function anstrengungModus(){ var a = state.db.settings.anstrengung; return a ===
 function anstrengungText(rpe){ return anstrengungModus() === "rir" ? "RIR "+(10 - rpe) : "RPE "+rpe; }
 function satzText(x){   // „40×12“, ohne Gewicht „12 Wdh.“, bei besonderen Sätzen mit Kürzel davor („Aufw. 20×10“), mit Anstrengung „40×12 @ RPE 8“
   var ty = satzTyp(x);
-  return (ty === "n" ? "" : t("satzTyp_"+ty)+" ")+(x[0] > 0 ? studioKg(x[0])+"×"+x[1] : x[1]+" "+t("wdhKurz"))+(x[3] > 0 ? " @ "+anstrengungText(x[3]) : "");
+  return (ty === "n" ? "" : t("satzTyp_"+ty)+" ")+(x[0] > 0 ? studioKg(x[0])+"×"+x[1]+(x[4] === 1 ? " s" : "") : x[1]+" "+(x[4] === 1 ? "s" : t("wdhKurz")))+(x[3] > 0 ? " @ "+anstrengungText(x[3]) : "");
 }
 /* Geschätztes 1RM und Bestgewicht über alle Einheiten (nur Arbeitssätze); davor = nur Einheiten vor dem Index i.
    wdh: die meisten Wiederholungen in einem Satz, wsum: die meisten in einer Einheit (für Übungen ohne Gewicht),
@@ -112,10 +112,10 @@ function studioNurBlock(ex){
 function studioTimer(id){
   var e = studioEintrag(id) || {}, tm = e.timer || {}, ex = findExercise(id);
   if(studioNurBlock(ex))   // Vorgabe wie in Air; Runden = Sätze des Ziels, Pause = die Pause der Übung (Plan oder Karte), sonst die aus Air
-    return { reps:(e.ziel && e.ziel.saetze) || tm.reps || ex.setReps || ex.reps, work:tm.work || ex.workSec,
+    return { reps:(e.ziel && e.ziel.saetze) || tm.reps || ex.setReps || ex.reps, work:tm.work || (studioEinheit(id) === "wdh" ? studioWdhDauer(id) : ex.workSec),
              rest:tm.rest != null ? tm.rest : (e.pause != null ? e.pause : ex.restSec) };
   // Runden = die Sätze des Ziels (im Plan oder auf der Karte eingestellt); eine ältere Timer-Einstellung gilt, solange kein Ziel gesetzt ist
-  return { reps:(e.ziel && e.ziel.saetze) || tm.reps || studioZiel(id).saetze, work:tm.work || 40, rest:tm.rest != null ? tm.rest : (e.pause || 90) };
+  return { reps:(e.ziel && e.ziel.saetze) || tm.reps || studioZiel(id).saetze, work:tm.work || (studioEinheit(id) === "wdh" ? studioWdhDauer(id) : 40), rest:tm.rest != null ? tm.rest : (e.pause || 90) };
 }
 function studioRun(ex){
   var tm = studioTimer(ex.id), b = exBlock(ex);
@@ -408,17 +408,27 @@ function studioModusSetzen(id, m){
   else { var a = studioAlle(); (a[id] || (a[id] = { log:[] })).modus = m; }
   save();
 }
+/* Einheit einer Übung im Plan: "wdh" (Sätze × Wiederholungen) oder "zeit" (Sätze × Sekunden); Übungen mit Gerät kommen mit Gewicht dazu (Gewicht tracken).
+   Ohne eigene Wahl (settings.studio[id].einheit): Übungen ohne Gewicht und Pläne mit Timer rechnen in Zeit, sonst in Wiederholungen. */
+function studioEinheit(id){
+  var e = studioEintrag(id);
+  if(e && (e.einheit === "wdh" || e.einheit === "zeit")) return e.einheit;
+  var p = studioModusPlan(id);
+  return studioNurBlock(findExercise(id)) || (p && planStartArt(p) === "timer") ? "zeit" : "wdh";
+}
+/* Läuft eine Übung in Wiederholungen mit dem Timer, rechnet er etwa 3 Sekunden je Wiederholung */
+function studioWdhDauer(id){ return clamp(studioZiel(id).wdh*3, 15, 120); }
 /* So heißen Sätze überall: „3 Sätze × 12“ (Wiederholungen) bzw. „3 Sätze × 40 s“ (Timer); nach einem Eintrag „40 kg · 3 Sätze × 12“ */
 function satzName(n){ return n === 1 ? t("satzEins") : t("satzMehr", { n:n }); }
 function satzZiel(id){
   var ex = findExercise(id);
-  if(studioNurBlock(ex) && studioModus(id) === "timer"){ var tb = studioTimer(id); return satzName(tb.reps)+" × "+tb.work+" s"; }
+  if(studioEinheit(id) === "zeit"){ var tb = studioTimer(id); return satzName(tb.reps)+" × "+tb.work+" s"; }
   var z = studioZiel(id);
   return satzName(z.saetze)+" × "+z.wdh;
 }
 function satzKurz(id){   // „3×12“ bzw. „3×40 s“ für die kleinen Plan-Kacheln
   var ex = findExercise(id);
-  if(studioNurBlock(ex) && studioModus(id) === "timer"){ var tb = studioTimer(id); return tb.reps+"×"+tb.work+" s"; }
+  if(studioEinheit(id) === "zeit"){ var tb = studioTimer(id); return tb.reps+"×"+tb.work+" s"; }
   var z = studioZiel(id);
   return z.saetze+"×"+z.wdh;
 }
@@ -535,10 +545,10 @@ function planZeileHTML(id, nr, bl, p){   // bl: { art, k, n, bid } - die Übung 
   var ex = findExercise(id);
   if(!ex) return "";
   var block = studioNurBlock(ex), z = studioZiel(id), tm = studioTimer(id), e = studioEintrag(id) || {}, l = studioLetzte(id, true);
-  var timerModus = block || (!!p && planStartArt(p) === "timer");   // mit Timer: Sätze, Arbeitszeit und Pause je Übung einstellbar; nach Sätzen: Wiederholungen und Gewicht
-  // Sätze, dann Wiederholungen (Satz-Modus) bzw. Arbeitszeit (Timer), Gewicht (nur Übungen mit Gewicht) und Pause
+  var zeit = studioEinheit(id) === "zeit";   // je Übung: Sätze × Zeit oder Sätze × Wiederholungen (Übungen mit Gerät dazu mit Gewicht)
+  // Sätze, dann Wiederholungen bzw. Arbeitszeit, Gewicht (nur Übungen mit Gewicht) und Pause
   var felder = planFeldHTML("saetze", t(bl ? "blkRunden" : "planSaetze"), z.saetze, 1, 20, 1)+
-    (timerModus ? planFeldHTML("work", t("planArbeit"), tm.work, 5, 600, 5) : planFeldHTML("wdh", t("stReps"), z.wdh, 1, 100, 1))+
+    (zeit ? planFeldHTML("work", t("planArbeit"), tm.work, 5, 600, 5) : planFeldHTML("wdh", t("stReps"), z.wdh, 1, 100, 1))+
     (block ? '' : planFeldHTML("kg", t("planKg"), studioArbeitsKg(id), 0, 500, z.schritt))+
     (block ? planFeldHTML("pause", t("planPause"), tm.rest, 0, 600, 5) : planFeldHTML("pause", t("planPause"), e.pause || 90, 0, 600, 15));
   return '<div class="pz-zeile'+(bl ? ' pz-imblock' : '')+'" data-pz="'+id+'"'+(bl ? ' data-pzblk="'+esc(bl.bid)+'"' : '')+' style="--cat:'+studioFarbe(ex)+'">'+
@@ -550,6 +560,9 @@ function planZeileHTML(id, nr, bl, p){   // bl: { art, k, n, bid } - die Übung 
         (function(){ var tp = studioSteigerTipp(id); return tp ? '<span class="pz-tipp"><span>↑ '+esc(tp.art === "kg" ? t("tippKurzKg", { kg:studioKg(tp.kg), p:tp.prozent }) : t("tippKurzWdh", { n:tp.wdh }))+'</span><button type="button" data-pzup="'+id+'">'+esc(t("tippUebernehmen"))+'</button></span>' : ''; })()+
         (e.notiz && e.notiz.trim() ? '<span class="pz-notiz">'+esc(e.notiz.trim())+'</span>' : '')+'</span>'+   // die Notiz der Übung erscheint beim nächsten Mal wieder
       '<span class="pz-pfeil" aria-hidden="true">'+ICON_CHEV+'</span></div>'+
+    '<div class="seg-row pz-einheit" role="group" aria-label="'+esc(t("planEinheit"))+'">'+
+      '<button type="button" data-pzeinheit="wdh" class="'+(zeit ? '' : 'active')+'" aria-pressed="'+!zeit+'">'+esc(t("planEinheitWdh"))+'</button>'+
+      '<button type="button" data-pzeinheit="zeit" class="'+(zeit ? 'active' : '')+'" aria-pressed="'+zeit+'">'+esc(t("planEinheitZeit"))+'</button></div>'+
     '<div class="st-eingabe pz-felder'+(block ? ' drei' : '')+'">'+felder+'</div></div>';
 }
 /* Die Zeilen des Plans: Einzelübungen und Blöcke (Supersatz, Zirkel) mit einem Knopf zwischen je zwei Übungen zum Verbinden bzw. Trennen */
@@ -594,7 +607,8 @@ function planKopfKarteBinden(p, ids, neu){
 function planStartArt(p){
   if(p.startArt === "saetze" || p.startArt === "timer") return p.startArt;
   if(p.standard === "saetze" || p.standard === "timer") return p.standard;
-  return bauModus() === "timer" ? "timer" : "saetze";
+  /* ohne Wahl: Übungen mit Gewicht laufen Satz für Satz, reine Körpergewichts-Pläne mit dem Timer */
+  return stPlanIds(p).some(function(id){ var ex = findExercise(id); return ex && !studioNurBlock(ex); }) ? "saetze" : "timer";
 }
 function planFolge(p){ return (Array.isArray(p.folge) ? p.folge : []).map(stPlanFind).filter(function(q){ return q && q !== p; }); }
 function planKetteIds(p){   // alle Übungen des BLOCs und der folgenden, jede nur einmal (für Training speichern)
@@ -658,6 +672,14 @@ function planZeilenBinden(root, fn, neuZeichnen, p){
       save();
       fn();
     }
+    zeile.querySelectorAll("[data-pzeinheit]").forEach(function(b){   // je Übung: Wiederholungen oder Zeit (mit Sätzen)
+      b.addEventListener("click", function(){
+        var u = b.getAttribute("data-pzeinheit") === "zeit" ? "zeit" : "wdh";
+        if(studioEinheit(id) === u) return;
+        eintrag().einheit = u; save();
+        if(neuZeichnen) neuZeichnen();
+      });
+    });
     zeile.querySelectorAll("[data-pzmodus]").forEach(function(b){   // je Übung: Satz für Satz oder mit Timer
       b.addEventListener("click", function(){
         var m = b.getAttribute("data-pzmodus") === "timer" ? "timer" : "saetze";
@@ -741,8 +763,8 @@ function renderStudioPlan(){
           (stPlanSel > -1 && stPlanSel < ids.length ? '<div class="plan-ctrl"><button type="button" data-planmv="-1" aria-label="'+esc(t("moveLeft"))+'"'+(stPlanSel === 0 ? ' disabled' : '')+'>&#9664;</button>'+
             '<button type="button" class="del" data-plandelsel>'+ICON_TRASH+' '+esc(t("planRaus"))+'</button>'+
             '<button type="button" data-planmv="1" aria-label="'+esc(t("moveRight"))+'"'+(stPlanSel === ids.length-1 ? ' disabled' : '')+'>&#9654;</button></div>' : '') : '')+'</div>'+
-      tippZeileHTML("info", "tippInfo")+hw.z(0, "page-hint")+suchFeldHTML(stPlanQuery, "pl", t("stSearch"))+
-      studioFilterHTML(gruppen, fGr, fTrain, fAusr, studioAnzahl(gruppen, fGr, artOk), zonen);
+      tippZeileHTML("info", "tippInfo")+hw.z(0, "page-hint")+
+      studioFilterHTML(gruppen, fGr, fTrain, fAusr, studioAnzahl(gruppen, fGr, artOk), zonen)+suchFeldHTML(stPlanQuery, "pl", t("stSearch"), true);   // Suche unter dem Filter
     if(rest.length) gruppen = gruppen.concat([{ id:"rest", name:t("planSonst"), ids:rest, immer:true }]);
     function planKachel(id){
       var ex = findExercise(id);

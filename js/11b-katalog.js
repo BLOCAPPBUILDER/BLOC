@@ -156,8 +156,8 @@ function bauTrainBinden(neu, box){
 var stPlanNeuId = null;
 function katPlanNeu(){
   katPlanAufraeumen();
-  // standard: die im Baukasten gewählte Art (Nach Zeit → Timer, Nach Sätzen → Satz für Satz) gilt für die Übungen des Plans, solange man sie nicht einzeln umstellt
-  var p = { id:uid(), name:t("planDefault", { n:stPlaene().filter(function(x){ return !x.entwurf; }).length+1 }), ids:[], updatedAt:Date.now(), entwurf:true, standard:bauModus() === "timer" ? "timer" : "saetze" };
+  // Satz für Satz oder mit Timer wird erst auf der Plan-Seite (nach „Weiter“) gewählt; je Übung dort Wiederholungen oder Zeit
+  var p = { id:uid(), name:t("planDefault", { n:stPlaene().filter(function(x){ return !x.entwurf; }).length+1 }), ids:[], updatedAt:Date.now(), entwurf:true };
   stPlaene().push(p); save();
   if(katTab() !== "baukasten") katZuMeine();   // aus dem Baukasten kommt „Zurück“ wieder dorthin
   stPlanAktiv = p.id; stPlanBauen = true; stPlanSel = -1; stPlanQuery = "";
@@ -286,14 +286,11 @@ function katKatalogOeffnen(){
 }
 /* ---------- Baukasten: Überrasch mich, selber bauen oder aus dem Katalog ---------- */
 function renderKatalogBaukasten(){
-  var modus = bauModus();
   var hw = hinweise("bau2", ["katBauHint"]);
   app.innerHTML =
     katKopfHTML("baukasten", hw.knopf) +
     hw.z(0, "page-hint") +
-    '<div class="bau-schritt"><span>1</span>'+esc(t("bauArtTitel"))+'</div>'+
-    bauArtHTML(modus, true) +
-    '<div class="bau-schritt"><span>2</span>'+esc(t("bauSchritt3"))+'</div>'+
+    '<div class="bau-schritt">'+esc(t("bauSchritt3"))+'</div>'+
     '<button type="button" class="bau-karte bau-sp" data-surprise><span class="bk-ico">'+svgIcon(ICON_UEBERRASCH)+'</span><span class="bk-t"><b>'+esc(t("surprise"))+'</b><small>'+esc(t("bauUeberraschSub"))+'</small></span>'+
       '<span class="bk-wuerfel" aria-hidden="true"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" rx="20"/><circle cx="30" cy="30" r="7"/><circle cx="70" cy="30" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="30" cy="70" r="7"/><circle cx="70" cy="70" r="7"/></svg></span>'+
       '<span class="bk-pfeil">'+ICON_CHEV+'</span></button>'+
@@ -305,7 +302,6 @@ function renderKatalogBaukasten(){
   katKopfBinden();
   app.querySelector("[data-baueigen]").addEventListener("click", function(){ exEditVorgabe = { equip:["gym"], cats:["weight"], reps:3, work:40, rest:60 }; go("#exedit/new"); });
   app.querySelector("[data-baukatalog]").addEventListener("click", function(){ katKatalogOeffnen(); });
-  bauArtBinden(modus, function(){ renderKatalog(); });
   app.querySelector("[data-surprise]").addEventListener("click", function(){ openSurprise(); });
   // „Selber bauen“ fragt nichts mehr nach: die Art (Schritt 1) steht schon, es geht gleich in die Übungsauswahl (Trainingsart, Ausrüstung und Muskel im Filter) -
   // Workout mit Timer oder Plan mit Sätzen, Gewicht und Pausen
@@ -366,8 +362,8 @@ function renderKatalogUebungen(){
     katKopfHTML("katalog", hw.knopf+lupeHTML("st", studioQuery)) +
     '<button type="button" class="btn btn-secondary kat-eigene" data-stnew2>'+ICON_PLUS+' '+esc(t("exNew"))+'</button>' +
     tippZeileHTML("uebung", "tippUebung") + hw.z(0, "page-hint") +
-    suchFeldHTML(studioQuery, "st", t("stSearch")) +
     studioFilterHTML(gruppen, fGr, fTrain, fAusr, anzahl, zonen) +
+    suchFeldHTML(studioQuery, "st", t("stSearch"), true) +
     html +
     '<div class="empty" data-noresult style="display:none;padding:30px 20px;">'+esc(t("stNone"))+'</div>' +
     hiddenBlockHTML(verborgen.length, verborgen.map(function(ex){ return libExCard(ex, true, exSubText(ex)); }).join("")) +
@@ -582,9 +578,9 @@ function renderKatalogWorkouts(){
 
   app.innerHTML =
     katKopfHTML("katalog", hw.knopf + lupeHTML("l", libQuery)) +
-    suchFeldHTML(libQuery, "l", t("searchWoPh")) +
     tippZeileHTML("workout", "tippWorkout") + hw.z(0, "page-hint") +
     studioFilterHTML(gruppen, fGr, fTrain, fAusr, sichtbar.length, zonen, { art:"Wo", extra:az, trainZahlen:katTrainZahlenWo() }) +
+    suchFeldHTML(libQuery, "l", t("searchWoPh"), true) +
     liste +
     hiddenBlockHTML(versteckt.length, versteckt.map(function(r){ return libWoCard(r.lw, r.exs, true, r.dur, r.mains); }).join("")) +
     '<div style="height:60px"></div>';
