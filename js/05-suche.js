@@ -272,7 +272,7 @@ function faqHTML(){
   var F = window.BLOC_FAQ;
   if(!F) return "";
   var sp = currentLang() === "en" ? "en" : "de", h = '<section class="faq faq-bereich" aria-labelledby="faq-titel"><button type="button" class="sec-head faq-kopf" data-faqtoggle aria-expanded="false"><span class="section-title" id="faq-titel">'+esc(t("faqTitel"))+'</span></button>'+
-    '<p class="faq-hinweis" role="note">'+F.hinweis[sp]+'</p><div class="faq-inhalt" hidden>', gruppe = -1;
+    '<details class="faq-hinweis" role="note"><summary>'+esc(t("faqHinweisKurz"))+'</summary><p>'+F.hinweis[sp]+'</p></details><div class="faq-inhalt" hidden>', gruppe = -1;
   F.fragen.forEach(function(f, i){
     var x = f[sp];
     if(f.g !== gruppe){
@@ -311,9 +311,11 @@ function renderTraining(){
   var fotos = bereichFotosNeu();
   app.querySelectorAll(".training-seite .area-tile[data-bereich]").forEach(function(el){
     var k = el.getAttribute("data-bereich");
-    if(k === "faq"){ el.style.backgroundImage = "url(img/neu-faq.jpg)"; el.style.backgroundPosition = "50% 55%"; return; }
-    if(k === "protein"){ el.style.backgroundImage = "url(img/neu-protein.jpg)"; el.style.backgroundPosition = "50% 27%"; return; }   // Hände mit den Eierschalen
-    if(fotos[k]){ el.style.backgroundImage = "url(" + fotos[k] + ")"; var fk = fotoFokus(fotos[k]); if(fk) el.style.backgroundPosition = fk; }
+    var ft = el.querySelector(".at-foto");   // das Foto liegt rechts in eigener Fläche, links bleibt Platz für Symbol und Text
+    if(!ft) return;
+    if(k === "faq"){ ft.style.backgroundImage = "url(img/neu-faq.jpg)"; ft.style.backgroundPosition = "50% 55%"; return; }
+    if(k === "protein"){ ft.style.backgroundImage = "url(img/neu-protein.jpg)"; ft.style.backgroundPosition = "50% 27%"; return; }   // Hände mit den Eierschalen
+    if(fotos[k]){ ft.style.backgroundImage = "url(" + fotos[k] + ")"; ft.style.backgroundPosition = fotoFokus(fotos[k]) || "50% 50%"; }
   });
   app.querySelectorAll("[data-bereich]:not([data-bereich=\"faq\"])").forEach(function(el){ langDruck(el, openBereicheSheet); });
   var wib = app.querySelector("[data-wasistwas]");

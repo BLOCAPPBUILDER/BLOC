@@ -51,7 +51,7 @@ function runPace(sek, m){   // „5:32“ min/km
   return min > 59 ? "–:––" : min+":"+(s < 10 ? "0" : "")+s;
 }
 /* Einstellungen: Auto-Pause (settings.runAuto = Sekunden Stillstand, 0 = aus) und Intervall (settings.runIv = { an, lauf, geh } in Sekunden) */
-function runAutoSek(){ return 5; }   // Auto-Pause ist fest auf 5 s gestellt (keine Einstellung mehr)
+function runAutoSek(){ return 10; }   // Auto-Pause ist fest auf 10 s gestellt (keine Einstellung mehr); 5 s waren zu knapp für langsames Gehen und schwaches GPS
 function runIvEinst(){
   var a = state.db.settings.runIv || {};
   return { an:!!a.an, lauf:clamp(Math.round(+a.lauf) || 60, 10, 900), geh:clamp(Math.round(+a.geh) || 60, 10, 900) };
@@ -88,7 +88,7 @@ function runPunkt(lat, lon, acc, ts, speed){
   }
   r.gps = acc; r.fehler = 0; r.n++; r.sumAcc += acc;
   if(acc > RUN_GENAU) return;
-  if(speed != null && speed >= 1) r.lastMove = Date.now();   // das Gerät meldet selbst Bewegung
+  if(speed != null && speed >= 0.6) r.lastMove = Date.now();   // das Gerät meldet selbst Bewegung (auch langsames Gehen, bevor die Strecke die Schwelle erreicht)
   var kf = runKalman(r, lat, lon, acc, ts); lat = kf[0]; lon = kf[1];   // geglätteter Ort
   var p = [Math.round(lat*1e6)/1e6, Math.round(lon*1e6)/1e6];   // 0,1 m genau (vorher 1 m), sonst wirkt die gerundete Kurve stufig
   if(!r.letzte){ r.letzte = { p:p, ts:ts }; if(!r.pts.length) r.pts.push(p); return; }
@@ -113,7 +113,7 @@ function runPunkt(lat, lon, acc, ts, speed){
 }
 /* Auto-Pause: steht man länger als die eingestellte Zeit (Strecke wächst nicht, Gerät meldet kaum Tempo), pausiert der Lauf.
    Die Stehzeit wird herausgerechnet (die Pause beginnt beim letzten Schritt, nicht erst bei der Erkennung). Weiter geht es von selbst,
-   sobald man sich ≥ 10 m vom Pausenort entfernt oder das Gerät ≥ 1,5 m/s meldet. GPS zittert im Stand, daher mindestens 5 s. */
+   sobald man sich ≥ 8 m vom Pausenort entfernt oder das Gerät dreimal hintereinander ≥ 0,6 m/s (oder einmal ≥ 1 m/s) meldet. GPS zittert im Stand, daher mindestens 10 s. */
 function runAutoPruefen(){
   var r = run, sek = runAutoSek();
   if(!r || !sek || r.pauseAb || !r.letzte || r.fehler) return;
@@ -125,10 +125,12 @@ function runAutoPruefen(){
 }
 function runAutoWeiter(lat, lon, acc, speed){
   var r = run;
-  if(acc > RUN_GENAU) return;
-  var weg = r.pausePos ? runMeter(r.pausePos, [lat, lon]) : 0;
-  if(weg < Math.max(8, acc) && !(speed != null && speed >= 1.2)) return;
-  r.pausenMs += Date.now() - r.pauseAb; r.pauseAb = 0; r.auto = false; r.letzte = null; r.kal = null; r.lastMove = Date.now();
+  /* Das Tempo kommt vom Gerät (Doppler) und hängt nicht von der Ortsgenauigkeit ab: drei Meldungen hintereinander ≥ 0,6 m/s heißen „es geht weiter“,
+     auch wenn die Position gerade zu ungenau ist (> 35 m) oder man so langsam geht, dass die 8 m Abstand lange dauern. Im Stand meldet das Gerät ~0. */
+  r.regung = speed != null && speed >= 0.6 ? (r.regung || 0) + 1 : 0;
+  var weg = r.pausePos && acc <= RUN_GENAU ? runMeter(r.pausePos, [lat, lon]) : 0;
+  if(r.regung < 3 && !(speed != null && speed >= 1) && weg < Math.max(8, acc)) return;
+  r.pausenMs += Date.now() - r.pauseAb; r.pauseAb = 0; r.auto = false; r.letzte = null; r.kal = null; r.lastMove = Date.now(); r.regung = 0;
   vibrate(120);
   runAnzeige();
 }
@@ -535,6 +537,7 @@ function runAnzeige(){
   var gps = r.fehler === 1 ? t("runGpsDenied") : r.fehler ? t("runGpsLost") : r.gps == null ? t("runGpsWait") :
     t(r.gps <= 15 ? "runGpsOk" : "runGpsWeak", { m:Math.round(r.gps) });
   setze("run-gps", r.pauseAb ? t(r.auto ? "runAutoPausiert" : "runPaused") : gps);
+  setze("run-dg", r.pauseAb ? t(r.auto ? "runAutoPausiert" : "runPaused") : "");   // abgedunkelt sieht man sonst nicht, dass die Zeit steht
   var pb = app.querySelector("[data-runpause]");
   if(pb){ var pt = t(r.pauseAb ? "runResume" : "runPause"); if(pb.textContent !== pt) pb.textContent = pt; }
   runIvTick();
@@ -546,7 +549,7 @@ function runAnzeige(){
 function runDunkel(){
   var d = document.createElement("div");
   d.id = "run-dunkel"; d.className = "run-dunkel";
-  d.innerHTML = '<div id="run-dz" class="rd-z"></div><div id="run-dk" class="rd-k"></div><div id="run-dp" class="rd-k rd-p"></div><div class="rd-h">'+esc(t("runDarkHint"))+'</div><div class="rd-balken"><i></i></div>';
+  d.innerHTML = '<div id="run-dz" class="rd-z"></div><div id="run-dk" class="rd-k"></div><div id="run-dp" class="rd-k rd-p"></div><div id="run-dg" class="rd-g"></div><div class="rd-h">'+esc(t("runDarkHint"))+'</div><div class="rd-balken"><i></i></div>';
   // Gegen versehentliche Berührungen in der Tasche: erst 2 s gedrückt halten (Balken füllt sich), ein kurzer Tipp tut nichts
   var tm = 0;
   function los(){ if(tm){ clearTimeout(tm); tm = 0; } d.classList.remove("halten"); }

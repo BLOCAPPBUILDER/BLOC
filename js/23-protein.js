@@ -6,7 +6,7 @@
    Keine Erinnerung ums Training, keine rote Warnung. Texte dieser Seite stehen in PROT_T (Deutsch und Englisch). */
 var PROT_T = {
   de: {
-    titel:"Protein-Tracker", kachelSub:"Tagesziel, Kalorienbedarf, Schnellbuttons", heute:"Heute", von:"von {g} g", noch:"noch {g} g", erreicht:"Ziel erreicht",
+    titel:"Protein-Tracker", kachelSub:"Tagesziel und Schnellbuttons", heute:"Heute", von:"von {g} g", noch:"noch {g} g", erreicht:"Ziel erreicht",
     rueck:"Rückgängig", schnell:"Schnellbuttons", schnellHint:"", katalog:"Katalog", favoriten:"Favoriten", favLeer:"Noch keine Favoriten. Tippe im Katalog auf ☆, dann steht das Lebensmittel hier.", favStern:"Als Favorit", katalogHint:"Ein Tipp trägt die Menge oben ein (Basis 100 g: je 100 g steht die Protein-Menge in der Zeile). ＋ speichert das Lebensmittel als eigenen Schnellbutton.",
     rub_milch:"Milch & Quark", rub_kaese:"Käse", rub_wurst:"Wurst & Aufschnitt", rub_fleisch:"Fleisch & Geflügel", rub_fisch:"Fisch", rub_eier:"Eier", rub_huelsen:"Hülsenfrüchte & vegan", rub_getreide:"Getreide & Brot", rub_nuss:"Nüsse & Samen", rub_shake:"Shakes & Riegel", rub_weitere:"Weitere", azTitel:"A–Z durchblättern",
     tabWoche:"Woche", tabBedarf:"Bedarf", koerper:"Körperdaten", eigenBtn:"＋ Eigenes", subGramm:"Gramm", subEigen:"Eigener Button", subKombi:"Kombi", kombiLeer:"Lege zuerst einen eigenen Button an.",
@@ -66,7 +66,7 @@ var PROT_T = {
     ]
   },
   en: {
-    titel:"Protein Tracker", kachelSub:"Daily goal, calorie need, quick buttons", heute:"Today", von:"of {g} g", noch:"{g} g to go", erreicht:"Goal reached",
+    titel:"Protein Tracker", kachelSub:"Daily goal and quick buttons", heute:"Today", von:"of {g} g", noch:"{g} g to go", erreicht:"Goal reached",
     rueck:"Undo", schnell:"Quick buttons", schnellHint:"", katalog:"Catalogue", favoriten:"Favourites", favLeer:"No favourites yet. Tap ☆ in the catalogue and the food appears here.", favStern:"Mark as favourite", katalogHint:"One tap logs the amount above (base 100 g: each row shows protein per 100 g). ＋ saves the food as your own quick button.",
     rub_milch:"Milk & quark", rub_kaese:"Cheese", rub_wurst:"Sausage & cold cuts", rub_fleisch:"Meat & poultry", rub_fisch:"Fish", rub_eier:"Eggs", rub_huelsen:"Legumes & vegan", rub_getreide:"Grains & bread", rub_nuss:"Nuts & seeds", rub_shake:"Shakes & bars", rub_weitere:"Other", azTitel:"Browse A–Z",
     tabWoche:"Week", tabBedarf:"Needs", koerper:"Body data", eigenBtn:"＋ Custom", subGramm:"Grams", subEigen:"Own button", subKombi:"Combo", kombiLeer:"Create your own button first.",

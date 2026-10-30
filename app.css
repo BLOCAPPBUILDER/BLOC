@@ -1381,7 +1381,7 @@ input[type="range"]{ width:100%; height:32px; accent-color:var(--accent); cursor
 .run-live{ margin-bottom:12px; }
 .run-splits td{ padding:8px 10px; } .run-splits td:last-child{ text-align:right; font-variant-numeric:tabular-nums; }
 .run-dunkel{ position:fixed; inset:0; z-index:99999; background:#000; color:#8a8a8a; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; }   /* schwarz, aber Zeit, Kilometer und Tempo gut lesbar */
-.rd-z{ font-size:56px; font-weight:600; font-variant-numeric:tabular-nums; } .rd-k{ font-size:30px; font-weight:500; font-variant-numeric:tabular-nums; } .rd-h{ font-size:13px; margin-top:40px; color:#4a4a4a; }
+.rd-z{ font-size:56px; font-weight:600; font-variant-numeric:tabular-nums; } .rd-k{ font-size:30px; font-weight:500; font-variant-numeric:tabular-nums; } .rd-h{ font-size:13px; margin-top:40px; color:#4a4a4a; } .rd-g{ font-size:18px; font-weight:600; color:#c98a3c; min-height:22px; }
 .run-ansage{ margin:0 0 14px; } .run-ansage .wahl-pick{ margin:6px 0 10px; } .run-ansage .btn{ margin-top:4px; }
 .run-fertig{ text-align:center; margin-bottom:14px; border:1px solid var(--run-color, #e5573f); }
 .rf-titel{ font-size:15px; font-weight:600; color:var(--run-color, #e5573f); text-transform:uppercase; letter-spacing:.06em; }
@@ -2128,6 +2128,12 @@ body.mit-tabs .fab-menu{ bottom:calc(166px + env(safe-area-inset-bottom)); }
 /* ---------- Fragen & Antworten (Seite Training, 2026-10-19): aufklappbare Fragen mit <details>, Hinweis immer sichtbar ---------- */
 .faq{ margin-top:8px; }
 .faq-hinweis{ background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin:0 0 6px; font-size:14px; line-height:1.5; color:var(--text); }
+/* eingeklappt: nur eine Zeile, der lange Hinweis steht erst nach dem Antippen da */
+.faq-hinweis summary{ list-style:none; display:flex; align-items:center; gap:10px; cursor:pointer; font-weight:600; font-size:13.5px; color:var(--text-dim); }
+.faq-hinweis summary::-webkit-details-marker{ display:none; }
+.faq-hinweis summary::after{ content:""; flex:none; width:7px; height:7px; margin:-3px 2px 0 auto; border-right:2px solid var(--text-dim); border-bottom:2px solid var(--text-dim); transform:rotate(45deg); transition:transform .15s; }
+.faq-hinweis[open] summary::after{ transform:rotate(-135deg); margin-top:3px; }
+.faq-hinweis p{ margin:10px 0 0; }
 .faq-gruppe{ margin:18px 4px 8px; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-dim); }
 .faq-q{ background:var(--surface); border:1px solid var(--border); border-radius:14px; margin:0 0 8px; }
 .faq-q summary{ list-style:none; display:flex; align-items:flex-start; gap:12px; min-height:48px; padding:14px; cursor:pointer; font-weight:600; line-height:1.35; }

@@ -227,7 +227,7 @@ var FOTO_FOKUS = {
   "img/neu-p-liegestuetz-feld.jpg":"50% 55%",
   "img/neu-p-studio-halle.jpg":"50% 55%",
   "img/neu-p-timer-box.jpg":"50% 62%",
-  "img/neu-p-frau-latzug.jpg":"50% 38%", "img/neu-p-frau-klimmzug.jpg":"50% 40%", "img/neu-p-frau-kniebeuge.jpg":"50% 45%",
+  "img/neu-p-frau-latzug.jpg":"50% 38%", "img/neu-p-frau-klimmzug.jpg":"50% 40%", "img/neu-p-frau-kniebeuge.jpg":"50% 30%",
   "img/neu-h-halle.jpg":"50% 62%", "img/neu-h-rack.jpg":"50% 45%", "img/neu-h-dehnen.jpg":"50% 40%",
   "img/neu-h-band.jpg":"50% 62%", "img/neu-h-kettlebell.jpg":"50% 32%", "img/neu-h-kb-gelb.jpg":"50% 70%", "img/neu-d-kalender.jpg":"50% 45%", "img/neu-h-brust-1.jpg":"50% 50%", "img/neu-h-brust-2.jpg":"50% 66%", "img/neu-h-core-1.jpg":"50% 50%", "img/neu-h-core-2.jpg":"50% 62%", "img/neu-d-core.jpg":"50% 68%", "img/neu-d-katalog.jpg":"50% 42%"
 };

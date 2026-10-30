@@ -3,6 +3,13 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-10-30 · Ruhigere Karten, Lauf-Auto-Pause robuster (Fassung 2026-10-30-8)
+
+- **Lauf**: Auto-Pause greift erst nach **10 s** Stillstand (vorher 5 s: langsames Gehen und schwaches GPS lösten sie fälschlich aus). Das Gerät-Tempo ab 0,6 m/s zählt jetzt schon als Bewegung. **Weiter geht es** nach drei Tempo-Meldungen ≥ 0,6 m/s hintereinander (oder einer ≥ 1 m/s), unabhängig von der Ortsgenauigkeit; vorher blieb die Pause stehen, wenn die Position gerade schlechter als 35 m war oder man so langsam ging, dass die 8 m Abstand lange dauerten. Im abgedunkelten Lauf steht bei Pause jetzt „Auto-Pause“ bzw. „Pausiert“ unter dem Tempo. **Nicht am Gerät geprüft.**
+- **Einzeiler**: Untertitel unter den Überschriften sind nur noch eine Zeile (Baukasten-Karten, Tools-Kacheln, Mobility-Baukasten; sonst mit „…“ gekürzt). Texte entsprechend gekürzt (Deutsch und Englisch).
+- **Wissensaustausch**: der lange Hinweis „keine medizinische Beratung“ ist eingeklappt (eine Zeile, antippen zeigt den Text).
+- **Tools**: das Foto steht rechts (eigene Fläche, 66 % der Kachel), links läuft es weich in die Kartenfarbe aus; Symbol und Text stehen ruhig davor. Kniebeuge-Foto zeigt jetzt auch den Kopf.
+
 ## 2026-10-29 · Baukasten: Trainingsart statt Ort, Core, neue Übungen; Lauf bei dunklem Display (Fassung 2026-10-30-7)
 
 - **Baukasten ohne Ort**: Fitnessstudio · Freiluft entfällt in Baukasten, Plan-Bau, Übungskatalog und Überrasch-mich-Fenster (auch der Workoutkatalog: dort zählt ein Workout, wenn mindestens zwei Drittel seiner Übungen zur gewählten Trainingsart passen). Im Filter stehen jetzt **1 Trainingsart** (Fitnessstudio, Calisthenic-Park, Körpergewicht; drei Fotokarten, Mehrfachwahl, Körpergewicht in Gelb), **2 Ausrüstung** (Smith, Kabelzug, Langhantel, Kurzhantel, Maschine, dazu Kettlebell und Widerstandsband) und **3 Muskel**. Alte Filter-Einstellungen werden übernommen (`stArten`/`stGeraete` → `stTrain`/`stAusr`, altes „Überrasch mich“ mit Ort → Trainingsart).
