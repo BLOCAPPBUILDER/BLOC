@@ -743,7 +743,9 @@ Object.assign(ILLU_POSES, {
                        Q(null,[54,38],[52,64],[[50,76,40,84,42,86]],[[44,40,56,50]], G_PB)],
   "pallof-press":     [Q(null,[50,20],[50,50],[[50,70,50,89,58,89]],[[44,33,55,31]], gHand(55,31,'<circle class="ipf" cx="55" cy="31" r="3"/>')),
                        Q(null,[50,20],[50,50],[[50,70,50,89,58,89]],[[62,26,75,26]], gHand(75,26,'<circle class="ipf" cx="75" cy="26" r="3"/>'))],
-  "copenhagen-plank": [Q(null,[24,64],[48,64],[[68,64,84,64],[56,76,70,82]],[[24,77,34,87]], gBench(62,94,66)), null],
+  /* Copenhagen Plank (Seitstütz, Obenbein auf der Bank, Untenbein hängt und wird zum Obenbein hochgezogen), wie auf dem Foto: Unterarm am Boden, Körper waagerecht */
+  "copenhagen-plank": [Q(null,[22,64],[46,63],[[60,63,74,62],[58,70,72,76]],[[22,78,24,88]], gLinie("M70 62H92M74 62V89M88 62V89")),
+                       Q(null,[22,64],[46,63],[[60,63,74,62],[60,64,74,63]],[[22,78,24,88]], gLinie("M70 62H92M74 62V89M88 62V89"))],
   "backpack-row":     [qWith(P_HG,{ x:gHand(61,68,'<rect class="ipf" x="57" y="66" width="9" height="12" rx="2"/>') }),
                        qWith(P_HG,{ a:[[50,36,56,48]], x:gHand(56,50,'<rect class="ipf" x="52" y="48" width="9" height="12" rx="2"/>') })],
   "single-leg-rdl":   [Q(null,[50,20],[50,50],[[50,70,50,89,58,89],[46,72,40,84]],[[52,34,53,47]]),
