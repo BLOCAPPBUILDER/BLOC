@@ -3589,6 +3589,11 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
   /* Side Jackknives von oben: auf der Seite liegend, Oberkörper und Beine biegen sich seitlich aufeinander zu (Banane); der Arm bleibt gestreckt */
   function sjOben(n, l, a, torso){ return Q(null,n,[50,62],l,a,'<path d="'+torso+'" style="stroke-width:14"/>',true); }
   V2["side-jackknives"] = { typ:"top", p:[sjOben([22,62],[[68,62,86,62]],[[14,62,6,62]],"M28 62L48 62"), sjOben([24,50],[[66,52,82,42]],[[15,47,6,44]],"M29 52L48 61")] };
+  /* Fehlende zweite Ansichten (2026-10-30): Muschel mit Band von oben (Seitenlage, dicker Körper, Arme und Beine gestreckt und weiß); Rudern mit weitem Griff von vorn. Swimmers und Plank Shoulder Taps von oben sahen aus wie stehende Personen und blieben deshalb weg. */
+  var DICK = function(d){ return '<path d="'+d+'" style="stroke-width:14"/>'; };
+  V2["band-clamshell"] = { typ:"top", p:[Q(null,[22,56],[46,56],[[62,64,50,74],[62,64,50,74]],[[12,56,4,56],[12,58,4,58]], DICK("M28 56L44 56")+gLinie("M60 64H62"), true),
+                                          Q(null,[22,56],[46,56],[[64,52,50,70],[62,64,50,74]],[[12,56,4,56],[12,58,4,58]], DICK("M28 56L44 56")+gLinie("M62 52L62 64"), true)] };
+  V2["wide-grip-cable-row"] = { typ:"front", p:[fr([50,30],[50,60],SEAT,[[38,50,30,62],[62,50,70,62]], gLinie("M26 62H74")+gGriff(30,62)+gGriff(70,62)), fr([50,30],[50,60],SEAT,[[28,52,34,50],[72,52,66,50]], gLinie("M28 50H72")+gGriff(34,50)+gGriff(66,50))] };
   /* Kurzhantel-Bankdrücken: zweite Ansicht von vorn (Blick vom Kopfende) - Ellbogen etwa 45° zum Körper, Hanteln über der Brust bzw. an der Brust */
   V2["db-bench-press"] = { typ:"front", p:[tpVorn([[44,40,42,20],[56,40,58,20]], [42,18,58,18]), tpVorn([[33,57,44,56],[67,57,56,56]], [44,54,56,54])] };
 
