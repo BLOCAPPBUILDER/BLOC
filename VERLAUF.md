@@ -9,6 +9,7 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 - **Einzeiler**: Untertitel unter den Überschriften sind nur noch eine Zeile (Baukasten-Karten, Tools-Kacheln, Mobility-Baukasten; sonst mit „…“ gekürzt). Texte entsprechend gekürzt (Deutsch und Englisch).
 - **Wissensaustausch**: der lange Hinweis „keine medizinische Beratung“ ist eingeklappt (eine Zeile, antippen zeigt den Text).
 - **Tools**: das Foto steht rechts (eigene Fläche, 66 % der Kachel), links läuft es weich in die Kartenfarbe aus; Symbol und Text stehen ruhig davor. Kniebeuge-Foto zeigt jetzt auch den Kopf.
+- **App-Symbol** (Startbildschirm) etwas kleiner: Zeichen im adaptiven Symbol von 78 % auf 68 %, im runden/alten Symbol auf 76 % (`assets/icon-foreground.svg`, `assets/icon-only.svg`, neu erzeugt mit `npx capacitor-assets generate --android`; die erzeugten Android-XML-Dateien bleiben wie vorher). Web-Symbol unverändert.
 
 ## 2026-10-29 · Baukasten: Trainingsart statt Ort, Core, neue Übungen; Lauf bei dunklem Display (Fassung 2026-10-30-7)
 
