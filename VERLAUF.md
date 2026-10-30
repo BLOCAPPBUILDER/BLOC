@@ -3,6 +3,15 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-10-30 · Figuren nachgeschärft nach der Figuren-Prüfliste (Fassung 2026-10-30-9)
+
+- **Fachlich korrigiert** (Prüfung durch Sportwissenschaft und UX): Swimmers gegengleich, Bicycle Crunches (Ellbogen zum Knie, Hände am Kopf), Aufrechtes Rudern (Ellbogen höchstens Schulterhöhe), Copenhagen Plank (Knie auf der Bank), Tate Press (richtige Armlängen), Prone T-Raise (Arm nur wenige cm angehoben), Rotary Torso (Drehung statt Neigung, Pfeil).
+- **Proportionen**: Bear Plank Rockback, Kabel-Crunch (2. Pose), Plank Toe Touch (Pike, Hand am Schienbein), Holzhacker (lange Arme) mit echten Segmentlängen; Seilknoten größer und quer zum Seil.
+- **Zweite Ansichten**: entfernt bei Prone T/Y (von oben wirkte es wie eine stehende Person; stattdessen der Buchstabe T bzw. Y im Bild), Side Jackknives, Muschel mit Band, Kurzhantel-Bankdrücken, Around the World und Cross-Body-Hammercurl (waren Kopien oder zeigten nichts Eigenes). Neu gezeichnet: Hammercurl (Hantel als Scheibe), Face Pull, Aufrechtes Rudern und Kabelrudern weit (Stange wandert mit den Händen), Pallof Press (Kabel mit Pfeil).
+- **Plank Shoulder Taps**: die Hand tippt die Schulter; eine Kugel auf dem Kreuzbein zeigt das ruhige Becken.
+- Texte: Swimmers (kein Hohlkreuz), Plank Shoulder Taps (Becken waagerecht), Side Jackknives (Arme gestreckt über dem Kopf), Aufrechtes Rudern (Fehlerhinweis).
+- Offen: Around the World beschreibt eine Hantel, das Original nimmt zwei (fachliche Entscheidung nötig). Alle neuen Posen nur im Browser geprüft, nicht auf dem Gerät.
+
 ## 2026-10-30 · Ruhigere Karten, Lauf-Auto-Pause robuster (Fassung 2026-10-30-8)
 
 - **Lauf**: Auto-Pause greift erst nach **10 s** Stillstand (vorher 5 s: langsames Gehen und schwaches GPS lösten sie fälschlich aus). Das Gerät-Tempo ab 0,6 m/s zählt jetzt schon als Bewegung. **Weiter geht es** nach drei Tempo-Meldungen ≥ 0,6 m/s hintereinander (oder einer ≥ 1 m/s), unabhängig von der Ortsgenauigkeit; vorher blieb die Pause stehen, wenn die Position gerade schlechter als 35 m war oder man so langsam ging, dass die 8 m Abstand lange dauerten. Im abgedunkelten Lauf steht bei Pause jetzt „Auto-Pause“ bzw. „Pausiert“ unter dem Tempo. **Nicht am Gerät geprüft.**

@@ -1028,7 +1028,7 @@
       Object.defineProperty(W.navigator, "geolocation", { configurable: true, value: { watchPosition: function (f) { cbs.push(f); return cbs.length; }, clearWatch: function () {} } });
       W.go("#run");
       await bis(function () { return $("#run-iv-an"); }, 3000, "Run-Einstellungen");
-      pruefe(!$("#run-auto") && W.runAutoSek() === 5, "Auto-Pause ist fest auf 5 s und keine Einstellung mehr");
+      pruefe(!$("#run-auto") && W.runAutoSek() === 10, "Auto-Pause ist fest auf 10 s und keine Einstellung mehr");
       klick($("#run-iv-an"));
       await bis(function () { return $("#run-iv-lauf"); }, 2000, "Intervall-Felder");
       pruefe(daten().settings.runIv && daten().settings.runIv.an === true, "Intervall nicht eingeschaltet");
@@ -1045,7 +1045,7 @@
       var steht = setInterval(function () { ts += 1000; cb({ coords: { latitude: lat, longitude: 11, accuracy: 8, speed: 0 }, timestamp: ts }); }, 1000);
       var z1;
       try {
-        await bis(function () { return /Auto-Pause/.test($("#run-gps").textContent) && /Weiter/.test($("[data-runpause]").textContent); }, 9000, "Auto-Pause nach etwa 5 s Stillstand (mit laufenden Standort-Punkten)");
+        await bis(function () { return /Auto-Pause/.test($("#run-gps").textContent) && /Weiter/.test($("[data-runpause]").textContent); }, 16000, "Auto-Pause nach etwa 10 s Stillstand (mit laufenden Standort-Punkten)");
         z1 = $("#run-zeit").textContent;
         await warte(1500);
         pruefe($("#run-zeit").textContent === z1, "Zeit läuft in der Auto-Pause weiter");

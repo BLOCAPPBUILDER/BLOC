@@ -488,6 +488,14 @@ function gWall(x){ return '<path class="ip" d="M'+x+' 6V89"/>'; }
 function gPole(x){ return '<path class="ip" d="M'+x+' 24V89"/>'; }
 function gBench(x1, x2, y){ return '<path class="ip" d="M'+x1+' '+y+'H'+x2+'M'+(x1+3)+' '+y+'V89M'+(x2-3)+' '+y+'V89"/>'; }
 
+/* Buchstaben T und Y als Hinweis in der Seitenansicht (Bauchlage von oben wirkte wie eine stehende Person); Kugel auf dem Kreuzbein bei Plank Shoulder Taps */
+var BUCHSTABE_T = '<path class="ip" d="M8 14H30M19 14V30" style="stroke-width:2;opacity:.65"/>';
+var BUCHSTABE_Y = '<path class="ip" d="M8 12L19 24L30 12M19 24V34" style="stroke-width:2;opacity:.65"/>';
+var KUGEL_BECKEN = '<circle class="ipf" cx="42" cy="65.5" r="2.6"/>';
+/* Buchstaben T und Y als Hinweis in der Seitenansicht (Bauchlage von oben wirkte wie eine stehende Person); Kugel auf dem Kreuzbein bei Plank Shoulder Taps */
+var BUCHSTABE_T = '<path class="ip" d="M8 14H30M19 14V30" style="stroke-width:2;opacity:.65"/>';
+var BUCHSTABE_Y = '<path class="ip" d="M8 12L19 24L30 12M19 24V34" style="stroke-width:2;opacity:.65"/>';
+var KUGEL_BECKEN = '<circle class="ipf" cx="42" cy="65.5" r="2.6"/>';
 /* Grundposen */
 var P_ST    = Q(null,[50,20],[50,50],[[50,70,50,89,58,89]],[[52,34,53,47]]);
 var P_STF   = qWith(P_ST, { a:[[63,25,76,25]] });                       // Arme nach vorn
@@ -587,11 +595,12 @@ var ILLU_POSES = {
   "superman-hold":      [P_LF, Q(null,[26,78],[52,84],[[70,82,88,76,92,78]],[[16,72,8,66]])],
   "reverse-snow-angels":[qWith(P_LF,{ a:[[36,80,46,80]] }), qWith(P_LF,{ a:[[16,76,6,72]] })],
   "bird-dog":           [P_Q4, Q(null,[66,66],[40,66],[[24,64,8,62],[40,88,22,88,18,89]],[[80,60,92,56],[67,78,68,89]])],
-  "prone-y-raise":      [P_LF, qWith(P_LF,{ a:[[15,76,5,70]] })],
-  "prone-t-raise":      [qWith(P_LF,{ a:[[29,87,33,89]] }), qWith(P_LF,{ a:[[29,72,31,62]] })],
+  "prone-y-raise":      [qWith(P_LF,{ a:[[14,88,4,88],[16,88.5,6,88.5]], x:BUCHSTABE_Y }), qWith(P_LF,{ a:[[15,76,5,70],[17,77.5,8,72.5]], x:BUCHSTABE_Y })],
+  "prone-t-raise":      [qWith(P_LF,{ a:[[29,87,33,89]], x:BUCHSTABE_T }), qWith(P_LF,{ a:[[30,79.5,33,75],[31,80.5,35,76.5]], x:BUCHSTABE_T })],   // Arme nur wenige cm angehoben (die Form T bzw. Y steht als Buchstabe im Bild, von der Seite ist sie nicht zu sehen)
   "good-mornings":      [qWith(P_ST,{ a:[[58,18,49,12]] }), qWith(P_HG,{ a:[[62,30,71,31]] })],
-  "swimmers":           [Q(null,[26,80],[52,84],[[70,82,88,77,92,78],[70,86,88,87,92,89]],[[16,74,6,70],[14,88,4,88]]),
-                         Q(null,[26,80],[52,84],[[70,86,88,87,92,89],[70,82,88,77,92,78]],[[14,88,4,88],[16,74,6,70]])],
+  /* gegengleich: Arm 0 und Bein 1 (andere Körperseite) heben gemeinsam, dann Arm 1 und Bein 0 */
+  "swimmers":           [Q(null,[26,80],[52,84],[[70,86,88,87,92,89],[70,82,88,77,92,78]],[[16,75,6,70],[14,88,4,88]]),
+                         Q(null,[26,80],[52,84],[[70,82,88,77,92,78],[70,86,88,87,92,89]],[[14,88,4,88],[16,75,6,70]])],
   "cobra-lift":         [qWith(P_LF,{ a:[[32,88,36,89]] }), Q(null,[24,66],[50,84],[[70,86,88,87,92,89]],[[26,77,28,89]])],
   "scapular-push-ups":  [P_PH, qWith(P_PH,{ n:[71,65] })],   // Brust sinkt zwischen den Schulterblättern ab, Arme bleiben gestreckt
   /* Scapular Pull-ups von vorn: Arme bleiben gestreckt, der ganze Körper hebt sich nur ein Stück (die Hände rutschen minimal nach außen) */
@@ -617,8 +626,9 @@ var ILLU_POSES = {
   "dead-bug":           [qWith(P_LB,{ l:[[52,66,68,66],[50,68,66,68]], a:[[22,70,22,58],[26,70,26,58]] }),
                          qWith(P_LB,{ l:[[68,82,88,80],[52,66,68,66]], a:[[12,76,4,72],[26,70,26,58]] })],
   /* Bicycle Crunches: ein Knie hoch über die Hüfte, das andere Bein gestreckt knapp über dem Boden; der diagonale Arm (Ellbogen) führt zum angezogenen Knie, die andere Hand liegt am Kopf */
-  "bicycle-crunches":   [Q(null,[26,76],[50,84],[[58,58,68,70],[68,82,88,80]],[[40,68,53,61],[22,70,18,73]]),
-                         Q(null,[26,76],[50,84],[[68,82,88,80],[58,58,68,70]],[[22,70,18,73],[40,68,53,61]])],
+  /* der Ellbogen des vollen Arms führt zum angezogenen Knie, die Hände bleiben am Kopf; nur die Beine wechseln */
+  "bicycle-crunches":   [Q(null,[28,74],[50,84],[[68,83,88,79],[45,64,63,68]],[[40,67,26,70],[22,72,18,75]]),
+                         Q(null,[28,74],[50,84],[[45,64,63,68],[68,83,88,79]],[[40,67,26,70],[22,72,18,75]])],
   "leg-raises":         [P_LB, qWith(P_LB,{ l:[[54,66,58,48,64,46]] })],
   "jackknives":         [qWith(P_LB,{ a:[[12,84,2,84]] }), Q(null,[34,64],[44,86],[[56,66,66,48,70,46]],[[48,56,62,46]])],
   "side-jackknives":    [qWith(P_LB,{ a:[[17,81,9,79],[17,84,9,83]], f:true, x:'<path d="M26 83L48 84" style="stroke-width:15"/>' }), Q(null,[28,72],[50,84],[[66,74,84,68,88,66],[64,80,82,74,86,72]],[[21,68,12,64],[21,72,12,68]], '<path d="M30 74L48 83" style="stroke-width:15"/>', true)],   // seitlich liegend: dickerer Körper, beide Arme und Beine weiß und gestreckt (es gibt kein vorn und hinten)
@@ -626,7 +636,8 @@ var ILLU_POSES = {
   "russian-twists":     [Q(null,[34,60],[46,84],[[60,70,74,74,80,72]],[[42,72,34,80]]), Q(null,[34,60],[46,84],[[60,70,74,74,80,72]],[[48,70,58,76]])],
   "sit-ups":            [qWith(P_LBK,{ a:[[30,80,36,78]] }), Q(null,[42,58],[46,86],[[60,70,70,89,78,89]],[[48,68,56,70]])],
   "toe-touches":        [qWith(P_LB,{ l:[[52,66,54,48,58,46]], a:[[22,72,22,62]] }), Q(null,[30,74],[50,84],[[52,66,54,48,58,46]],[[42,64,52,52]])],
-  "plank-shoulder-taps":[P_PH, qWith(P_PH,{ a:[[66,64,73,56],[69,75,70,89]] })],   // eine Hand hebt ab und tippt die Schulter an
+  /* eine Hand hebt ab und tippt die Schulter an; die Kugel auf dem Kreuzbein bleibt ruhig (Becken kippt nicht) */
+  "plank-shoulder-taps":[qWith(P_PH,{ x:KUGEL_BECKEN }), qWith(P_PH,{ a:[[73,67,69,58],[69,75,70,89]], x:KUGEL_BECKEN })],
   "toes-to-bar":        [Q([57,24],[50,30],[50,58],[[50,72,50,86]],[[47,19,46,6]], gBar(6,30,70)),
                          Q(null,[48,30],[56,55],[[58,41,55,27,52,23]],[[47,19,46,6]], gBar(6,30,70))]
 };
@@ -745,8 +756,8 @@ Object.assign(ILLU_POSES, {
                        Q(null,[50,20],[50,50],[[50,70,50,89,58,89]],[[62,26,75,26]], gHand(75,26,'<circle class="ipf" cx="75" cy="26" r="3"/>'))],
   /* Gelenk des gestreckten Stützarms: ein etwas größerer Kreis am Boden deutet es an (kein Knick) */
   /* Copenhagen Plank (Seitstütz, Obenbein auf der Bank, Untenbein hängt und wird zum Obenbein hochgezogen), wie auf dem Foto: Unterarm am Boden, Körper waagerecht */
-  "copenhagen-plank": [Q(null,[22,64],[46,63],[[60,63,74,62],[58,70,72,76]],[[22,76,22,87],[36,50,50,60]], gLinie("M70 62H92M74 62V89M88 62V89")+'<circle cx="22" cy="87" r="4.4"/><path d="M30 64L48 63" style="stroke-width:14"/>', true),
-                       Q(null,[22,64],[46,63],[[60,63,74,62],[60,64,74,63]],[[22,76,22,87],[36,50,50,60]], gLinie("M70 62H92M74 62V89M88 62V89")+'<circle cx="22" cy="87" r="4.4"/><path d="M30 64L48 63" style="stroke-width:14"/>', true)],
+  "copenhagen-plank": [Q(null,[22,64],[46,63],[[68,59,87,59],[62,72,76,80]],[[22,76,22,87],[36,50,50,60]], gLinie("M64 62H92M68 62V89M88 62V89")+'<circle cx="22" cy="87" r="4.4"/><path d="M30 64L48 63" style="stroke-width:12"/>', true),
+                       Q(null,[22,64],[46,63],[[68,59,87,59],[64,67,80,66]],[[22,76,22,87],[36,50,50,60]], gLinie("M64 62H92M68 62V89M88 62V89")+'<circle cx="22" cy="87" r="4.4"/><path d="M30 64L48 63" style="stroke-width:12"/>', true)],
   "backpack-row":     [qWith(P_HG,{ x:gHand(61,68,'<rect class="ipf" x="57" y="66" width="9" height="12" rx="2"/>') }),
                        qWith(P_HG,{ a:[[50,36,56,48]], x:gHand(56,50,'<rect class="ipf" x="52" y="48" width="9" height="12" rx="2"/>') })],
   "single-leg-rdl":   [Q(null,[50,20],[50,50],[[50,70,50,89,58,89],[46,72,40,84]],[[52,34,53,47]]),
@@ -1230,7 +1241,7 @@ var EX_INFO = {
   "bicycle-crunches":["Rückenlage, Hände locker am Kopf, Schultern leicht angehoben.|Ein Knie zur Brust ziehen, das andere Bein strecken.|Den gegenüberliegenden Ellbogen zum Knie drehen und im Wechsel radeln.","Lie on your back, hands lightly at your head, shoulders lifted.|Pull one knee in while extending the other leg.|Rotate the opposite elbow towards the knee and pedal alternately."],
   "leg-raises":["Rückenlage, Beine gestreckt, Hände neben dem Körper.|Die gestreckten Beine bis senkrecht anheben.|Kontrolliert absenken, bei Bedarf mit gebeugten Knien.","Lie on your back, legs straight, hands by your sides.|Lift your straight legs to vertical.|Lower with control, bend your knees if needed."],
   "jackknives":["Rückenlage, Arme über dem Kopf, Beine gestreckt.|Gleichzeitig Oberkörper und Beine anheben und mit den Händen Richtung Füße greifen.|Kontrolliert zurück in die gestreckte Lage.","Lie on your back, arms overhead, legs straight.|Lift your torso and legs at the same time and reach for your feet.|Return with control to the stretched position."],
-  "side-jackknives":["Auf der Seite liegen, die obere Hand am Kopf.|Oberkörper und gestreckte Beine gleichzeitig seitlich anheben.|Langsam absenken, Seite nach jedem Intervall wechseln.","Lie on your side, top hand at your head.|Lift your torso and straight legs sideways at the same time.|Lower slowly, switch sides after each interval."],
+  "side-jackknives":["Auf der Seite liegen, die Arme gestreckt über dem Kopf.|Oberkörper und gestreckte Beine gleichzeitig seitlich anheben.|Langsam absenken, Seite nach jedem Intervall wechseln.","Lie on your side, arms extended overhead.|Lift your torso and straight legs sideways at the same time.|Lower slowly, switch sides after each interval."],
   "hollow-hold":["Rückenlage, den unteren Rücken fest in den Boden drücken.|Schultern und gestreckte Beine leicht anheben, Arme über den Kopf.|Den Körper wie eine Banane halten, leichter mit gebeugten Knien.","Lie on your back and press your lower back into the floor.|Lift your shoulders and straight legs slightly, arms overhead.|Hold a banana shape, easier with bent knees."],
   "russian-twists":["Sitzen, Oberkörper leicht zurückgelehnt, Füße am Boden oder angehoben.|Brustbein aufrecht, Hände vor dem Körper.|Den Oberkörper abwechselnd nach links und rechts drehen.","Sit and lean back slightly, feet on the floor or lifted.|Chest up, hands in front of you.|Rotate your torso from side to side."],
   "sit-ups":["Rückenlage, Knie angewinkelt, Füße am Boden.|Oberkörper kontrolliert bis zum Sitzen aufrollen.|Langsam Wirbel für Wirbel zurückrollen, ohne Schwung.","Lie on your back, knees bent, feet flat.|Roll your torso up to sitting with control.|Roll back down slowly, one vertebra at a time, no momentum."],
@@ -1366,7 +1377,7 @@ var EX_POSTURE = {
   "prone-y-raise":["Stirn knapp über dem Boden, Nacken lang.|Schulterblätter nach hinten unten ziehen.","Mit dem unteren Rücken statt den Schultern heben.","Forehead just off the floor, long neck.|Draw your shoulder blades back and down.","Lifting with your lower back instead of your shoulders."],
   "prone-t-raise":["Nacken lang, Blick zum Boden.|Arme auf Schulterhöhe, Schulterblätter zusammen.","Die Schultern hochziehen.","Long neck, eyes down.|Arms at shoulder height, blades squeezed together.","Shrugging your shoulders up."],
   "good-mornings":["Rücken neutral, Ellbogen offen.|Knie leicht gebeugt, Gewicht auf den Fersen.|Hände nur locker am Kopf, nicht am Nacken ziehen.","Tiefer beugen, als der Rücken gerade bleibt.","Neutral spine, elbows open.|Knees soft, weight in your heels.|Hands only rest lightly at your head, don't pull on your neck.","Bending lower than your back can stay flat."],
-  "swimmers":["Blick zum Boden, Nacken lang.|Bauch leicht angespannt, Becken bleibt am Boden.","Den Kopf hochreißen.","Look down, long neck.|Abs lightly braced, pelvis on the floor.","Jerking your head up."],
+  "swimmers":["Blick zum Boden, Nacken lang.|Bauch leicht angespannt, Becken bleibt am Boden.","Den Kopf hochreißen oder ins Hohlkreuz gehen.","Look down, long neck.|Abs lightly braced, pelvis on the floor.","Jerking your head up or arching your lower back."],
   "cobra-lift":["Schultern weg von den Ohren, Blick schräg nach vorn unten.|Becken bleibt am Boden, Gesäß locker.","Sich mit den Armen weit hochdrücken und den unteren Rücken stauchen.","Shoulders away from your ears, eyes down and forward.|Pelvis stays down, glutes relaxed.","Pushing up high with your arms and crunching your lower back."],
   "scapular-push-ups":["Arme gestreckt, Rumpf wie im Stütz.|Bewegung nur aus den Schulterblättern.","Die Ellbogen beugen oder ins Hohlkreuz fallen.","Arms straight, body like a plank.|Move only your shoulder blades.","Bending your elbows or sagging into your lower back."],
   "scapular-pull-ups":["Arme bleiben gestreckt.|Rumpf fest, Beine ruhig.","Mit den Armen ziehen.","Arms stay straight.|Core braced, legs still.","Pulling with your arms."],
@@ -1390,7 +1401,7 @@ var EX_POSTURE = {
   "russian-twists":["Brustbein aufrecht, Rücken lang, nicht rund.|Drehen aus dem Oberkörper, Becken ruhig.","Mit rundem Rücken nach hinten kippen. Bei Rückenbeschwerden die Füße am Boden lassen und kleiner drehen.","Chest up, long spine, not rounded.|Rotate through your upper body, pelvis still.","Slumping back with a rounded spine. With back problems keep your feet down and rotate less."],
   "sit-ups":["Kinn leicht zur Brust, Nacken locker.|Füße bleiben am Boden, Bauch führt die Bewegung.","Sich mit den Händen am Kopf hochziehen.","Chin slightly tucked, relaxed neck.|Feet stay down, your abs lead.","Yanking yourself up by your head."],
   "toe-touches":["Unterer Rücken am Boden.|Schulterblätter abheben, Nacken lang.","Mit dem Kopf nach vorn nicken.","Lower back down.|Lift your shoulder blades, long neck.","Jerking your head forward."],
-  "plank-shoulder-taps":["Hüfte parallel zum Boden, Füße etwas breiter.|Gesäß und Bauch fest.","Mit der Hüfte hin und her schaukeln.","Hips parallel to the floor, feet a bit wider.|Glutes and abs tight.","Rocking your hips side to side."],
+  "plank-shoulder-taps":["Becken waagerecht, beide Hüftknochen gleich hoch, Füße etwas breiter.|Gesäß und Bauch fest.","Mit der Hüfte hin und her schaukeln.","Pelvis level, both hip bones at the same height, feet a bit wider.|Glutes and abs tight.","Rocking your hips side to side."],
   "toes-to-bar":["Schultern aktiv, Rumpf fest.|Becken zum Heben einrollen.","Mit großem Schwung arbeiten.","Active shoulders, braced core.|Tuck your pelvis to lift.","Using big swings."]
 };
 
@@ -2849,8 +2860,8 @@ G("upright-row", "Aufrechtes Rudern", "Upright Row", "weight", 3, 40, 0,
   ["Seitliche Schulter", "Trapez, Bizeps", "Side delts", "Traps, biceps"],
   "Die Stange oder SZ-Stange mit etwa schulterbreitem Griff halten und aufrecht stehen.|Eng am Körper bis etwa Brusthöhe ziehen, die Ellbogen führen nach oben.|Langsam absenken. Ellbogen nicht höher als die Schultern.",
   "Hold the bar or EZ bar about shoulder-width apart and stand tall.|Pull it close to your body up to about chest height, elbows leading upward.|Lower slowly. Keep your elbows no higher than your shoulders.",
-  "Schultern tief, Handgelenke locker.|Nur so hoch, wie es angenehm bleibt.", "Zu schwer oder zu hoch ziehen, wenn die Schultern zwicken.",
-  "Shoulders low, wrists relaxed.|Only as high as feels comfortable.", "Going too heavy or too high if your shoulders pinch.",
+  "Schultern tief, Handgelenke locker.|Nur so hoch, wie es angenehm bleibt.", "Die Ellbogen höher als die Schultern ziehen; bei Schulterbeschwerden lieber Seitheben.",
+  "Shoulders low, wrists relaxed.|Only as high as feels comfortable.", "Pulling your elbows above shoulder height; with shoulder issues choose lateral raises instead.",
   "schulter", ["SZ-Stange oder gerade Stange (Kabel oder Langhantel)", "EZ bar or straight bar (cable or barbell)"], "aufrechtes rudern kinnheben");
 G("cuban-press", "Cuban Press", "Cuban Press", "weight", 3, 40, 0,
   "Hanteln seitlich hochziehen, nach außen drehen, dann hochdrücken", "Pull the dumbbells up and out, rotate outward, then press up", 45, 3, 1, "gym db",
@@ -3392,7 +3403,7 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
   var SEAT  = [[43,64,40,82,36,86],[57,64,60,82,64,86]];     // sitzend, von vorn
   var KNIE  = [[50,87,30,88,24,89]];                           // kniend
   function fr(n, p, l, a, x){ return Q(null, n, p, l, a, x || "", true); }
-  function knoten(x, y){ return gHand(x, y, '<circle class="ipf" cx="'+x+'" cy="'+y+'" r="2.6"/>'); }
+  function knoten(x, y){ return gHand(x, y, '<circle class="ipf" cx="'+x+'" cy="'+y+'" r="3.4"/>'); }
   function tick(x, y){ return gHand(x, y, '<path class="ip" d="M'+x+' '+(y-5)+'v10"/>'); }
   function liegeBank(arm, x){ return stLiegen(arm, x); }
 
@@ -3420,10 +3431,10 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
   P["incline-push-up"] = [Q(null,[74,42],[51,61],[[35,75,21,87,15,89]],[[72,58,73,71]], BANK_HOCH),
                           Q(null,[73,50],[48,66],[[33,78,20,87,14,89]],[[63,63,73,71]], BANK_HOCH)];
   /* Bear Plank Rockback Push-up: Rockback (Hüfte weit nach hinten, Arme lang) und unten im Liegestütz mit schwebenden Knien */
-  P["bear-plank-rockback-push-up"] = [Q(null,[66,70],[22,78],[[34,87,22,88,18,89]],[[70,80,74,89]]),
-                                      Q(null,[70,80],[46,76],[[46,86,30,88,26,89]],[[60,76,68,89]])];
+  P["bear-plank-rockback-push-up"] = [Q(null,[70,65],[41,73],[[58,85,39,87,33,89]],[[69,77.5,72,89]]),
+                                      Q(null,[75,76],[46,66],[[47,85,28,86,22,89]],[[60,79,70,89]])];
   /* Plank Toe Touch: hoher Stütz, dann Hüfte hoch (Pike) und eine Hand zum Fuß der Gegenseite */
-  P["plank-toe-touch"] = [P_PH, Q(null,[60,60],[40,40],[[34,64,28,87,25,89]],[[63,76,66,89],[50,62,40,78]])];
+  P["plank-toe-touch"] = [P_PH, Q(null,[63,67],[46,44],[[41,65,37,85,33,88.5],[43,66,40,86,36,89]],[[50,70.5,38.8,76],[65,77,70,89]])];
   var DEF_X = gLinie("M62 89V81H78V89");
   P["deficit-push-up"] = [Q(null,[71,56],[44,70],[[28,78,12,86,9,89]],[[68,69,70,81]], DEF_X),
                           Q(null,[72,84],[44,83],[[28,86,12,88,9,89]],[[60,77,70,81]], DEF_X)];
@@ -3494,7 +3505,7 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
   var SITZLEGS = [[43,66,40,82,36,86],[57,66,60,82,64,86]];
   P["seated-rear-delt-fly"] = [fr([50,44],[50,60],SITZLEGS,[[46,57,45,68],[54,57,55,68]], SITZB+gDB(45,70)+gDB(55,70)),
                                fr([50,44],[50,60],SITZLEGS,[[38,46,26,46],[62,46,74,46]], SITZB+gDB(26,46)+gDB(74,46))];
-  P["upright-row"] = [Q(null,[50,20],[50,50],STAND,[[52,35,54,47]], gScheibe(55,48,5)), Q(null,[50,20],[50,50],STAND,[[60,19,56,30]], gScheibe(57,31,5))];
+  P["upright-row"] = [Q(null,[50,20],[50,50],STAND,[[52,35,54,47]], gScheibe(55,48,5)), Q(null,[50,20],[50,50],STAND,[[58,26,56,32]], gScheibe(57,33,5))];
   var CU_A = fr([50,28],[50,58],FRONT,[[38,32,40,44],[62,32,60,44]], gDB(40,45)+gDB(60,45));
   var CU_M = fr([50,28],[50,58],FRONT,[[38,32,37,20],[62,32,63,20]], gDB(37,21)+gDB(63,21));
   var CU_B = fr([50,28],[50,58],FRONT,[[41,24,43,12],[59,24,57,12]], gDB(43,10)+gDB(57,10));
@@ -3517,8 +3528,9 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
   var CC_T = gLinie("M74 40V89")+gRolle(70,84);
   P["one-arm-cable-curl"] = [Q(null,[50,20],[50,50],STAND,[[52,32,54,44],[47,34,47,46]], CC_T+gGriff(54,44)),
                              Q(null,[50,20],[50,50],STAND,[[52,32,60,23],[47,34,47,46]], CC_T+gGriff(60,23))];
-  P["cross-body-hammer-curl"] = [fr([50,20],[50,52],FRONT,[[43,34,42,46],[57,34,58,46]], tick(42,46)),
-                                 fr([50,20],[50,52],FRONT,[[43,34,54,29],[57,34,58,46]], tick(54,29))];
+  var CB_SPUR = '<path class="ip" d="M43 44C42 36 47 31 53 30" style="stroke-width:1.2;stroke-dasharray:2 2;opacity:.6"/>';
+  P["cross-body-hammer-curl"] = [fr([50,20],[50,52],FRONT,[[43,34,42,46],[57,34,58,46]], tick(42,46)+tick(58,46)+CB_SPUR),
+                                 fr([50,20],[50,52],FRONT,[[45,36,56,28],[57,34,58,46]], tick(56,28)+tick(58,46)+CB_SPUR)];
   var PC_SITZ = gSitz(30,52,66)+gLinie("M47 41L61 50");
   P["preacher-curl"] = [Q(null,[46,37],[40,64],[[58,67,58,86,65,88]],[[56,46,66,55]], PC_SITZ+gScheibe(66,56,3.6)),
                         Q(null,[46,37],[40,64],[[58,67,58,86,65,88]],[[56,46,53,34]], PC_SITZ+gScheibe(53,35,3.6))];
@@ -3557,45 +3569,46 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
   P["ez-jm-press"] = [stLiegen([29,56,30,44], gScheibe(30,42,3)), stLiegen([38,60,28,57], gScheibe(28,56,3))];
   /* Tate Press: nur die Ansicht von vorn (siehe unten) */
   /* Tate Press von vorn (Blick vom Kopfende): Ellbogen zeigen nach oben und außen, die Hanteln gehen von der Brust nach oben über die Ellbogen */
-  var TP_BANK = gLinie("M34 68H66M38 68V87M62 68V87");   // Bank von vorn (Blick von den Füßen): Polster und zwei Beine, die Füße stehen links und rechts daneben
+  var TP_BANK = gLinie("M33 70H67M38 70V87M62 70V87");   // Bank von vorn (Blick von den Füßen): Polster und zwei Beine, die Füße stehen links und rechts daneben
   function tpVorn(a, d){ return Q([50,54],[50,60],[50,66],[[33,76,30,87,26,89],[67,76,70,87,74,89]], a, TP_BANK+gDB(d[0],d[1])+gDB(d[2],d[3]), true); }
   /* oben: beide Arme gestreckt nach oben; unten: die Ellbogen zeigen zur Seite, die Hanteln sinken neben den Kopf (der abgewinkelte Arm ist nur von vorn zu sehen) */
-  P["tate-press"] = [tpVorn([[43,40,38,20],[57,40,62,20]], [38,18,62,18]), tpVorn([[27,58,35,46],[73,58,65,46]], [35,44,65,44])];   // nur diese Ansicht: von der Seite wäre der abgewinkelte Arm irreführend
+  P["tate-press"] = [tpVorn([[45.5,49,41,37],[54.5,49,59,37]], [41,35,59,35]), tpVorn([[37,52,46,58],[63,52,54,58]], [45,58,55,58])];   // nur diese Ansicht: von der Seite wäre der abgewinkelte Arm irreführend
   /* Zweite Ansichten nach der Prüfung (2026-10-29): Prone T-/Y-Raise von oben (die Form T bzw. Y ist von der Seite nicht zu sehen), Face Pull und Upright Row von vorn (Ellbogen hoch und nach außen) */
-  function tyOben(a){ return Q(null,[50,32],[50,64],[[48,79,47,94],[52,79,53,94]], a, "", true); }
-  V2["prone-t-raise"] = { typ:"top", p:[tyOben([[62,34,76,35],[38,34,24,35]]), tyOben([[61,34,73,34],[39,34,27,34]])] };
-  V2["prone-y-raise"] = { typ:"top", p:[tyOben([[60,28,68,14],[40,28,32,14]]), tyOben([[59,28,65,17],[41,28,35,17]])] };
-  V2["face-pull"] = { typ:"front", p:[fr([50,20],[50,52],FRONT,[[40,44,43,52],[60,44,57,52]], gLinie("M43 52H57")+gGriff(43,52)+gGriff(57,52)),
-                                       fr([50,20],[50,52],FRONT,[[33,28,41,21],[67,28,59,21]], gLinie("M41 21H59")+gGriff(41,21)+gGriff(59,21))] };
-  V2["upright-row"] = { typ:"front", p:[fr([50,20],[50,52],FRONT,[[41,44,41,58],[59,44,59,58]], gLinie("M34 58H66M34 54V62M66 54V62")+gGriff(41,58)+gGriff(59,58)),
-                                         fr([50,20],[50,52],FRONT,[[33,34,42,42],[67,34,58,42]], gLinie("M34 42H66M34 38V46M66 38V46")+gGriff(42,42)+gGriff(58,42))] };
+  /* Face Pull von vorn: Start die Hände eng vor dem Gesicht, Ende Hände auseinander auf Ohrhöhe, Ellbogen hoch und außen */
+  V2["face-pull"] = { typ:"front", p:[fr([50,20],[50,52],FRONT,[[41,33,46,26],[59,33,54,26]], gLinie("M46 26H54")+gGriff(46,26)+gGriff(54,26)),
+                                       fr([50,20],[50,52],FRONT,[[31,25,38,13],[69,25,62,13]], gGriff(38,13)+gGriff(62,13))] };
+  /* Aufrechtes Rudern von vorn: die Stange wandert mit der Hand (gHand), Ellbogen hoch und außen, höchstens bis Schulterhöhe */
+  V2["upright-row"] = { typ:"front", p:[fr([50,20],[50,52],FRONT,[[42,36,45,48],[58,36,55,48]], gHand(45,48,'<path class="ip" d="M33 48H67M33 44V52M67 44V52"/>')),
+                                         fr([50,20],[50,52],FRONT,[[36,25,44,34],[64,25,56,34]], gHand(44,34,'<path class="ip" d="M32 34H68M32 30V38M68 30V38"/>'))] };
   /* Weitere Figuren nach der Prüfung (2026-10-29): Seil am Kabelzug mit Rolle, Zugseil und zwei Knoten; Ansichten von vorn bzw. oben, wo die Seite die Bewegung nicht zeigt */
-  function kabelSeil(px, py, hx, hy){ return gRolle(px, py)+gLinie("M"+px+" "+py+"L"+hx+" "+hy)+knoten(hx-3, hy-2)+knoten(hx+3, hy+2); }   // Rolle (px,py) -> Hand (hx,hy), Knoten am Griff
-  P["cable-woodchop"] = [fr([50,22],[50,52],FRONT,[[38,32,31,18],[40,34,33,20]], gLinie("M12 0V89")+kabelSeil(14,4,32,17)),
-                         fr([50,22],[50,52],FRONT,[[52,46,61,58],[54,44,63,56]], gLinie("M12 0V89")+kabelSeil(14,4,62,57))];
+  function kabelSeil(px, py, hx, hy){ return gRolle(px, py)+gLinie("M"+px+" "+py+"L"+hx+" "+hy)+knotenPaar(px, py, hx, hy); }
+  /* zwei Knoten am Seilende, quer zur Seilrichtung nebeneinander (je 3,5 von der Hand) */
+  function knotenPaar(px, py, hx, hy){
+    var l = Math.hypot(hx-px, hy-py) || 1, qx = Math.round(35*(py-hy)/l)/10, qy = Math.round(35*(hx-px)/l)/10;
+    return knoten(hx+qx, hy+qy)+knoten(hx-qx, hy-qy);
+  }   // Rolle (px,py) -> Hand (hx,hy), Knoten am Griff
+  /* Holzhacker: Arme lang (oben auf der Zugseite, unten diagonal zur Gegenseite), der Oberkörper neigt und dreht mit */
+  P["cable-woodchop"] = [fr([50,22],[50,52],FRONT,[[41.5,18.7,33,11],[43,20.5,35,13]], gLinie("M12 0V89")+kabelSeil(14,4,33,11)),
+                         fr([55,29],[50,52],FRONT,[[59,43,64,54],[60,42,66,52]], gLinie("M12 0V89")+kabelSeil(14,4,65,53))];
   /* Rotary Torso: aufrecht sitzen, beide Hände am Polster vor der Brust (keine gekreuzten Arme), der Oberkörper dreht sich aus dem Rumpf */
   var RT_STUETZE = gLinie("M36 62H64M50 62V89");
-  P["rotary-torso"] = [Q(null,[50,30],[50,60],[[43,64,40,82,36,86],[57,64,60,82,64,86]],[[44,42,50,46],[56,42,50,46]], RT_STUETZE+gQuer(50,46,6), true),
-                       Q(null,[43,31],[50,60],[[43,64,40,82,36,86],[57,64,60,82,64,86]],[[38,42,44,46],[50,42,44,46]], RT_STUETZE+gQuer(44,46,6), true)];
+  var RT_PFEIL = '<path class="ip" d="M36 20Q50 12 64 20M60 16.5L64 20L59 22.5" style="stroke-width:1.4;opacity:.7"/>';   // Drehrichtung: die Wirbelsäule bleibt senkrecht, nur der Oberkörper dreht
+  P["rotary-torso"] = [Q(null,[50,30],[50,60],[[43,64,40,82,36,86],[57,64,60,82,64,86]],[[38,43,40,46],[46,42,40,46]], RT_STUETZE+RT_PFEIL+gQuer(40,46,6), true),
+                       Q(null,[50,30],[50,60],[[43,64,40,82,36,86],[57,64,60,82,64,86]],[[54,43,60,46],[62,42,60,46]], RT_STUETZE+RT_PFEIL+gQuer(60,46,6), true)];
   /* Pallof Press von vorn: das Kabel zieht von der Seite, die Hände drücken vor der Brust gerade nach vorn und halten gegen die Drehung */
-  var PL_K = gLinie("M10 0V89")+gRolle(14,40);
-  V2["pallof-press"] = { typ:"front", p:[fr([50,20],[50,52],FRONT,[[41,40,47,38],[59,40,53,38]], PL_K+gLinie("M14 40L50 38")+gGriff(50,38)), fr([50,20],[50,52],FRONT,[[48,36,50,34],[52,36,50,34]], PL_K+gLinie("M14 40L50 34")+gGriff(50,34))] };
+  var PL_K = gLinie("M10 0V89")+gRolle(14,36)+gLinie("M26 32L22 36L26 40")+'<path class="ip" d="M50 6V54" style="stroke-width:1.2;stroke-dasharray:2 2;opacity:.5"/>';   // Pfeil zur Rolle: der Zug geht zur Seite, die Mittellinie zeigt "Brust nach vorn"
+  V2["pallof-press"] = { typ:"front", p:[fr([50,20],[50,52],FRONT,[[41,40,47,38],[59,40,53,38]], PL_K+gLinie("M14 36L50 38")+gQuer(50,38,3)), fr([50,20],[50,52],FRONT,[[46,35,50,31],[54,35,50,31]], PL_K+gLinie("M14 36L50 31")+gQuer(50,31,5))] };
   /* Cable Crunch: Zugseil von der oberen Rolle zu den Händen am Kopf */
-  P["cable-crunch"] = [Q(null,[52,34],[49,62],[[50,87,30,88,24,89]],[[62,40,56,30]], gLinie("M90 0V89")+kabelSeil(86,6,56,30)),
-                       Q(null,[64,70],[48,62],[[50,87,30,88,24,89]],[[64,56,58,66]], gLinie("M90 0V89")+kabelSeil(86,6,58,66))];
-  V2["around-world-pullover"] = V2["pullover"];
-  V2["hammer-curl"] = V2["db-curl"];
-  V2["cross-body-hammer-curl"] = V2["db-curl"];
-  /* Side Jackknives von oben: auf der Seite liegend, Oberkörper und Beine biegen sich seitlich aufeinander zu (Banane); der Arm bleibt gestreckt */
-  function sjOben(n, l, a, torso){ return Q(null,n,[50,62],l,a,'<path d="'+torso+'" style="stroke-width:14"/>',true); }
-  V2["side-jackknives"] = { typ:"top", p:[sjOben([22,62],[[68,62,86,62]],[[14,62,6,62]],"M28 62L48 62"), sjOben([24,50],[[66,52,82,42]],[[15,47,6,44]],"M29 52L48 61")] };
+  P["cable-crunch"] = [Q(null,[52,34],[49,62],[[50,87,30,88,24,89]],[[60,35,58,24]], gLinie("M90 0V89")+kabelSeil(86,6,58,24)),
+                       Q(null,[73,71],[48,62],[[50,87,30,88,24,89]],[[76,79,84,70]], gLinie("M90 0V89")+kabelSeil(86,6,84,70))];
+  /* Hammercurl von vorn: die Hanteln zeigen mit der Stirnseite zu uns (Neutralgriff, als Scheibe) - anders als beim normalen Curl (waagerechte Stange) */
+  V2["hammer-curl"] = { typ:"front", p:[fr([50,20],[50,52],FRONT,[[43,34,42,46],[57,34,58,46]], gScheibe(42,47,4.5)+gScheibe(58,47,4.5)),
+                                         fr([50,20],[50,52],FRONT,[[43,34,42,23],[57,34,58,23]], gScheibe(42,22,4.5)+gScheibe(58,22,4.5))] };
+  /* Ohne zweite Ansicht (nach der Prüfung 2026-10-30): Around the World, Cross-Body-Hammercurl (Hauptansicht ist schon von vorn), Side Jackknives, Prone T/Y, Muschel, DB-Bankdrücken - die Ansicht von oben bzw. die Kopie zeigte nichts Eigenes oder wirkte wie eine stehende Person */
   /* Fehlende zweite Ansichten (2026-10-30): Muschel mit Band von oben (Seitenlage, dicker Körper, Arme und Beine gestreckt und weiß); Rudern mit weitem Griff von vorn. Swimmers und Plank Shoulder Taps von oben sahen aus wie stehende Personen und blieben deshalb weg. */
-  var DICK = function(d){ return '<path d="'+d+'" style="stroke-width:14"/>'; };
-  V2["band-clamshell"] = { typ:"top", p:[Q(null,[22,56],[46,56],[[62,64,50,74],[62,64,50,74]],[[12,56,4,56],[12,58,4,58]], DICK("M28 56L44 56")+gLinie("M60 64H62"), true),
-                                          Q(null,[22,56],[46,56],[[64,52,50,70],[62,64,50,74]],[[12,56,4,56],[12,58,4,58]], DICK("M28 56L44 56")+gLinie("M62 52L62 64"), true)] };
-  V2["wide-grip-cable-row"] = { typ:"front", p:[fr([50,30],[50,60],SEAT,[[38,50,30,62],[62,50,70,62]], gLinie("M26 62H74")+gGriff(30,62)+gGriff(70,62)), fr([50,30],[50,60],SEAT,[[28,52,34,50],[72,52,66,50]], gLinie("M28 50H72")+gGriff(34,50)+gGriff(66,50))] };
-  /* Kurzhantel-Bankdrücken: zweite Ansicht von vorn (Blick vom Kopfende) - Ellbogen etwa 45° zum Körper, Hanteln über der Brust bzw. an der Brust */
-  V2["db-bench-press"] = { typ:"front", p:[tpVorn([[44,40,42,20],[56,40,58,20]], [42,18,58,18]), tpVorn([[33,57,44,56],[67,57,56,56]], [44,54,56,54])] };
+  /* Rudern mit weitem Griff von vorn: gleiche Griffbreite in beiden Posen, die Stange wandert mit der Hand, Ellbogen hoch und außen (über der Stange) */
+  V2["wide-grip-cable-row"] = { typ:"front", p:[fr([50,30],[50,60],SEAT,[[39,48,32,62],[61,48,68,62]], gHand(32,62,'<path class="ip" d="M24 62H76M24 58.5V65.5M76 58.5V65.5"/>')),
+                                                 fr([50,30],[50,60],SEAT,[[25,43,32,52],[75,43,68,52]], gHand(32,52,'<path class="ip" d="M24 52H76M24 48.5V55.5M76 48.5V55.5"/>'))] };
 
   /* ---------- Beine, Core, Unterarme ---------- */
   var BS_B = gBench(24,46,67);
