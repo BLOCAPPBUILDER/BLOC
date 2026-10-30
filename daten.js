@@ -621,7 +621,7 @@ var ILLU_POSES = {
                          Q(null,[26,76],[50,84],[[68,82,88,80],[58,58,68,70]],[[22,70,18,73],[40,68,53,61]])],
   "leg-raises":         [P_LB, qWith(P_LB,{ l:[[54,66,58,48,64,46]] })],
   "jackknives":         [qWith(P_LB,{ a:[[12,84,2,84]] }), Q(null,[34,64],[44,86],[[56,66,66,48,70,46]],[[48,56,62,46]])],
-  "side-jackknives":    [qWith(P_LB,{ a:[[22,74,14,76]], x:'<path d="M26 83L48 84" style="stroke-width:15"/>' }), Q(null,[28,72],[50,84],[[66,74,84,68,88,66]],[[24,64,16,66]], '<path d="M30 74L48 83" style="stroke-width:15"/>')],   // seitlich liegend: dickerer Körper
+  "side-jackknives":    [qWith(P_LB,{ a:[[17,81,9,79]], x:'<path d="M26 83L48 84" style="stroke-width:15"/>' }), Q(null,[28,72],[50,84],[[66,74,84,68,88,66]],[[21,68,12,64]], '<path d="M30 74L48 83" style="stroke-width:15"/>')],   // seitlich liegend: dickerer Körper, Arm gestreckt (kein Knick)
   "hollow-hold":        [Q(null,[26,74],[50,84],[[68,80,86,74,90,72]],[[14,68,4,64]]), null],
   "russian-twists":     [Q(null,[34,60],[46,84],[[60,70,74,74,80,72]],[[42,72,34,80]]), Q(null,[34,60],[46,84],[[60,70,74,74,80,72]],[[48,70,58,76]])],
   "sit-ups":            [qWith(P_LBK,{ a:[[30,80,36,78]] }), Q(null,[42,58],[46,86],[[60,70,70,89,78,89]],[[48,68,56,70]])],
@@ -3586,6 +3586,9 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
   V2["around-world-pullover"] = V2["pullover"];
   V2["hammer-curl"] = V2["db-curl"];
   V2["cross-body-hammer-curl"] = V2["db-curl"];
+  /* Side Jackknives von oben: auf der Seite liegend, Oberkörper und Beine biegen sich seitlich aufeinander zu (Banane); der Arm bleibt gestreckt */
+  function sjOben(n, l, a, torso){ return Q(null,n,[50,62],l,a,'<path d="'+torso+'" style="stroke-width:14"/>',true); }
+  V2["side-jackknives"] = { typ:"top", p:[sjOben([22,62],[[68,62,86,62]],[[14,62,6,62]],"M28 62L48 62"), sjOben([24,50],[[66,52,82,42]],[[15,47,6,44]],"M29 52L48 61")] };
   /* Kurzhantel-Bankdrücken: zweite Ansicht von vorn (Blick vom Kopfende) - Ellbogen etwa 45° zum Körper, Hanteln über der Brust bzw. an der Brust */
   V2["db-bench-press"] = { typ:"front", p:[tpVorn([[44,40,42,20],[56,40,58,20]], [42,18,58,18]), tpVorn([[33,57,44,56],[67,57,56,56]], [44,54,56,54])] };
 
