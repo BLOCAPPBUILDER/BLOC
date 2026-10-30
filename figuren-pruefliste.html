@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BLOC">
 <!-- ?v= gehört zu FASSUNG in sw.js: bei jeder neuen Fassung beide ändern -->
-<link rel="stylesheet" href="./app.css?v=2026-10-30-6">
-<link rel="stylesheet" href="./layout-new.css?v=2026-10-30-6">
+<link rel="stylesheet" href="./app.css?v=2026-10-30-7">
+<link rel="stylesheet" href="./layout-new.css?v=2026-10-30-7">
 </head>
 <style>
 body{ background:#16161a; color:#eee; font:14px/1.4 system-ui,sans-serif; padding:12px; }
@@ -27,41 +27,54 @@ h1{ font-size:20px; margin:4px 0 2px; } .sub{ color:#aaa; margin-bottom:12px; }
 .f{ display:flex; gap:4px; flex-wrap:wrap; } .f svg{ width:110px; height:110px; background:#2e2e35; border-radius:8px; color:#fff; }
 .f .l{ font-size:11px; color:#aaa; width:100%; margin-top:4px; }
 .grund{ margin-top:6px; font-size:12.5px; color:#f2c230; } .offen .grund{ color:#ff7a7f; }
+@media print{
+ body{ background:#fff !important; color:#111 !important; padding:0 !important; }
+ .sub a{ display:none; } .sub{ color:#555; }
+ .grid{ grid-template-columns:repeat(3,1fr); gap:8px; }
+ .k{ background:#fff; border:1.5px solid #ccc; break-inside:avoid; page-break-inside:avoid; padding:6px; }
+ .k.unsicher{ border-color:#d99a00; } .k.offen{ border-color:#d33; }
+ .k h3{ color:#111; font-size:13px; } .k small{ color:#777; }
+ .f svg{ background:#eceef2; color:#222; width:82px; height:82px; }
+ .grund{ color:#a06a00; font-size:10.5px; } .offen .grund{ color:#c22; }
+ .leg span{ color:#333 !important; }
+}
 </style>
 </head>
 <body>
 <div id="app"></div><div id="playerRoot"></div><div id="overlayRoot"></div><nav id="tabbar" class="tabbar hidden"></nav>
-<script src="./texte.js?v=2026-10-30-6"></script>
-<script src="./daten.js?v=2026-10-30-6"></script>
-<script src="./faq.js?v=2026-10-30-6"></script>
-<script src="./js/00-native.js?v=2026-10-30-6"></script>
-<script src="./js/01-basis.js?v=2026-10-30-6"></script>
-<script src="./js/02-bibliothek.js?v=2026-10-30-6"></script>
-<script src="./js/03-router.js?v=2026-10-30-6"></script>
-<script src="./js/04-start.js?v=2026-10-30-6"></script>
-<script src="./js/05-suche.js?v=2026-10-30-6"></script>
-<script src="./js/06-timer-listen.js?v=2026-10-30-6"></script>
-<script src="./js/07-studio.js?v=2026-10-30-6"></script>
-<script src="./js/08-koerperkarte.js?v=2026-10-30-6"></script>
-<script src="./js/09-studio-karte.js?v=2026-10-30-6"></script>
-<script src="./js/10-gemeinsam.js?v=2026-10-30-6"></script>
-<script src="./js/11-bibliothek-seite.js?v=2026-10-30-6"></script>
-<script src="./js/11b-katalog.js?v=2026-10-30-6"></script>
-<script src="./js/12-uebung-statistik.js?v=2026-10-30-6"></script>
-<script src="./js/13-teilen-editor.js?v=2026-10-30-6"></script>
-<script src="./js/14-einfuehrung-sicherung.js?v=2026-10-30-6"></script>
-<script src="./js/16-lauf.js?v=2026-10-30-6"></script>
-<script src="./js/17-aufwaermen-einstellungen.js?v=2026-10-30-6"></script>
-<script src="./js/18-audio.js?v=2026-10-30-6"></script>
-<script src="./js/19-timer-motor.js?v=2026-10-30-6"></script>
-<script src="./js/19a-kalender.js?v=2026-10-30-6"></script>
-<script src="./js/20-walzen-start.js?v=2026-10-30-6"></script>
-<script src="./js/21-koerper.js?v=2026-10-30-6"></script>
-<script src="./js/22-satz-training.js?v=2026-10-30-6"></script>
-<script src="./js/23-protein.js?v=2026-10-30-6"></script>
+<script src="./texte.js?v=2026-10-30-7"></script>
+<script src="./daten.js?v=2026-10-30-7"></script>
+<script src="./faq.js?v=2026-10-30-7"></script>
+<script src="./js/00-native.js?v=2026-10-30-7"></script>
+<script src="./js/01-basis.js?v=2026-10-30-7"></script>
+<script src="./js/02-bibliothek.js?v=2026-10-30-7"></script>
+<script src="./js/03-router.js?v=2026-10-30-7"></script>
+<script src="./js/04-start.js?v=2026-10-30-7"></script>
+<script src="./js/05-suche.js?v=2026-10-30-7"></script>
+<script src="./js/06-timer-listen.js?v=2026-10-30-7"></script>
+<script src="./js/07-studio.js?v=2026-10-30-7"></script>
+<script src="./js/08-koerperkarte.js?v=2026-10-30-7"></script>
+<script src="./js/09-studio-karte.js?v=2026-10-30-7"></script>
+<script src="./js/10-gemeinsam.js?v=2026-10-30-7"></script>
+<script src="./js/11-bibliothek-seite.js?v=2026-10-30-7"></script>
+<script src="./js/11b-katalog.js?v=2026-10-30-7"></script>
+<script src="./js/12-uebung-statistik.js?v=2026-10-30-7"></script>
+<script src="./js/13-teilen-editor.js?v=2026-10-30-7"></script>
+<script src="./js/14-einfuehrung-sicherung.js?v=2026-10-30-7"></script>
+<script src="./js/16-lauf.js?v=2026-10-30-7"></script>
+<script src="./js/17-aufwaermen-einstellungen.js?v=2026-10-30-7"></script>
+<script src="./js/18-audio.js?v=2026-10-30-7"></script>
+<script src="./js/19-timer-motor.js?v=2026-10-30-7"></script>
+<script src="./js/19a-kalender.js?v=2026-10-30-7"></script>
+<script src="./js/20-walzen-start.js?v=2026-10-30-7"></script>
+<script src="./js/21-koerper.js?v=2026-10-30-7"></script>
+<script src="./js/22-satz-training.js?v=2026-10-30-7"></script>
+<script src="./js/23-protein.js?v=2026-10-30-7"></script>
 <script>
 /* Figuren-Prüfliste: alle Übungen mit ihren Figuren (Pose A und B, zweite Ansicht); gelb = unsicher, rot = bekannt unzureichend (noch offen) */
 var UNSICHER = {
+  "band-clamshell":"Neue zweite Ansicht von oben (Seitenlage, Knie öffnet sich); das Band ist nur ein kleiner Strich.",
+  "wide-grip-cable-row":"Neue zweite Ansicht von vorn (weite Griffe an der Stange); Armwinkel grob.",
   "side-jackknives":"Testweise: dicker Körper, Arm gestreckt, zusätzlich Ansicht von oben mit der seitlichen Beuge; Kopf/Arm dort noch klein.",
   "copenhagen-plank":"Nach deinem Foto und deiner Skizze: dicker Körper, gestreckter Stützarm mit Gelenkkreis, Obenarm an der Hüfte.",
   "bicycle-crunches":"Testweise nach deinem Vorschlag: Knie höher, der diagonale Arm führt zum Knie. Pose B (Seitenwechsel) zeigt den Arm nur schwach.",
@@ -82,10 +95,8 @@ var UNSICHER = {
   "cross-body-hammer-curl":"Wie Hammer Curl: Neutralgriff und Diagonale nicht zu sehen."
 };
 var OFFEN = {
-  "swimmers":"Seitenansicht zeigt die wechselnde Arm-/Bein-Bewegung nicht eindeutig; Ansicht von oben nicht überzeugend, daher noch nicht gezeichnet.",
-  "plank-shoulder-taps":"Seitenansicht zeigt die Hüftstabilität nicht; zweite Ansicht fehlt.",
-  "band-clamshell":"Öffnen des Knies von der Seite fast unsichtbar; zweite Ansicht fehlt.",
-  "wide-grip-cable-row":"Weite Griffbreite nicht sichtbar; zweite Ansicht fehlt."
+  "swimmers":"Seitenansicht zeigt die wechselnde Arm-/Bein-Bewegung nicht eindeutig; eine Ansicht von oben wirkt wie eine stehende Person und wurde verworfen.",
+  "plank-shoulder-taps":"Seitenansicht zeigt die Hüftstabilität nicht; eine Ansicht von oben wirkt wie eine stehende Person und wurde verworfen (Vorschlag von dir gesucht).",
 };
 window.addEventListener("load", function(){ setTimeout(function(){
   ["app","playerRoot","overlayRoot","tabbar"].forEach(function(i){ var e=document.getElementById(i); if(e) e.remove(); }); document.body.className = ""; document.body.style.cssText = "background:#16161a;color:#eee;padding:12px;min-height:0";
