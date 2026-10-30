@@ -621,7 +621,7 @@ var ILLU_POSES = {
                          Q(null,[26,76],[50,84],[[68,82,88,80],[58,58,68,70]],[[22,70,18,73],[40,68,53,61]])],
   "leg-raises":         [P_LB, qWith(P_LB,{ l:[[54,66,58,48,64,46]] })],
   "jackknives":         [qWith(P_LB,{ a:[[12,84,2,84]] }), Q(null,[34,64],[44,86],[[56,66,66,48,70,46]],[[48,56,62,46]])],
-  "side-jackknives":    [qWith(P_LB,{ a:[[22,74,14,76]] }), Q(null,[28,72],[50,84],[[66,74,84,68,88,66]],[[24,64,16,66]])],
+  "side-jackknives":    [qWith(P_LB,{ a:[[22,74,14,76]], x:'<path d="M26 83L48 84" style="stroke-width:15"/>' }), Q(null,[28,72],[50,84],[[66,74,84,68,88,66]],[[24,64,16,66]], '<path d="M30 74L48 83" style="stroke-width:15"/>')],   // seitlich liegend: dickerer Körper
   "hollow-hold":        [Q(null,[26,74],[50,84],[[68,80,86,74,90,72]],[[14,68,4,64]]), null],
   "russian-twists":     [Q(null,[34,60],[46,84],[[60,70,74,74,80,72]],[[42,72,34,80]]), Q(null,[34,60],[46,84],[[60,70,74,74,80,72]],[[48,70,58,76]])],
   "sit-ups":            [qWith(P_LBK,{ a:[[30,80,36,78]] }), Q(null,[42,58],[46,86],[[60,70,70,89,78,89]],[[48,68,56,70]])],
@@ -745,8 +745,8 @@ Object.assign(ILLU_POSES, {
                        Q(null,[50,20],[50,50],[[50,70,50,89,58,89]],[[62,26,75,26]], gHand(75,26,'<circle class="ipf" cx="75" cy="26" r="3"/>'))],
   /* Gelenk des gestreckten Stützarms: ein etwas größerer Kreis am Boden deutet es an (kein Knick) */
   /* Copenhagen Plank (Seitstütz, Obenbein auf der Bank, Untenbein hängt und wird zum Obenbein hochgezogen), wie auf dem Foto: Unterarm am Boden, Körper waagerecht */
-  "copenhagen-plank": [Q(null,[22,64],[46,63],[[60,63,74,62],[58,70,72,76]],[[22,76,22,87]], gLinie("M70 62H92M74 62V89M88 62V89")+'<circle cx="22" cy="87" r="4.4"/>'),
-                       Q(null,[22,64],[46,63],[[60,63,74,62],[60,64,74,63]],[[22,76,22,87]], gLinie("M70 62H92M74 62V89M88 62V89")+'<circle cx="22" cy="87" r="4.4"/>')],
+  "copenhagen-plank": [Q(null,[22,64],[46,63],[[60,63,74,62],[58,70,72,76]],[[22,76,22,87],[36,50,50,60]], gLinie("M70 62H92M74 62V89M88 62V89")+'<circle cx="22" cy="87" r="4.4"/><path d="M30 64L48 63" style="stroke-width:14"/>'),
+                       Q(null,[22,64],[46,63],[[60,63,74,62],[60,64,74,63]],[[22,76,22,87],[36,50,50,60]], gLinie("M70 62H92M74 62V89M88 62V89")+'<circle cx="22" cy="87" r="4.4"/><path d="M30 64L48 63" style="stroke-width:14"/>')],
   "backpack-row":     [qWith(P_HG,{ x:gHand(61,68,'<rect class="ipf" x="57" y="66" width="9" height="12" rx="2"/>') }),
                        qWith(P_HG,{ a:[[50,36,56,48]], x:gHand(56,50,'<rect class="ipf" x="52" y="48" width="9" height="12" rx="2"/>') })],
   "single-leg-rdl":   [Q(null,[50,20],[50,50],[[50,70,50,89,58,89],[46,72,40,84]],[[52,34,53,47]]),
