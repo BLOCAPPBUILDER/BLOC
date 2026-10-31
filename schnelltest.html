@@ -296,8 +296,8 @@
       // Suche: Körperkarte aufklappen, Muskelgruppe wählen -> nur passende Übungen
       await heim();
       W.go("#search");
-      await bis(function () { return $("[data-srkk]"); }, 3000, "Suche mit Körper-Zeile");
-      klick("[data-srkk]");
+      await bis(function () { return $("[data-srtoggle]"); }, 3000, "Suche mit Filterkarte");
+      if (!$('[data-srtrain="studio"]')) klick("[data-srtoggle]");   // Filterkarte der Suche aufklappen (wie beim Workout-Filter)
       klick(await bis(function () { return $('.fc-chip[data-srzone="ruecken"]'); }, 2000, "Körperkarte in der Suche"));
       await bis(function () { return $('.fc-chip[data-srzone="ruecken"].on') && $$("[data-playex]").length > 5; }, 2000, "Rücken-Übungen als Kacheln in der Suche");
       pruefe($$("[data-playex]").length < 140 && $$(".air-kachel").length === $$("[data-playex]").length, "Rücken-Filter filtert nicht oder Kacheln fehlen");
@@ -409,7 +409,7 @@
       await heim();
       W.go("#search");
       await bis(function () { return $$("[data-srkat]").length === 6; }, 3000, "sechs Kategorien");
-      pruefe($(".bereich-bild img[src$='bereich-suche.jpg']"), "Suche: Bild-Kopf fehlt");
+      pruefe(!$(".bereich-bild") && $(".air-filter [data-srtoggle]"), "Suche: das Bild oben soll entfallen, dafür die Filterkarte wie beim Workout");
       klick('[data-srkat="uebungen"]');
       await bis(function () { return $$("[data-sr]").length + $$(".air-kachel").length > 100; }, 3000, "Kategorie Übungen zeigt alle Übungen (Air als Kacheln, Studio als Zeilen)");
       eingeben($("#gs-q"), "burpee");
@@ -418,6 +418,26 @@
       klick('[data-srkat="alle"]');
       eingeben($("#gs-q"), "");
       await bis(function () { return !$$("[data-sr]").length && !$$(".air-kachel").length; }, 3000, "Alle + leer = Hinweistext");
+    }],
+    ["Übungsbilder: Umschalter Figur | Bild nur in der Info, ohne Bild kein Umschalter", async function () {
+      await heim();
+      W.state.db.settings.infoBild = false;
+      var zu = function () { W.document.getElementById("overlayRoot").innerHTML = ""; };
+      W.openExInfo("ab-crunch-machine");
+      await bis(function () { return $(".media-seg"); }, 2000, "Umschalter in der Info");
+      pruefe($$(".media-seg button").length === 2 && $(".info-pane-bild").hidden && !$(".info-pane-fig").hidden, "Info startet mit der Figur");
+      klick('[data-ansicht="bild"]');
+      await bis(function () { return !$(".info-pane-bild").hidden && $(".info-pane-fig").hidden; }, 2000, "Bild ersetzt die Figur");
+      pruefe(W.state.db.settings.infoBild === true && $('[data-ansicht="bild"]').getAttribute("aria-pressed") === "true", "Die Wahl Bild wird nicht gemerkt");
+      zu(); W.openExInfo("ab-crunch-machine");
+      await bis(function () { return $(".media-seg"); }, 2000, "Umschalter beim zweiten Öffnen");
+      pruefe(!$(".info-pane-bild").hidden, "Die Wahl Bild bleibt beim erneuten Öffnen nicht erhalten");
+      klick('[data-ansicht="figur"]');
+      await bis(function () { return $(".info-pane-bild").hidden && !$(".info-pane-fig").hidden; }, 2000, "Zurück zur Figur");
+      zu(); W.openExInfo("commando-pull-ups");
+      await bis(function () { return $(".info-fig"); }, 2000, "Info ohne Bild");
+      pruefe(!$(".media-seg") && !$(".info-pane-bild"), "Ohne Bild darf es keinen Umschalter geben");
+      zu(); W.state.db.settings.infoBild = false;
     }],
     ["Filterkarte: Workouts (Training, Ausrüstung) und Übungen (Gruppe, Ausrüstung, Körperkarte), bleibt beim Mehrfachwählen offen (auch Dehnen)", async function () {
       await heim();
@@ -1311,6 +1331,7 @@
       var farben = $$(".sr-welt").map(function (e) { return e.style.getPropertyValue("--w"); });
       pruefe(farben.length > 0 && farben.every(function (f) { return /gym-color|tp-color/.test(f); }), "Ort-Zeichen in der Suche: " + farben.join(", "));
       var vorher = $$("#gs-res .list-item").length, stVor = JSON.stringify(W.studioTrainWahl());
+      if (!$('[data-srtrain="studio"]')) klick("[data-srtoggle]");
       klick('[data-srtrain="studio"]');   // Trainingsart-Filter der Suche: Fitnessstudio (Workouts: zwei Drittel der Übungen)
       await bis(function () { var n = $$("#gs-res .list-item").length; return n > 0 && n < vorher && !/High Pulse/.test($("#gs-res").textContent); }, 3000, "Trainingsart Fitnessstudio grenzt die Treffer der Suche ein");
       pruefe(W.suchTrain.indexOf("studio") > -1 && JSON.stringify(W.studioTrainWahl()) === stVor, "Suche hat die Trainingsart nur im Speicher");

@@ -3,6 +3,12 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-10-31 · Bilder als Umschalter, Suche mit Filterkarte (Fassung 2026-10-31-2)
+
+- **Info-Fenster:** Statt der kleinen Kachel gibt es einen Umschalter **Figur | Bild** über der Bühne. Das Bild ersetzt die Strichfigur in voller Breite, die Wahl merkt sich die App (`settings.infoBild`). Die Karte hinter dem Bild folgt dem Thema (dunkel im Dark Mode, weiß im Light Mode), die Bilder selbst sind transparent. Tippen auf das Bild zeigt es größer. Ohne Bild gibt es keinen Umschalter.
+- **Suche:** Das Foto oben entfällt. Oben die Kategorien (Alle · **Übungskatalog** · **Workoutkatalog** · Timer · Bereiche · Erstellen), darunter dieselbe Filterkarte wie beim Bauen eines Workouts (Trainingsart als Fotokarten, Ausrüstung, Muskel mit Chips und Körperfigur), darunter das Suchfeld. Die Filter der Suche haben einen eigenen Speicher und verstellen den Workout-Filter nicht. Der Knopf der Karte zeigt „n Treffer anzeigen“. Der Muskel-Filter gilt jetzt auch für Workouts (mindestens eine passende Übung).
+- Tests: Schnelltest an die neue Suche angepasst, neuer Test für den Umschalter Figur | Bild.
+
 ## 2026-10-31 · Übungsbilder in der Übungs-Info (Fassung 2026-10-31-1)
 
 - **Neu:** 324 Übungsbilder (`img/ex/<id>.webp`, Vorschau `img/ex/t/<id>.webp`, Liste in `fotos.js`). Nur im Info-Fenster einer Übung: kleine Kachel „Bild“ unten rechts an der Strichfigur, Tippen zeigt das Bild groß. Bibliothek, Karten und Timer zeigen weiter nur die Strichfigur.

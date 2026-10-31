@@ -930,12 +930,19 @@ function gymHinweisHTML(ex){
   if(!ex || !ex.equip || ex.equip.indexOf("gym") < 0) return "";
   return '<div class="info-title">'+t("gymTitel")+'</div><ul class="info-posture info-band">'+["gymS1", "gymS2", "gymS3"].map(function(k){ return '<li>'+esc(t(k))+'</li>'; }).join("")+'</ul>';
 }
-/* Übungsbilder (img/ex/<id>.webp, Vorschau img/ex/t/<id>.webp): kleine Kachel „Bild“ unten rechts an der Figur, Tippen zeigt das Bild groß.
-   Wer kein Bild hat (oder wenn es nicht lädt), behält die Strichfigur. */
+/* Übungsbilder (img/ex/<id>.webp): nur im Info-Fenster. Umschalter „Figur | Bild“ über der Bühne; das Bild ersetzt die Strichfigur (volle Breite),
+   die Wahl merkt sich die App (settings.infoBild). Die Karte hinter dem Bild folgt dem Thema (dunkel / weiß), die Bilder selbst sind transparent.
+   Ohne Bild (oder wenn es nicht lädt) gibt es keinen Umschalter und die Strichfigur bleibt. Tippen auf das Bild zeigt es größer. */
 var fotoOffen = null;
-function fotoHTML(exId, name){
-  if(typeof EX_FOTO === "undefined" || !EX_FOTO[exId]) return "";
-  return '<button type="button" class="foto-kachel" data-foto="'+exId+'" aria-label="'+esc(t("fotoGross"))+': '+esc(name)+'"><img src="./img/ex/t/'+exId+'.webp" alt="" loading="lazy" decoding="async" width="160" height="160"><span>'+esc(t("fotoLabel"))+'</span></button>';
+function hatFoto(exId){ return typeof EX_FOTO !== "undefined" && !!EX_FOTO[exId]; }
+function fotoUmschalterHTML(an){
+  return '<div class="media-seg" role="group" aria-label="'+esc(t("fotoAnsicht"))+'">'+
+    '<button type="button" data-ansicht="figur" aria-pressed="'+!an+'">'+esc(t("fotoFigur"))+'</button>'+
+    '<button type="button" data-ansicht="bild" aria-pressed="'+an+'">'+esc(t("fotoLabel"))+'</button></div>';
+}
+function fotoBuehneHTML(exId, name, an){
+  return '<div class="info-pane-bild"'+(an ? '' : ' hidden')+'><button type="button" class="foto-stage" data-foto="'+exId+'" aria-label="'+esc(t("fotoGross"))+': '+esc(name)+'">'+
+    '<img src="./img/ex/'+exId+'.webp" alt="'+esc(name)+'" loading="lazy" decoding="async" width="384" height="384"></button></div>';
 }
 function fotoGross(exId, name){
   fotoZu();
@@ -959,12 +966,13 @@ function openExInfo(exId, live, lib){
       '<div class="info-sub">'+blockSpec(exBlock(ex))+SEP+esc(ex.cats.map(catName).join(" · "))+'</div></div>'+
       '<button type="button" class="info-x" data-close aria-label="'+t("close")+'">&times;</button></div>'+
     (live ? '<div class="info-live"><span id="info-live-text"></span><button type="button" class="tpl-adopt" data-infopause></button></div>' : '')+
-    '<div class="info-fig">'+
+    '<div class="info-fig">'+(hatFoto(exId) ? fotoUmschalterHTML(!!state.db.settings.infoBild) : '')+
+    '<div class="info-pane-fig"'+(hatFoto(exId) && state.db.settings.infoBild ? ' hidden' : '')+'>'+
     (ILLU2[exId]
       ? '<div class="info-views"><figure>'+illuHTML(exId, "info-illu")+'<figcaption>'+t(ILLU_VIEW2[exId].haupt === "front" ? "viewFront" : "viewSide")+'</figcaption></figure>'+
         '<figure>'+illuHTML(exId, "info-illu", true)+'<figcaption>'+t({ top:"viewTop", side:"viewSide" }[ILLU_VIEW2[exId].typ] || "viewFront")+'</figcaption></figure></div>'
-      : (ILLU[exId] ? illuHTML(exId, "info-illu") : (ex.custom ? '<div class="info-views"><span class="ex-symbol big">'+exSymbol(ex)+'</span></div>' : "")))+
-    fotoHTML(exId, tplText(ex.name), !ILLU[exId] && !ex.custom)+'</div>'+
+      : (ILLU[exId] ? illuHTML(exId, "info-illu") : (ex.custom ? '<div class="info-views"><span class="ex-symbol big">'+exSymbol(ex)+'</span></div>' : "")))+'</div>'+
+    (hatFoto(exId) ? fotoBuehneHTML(exId, tplText(ex.name), !!state.db.settings.infoBild) : '')+'</div>'+
     gearChipsHTML(ex, live)+griffHTML(exId)+
     bandAnkerHTML(exId)+   // Band-Übungen: wo und wie das Band befestigt wird (aufklappbar, unter den Figuren)
     (EX_MUSCLES[exId] ? '<div class="info-mus"><div class="info-mus-t"><div><b>'+esc(musclesLabel(ex))+':</b> '+esc(musclesMain(ex))+'</div>'+
@@ -1009,6 +1017,21 @@ function openExInfo(exId, live, lib){
   }
   root.querySelectorAll("[data-close]").forEach(function(b){ b.addEventListener("click", close); });
   root.querySelectorAll("[data-foto]").forEach(function(b){ b.addEventListener("click", function(e){ e.stopPropagation(); fotoGross(b.getAttribute("data-foto"), tplText(ex.name)); }); });
+  (function(){   // Umschalter Figur | Bild; lädt das Bild nicht, bleibt die Strichfigur (und der Umschalter verschwindet)
+    var pf = root.querySelector(".info-pane-fig"), pb = root.querySelector(".info-pane-bild"), seg = root.querySelector(".media-seg");
+    if(!pb) return;
+    function zeige(bild){
+      pf.hidden = bild; pb.hidden = !bild;
+      root.querySelectorAll("[data-ansicht]").forEach(function(x){ x.setAttribute("aria-pressed", String((x.getAttribute("data-ansicht") === "bild") === bild)); });
+    }
+    var im = pb.querySelector("img");
+    if(im) im.addEventListener("error", function(){ zeige(false); if(seg) seg.hidden = true; pb.remove(); });
+    root.querySelectorAll("[data-ansicht]").forEach(function(b){ b.addEventListener("click", function(e){
+      e.stopPropagation();
+      var bild = b.getAttribute("data-ansicht") === "bild";
+      state.db.settings.infoBild = bild; save(); zeige(bild);
+    }); });
+  })();
   root.querySelectorAll("[data-lz]").forEach(function(b){ b.addEventListener("click", function(){ var nach = b.getAttribute("data-lz"); close(); openExInfo(nach, false, lib); }); });
   root.querySelector(".confirm-overlay").addEventListener("click", function(e){ if(e.target.classList.contains("confirm-overlay")) close(); });
   if(live){
