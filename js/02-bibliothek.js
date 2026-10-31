@@ -972,6 +972,16 @@ function fotoBinden(root, name){
     state.db.settings.infoBild = bild; save(); zeige(bild);
   }); });
 }
+/* Einklappbarer Block „Einstellen & starten“ in der Info-Karte der Suche: Satz für Satz oder Mit Timer wählen (wie auf der Studio-Seite), der Knopf darunter öffnet die Studio-Seite
+   mit allen Einstellungen (Gewicht, Wiederholungen, Pause bzw. Runden, Arbeit, Pause); auch die Übungen ohne Gewicht gehen so über diese Seite */
+function infoStartHTML(exId){
+  var m = studioModus(exId) === "timer" ? "timer" : "saetze";
+  return '<details class="info-start"'+(state.db.settings.infoStartAuf ? ' open' : '')+'><summary><span>'+ICON_PLAY+' '+esc(t("infoEinst"))+'</span><b data-infomodusnow>'+esc(t(m === "timer" ? "stModusTimer" : "stModusSaetze"))+'</b><span class="tpl-chev" aria-hidden="true">&#9662;</span></summary>'+
+    '<div class="seg-row st-modus" role="group" aria-label="'+esc(t("stModusTitel"))+'">'+
+      '<button type="button" data-infomodus="saetze" class="'+(m === "saetze" ? 'active' : '')+'" aria-pressed="'+(m === "saetze")+'">'+esc(t("stModusSaetze"))+'</button>'+
+      '<button type="button" data-infomodus="timer" class="'+(m === "timer" ? 'active' : '')+'" aria-pressed="'+(m === "timer")+'">'+ICON_PLAY+' '+esc(t("stModusTimer"))+'</button></div>'+
+    '<button type="button" class="btn btn-primary info-play" data-infoplay>'+ICON_PLAY+' '+esc(t("infoStart"))+'</button></details>';
+}
 function openExInfo(exId, live, lib){
   var ex = findExercise(exId), info = EX_INFO[exId], farbe = bereichsFarbe() || (ex && studioFarbe(ex) === "var(--gym-color)" ? "var(--gym-color)" : "");
   if(!ex || !info) return;
@@ -990,7 +1000,7 @@ function openExInfo(exId, live, lib){
         '<figure>'+illuHTML(exId, "info-illu", true)+'<figcaption>'+t({ top:"viewTop", side:"viewSide" }[ILLU_VIEW2[exId].typ] || "viewFront")+'</figcaption></figure></div>'
       : (ILLU[exId] ? illuHTML(exId, "info-illu") : (ex.custom ? '<div class="info-views"><span class="ex-symbol big">'+exSymbol(ex)+'</span></div>' : "")))+'</div>'+
     (hatFoto(exId) ? fotoBuehneHTML(exId, tplText(ex.name), !!state.db.settings.infoBild) : '')+'</div>'+
-    (lib && lib.play ? '<button type="button" class="btn btn-primary info-play" data-infoplay>'+ICON_PLAY+' '+esc(t("infoStart"))+'</button>' : '')+   // aus der Suche: erst die Karte, dann hier starten
+    (lib && lib.play ? infoStartHTML(exId) : '')+   // aus der Suche: erst die Karte, darin einklappbar „Einstellen & starten“
     gearChipsHTML(ex, live)+griffHTML(exId)+
     bandAnkerHTML(exId)+   // Band-Übungen: wo und wie das Band befestigt wird (aufklappbar, unter den Figuren)
     (EX_MUSCLES[exId] ? '<div class="info-mus"><div class="info-mus-t"><div><b>'+esc(musclesLabel(ex))+':</b> '+esc(musclesMain(ex))+'</div>'+
@@ -1021,8 +1031,16 @@ function openExInfo(exId, live, lib){
     '<button class="btn btn-secondary" data-close>'+t("close")+'</button>'+
   '</div></div>';
   if(lib){
-    var pl = root.querySelector("[data-infoplay]");
+    var pl = root.querySelector("[data-infoplay]"), sb = root.querySelector(".info-start");
     if(pl) pl.addEventListener("click", function(){ close(); lib.play(); });
+    if(sb){
+      sb.addEventListener("toggle", function(){ var auf = sb.open; if(!!state.db.settings.infoStartAuf !== auf){ state.db.settings.infoStartAuf = auf; save(); } });   // „toggle“ feuert auch beim ersten Zeichnen: dann nichts speichern
+      sb.querySelectorAll("[data-infomodus]").forEach(function(b){ b.addEventListener("click", function(){
+        var m = b.getAttribute("data-infomodus"); studioModusSetzen(exId, m);
+        sb.querySelectorAll("[data-infomodus]").forEach(function(x){ var an = x === b; x.classList.toggle("active", an); x.setAttribute("aria-pressed", String(an)); });
+        sb.querySelector("[data-infomodusnow]").textContent = t(m === "timer" ? "stModusTimer" : "stModusSaetze");
+      }); });
+    }
     root.querySelector("[data-infoblock]").addEventListener("click", function(){
       adoptExercise(ex); showToast(t("adoptedBlock", { n:tplText(ex.name) }));
     });

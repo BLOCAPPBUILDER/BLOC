@@ -439,6 +439,26 @@
       pruefe(!$(".media-seg") && !$(".info-pane-bild"), "Ohne Bild darf es keinen Umschalter geben");
       zu(); W.state.db.settings.infoBild = false;
     }],
+    ["Suche: Antippen öffnet erst die Info-Karte, darin einklappbar „Training“ (Satz für Satz | Mit Timer) mit Start darunter; Zurück führt in die Suche", async function () {
+      await heim();
+      delete W.state.db.settings.infoStartAuf;
+      W.go("#search");
+      await bis(function () { return $('[data-srkat="uebungen"]'); }, 3000, "Suche");
+      klick('[data-srkat="uebungen"]');
+      klick(await bis(function () { return $('[data-info="leg-press"]'); }, 3000, "Kachel Beinpresse"));   // Studio-Übung: keine eigene Seite, sondern die Info-Karte
+      await bis(function () { return $(".info-start"); }, 2000, "Block Training in der Info-Karte");
+      pruefe($(".info-sheet") && !$(".info-start").open && !$(".air-start"), "Karte öffnet nicht zuerst oder Block ist nicht eingeklappt");
+      klick(".info-start summary");
+      await bis(function () { return $(".info-start").open; }, 1000, "Block aufklappen");
+      klick('[data-infomodus="timer"]');
+      pruefe(W.studioModus("leg-press") === "timer", "Mit Timer wird nicht übernommen");
+      klick('[data-infomodus="saetze"]');
+      klick("[data-infoplay]");
+      await bis(function () { return $("[data-stset]"); }, 3000, "Studio-Seite mit Einstellungen");
+      klick("button.back");
+      await bis(function () { return $("[data-srkat]"); }, 3000, "Zurück in der Suche");
+      delete W.state.db.settings.infoStartAuf;
+    }],
     ["Filterkarte: Workouts (Training, Ausrüstung) und Übungen (Gruppe, Ausrüstung, Körperkarte), bleibt beim Mehrfachwählen offen (auch Dehnen)", async function () {
       await heim();
       zuWorkout();
