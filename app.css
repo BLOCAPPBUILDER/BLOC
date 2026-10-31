@@ -2251,10 +2251,10 @@ details[open] > summary > .pg-pfeil{ transform:rotate(180deg); }
 .ort-fotos.drei .of-t small{ font-size:10.5px; }
 .ort-fotos.drei .of-haken{ top:5px; right:5px; width:20px; height:20px; }
 .ort-fotos.drei .of-haken svg{ width:12px; height:12px; }
-.ort-foto[data-sttrain="studio"], .ort-foto[data-sptrain="studio"]{ --of:var(--gym-color); }
-.ort-foto[data-sttrain="cali"], .ort-foto[data-sptrain="cali"], .ort-foto[data-bauort="cali"]{ --of:var(--tp-color); }
-.ort-foto[data-sttrain="body"], .ort-foto[data-sptrain="body"], .ort-foto[data-bauort="body"]{ --of:var(--train-gelb); }
-.ort-foto[data-sttrain="body"] .of-haken, .ort-foto[data-sptrain="body"] .of-haken, .ort-foto[data-bauort="body"] .of-haken{ color:#241c00; }
+.ort-foto[data-sttrain="studio"], .ort-foto[data-sptrain="studio"], .ort-foto[data-srtrain="studio"]{ --of:var(--gym-color); }
+.ort-foto[data-sttrain="cali"], .ort-foto[data-sptrain="cali"], .ort-foto[data-srtrain="cali"], .ort-foto[data-bauort="cali"]{ --of:var(--tp-color); }
+.ort-foto[data-sttrain="body"], .ort-foto[data-sptrain="body"], .ort-foto[data-srtrain="body"], .ort-foto[data-bauort="body"]{ --of:var(--train-gelb); }
+.ort-foto[data-sttrain="body"] .of-haken, .ort-foto[data-sptrain="body"] .of-haken, .ort-foto[data-srtrain="body"] .of-haken, .ort-foto[data-bauort="body"] .of-haken{ color:#241c00; }
 .af-schritt{ margin:16px 0 8px; }
 .af-body > .af-schritt:first-child{ margin-top:14px; }
 .af-ausr{ margin-bottom:2px; }
@@ -2314,3 +2314,13 @@ details[open] > summary > .pg-pfeil{ transform:rotate(180deg); }
 .st-eintrag > summary .tpl-chev{ margin-left:auto; transition:transform .2s; }
 .st-eintrag[open] > summary .tpl-chev{ transform:rotate(180deg); }
 .st-figur.info-fig{ margin:0 0 6px; }
+
+/* Info-Karte der Suche: einklappbar „Training“ (Satz für Satz | Mit Timer), Start darunter */
+.info-start{ margin:4px 0 10px; border-radius:14px; background:var(--surface-2, rgba(128,128,128,.08)); padding:2px 12px 12px; }
+.info-start > summary{ list-style:none; display:flex; align-items:center; gap:10px; cursor:pointer; min-height:48px; font-size:15px; font-weight:700; }
+.info-start > summary::-webkit-details-marker{ display:none; }
+.info-start > summary span:first-child{ display:inline-flex; align-items:center; gap:8px; }
+.info-start > summary b{ font-weight:600; font-size:13px; opacity:.7; margin-left:auto; }
+.info-start > summary .tpl-chev{ transition:transform .2s; }
+.info-start[open] > summary .tpl-chev{ transform:rotate(180deg); }
+.info-start .st-modus{ margin:2px 0 12px; }

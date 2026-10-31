@@ -83,7 +83,7 @@ function suchFilterKarteHTML(anzahl){
 function exInfoSuche(id){
   var ex = findExercise(id), onChange = function(){ if(navTop() === "#search"){ var y = window.scrollY; renderSearch(); window.scrollTo(0, y); } };
   openExInfo(id, false, { onChange:onChange, zu:function(){ exZuProgramm(id); },
-    play:function(){ go(ex && STUDIO_NUR[id] ? "#studio/"+id : "#playex/"+id); } });
+    play:function(){ go("#studio/"+id); } });
 }
 /* Kachel wie im Workout-Baukasten (13-teilen-editor): Rahmen und Farbe nach Trainingsart (Fitnessstudio rot, Calisthenic-Park blau, Körpergewicht gelb, Mobility grün) */
 function suchKachel(ex){

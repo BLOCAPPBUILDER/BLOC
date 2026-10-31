@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-10-31 · Info-Karte der Suche mit „Training“-Block (Fassung 2026-10-31-5)
+
+- **Suche:** In der Info-Karte steht statt des großen Play-Knopfs ein einklappbarer Block **Training**: Satz für Satz | Mit Timer wählen, darunter **Einstellen & starten**. Der Knopf öffnet die Studio-Seite mit allen Einstellungen (Gewicht, Wiederholungen, Pause bzw. Runden, Arbeit, Pause), auch bei Übungen ohne Gewicht. Standard: eingeklappt, die Wahl merkt sich die App (`settings.infoStartAuf`).
+- **Suche, Filter:** Die Trainingsart-Karten haben dieselben Rahmenfarben wie im Baukasten (Fitnessstudio rot, Calisthenic-Park blau, Körpergewicht gelb).
+
 ## 2026-10-31 · Suche öffnet erst die Info-Karte (Fassung 2026-10-31-4)
 
 - **Suche:** Antippen einer Übung (auch Studio-Kacheln) öffnet zuerst die Info-Karte; dort steht oben der Knopf **Übung starten**. Die kleinen ▶ auf den Kacheln entfallen in der Suche. „Zurück“ aus Timer oder Studio-Seite führt wieder zur Suche (Navigations-Stack). Im dunklen Thema haben Studio-Kacheln in der Suche denselben Rahmen (rot) wie die anderen Bereiche.
