@@ -5,7 +5,7 @@
 var gesamtQuery = "";
 /* Kategorien der Suche: ordnet die Gruppen der Treffer sechs Kategorien zu (Chips unter dem Suchfeld) */
 var suchKat = "alle", suchZonen = [], suchKoerperAuf = false;   // Körper-Filter der Suche: gewählte Muskelgruppen, Karte offen
-/* Filter der Suche: dieselben Attribute und dieselbe Logik wie im Workout-Filter (studioFilterHTML): Trainingsart (studio | cali | body, TRAIN_ARTEN)
+/* Filter der Suche (Karte wie beim Bauen eines Workouts, Bild oben entfällt): dieselben Attribute und dieselbe Logik wie im Workout-Filter (studioFilterHTML): Trainingsart (studio | cali | body, TRAIN_ARTEN)
    und Ausrüstung (AUSR_IDS), jeweils Mehrfachwahl, leer = alles. Bewusst nur im Speicher (suchTrain/suchAusr) und NICHT in settings.stTrain/stAusr,
    damit eine Suche den Filter im Workout-Bereich nicht verstellt. Die Chips sind kompakt (Text statt Fotokarten). */
 var suchTrain = [], suchAusr = [];
@@ -60,35 +60,35 @@ function gesamtEintraege(){
   state.db.blocks.forEach(function(b){ add(t("mineBlocks"), b.name, blockSpec(b), "", function(){ go("#block/"+b.id); }); });
   return l;
 }
+/* Filterkarte der Suche: dieselbe Karte wie beim Bauen eines Workouts (Trainingsart als Fotokarten, Ausrüstung, Muskel), aber mit eigenem Speicher
+   (suchTrain/suchAusr/suchZonen), damit die Suche den Filter im Workout-Bereich nicht verstellt. Auf/Zu merkt sich suchFilterAuf. */
+var suchFilterAuf = false;
+function suchFilterKarteHTML(anzahl){
+  var namen = suchTrain.map(function(a){ return t("trArt_"+a); }).concat(suchAusr.map(function(g){ return t("stGer_"+g); }), suchZonen.map(kkName));
+  return filterKarteHTML({ offen:suchFilterAuf, toggle:"data-srtoggle", reset:"data-srreset", n:namen.length,
+    summe:namen.length ? namen.join(", ") : t(suchKat === "workouts" ? "afAlleWo" : "afAlleEx"),
+    zeigen:t(anzahl === 1 ? "srAnzeigen1" : "srAnzeigenN", { n:anzahl }),
+    inhalt:filterSchrittHTML(1, t("trSchritt1"))+trainFotosHTML("data-srtrain", suchTrain)+
+      filterSchrittHTML(2, t("stGerKopf"))+
+      '<div class="fc-chips af-ausr">'+AUSR_IDS.map(function(g){
+        return filterChip("data-srausr", g, suchAusr.indexOf(g) > -1, svgIcon(STUDIO_GERAET_ICON[g] || STUDIO_AUSR_ICON[g]), t("stGer_"+g)); }).join("")+'</div>'+
+      filterSchrittHTML(3, t("trSchritt3"))+
+      kkMuskelHTML("data-srzone", "data-srgrp", suchZonen, { ohneLabel:true }) });
+}
 function renderSearch(){
   var alle = gesamtEintraege();
   suchZonen = kkNorm(suchZonen);   // nach dem Umschalten der Detailansicht passen
-  app.innerHTML =
-    topbar(t("srTitle"), { back:"#home" }) +
-    bereichBildHTML("suche") +
-    searchHTML(gesamtQuery, "gs", t("srPh")) +
-    '<div class="lib-chips sr-kats">'+SUCH_KATEGORIEN.map(function(k){
-      return '<button type="button" class="lib-chip'+(suchKat === k ? ' active' : '')+'" data-srkat="'+k+'" aria-pressed="'+(suchKat === k)+'">'+esc(t("srKat_"+k))+'</button>';
-    }).join("")+'</div>'+
-    '<div class="lib-chips sr-orte" role="group" aria-label="'+esc(t("trSchritt1"))+'">'+TRAIN_ARTEN.map(function(a){
-      var an = suchTrain.indexOf(a) > -1;
-      return '<button type="button" class="lib-chip'+(an ? ' active' : '')+'" data-srtrain="'+a+'" aria-pressed="'+an+'">'+esc(t("trArt_"+a))+'</button>';
-    }).join("")+'</div>'+
-    '<div class="lib-chips sr-arten" role="group" aria-label="'+esc(t("stGerKopf"))+'">'+AUSR_IDS.map(function(a){
-      var an = suchAusr.indexOf(a) > -1;
-      return '<button type="button" class="lib-chip'+(an ? ' active' : '')+'" data-srausr="'+a+'" aria-pressed="'+an+'">'+esc(t("stGer_"+a))+'</button>';
-    }).join("")+'</div>'+
-    '<button type="button" class="sr-koerper-knopf" data-srkk aria-expanded="'+suchKoerperAuf+'">'+esc(t("kkFilter"))+(suchZonen.length ? ' · '+suchZonen.map(kkName).join(', ') : '')+'<span class="tpl-chev'+(suchKoerperAuf ? '' : ' zu')+'" aria-hidden="true">&#9662;</span></button>'+
-    '<div class="sr-koerper" id="sr-kk"'+(suchKoerperAuf ? '' : ' hidden')+'>'+kkFilterHTML('data-srzone', suchZonen)+'</div>'+
-    tippZeileHTML("suche", "tippUebung")+'<div id="gs-res"></div><div style="height:40px"></div>';
-  bindCommon();
-  var feld = app.querySelector("#gs-q"), res = app.querySelector("#gs-res");
-  function zeigen(){
-    var w = suchNorm(gesamtQuery), zon = suchZonen.length > 0, tr = suchTrain.length > 0, au = suchAusr.length > 0, gewaehlt = suchKat !== "alle" || zon || tr || au;
-    if(!w && !gewaehlt){ res.innerHTML = '<div class="seiten-intro">'+esc(t("srHint"))+'</div>'; return; }
-    // Muskelgruppen gewählt: nur Übungen, die diese Gruppen als Hauptmuskeln haben
-    var treffer = alle.filter(function(e){
-      if(zon && !(e.ex && zonePasst(findExercise(e.ex), suchZonen))) return false;
+  /* Trefferliste nach Kategorie, Filter und Suchwort (ohne Suchwort zeigt eine gewählte Kategorie oder ein Filter alle passenden Einträge) */
+  function gewaehltIst(){ return suchKat !== "alle" || suchZonen.length > 0 || suchTrain.length > 0 || suchAusr.length > 0; }
+  function filtern(){
+    var w = suchNorm(gesamtQuery), zon = suchZonen.length > 0, tr = suchTrain.length > 0, au = suchAusr.length > 0;
+    if(!w && !gewaehltIst()) return [];
+    return alle.filter(function(e){
+      if(zon){   // Muskelgruppen: Übungen mit diesen Hauptmuskeln, Workouts mit mindestens einer solchen Übung
+        if(e.ex){ if(!zonePasst(findExercise(e.ex), suchZonen)) return false; }
+        else if(e.exs){ if(!e.exs.some(function(id){ var x = findExercise(id); return x && zonePasst(x, suchZonen); })) return false; }
+        else return false;
+      }
       if(tr || au){   // Trainingsart und Ausrüstung wie im Workout: Übungen über trainPasst/ausrPasst, Workouts über katWoTrainOk (zwei Drittel) und ausrPasst für Studio-Übungen
         if(e.ex){ var x = findExercise(e.ex); if(!x || !trainPasst(x, suchTrain) || !ausrPasst(x, suchAusr)) return false; }
         else if(e.exs){
@@ -98,8 +98,23 @@ function renderSearch(){
         }
         else return false;
       }
-      return (suchKat === "alle" || e.k === suchKat) && (!w || suchPasst(e.text, gesamtQuery));   // ohne Suchwort zeigt eine Kategorie alle ihre Einträge
+      return (suchKat === "alle" || e.k === suchKat) && (!w || suchPasst(e.text, gesamtQuery));
     });
+  }
+  app.innerHTML =
+    topbar(t("srTitle"), { back:"#home" }) +
+    '<div class="lib-chips sr-kats">'+SUCH_KATEGORIEN.map(function(k){
+      return '<button type="button" class="lib-chip'+(suchKat === k ? ' active' : '')+'" data-srkat="'+k+'" aria-pressed="'+(suchKat === k)+'">'+esc(t("srKat_"+k))+'</button>';
+    }).join("")+'</div>'+
+    suchFilterKarteHTML(filtern().length)+
+    searchHTML(gesamtQuery, "gs", t("srPh")) +
+    tippZeileHTML("suche", "tippUebung")+'<div id="gs-res"></div><div style="height:40px"></div>';
+  bindCommon();
+  var feld = app.querySelector("#gs-q"), res = app.querySelector("#gs-res");
+  function zeigen(){
+    var w = suchNorm(gesamtQuery), gewaehlt = gewaehltIst();
+    if(!w && !gewaehlt){ res.innerHTML = '<div class="seiten-intro">'+esc(t("srHint"))+'</div>'; return; }
+    var treffer = filtern();
     if(!treffer.length){ res.innerHTML = '<div class="empty" style="padding:30px 20px;">'+esc(t("noResult"))+'</div>'; return; }
     var html = "", gruppe = null, n = 0, reihe = [];
     treffer.forEach(function(e){ if(reihe.indexOf(e.g) < 0) reihe.push(e.g); e.n = suchPasst(e.titel, gesamtQuery) ? 0 : 1; });
@@ -152,25 +167,16 @@ function renderSearch(){
       zeigen();
     });
   });
-  [["data-srtrain", "train"], ["data-srausr", "ausr"]].forEach(function(p){
-    app.querySelectorAll("["+p[0]+"]").forEach(function(b){
-      b.addEventListener("click", function(){
-        var id = b.getAttribute(p[0]);
-        if(p[1] === "train") suchTrain = selToggle(suchTrain, id); else suchAusr = selToggle(suchAusr, id);
-        var an = (p[1] === "train" ? suchTrain : suchAusr).indexOf(id) > -1;
-        b.classList.toggle("active", an); b.setAttribute("aria-pressed", String(an));
-        zeigen();
-      });
-    });
-  });
-  // Körperkarte der Suche: aufklappen, Muskelgruppen antippen (mehrere möglich)
-  var kkKnopf = app.querySelector("[data-srkk]");
-  kkKnopf.addEventListener("click", function(){ suchKoerperAuf = !suchKoerperAuf; renderSearch(); });
-  app.querySelectorAll("[data-srzone]").forEach(function(el){
-    el.addEventListener("click", function(){ suchZonen = selToggle(suchZonen, el.getAttribute("data-srzone")); renderSearch(); });
-  });
+  // Filterkarte: auf/zu, zurücksetzen, Trainingsart, Ausrüstung, Muskel (Chips und Figur); nach jedem Antippen neu zeichnen wie beim Workout-Filter
+  app.querySelectorAll("[data-srtoggle]").forEach(function(b){ b.addEventListener("click", function(){ suchFilterAuf = !suchFilterAuf; renderSearch(); }); });
+  var zur = app.querySelector("[data-srreset]");
+  if(zur) zur.addEventListener("click", function(){ suchTrain = []; suchAusr = []; suchZonen = []; renderSearch(); });
+  app.querySelectorAll("[data-srtrain]").forEach(function(b){ b.addEventListener("click", function(){ suchTrain = selToggle(suchTrain, b.getAttribute("data-srtrain")); renderSearch(); }); });
+  app.querySelectorAll("[data-srausr]").forEach(function(b){ b.addEventListener("click", function(){ suchAusr = selToggle(suchAusr, b.getAttribute("data-srausr")); renderSearch(); }); });
+  app.querySelectorAll("[data-srzone]").forEach(function(b){ b.addEventListener("click", function(){ suchZonen = selToggle(suchZonen, b.getAttribute("data-srzone")); renderSearch(); }); });
+  app.querySelectorAll("[data-srgrp]").forEach(function(b){ b.addEventListener("click", function(){ suchZonen = kkGrpToggle(suchZonen, b.getAttribute("data-srgrp")); renderSearch(); }); });
   zeigen();
-  if(!gesamtQuery && !suchKoerperAuf) feld.focus();
+  if(!gesamtQuery && !suchFilterAuf && !gewaehltIst()) feld.focus();   // Tastatur nur beim ersten Öffnen, nicht nach dem Antippen eines Filters
 }
 /* Startseite: Kopf, Hinweise, Meine Woche (führt in den Kalender), Kopfblock (heutiges Training › Favoriten › Baukasten), Favoriten, darunter die Bereiche */
 function renderHome(){

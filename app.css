@@ -2286,15 +2286,20 @@ details[open] > summary > .pg-pfeil{ transform:rotate(180deg); }
 .player .illu .ip, .player .illu .gm{ stroke:currentColor; opacity:.7; }
 .player .illu .ipf, .player .illu circle.ipf.gm{ fill:currentColor; }
 
-/* Übungsbilder (2026-10-31): kleine Kachel „Bild“ unten rechts an der Figur; Tippen öffnet das Bild groß */
-.info-fig{ position:relative; }
-.info-fig .foto-kachel{ position:absolute; top:auto; left:auto; right:2px; bottom:4px; width:54px; height:auto; min-height:0; padding:0; border:1px solid var(--border); border-radius:10px; background:#1c1c22; color:#fff; cursor:pointer; overflow:hidden; display:flex; flex-direction:column; align-items:stretch; box-shadow:0 2px 8px rgba(0,0,0,.28); }
-.info-fig .foto-kachel img{ display:block; width:100%; height:auto; aspect-ratio:1; object-fit:contain; background:#1c1c22; }
-.info-fig .foto-kachel span{ display:block; font-size:10px; font-weight:700; letter-spacing:.04em; line-height:1; padding:3px 0 4px; text-align:center; background:var(--surface-2); color:var(--text); }
-.foto-haupt{ display:block; margin:10px auto 4px; width:min(240px, 70%); padding:0; border:0; border-radius:14px; background:#1c1c22; cursor:pointer; overflow:hidden; }
-.foto-haupt img{ display:block; width:100%; aspect-ratio:1; object-fit:contain; }
+/* Übungsbilder (2026-10-31): Umschalter „Figur | Bild“ über der Bühne; die Karte hinter dem Bild folgt dem Thema (Bilder sind transparent) */
+:root{ --foto-bg:#ffffff; --foto-line:rgba(0,0,0,.1); }
+:root[data-theme="dark"]{ --foto-bg:#23232b; --foto-line:rgba(255,255,255,.1); }
+@media (prefers-color-scheme: dark){ :root:not([data-theme]){ --foto-bg:#23232b; --foto-line:rgba(255,255,255,.1); } }
+.info-fig{ margin:0; }
+.media-seg{ display:flex; gap:4px; margin:10px auto 0; padding:4px; width:min(240px, 100%); border-radius:14px; background:var(--surface-2); }
+.media-seg button{ flex:1; min-height:44px; border:0; border-radius:10px; background:transparent; color:var(--text); font:600 14px/1 inherit; font-family:inherit; cursor:pointer; }
+.media-seg button[aria-pressed="true"]{ background:var(--accent); color:#1a0d05; }
+.info-pane-bild{ margin:10px auto 4px; width:min(320px, 100%); }
+.info-pane-bild[hidden], .info-pane-fig[hidden], .media-seg[hidden]{ display:none; }
+.foto-stage{ display:block; width:100%; padding:8px; border:1px solid var(--foto-line); border-radius:20px; background:var(--foto-bg); cursor:zoom-in; }
+.foto-stage img{ display:block; width:100%; height:auto; aspect-ratio:1; object-fit:contain; border-radius:12px; }
 .foto-gross{ position:fixed; inset:0; z-index:90; background:rgba(0,0,0,.82); display:flex; align-items:center; justify-content:center; padding:16px; }
-.foto-box{ position:relative; width:min(92vw, 460px); background:#1c1c22; border-radius:18px; padding:10px 10px 12px; box-shadow:0 14px 40px rgba(0,0,0,.5); }
-.foto-box img{ display:block; width:100%; aspect-ratio:1; object-fit:contain; border-radius:12px; }
-.foto-name{ margin-top:8px; text-align:center; font-size:14px; font-weight:600; color:#f4f4f6; }
-.foto-x{ position:absolute; top:6px; right:6px; width:34px; height:34px; border-radius:50%; border:0; background:rgba(255,255,255,.14); color:#fff; font-size:22px; line-height:1; cursor:pointer; }
+.foto-box{ position:relative; width:min(92vw, 460px); background:var(--foto-bg); border-radius:18px; padding:10px 10px 12px; box-shadow:0 14px 40px rgba(0,0,0,.5); }
+.foto-box img{ display:block; width:100%; height:auto; aspect-ratio:1; object-fit:contain; border-radius:12px; }
+.foto-name{ margin-top:8px; text-align:center; font-size:14px; font-weight:600; color:var(--text); }
+.foto-x{ position:absolute; top:6px; right:6px; width:44px; height:44px; border-radius:50%; border:0; background:var(--surface-2); color:var(--text); font-size:24px; line-height:1; cursor:pointer; }
