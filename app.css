@@ -2297,3 +2297,7 @@ details[open] > summary > .pg-pfeil{ transform:rotate(180deg); }
 .foto-box img{ display:block; width:100%; height:auto; aspect-ratio:1; object-fit:contain; border-radius:12px; }
 .foto-name{ margin-top:8px; text-align:center; font-size:14px; font-weight:600; color:var(--text); }
 .foto-x{ position:absolute; top:6px; right:6px; width:44px; height:44px; border-radius:50%; border:0; background:var(--surface-2); color:var(--text); font-size:24px; line-height:1; cursor:pointer; }
+
+/* Suche: Zwischenüberschrift je Kategorie im Übungs- und Workoutkatalog */
+.sr-unter{ font-size:15px; font-weight:700; color:var(--text); margin:18px 4px 8px; display:flex; align-items:center; gap:8px; }
+.sr-unter::after{ content:""; flex:1; height:1px; background:var(--line, rgba(128,128,128,.25)); }

@@ -8,7 +8,7 @@ var suchKat = "alle", suchZonen = [], suchKoerperAuf = false;   // Körper-Filte
 /* Filter der Suche (Karte wie beim Bauen eines Workouts, Bild oben entfällt): dieselben Attribute und dieselbe Logik wie im Workout-Filter (studioFilterHTML): Trainingsart (studio | cali | body, TRAIN_ARTEN)
    und Ausrüstung (AUSR_IDS), jeweils Mehrfachwahl, leer = alles. Bewusst nur im Speicher (suchTrain/suchAusr) und NICHT in settings.stTrain/stAusr,
    damit eine Suche den Filter im Workout-Bereich nicht verstellt. Die Chips sind kompakt (Text statt Fotokarten). */
-var suchTrain = [], suchAusr = [];
+var suchTrain = [], suchAusr = [], suchLib = [];   // suchLib: Kategorie-Chips (LIB_CATS) im Übungs- und Workoutkatalog, wie beim Bauen eines BLOCs
 var SUCH_KATEGORIEN = ["alle", "uebungen", "workouts", "timer", "bereiche", "erstellen"];
 function suchKategorie(gruppe){
   if(gruppe === t("libExercises")) return "uebungen";
@@ -39,12 +39,14 @@ function gesamtEintraege(){
     add(t("workouts"), tplText(lw.name), t("exCount", { n:exs.length })+" · "+fmtDauerKurz(workoutDuration(libWorkoutRun(lw))), woSearchText("", exs), function(){ go("#cover/lib/"+lw.id); });
     if(!libIstWarmDehn(lw)){ l[l.length-1].welt = katWoOrt(exs); }   // Freiluft blau, Fitnessstudio orange (Aufwärmen und Dehnen gehören zu Mobility & Stretch)
     l[l.length-1].exs = exs.map(function(ex){ return ex.id; });   // für den Ausrüstungs-Filter
+    l[l.length-1].cat = lw.focus;
   });
   (state.db.myWorkouts || []).map(normMy).forEach(function(mw){
     var exs = mw.items.map(function(it){ return findExercise(it.ex); }).filter(Boolean);
     add(t("mineMy"), mw.name, t("exCount", { n:exs.length }), woSearchText("", exs), function(){ go("#mybuild/"+mw.id); });
     if(!mw.ws){ l[l.length-1].welt = katWoOrt(exs); }
     l[l.length-1].exs = exs.map(function(ex){ return ex.id; });
+    l[l.length-1].cat = "mix";
   });
   // Übungen
   EXERCISES.forEach(function(ex){
@@ -54,6 +56,7 @@ function gesamtEintraege(){
       else go(ex.custom ? "#exedit/"+ex.id : "#playex/"+ex.id);
     });
     l[l.length-1].ex = ex.id;   // für den Körper-Filter der Suche
+    l[l.length-1].cat = ex.cats[0];
   });
   // Timer-Workouts und Blöcke
   state.db.workouts.forEach(function(w){ add(t("mineTimer"), w.name || t("untitled"), "", "", function(){ go("#workout/"+w.id); }); });
@@ -79,6 +82,7 @@ function renderSearch(){
   var alle = gesamtEintraege();
   suchZonen = kkNorm(suchZonen);   // nach dem Umschalten der Detailansicht passen
   /* Trefferliste nach Kategorie, Filter und Suchwort (ohne Suchwort zeigt eine gewählte Kategorie oder ein Filter alle passenden Einträge) */
+  function katalogIst(){ return suchKat === "uebungen" || suchKat === "workouts"; }
   function gewaehltIst(){ return suchKat !== "alle" || suchZonen.length > 0 || suchTrain.length > 0 || suchAusr.length > 0; }
   function filtern(){
     var w = suchNorm(gesamtQuery), zon = suchZonen.length > 0, tr = suchTrain.length > 0, au = suchAusr.length > 0;
@@ -98,6 +102,7 @@ function renderSearch(){
         }
         else return false;
       }
+      if(suchLib.length && katalogIst() && (e.ex ? !findExercise(e.ex).cats.some(function(c){ return suchLib.indexOf(c) > -1; }) : (e.exs ? suchLib.indexOf(e.cat) < 0 : true))) return false;
       return (suchKat === "alle" || e.k === suchKat) && (!w || suchPasst(e.text, gesamtQuery));
     });
   }
@@ -106,6 +111,7 @@ function renderSearch(){
     '<div class="lib-chips sr-kats">'+SUCH_KATEGORIEN.map(function(k){
       return '<button type="button" class="lib-chip'+(suchKat === k ? ' active' : '')+'" data-srkat="'+k+'" aria-pressed="'+(suchKat === k)+'">'+esc(t("srKat_"+k))+'</button>';
     }).join("")+'</div>'+
+    (katalogIst() ? catChipsHTML(suchLib, "data-srlib") : '')+
     suchFilterKarteHTML(filtern().length)+
     searchHTML(gesamtQuery, "gs", t("srPh")) +
     tippZeileHTML("suche", "tippUebung")+'<div id="gs-res"></div><div style="height:40px"></div>';
@@ -121,10 +127,18 @@ function renderSearch(){
     // je Gruppe zuerst die Treffer im Namen, danach die über Übungen/Hinweise (stabil)
     treffer = treffer.map(function(e, i){ return { e:e, i:i }; }).sort(function(a, b){
       return reihe.indexOf(a.e.g) - reihe.indexOf(b.e.g) || a.e.n - b.e.n || a.i - b.i; }).map(function(o){ return o.e; });
-    var kacheln = "", zeilen = "";   // Air-, Studio- und Dehnübungen erscheinen als quadratische Kacheln wie unter Air › Übungen (zuerst), alles andere als Zeile
+    /* Im Übungs- und Workoutkatalog ohne Suchwort: je Kategorie (Cardio, Gewicht, Bodyweight …) unter einer Zwischenüberschrift, Reihenfolge wie die Kategorie-Chips */
+    var unter = katalogIst() && !w && suchLib.length !== 1;
+    if(unter){
+      var rang = function(e){ var r = LIB_CATS.map(function(c){ return c.id; }).indexOf(e.cat); return r < 0 ? 99 : r; };
+      treffer = treffer.map(function(e, i){ return { e:e, i:i }; }).sort(function(a, b){
+        return reihe.indexOf(a.e.g) - reihe.indexOf(b.e.g) || rang(a.e) - rang(b.e) || a.i - b.i; }).map(function(o){ return o.e; });
+    }
+    var kacheln = "", zeilen = "", katAlt = null;   // Air-, Studio- und Dehnübungen erscheinen als quadratische Kacheln wie unter Air › Übungen (zuerst), alles andere als Zeile
     function raster(){ if(kacheln) html += '<div class="fig-grid">'+kacheln+'</div>'; html += zeilen; kacheln = ""; zeilen = ""; }
     treffer.forEach(function(e, i){
-      if(e.g !== gruppe){ raster(); gruppe = e.g; n = 0; html += '<div class="section-title">'+esc(gruppe)+'</div>'; }
+      if(e.g !== gruppe){ raster(); gruppe = e.g; n = 0; katAlt = null; html += '<div class="section-title">'+esc(gruppe)+'</div>'; }
+      if(unter && e.cat !== katAlt){ raster(); katAlt = e.cat; html += '<div class="sr-unter">'+esc(catName(e.cat))+'</div>'; }
       if(!gewaehlt && ++n > 12) return;   // je Gruppe die ersten zwölf; genauer tippen grenzt ein (mit gewählter Kategorie alle)
       var ex = e.ex && findExercise(e.ex);
       if(ex && (fuerAir(ex) || ex.main === "stretch") && ILLU[ex.id]){ kacheln += ex.main === "stretch" ? '<div style="display:contents;--bereich:var(--ws-color)">'+libExKachel(ex)+'</div>' : libExKachel(ex); return; }   // Dehnübungen in der Farbe von Mobility & Stretch
@@ -162,15 +176,15 @@ function renderSearch(){
   feld.addEventListener("input", function(){ gesamtQuery = feld.value; zeigen(); });
   app.querySelectorAll("[data-srkat]").forEach(function(b){
     b.addEventListener("click", function(){
-      suchKat = b.getAttribute("data-srkat");
-      app.querySelectorAll("[data-srkat]").forEach(function(x){ var an = x === b; x.classList.toggle("active", an); x.setAttribute("aria-pressed", String(an)); });
-      zeigen();
+      suchKat = b.getAttribute("data-srkat"); suchLib = [];
+      renderSearch();   // die Kategorie-Chips des Katalogs kommen und gehen mit der Auswahl
     });
   });
   // Filterkarte: auf/zu, zurücksetzen, Trainingsart, Ausrüstung, Muskel (Chips und Figur); nach jedem Antippen neu zeichnen wie beim Workout-Filter
   app.querySelectorAll("[data-srtoggle]").forEach(function(b){ b.addEventListener("click", function(){ suchFilterAuf = !suchFilterAuf; renderSearch(); }); });
   var zur = app.querySelector("[data-srreset]");
   if(zur) zur.addEventListener("click", function(){ suchTrain = []; suchAusr = []; suchZonen = []; renderSearch(); });
+  app.querySelectorAll("[data-srlib]").forEach(function(b){ b.addEventListener("click", function(){ var c = b.getAttribute("data-srlib"); suchLib = c === "all" ? [] : selToggle(suchLib, c); renderSearch(); }); });
   app.querySelectorAll("[data-srtrain]").forEach(function(b){ b.addEventListener("click", function(){ suchTrain = selToggle(suchTrain, b.getAttribute("data-srtrain")); renderSearch(); }); });
   app.querySelectorAll("[data-srausr]").forEach(function(b){ b.addEventListener("click", function(){ suchAusr = selToggle(suchAusr, b.getAttribute("data-srausr")); renderSearch(); }); });
   app.querySelectorAll("[data-srzone]").forEach(function(b){ b.addEventListener("click", function(){ suchZonen = selToggle(suchZonen, b.getAttribute("data-srzone")); renderSearch(); }); });

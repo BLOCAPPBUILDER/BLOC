@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-10-31 · Katalog-Suche nach Kategorien, Bilder gekürzt (Fassung 2026-10-31-3)
+
+- **Suche:** Im Übungs- und im Workoutkatalog gibt es unter den Kategorien dieselben Kategorie-Chips wie beim Bauen eines BLOCs (Alle · Cardio · Gewicht · Bodyweight · Rücken · Beine · Bauch / Core · Arme · Calisthenics · Dehnen). Ohne Suchwort und ohne einzelne Kategorie stehen die Treffer unter Zwischenüberschriften je Kategorie.
+- **Bilder:** Skater Jumps und Jump Lunges zeigen nur noch die zwei gewünschten Posen (die beiden anderen sind entfernt, neu zugeschnitten auf 384 × 384).
+
 ## 2026-10-31 · Bilder als Umschalter, Suche mit Filterkarte (Fassung 2026-10-31-2)
 
 - **Info-Fenster:** Statt der kleinen Kachel gibt es einen Umschalter **Figur | Bild** über der Bühne. Das Bild ersetzt die Strichfigur in voller Breite, die Wahl merkt sich die App (`settings.infoBild`). Die Karte hinter dem Bild folgt dem Thema (dunkel im Dark Mode, weiß im Light Mode), die Bilder selbst sind transparent. Tippen auf das Bild zeigt es größer. Ohne Bild gibt es keinen Umschalter.
