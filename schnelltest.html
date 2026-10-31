@@ -434,9 +434,11 @@
       pruefe(!$(".info-pane-bild").hidden, "Die Wahl Bild bleibt beim erneuten Öffnen nicht erhalten");
       klick('[data-ansicht="figur"]');
       await bis(function () { return $(".info-pane-bild").hidden && !$(".info-pane-fig").hidden; }, 2000, "Zurück zur Figur");
-      zu(); W.openExInfo("commando-pull-ups");
+      zu(); var fotoMerk = W.EX_FOTO["commando-pull-ups"]; delete W.EX_FOTO["commando-pull-ups"];   // alle Übungen haben ein Bild: „ohne Bild“ wird hier nachgestellt
+      W.openExInfo("commando-pull-ups");
       await bis(function () { return $(".info-fig"); }, 2000, "Info ohne Bild");
       pruefe(!$(".media-seg") && !$(".info-pane-bild"), "Ohne Bild darf es keinen Umschalter geben");
+      W.EX_FOTO["commando-pull-ups"] = fotoMerk;
       zu(); W.state.db.settings.infoBild = false;
     }],
     ["Suche: Antippen öffnet erst die Info-Karte, darin einklappbar „Training“ (Satz für Satz | Mit Timer) mit Start darunter; Zurück führt in die Suche", async function () {
