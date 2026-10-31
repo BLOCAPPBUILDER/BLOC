@@ -5,7 +5,7 @@
 import { cpSync, rmSync, mkdirSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 
 const ziel = "www";
-const dateien = ["index.html", "app.css", "layout-new.css", "texte.js", "daten.js", "faq.js", "manifest.json", "icon.png", "icon-180.png", "icon.svg", "privacy.html", "quellen.html"];
+const dateien = ["index.html", "app.css", "layout-new.css", "texte.js", "daten.js", "fotos.js", "faq.js", "manifest.json", "icon.png", "icon-180.png", "icon.svg", "privacy.html", "quellen.html"];
 const ordner = ["js", "img"];
 
 rmSync(ziel, { recursive: true, force: true });

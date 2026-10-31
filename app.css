@@ -2285,3 +2285,16 @@ details[open] > summary > .pg-pfeil{ transform:rotate(180deg); }
 .illu circle.ip{ fill:none; }
 .player .illu .ip, .player .illu .gm{ stroke:currentColor; opacity:.7; }
 .player .illu .ipf, .player .illu circle.ipf.gm{ fill:currentColor; }
+
+/* Übungsbilder (2026-10-31): kleine Kachel „Bild“ unten rechts an der Figur; Tippen öffnet das Bild groß */
+.info-fig{ position:relative; }
+.info-fig .foto-kachel{ position:absolute; top:auto; left:auto; right:2px; bottom:4px; width:54px; height:auto; min-height:0; padding:0; border:1px solid var(--border); border-radius:10px; background:#1c1c22; color:#fff; cursor:pointer; overflow:hidden; display:flex; flex-direction:column; align-items:stretch; box-shadow:0 2px 8px rgba(0,0,0,.28); }
+.info-fig .foto-kachel img{ display:block; width:100%; height:auto; aspect-ratio:1; object-fit:contain; background:#1c1c22; }
+.info-fig .foto-kachel span{ display:block; font-size:10px; font-weight:700; letter-spacing:.04em; line-height:1; padding:3px 0 4px; text-align:center; background:var(--surface-2); color:var(--text); }
+.foto-haupt{ display:block; margin:10px auto 4px; width:min(240px, 70%); padding:0; border:0; border-radius:14px; background:#1c1c22; cursor:pointer; overflow:hidden; }
+.foto-haupt img{ display:block; width:100%; aspect-ratio:1; object-fit:contain; }
+.foto-gross{ position:fixed; inset:0; z-index:90; background:rgba(0,0,0,.82); display:flex; align-items:center; justify-content:center; padding:16px; }
+.foto-box{ position:relative; width:min(92vw, 460px); background:#1c1c22; border-radius:18px; padding:10px 10px 12px; box-shadow:0 14px 40px rgba(0,0,0,.5); }
+.foto-box img{ display:block; width:100%; aspect-ratio:1; object-fit:contain; border-radius:12px; }
+.foto-name{ margin-top:8px; text-align:center; font-size:14px; font-weight:600; color:#f4f4f6; }
+.foto-x{ position:absolute; top:6px; right:6px; width:34px; height:34px; border-radius:50%; border:0; background:rgba(255,255,255,.14); color:#fff; font-size:22px; line-height:1; cursor:pointer; }
