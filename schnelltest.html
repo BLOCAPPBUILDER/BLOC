@@ -299,10 +299,10 @@
       await bis(function () { return $("[data-srtoggle]"); }, 3000, "Suche mit Filterkarte");
       if (!$('[data-srtrain="studio"]')) klick("[data-srtoggle]");   // Filterkarte der Suche aufklappen (wie beim Workout-Filter)
       klick(await bis(function () { return $('.fc-chip[data-srzone="ruecken"]'); }, 2000, "Körperkarte in der Suche"));
-      await bis(function () { return $('.fc-chip[data-srzone="ruecken"].on') && $$("[data-playex]").length > 5; }, 2000, "Rücken-Übungen als Kacheln in der Suche");
-      pruefe($$("[data-playex]").length < 140 && $$(".air-kachel").length === $$("[data-playex]").length, "Rücken-Filter filtert nicht oder Kacheln fehlen");
-      pruefe($$(".st-kachel[data-studio]").length > 5, "Rücken-Filter: Studio-Übungen fehlen als Kacheln");
-      pruefe($$(".air-kachel [data-playex]").length + $$("[data-info]").length > 0 && $$("[data-info]").some(function (el) { var e = W.findExercise(el.getAttribute("data-info")); return e && e.main === "stretch"; }), "Rücken-Filter: Dehnübungen fehlen als Kacheln");
+      await bis(function () { return $('.fc-chip[data-srzone="ruecken"].on') && $$(".air-kachel").length > 5; }, 2000, "Rücken-Übungen als Kacheln in der Suche");
+      pruefe($$(".air-kachel").length < 140 && $$(".air-kachel").length === $$("[data-info]").length, "Rücken-Filter filtert nicht oder Kacheln fehlen");
+      pruefe($$(".air-kachel[style*='--gym-color']").length > 5, "Rücken-Filter: Studio-Übungen fehlen als Kacheln (gleiche Kacheln wie beim Workout-Bauen)");
+      pruefe($$("[data-info]").some(function (el) { var e = W.findExercise(el.getAttribute("data-info")); return e && e.main === "stretch"; }), "Rücken-Filter: Dehnübungen fehlen als Kacheln");
       await heim();   // zurück in den Katalog, wie der nächste Test ihn erwartet
       zuWorkout();
     }],

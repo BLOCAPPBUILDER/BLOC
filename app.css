@@ -2301,3 +2301,16 @@ details[open] > summary > .pg-pfeil{ transform:rotate(180deg); }
 /* Suche: Zwischenüberschrift je Kategorie im Übungs- und Workoutkatalog */
 .sr-unter{ font-size:15px; font-weight:700; color:var(--text); margin:18px 4px 8px; display:flex; align-items:center; gap:8px; }
 .sr-unter::after{ content:""; flex:1; height:1px; background:var(--line, rgba(128,128,128,.25)); }
+
+/* Suche: kein Start-Knopf auf den Kacheln (Stöbern); gestartet wird in der Info-Karte */
+#gs-res .air-start{ display:none; }
+.info-play{ width:100%; margin:0 0 10px; display:flex; align-items:center; justify-content:center; gap:8px; min-height:48px; }
+
+/* Studio-Seite: Eingabe einklappbar */
+.st-eintrag{ margin:4px 0 0; text-align:left; }
+.st-eintrag > summary{ list-style:none; display:flex; align-items:center; gap:10px; cursor:pointer; min-height:44px; padding:6px 4px; font-size:14px; font-weight:700; }
+.st-eintrag > summary::-webkit-details-marker{ display:none; }
+.st-eintrag > summary b{ font-weight:600; font-size:12px; opacity:.7; }
+.st-eintrag > summary .tpl-chev{ margin-left:auto; transition:transform .2s; }
+.st-eintrag[open] > summary .tpl-chev{ transform:rotate(180deg); }
+.st-figur.info-fig{ margin:0 0 6px; }

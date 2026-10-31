@@ -804,7 +804,11 @@ var ILLU_SEQ = {
   "box-step-ups":  { k:[BS_BODEN, BS_AUF, BS_HOCH, BS_OBEN, BS_RUNTER], t:[[.05,.22],[.02,.18],[.02,.16],[.05,.2],[.02,.2]] },
   "jump-squats":  { k:jSeq([J_SQB, J_AIR, J_SQF]), t:[[.22,.32,"o"],[.06,.36,"i"],[.18,.3]] },
   /* Tuck Jumps: Hocke (Arme hinten) → kräftiges Strecken mit Armschwung nach oben → Knie zur Brust auf dem Höhepunkt → weiche Landung in der Hocke */
-  "tuck-jumps":   { k:jSeq([J_SQB, J_AIR, J_TUCK, J_SQF]), t:[[.2,.22,"o"],[.0,.16],[.06,.3,"i"],[.16,.3]] },
+  /* Alle vier Posen haben zwei Beine und zwei Arme (sonst übernimmt das Gerüst die fehlenden aus der Tuck-Pose und es hängt ein Phantom-Bein/-Arm mit): in der Tuck-Pose die Fäuste vor der Brust (Boxhaltung, kein Greifen ans Knie) */
+  "tuck-jumps":   { k:jSeq([qWith(J_SQB,{ l:[J_SQB.l[0], J_SQB.l[0]], a:[J_SQB.a[0], J_SQB.a[0]] }),
+                            qWith(J_AIR,{ l:[J_AIR.l[0], [55,55,54,74,58,79]], a:[J_AIR.a[0], [56,2,62,-7]] }),
+                            qWith(J_TUCK,{ l:[[67,32,57,47,64,49],[62,34,52,49,59,51]], a:[[57,17,63,8],[55,18,60,10]] }),
+                            qWith(J_SQF,{ l:[J_SQF.l[0], J_SQF.l[0]], a:[J_SQF.a[0], J_SQF.a[0]] })]), t:[[.2,.22,"o"],[.0,.16],[.06,.3,"i"],[.16,.3]] },
   "jump-lunges":  { k:jSeq([JL_A, JL_AIR, qSwap(JL_A), JL_AIR], .84), t:[[.16,.26,"o"],[.04,.26,"i"],[.16,.26,"o"],[.04,.26,"i"]] },
   "burpees":      { k:jSeq([J_ST, B_SQH, B_PL, B_PUL, B_PL, B_SQH, J_AIR]), t:[[.2,.38],[.04,.28],[.06,.3],[.08,.3],[.04,.28],[.04,.3,"o"],[.06,.36,"i"]] },
   "plank-burpees":{ k:[J_ST, B_SQH, B_PL, B_SQH], t:[[.25,.45],[.06,.4],[.3,.4],[.06,.45]] },

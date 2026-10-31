@@ -52,7 +52,7 @@ function gesamtEintraege(){
   EXERCISES.forEach(function(ex){
     if(libHidden("ex:"+ex.id)) return;
     add(t("libExercises"), tplText(ex.name), ex.cats.map(catName).join(", "), exSearchText(ex), function(){
-      if(EX_INFO[ex.id]) openExInfo(ex.id, false, {});
+      if(EX_INFO[ex.id]) exInfoSuche(ex.id);
       else go(ex.custom ? "#exedit/"+ex.id : "#playex/"+ex.id);
     });
     l[l.length-1].ex = ex.id;   // für den Körper-Filter der Suche
@@ -77,6 +77,20 @@ function suchFilterKarteHTML(anzahl){
         return filterChip("data-srausr", g, suchAusr.indexOf(g) > -1, svgIcon(STUDIO_GERAET_ICON[g] || STUDIO_AUSR_ICON[g]), t("stGer_"+g)); }).join("")+'</div>'+
       filterSchrittHTML(3, t("trSchritt3"))+
       kkMuskelHTML("data-srzone", "data-srgrp", suchZonen, { ohneLabel:true }) });
+}
+/* Übung in der Suche: Antippen öffnet erst die Info-Karte (beim Stöbern startet nichts von allein), der Start liegt als Knopf in der Karte.
+   Zurück aus dem Timer oder der Studio-Seite führt über den Navigations-Stack wieder zur Suche. */
+function exInfoSuche(id){
+  var ex = findExercise(id), onChange = function(){ if(navTop() === "#search"){ var y = window.scrollY; renderSearch(); window.scrollTo(0, y); } };
+  openExInfo(id, false, { onChange:onChange, zu:function(){ exZuProgramm(id); },
+    play:function(){ go(ex && STUDIO_NUR[id] ? "#studio/"+id : "#playex/"+id); } });
+}
+/* Kachel wie im Workout-Baukasten (13-teilen-editor): Rahmen und Farbe nach Trainingsart (Fitnessstudio rot, Calisthenic-Park blau, Körpergewicht gelb, Mobility grün) */
+function suchKachel(ex){
+  var g = ex.equip[0], mobil = exIsMobility(ex.id) || AUFWAERM_IDS.indexOf(ex.id) > -1;
+  var geraet = !mobil && g && g !== "none" && EQUIP_ICON[g] ? '<span class="air-gear" aria-label="'+esc(exEquipText(ex))+'">'+svgIcon(EQUIP_ICON[g])+'</span>' : '';
+  return uebKachel({ bild:ex.id, name:tplText(ex.name), attr:'data-info="'+ex.id+'" data-exlang="'+ex.id+'"', q:exSearchText(ex), cat:exFarbe(ex), klasse:"air-kachel",
+    innen:exFavBtn(ex.id)+geraet, unter:kachelMuskel(ex)+(gymSatzKachel(ex.id) ? '<span class="st-sub an">'+esc(gymSatzKachel(ex.id))+'</span>' : '') });
 }
 function renderSearch(){
   var alle = gesamtEintraege();
@@ -141,8 +155,7 @@ function renderSearch(){
       if(unter && e.cat !== katAlt){ raster(); katAlt = e.cat; html += '<div class="sr-unter">'+esc(catName(e.cat))+'</div>'; }
       if(!gewaehlt && ++n > 12) return;   // je Gruppe die ersten zwölf; genauer tippen grenzt ein (mit gewählter Kategorie alle)
       var ex = e.ex && findExercise(e.ex);
-      if(ex && (fuerAir(ex) || ex.main === "stretch") && ILLU[ex.id]){ kacheln += ex.main === "stretch" ? '<div style="display:contents;--bereich:var(--ws-color)">'+libExKachel(ex)+'</div>' : libExKachel(ex); return; }   // Dehnübungen in der Farbe von Mobility & Stretch
-      if(ex && STUDIO_NUR[ex.id]){ kacheln += studioKachel(ex.id); return; }   // Studio-Übungen ebenfalls als Kacheln (antippen = Studio-Seite)
+      if(ex && !ex.custom && (ILLU[ex.id] || STUDIO_NUR[ex.id])){ kacheln += suchKachel(ex); return; }   // alle Übungen als Kacheln wie beim Bauen eines Workouts (gleiche Farben nach Trainingsart), antippen = Info-Karte
       var weltZeichen = e.welt ? '<span class="sr-welt" style="--w:'+(e.welt === "studio" ? "var(--gym-color)" : "var(--tp-color)")+'" title="'+esc(t(e.welt === "studio" ? "katOrtStudio" : "katOrtFrei"))+'">'+svgIcon(e.welt === "studio" ? KAT_ICON_STUDIO : KAT_ICON_FREI)+'</span>' : '';
       zeilen += '<div class="list-item entry" role="button" tabindex="0" data-sr="'+i+'">'+weltZeichen+'<div class="meta"><div class="name">'+esc(e.titel)+'</div>'+
         (e.sub ? '<div class="sub">'+esc(e.sub)+'</div>' : '')+'</div><span class="chip chev">'+ICON_CHEV+'</span></div>';
@@ -151,7 +164,7 @@ function renderSearch(){
     res.innerHTML = html;
     // Kacheln wie in Air: antippen = Übungsinfo, ▶ = starten, ☆ = merken, lange drücken = in Workout oder Plan legen
     res.querySelectorAll("[data-info]").forEach(function(el){
-      el.addEventListener("click", function(){ var id = el.getAttribute("data-info"); openExInfo(id, false, { onChange:zeigen, zu:function(){ exZuProgramm(id); } }); });
+      el.addEventListener("click", function(){ exInfoSuche(el.getAttribute("data-info")); });
     });
     res.querySelectorAll("[data-playex]").forEach(function(el){
       el.addEventListener("click", function(ev){ ev.stopPropagation(); go("#playex/"+el.getAttribute("data-playex")); });
@@ -161,7 +174,7 @@ function renderSearch(){
     });
     res.querySelectorAll("[data-exlang]").forEach(function(el){ langDruck(el, function(){ exZuProgramm(el.getAttribute("data-exlang")); }); });
     res.querySelectorAll("[data-studio]").forEach(function(el){
-      function oeffnen(){ go("#studio/"+el.getAttribute("data-studio")); }
+      function oeffnen(){ var id = el.getAttribute("data-studio"); if(EX_INFO[id]) exInfoSuche(id); else go("#studio/"+id); }
       el.addEventListener("click", oeffnen);
       el.addEventListener("keydown", function(ev){ if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); oeffnen(); } });
       langDruck(el, function(){ exZuProgramm(el.getAttribute("data-studio")); });
