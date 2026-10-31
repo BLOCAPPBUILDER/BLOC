@@ -3,6 +3,13 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-10-31 · Übungsbilder in der Übungs-Info (Fassung 2026-10-31-1)
+
+- **Neu:** 324 Übungsbilder (`img/ex/<id>.webp`, Vorschau `img/ex/t/<id>.webp`, Liste in `fotos.js`). Nur im Info-Fenster einer Übung: kleine Kachel „Bild“ unten rechts an der Strichfigur, Tippen zeigt das Bild groß (Tippen oder Escape schließt). Bibliothek, Karten und Timer zeigen weiter nur die Strichfigur.
+- Ohne Bild (aussortiert, später neu): Commando Pull-Up, Wechselndes Kabelrudern, Konzentrationscurl im Stand, Einarmiges Trizepsdrücken am Kabel, Scheibenklemme. Dort bleibt es bei der Strichfigur.
+- Bilder laden erst beim Öffnen (`loading="lazy"`), kein Vorab-Cache; die App wächst um etwa 15 MB.
+- Bilder liegen sortiert und umgefärbt (Geräte und Schuhe orange) in OneDrive `Bilder-Sortiert`; Stilbeschreibung dort in `STIL-BESCHREIBUNG.md`.
+
 ## 2026-10-30 · Figuren nachgeschärft nach der Figuren-Prüfliste (Fassung 2026-10-30-9)
 
 - **Fachlich korrigiert** (Prüfung durch Sportwissenschaft und UX): Swimmers gegengleich, Bicycle Crunches (Ellbogen zum Knie, Hände am Kopf), Aufrechtes Rudern (Ellbogen höchstens Schulterhöhe), Copenhagen Plank (Knie auf der Bank), Tate Press (richtige Armlängen), Prone T-Raise (Arm nur wenige cm angehoben), Rotary Torso (Drehung statt Neigung, Pfeil).
