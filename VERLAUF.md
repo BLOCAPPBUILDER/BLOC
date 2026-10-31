@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-10-31 · Sieben neue Übungsbilder (Fassung 2026-10-31-6)
+
+- **Bilder:** Neu aus den Blättern: 185 Commando Pull-Up, 255 Wechselndes Kabelrudern, 283 Konzentrationscurl im Stand, 286 Einarmiges Trizepsdrücken am Kabel, 314 Scheibenklemme, 025 Floor Press; 007 Jump Lunges neu mit drei Posen. Damit haben alle 329 Übungen ein Bild.
+- **Test:** „Ohne Bild kein Umschalter“ stellt den Fall nach (entfernt kurz den Eintrag in `EX_FOTO`), weil keine Übung mehr ohne Bild ist.
+
 ## 2026-10-31 · Info-Karte der Suche mit „Training“-Block (Fassung 2026-10-31-5)
 
 - **Suche:** In der Info-Karte steht statt des großen Play-Knopfs ein einklappbarer Block **Training**: Satz für Satz | Mit Timer wählen, darunter **Einstellen & starten**. Der Knopf öffnet die Studio-Seite mit allen Einstellungen (Gewicht, Wiederholungen, Pause bzw. Runden, Arbeit, Pause), auch bei Übungen ohne Gewicht. Standard: eingeklappt, die Wahl merkt sich die App (`settings.infoStartAuf`).
