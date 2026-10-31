@@ -365,7 +365,9 @@ function renderStudioKarte(id){
     topbar(tplText(ex.name), { back:"#timers", right:exFavBtn(id) }) +
     '<div class="card st-hero" style="--cat:'+studioFarbe(ex)+'">'+
       studioStatsLeiste(id)+
-      (ILLU[id] ? '<div class="st-figur">'+illuHTML(id, "st-illu")+'</div>' : (ex.custom ? '<div class="st-figur"><span class="ex-symbol big">'+exSymbol(ex)+'</span></div>' : ''))+
+      (ILLU[id] ? (hatFoto(id)   // mit Bild: Umschalter Figur | Bild wie in der Info-Karte, Strichfigur oder Bild in derselben Bühne
+        ? '<div class="st-figur info-fig">'+fotoUmschalterHTML(!!state.db.settings.infoBild)+'<div class="info-pane-fig"'+(state.db.settings.infoBild ? ' hidden' : '')+'>'+illuHTML(id, "st-illu")+'</div>'+fotoBuehneHTML(id, tplText(ex.name), !!state.db.settings.infoBild)+'</div>'
+        : '<div class="st-figur">'+illuHTML(id, "st-illu")+'</div>') : (ex.custom ? '<div class="st-figur"><span class="ex-symbol big">'+exSymbol(ex)+'</span></div>' : ''))+
       bandAnkerHTML(id)+   // Band-Übung: „Band befestigen“ gehört direkt unter die bewegte Figur
       griffHTML(id)+
       (e.kg != null && !koerper ? '<div class="st-ziel">'+esc(t("stWeight"))+' '+studioKg(e.kg)+' kg</div>' : '')+   // das Ziel „3 Sätze × 12“ steht nicht mehr da (zu spezifisch)
@@ -383,6 +385,7 @@ function renderStudioKarte(id){
       (blKontext ? '<div class="st-block"><span><b>'+esc(t(blKontext.art === "zirkel" ? "blkZirkel" : "blkSuper"))+'</b> · '+(blKontext.i+1)+'/'+blKontext.n+
         '<small>'+esc(t(blKontext.letzte ? "blkDannPause" : "blkDanach", { n:tplText(findExercise(blKontext.next).name) }))+'</small></span>'+
         '<button type="button" class="btn btn-primary" data-stblock="'+esc(blKontext.next)+'">'+esc(t("blkWeiter"))+' ›</button></div>' : '')+
+ '<details class="st-eintrag"'+(state.db.settings.stEintragZu ? '' : ' open')+'><summary><span>'+esc(t("stEintrag"))+'</span>'+(h && h.s.length ? '<b>'+h.s.length+' '+esc(t("stHeuteN"))+'</b>' : '')+'<span class="tpl-chev" aria-hidden="true">&#9662;</span></summary>'+
       '<div class="seg-row st-modus" role="group" aria-label="'+esc(t("stModusTitel"))+'">'+
         '<button type="button" data-stmodus="saetze" class="'+(timerModus ? '' : 'active')+'" aria-pressed="'+!timerModus+'">'+esc(t("stModusSaetze"))+'</button>'+
         '<button type="button" data-stmodus="timer" class="'+(timerModus ? 'active' : '')+'" aria-pressed="'+timerModus+'">'+ICON_PLAY+' '+esc(t("stModusTimer"))+'</button></div>'+
@@ -417,7 +420,7 @@ function renderStudioKarte(id){
       '<div class="st-pausewahl">'+esc(t("stPause"))+': '+(koerper ? [30, 60, 90, 120] : [60, 90, 120, 180]).map(function(sec){
         return '<button type="button" class="fc-chip'+(pause === sec ? ' on' : '')+'" data-stpause="'+sec+'">'+(sec < 120 ? sec+" s" : (sec/60)+" min")+'</button>'; }).join("")+'</div>'+
       (h && h.s.length ? '<button type="button" class="st-undo" data-stundo>'+esc(t("stUndo"))+'</button>' : ''))+
-    '</div>'+
+    '</details></div>'+
     '<div class="section-title">'+esc(t("stNote"))+'</div>'+
     '<div class="card"><textarea id="st-notiz" rows="2" placeholder="'+esc(t("stNotePh"))+'">'+esc(e.notiz || "")+'</textarea></div>'+
     studioInfoHTML(id, ex)+
@@ -426,6 +429,9 @@ function renderStudioKarte(id){
     (trKontext.ids.length ? trainingLeisteHTML(trKontext) : "")+
     '<div style="height:'+(trKontext.ids.length ? 96 : 40)+'px"></div>';
   bindCommon();
+  fotoBinden(app.querySelector(".st-hero"), tplText(ex.name));
+  var eintragBox = app.querySelector(".st-eintrag");   // Eingabe ein-/ausklappbar, die Wahl merkt sich die App (für alle Übungen)
+  if(eintragBox) eintragBox.addEventListener("toggle", function(){ var zu = !eintragBox.open; if(!!state.db.settings.stEintragZu !== zu){ state.db.settings.stEintragZu = zu; save(); } });   // „toggle“ feuert auch beim ersten Zeichnen: dann nichts speichern
   function neu(){ var y = window.scrollY; renderStudioKarte(id); window.scrollTo(0, y); }
   function eintrag(){ var a = studioAlle(); return a[id] || (a[id] = { log:[] }); }
   var kgIn = app.querySelector("#st-kg"), wIn = app.querySelector("#st-w");   // im Timer-Modus gibt es keine Eingabe, ohne Gewicht kein kg-Feld

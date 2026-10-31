@@ -3,6 +3,14 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-10-31 · Suche öffnet erst die Info-Karte (Fassung 2026-10-31-4)
+
+- **Suche:** Antippen einer Übung (auch Studio-Kacheln) öffnet zuerst die Info-Karte; dort steht oben der Knopf **Übung starten**. Die kleinen ▶ auf den Kacheln entfallen in der Suche. „Zurück“ aus Timer oder Studio-Seite führt wieder zur Suche (Navigations-Stack). Im dunklen Thema haben Studio-Kacheln in der Suche denselben Rahmen (rot) wie die anderen Bereiche.
+- **Suche, Kacheln:** Alle Übungen erscheinen als dieselben Kacheln wie im Workout-Baukasten (Rahmen und Farbe nach Trainingsart: Fitnessstudio rot, Calisthenic-Park blau, Körpergewicht gelb, Mobility grün); vorher hatten Studio-Übungen eine eigene Kachel ohne Rahmen.
+- **Studio-Seite:** Figur | Bild wie in der Info-Karte; der Bereich **Sätze eintragen** (Satz für Satz / Timer, kg, Wdh., Pause) lässt sich einklappen, die Wahl merkt sich die App (`settings.stEintragZu`).
+- **Tuck Jumps:** Strichfigur-Animation neu: alle Posen mit zwei Beinen und zwei Armen (vorher hing ein Phantom-Glied mit), in der Tuck-Pose Fäuste vor der Brust statt Hände am Knie.
+- **Bilder:** Box Step-ups (letzte Figur) und Sprint auf der Stelle (rechte Figur) entfernt; Floor Press ohne Bild, bis ein neues vorliegt.
+
 ## 2026-10-31 · Katalog-Suche nach Kategorien, Bilder gekürzt (Fassung 2026-10-31-3)
 
 - **Suche:** Im Übungs- und im Workoutkatalog gibt es unter den Kategorien dieselben Kategorie-Chips wie beim Bauen eines BLOCs (Alle · Cardio · Gewicht · Bodyweight · Rücken · Beine · Bauch / Core · Arme · Calisthenics · Dehnen). Ohne Suchwort und ohne einzelne Kategorie stehen die Treffer unter Zwischenüberschriften je Kategorie.

@@ -955,6 +955,23 @@ function fotoGross(exId, name){
 }
 function fotoZu(){ if(fotoOffen){ fotoOffen.remove(); fotoOffen = null; } }
 document.addEventListener("keydown", function(e){ if(e.key === "Escape" && fotoOffen){ fotoZu(); e.stopPropagation(); } }, true);
+/* Umschalter Figur | Bild und Tippen = groß, für die Info-Karte und die Studio-Seite; lädt das Bild nicht, bleibt die Strichfigur (und der Umschalter verschwindet) */
+function fotoBinden(root, name){
+  root.querySelectorAll("[data-foto]").forEach(function(b){ b.addEventListener("click", function(e){ e.stopPropagation(); fotoGross(b.getAttribute("data-foto"), name); }); });
+  var pf = root.querySelector(".info-pane-fig"), pb = root.querySelector(".info-pane-bild"), seg = root.querySelector(".media-seg");
+  if(!pb) return;
+  function zeige(bild){
+    pf.hidden = bild; pb.hidden = !bild;
+    root.querySelectorAll("[data-ansicht]").forEach(function(x){ x.setAttribute("aria-pressed", String((x.getAttribute("data-ansicht") === "bild") === bild)); });
+  }
+  var im = pb.querySelector("img");
+  if(im) im.addEventListener("error", function(){ zeige(false); if(seg) seg.hidden = true; pb.remove(); });
+  root.querySelectorAll("[data-ansicht]").forEach(function(b){ b.addEventListener("click", function(e){
+    e.stopPropagation();
+    var bild = b.getAttribute("data-ansicht") === "bild";
+    state.db.settings.infoBild = bild; save(); zeige(bild);
+  }); });
+}
 function openExInfo(exId, live, lib){
   var ex = findExercise(exId), info = EX_INFO[exId], farbe = bereichsFarbe() || (ex && studioFarbe(ex) === "var(--gym-color)" ? "var(--gym-color)" : "");
   if(!ex || !info) return;
@@ -973,6 +990,7 @@ function openExInfo(exId, live, lib){
         '<figure>'+illuHTML(exId, "info-illu", true)+'<figcaption>'+t({ top:"viewTop", side:"viewSide" }[ILLU_VIEW2[exId].typ] || "viewFront")+'</figcaption></figure></div>'
       : (ILLU[exId] ? illuHTML(exId, "info-illu") : (ex.custom ? '<div class="info-views"><span class="ex-symbol big">'+exSymbol(ex)+'</span></div>' : "")))+'</div>'+
     (hatFoto(exId) ? fotoBuehneHTML(exId, tplText(ex.name), !!state.db.settings.infoBild) : '')+'</div>'+
+    (lib && lib.play ? '<button type="button" class="btn btn-primary info-play" data-infoplay>'+ICON_PLAY+' '+esc(t("infoStart"))+'</button>' : '')+   // aus der Suche: erst die Karte, dann hier starten
     gearChipsHTML(ex, live)+griffHTML(exId)+
     bandAnkerHTML(exId)+   // Band-Übungen: wo und wie das Band befestigt wird (aufklappbar, unter den Figuren)
     (EX_MUSCLES[exId] ? '<div class="info-mus"><div class="info-mus-t"><div><b>'+esc(musclesLabel(ex))+':</b> '+esc(musclesMain(ex))+'</div>'+
@@ -1003,6 +1021,8 @@ function openExInfo(exId, live, lib){
     '<button class="btn btn-secondary" data-close>'+t("close")+'</button>'+
   '</div></div>';
   if(lib){
+    var pl = root.querySelector("[data-infoplay]");
+    if(pl) pl.addEventListener("click", function(){ close(); lib.play(); });
     root.querySelector("[data-infoblock]").addEventListener("click", function(){
       adoptExercise(ex); showToast(t("adoptedBlock", { n:tplText(ex.name) }));
     });
@@ -1016,22 +1036,7 @@ function openExInfo(exId, live, lib){
     root.innerHTML = "";
   }
   root.querySelectorAll("[data-close]").forEach(function(b){ b.addEventListener("click", close); });
-  root.querySelectorAll("[data-foto]").forEach(function(b){ b.addEventListener("click", function(e){ e.stopPropagation(); fotoGross(b.getAttribute("data-foto"), tplText(ex.name)); }); });
-  (function(){   // Umschalter Figur | Bild; lädt das Bild nicht, bleibt die Strichfigur (und der Umschalter verschwindet)
-    var pf = root.querySelector(".info-pane-fig"), pb = root.querySelector(".info-pane-bild"), seg = root.querySelector(".media-seg");
-    if(!pb) return;
-    function zeige(bild){
-      pf.hidden = bild; pb.hidden = !bild;
-      root.querySelectorAll("[data-ansicht]").forEach(function(x){ x.setAttribute("aria-pressed", String((x.getAttribute("data-ansicht") === "bild") === bild)); });
-    }
-    var im = pb.querySelector("img");
-    if(im) im.addEventListener("error", function(){ zeige(false); if(seg) seg.hidden = true; pb.remove(); });
-    root.querySelectorAll("[data-ansicht]").forEach(function(b){ b.addEventListener("click", function(e){
-      e.stopPropagation();
-      var bild = b.getAttribute("data-ansicht") === "bild";
-      state.db.settings.infoBild = bild; save(); zeige(bild);
-    }); });
-  })();
+  fotoBinden(root, tplText(ex.name));
   root.querySelectorAll("[data-lz]").forEach(function(b){ b.addEventListener("click", function(){ var nach = b.getAttribute("data-lz"); close(); openExInfo(nach, false, lib); }); });
   root.querySelector(".confirm-overlay").addEventListener("click", function(e){ if(e.target.classList.contains("confirm-overlay")) close(); });
   if(live){
