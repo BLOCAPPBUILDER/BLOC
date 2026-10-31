@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-10-31 · Übungsbilder in der Übungs-Info (Fassung 2026-10-31-1)
+
+- **Neu:** 324 Übungsbilder (`img/ex/<id>.webp`, Vorschau `img/ex/t/<id>.webp`, Liste in `fotos.js`). Nur im Info-Fenster einer Übung: kleine Kachel „Bild“ unten rechts an der Strichfigur, Tippen zeigt das Bild groß. Bibliothek, Karten und Timer zeigen weiter nur die Strichfigur.
+- Ohne Bild (aussortiert, später neu): Commando Pull-Up, Wechselndes Kabelrudern, Konzentrationscurl im Stand, Einarmiges Trizepsdrücken am Kabel, Scheibenklemme.
+
 ## 2026-10-29 · Baukasten: Trainingsart statt Ort, Core, neue Übungen; Lauf bei dunklem Display (Fassung 2026-10-29-22)
 
 - **Baukasten ohne Ort**: Fitnessstudio · Freiluft entfällt in Baukasten, Plan-Bau, Übungskatalog und Überrasch-mich-Fenster (auch der Workoutkatalog: dort zählt ein Workout, wenn mindestens zwei Drittel seiner Übungen zur gewählten Trainingsart passen). Im Filter stehen jetzt **1 Trainingsart** (Fitnessstudio, Calisthenic-Park, Körpergewicht; drei Fotokarten, Mehrfachwahl, Körpergewicht in Gelb), **2 Ausrüstung** (Smith, Kabelzug, Langhantel, Kurzhantel, Maschine, dazu Kettlebell und Widerstandsband) und **3 Muskel**. Alte Filter-Einstellungen werden übernommen (`stArten`/`stGeraete` → `stTrain`/`stAusr`, altes „Überrasch mich“ mit Ort → Trainingsart).

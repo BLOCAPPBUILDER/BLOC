@@ -930,6 +930,24 @@ function gymHinweisHTML(ex){
   if(!ex || !ex.equip || ex.equip.indexOf("gym") < 0) return "";
   return '<div class="info-title">'+t("gymTitel")+'</div><ul class="info-posture info-band">'+["gymS1", "gymS2", "gymS3"].map(function(k){ return '<li>'+esc(t(k))+'</li>'; }).join("")+'</ul>';
 }
+/* Übungsbilder (img/ex/<id>.webp, Vorschau img/ex/t/<id>.webp): kleine Kachel „Bild“ unten rechts an der Figur, Tippen zeigt das Bild groß.
+   Wer kein Bild hat (oder wenn es nicht lädt), behält die Strichfigur. */
+var fotoOffen = null;
+function fotoHTML(exId, name){
+  if(typeof EX_FOTO === "undefined" || !EX_FOTO[exId]) return "";
+  return '<button type="button" class="foto-kachel" data-foto="'+exId+'" aria-label="'+esc(t("fotoGross"))+': '+esc(name)+'"><img src="./img/ex/t/'+exId+'.webp" alt="" loading="lazy" decoding="async" width="160" height="160"><span>'+esc(t("fotoLabel"))+'</span></button>';
+}
+function fotoGross(exId, name){
+  fotoZu();
+  var d = document.createElement("div");
+  d.className = "foto-gross"; d.setAttribute("role", "dialog"); d.setAttribute("aria-label", name);
+  d.innerHTML = '<div class="foto-box"><img src="./img/ex/'+exId+'.webp" alt="'+esc(name)+'" decoding="async"><div class="foto-name">'+esc(name)+'</div><button type="button" class="foto-x" aria-label="'+esc(t("close"))+'">&times;</button></div>';
+  d.addEventListener("click", function(){ fotoZu(); });
+  d.querySelector("img").addEventListener("error", function(){ fotoZu(); });
+  document.body.appendChild(d); fotoOffen = d;
+}
+function fotoZu(){ if(fotoOffen){ fotoOffen.remove(); fotoOffen = null; } }
+document.addEventListener("keydown", function(e){ if(e.key === "Escape" && fotoOffen){ fotoZu(); e.stopPropagation(); } }, true);
 function openExInfo(exId, live, lib){
   var ex = findExercise(exId), info = EX_INFO[exId], farbe = bereichsFarbe() || (ex && studioFarbe(ex) === "var(--gym-color)" ? "var(--gym-color)" : "");
   if(!ex || !info) return;
@@ -941,10 +959,12 @@ function openExInfo(exId, live, lib){
       '<div class="info-sub">'+blockSpec(exBlock(ex))+SEP+esc(ex.cats.map(catName).join(" · "))+'</div></div>'+
       '<button type="button" class="info-x" data-close aria-label="'+t("close")+'">&times;</button></div>'+
     (live ? '<div class="info-live"><span id="info-live-text"></span><button type="button" class="tpl-adopt" data-infopause></button></div>' : '')+
+    '<div class="info-fig">'+
     (ILLU2[exId]
       ? '<div class="info-views"><figure>'+illuHTML(exId, "info-illu")+'<figcaption>'+t(ILLU_VIEW2[exId].haupt === "front" ? "viewFront" : "viewSide")+'</figcaption></figure>'+
         '<figure>'+illuHTML(exId, "info-illu", true)+'<figcaption>'+t({ top:"viewTop", side:"viewSide" }[ILLU_VIEW2[exId].typ] || "viewFront")+'</figcaption></figure></div>'
       : (ILLU[exId] ? illuHTML(exId, "info-illu") : (ex.custom ? '<div class="info-views"><span class="ex-symbol big">'+exSymbol(ex)+'</span></div>' : "")))+
+    fotoHTML(exId, tplText(ex.name), !ILLU[exId] && !ex.custom)+'</div>'+
     gearChipsHTML(ex, live)+griffHTML(exId)+
     bandAnkerHTML(exId)+   // Band-Übungen: wo und wie das Band befestigt wird (aufklappbar, unter den Figuren)
     (EX_MUSCLES[exId] ? '<div class="info-mus"><div class="info-mus-t"><div><b>'+esc(musclesLabel(ex))+':</b> '+esc(musclesMain(ex))+'</div>'+
@@ -988,6 +1008,7 @@ function openExInfo(exId, live, lib){
     root.innerHTML = "";
   }
   root.querySelectorAll("[data-close]").forEach(function(b){ b.addEventListener("click", close); });
+  root.querySelectorAll("[data-foto]").forEach(function(b){ b.addEventListener("click", function(e){ e.stopPropagation(); fotoGross(b.getAttribute("data-foto"), tplText(ex.name)); }); });
   root.querySelectorAll("[data-lz]").forEach(function(b){ b.addEventListener("click", function(){ var nach = b.getAttribute("data-lz"); close(); openExInfo(nach, false, lib); }); });
   root.querySelector(".confirm-overlay").addEventListener("click", function(e){ if(e.target.classList.contains("confirm-overlay")) close(); });
   if(live){
