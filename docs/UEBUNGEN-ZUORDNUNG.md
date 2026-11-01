@@ -320,297 +320,297 @@ Regel: Gerät, Hantel, Kettlebell oder Widerstandsband → **Fitnessstudio**; nu
 | barbell-push-press | Push Press mit Langhantel | gym | Langhantel | Vordere Schulter |
 
 
-## Übungsliste 2026-11 – 271 neue Übungen (Fassung 2026-11-01-1)
+## Übungsliste 2026-11 – 271 neue Übungen (Fassung 2026-11-01-2)
 
-Eigene Namen, Muskeln und Posen; Figuren im BLOC-Stil neu gezeichnet. Trainingsart und Ausrüstung folgen derselben Regel wie oben. Die Schwierigkeit (leicht / mittel / schwer) steht in `EX_LEVEL` und ist im Filter wählbar (Mehrfachwahl).
+Eigene Namen, Muskeln und Posen; Figuren im BLOC-Stil neu gezeichnet. Trainingsart und Ausrüstung folgen derselben Regel wie oben. Die Schwierigkeit (leicht / mittel / schwer) steht in `EX_LEVEL` und ist im Filter wählbar (Mehrfachwahl). Muskeln: Haupt- und Hilfsmuskeln wie in `EX_MUSCLES` (Körperkarte), nach Prüfung durch den Sportwissenschaftler.
 
 ### Fitnessstudio (150)
 
-| ID | Name | Ausrüstung | Schwierigkeit | Hauptmuskel |
-|---|---|---|---|---|
-| sumo-deadlift | Sumo-Kreuzheben | Langhantel | mittel | Gesäß, Adduktoren, Oberschenkel vorn, Rückenstrecker |
-| trap-bar-deadlift | Kreuzheben (Trap-Bar) | Trap-Bar | mittel | Oberschenkel vorn, Gesäß, Rückenstrecker |
-| rack-pull | Rack Pull | Langhantel (Rack) | mittel | Rückenstrecker, Gesäß, Trapez, Unterarme |
-| overhead-squat | Überkopf-Kniebeuge | Langhantel | schwer | Oberschenkel vorn, Gesäß, Rumpf, Schultern |
-| reverse-hyperextension | Reverse Hyperextension | Bank oder Gerät | mittel | Gesäß, Rückenstrecker |
-| cable-hip-abduction | Beinabspreizen (Kabelzug) | Kabelzug | leicht | Seitliches Gesäß |
-| cable-hip-adduction | Beinanführen (Kabelzug) | Kabelzug | leicht | Adduktoren |
-| band-lateral-walk | Seitschritt (Band) | Band | leicht | Seitliches Gesäß |
-| barbell-lunge | Ausfallschritt (Langhantel) | Langhantel | mittel | Oberschenkel vorn, Gesäß |
-| power-clean | Power Clean | Langhantel | schwer | Gesäß, Oberschenkel hinten, Oberer Rücken, Schultern |
-| clean-and-press | Clean and Press | Langhantel | schwer | Schultern, Gesäß, Oberschenkel, Rücken |
-| decline-bench-press | Negativbankdrücken (Langhantel) | Langhantel | mittel | Untere Brust, Trizeps, Vordere Schulter |
-| incline-bench-press | Schrägbankdrücken (Langhantel) | Langhantel | mittel | Obere Brust, Vordere Schulter, Trizeps |
-| close-grip-bench-press | Enges Bankdrücken (Langhantel) | Langhantel | mittel | Trizeps, Brust, Vordere Schulter |
-| decline-db-fly | Negativ-Fliegende (Kurzhantel) | Kurzhantel | mittel | Untere Brust |
-| barbell-front-raise | Frontheben (Langhantel) | Langhantel | leicht | Vordere Schulter |
-| rear-delt-row | Rudern zur hinteren Schulter | Kurzhantel | leicht | Hintere Schulter, Oberer Rücken |
-| side-lying-external-rotation | Außenrotation in Seitenlage | Kurzhantel | leicht | Rotatorenmanschette |
-| cable-external-rotation | Außenrotation (Kabelzug) | Kabelzug | leicht | Rotatorenmanschette |
-| cable-internal-rotation | Innenrotation (Kabelzug) | Kabelzug | leicht | Rotatorenmanschette (Innenrotatoren) |
-| underhand-barbell-row | Vorgebeugtes Rudern, Untergriff (Langhantel) | Langhantel | mittel | Breiter Rückenmuskel, Bizeps, Unterer Rücken |
-| single-arm-lat-pulldown | Einarmiges Latziehen | Kabelzug | leicht | Breiter Rückenmuskel, Bizeps |
-| drag-curl | Drag Curl (Ellbogen zurück) | Langhantel | mittel | Bizeps |
-| reverse-preacher-curl | Reverse Preacher Curl | Langhantel | mittel | Bizeps, Unterarme |
-| incline-hammer-curl | Schrägbank-Hammercurl | Kurzhantel | leicht | Bizeps |
-| db-triceps-kickback | Trizeps-Kickback (Kurzhantel) | Kurzhantel | leicht | Trizeps |
-| reverse-wrist-curl | Handgelenkstrecken im Obergriff | Kurzhantel | leicht | Unterarme (Handstrecker) |
-| decline-sit-up | Sit-up auf der Negativbank | Bank | mittel | Gerader Bauch, Hüftbeuger |
-| db-side-bend | Seitbeugen (Kurzhantel) | Kurzhantel | leicht | Schräge Bauchmuskeln |
-| turkish-get-up | Turkish Get-up | Kettlebell | schwer | Schultern, Rumpf, Gesäß |
-| kb-windmill | Kettlebell Windmill | Kettlebell | schwer | Schräge Bauchmuskeln, Gesäß, Oberschenkel hinten, Schultern |
-| kb-snatch | Kettlebell Snatch | Kettlebell | schwer | Gesäß, Oberschenkel hinten, Schultern |
-| kb-press | Einarmiges Kettlebell-Drücken | Kettlebell | leicht | Vordere Schulter, Trizeps, Rumpf |
-| kb-sumo-high-pull | Sumo-Kreuzheben mit Zug zum Kinn (Kettlebell) | Kettlebell | mittel | Gesäß, Oberer Rücken, Schultern |
-| kb-figure-8 | Kettlebell Figure 8 | Kettlebell | mittel | Rumpf, Gesäß, Unterarme |
-| kb-halo | Kettlebell Halo | Kettlebell | leicht | Schultern, Rumpf |
-| incline-db-fly | Schrägbank-Fliegende (Kurzhantel) | Kurzhantel | mittel | Obere Brust, Vordere Schulter |
-| db-push-up | Liegestütz auf Kurzhanteln | Kurzhantel | mittel | Brust, Trizeps, Unterarme |
-| standing-cable-chest-press | Brustdrücken im Stand (Kabelzug) | Kabelzug | leicht | Brust, Trizeps, Vordere Schulter |
-| pendlay-row | Pendlay-Rudern | Langhantel | schwer | Breiter Rückenmuskel, Oberer Rücken, Rückenstrecker |
-| cable-reverse-fly | Reverse Fly (Kabelzug) | Kabelzug | leicht | Hintere Schulter, Oberer Rücken |
-| kb-deadlift | Kreuzheben (Kettlebell) | Kettlebell | leicht | Gesäß, Oberschenkel hinten, Rückenstrecker |
-| seated-barbell-shoulder-press | Sitzendes Schulterdrücken (Langhantel) | Langhantel | mittel | Vordere Schulter, Trizeps |
-| landmine-press | Landmine Press | Langhantel | leicht | Vordere Schulter, Obere Brust, Rumpf |
-| cable-front-raise | Frontheben (Kabelzug) | Kabelzug | leicht | Vordere Schulter |
-| seated-lateral-raise | Sitzendes Seitheben | Kurzhantel | leicht | Seitliche Schulter |
-| plate-front-raise | Frontheben (Hantelscheibe) | Hantelscheibe | leicht | Vordere Schulter |
-| cable-upright-row | Aufrechtes Rudern (Kabelzug) | Kabelzug | mittel | Seitliche Schulter, Trapez |
-| ez-curl | Bizepscurl (SZ-Stange) | SZ-Stange | leicht | Bizeps |
-| ez-reverse-curl | Reverse Curl (SZ-Stange) | SZ-Stange | leicht | Bizeps, Unterarme |
-| cable-hammer-curl | Hammercurl (Kabelzug) | Kabelzug | leicht | Bizeps |
-| db-bulgarian-split-squat | Bulgarische Kniebeuge (Kurzhantel) | Kurzhantel | mittel | Oberschenkel vorn, Gesäß |
-| db-walking-lunge | Ausfallschritt gehend (Kurzhantel) | Kurzhantel | leicht | Oberschenkel vorn, Gesäß |
-| barbell-step-up | Step-up (Langhantel) | Langhantel | mittel | Oberschenkel vorn, Gesäß |
-| kb-front-squat | Frontkniebeuge (Kettlebell) | Kettlebell | leicht | Oberschenkel vorn, Gesäß, Rumpf |
-| single-leg-hip-thrust | Einbeiniger Hip Thrust | Bank | mittel | Gesäß, Oberschenkel hinten |
-| barbell-glute-bridge | Glute Bridge (Langhantel) | Langhantel | mittel | Gesäß, Oberschenkel hinten |
-| db-calf-raise | Wadenheben (Kurzhantel) | Kurzhantel | leicht | Waden |
-| weighted-russian-twist | Ukraine Twist (Kettlebell) | Kettlebell | mittel | Schräge Bauchmuskeln, Gerader Bauch |
-| kb-one-arm-swing | Einarmiger Kettlebell-Swing | Kettlebell | mittel | Gesäß, Oberschenkel hinten, Rumpf |
-| db-neutral-grip-press | Bankdrücken mit Kurzhanteln im Hammergriff | Kurzhantel | leicht | Brust, Trizeps, Vordere Schulter |
-| db-incline-neutral-press | Schrägbankdrücken im Hammergriff | Kurzhantel | leicht | Obere Brust, Vordere Schulter, Trizeps |
-| db-one-arm-bench-press | Einarmiges Bankdrücken (Kurzhantel) | Kurzhantel | mittel | Brust, Trizeps, Schräge Bauchmuskeln |
-| db-lying-one-arm-triceps-extension | Einarmiges Trizepsstrecken liegend | Kurzhantel | mittel | Trizeps |
-| db-incline-triceps-extension | Trizepsstrecken (Schrägbank) | Kurzhantel | mittel | Trizeps (langer Kopf) |
-| db-one-arm-triceps-extension | Einarmiges Trizepsstrecken über Kopf | Kurzhantel | leicht | Trizeps (langer Kopf) |
-| db-one-arm-curl | Einarmiger Kurzhantelcurl | Kurzhantel | leicht | Bizeps |
-| db-reverse-curl | Reverse Curl (Kurzhantel) | Kurzhantel | leicht | Bizeps, Unterarme |
-| db-seated-hammer-curl | Sitzender Hammercurl | Kurzhantel | leicht | Bizeps |
-| db-seated-curl | Sitzender Kurzhantelcurl | Kurzhantel | leicht | Bizeps |
-| db-one-arm-preacher-curl | Einarmiger Preacher Curl (Kurzhantel) | Kurzhantel | mittel | Bizeps (unterer Anteil) |
-| db-front-raise-alternating | Frontheben im Wechsel | Kurzhantel | leicht | Vordere Schulter |
-| db-front-raise-overhead | Frontheben bis über den Kopf | Kurzhantel | mittel | Vordere Schulter, Trapez |
-| db-lateral-to-front-raise | Seitheben mit Frontheben | Kurzhantel | mittel | Seitliche und Vordere Schulter |
-| db-full-can-lateral-raise | Seitheben mit Daumen oben | Kurzhantel | leicht | Seitliche Schulter, Obergrätenmuskel |
-| db-one-arm-lateral-raise-supported | Einarmiges Seitheben mit Stütze | Kurzhantel | leicht | Seitliche Schulter |
-| db-prone-rear-raise | Rear Raise in Bauchlage | Kurzhantel | mittel | Hintere Schulter, Oberer Rücken |
-| db-w-press | W-Press | Kurzhantel | mittel | Schultern, Trizeps |
-| db-one-arm-shoulder-press | Einarmiges Schulterdrücken (Kurzhantel) | Kurzhantel | leicht | Vordere Schulter, Trizeps, Rumpf |
-| db-alternating-press | Schulterdrücken im Wechsel | Kurzhantel | leicht | Vordere Schulter, Trizeps |
-| db-palms-in-press | Schulterdrücken im Hammergriff | Kurzhantel | leicht | Vordere Schulter, Trizeps |
-| db-upright-row | Aufrechtes Rudern (Kurzhantel) | Kurzhantel | mittel | Seitliche Schulter, Trapez |
-| db-one-arm-upright-row | Einarmiges aufrechtes Rudern | Kurzhantel | mittel | Seitliche Schulter, Trapez |
-| db-incline-shrug | Schulterheben (Schrägbank) | Kurzhantel | leicht | Trapez, Oberer Rücken |
-| db-straight-arm-pullover | Pullover mit gestreckten Armen | Kurzhantel | mittel | Breiter Rückenmuskel, Brust |
-| db-squat | Kniebeuge (Kurzhantel) | Kurzhantel | mittel | Oberschenkel vorn, Gesäß |
-| db-box-squat | Kniebeuge zur Bank (Kurzhantel) | Kurzhantel | mittel | Oberschenkel vorn, Gesäß |
-| db-lunge | Ausfallschritt (Kurzhantel) | Kurzhantel | mittel | Oberschenkel vorn, Gesäß |
-| db-single-leg-squat | Einbeinige Kniebeuge (Kurzhantel) | Kurzhantel | schwer | Oberschenkel vorn, Gesäß |
-| db-plyo-squat | Sprungkniebeuge (Kurzhantel) | Kurzhantel | schwer | Oberschenkel vorn, Gesäß, Waden |
-| db-lying-leg-curl | Beinbeugen liegend (Kurzhantel) | Kurzhantel | mittel | Oberschenkel hinten |
-| db-seated-calf-raise | Sitzendes einbeiniges Wadenheben | Kurzhantel | leicht | Waden (Schollenmuskel) |
-| db-wrist-curl-one-arm | Einarmiger Handgelenkcurl | Kurzhantel | leicht | Unterarme (Handbeuger) |
-| db-wrist-curl-hammer | Handgelenkcurl im Hammergriff | Kurzhantel | leicht | Unterarme (Speichenseite) |
-| cable-shrug | Schulterheben (Kabelzug) | Kabelzug | leicht | Trapez, Oberer Rücken |
-| cable-side-bend | Seitbeugen (Kabelzug) | Kabelzug | leicht | Schräge Bauchmuskeln |
-| cable-standing-row | Rudern im Stand (Kabelzug) | Kabelzug | leicht | Breiter Rückenmuskel, Oberer Rücken, Bizeps |
-| cable-rear-delt-row | Rudern zur hinteren Schulter (Kabelzug) | Kabelzug | leicht | Hintere Schulter, Oberer Rücken |
-| cable-lying-fly | Fliegende liegend (Kabelzug) | Kabelzug | leicht | Brust, Vordere Schulter |
-| cable-lying-triceps-extension | Trizepsstrecken liegend (Kabelzug) | Kabelzug | leicht | Trizeps |
-| cable-incline-fly | Schrägbank-Fliegende (Kabelzug) | Kabelzug | leicht | Obere Brust, Vordere Schulter |
-| cable-incline-press | Schrägbankdrücken (Kabelzug) | Kabelzug | mittel | Obere Brust, Vordere Schulter, Trizeps |
-| cable-lying-curl | Bizepscurl liegend (Kabelzug) | Kabelzug | leicht | Bizeps |
-| cable-reverse-curl | Reverse Curl (Kabelzug) | Kabelzug | leicht | Bizeps, Unterarme |
-| cable-wrist-curl | Handgelenkcurl (Kabelzug) | Kabelzug | leicht | Unterarme (Handbeuger) |
-| cable-standing-twist-row | Rudern mit Rumpfdrehung (Kabelzug) | Kabelzug | mittel | Breiter Rückenmuskel, Schräge Bauchmuskeln |
-| cable-single-arm-bent-row | Vorgebeugtes einarmiges Rudern (Kabelzug) | Kabelzug | mittel | Breiter Rückenmuskel, Oberer Rücken |
-| cable-single-arm-shoulder-press | Einarmiges Schulterdrücken (Kabelzug) | Kabelzug | mittel | Vordere Schulter, Trizeps, Rumpf |
-| cable-decline-fly | Fliegende von oben nach unten (Kabelzug) | Kabelzug | leicht | Untere Brust, Vordere Schulter |
-| glute-ham-raise | Gesäß-Beinbeuger-Heben | Maschine | schwer | Oberschenkel hinten, Gesäß, Rückenstrecker |
-| sled-push | Schlitten schieben | Schlitten | mittel | Oberschenkel vorn, Gesäß, Waden |
-| suitcase-carry | Einarm-Tragen (Koffer) | Kurzhantel | leicht | Schräge Bauchmuskeln, Unterarme, Trapez |
-| landmine-row | Landmine-Rudern | Langhantel (Landmine) | mittel | Breiter Rückenmuskel, Oberer Rücken |
-| single-arm-db-snatch | Einarmiges Reißen (Kurzhantel) | Kurzhantel | schwer | Gesäß, Schultern, Oberschenkel hinten |
-| band-pull-apart | Band auseinanderziehen | Band | leicht | Hintere Schulter, Oberer Rücken |
-| goblet-reverse-lunge | Ausfallschritt rückwärts mit Hantel vor der Brust | Kurzhantel | mittel | Oberschenkel vorn, Gesäß |
-| supine-db-curl | Curl liegend auf der Bank | Kurzhantel, Bank | mittel | Bizeps |
-| overhead-cable-curl | Bizepscurl über Kopf (Kabelzug) | Kabelzug | mittel | Bizeps |
-| weighted-pull-up | Klimmzug mit Zusatzgewicht | Stange, Kettlebell oder Kurzhantel | schwer | Breiter Rückenmuskel, Bizeps |
-| weighted-dip | Dip mit Zusatzgewicht | Dip-Barren, Kettlebell oder Kurzhantel | schwer | Trizeps, Brust |
-| standing-leg-curl-band | Beinbeugen im Stand (Band) | Band | leicht | Oberschenkel hinten |
-| band-hip-adduction | Beinanführen im Stand (Band) | Band | leicht | Adduktoren |
-| db-single-leg-rdl | Einbeiniges Kreuzheben (Kurzhantel) | Kurzhantel | mittel | Gesäß, Oberschenkel hinten |
-| b-stance-rdl | Rumänisches Kreuzheben (B-Stance) | Kurzhantel | mittel | Oberschenkel hinten, Gesäß |
-| suitcase-deadlift | Koffer-Kreuzheben | Kurzhantel oder Kettlebell | mittel | Gesäß, Rücken, Rumpf |
-| deficit-deadlift | Kreuzheben aus dem Defizit | Langhantel (Plattform) | schwer | Gesäß, Rücken |
-| band-deadlift | Kreuzheben (Band) | Band | leicht | Gesäß, Oberschenkel hinten |
-| barbell-box-squat | Kniebeuge zur Bank (Langhantel) | Langhantel, Bank | mittel | Oberschenkel vorn, Gesäß |
-| barbell-shrug | Schulterheben (Langhantel) | Langhantel | leicht | Trapez |
-| yates-row | Yates-Rudern | Langhantel | mittel | Breiter Rückenmuskel, Trapez |
-| kroc-row | Kroc-Rudern | Kurzhantel, Bank | schwer | Breiter Rückenmuskel, Unterarme |
-| barbell-thruster | Thruster (Langhantel) | Langhantel | schwer | Beine, Schultern |
-| hang-clean | Umsetzen aus dem Hang | Langhantel | schwer | Beine, Rücken, Schultern |
-| barbell-jammer | Barbell Jammer | Langhantel (Landmine) | mittel | Schultern, Beine, Rumpf |
-| seated-cable-chest-press | Brustdrücken sitzend (Kabelzug) | Kabelzug, Bank | leicht | Brust, Trizeps |
-| rotational-uppercut | Drehender Aufwärtshaken | Kurzhantel | mittel | Rumpf, Schultern |
-| rotational-overhead-press | Drehendes Schulterdrücken | Kurzhantel | mittel | Schultern, Rumpf |
-| v-raise | V-Heben | Kurzhantel | leicht | Schultern |
-| diagonal-raise | Diagonales Heben | Kurzhantel | leicht | Schultern |
-| kb-bottoms-up-press | Bottoms-up-Drücken | Kettlebell | mittel | Schultern, Unterarme |
-| kb-half-turkish-get-up | Halbes Turkish Get-up | Kettlebell | mittel | Rumpf, Schultern |
-| kb-overhead-squat | Einarmige Überkopf-Kniebeuge (Kettlebell) | Kettlebell | schwer | Beine, Schultern, Rumpf |
-| kb-double-push-press | Doppel-Push-Press | Kettlebell | mittel | Beine, Schultern |
-| waiters-carry | Kellner-Tragen | Kettlebell | mittel | Schultern, Rumpf |
-| band-external-rotation | Außenrotation (Band) | Band | leicht | Rotatorenmanschette |
-| band-internal-rotation | Innenrotation (Band) | Band | leicht | Rotatorenmanschette |
-| band-external-rotation-90 | Außenrotation mit Band, Arm 90° | Band | mittel | Rotatorenmanschette |
-| side-lying-internal-rotation | Innenrotation in Seitenlage | Kurzhantel (leicht) | leicht | Rotatorenmanschette (Innenrotatoren) |
-| scaption-raise | Heben in der Schulterblattebene | Kurzhantel (leicht) | leicht | Schultern, Rotatorenmanschette |
-| band-ankle-dorsiflexion | Fußheben (Band) | Band | leicht | Vorderer Schienbeinmuskel |
+| ID | Name | Ausrüstung | Schwierigkeit | Hauptmuskel | Hilfsmuskel |
+|---|---|---|---|---|---|
+| sumo-deadlift | Sumo-Kreuzheben | Langhantel | mittel | Gesäß, Adduktoren | Oberschenkel vorn, Oberschenkel hinten, Rückenstrecker |
+| trap-bar-deadlift | Kreuzheben (Trap-Bar) | Trap-Bar | mittel | Oberschenkel vorn, Gesäß | Oberschenkel hinten, Rückenstrecker, Trapez, Unterarme |
+| rack-pull | Rack Pull | Langhantel (Rack) | mittel | Rückenstrecker, Gesäß, Oberer Trapez | Oberschenkel hinten, Unterarme |
+| overhead-squat | Überkopf-Kniebeuge | Langhantel | schwer | Oberschenkel vorn, Gesäß | Rumpf, Schultern, Rückenstrecker |
+| reverse-hyperextension | Reverse Hyperextension | Bank oder Gerät | mittel | Gesäß, Rückenstrecker | Oberschenkel hinten |
+| cable-hip-abduction | Beinabspreizen (Kabelzug) | Kabelzug | leicht | Seitliches Gesäß | Gesäß |
+| cable-hip-adduction | Beinanführen (Kabelzug) | Kabelzug | leicht | Adduktoren | – |
+| band-lateral-walk | Seitschritt (Band) | Band | leicht | Seitliches Gesäß | Gesäß |
+| barbell-lunge | Ausfallschritt (Langhantel) | Langhantel | mittel | Oberschenkel vorn, Gesäß | Oberschenkel hinten, Adduktoren, Rumpf |
+| power-clean | Power Clean | Langhantel | schwer | Gesäß, Oberschenkel vorn, Rückenstrecker | Oberschenkel hinten, Oberer Trapez, Schultern, Unterarme |
+| clean-and-press | Clean and Press | Langhantel | schwer | Schultern, Gesäß, Oberschenkel vorn | Trizeps, Rückenstrecker, Oberer Trapez |
+| decline-bench-press | Negativbankdrücken (Langhantel) | Langhantel | mittel | Untere Brust | Trizeps, Vordere Schulter |
+| incline-bench-press | Schrägbankdrücken (Langhantel) | Langhantel | mittel | Obere Brust, Brust | Vordere Schulter, Trizeps |
+| close-grip-bench-press | Enges Bankdrücken (Langhantel) | Langhantel | mittel | Trizeps, Brust | Vordere Schulter |
+| decline-db-fly | Negativ-Fliegende (Kurzhantel) | Kurzhantel | mittel | Untere Brust | Trizeps |
+| barbell-front-raise | Frontheben (Langhantel) | Langhantel | leicht | Vordere Schulter | Oberer Trapez |
+| rear-delt-row | Rudern zur hinteren Schulter | Kurzhantel | leicht | Hintere Schulter | Oberer Rücken |
+| side-lying-external-rotation | Außenrotation in Seitenlage | Kurzhantel | leicht | Rotatorenmanschette | Hintere Schulter |
+| cable-external-rotation | Außenrotation (Kabelzug) | Kabelzug | leicht | Rotatorenmanschette | Hintere Schulter |
+| cable-internal-rotation | Innenrotation (Kabelzug) | Kabelzug | leicht | Vordere Schulter | Brust |
+| underhand-barbell-row | Vorgebeugtes Rudern, Untergriff (Langhantel) | Langhantel | mittel | Breiter Rückenmuskel, Oberer Rücken | Bizeps, Unterer Rücken |
+| single-arm-lat-pulldown | Einarmiges Latziehen | Kabelzug | leicht | Breiter Rückenmuskel | Bizeps |
+| drag-curl | Drag Curl (Ellbogen zurück) | Langhantel | mittel | Bizeps | Unterarme |
+| reverse-preacher-curl | Reverse Preacher Curl | Langhantel | mittel | Bizeps, Unterarme | – |
+| incline-hammer-curl | Schrägbank-Hammercurl | Kurzhantel | leicht | Bizeps, Unterarme | – |
+| db-triceps-kickback | Trizeps-Kickback (Kurzhantel) | Kurzhantel | leicht | Trizeps | Hintere Schulter |
+| reverse-wrist-curl | Handgelenkstrecken im Obergriff | Kurzhantel | leicht | Unterarme | – |
+| decline-sit-up | Sit-up auf der Negativbank | Bank | mittel | Gerader Bauch, Hüftbeuger | Schräge Bauchmuskeln |
+| db-side-bend | Seitbeugen (Kurzhantel) | Kurzhantel | leicht | Schräge Bauchmuskeln | Unterer Rücken |
+| turkish-get-up | Turkish Get-up | Kettlebell | schwer | Schultern, Rumpf, Gesäß | Oberschenkel vorn, Schräge Bauchmuskeln, Trizeps |
+| kb-windmill | Kettlebell Windmill | Kettlebell | schwer | Schräge Bauchmuskeln, Oberschenkel hinten, Gesäß | Schultern |
+| kb-snatch | Kettlebell Snatch | Kettlebell | schwer | Gesäß, Oberschenkel hinten, Schultern | Rückenstrecker, Oberer Trapez, Unterarme, Rumpf |
+| kb-press | Einarmiges Kettlebell-Drücken | Kettlebell | leicht | Schultern, Trizeps | Rumpf |
+| kb-sumo-high-pull | Sumo-Kreuzheben mit Zug zum Kinn (Kettlebell) | Kettlebell | mittel | Gesäß, Oberer Trapez, Seitliche Schulter | Oberschenkel vorn, Bizeps |
+| kb-figure-8 | Kettlebell Figure 8 | Kettlebell | mittel | Rumpf | Gesäß, Unterarme |
+| kb-halo | Kettlebell Halo | Kettlebell | leicht | Schultern, Hintere Schulter | Rumpf, Trizeps |
+| incline-db-fly | Schrägbank-Fliegende (Kurzhantel) | Kurzhantel | mittel | Obere Brust | Vordere Schulter |
+| db-push-up | Liegestütz auf Kurzhanteln | Kurzhantel | mittel | Brust | Trizeps, Unterarme |
+| standing-cable-chest-press | Brustdrücken im Stand (Kabelzug) | Kabelzug | leicht | Brust | Trizeps, Vordere Schulter |
+| pendlay-row | Pendlay-Rudern | Langhantel | schwer | Breiter Rückenmuskel, Oberer Rücken | Rückenstrecker, Bizeps |
+| cable-reverse-fly | Reverse Fly (Kabelzug) | Kabelzug | leicht | Hintere Schulter | Oberer Rücken |
+| kb-deadlift | Kreuzheben (Kettlebell) | Kettlebell | leicht | Gesäß, Oberschenkel hinten | Rückenstrecker, Oberschenkel vorn, Unterarme |
+| seated-barbell-shoulder-press | Sitzendes Schulterdrücken (Langhantel) | Langhantel | mittel | Schultern, Trizeps | Rumpf |
+| landmine-press | Landmine Press | Langhantel | leicht | Vordere Schulter, Obere Brust | Trizeps, Rumpf |
+| cable-front-raise | Frontheben (Kabelzug) | Kabelzug | leicht | Vordere Schulter | Oberer Trapez |
+| seated-lateral-raise | Sitzendes Seitheben | Kurzhantel | leicht | Seitliche Schulter | Oberer Trapez |
+| plate-front-raise | Frontheben (Hantelscheibe) | Hantelscheibe | leicht | Vordere Schulter | Oberer Trapez |
+| cable-upright-row | Aufrechtes Rudern (Kabelzug) | Kabelzug | mittel | Seitliche Schulter, Oberer Trapez | Bizeps |
+| ez-curl | Bizepscurl (SZ-Stange) | SZ-Stange | leicht | Bizeps | Unterarme |
+| ez-reverse-curl | Reverse Curl (SZ-Stange) | SZ-Stange | leicht | Bizeps, Unterarme | – |
+| cable-hammer-curl | Hammercurl (Kabelzug) | Kabelzug | leicht | Bizeps, Unterarme | – |
+| db-bulgarian-split-squat | Bulgarische Kniebeuge (Kurzhantel) | Kurzhantel | mittel | Oberschenkel vorn, Gesäß | Hüftbeuger |
+| db-walking-lunge | Ausfallschritt gehend (Kurzhantel) | Kurzhantel | leicht | Oberschenkel vorn, Gesäß | Hüftbeuger |
+| barbell-step-up | Step-up (Langhantel) | Langhantel | mittel | Oberschenkel vorn, Gesäß | Hüftbeuger |
+| kb-front-squat | Frontkniebeuge (Kettlebell) | Kettlebell | leicht | Oberschenkel vorn, Gesäß | Rumpf |
+| single-leg-hip-thrust | Einbeiniger Hip Thrust | Bank | mittel | Gesäß | Oberschenkel hinten |
+| barbell-glute-bridge | Glute Bridge (Langhantel) | Langhantel | mittel | Gesäß | Oberschenkel hinten |
+| db-calf-raise | Wadenheben (Kurzhantel) | Kurzhantel | leicht | Waden | – |
+| weighted-russian-twist | Ukraine Twist (Kettlebell) | Kettlebell | mittel | Schräge Bauchmuskeln | Gerader Bauch |
+| kb-one-arm-swing | Einarmiger Kettlebell-Swing | Kettlebell | mittel | Gesäß, Oberschenkel hinten | Rückenstrecker, Rumpf, Unterarme |
+| db-neutral-grip-press | Bankdrücken mit Kurzhanteln im Hammergriff | Kurzhantel | leicht | Brust | Trizeps, Vordere Schulter |
+| db-incline-neutral-press | Schrägbankdrücken im Hammergriff | Kurzhantel | leicht | Obere Brust | Vordere Schulter, Trizeps |
+| db-one-arm-bench-press | Einarmiges Bankdrücken (Kurzhantel) | Kurzhantel | mittel | Brust | Trizeps, Schräge Bauchmuskeln |
+| db-lying-one-arm-triceps-extension | Einarmiges Trizepsstrecken liegend | Kurzhantel | mittel | Trizeps | Hintere Schulter |
+| db-incline-triceps-extension | Trizepsstrecken (Schrägbank) | Kurzhantel | mittel | Trizeps | Hintere Schulter |
+| db-one-arm-triceps-extension | Einarmiges Trizepsstrecken über Kopf | Kurzhantel | leicht | Trizeps | Hintere Schulter |
+| db-one-arm-curl | Einarmiger Kurzhantelcurl | Kurzhantel | leicht | Bizeps | Unterarme |
+| db-reverse-curl | Reverse Curl (Kurzhantel) | Kurzhantel | leicht | Bizeps, Unterarme | – |
+| db-seated-hammer-curl | Sitzender Hammercurl | Kurzhantel | leicht | Bizeps, Unterarme | – |
+| db-seated-curl | Sitzender Kurzhantelcurl | Kurzhantel | leicht | Bizeps | Unterarme |
+| db-one-arm-preacher-curl | Einarmiger Preacher Curl (Kurzhantel) | Kurzhantel | mittel | Bizeps | Unterarme |
+| db-front-raise-alternating | Frontheben im Wechsel | Kurzhantel | leicht | Vordere Schulter | Oberer Trapez |
+| db-front-raise-overhead | Frontheben bis über den Kopf | Kurzhantel | mittel | Vordere Schulter | Oberer Trapez |
+| db-lateral-to-front-raise | Seitheben mit Frontheben | Kurzhantel | mittel | Seitliche Schulter | Vordere Schulter |
+| db-full-can-lateral-raise | Seitheben mit Daumen oben | Kurzhantel | leicht | Seitliche Schulter | Rotatorenmanschette |
+| db-one-arm-lateral-raise-supported | Einarmiges Seitheben mit Stütze | Kurzhantel | leicht | Seitliche Schulter | Oberer Trapez |
+| db-prone-rear-raise | Rear Raise in Bauchlage | Kurzhantel | mittel | Hintere Schulter | Oberer Rücken |
+| db-w-press | W-Press | Kurzhantel | mittel | Schultern | Trizeps |
+| db-one-arm-shoulder-press | Einarmiges Schulterdrücken (Kurzhantel) | Kurzhantel | leicht | Schultern, Trizeps | Rumpf |
+| db-alternating-press | Schulterdrücken im Wechsel | Kurzhantel | leicht | Schultern, Trizeps | Rumpf |
+| db-palms-in-press | Schulterdrücken im Hammergriff | Kurzhantel | leicht | Schultern, Trizeps | Rumpf |
+| db-upright-row | Aufrechtes Rudern (Kurzhantel) | Kurzhantel | mittel | Seitliche Schulter, Oberer Trapez | Bizeps |
+| db-one-arm-upright-row | Einarmiges aufrechtes Rudern | Kurzhantel | mittel | Seitliche Schulter, Oberer Trapez | Bizeps |
+| db-incline-shrug | Schulterheben (Schrägbank) | Kurzhantel | leicht | Oberer Trapez | Unterarme |
+| db-straight-arm-pullover | Pullover mit gestreckten Armen | Kurzhantel | mittel | Breiter Rückenmuskel | Brust, Trizeps |
+| db-squat | Kniebeuge (Kurzhantel) | Kurzhantel | mittel | Oberschenkel vorn, Gesäß | Hüftbeuger |
+| db-box-squat | Kniebeuge zur Bank (Kurzhantel) | Kurzhantel | mittel | Oberschenkel vorn, Gesäß | Hüftbeuger |
+| db-lunge | Ausfallschritt (Kurzhantel) | Kurzhantel | mittel | Oberschenkel vorn, Gesäß | Hüftbeuger |
+| db-single-leg-squat | Einbeinige Kniebeuge (Kurzhantel) | Kurzhantel | schwer | Oberschenkel vorn, Gesäß | Hüftbeuger |
+| db-plyo-squat | Sprungkniebeuge (Kurzhantel) | Kurzhantel | schwer | Oberschenkel vorn | Gesäß, Waden |
+| db-lying-leg-curl | Beinbeugen liegend (Kurzhantel) | Kurzhantel | mittel | Oberschenkel hinten | Gesäß |
+| db-seated-calf-raise | Sitzendes einbeiniges Wadenheben | Kurzhantel | leicht | Waden (Schollenmuskel) | – |
+| db-wrist-curl-one-arm | Einarmiger Handgelenkcurl | Kurzhantel | leicht | Unterarme | – |
+| db-wrist-curl-hammer | Handgelenkcurl im Hammergriff | Kurzhantel | leicht | Unterarme | – |
+| cable-shrug | Schulterheben (Kabelzug) | Kabelzug | leicht | Oberer Trapez | Unterarme |
+| cable-side-bend | Seitbeugen (Kabelzug) | Kabelzug | leicht | Schräge Bauchmuskeln | Unterer Rücken |
+| cable-standing-row | Rudern im Stand (Kabelzug) | Kabelzug | leicht | Breiter Rückenmuskel, Oberer Rücken | Bizeps |
+| cable-rear-delt-row | Rudern zur hinteren Schulter (Kabelzug) | Kabelzug | leicht | Hintere Schulter | Oberer Rücken |
+| cable-lying-fly | Fliegende liegend (Kabelzug) | Kabelzug | leicht | Brust | Vordere Schulter |
+| cable-lying-triceps-extension | Trizepsstrecken liegend (Kabelzug) | Kabelzug | leicht | Trizeps | Vordere Schulter |
+| cable-incline-fly | Schrägbank-Fliegende (Kabelzug) | Kabelzug | leicht | Obere Brust | Vordere Schulter |
+| cable-incline-press | Schrägbankdrücken (Kabelzug) | Kabelzug | mittel | Obere Brust | Vordere Schulter, Trizeps |
+| cable-lying-curl | Bizepscurl liegend (Kabelzug) | Kabelzug | leicht | Bizeps | Unterarme |
+| cable-reverse-curl | Reverse Curl (Kabelzug) | Kabelzug | leicht | Bizeps, Unterarme | – |
+| cable-wrist-curl | Handgelenkcurl (Kabelzug) | Kabelzug | leicht | Unterarme | – |
+| cable-standing-twist-row | Rudern mit Rumpfdrehung (Kabelzug) | Kabelzug | mittel | Breiter Rückenmuskel, Oberer Rücken | Bizeps |
+| cable-single-arm-bent-row | Vorgebeugtes einarmiges Rudern (Kabelzug) | Kabelzug | mittel | Breiter Rückenmuskel, Oberer Rücken | Bizeps, Rückenstrecker |
+| cable-single-arm-shoulder-press | Einarmiges Schulterdrücken (Kabelzug) | Kabelzug | mittel | Schultern, Trizeps | Rumpf |
+| cable-decline-fly | Fliegende von oben nach unten (Kabelzug) | Kabelzug | leicht | Untere Brust | Vordere Schulter |
+| glute-ham-raise | Gesäß-Beinbeuger-Heben | Maschine | schwer | Oberschenkel hinten | Gesäß, Rückenstrecker |
+| sled-push | Schlitten schieben | Schlitten | mittel | Oberschenkel vorn, Gesäß, Waden | Rumpf, Schultern |
+| suitcase-carry | Einarm-Tragen (Koffer) | Kurzhantel | leicht | Schräge Bauchmuskeln | Unterarme, Trapez |
+| landmine-row | Landmine-Rudern | Langhantel (Landmine) | mittel | Breiter Rückenmuskel, Oberer Rücken | Bizeps, Rückenstrecker |
+| single-arm-db-snatch | Einarmiges Reißen (Kurzhantel) | Kurzhantel | schwer | Gesäß, Oberschenkel hinten | Schultern, Oberer Trapez |
+| band-pull-apart | Band auseinanderziehen | Band | leicht | Hintere Schulter, Mittlerer Trapez | – |
+| goblet-reverse-lunge | Ausfallschritt rückwärts mit Hantel vor der Brust | Kurzhantel | mittel | Oberschenkel vorn, Gesäß | Hüftbeuger |
+| supine-db-curl | Curl liegend auf der Bank | Kurzhantel, Bank | mittel | Bizeps | Unterarme |
+| overhead-cable-curl | Bizepscurl über Kopf (Kabelzug) | Kabelzug | mittel | Bizeps | Unterarme |
+| weighted-pull-up | Klimmzug mit Zusatzgewicht | Stange, Kettlebell oder Kurzhantel | schwer | Breiter Rückenmuskel | Bizeps |
+| weighted-dip | Dip mit Zusatzgewicht | Dip-Barren, Kettlebell oder Kurzhantel | schwer | Trizeps | Brust |
+| band-standing-leg-curl | Beinbeugen im Stand (Band) | Band | leicht | Oberschenkel hinten | Gesäß |
+| band-hip-adduction | Beinanführen im Stand (Band) | Band | leicht | Adduktoren | – |
+| db-single-leg-rdl | Einbeiniges Kreuzheben (Kurzhantel) | Kurzhantel | mittel | Gesäß | Oberschenkel hinten |
+| b-stance-rdl | Rumänisches Kreuzheben (B-Stance) | Kurzhantel | mittel | Oberschenkel hinten | Gesäß |
+| suitcase-deadlift | Koffer-Kreuzheben | Kurzhantel oder Kettlebell | mittel | Gesäß, Oberschenkel hinten | Rückenstrecker, Unterarme, Schräge Bauchmuskeln |
+| deficit-deadlift | Kreuzheben aus dem Defizit | Langhantel (Plattform) | schwer | Gesäß, Oberschenkel hinten, Oberschenkel vorn | Rückenstrecker |
+| band-deadlift | Kreuzheben (Band) | Band | leicht | Gesäß | Oberschenkel hinten |
+| barbell-box-squat | Kniebeuge zur Bank (Langhantel) | Langhantel, Bank | mittel | Oberschenkel vorn, Gesäß | Hüftbeuger |
+| barbell-shrug | Schulterheben (Langhantel) | Langhantel | leicht | Oberer Trapez | Unterarme |
+| yates-row | Yates-Rudern | Langhantel | mittel | Breiter Rückenmuskel, Oberer Trapez | Bizeps |
+| kroc-row | Kroc-Rudern | Kurzhantel, Bank | schwer | Breiter Rückenmuskel, Oberer Rücken | Bizeps, Rückenstrecker |
+| barbell-thruster | Thruster (Langhantel) | Langhantel | schwer | Oberschenkel vorn, Gesäß, Schultern | Trizeps, Rumpf |
+| hang-clean | Umsetzen aus dem Hang | Langhantel | schwer | Gesäß, Oberschenkel hinten, Oberer Trapez | Rückenstrecker, Schultern, Unterarme |
+| barbell-jammer | Barbell Jammer | Langhantel (Landmine) | mittel | Schultern | Beine, Rumpf |
+| seated-cable-chest-press | Brustdrücken sitzend (Kabelzug) | Kabelzug, Bank | leicht | Brust | Trizeps |
+| rotational-uppercut | Drehender Aufwärtshaken | Kurzhantel | mittel | Rumpf | Schultern |
+| rotational-overhead-press | Drehendes Schulterdrücken | Kurzhantel | mittel | Schultern | Rumpf |
+| v-raise | V-Heben | Kurzhantel | leicht | Schultern | Oberer Trapez |
+| diagonal-raise | Diagonales Heben | Kurzhantel | leicht | Schultern | Oberer Trapez |
+| kb-bottoms-up-press | Bottoms-up-Drücken | Kettlebell | mittel | Schultern | Unterarme, Rumpf, Trizeps |
+| kb-half-turkish-get-up | Halbes Turkish Get-up | Kettlebell | mittel | Rumpf, Schultern | Gesäß |
+| kb-overhead-squat | Einarmige Überkopf-Kniebeuge (Kettlebell) | Kettlebell | schwer | Oberschenkel vorn, Gesäß | Schultern, Rumpf |
+| kb-double-push-press | Doppel-Push-Press | Kettlebell | mittel | Oberschenkel vorn, Schultern | Gesäß, Trizeps |
+| waiters-carry | Kellner-Tragen | Kettlebell | mittel | Schultern | Rumpf |
+| band-external-rotation | Außenrotation (Band) | Band | leicht | Rotatorenmanschette | Hintere Schulter |
+| band-internal-rotation | Innenrotation (Band) | Band | leicht | Vordere Schulter | Brust |
+| band-external-rotation-90 | Außenrotation mit Band, Arm 90° | Band | mittel | Rotatorenmanschette | Hintere Schulter |
+| side-lying-internal-rotation | Innenrotation in Seitenlage | Kurzhantel (leicht) | leicht | Vordere Schulter | Brust |
+| scaption-raise | Heben in der Schulterblattebene | Kurzhantel (leicht) | leicht | Schultern | Rotatorenmanschette |
+| band-ankle-dorsiflexion | Fußheben (Band) | Band | leicht | – | – |
 
 ### Calisthenic-Park (11)
 
-| ID | Name | Ausrüstung | Schwierigkeit | Hauptmuskel |
-|---|---|---|---|---|
-| chest-dip | Brust-Dips (Vorneigung) | Dip-Barren | schwer | Untere Brust, Trizeps, Vordere Schulter |
-| wide-grip-pull-up | Klimmzug weit | Stange | schwer | Breiter Rückenmuskel, Oberer Rücken, Bizeps |
-| hanging-leg-raise-twist | Hängendes Beinheben mit Drehung | Stange | schwer | Schräge Bauchmuskeln, Gerader Bauch |
-| archer-pull-up | Archer-Klimmzug | Stange | schwer | Breiter Rückenmuskel, Bizeps, Oberer Rücken |
-| tuck-front-lever-hold | Front Lever (Tuck) halten | Stange | schwer | Breiter Rückenmuskel, Gerader Bauch |
-| parallel-bar-knee-raise | Beinheben im Barrenstütz | Dip-Barren | leicht | Gerader Bauch, Hüftbeuger |
-| bodyweight-curl | Körpergewichts-Curl an der Stange | Stange | mittel | Bizeps |
-| active-hang | Aktiver Hang | Stange | leicht | Breiter Rückenmuskel, Schulterblattsenker |
-| chest-to-bar-pull-up | Klimmzug Brust zur Stange | Stange | schwer | Breiter Rückenmuskel, Oberer Rücken |
-| tuck-l-sit | L-Sit (Tuck) | Dip-Barren | mittel | Bauch, Hüftbeuger, Trizeps |
-| straight-bar-dip | Dip an der geraden Stange | Stange | schwer | Brust, Trizeps |
+| ID | Name | Ausrüstung | Schwierigkeit | Hauptmuskel | Hilfsmuskel |
+|---|---|---|---|---|---|
+| chest-dip | Brust-Dips (Vorneigung) | Dip-Barren | schwer | Brust, Trizeps | Vordere Schulter |
+| wide-grip-pull-up | Klimmzug weit | Stange | schwer | Breiter Rückenmuskel | Oberer Rücken, Bizeps |
+| hanging-leg-raise-twist | Hängendes Beinheben mit Drehung | Stange | schwer | Schräge Bauchmuskeln | Gerader Bauch |
+| archer-pull-up | Archer-Klimmzug | Stange | schwer | Breiter Rückenmuskel | Bizeps, Oberer Rücken |
+| tuck-front-lever-hold | Front Lever (Tuck) halten | Stange | schwer | Breiter Rückenmuskel, Gerader Bauch | Bizeps, Oberer Rücken |
+| parallel-bar-knee-raise | Beinheben im Barrenstütz | Dip-Barren | leicht | Gerader Bauch, Hüftbeuger | Schräge Bauchmuskeln |
+| bodyweight-curl | Körpergewichts-Curl an der Stange | Stange | mittel | Bizeps | Unterarme |
+| active-hang | Aktiver Hang | Stange | leicht | Unterarme, Breiter Rückenmuskel | Unterer Trapez |
+| chest-to-bar-pull-up | Klimmzug Brust zur Stange | Stange | schwer | Breiter Rückenmuskel | Oberer Rücken |
+| tuck-l-sit | L-Sit (Tuck) | Dip-Barren | mittel | Bauch | Hüftbeuger, Trizeps |
+| straight-bar-dip | Dip an der geraden Stange | Stange | schwer | Brust | Trizeps |
 
 ### Körpergewicht (84)
 
-| ID | Name | Ausrüstung | Schwierigkeit | Hauptmuskel |
-|---|---|---|---|---|
-| sissy-squat | Sissy Squat | Ohne Geräte (Festhalten) | schwer | Oberschenkel vorn (gerader Oberschenkelmuskel), Hüftbeuger |
-| curtsy-lunge | Curtsy Lunge | Ohne Geräte | mittel | Gesäß, Adduktoren, Oberschenkel vorn |
-| lateral-step-up | Seitliches Step-up | Ohne Geräte (Stufe oder Bank) | leicht | Seitliches Gesäß, Oberschenkel vorn |
-| box-jump | Box Jump | Ohne Geräte (Kasten oder Stufe) | mittel | Oberschenkel vorn, Gesäß, Waden |
-| lateral-box-jump | Seitlicher Box Jump | Ohne Geräte (Kasten oder Stufe) | schwer | Oberschenkel vorn, seitliches Gesäß, Waden |
-| donkey-calf-raise | Donkey Calf Raise | Ohne Geräte (Stufe, Stütze) | mittel | Waden |
-| side-lying-leg-raise | Seitliches Beinheben | Ohne Geräte | leicht | Seitliches Gesäß |
-| fire-hydrant | Fire Hydrant | Ohne Geräte | leicht | Seitliches Gesäß |
-| decline-push-up | Liegestütz (Füße erhöht) | Ohne Geräte (Stufe oder Bank) | mittel | Obere Brust, Vordere Schulter, Trizeps |
-| single-arm-push-up | Einarmiger Liegestütz | Ohne Geräte | schwer | Brust, Trizeps, Rumpf, Schräge Bauchmuskeln |
-| shoulder-tap-push-up | Liegestütz mit Schulterberührung | Ohne Geräte | mittel | Brust, Rumpf, Schultern |
-| spiderman-push-up | Spiderman Push-up | Ohne Geräte | mittel | Brust, Schräge Bauchmuskeln, Hüftbeuger |
-| handstand-push-up | Handstand Push-up | Ohne Geräte (Wand) | schwer | Schultern, Trizeps, Rumpf |
-| flutter-kicks | Flutter Kicks | Ohne Geräte | mittel | Gerader Bauch (unterer Anteil), Hüftbeuger |
-| scissor-kicks | Scissor Kicks | Ohne Geräte | mittel | Gerader Bauch (unterer Anteil), Adduktoren |
-| oblique-crunch | Seitlicher Crunch | Ohne Geräte | leicht | Schräge Bauchmuskeln |
-| heel-touches | Heel Touches (Fersenberühren) | Ohne Geräte | leicht | Schräge Bauchmuskeln |
-| reverse-plank | Reverse Plank | Ohne Geräte | mittel | Gesäß, Rückenstrecker, Hintere Schulter, Oberschenkel hinten, Trizeps |
-| plank-hip-dips | Plank Hip Dips | Ohne Geräte | mittel | Schräge Bauchmuskeln, Rumpf |
-| jump-rope | Seilspringen | Ohne Geräte (Springseil) | leicht | Waden, Schultern, Unterarme |
-| butt-kicks | Butt Kicks | Ohne Geräte | leicht | Oberschenkel hinten, Waden |
-| star-jumps | Star Jumps | Ohne Geräte | mittel | Waden, Schultern, Oberschenkel vorn, Gesäß |
-| squat-jacks | Squat Jacks | Ohne Geräte | mittel | Oberschenkel vorn, Gesäß, Adduktoren |
-| wide-push-up | Liegestütz mit weitem Griff | Ohne Geräte | leicht | Brust, Vordere Schulter, Trizeps |
-| push-up-rotation | Liegestütz mit Rotation | Ohne Geräte | mittel | Brust, Schräge Bauchmuskeln, Schultern |
-| hollow-rock | Hollow Rock | Ohne Geräte | schwer | Gerader Bauch, Hüftbeuger |
-| butterfly-sit-up | Butterfly Sit-up | Ohne Geräte | leicht | Gerader Bauch |
-| plank-jacks | Plank Jacks | Ohne Geräte | mittel | Rumpf, Schultern, Gesäß |
-| side-plank-hip-dip | Seitstütz mit Hüftsenken | Ohne Geräte | mittel | Schräge Bauchmuskeln |
-| side-plank-leg-raise | Seitstütz mit Beinheben | Ohne Geräte | mittel | Schräge Bauchmuskeln, Seitliches Gesäß |
-| twisting-sit-up | Sit-up mit Drehung | Ohne Geräte | leicht | Schräge Bauchmuskeln, Gerader Bauch |
-| cross-body-mountain-climbers | Mountain Climbers über Kreuz | Ohne Geräte | mittel | Rumpf, Hüftbeuger, Schultern |
-| broad-jump | Standweitsprung | Ohne Geräte | mittel | Oberschenkel vorn, Gesäß, Waden |
-| crab-walk | Krabbengang | Ohne Geräte | leicht | Trizeps, Gesäß, Hintere Schulter |
-| inchworm | Inchworm | Ohne Geräte | leicht | Oberschenkel hinten, Rumpf, Schultern |
-| lateral-shuffle | Seitlicher Shuffle | Ohne Geräte | leicht | Seitliches Gesäß, Oberschenkel vorn, Waden |
-| hamstring-walkout | Brücke mit Fersengang | Ohne Geräte | mittel | Oberschenkel hinten, Gesäß |
-| step-up | Step-up | Ohne Geräte (Stufe oder Bank) | leicht | Oberschenkel vorn, Gesäß |
-| chair-squat | Kniebeuge zum Stuhl | Ohne Geräte (Stuhl) | leicht | Oberschenkel vorn, Gesäß |
-| hindu-push-up | Hindu-Liegestütz | Ohne Geräte | mittel | Schultern, Brust, Trizeps, Rückenstrecker |
-| elevated-pike-push-up | Pike-Liegestütz mit erhöhten Füßen | Ohne Geräte (Stufe oder Bank) | schwer | Vordere Schulter, Trizeps |
-| boat-hold | Boot-Haltung | Ohne Geräte | mittel | Gerader Bauch, Hüftbeuger |
-| lunge-with-rotation | Ausfallschritt mit Rumpfdrehung | Ohne Geräte | leicht | Oberschenkel vorn, Gesäß, Schräge Bauchmuskeln |
-| shadow-boxing | Schattenboxen | Ohne Geräte | leicht | Schultern, Rumpf, Waden |
-| pseudo-planche-push-up | Pseudo-Planche-Liegestütz | Ohne Geräte | schwer | Vordere Schulter, Brust, Trizeps |
-| wall-handstand-hold | Handstand an der Wand halten | Ohne Geräte (Wand) | schwer | Vordere Schulter, Trizeps, Rumpf |
-| pogo-hops | Fußgelenkhüpfer | Ohne Geräte | leicht | Waden |
-| prone-w-raise | W-Heben in Bauchlage | Ohne Geräte | leicht | Unterer und mittlerer Trapez, Hintere Schulter |
-| reverse-grip-push-up | Liegestütz im Untergriff | Ohne Geräte | schwer | Obere Brust, Bizeps, Vordere Schulter |
-| hand-release-push-up | Liegestütz mit Handlösen | Ohne Geräte | mittel | Brust, Trizeps |
-| wall-push-up | Wand-Liegestütz | Ohne Geräte (Wand) | leicht | Brust, Trizeps |
-| single-leg-push-up | Liegestütz mit Beinheben | Ohne Geräte | mittel | Brust, Gesäß, Rumpf |
-| staggered-hands-push-up | Liegestütz mit versetzten Händen | Ohne Geräte | mittel | Brust, Trizeps |
-| bridge-hold | Brücke (Rückbeuge) halten | Ohne Geräte | schwer | Rückenstrecker, Gesäß, Schultern |
-| wall-walk | Wandlauf | Ohne Geräte (Wand) | schwer | Schultern, Rumpf |
-| crow-pose | Krähe | Ohne Geräte | schwer | Handgelenkbeuger, Rumpf, Arme |
-| frog-stand | Froschstand | Ohne Geräte | mittel | Schultern, Handgelenke, Rumpf |
-| freestanding-handstand | Freier Handstand | Ohne Geräte | schwer | Schultern, Trizeps, Rumpf |
-| tuck-planche-hold | Planche (Tuck) halten | Ohne Geräte | schwer | Vordere Schulter, Rumpf, Handgelenke |
-| v-sit | V-Sit | Ohne Geräte | schwer | Bauch, Hüftbeuger |
-| hindu-squat | Hindu-Kniebeuge | Ohne Geräte | mittel | Oberschenkel vorn, Waden |
-| sumo-squat | Sumo-Kniebeuge | Ohne Geräte | leicht | Adduktoren, Gesäß |
-| shrimp-squat | Shrimp-Kniebeuge | Ohne Geräte | schwer | Oberschenkel vorn, Gesäß |
-| transverse-lunge | Ausfallschritt quer | Ohne Geräte | mittel | Gesäß, Oberschenkel |
-| stair-climbing | Treppensteigen | Ohne Geräte (Treppe) | leicht | Beine, Kreislauf |
-| prone-hip-extension | Beinheben in Bauchlage | Ohne Geräte | leicht | Gesäß, Oberschenkel hinten |
-| donkey-kick | Donkey Kick | Ohne Geräte | leicht | Gesäß |
-| standing-hip-extension | Beinrückheben im Stand | Ohne Geräte (Stuhl) | leicht | Gesäß, Oberschenkel hinten |
-| standing-hip-abduction | Beinheben seitlich im Stand | Ohne Geräte (Stuhl) | leicht | Seitliches Gesäß |
-| side-lying-hip-adduction | Beinanführen in Seitenlage | Ohne Geräte | leicht | Adduktoren |
-| clamshell | Muschel | Ohne Geräte | leicht | Seitliches Gesäß |
-| reverse-clamshell | Umgekehrte Muschel | Ohne Geräte | leicht | Seitliches Gesäß, Adduktoren |
-| hip-hinge-drill | Hüftbeuge-Übung | Ohne Geräte | leicht | Gesäß, Oberschenkel hinten |
-| scapula-setting | Schulterblatt-Setzen | Ohne Geräte | leicht | Mittlerer Trapez, Serratus |
-| serratus-punch | Serratus-Punch | Ohne Geräte | leicht | Serratus anterior |
-| supine-snow-angels | Schneeengel in Rückenlage | Ohne Geräte | leicht | Schultern, Brust |
-| single-leg-stand | Einbeinstand | Ohne Geräte (Wand oder Stuhl) | leicht | Hüftstabilisatoren, Fuß |
-| pelvic-tilt | Beckenkippen | Ohne Geräte | leicht | Bauch, Rückenstrecker |
-| side-plank-knees | Seitstütz auf den Knien | Ohne Geräte | leicht | Schräge Bauchmuskeln |
-| single-arm-plank | Einarm-Plank | Ohne Geräte | schwer | Rumpf |
-| single-arm-single-leg-plank | Einarm-Einbein-Plank | Ohne Geräte | mittel | Rumpf |
-| single-leg-hop | Einbeinhüpfen | Ohne Geräte | mittel | Beine, Waden |
-| alternate-leg-push-off | Wechselbein-Abdruck von der Stufe | Ohne Geräte (Stufe) | mittel | Beine, Gesäß |
-| single-leg-push-off | Einbein-Abdruck von der Stufe | Ohne Geräte (Stufe) | mittel | Beine, Gesäß |
+| ID | Name | Ausrüstung | Schwierigkeit | Hauptmuskel | Hilfsmuskel |
+|---|---|---|---|---|---|
+| sissy-squat | Sissy Squat | Ohne Geräte (Festhalten) | schwer | Oberschenkel vorn | Hüftbeuger |
+| curtsy-lunge | Curtsy Lunge | Ohne Geräte | mittel | Gesäß, Oberschenkel vorn | Adduktoren, Seitliches Gesäß |
+| lateral-step-up | Seitliches Step-up | Ohne Geräte (Stufe oder Bank) | leicht | Oberschenkel vorn, Seitliches Gesäß | Gesäß |
+| box-jump | Box Jump | Ohne Geräte (Kasten oder Stufe) | mittel | Oberschenkel vorn, Gesäß | Waden, Oberschenkel hinten |
+| lateral-box-jump | Seitlicher Box Jump | Ohne Geräte (Kasten oder Stufe) | schwer | Oberschenkel vorn, Seitliches Gesäß | Waden, Gesäß |
+| donkey-calf-raise | Donkey Calf Raise | Ohne Geräte (Stufe, Stütze) | mittel | Waden | – |
+| side-lying-leg-raise | Seitliches Beinheben | Ohne Geräte | leicht | Seitliches Gesäß | Gesäß |
+| fire-hydrant | Fire Hydrant | Ohne Geräte | leicht | Seitliches Gesäß | Gesäß |
+| decline-push-up | Liegestütz (Füße erhöht) | Ohne Geräte (Stufe oder Bank) | mittel | Obere Brust, Brust | Vordere Schulter, Trizeps, Rumpf |
+| single-arm-push-up | Einarmiger Liegestütz | Ohne Geräte | schwer | Brust | Trizeps, Rumpf, Schräge Bauchmuskeln |
+| shoulder-tap-push-up | Liegestütz mit Schulterberührung | Ohne Geräte | mittel | Brust | Rumpf, Schultern, Trizeps |
+| spiderman-push-up | Spiderman Push-up | Ohne Geräte | mittel | Brust | Schräge Bauchmuskeln, Hüftbeuger |
+| handstand-push-up | Handstand Push-up | Ohne Geräte (Wand) | schwer | Schultern, Trizeps | Rumpf |
+| flutter-kicks | Flutter Kicks | Ohne Geräte | mittel | Gerader Bauch, Hüftbeuger | Schräge Bauchmuskeln |
+| scissor-kicks | Scissor Kicks | Ohne Geräte | mittel | Gerader Bauch, Hüftbeuger | Adduktoren |
+| oblique-crunch | Seitlicher Crunch | Ohne Geräte | leicht | Schräge Bauchmuskeln | Gerader Bauch |
+| heel-touches | Heel Touches (Fersenberühren) | Ohne Geräte | leicht | Schräge Bauchmuskeln | Gerader Bauch |
+| reverse-plank | Reverse Plank | Ohne Geräte | mittel | Gesäß | Rückenstrecker, Hintere Schulter, Oberschenkel hinten |
+| plank-hip-dips | Plank Hip Dips | Ohne Geräte | mittel | Schräge Bauchmuskeln | Hüftstabilisatoren |
+| jump-rope | Seilspringen | Ohne Geräte (Springseil) | leicht | Waden | Schultern, Unterarme |
+| butt-kicks | Butt Kicks | Ohne Geräte | leicht | Oberschenkel hinten | Waden |
+| star-jumps | Star Jumps | Ohne Geräte | mittel | Oberschenkel vorn, Gesäß | Waden, Schultern |
+| squat-jacks | Squat Jacks | Ohne Geräte | mittel | Oberschenkel vorn | Gesäß, Adduktoren |
+| wide-push-up | Liegestütz mit weitem Griff | Ohne Geräte | leicht | Brust | Vordere Schulter, Trizeps |
+| push-up-rotation | Liegestütz mit Rotation | Ohne Geräte | mittel | Brust | Schräge Bauchmuskeln, Schultern |
+| hollow-rock | Hollow Rock | Ohne Geräte | schwer | Gerader Bauch, Hüftbeuger | Schräge Bauchmuskeln |
+| butterfly-sit-up | Butterfly Sit-up | Ohne Geräte | leicht | Gerader Bauch | Schräge Bauchmuskeln |
+| plank-jacks | Plank Jacks | Ohne Geräte | mittel | Rumpf | Schultern, Gesäß |
+| side-plank-hip-dip | Seitstütz mit Hüftsenken | Ohne Geräte | mittel | Schräge Bauchmuskeln | Unterer Rücken |
+| side-plank-leg-raise | Seitstütz mit Beinheben | Ohne Geräte | mittel | Schräge Bauchmuskeln | Seitliches Gesäß |
+| twisting-sit-up | Sit-up mit Drehung | Ohne Geräte | leicht | Schräge Bauchmuskeln | Gerader Bauch |
+| cross-body-mountain-climbers | Mountain Climbers über Kreuz | Ohne Geräte | mittel | Rumpf | Hüftbeuger, Schultern |
+| broad-jump | Standweitsprung | Ohne Geräte | mittel | Oberschenkel vorn, Gesäß | Waden |
+| crab-walk | Krabbengang | Ohne Geräte | leicht | Trizeps | Gesäß, Hintere Schulter |
+| inchworm | Inchworm | Ohne Geräte | leicht | Rumpf, Oberschenkel hinten | Schultern, Brust |
+| lateral-shuffle | Seitlicher Shuffle | Ohne Geräte | leicht | Seitliches Gesäß, Oberschenkel vorn | Waden |
+| hamstring-walkout | Brücke mit Fersengang | Ohne Geräte | mittel | Oberschenkel hinten | Gesäß |
+| step-up | Step-up | Ohne Geräte (Stufe oder Bank) | leicht | Oberschenkel vorn, Gesäß | Hüftbeuger |
+| chair-squat | Kniebeuge zum Stuhl | Ohne Geräte (Stuhl) | leicht | Oberschenkel vorn, Gesäß | Hüftbeuger |
+| hindu-push-up | Hindu-Liegestütz | Ohne Geräte | mittel | Brust, Schultern | Trizeps, Rückenstrecker |
+| elevated-pike-push-up | Pike-Liegestütz mit erhöhten Füßen | Ohne Geräte (Stufe oder Bank) | schwer | Schultern, Trizeps | Obere Brust |
+| boat-hold | Boot-Haltung | Ohne Geräte | mittel | Gerader Bauch, Hüftbeuger | Schräge Bauchmuskeln |
+| lunge-with-rotation | Ausfallschritt mit Rumpfdrehung | Ohne Geräte | leicht | Oberschenkel vorn, Gesäß | Schräge Bauchmuskeln |
+| shadow-boxing | Schattenboxen | Ohne Geräte | leicht | Schultern | Rumpf, Waden |
+| pseudo-planche-push-up | Pseudo-Planche-Liegestütz | Ohne Geräte | schwer | Vordere Schulter, Brust | Trizeps |
+| wall-handstand-hold | Handstand an der Wand halten | Ohne Geräte (Wand) | schwer | Vordere Schulter | Trizeps, Rumpf |
+| pogo-hops | Fußgelenkhüpfer | Ohne Geräte | leicht | Waden | – |
+| prone-w-raise | W-Heben in Bauchlage | Ohne Geräte | leicht | Mittlerer Trapez | Hintere Schulter |
+| reverse-grip-push-up | Liegestütz im Untergriff | Ohne Geräte | schwer | Obere Brust | Bizeps, Vordere Schulter |
+| hand-release-push-up | Liegestütz mit Handlösen | Ohne Geräte | mittel | Brust | Trizeps |
+| wall-push-up | Wand-Liegestütz | Ohne Geräte (Wand) | leicht | Brust | Trizeps |
+| single-leg-push-up | Liegestütz mit Beinheben | Ohne Geräte | mittel | Brust | Gesäß, Rumpf |
+| staggered-hands-push-up | Liegestütz mit versetzten Händen | Ohne Geräte | mittel | Brust | Trizeps |
+| bridge-hold | Brücke (Rückbeuge) halten | Ohne Geräte | schwer | Rückenstrecker | Gesäß, Schultern |
+| wall-walk | Wandlauf | Ohne Geräte (Wand) | schwer | Schultern | Rumpf |
+| crow-pose | Krähe | Ohne Geräte | schwer | Rumpf, Trizeps | Unterarme, Schultern |
+| frog-stand | Froschstand | Ohne Geräte | mittel | Rumpf, Schultern | Trizeps, Unterarme |
+| freestanding-handstand | Freier Handstand | Ohne Geräte | schwer | Schultern | Trizeps, Rumpf |
+| tuck-planche-hold | Planche (Tuck) halten | Ohne Geräte | schwer | Vordere Schulter, Rumpf | Unterarme |
+| v-sit | V-Sit | Ohne Geräte | schwer | Gerader Bauch, Hüftbeuger | Bauch |
+| hindu-squat | Hindu-Kniebeuge | Ohne Geräte | mittel | Oberschenkel vorn | Waden |
+| sumo-squat | Sumo-Kniebeuge | Ohne Geräte | leicht | Oberschenkel vorn, Gesäß, Adduktoren | – |
+| shrimp-squat | Shrimp-Kniebeuge | Ohne Geräte | schwer | Oberschenkel vorn | Gesäß |
+| transverse-lunge | Ausfallschritt quer | Ohne Geräte | mittel | Gesäß, Adduktoren | Oberschenkel vorn |
+| stair-climbing | Treppensteigen | Ohne Geräte (Treppe) | leicht | Oberschenkel vorn, Gesäß, Waden | Ausdauer |
+| prone-hip-extension | Beinheben in Bauchlage | Ohne Geräte | leicht | Gesäß | Oberschenkel hinten |
+| donkey-kick | Donkey Kick | Ohne Geräte | leicht | Gesäß | Oberschenkel hinten |
+| standing-hip-extension | Beinrückheben im Stand | Ohne Geräte (Stuhl) | leicht | Gesäß | Oberschenkel hinten |
+| standing-hip-abduction | Beinheben seitlich im Stand | Ohne Geräte (Stuhl) | leicht | Seitliches Gesäß | Gesäß |
+| side-lying-hip-adduction | Beinanführen in Seitenlage | Ohne Geräte | leicht | Adduktoren | – |
+| clamshell | Muschel | Ohne Geräte | leicht | Seitliches Gesäß | Gesäß |
+| reverse-clamshell | Umgekehrte Muschel | Ohne Geräte | leicht | Seitliches Gesäß | Adduktoren |
+| hip-hinge-drill | Hüftbeuge-Übung | Ohne Geräte | leicht | Gesäß | Oberschenkel hinten |
+| scapula-setting | Schulterblatt-Setzen | Ohne Geräte | leicht | Mittlerer Trapez | Sägemuskel (Serratus) |
+| serratus-punch | Serratus-Punch | Ohne Geräte | leicht | Sägemuskel (Serratus) | Schultern |
+| supine-snow-angels | Schneeengel in Rückenlage | Ohne Geräte | leicht | Schultern | Oberer Rücken |
+| single-leg-stand | Einbeinstand | Ohne Geräte (Wand oder Stuhl) | leicht | Hüftstabilisatoren | Waden |
+| pelvic-tilt | Beckenkippen | Ohne Geräte | leicht | Bauch | Gesäß, Rückenstrecker |
+| side-plank-knees | Seitstütz auf den Knien | Ohne Geräte | leicht | Schräge Bauchmuskeln | Unterer Rücken |
+| single-arm-plank | Einarm-Plank | Ohne Geräte | schwer | Rumpf | Schultern |
+| single-arm-single-leg-plank | Einarm-Einbein-Plank | Ohne Geräte | mittel | Rumpf | Schultern, Gesäß |
+| single-leg-hop | Einbeinhüpfen | Ohne Geräte | mittel | Oberschenkel vorn, Gesäß, Waden | Beine |
+| alternate-leg-push-off | Wechselbein-Abdruck von der Stufe | Ohne Geräte (Stufe) | mittel | Oberschenkel vorn, Gesäß, Waden | Beine |
+| single-leg-push-off | Einbein-Abdruck von der Stufe | Ohne Geräte (Stufe) | mittel | Oberschenkel vorn, Gesäß, Waden | Beine |
 
 ### Dehnen / Mobilität (26)
 
-| ID | Name | Ausrüstung | Schwierigkeit | Hauptmuskel |
-|---|---|---|---|---|
-| wall-angel | Wandengel | Ohne Geräte (Wand) | Mobilität (kein Kraftreiz) | Hintere Schulter, Oberer Rücken |
-| leg-swing | Beinpendeln | Ohne Geräte (Wand zum Abstützen) | Mobilität (kein Kraftreiz) | Hüftbeuger, Oberschenkel hinten |
-| hip-90-90-switch | 90/90-Hüftwechsel | Ohne Geräte | Mobilität (kein Kraftreiz) | Gesäß, Adduktoren |
-| thread-the-needle | Nadelöhr | Ohne Geräte | Mobilität (kein Kraftreiz) | Oberer Rücken, Hintere Schulter |
-| lat-stretch | Latissimus-Dehnung | Ohne Geräte | Mobilität (kein Kraftreiz) | Breiter Rückenmuskel |
-| knee-to-wall-ankle-mobilization | Sprunggelenk lösen (Knie zur Wand) | Ohne Geräte (Wand) | Mobilität (kein Kraftreiz) | Waden |
-| couch-stretch | Couch-Dehnung | Ohne Geräte (Wand) | Mobilität (kein Kraftreiz) | Oberschenkel vorn, Hüftbeuger |
-| hip-airplane | Hüftflieger | Ohne Geräte | Mobilität (kein Kraftreiz) | Gesäß, Hüftrotatoren, Waden |
-| sleeper-stretch | Sleeper-Stretch | Ohne Geräte | Mobilität (kein Kraftreiz) | Hintere Schulter |
-| stick-external-rotation | Außenrotation mit Stab | Stange (leichter Stab) | Mobilität (kein Kraftreiz) | Schulter-Außenrotatoren |
-| stick-internal-rotation | Innenrotation mit Stab | Stange (leichter Stab) | Mobilität (kein Kraftreiz) | Schulter-Innenrotatoren |
-| high-plank-thoracic-rotation | Stütz mit Brustwirbelsäulen-Drehung | Ohne Geräte | Mobilität (kein Kraftreiz) | Oberer Rücken, Schultern |
-| neck-rotation | Nackendrehen | Ohne Geräte | Mobilität (kein Kraftreiz) | Nackenmuskeln |
-| ankle-circles | Fußkreisen | Ohne Geräte | Mobilität (kein Kraftreiz) | Sprunggelenk |
-| seated-trunk-rotation | Sitzende Rumpfdrehung | Ohne Geräte (Stuhl) | Mobilität (kein Kraftreiz) | Rumpf, Oberer Rücken |
-| knee-to-chest-stretch | Knie zur Brust | Ohne Geräte | Mobilität (kein Kraftreiz) | Gesäß, Unterer Rücken |
-| standing-it-band-stretch | Hüftaußenseite im Stand dehnen | Ohne Geräte | Mobilität (kein Kraftreiz) | Hüfte, Oberschenkelaußenseite |
-| supine-hamstring-stretch | Beinrückseite liegend dehnen | Ohne Geräte | Mobilität (kein Kraftreiz) | Oberschenkel hinten |
-| thomas-stretch | Thomas-Dehnung | Ohne Geräte (Bank) | Mobilität (kein Kraftreiz) | Hüftbeuger |
-| seated-straddle-stretch | Grätschsitz-Dehnung | Ohne Geräte | Mobilität (kein Kraftreiz) | Adduktoren, Rücken |
-| side-lying-quad-stretch | Oberschenkel vorn in Seitenlage | Ohne Geräte | Mobilität (kein Kraftreiz) | Oberschenkel vorn |
-| seated-rotation-stretch | Sitzende Rotationsdehnung | Ohne Geräte | Mobilität (kein Kraftreiz) | Gesäß, Rumpf |
-| soleus-stretch | Wadendehnung mit gebeugtem Knie | Ohne Geräte (Wand) | Mobilität (kein Kraftreiz) | Tiefe Wade |
-| upward-facing-dog | Hund aufwärts | Ohne Geräte | Mobilität (kein Kraftreiz) | Rücken, Bauch |
-| warrior-i | Krieger I | Ohne Geräte | Mobilität (kein Kraftreiz) | Beine, Hüftbeuger |
-| neck-isometric | Nacken isometrisch (vier Richtungen) | Ohne Geräte (Stuhl) | Mobilität (kein Kraftreiz) | Nackenmuskeln |
+| ID | Name | Ausrüstung | Schwierigkeit | Hauptmuskel | Hilfsmuskel |
+|---|---|---|---|---|---|
+| wall-angel | Wandengel | Ohne Geräte (Wand) | Mobilität (kein Kraftreiz) | Oberer Rücken, Hintere Schulter | – |
+| leg-swing | Beinpendeln | Ohne Geräte (Wand zum Abstützen) | Mobilität (kein Kraftreiz) | Hüftbeuger | Oberschenkel hinten |
+| hip-90-90-switch | 90/90-Hüftwechsel | Ohne Geräte | Mobilität (kein Kraftreiz) | Hüftrotatoren | Adduktoren |
+| thread-the-needle | Nadelöhr | Ohne Geräte | Mobilität (kein Kraftreiz) | Oberer Rücken | Hintere Schulter |
+| lat-stretch | Latissimus-Dehnung | Ohne Geräte | Mobilität (kein Kraftreiz) | Breiter Rückenmuskel | Oberer Rücken |
+| knee-to-wall-ankle-mobilization | Sprunggelenk lösen (Knie zur Wand) | Ohne Geräte (Wand) | Mobilität (kein Kraftreiz) | Waden | – |
+| couch-stretch | Couch-Dehnung | Ohne Geräte (Wand) | Mobilität (kein Kraftreiz) | Oberschenkel vorn | Hüftbeuger |
+| hip-airplane | Hüftflieger | Ohne Geräte | Mobilität (kein Kraftreiz) | Gesäß | Hüftrotatoren, Waden |
+| sleeper-stretch | Sleeper-Stretch | Ohne Geräte | Mobilität (kein Kraftreiz) | Hintere Schulter | Oberer Rücken |
+| stick-external-rotation | Außenrotation mit Stab | Stange (leichter Stab) | Mobilität (kein Kraftreiz) | Rotatorenmanschette | Hintere Schulter |
+| stick-internal-rotation | Innenrotation mit Stab | Stange (leichter Stab) | Mobilität (kein Kraftreiz) | Vordere Schulter | Brust |
+| high-plank-thoracic-rotation | Stütz mit Brustwirbelsäulen-Drehung | Ohne Geräte | Mobilität (kein Kraftreiz) | Oberer Rücken | Schultern |
+| neck-rotation | Nackendrehen | Ohne Geräte | Mobilität (kein Kraftreiz) | Nackenmuskeln | – |
+| ankle-circles | Fußkreisen | Ohne Geräte | Mobilität (kein Kraftreiz) | Waden | – |
+| seated-trunk-rotation | Sitzende Rumpfdrehung | Ohne Geräte (Stuhl) | Mobilität (kein Kraftreiz) | Rumpf | Oberer Rücken |
+| knee-to-chest-stretch | Knie zur Brust | Ohne Geräte | Mobilität (kein Kraftreiz) | Gesäß | Unterer Rücken |
+| standing-it-band-stretch | Hüftaußenseite im Stand dehnen | Ohne Geräte | Mobilität (kein Kraftreiz) | Hüftstabilisatoren | Oberschenkel außen |
+| supine-hamstring-stretch | Beinrückseite liegend dehnen | Ohne Geräte | Mobilität (kein Kraftreiz) | Oberschenkel hinten | Gesäß |
+| thomas-stretch | Thomas-Dehnung | Ohne Geräte (Bank) | Mobilität (kein Kraftreiz) | Hüftbeuger | Oberschenkel vorn |
+| seated-straddle-stretch | Grätschsitz-Dehnung | Ohne Geräte | Mobilität (kein Kraftreiz) | Adduktoren | Oberschenkel hinten |
+| side-lying-quad-stretch | Oberschenkel vorn in Seitenlage | Ohne Geräte | Mobilität (kein Kraftreiz) | Oberschenkel vorn | Hüftbeuger |
+| seated-rotation-stretch | Sitzende Rotationsdehnung | Ohne Geräte | Mobilität (kein Kraftreiz) | Hüftrotatoren | Rumpf |
+| soleus-stretch | Wadendehnung mit gebeugtem Knie | Ohne Geräte (Wand) | Mobilität (kein Kraftreiz) | Waden (Schollenmuskel) | – |
+| upward-facing-dog | Hund aufwärts | Ohne Geräte | Mobilität (kein Kraftreiz) | Rückenstrecker | Bauch, Brust |
+| warrior-i | Krieger I | Ohne Geräte | Mobilität (kein Kraftreiz) | Oberschenkel vorn, Gesäß | Hüftbeuger |
+| neck-isometric | Nacken isometrisch (vier Richtungen) | Ohne Geräte (Stuhl) | Mobilität (kein Kraftreiz) | Nackenmuskeln | – |
