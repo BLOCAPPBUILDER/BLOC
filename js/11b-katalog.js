@@ -324,15 +324,15 @@ function renderKatalogUebungen(){
   var gruppen = katalogGruppen(), vonId = katGruppeIds(gruppen), gueltig = {};
   gruppen.forEach(function(g){ gueltig[g.id] = true; });
   var fGr = selArr(s.stGruppen).filter(function(id){ return gueltig[id]; });
-  var fTrain = studioTrainWahl(), fAusr = studioAusrWahl();
+  var fTrain = studioTrainWahl(), fAusr = studioAusrWahl(), fSchw = studioSchwWahl();
   var zonen = kkNorm(s.stZonen);   // Körperkarte: gewählte Muskelzonen
   /* Gezeigt werden die Übungen der gewählten Trainingsarten; die übrigen stehen unsichtbar mit im Seitentext (data-ortfremd) und erscheinen nur,
      solange etwas gesucht wird - die Suche soll nicht an der Trainingsart scheitern. */
-  function artOkOhneOrt(id){ var ex = findExercise(id); return !!ex && ausrPasst(ex, fAusr) && (!zonen.length || zonePasst(ex, zonen)); }
+  function artOkOhneOrt(id){ var ex = findExercise(id); return !!ex && ausrPasst(ex, fAusr) && schwPasst(ex, fSchw) && (!zonen.length || zonePasst(ex, zonen)); }
   function artOk(id){ return artOkOhneOrt(id) && hier(id); }
   function passtOhneOrt(id){ return !!vonId[id] && (!fGr.length || fGr.indexOf(vonId[id]) > -1) && artOkOhneOrt(id); }
   function hier(id){ return trainPasst(findExercise(id), fTrain); }
-  var filterAn = !!(fGr.length || fTrain.length || fAusr.length || zonen.length);
+  var filterAn = !!(fGr.length || fTrain.length || fAusr.length || fSchw.length || zonen.length);
   var favs = (s.exFavs || []).filter(function(id){ return !!findExercise(id) && passtOhneOrt(id); });
   var zuletzt = Object.keys(alle).filter(function(id){ return alle[id].zuletzt && findExercise(id) && passtOhneOrt(id) && favs.indexOf(id) < 0; })
     .sort(function(a, b){ return alle[b].zuletzt - alle[a].zuletzt; }).slice(0, 6);

@@ -226,7 +226,7 @@
       if (!$(".af-body")) klick(".af-kopf");
       await bis(function () { return $(".af-body"); }, 2000, "Filterkarte im Übungskatalog");
       pruefe(!$("[data-katort]") && $$(".ort-foto").length === 3 && $$(".ort-foto[data-sttrain]").length === 3 && /Übungen/.test($(".ort-fotos").textContent) && $$(".ort-foto img[src^='img/']").length === 3, "Übungskatalog: drei Fotokarten der Trainingsart mit Übungszahl fehlen");
-      pruefe($$(".bau-schritt.af-schritt").length === 3, "Filter: drei Schritte (Trainingsart, Ausrüstung, Muskel) erwartet, gefunden " + $$(".bau-schritt.af-schritt").length);
+      pruefe($$(".bau-schritt.af-schritt").length === 4, "Filter: vier Schritte (Trainingsart, Ausrüstung, Muskel, Schwierigkeit) erwartet, gefunden " + $$(".bau-schritt.af-schritt").length);
       pruefe(!$('[data-start]') && !$('[data-stger]'), "Die alten Ausrüstungs-Chips (data-start, data-stger) gibt es nicht mehr");
       var ug = $$("details.kat-gr");
       pruefe(ug.length >= 7 && ug.every(function (d) { return !d.open && sichtbar(d); }), "Übungen: zu Beginn sollen nur die Überschriften stehen (" + ug.length + " Bereiche)");
@@ -237,7 +237,7 @@
       function namen(x) { eingeben(q, x); return $$(".fig-karte").filter(sichtbar).map(function (c) { return (c.querySelector(".fig-name") || {}).textContent || ""; }); }
       pruefe(namen("pull ups").indexOf("Pull-ups") > -1, "„pull ups“ findet Pull-ups nicht");
       pruefe(namen("klimmzug").length >= 5, "„klimmzug“ findet zu wenig");
-      pruefe(namen("liegestutz").indexOf("Push-ups") > -1, "„liegestutz“ findet Push-ups nicht");
+      pruefe(namen("liegestutz").indexOf("Liegestütz") > -1, "„liegestutz“ findet Liegestütz nicht");
       eingeben(q, "");
       pruefe($$("[data-studio]:not([data-ortfremd])").filter(function (c) { return c.style.display !== "none"; }).length > 100, "ohne Suche zu wenige Übungen");
       pruefe($$("details.kat-gr").every(function (d) { return !d.open; }), "nach der Suche stehen die Bereiche nicht wieder zugeklappt da");
@@ -306,9 +306,9 @@
       await heim();   // zurück in den Katalog, wie der nächste Test ihn erwartet
       zuWorkout();
     }],
-    ["Widerstandsband: 38 Übungen vollständig (zwei Posen, Anleitung, Haltung, Muskeln, Gerät)", async function () {
+    ["Widerstandsband: 47 Übungen vollständig (zwei Posen, Anleitung, Haltung, Muskeln, Gerät)", async function () {
       var d = W.BLOC_DATEN, ids = d.EXERCISE_ROWS.map(function (x) { return x[0]; }).filter(function (id) { return id.indexOf("band-") === 0; });
-      pruefe(ids.length === 38, "erwartet 38 Band-Übungen, gefunden " + ids.length);
+      pruefe(ids.length === 47, "erwartet 47 Band-Übungen, gefunden " + ids.length);
       ids.forEach(function (id) {
         var p = d.ILLU_POSES[id], i = d.EX_INFO[id], h = d.EX_POSTURE[id], m = d.EX_MUSCLES[id];
         pruefe(p && p[0] && p[1], "Figur fehlt: " + id);
@@ -938,7 +938,7 @@
       await bis(function () { return $$(".plan-sticky [data-plansel]").length === 2; }, 2000, "Übung wieder im Plan");
       klick($('.plan-sticky [data-plansel="1"]'));   // Reihenfolge: die zweite Übung (Air Squats) nach vorn schieben
       klick(await bis(function () { return $('[data-planmv="-1"]'); }, 2000, "◀ im Plan"));
-      await bis(function () { var n = $$(".plan-sticky .wb-mini-name"); return n.length === 2 && /Squat/i.test(n[0].textContent); }, 2000, "Air Squats steht jetzt vorn");
+      await bis(function () { var n = $$(".plan-sticky .wb-mini-name"); return n.length === 2 && /Squat|Kniebeuge/i.test(n[0].textContent); }, 2000, "Air Squats steht jetzt vorn");
       W.scrollTo(0, 2500); await warte(250);   // weit nach unten: der Plan bleibt oben stehen
       var rs = $("#plan-sticky").getBoundingClientRect();
       pruefe(rs.top >= 0 && rs.top < 160 && W.scrollY > 300, "Der Plan soll beim Scrollen oben stehen bleiben: Abstand " + Math.round(rs.top) + ", gescrollt " + Math.round(W.scrollY));
@@ -1717,7 +1717,7 @@
       pruefe(W.ILLU["tuck-jumps"][1] && W.BLOC_DEV && W.BLOC_DEV.SEQ["tuck-jumps"].k.length === 4, "Tuck Jumps: vier Phasen erwartet");
       // jede Band-Übung hat eine Befestigung mit bekannter Art
       var bandIds = W.EXERCISES.filter(function (e) { return e.equip.indexOf("band") > -1; }).map(function (e) { return e.id; });
-      pruefe(bandIds.length === 38 && bandIds.every(function (id) { return W.BAND_ANKER[id] && W.BAND_ARTEN[W.BAND_ANKER[id][0]]; }), "Nicht jede Band-Übung hat eine Befestigung");
+      pruefe(bandIds.length === 47 && bandIds.every(function (id) { return W.BAND_ANKER[id] && W.BAND_ARTEN[W.BAND_ANKER[id][0]]; }), "Nicht jede Band-Übung hat eine Befestigung");
       W.openExInfo("band-standing-row", false);
       var k = await bis(function () { return $("#overlayRoot .info-anker"); }, 2000, "Karte Band befestigen");
       pruefe(!k.open && /Pfosten/.test(k.textContent) && !/Tür/.test(k.textContent) && /Brusthöhe/.test(k.textContent), "Karte: Pfosten und Brusthöhe (keine Tür) erwartet: " + k.textContent.slice(0, 80));
