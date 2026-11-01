@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-01 · Trainingspläne mit mehr neuen Übungen (Fassung 2026-11-01-4)
+
+- **Pläne:** 29 der 53 Trainingspläne enthalten jetzt mehr der neuen Übungen (knapp die Hälfte aller Übungsplätze). Reihenfolge, Level-Passung und Burpee-Finisher bleiben. Rucksack-Rudern kommt nicht vor.
+
 ## 2026-11-01 · 53 Trainingspläne (Fassung 2026-11-01-3)
 
 - **Pläne:** 53 neue fertige Workouts im Workoutkatalog, je Bereich (Fitnessstudio, Calisthenic-Park, Körpergewicht), Schwierigkeit (leicht, mittel, schwer) und Körpergruppe (Brust, Rücken, Schultern, Arme, Beine, Core, Ganzkörper), in sinnvoller Reihenfolge mit Pause und Hinweis zu Sätzen, Häufigkeit und Steigerung (Fachprüfung: Sportwissenschaftler). Mittel- und Schwer-Pläne enden mit einem Burpee-Finisher. Die neuen Übungen kommen gezielt vor. Es fehlen bewusst Calisthenic-Beine, Calisthenic-Schultern mittel, Körpergewicht-Rücken schwer und einzelne dünn besetzte Kombinationen.
