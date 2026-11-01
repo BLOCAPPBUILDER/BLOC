@@ -848,7 +848,7 @@
       gym.forEach(function (id) { pruefe($('[data-cover="lib/' + id + '"]'), "Programm fehlt: " + id); });
       // derselbe Filter wirkt auch hier
       klick('[data-stgrp="beine"]');
-      await bis(function () { var n = $$(".lib-card").length; return n >= 3 && n < 15 && $('[data-cover="lib/gym-legday"]') && !$('[data-cover="lib/gym-arms"]'); }, 2000, "Gruppe Beine: Beinprogramme, nicht Arme");
+      await bis(function () { var n = $$(".lib-card").length; return n >= 3 && n < 40 && $('[data-cover="lib/gym-legday"]') && !$('[data-cover="lib/gym-arms"]'); }, 2000, "Gruppe Beine: Beinprogramme, nicht Arme");
       klick('[data-streset]');
       await bis(function () { return $$(".lib-card").length === total && !$("[data-sttrain].on"); }, 2000, "Zurücksetzen: wieder alle Workouts, keine Trainingsart gewählt");
       // Programm öffnen: Übungen aus dem Fitnessstudio laufen als Workout

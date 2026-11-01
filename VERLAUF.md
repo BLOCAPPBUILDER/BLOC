@@ -3,6 +3,12 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-01 · 53 Trainingspläne (Fassung 2026-11-01-3)
+
+- **Pläne:** 53 neue fertige Workouts im Workoutkatalog, je Bereich (Fitnessstudio, Calisthenic-Park, Körpergewicht), Schwierigkeit (leicht, mittel, schwer) und Körpergruppe (Brust, Rücken, Schultern, Arme, Beine, Core, Ganzkörper), in sinnvoller Reihenfolge mit Pause und Hinweis zu Sätzen, Häufigkeit und Steigerung (Fachprüfung: Sportwissenschaftler). Mittel- und Schwer-Pläne enden mit einem Burpee-Finisher. Die neuen Übungen kommen gezielt vor. Es fehlen bewusst Calisthenic-Beine, Calisthenic-Schultern mittel, Körpergewicht-Rücken schwer und einzelne dünn besetzte Kombinationen.
+- **Schwierigkeit:** Bankdrücken, Überkopfdrücken und enges Bankdrücken zählen jetzt als schwer.
+- **Tests:** Der Beinfilter im Studio-Katalog zeigt jetzt mehr Programme (Grenze von 15 auf 40). Der Satz-Training-Test braucht eine sichtbare Vorschau, sonst scheitert er.
+
 ## 2026-11-01 · Körperkarte der neuen Übungen nach Fachprüfung (Fassung 2026-11-01-2)
 
 - **Muskeln:** Hauptmuskel und Hilfsmuskeln der 271 neuen Übungen nach Prüfung des Sportwissenschaftlers korrigiert: Kniebeugen und Ausfallschritte mit Gesäß als Hauptmuskel, Pressen mit Schultern und Trizeps, Hammer- und Reverse-Curls mit Unterarmen, Doppelzählungen und falsche Gegenspieler bei Hilfsmuskeln entfernt, Innenrotation vordere Schulter statt hintere.
