@@ -305,8 +305,8 @@ function renderDraftPage(d, cfg){
       '<div class="empty" data-noresult style="display:none;padding:20px;">'+t("noResult")+'</div>';
   } else if(palOpen){
     // nur Übungen der gewählten Trainingsarten (nichts gewählt = alle), schon Gewähltes bleibt im Ablauf
-    var palTrain = studioTrainWahl();
-    var palListe = sortedExercises(cat, sort, equip, [], zonen).filter(function(ex){ return fuerBau(ex) && trainPasst(ex, palTrain); });
+    var palTrain = studioTrainWahl(), palSchw = studioSchwWahl();
+    var palListe = sortedExercises(cat, sort, equip, [], zonen).filter(function(ex){ return fuerBau(ex) && trainPasst(ex, palTrain) && schwPasst(ex, palSchw); });
     hw = hinweise("bau", ["wbTippen"]);
     // Nach Körperregionen geordnet wie im Katalog und im Plan-Bau: Brust, Rücken, Schultern, Arme, Bauch & Rumpf, Beine & Po, Cardio, Eigene
     var je = {};

@@ -3351,6 +3351,2469 @@ G("barbell-push-press", "Push Press mit Langhantel", "Barbell Push Press", "weig
 [["front-squat",8,5],["pause-squat",6,5],["zercher-squat",6,5],["barbell-good-morning",10,5],["barbell-push-press",6,2.5],["smith-overhead-press",10,2.5],["smith-incline-press",10,2.5],
  ["smith-bent-over-row",10,2.5],["smith-split-squat",10,2.5],["smith-hip-thrust",10,5],["smith-calf-raise",15,5],["smith-shrug",12,2.5]].forEach(function(z){ STUDIO_ZIEL[z[0]] = [3, z[1], z[2]]; });
 
+/* ===== Übungsliste 2026-11: 271 neue Übungen (Figuren, Kategorien, Schwierigkeit) ===== */
+G("sumo-deadlift", "Sumo-Kreuzheben", "Sumo Deadlift", "weight legs", 3, 40, 0,
+  "Neutraler Rücken, Gewicht langsam steigern", "Neutral back, increase the weight slowly", 60, 2, 2, "gym",
+  ["Gesäß", "Adduktoren, Oberschenkel vorn, Rückenstrecker", "Glutes", "Adductors, Quads, Spinal erectors"],
+  "Ausgangsposition: Sehr breiter Stand, Zehen nach außen, Hüfte tief, Rücken gerade, Hände fassen die Stange zwischen den Beinen.|Endposition: Aufrecht, Hüfte und Knie gestreckt, Stange hängt vor den Oberschenkeln.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Very wide stance, toes turned out, hips low, back straight, hands grip the bar between your legs.|End position: Standing tall, hips and knees extended, bar hanging in front of your thighs.|Return to the starting position under control and repeat without momentum.",
+  "Neutraler Rücken, Gewicht langsam steigern.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Neutral back, increase the weight slowly.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "sumo deadlift sumo deadlift");
+G("trap-bar-deadlift", "Kreuzheben (Trap-Bar)", "Trap-Bar Deadlift", "weight legs", 3, 40, 0,
+  "Neutraler Rücken, Gewicht langsam steigern", "Neutral back, increase the weight slowly", 60, 2, 2, "gym",
+  ["Oberschenkel vorn", "Gesäß, Rückenstrecker", "Quads", "Glutes, Spinal erectors"],
+  "Ausgangsposition: Innerhalb der Trap-Bar, Hüfte tief, Rücken gerade, Griffe seitlich neben den Beinen.|Endposition: Aufrecht, Hüfte und Knie gestreckt, Arme hängen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing inside the trap bar, hips low, back straight, handles beside your legs.|End position: Standing tall, hips and knees extended, arms hanging.|Return to the starting position under control and repeat without momentum.",
+  "Neutraler Rücken, Gewicht langsam steigern.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Neutral back, increase the weight slowly.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "trap-bar deadlift trap bar deadlift");
+G("rack-pull", "Rack Pull", "Rack Pull", "weight back", 3, 40, 0,
+  "Aufrecht, Hüfte gestreckt, Schulterblätter leicht zusammen", "Standing tall, hips extended, shoulder blades slightly together", 60, 2, 2, "gym",
+  ["Rückenstrecker", "Gesäß, Trapez, Unterarme", "Spinal erectors", "Glutes, Traps, Forearms"],
+  "Ausgangsposition: Stange auf Kniehöhe im Rack, Hüfte nach hinten, Rücken gerade.|Endposition: Aufrecht, Hüfte gestreckt, Schulterblätter leicht zusammen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bar at knee height in the rack, hips back, back straight.|End position: Standing tall, hips extended, shoulder blades slightly together.|Return to the starting position under control and repeat without momentum.",
+  "Stange im Rack auf Kniehöhe ablegen, Rücken neutral, oben nicht ins Hohlkreuz überstrecken.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Set the bar on the rack at knee height, keep a neutral back, don't overextend into a hollow back at the top.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "ruecken", null, "rack pull rack pull");
+G("overhead-squat", "Überkopf-Kniebeuge", "Overhead Squat", "weight legs", 3, 40, 0,
+  "Tiefe Hocke, Stange weiter gestreckt über den Fußmitten, Oberkörper aufrecht", "Deep squat, bar still straight overhead above mid-foot, torso upright", 60, 3, 2, "gym",
+  ["Oberschenkel vorn", "Gesäß, Rumpf, Schultern", "Quads", "Glutes, Core, Shoulders"],
+  "Ausgangsposition: Stange mit weitem Griff gestreckt über dem Kopf, Stand schulterbreit.|Endposition: Tiefe Hocke, Stange weiter gestreckt über den Fußmitten, Oberkörper aufrecht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bar held straight overhead with a wide grip, feet shoulder-width.|End position: Deep squat, bar still straight overhead above mid-foot, torso upright.|Return to the starting position under control and repeat without momentum.",
+  "Voraussetzung: gute Beweglichkeit in Schulter, Brustwirbelsäule und Sprunggelenk. Erst mit Besenstiel oder leerer Stange, am besten im Rack.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Needs good mobility in shoulders, upper back and ankles. Start with a broomstick or empty bar, ideally in a rack.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "overhead squat overhead squat");
+G("sissy-squat", "Sissy Squat", "Sissy Squat", "bw legs", 3, 30, 0,
+  "Knie weit nach vorn, Fersen angehoben, Oberkörper und Oberschenkel bilden nach hinten gene", "Knees far forward, heels raised, torso and thighs form one line leaning back", 45, 3, 2, "none",
+  ["Oberschenkel vorn", "Hüftbeuger", "Quads", "Hip flexors"],
+  "Ausgangsposition: Aufrecht auf den Fußballen, eine Hand an einer Stütze.|Endposition: Knie weit nach vorn, Fersen angehoben, Oberkörper und Oberschenkel bilden nach hinten geneigt eine Linie.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall on the balls of your feet, one hand on a support.|End position: Knees far forward, heels raised, torso and thighs form one line leaning back.|Return to the starting position under control and repeat without momentum.",
+  "Hohe Kniebelastung: kontrolliert, mit Halt, ohne Zusatzgewicht, nicht bei Knieproblemen. Vorstufe: Air Squats.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "High load on the knees: slow, with support, no extra weight, not with knee problems. Preparation: air squats.", "Rushing the movement or losing body tension.",
+  "beine", null, "sissy squat sissy squat");
+G("curtsy-lunge", "Curtsy Lunge", "Curtsy Lunge", "bw legs", 3, 30, 1,
+  "Knie nicht nach innen einknicken, Becken ruhig, Oberkörper aufrecht", "Don't let the knee cave in, keep the pelvis still and the torso upright", 45, 2, 2, "none",
+  ["Gesäß", "Adduktoren, Oberschenkel vorn", "Glutes", "Adductors, Quads"],
+  "Ausgangsposition: Aufrecht, Füße hüftbreit.|Endposition: Hinteres Bein diagonal hinter dem Standbein, Knie des Standbeins in Zehenrichtung, beide Knie gebeugt, Oberkörper aufrecht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, feet hip-width.|End position: Back leg diagonally behind the front leg, front knee tracks over the toes, both knees bent, torso upright.|Return to the starting position under control and repeat without momentum.",
+  "Knie nicht nach innen einknicken, Becken ruhig, Oberkörper aufrecht.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Don't let the knee cave in, keep the pelvis still and the torso upright.", "Rushing the movement or losing body tension.",
+  "beine", null, "curtsy lunge curtsy lunge");
+G("lateral-step-up", "Seitliches Step-up", "Lateral Step-up", "bw legs", 3, 30, 1,
+  "Ganzer Fuß auf der Stufe, Stufe maximal kniehoch, kontrolliert absenken", "Whole foot on the step, step knee height at most, lower under control", 45, 1, 2, "none",
+  ["Seitliches Gesäß", "Oberschenkel vorn", "Side glutes", "Quads"],
+  "Ausgangsposition: Seitlich neben einer Stufe oder Bank, ein Fuß steht oben.|Endposition: Standbein gestreckt auf der Stufe, anderes Bein hängt frei daneben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing beside a step or bench, one foot on top.|End position: Standing leg straight on the step, other leg hanging free beside it.|Return to the starting position under control and repeat without momentum.",
+  "Ganzer Fuß auf der Stufe, Stufe maximal kniehoch, kontrolliert absenken.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Whole foot on the step, step knee height at most, lower under control.", "Rushing the movement or losing body tension.",
+  "beine", null, "lateral step-up lateral step up");
+G("box-jump", "Box Jump", "Box Jump", "cardio", 4, 30, 0,
+  "Beide Füße stehen aufrecht oben auf dem Kasten, Hüfte gestreckt", "Both feet standing tall on top of the box, hips extended", 30, 2, 3, "none",
+  ["Oberschenkel vorn", "Gesäß, Waden", "Quads", "Glutes, Calves"],
+  "Ausgangsposition: Hüftbreiter Stand vor dem Kasten, leichte Hocke, Arme hinten.|Endposition: Beide Füße stehen aufrecht oben auf dem Kasten, Hüfte gestreckt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Hip-width stance in front of the box, slight squat, arms back.|End position: Both feet standing tall on top of the box, hips extended.|Return to the starting position under control and repeat without momentum.",
+  "Höhe schrittweise steigern, feste rutschfeste Box, nach dem Sprung hinuntersteigen statt springen. Weiche Landung, Knie in Fußrichtung.", "Hart oder steif landen und die Technik verlieren.",
+  "Increase height gradually, use a sturdy non-slip box, step down instead of jumping down. Land softly, knees over your feet.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "box jump box jump");
+G("lateral-box-jump", "Seitlicher Box Jump", "Lateral Box Jump", "cardio", 4, 30, 0,
+  "Beide Füße aufrecht oben auf dem Kasten, Hüfte gestreckt", "Both feet standing tall on top of the box, hips extended", 30, 3, 3, "none",
+  ["Oberschenkel vorn", "Seitliches Gesäß, Waden", "Quads", "Side glutes, Calves"],
+  "Ausgangsposition: Seitlich neben dem Kasten, leichte Hocke.|Endposition: Beide Füße aufrecht oben auf dem Kasten, Hüfte gestreckt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Beside the box, slight squat.|End position: Both feet standing tall on top of the box, hips extended.|Return to the starting position under control and repeat without momentum.",
+  "Geringe Höhe, feste rutschfeste Box, hinuntersteigen statt springen. Weiche Landung, Knie in Fußrichtung.", "Hart oder steif landen und die Technik verlieren.",
+  "Low height, sturdy non-slip box, step down instead of jumping down. Land softly, knees over your feet.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "lateral box jump lateral box jump");
+G("donkey-calf-raise", "Donkey Calf Raise", "Donkey Calf Raise", "bw legs", 3, 30, 1,
+  "Unten volle Dehnung, kein Federn, Rücken gerade", "Full stretch at the bottom, no bouncing, back straight", 45, 2, 2, "none",
+  ["Waden", "Vorderer Schienbeinmuskel", "Calves", "Shin muscles"],
+  "Ausgangsposition: Vorgebeugt, Hände abgestützt, Fußballen auf einer Stufe, Fersen tief.|Endposition: Fersen so hoch wie möglich, Waden angespannt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bent forward, hands supported, balls of your feet on a step, heels low.|End position: Heels as high as possible, calves tensed.|Return to the starting position under control and repeat without momentum.",
+  "Unten volle Dehnung, kein Federn, Rücken gerade.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Full stretch at the bottom, no bouncing, back straight.", "Rushing the movement or losing body tension.",
+  "beine", null, "donkey calf raise donkey calf raise");
+G("reverse-hyperextension", "Reverse Hyperextension", "Reverse Hyperextension", "weight back", 3, 40, 0,
+  "Nicht über die Rückenlinie hinaus überstrecken", "Don't go beyond the line of your back", 60, 2, 2, "gym",
+  ["Gesäß", "Rückenstrecker", "Glutes", "Spinal erectors"],
+  "Ausgangsposition: Bauch und Hüfte liegen auf der Bank, Hüfte am Kantenrand, Beine hängen nach unten.|Endposition: Beine gestreckt in Verlängerung des Rückens angehoben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Belly and hips on the bench, hips at the edge, legs hanging down.|End position: Legs raised straight in line with your back.|Return to the starting position under control and repeat without momentum.",
+  "Nicht über die Rückenlinie hinaus überstrecken.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Don't go beyond the line of your back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "ruecken", null, "reverse hyperextension reverse hyperextension");
+G("side-lying-leg-raise", "Seitliches Beinheben", "Side-Lying Leg Raise", "bw legs", 3, 30, 1,
+  "Becken nicht nach hinten kippen, Bewegung aus der Hüfte", "Don't tip the pelvis back, move from the hip", 45, 1, 2, "none",
+  ["Seitliches Gesäß", "Hüftstabilisatoren", "Side glutes", "Hip stabilisers"],
+  "Ausgangsposition: Seitenlage, Körper gerade, Beine übereinander.|Endposition: Oberes Bein gestreckt seitlich angehoben, Hüfte bleibt gestapelt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your side, body straight, legs stacked.|End position: Top leg raised out to the side, hips stay stacked.|Return to the starting position under control and repeat without momentum.",
+  "Becken nicht nach hinten kippen, Bewegung aus der Hüfte.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Don't tip the pelvis back, move from the hip.", "Rushing the movement or losing body tension.",
+  "beine", null, "side-lying leg raise side lying leg raise");
+G("fire-hydrant", "Fire Hydrant", "Fire Hydrant", "bw legs", 3, 30, 1,
+  "Becken nicht nach hinten kippen, Bewegung aus der Hüfte", "Don't tip the pelvis back, move from the hip", 45, 1, 2, "none",
+  ["Seitliches Gesäß", "Hüftstabilisatoren", "Side glutes", "Hip stabilisers"],
+  "Ausgangsposition: Vierfüßlerstand, Knie unter der Hüfte.|Endposition: Ein Knie seitlich bis auf Hüfthöhe angehoben, Becken bleibt ruhig.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: On all fours, knees under your hips.|End position: One knee lifted out to the side up to hip height, pelvis stays still.|Return to the starting position under control and repeat without momentum.",
+  "Becken nicht nach hinten kippen, Bewegung aus der Hüfte.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Don't tip the pelvis back, move from the hip.", "Rushing the movement or losing body tension.",
+  "beine", null, "fire hydrant fire hydrant");
+G("cable-hip-abduction", "Beinabspreizen (Kabelzug)", "Cable Hip Abduction", "weight legs", 3, 40, 1,
+  "Am Turm festhalten, kein Schwung, Standbein leicht gebeugt", "Hold on to the tower, no momentum, standing leg slightly bent", 60, 1, 2, "gym",
+  ["Seitliches Gesäß", "Hüftstabilisatoren", "Side glutes", "Hip stabilisers"],
+  "Ausgangsposition: Seitlich zum Kabelturm, Manschette am äußeren Knöchel, Standbein gestreckt, Arbeitsbein neben dem Standbein.|Endposition: Äußeres Bein gestreckt seitlich abgespreizt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Side-on to the cable tower, cuff on the outer ankle, standing leg straight, working leg beside the standing leg.|End position: Outer leg straight and spread out to the side.|Return to the starting position under control and repeat without momentum.",
+  "Am Turm festhalten, kein Schwung, Standbein leicht gebeugt.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Hold on to the tower, no momentum, standing leg slightly bent.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "cable hip abduction cable hip abduction");
+G("cable-hip-adduction", "Beinanführen (Kabelzug)", "Cable Hip Adduction", "weight legs", 3, 40, 1,
+  "Am Turm festhalten, kein Schwung, Standbein leicht gebeugt", "Hold on to the tower, no momentum, standing leg slightly bent", 60, 1, 2, "gym",
+  ["Adduktoren", "Hüftstabilisatoren", "Adductors", "Hip stabilisers"],
+  "Ausgangsposition: Seitlich zum Kabelturm, Manschette am inneren Knöchel, Bein seitlich abgespreizt, Standbein gestreckt.|Endposition: Bein gestreckt vor dem Standbein vorbeigeführt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Side-on to the cable tower, cuff on the inner ankle, leg spread out to the side, standing leg straight.|End position: Leg straight and swung across in front of the standing leg.|Return to the starting position under control and repeat without momentum.",
+  "Am Turm festhalten, kein Schwung, Standbein leicht gebeugt.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Hold on to the tower, no momentum, standing leg slightly bent.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "cable hip adduction cable hip adduction");
+G("band-lateral-walk", "Seitschritt (Band)", "Lateral Band Walk", "weight legs", 3, 40, 0,
+  "Band über Knien oder Knöcheln, nicht um die Zehen; Knie nicht nach innen fallen lassen", "Band above the knees or at the ankles, not around the toes; don't let your knees cave in", 60, 1, 2, "band",
+  ["Seitliches Gesäß", "Hüftstabilisatoren", "Side glutes", "Hip stabilisers"],
+  "Ausgangsposition: Band um die Knöchel oder Knie, leichte Hocke, Beine hüftbreit.|Endposition: Seitlich Schritt nach außen, Band bleibt gespannt, Hocke bleibt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Band around your ankles or knees, slight squat, feet hip-width.|End position: Step sideways outward, band stays taut, squat position stays.|Return to the starting position under control and repeat without momentum.",
+  "Band über Knien oder Knöcheln, nicht um die Zehen; Knie nicht nach innen fallen lassen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Band above the knees or at the ankles, not around the toes; don't let your knees cave in.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "lateral band walk band lateral walk");
+G("barbell-lunge", "Ausfallschritt (Langhantel)", "Barbell Lunge", "weight legs", 3, 40, 1,
+  "Mit leerer Stange beginnen, Schritt groß genug, Knie über dem Fuß, Oberkörper aufrecht", "Start with an empty bar, take a long enough step, knee over foot, torso upright", 60, 2, 2, "gym",
+  ["Oberschenkel vorn", "Gesäß", "Quads", "Glutes"],
+  "Ausgangsposition: Stange auf dem oberen Rücken (Nacken), aufrecht, Füße hüftbreit.|Endposition: Ausfallschritt vorwärts, beide Knie etwa 90°, Oberkörper aufrecht, danach zurück in den Stand.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bar on your upper back, standing tall, feet hip-width.|End position: Lunge forward, both knees about 90°, torso upright, then back to standing.|Return to the starting position under control and repeat without momentum.",
+  "Mit leerer Stange beginnen, Schritt groß genug, Knie über dem Fuß, Oberkörper aufrecht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Start with an empty bar, take a long enough step, knee over foot, torso upright.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "barbell lunge barbell lunge");
+G("power-clean", "Power Clean", "Power Clean", "weight", 3, 40, 0,
+  "Stange auf den Schultern vorn abgefangen, Ellbogen vorn, Hüfte und Knie in leichter Beugun", "Bar caught on the front of your shoulders, elbows forward, hips and knees slightly bent", 60, 3, 3, "gym",
+  ["Gesäß", "Oberschenkel hinten, Oberer Rücken, Schultern", "Glutes", "Hamstrings, Upper back, Shoulders"],
+  "Ausgangsposition: Stange am Boden, Hüfte tief, Rücken gerade, Arme gestreckt.|Endposition: Stange auf den Schultern vorn abgefangen, Ellbogen vorn, Hüfte und Knie in leichter Beugung.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bar on the floor, hips low, back straight, arms straight.|End position: Bar caught on the front of your shoulders, elbows forward, hips and knees slightly bent.|Return to the starting position under control and repeat without momentum.",
+  "Technikintensiv und explosiv: erst leicht oder mit leerer Stange, Anleitung durch Trainer empfohlen. Stange bei Kontrollverlust fallen lassen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Technical and explosive: start light or with an empty bar, coaching recommended. Drop the bar if you lose control.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "power clean power clean");
+G("clean-and-press", "Clean and Press", "Clean and Press", "weight", 3, 40, 0,
+  "Stange gestreckt über dem Kopf, Körper aufrecht", "Bar straight overhead, body upright", 60, 3, 3, "gym",
+  ["Schultern", "Gesäß, Oberschenkel, Rücken", "Shoulders", "Glutes, Thighs, Back"],
+  "Ausgangsposition: Stange am Boden bzw. vor den Oberschenkeln, Hüfte tief, Rücken gerade.|Endposition: Stange gestreckt über dem Kopf, Körper aufrecht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bar on the floor or in front of your thighs, hips low, back straight.|End position: Bar straight overhead, body upright.|Return to the starting position under control and repeat without momentum.",
+  "Technikintensiv: erst leicht oder mit leerer Stange, Anleitung durch Trainer empfohlen. Stange bei Kontrollverlust fallen lassen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Technical: start light or with an empty bar, coaching recommended. Drop the bar if you lose control.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "clean and press clean and press");
+G("decline-bench-press", "Negativbankdrücken (Langhantel)", "Barbell Decline Bench Press", "weight", 3, 40, 0,
+  "Füße sicher fixieren, nur mit Spotter", "Secure your feet, only with a spotter", 60, 2, 2, "gym",
+  ["Untere Brust", "Trizeps, Vordere Schulter", "Lower chest", "Triceps, Front delts"],
+  "Ausgangsposition: Rücken auf der Negativbank, Stange auf Brusthöhe, Ellbogen etwa 45° zum Körper.|Endposition: Arme gestreckt, Stange über dem Brustbein.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back on the decline bench, bar at chest height, elbows about 45° from your body.|End position: Arms straight, bar above your breastbone.|Return to the starting position under control and repeat without momentum.",
+  "Füße sicher fixieren, nur mit Spotter.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Secure your feet, only with a spotter.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "brust", null, "barbell decline bench press decline bench press");
+G("incline-bench-press", "Schrägbankdrücken (Langhantel)", "Barbell Incline Bench Press", "weight", 3, 40, 0,
+  "Bank 30 bis 45°, Spotter, Handgelenke gerade", "Bench at 30 to 45°, spotter, wrists straight", 60, 2, 2, "gym",
+  ["Obere Brust", "Vordere Schulter, Trizeps", "Upper chest", "Front delts, Triceps"],
+  "Ausgangsposition: Rücken auf der Schrägbank, Stange knapp über der oberen Brust.|Endposition: Arme gestreckt, Stange über den Schultern.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back on the incline bench, bar just above your upper chest.|End position: Arms straight, bar above your shoulders.|Return to the starting position under control and repeat without momentum.",
+  "Bank 30 bis 45°, Spotter, Handgelenke gerade.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Bench at 30 to 45°, spotter, wrists straight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "brust", null, "barbell incline bench press incline bench press");
+G("close-grip-bench-press", "Enges Bankdrücken (Langhantel)", "Barbell Close-Grip Bench Press", "weight arms", 3, 40, 0,
+  "Spotter oder Rack nötig", "Spotter or rack needed", 60, 2, 2, "gym",
+  ["Trizeps", "Brust, Vordere Schulter", "Triceps", "Chest, Front delts"],
+  "Ausgangsposition: Rücken auf der Flachbank, Griff schulterbreit, Stange an der unteren Brust, Ellbogen nah am Körper.|Endposition: Arme gestreckt, Stange über der Brust.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back on the flat bench, shoulder-width grip, bar at your lower chest, elbows close to your body.|End position: Arms straight, bar above your chest.|Return to the starting position under control and repeat without momentum.",
+  "Spotter oder Rack nötig.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Spotter or rack needed.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "barbell close-grip bench press close grip bench press");
+G("decline-push-up", "Liegestütz (Füße erhöht)", "Feet-Elevated Push-up", "bw", 3, 30, 0,
+  "Rumpf spannen, Hüfte nicht durchhängen", "Brace your core, don't let your hips sag", 45, 2, 2, "none",
+  ["Obere Brust", "Vordere Schulter, Trizeps", "Upper chest", "Front delts, Triceps"],
+  "Ausgangsposition: Füße erhöht, Hände schulterbreit am Boden, Körper gerade, Arme gestreckt.|Endposition: Brust knapp über dem Boden, Ellbogen schräg nach hinten, Körper gerade.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Feet raised, hands shoulder-width on the floor, body straight, arms straight.|End position: Chest just above the floor, elbows angled back, body straight.|Return to the starting position under control and repeat without momentum.",
+  "Rumpf spannen, Hüfte nicht durchhängen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Brace your core, don't let your hips sag.", "Rushing the movement or losing body tension.",
+  "brust", null, "feet-elevated push-up decline push up");
+G("chest-dip", "Brust-Dips (Vorneigung)", "Chest Dip", "calis", 3, 30, 0,
+  "Nicht zu tief absenken (Schulter). Vorstufen: Negative Dips, Assisted Dip", "Don't go too deep (shoulder). Preparation: negative dips, assisted dip", 60, 3, 2, "dip",
+  ["Untere Brust", "Trizeps, Vordere Schulter", "Lower chest", "Triceps, Front delts"],
+  "Ausgangsposition: Stütz an den Barren, Arme gestreckt, Oberkörper leicht nach vorn geneigt.|Endposition: Ellbogen etwa 90°, Oberkörper vorgeneigt, Brust zwischen den Barren.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Support on the bars, arms straight, torso leaning slightly forward.|End position: Elbows about 90°, torso leaning forward, chest between the bars.|Return to the starting position under control and repeat without momentum.",
+  "Nicht zu tief absenken (Schulter). Vorstufen: Negative Dips, Assisted Dip.", "Mit Schwung arbeiten oder ohne sicheren Griff und Stand üben.",
+  "Don't go too deep (shoulder). Preparation: negative dips, assisted dip.", "Using momentum or training without a secure grip and footing.",
+  "brust", null, "chest dip chest dip");
+G("single-arm-push-up", "Einarmiger Liegestütz", "Single-Arm Push-up", "bw", 3, 30, 1,
+  "Vorstufen: Archer-Liegestütz, Hand erhöht", "Preparation: archer push-up, hand raised", 45, 3, 2, "none",
+  ["Brust", "Trizeps, Rumpf, Schräge Bauchmuskeln", "Chest", "Triceps, Core, Obliques"],
+  "Ausgangsposition: Breiter Stand, eine Hand unter der Schulter, andere Hand auf den Rücken.|Endposition: Brust knapp über dem Boden, Körper bleibt gerade, kaum Verdrehung.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Wide stance, one hand under your shoulder, other hand on your back.|End position: Chest just above the floor, body stays straight, little twisting.|Return to the starting position under control and repeat without momentum.",
+  "Vorstufen: Archer-Liegestütz, Hand erhöht.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Preparation: archer push-up, hand raised.", "Rushing the movement or losing body tension.",
+  "brust", null, "single-arm push-up single arm push up");
+G("shoulder-tap-push-up", "Liegestütz mit Schulterberührung", "Shoulder-Tap Push-up", "bw", 3, 30, 0,
+  "Hüfte ruhig, Füße etwas breiter für mehr Stabilität", "Keep your hips still, feet a little wider for more stability", 45, 2, 2, "none",
+  ["Brust", "Rumpf, Schultern", "Chest", "Core, Shoulders"],
+  "Ausgangsposition: Hochstütz, Hände schulterbreit, Beine breit.|Endposition: Nach dem Liegestütz im Hochstütz eine Hand zur gegenüberliegenden Schulter, Hüfte ruhig.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: High plank, hands shoulder-width, feet wide.|End position: After the push-up, in the high plank one hand taps the opposite shoulder, hips still.|Return to the starting position under control and repeat without momentum.",
+  "Hüfte ruhig, Füße etwas breiter für mehr Stabilität.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Keep your hips still, feet a little wider for more stability.", "Rushing the movement or losing body tension.",
+  "brust", null, "shoulder-tap push-up shoulder tap push up");
+G("spiderman-push-up", "Spiderman Push-up", "Spiderman Push-up", "bw", 3, 30, 0,
+  "Hüfte ruhig, Knie nicht auf den Boden schlagen lassen", "Keep your hips still, don't let the knee slam the floor", 45, 2, 2, "none",
+  ["Brust", "Schräge Bauchmuskeln, Hüftbeuger", "Chest", "Obliques, Hip flexors"],
+  "Ausgangsposition: Hochstütz, Hände schulterbreit, Körper gerade.|Endposition: Unten ein Knie seitlich zum Ellbogen geführt, Brust nah am Boden.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: High plank, hands shoulder-width, body straight.|End position: At the bottom one knee drawn out to the elbow, chest close to the floor.|Return to the starting position under control and repeat without momentum.",
+  "Hüfte ruhig, Knie nicht auf den Boden schlagen lassen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Keep your hips still, don't let the knee slam the floor.", "Rushing the movement or losing body tension.",
+  "brust", null, "spiderman push-up spiderman push up");
+G("decline-db-fly", "Negativ-Fliegende (Kurzhantel)", "Decline Dumbbell Fly", "weight", 3, 40, 0,
+  "Ellbogen nicht tiefer als die Schulter sinken lassen", "Don't let your elbows sink below shoulder level", 60, 2, 2, "db",
+  ["Untere Brust", "Trizeps", "Lower chest", "Triceps"],
+  "Ausgangsposition: Rücken auf der Negativbank, Arme fast gestreckt über der Brust, Ellbogen leicht gebeugt, Handflächen zueinander.|Endposition: Arme weit geöffnet auf Brusthöhe, Ellbogen leicht gebeugt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back on the decline bench, arms almost straight above your chest, elbows slightly bent, palms facing each other.|End position: Arms wide open at chest height, elbows slightly bent.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen nicht tiefer als die Schulter sinken lassen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Don't let your elbows sink below shoulder level.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "brust", null, "decline dumbbell fly decline db fly");
+G("handstand-push-up", "Handstand Push-up", "Handstand Push-up", "bw", 3, 30, 0,
+  "Kopf berührt leicht oder knapp über dem Boden, Ellbogen etwa 90°, Körper gerade", "Head touches lightly or stays just above the floor, elbows about 90°, body straight", 45, 3, 2, "none",
+  ["Schultern", "Trizeps, Rumpf", "Shoulders", "Triceps, Core"],
+  "Ausgangsposition: Handstand mit dem Bauch zur Wand, Arme gestreckt.|Endposition: Kopf berührt leicht oder knapp über dem Boden, Ellbogen etwa 90°, Körper gerade.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Handstand facing the wall, arms straight.|End position: Head touches lightly or stays just above the floor, elbows about 90°, body straight.|Return to the starting position under control and repeat without momentum.",
+  "Kopf- und Nackenbelastung, Sturzrisiko: Wand, freie Fläche, weicher Untergrund. Nicht bei Schulterproblemen. Vorstufe: Pike Push-ups.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Load on head and neck, risk of falling: wall, clear space, soft surface. Not with shoulder problems. Preparation: pike push-ups.", "Rushing the movement or losing body tension.",
+  "schulter", null, "handstand push-up handstand push up");
+G("barbell-front-raise", "Frontheben (Langhantel)", "Barbell Front Raise", "weight", 3, 40, 0,
+  "Kein Schwung", "No swinging", 60, 1, 2, "gym",
+  ["Vordere Schulter", "Oberer Trapez", "Front delts", "Upper traps"],
+  "Ausgangsposition: Aufrecht, Stange im Obergriff vor den Oberschenkeln, Arme gestreckt.|Endposition: Stange mit gestreckten Armen bis auf Schulterhöhe angehoben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, bar in an overhand grip in front of your thighs, arms straight.|End position: Bar raised to shoulder height with straight arms.|Return to the starting position under control and repeat without momentum.",
+  "Kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "No swinging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "barbell front raise barbell front raise");
+G("rear-delt-row", "Rudern zur hinteren Schulter", "Rear Delt Row", "weight", 3, 40, 0,
+  "Leichtes Gewicht, Rücken gerade, Nacken neutral", "Light weight, back straight, neck neutral", 60, 1, 2, "db",
+  ["Hintere Schulter", "Oberer Rücken", "Rear delts", "Upper back"],
+  "Ausgangsposition: Vorgebeugt, Rücken gerade, Arme hängen gestreckt unter den Schultern.|Endposition: Ellbogen seitlich auf Schulterhöhe nach oben gezogen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bent forward, back straight, arms hanging straight under your shoulders.|End position: Elbows pulled up and out to shoulder height.|Return to the starting position under control and repeat without momentum.",
+  "Leichtes Gewicht, Rücken gerade, Nacken neutral.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight, back straight, neck neutral.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "rear delt row rear delt row");
+G("side-lying-external-rotation", "Außenrotation in Seitenlage", "Side-Lying External Rotation", "weight", 3, 40, 1,
+  "Sehr leichtes Gewicht", "Very light weight", 60, 1, 2, "db",
+  ["Rotatorenmanschette", "Hintere Schulter", "Rotator cuff", "Rear delts"],
+  "Ausgangsposition: Seitenlage, Oberarm am Körper (Handtuch zwischen Ellbogen und Rumpf), Ellbogen 90°, Unterarm vor dem Bauch.|Endposition: Unterarm nach oben gedreht, Ellbogen bleibt am Körper.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your side, upper arm at your body (towel between elbow and torso), elbow 90°, forearm in front of your belly.|End position: Forearm rotated upward, elbow stays at your body.|Return to the starting position under control and repeat without momentum.",
+  "Sehr leichtes Gewicht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Very light weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "side-lying external rotation side lying external rotation");
+G("cable-external-rotation", "Außenrotation (Kabelzug)", "Cable External Rotation", "weight", 3, 40, 1,
+  "Sehr leichtes Gewicht, Ellbogen (Handtuch) am Körper, keine Ausweichbewegung", "Very light weight, elbow (towel) at your body, no evasive movement", 60, 1, 2, "gym",
+  ["Rotatorenmanschette", "Hintere Schulter", "Rotator cuff", "Rear delts"],
+  "Ausgangsposition: Aufrecht, Ellbogen 90° am Körper, Unterarm vor dem Bauch zum Kabel.|Endposition: Unterarm nach außen gedreht, Ellbogen bleibt am Körper.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, elbow 90° at your body, forearm in front of your belly towards the cable.|End position: Forearm rotated outward, elbow stays at your body.|Return to the starting position under control and repeat without momentum.",
+  "Sehr leichtes Gewicht, Ellbogen (Handtuch) am Körper, keine Ausweichbewegung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Very light weight, elbow (towel) at your body, no evasive movement.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "cable external rotation cable external rotation");
+G("cable-internal-rotation", "Innenrotation (Kabelzug)", "Cable Internal Rotation", "weight", 3, 40, 1,
+  "Sehr leichtes Gewicht, Ellbogen (Handtuch) am Körper, keine Ausweichbewegung", "Very light weight, elbow (towel) at your body, no evasive movement", 60, 1, 2, "gym",
+  ["Rotatorenmanschette", "Hintere Schulter", "Rotator cuff", "Rear delts"],
+  "Ausgangsposition: Aufrecht, Ellbogen 90° am Körper, Unterarm nach außen gedreht.|Endposition: Unterarm vor den Bauch gezogen, Ellbogen bleibt am Körper.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, elbow 90° at your body, forearm rotated outward.|End position: Forearm pulled in front of your belly, elbow stays at your body.|Return to the starting position under control and repeat without momentum.",
+  "Sehr leichtes Gewicht, Ellbogen (Handtuch) am Körper, keine Ausweichbewegung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Very light weight, elbow (towel) at your body, no evasive movement.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "cable internal rotation cable internal rotation");
+G("underhand-barbell-row", "Vorgebeugtes Rudern, Untergriff (Langhantel)", "Underhand Barbell Row", "weight back", 3, 40, 0,
+  "Rücken neutral, Gewicht moderat (Bizepssehne belastet)", "Neutral back, moderate weight (loads the biceps tendon)", 60, 2, 2, "gym",
+  ["Breiter Rückenmuskel", "Bizeps, Unterer Rücken", "Lats", "Biceps, Lower back"],
+  "Ausgangsposition: Vorgebeugt, Rücken gerade, Stange im Untergriff mit gestreckten Armen vor den Knien.|Endposition: Stange zum Unterbauch gezogen, Ellbogen am Körper.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bent forward, back straight, bar in an underhand grip with straight arms in front of your knees.|End position: Bar pulled to your lower belly, elbows at your body.|Return to the starting position under control and repeat without momentum.",
+  "Rücken neutral, Gewicht moderat (Bizepssehne belastet).", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Neutral back, moderate weight (loads the biceps tendon).", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "ruecken", null, "underhand barbell row underhand barbell row");
+G("wide-grip-pull-up", "Klimmzug weit", "Wide-Grip Pull-up", "calis back", 3, 30, 0,
+  "Nicht hinter den Nacken ziehen", "Don't pull behind the neck", 60, 3, 2, "bar",
+  ["Breiter Rückenmuskel", "Oberer Rücken, Bizeps", "Lats", "Upper back, Biceps"],
+  "Ausgangsposition: Hang an der Stange im Obergriff, deutlich schulterbreit überfasst, Arme gestreckt.|Endposition: Kinn über der Stange, Ellbogen schräg nach unten, Brust oben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Hanging from the bar in an overhand grip, clearly wider than shoulder-width, arms straight.|End position: Chin over the bar, elbows angled down, chest up.|Return to the starting position under control and repeat without momentum.",
+  "Nicht hinter den Nacken ziehen.", "Mit Schwung arbeiten oder ohne sicheren Griff und Stand üben.",
+  "Don't pull behind the neck.", "Using momentum or training without a secure grip and footing.",
+  "ruecken", null, "wide-grip pull-up wide grip pull up");
+G("single-arm-lat-pulldown", "Einarmiges Latziehen", "Single-Arm Lat Pulldown", "weight back", 3, 40, 1,
+  "Schulter nicht hochziehen, Oberkörper nicht verdrehen", "Don't shrug, don't twist your torso", 60, 1, 2, "gym",
+  ["Breiter Rückenmuskel", "Bizeps", "Lats", "Biceps"],
+  "Ausgangsposition: Sitzend vor dem Kabel, ein Arm gestreckt nach oben greifend.|Endposition: Ellbogen zur Seite des Rumpfs gezogen, Hand auf Schulterhöhe.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Seated at the cable, one arm reaching up straight.|End position: Elbow pulled to the side of your torso, hand at shoulder height.|Return to the starting position under control and repeat without momentum.",
+  "Schulter nicht hochziehen, Oberkörper nicht verdrehen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Don't shrug, don't twist your torso.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "ruecken", null, "single-arm lat pulldown single arm lat pulldown");
+G("drag-curl", "Drag Curl (Ellbogen zurück)", "Drag Curl", "weight arms", 3, 40, 0,
+  "Schultern nicht nach vorn, moderates Gewicht", "Shoulders don't roll forward, moderate weight", 60, 2, 2, "gym",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Aufrecht, Stange im Untergriff vor den Oberschenkeln.|Endposition: Ellbogen zurückgezogen, Stange nah am Körper bis zur Brust gezogen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, bar in an underhand grip in front of your thighs.|End position: Elbows drawn back, bar pulled up close to your body to your chest.|Return to the starting position under control and repeat without momentum.",
+  "Schultern nicht nach vorn, moderates Gewicht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Shoulders don't roll forward, moderate weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "drag curl drag curl");
+G("reverse-preacher-curl", "Reverse Preacher Curl", "Reverse Preacher Curl", "weight arms", 3, 40, 0,
+  "Unten Ellbogen nicht ganz durchstrecken", "Don't fully lock your elbows at the bottom", 60, 2, 2, "gym",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Oberarme auf dem Preacher-Pult, Stange im Obergriff, Arme fast gestreckt.|Endposition: Unterarme angehoben, Handrücken zeigen nach vorn oben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Upper arms on the preacher pad, bar in an overhand grip, arms almost straight.|End position: Forearms raised, backs of your hands facing forward and up.|Return to the starting position under control and repeat without momentum.",
+  "Unten Ellbogen nicht ganz durchstrecken.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Don't fully lock your elbows at the bottom.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "reverse preacher curl reverse preacher curl");
+G("incline-hammer-curl", "Schrägbank-Hammercurl", "Incline Hammer Curl", "weight arms", 3, 40, 0,
+  "Schultern hinten an der Bank lassen", "Keep your shoulders back against the bench", 60, 1, 2, "db",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Rücken auf der Schrägbank, Arme hängen, Handflächen zueinander.|Endposition: Unterarme angehoben, Daumen oben, Oberarme bleiben hängen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back on the incline bench, arms hanging, palms facing each other.|End position: Forearms raised, thumbs up, upper arms keep hanging.|Return to the starting position under control and repeat without momentum.",
+  "Schultern hinten an der Bank lassen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Keep your shoulders back against the bench.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "incline hammer curl incline hammer curl");
+G("db-triceps-kickback", "Trizeps-Kickback (Kurzhantel)", "Dumbbell Triceps Kickback", "weight arms", 3, 40, 0,
+  "Oberarm fixiert, leichtes Gewicht, kein Schwung", "Fix your upper arm, light weight, no swinging", 60, 1, 2, "db",
+  ["Trizeps", "Vordere Schulter", "Triceps", "Front delts"],
+  "Ausgangsposition: Vorgebeugt, Oberarm parallel zum Rumpf, Ellbogen 90°.|Endposition: Arm nach hinten gestreckt, Oberarm bleibt fix.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bent forward, upper arm parallel to your torso, elbow 90°.|End position: Arm extended backward, upper arm stays fixed.|Return to the starting position under control and repeat without momentum.",
+  "Oberarm fixiert, leichtes Gewicht, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Fix your upper arm, light weight, no swinging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "dumbbell triceps kickback db triceps kickback");
+G("reverse-wrist-curl", "Handgelenkstrecken im Obergriff", "Reverse Wrist Curl", "weight arms", 3, 40, 0,
+  "Sehr leichtes Gewicht, Handgelenk nicht überstrecken", "Very light weight, don't overextend the wrist", 60, 1, 2, "db",
+  ["Unterarme", "Bizeps", "Forearms", "Biceps"],
+  "Ausgangsposition: Unterarme auf dem Oberschenkel oder der Bank, Handrücken nach oben, Handgelenke gebeugt.|Endposition: Handrücken nach oben gestreckt, Unterarm ruht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Forearms on your thigh or the bench, backs of your hands up, wrists flexed.|End position: Backs of your hands extended upward, forearm rests.|Return to the starting position under control and repeat without momentum.",
+  "Sehr leichtes Gewicht, Handgelenk nicht überstrecken.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Very light weight, don't overextend the wrist.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "reverse wrist curl reverse wrist curl");
+G("flutter-kicks", "Flutter Kicks", "Flutter Kicks", "bw core", 3, 30, 0,
+  "Lendenwirbel am Boden halten; bei Rückenproblemen Beine höher oder Knie beugen", "Legs move alternately up and down in a small range", 45, 2, 3, "none",
+  ["Gerader Bauch", "Hüftbeuger", "Abs", "Hip flexors"],
+  "Ausgangsposition: Rückenlage, Beine gestreckt knapp über dem Boden, Lendenwirbel am Boden.|Endposition: Beine wechselweise im kleinen Bereich auf und ab bewegt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back, legs straight just above the floor, lower back on the floor.|End position: Legs move alternately up and down in a small range.|Return to the starting position under control and repeat without momentum.",
+  "Lendenwirbel am Boden halten; bei Rückenproblemen Beine höher oder Knie beugen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Keep your lower back on the floor; with back problems raise your legs higher or bend your knees.", "Rushing the movement or losing body tension.",
+  "bauch", null, "flutter kicks flutter kicks");
+G("scissor-kicks", "Scissor Kicks", "Scissor Kicks", "bw core", 3, 30, 0,
+  "Lendenwirbel am Boden halten; bei Rückenproblemen Beine höher oder Knie beugen", "Legs cross over alternately, torso stays still", 45, 2, 3, "none",
+  ["Gerader Bauch", "Adduktoren", "Abs", "Adductors"],
+  "Ausgangsposition: Rückenlage, Beine gestreckt knapp über dem Boden.|Endposition: Beine überkreuzen sich wechselweise, Rumpf bleibt ruhig.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back, legs straight just above the floor.|End position: Legs cross over alternately, torso stays still.|Return to the starting position under control and repeat without momentum.",
+  "Lendenwirbel am Boden halten; bei Rückenproblemen Beine höher oder Knie beugen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Keep your lower back on the floor; with back problems raise your legs higher or bend your knees.", "Rushing the movement or losing body tension.",
+  "bauch", null, "scissor kicks scissor kicks");
+G("decline-sit-up", "Sit-up auf der Negativbank", "Decline Sit-up", "weight core", 3, 40, 0,
+  "Nicht am Kopf ziehen, nur bei beschwerdefreiem Rücken, Halt der Füße prüfen", "Don't pull on your head, only with a pain-free back, check that your feet are secure", 60, 2, 2, "gym",
+  ["Gerader Bauch", "Hüftbeuger", "Abs", "Hip flexors"],
+  "Ausgangsposition: Rückenlage auf der Negativbank, Füße fixiert, Hände an den Schläfen.|Endposition: Oberkörper aufgerichtet, Rücken leicht rund.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on the decline bench, feet secured, hands at your temples.|End position: Torso raised, back slightly rounded.|Return to the starting position under control and repeat without momentum.",
+  "Nicht am Kopf ziehen, nur bei beschwerdefreiem Rücken, Halt der Füße prüfen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Don't pull on your head, only with a pain-free back, check that your feet are secure.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "bauch", null, "decline sit-up decline sit up");
+G("oblique-crunch", "Seitlicher Crunch", "Oblique Crunch", "bw core", 3, 30, 0,
+  "Nicht am Kopf ziehen, Lendenbereich am Boden", "Don't pull on your head, lower back on the floor", 45, 1, 2, "none",
+  ["Schräge Bauchmuskeln", "Gerader Bauch", "Obliques", "Abs"],
+  "Ausgangsposition: Rückenlage, Knie angewinkelt und zur Seite abgelegt, Hände am Kopf.|Endposition: Schulter zur Hüfte gehoben, Knie bleiben zur anderen Seite abgelegt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back, knees bent and dropped to one side, hands at your head.|End position: Shoulder raised towards the hip, knees stay dropped to the other side.|Return to the starting position under control and repeat without momentum.",
+  "Nicht am Kopf ziehen, Lendenbereich am Boden.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Don't pull on your head, lower back on the floor.", "Rushing the movement or losing body tension.",
+  "bauch", null, "oblique crunch oblique crunch");
+G("heel-touches", "Heel Touches (Fersenberühren)", "Heel Touches", "bw core", 3, 30, 0,
+  "Nicht am Kopf ziehen, Lendenbereich am Boden", "Don't pull on your head, lower back on the floor", 45, 1, 2, "none",
+  ["Schräge Bauchmuskeln", "Gerader Bauch", "Obliques", "Abs"],
+  "Ausgangsposition: Rückenlage, Knie angewinkelt, Füße aufgestellt, Arme seitlich.|Endposition: Oberkörper leicht angehoben, eine Hand berührt die gleichseitige Ferse.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back, knees bent, feet flat, arms at your sides.|End position: Torso raised slightly, one hand touches the heel on the same side.|Return to the starting position under control and repeat without momentum.",
+  "Nicht am Kopf ziehen, Lendenbereich am Boden.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Don't pull on your head, lower back on the floor.", "Rushing the movement or losing body tension.",
+  "bauch", null, "heel touches heel touches");
+G("reverse-plank", "Reverse Plank", "Reverse Plank", "bw core", 3, 30, 0,
+  "Schultern nicht einsinken lassen, Hüfte nicht überstrecken", "Don't let your shoulders sink, don't overextend your hips", 45, 2, 1, "none",
+  ["Gesäß", "Rückenstrecker, Hintere Schulter, Oberschenkel hinten", "Glutes", "Spinal erectors, Rear delts, Hamstrings"],
+  "Ausgangsposition: Sitzend, Hände hinter dem Gesäß aufgestützt, Beine gestreckt.|Endposition: Hüfte angehoben, Körper bildet eine gerade Linie von Kopf bis Fuß.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Sitting, hands propped behind your hips, legs straight.|End position: Hips raised, body forms a straight line from head to foot.|Hold the position calmly while breathing evenly, then release under control.",
+  "Schultern nicht einsinken lassen, Hüfte nicht überstrecken.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Don't let your shoulders sink, don't overextend your hips.", "Rushing the movement or losing body tension.",
+  "bauch", null, "reverse plank reverse plank");
+G("plank-hip-dips", "Plank Hip Dips", "Plank Hip Dips", "bw core", 3, 30, 0,
+  "Hüfte nicht zu tief absenken, Nacken neutral", "Don't lower your hips too far, neck neutral", 45, 2, 2, "none",
+  ["Schräge Bauchmuskeln", "Rumpf", "Obliques", "Core"],
+  "Ausgangsposition: Unterarmstütz, Körper gerade.|Endposition: Hüfte zur Seite gedreht und abgesenkt, Rumpf angespannt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Forearm plank, body straight.|End position: Hips rotated and lowered to the side, core tensed.|Return to the starting position under control and repeat without momentum.",
+  "Hüfte nicht zu tief absenken, Nacken neutral.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Don't lower your hips too far, neck neutral.", "Rushing the movement or losing body tension.",
+  "bauch", null, "plank hip dips plank hip dips");
+G("db-side-bend", "Seitbeugen (Kurzhantel)", "Dumbbell Side Bend", "weight core", 3, 40, 0,
+  "Kein schweres Gewicht", "No heavy weight", 60, 1, 2, "db",
+  ["Schräge Bauchmuskeln", "Gerader Bauch", "Obliques", "Abs"],
+  "Ausgangsposition: Aufrecht, Hantel in einer Hand seitlich am Körper.|Endposition: Oberkörper seitlich zur Hantelseite geneigt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, dumbbell in one hand at your side.|End position: Torso bent sideways towards the dumbbell.|Return to the starting position under control and repeat without momentum.",
+  "Kein schweres Gewicht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "No heavy weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "bauch", null, "dumbbell side bend db side bend");
+G("hanging-leg-raise-twist", "Hängendes Beinheben mit Drehung", "Hanging Leg Raise with Twist", "calis core", 3, 30, 0,
+  "Nicht schwingen, Schultern aktiv. Griffkraft vorher mit Dead Hang aufbauen", "Don't swing, shoulders active. Build grip strength first with the dead hang", 60, 3, 2, "bar",
+  ["Schräge Bauchmuskeln", "Gerader Bauch", "Obliques", "Abs"],
+  "Ausgangsposition: Hang an der Stange, Beine gestreckt.|Endposition: Beine seitlich zu einer Schulter gehoben, Becken gedreht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Hanging from the bar, legs straight.|End position: Legs raised to one shoulder, pelvis rotated.|Return to the starting position under control and repeat without momentum.",
+  "Nicht schwingen, Schultern aktiv. Griffkraft vorher mit Dead Hang aufbauen.", "Mit Schwung arbeiten oder ohne sicheren Griff und Stand üben.",
+  "Don't swing, shoulders active. Build grip strength first with the dead hang.", "Using momentum or training without a secure grip and footing.",
+  "bauch", null, "hanging leg raise with twist hanging leg raise twist");
+G("jump-rope", "Seilspringen", "Jump Rope", "cardio", 4, 30, 0,
+  "Weicher Untergrund, kleine Sprünge, nur auf den Ballen landen", "Soft surface, small jumps, land on the balls of your feet only", 30, 1, 3, "none",
+  ["Waden", "Schultern, Unterarme", "Calves", "Shoulders, Forearms"],
+  "Ausgangsposition: Aufrecht, Seil hinter den Füßen, Ellbogen nah am Körper.|Endposition: Kleiner Sprung, Seil läuft unter den Füßen durch.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, rope behind your feet, elbows close to your body.|End position: Small jump, rope passes under your feet.|Return to the starting position under control and repeat without momentum.",
+  "Weicher Untergrund, kleine Sprünge, nur auf den Ballen landen.", "Hart oder steif landen und die Technik verlieren.",
+  "Soft surface, small jumps, land on the balls of your feet only.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "jump rope jump rope");
+G("butt-kicks", "Butt Kicks", "Butt Kicks", "cardio", 4, 30, 0,
+  "Aufrecht bleiben, weich landen", "Stay upright, land softly", 30, 1, 3, "none",
+  ["Oberschenkel hinten", "Waden", "Hamstrings", "Calves"],
+  "Ausgangsposition: Aufrecht, Oberkörper leicht nach vorn.|Endposition: Ferse zum Gesäß gezogen, Wechsel im Laufrhythmus.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, torso leaning slightly forward.|End position: Heel pulled up to your glutes, alternating in a running rhythm.|Return to the starting position under control and repeat without momentum.",
+  "Aufrecht bleiben, weich landen.", "Hart oder steif landen und die Technik verlieren.",
+  "Stay upright, land softly.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "butt kicks butt kicks");
+G("star-jumps", "Star Jumps", "Star Jumps", "cardio", 4, 30, 0,
+  "Sprung in die Streckung, Arme und Beine sternförmig gespreizt", "Jump into full extension, arms and legs spread like a star", 30, 2, 3, "none",
+  ["Waden", "Schultern, Oberschenkel vorn, Gesäß", "Calves", "Shoulders, Quads, Glutes"],
+  "Ausgangsposition: Aufrecht, Füße geschlossen, Arme am Körper.|Endposition: Sprung in die Streckung, Arme und Beine sternförmig gespreizt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, feet together, arms at your sides.|End position: Jump into full extension, arms and legs spread like a star.|Return to the starting position under control and repeat without momentum.",
+  "Weiche Landung, Knie in Fußrichtung; bei Knie-, Sprunggelenk- oder Herz-Kreislauf-Beschwerden vorher ärztlich abklären.", "Hart oder steif landen und die Technik verlieren.",
+  "Land softly, knees over your feet; with knee, ankle or cardiovascular problems get medical advice first.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "star jumps star jumps");
+G("squat-jacks", "Squat Jacks", "Squat Jacks", "cardio", 4, 30, 0,
+  "Weiche Landung, Knie in Fußrichtung; bei Beschwerden vorher ärztlich abklären", "Land softly, knees over your feet; with any problems get medical advice first", 30, 2, 3, "none",
+  ["Oberschenkel vorn", "Gesäß, Adduktoren", "Quads", "Glutes, Adductors"],
+  "Ausgangsposition: Hocke, Füße breiter als schulterbreit, Hände vor der Brust.|Endposition: Sprung zu geschlossenen Füßen, Hocke bleibt, Arme seitlich.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Squat, feet wider than shoulder-width, hands in front of your chest.|End position: Jump to feet together, squat stays, arms at your sides.|Return to the starting position under control and repeat without momentum.",
+  "Weiche Landung, Knie in Fußrichtung; bei Beschwerden vorher ärztlich abklären.", "Hart oder steif landen und die Technik verlieren.",
+  "Land softly, knees over your feet; with any problems get medical advice first.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "squat jacks squat jacks");
+G("turkish-get-up", "Turkish Get-up", "Turkish Get-up", "weight", 3, 40, 1,
+  "Aufrecht stehend, Gewicht gestreckt über dem Kopf", "Standing tall, weight straight overhead", 60, 3, 2, "kb",
+  ["Schultern", "Rumpf, Gesäß", "Shoulders", "Core, Glutes"],
+  "Ausgangsposition: Rückenlage, Gewicht mit gestrecktem Arm nach oben, gegenüber Bein angewinkelt.|Endposition: Aufrecht stehend, Gewicht gestreckt über dem Kopf.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back, weight in a straight arm above you, opposite leg bent.|End position: Standing tall, weight straight overhead.|Return to the starting position under control and repeat without momentum.",
+  "Erst ohne Gewicht üben, Blick zum Gewicht. Für die Figur sind Zwischenpositionen (Ellbogenstütz, Halbkniestand) nötig.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Practise without weight first, eyes on the weight. Intermediate positions (elbow support, half kneeling) are needed for the figure.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "turkish get-up turkish get up");
+G("kb-windmill", "Kettlebell Windmill", "Kettlebell Windmill", "weight core", 3, 40, 1,
+  "Oberkörper seitlich nach unten geneigt, Hand zum Fuß, Blick zum Gewicht", "Torso bent down to the side, hand towards the foot, eyes on the weight", 60, 3, 2, "kb",
+  ["Schräge Bauchmuskeln", "Gesäß, Oberschenkel hinten, Schultern", "Obliques", "Glutes, Hamstrings, Shoulders"],
+  "Ausgangsposition: Aufrecht, Gewicht gestreckt über dem Kopf, Füße etwas breiter.|Endposition: Oberkörper seitlich nach unten geneigt, Hand zum Fuß, Blick zum Gewicht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, weight straight overhead, feet a little wider.|End position: Torso bent down to the side, hand towards the foot, eyes on the weight.|Return to the starting position under control and repeat without momentum.",
+  "Erst ohne Last, Blick zum Gewicht, Gewichtsarm bleibt senkrecht. Braucht Schulterbeweglichkeit.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "First without load, eyes on the weight, the weight arm stays vertical. Needs shoulder mobility.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "bauch", null, "kettlebell windmill kb windmill");
+G("kb-snatch", "Kettlebell Snatch", "Kettlebell Snatch", "weight", 3, 40, 1,
+  "Erst Swing, dann Clean beherrschen. Gewicht nicht auf den Unterarm aufschlagen lassen", "Master the swing, then the clean first. Don't let the weight slam onto your forearm", 60, 3, 3, "kb",
+  ["Gesäß", "Oberschenkel hinten, Schultern", "Glutes", "Hamstrings, Shoulders"],
+  "Ausgangsposition: Hüfte zurück, Gewicht zwischen den Beinen.|Endposition: Hüfte gestreckt, Gewicht gestreckt über dem Kopf fixiert.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Hips back, weight between your legs.|End position: Hips extended, weight locked out straight overhead.|Return to the starting position under control and repeat without momentum.",
+  "Erst Swing, dann Clean beherrschen. Gewicht nicht auf den Unterarm aufschlagen lassen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Master the swing, then the clean first. Don't let the weight slam onto your forearm.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "kettlebell snatch kb snatch");
+G("kb-press", "Einarmiges Kettlebell-Drücken", "Single-Arm Kettlebell Press", "weight", 3, 40, 0,
+  "Handgelenk gerade, Rippen unten (kein Hohlkreuz)", "Wrist straight, ribs down (no hollow back)", 60, 1, 2, "kb",
+  ["Vordere Schulter", "Trizeps, Rumpf", "Front delts", "Triceps, Core"],
+  "Ausgangsposition: Aufrecht, Gewicht in Rackposition an der Schulter.|Endposition: Arm gestreckt über dem Kopf, Rumpf stabil.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, weight in rack position at your shoulder.|End position: Arm straight overhead, torso stable.|Return to the starting position under control and repeat without momentum.",
+  "Handgelenk gerade, Rippen unten (kein Hohlkreuz).", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Wrist straight, ribs down (no hollow back).", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "single-arm kettlebell press kb press");
+G("kb-sumo-high-pull", "Sumo-Kreuzheben mit Zug zum Kinn (Kettlebell)", "Kettlebell Sumo Deadlift High Pull", "weight", 3, 40, 0,
+  "Ellbogen über dem Handgelenk, Schulter schonen", "Elbow above the wrist, go easy on the shoulder", 60, 2, 2, "kb",
+  ["Gesäß", "Oberer Rücken, Schultern", "Glutes", "Upper back, Shoulders"],
+  "Ausgangsposition: Breiter Stand, Hüfte tief, Gewicht zwischen den Füßen.|Endposition: Aufrecht, Gewicht mit hohem Ellbogen bis zur Brust gezogen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Wide stance, hips low, weight between your feet.|End position: Standing tall, weight pulled to your chest with a high elbow.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen über dem Handgelenk, Schulter schonen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Elbow above the wrist, go easy on the shoulder.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "kettlebell sumo deadlift high pull kb sumo high pull");
+G("kb-figure-8", "Kettlebell Figure 8", "Kettlebell Figure 8", "weight core", 3, 40, 1,
+  "Rücken neutral, Gewicht nicht auf die Füße fallen lassen", "Neutral back, don't drop the weight on your feet", 60, 2, 2, "kb",
+  ["Rumpf", "Gesäß, Unterarme", "Core", "Glutes, Forearms"],
+  "Ausgangsposition: Gewicht vorn rechts, Hüfte nach hinten, Rücken gerade.|Endposition: Gewicht links hinten, Hände wechseln unter dem Bein.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Weight in front on the right, hips back, back straight.|End position: Weight behind on the left, hands switch under the leg.|Return to the starting position under control and repeat without momentum.",
+  "Rücken neutral, Gewicht nicht auf die Füße fallen lassen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Neutral back, don't drop the weight on your feet.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "bauch", null, "kettlebell figure 8 kb figure 8");
+G("kb-halo", "Kettlebell Halo", "Kettlebell Halo", "weight", 3, 40, 0,
+  "Kein Hohlkreuz", "No hollow back", 60, 1, 2, "kb",
+  ["Schultern", "Rumpf", "Shoulders", "Core"],
+  "Ausgangsposition: Aufrecht, Gewicht mit beiden Händen vor der Brust.|Endposition: Gewicht hinter dem Kopf, Ellbogen nah am Kopf.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, weight held in both hands in front of your chest.|End position: Weight behind your head, elbows close to your head.|Return to the starting position under control and repeat without momentum.",
+  "Kein Hohlkreuz.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "No hollow back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "kettlebell halo kb halo");
+G("incline-db-fly", "Schrägbank-Fliegende (Kurzhantel)", "Incline Dumbbell Fly", "weight", 3, 40, 0,
+  "Leichtes Gewicht, Ellbogen nicht tiefer als die Schulter, Bank etwa 30°", "Light weight, elbows no lower than your shoulders, bench about 30°", 60, 2, 2, "db",
+  ["Obere Brust", "Vordere Schulter", "Upper chest", "Front delts"],
+  "Ausgangsposition: Rücken auf der Schrägbank, Arme fast gestreckt über der Brust, Handflächen zueinander.|Endposition: Arme weit geöffnet auf Brusthöhe, Ellbogen leicht gebeugt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back on the incline bench, arms almost straight above your chest, palms facing each other.|End position: Arms wide open at chest height, elbows slightly bent.|Return to the starting position under control and repeat without momentum.",
+  "Leichtes Gewicht, Ellbogen nicht tiefer als die Schulter, Bank etwa 30°.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight, elbows no lower than your shoulders, bench about 30°.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "brust", null, "incline dumbbell fly incline db fly");
+G("wide-push-up", "Liegestütz mit weitem Griff", "Wide Push-up", "bw", 3, 30, 0,
+  "Rumpf anspannen, Hände unter Kontrolle halten", "Brace your core, wrists under control", 45, 1, 2, "none",
+  ["Brust", "Vordere Schulter, Trizeps", "Chest", "Front delts, Triceps"],
+  "Ausgangsposition: Hochstütz, Hände deutlich breiter als schulterbreit, Körper gerade.|Endposition: Brust knapp über dem Boden, Ellbogen schräg nach außen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: High plank, hands clearly wider than shoulder-width, body straight.|End position: Chest just above the floor, elbows angled outward.|Return to the starting position under control and repeat without momentum.",
+  "Rumpf anspannen, Hände unter Kontrolle halten.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Brace your core, wrists under control.", "Rushing the movement or losing body tension.",
+  "brust", null, "wide push-up wide push up");
+G("push-up-rotation", "Liegestütz mit Rotation", "Push-up with Rotation", "bw", 3, 30, 1,
+  "Hüfte dreht mit, Blick zur Hand, Handgelenke aufwärmen", "Hips rotate with you, eyes on your hand, warm up your wrists", 45, 2, 2, "none",
+  ["Brust", "Schräge Bauchmuskeln, Schultern", "Chest", "Obliques, Shoulders"],
+  "Ausgangsposition: Hochstütz, Hände schulterbreit.|Endposition: Nach dem Hochdrücken Körper seitlich gedreht, ein Arm gestreckt zur Decke.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: High plank, hands shoulder-width.|End position: After pushing up, body turned sideways, one arm straight up to the ceiling.|Return to the starting position under control and repeat without momentum.",
+  "Hüfte dreht mit, Blick zur Hand, Handgelenke aufwärmen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Hips rotate with you, eyes on your hand, warm up your wrists.", "Rushing the movement or losing body tension.",
+  "brust", null, "push-up with rotation push up rotation");
+G("db-push-up", "Liegestütz auf Kurzhanteln", "Push-up on Dumbbells", "weight", 3, 40, 0,
+  "Hanteln mit festem Stand, nicht rollend", "Dumbbells on firm footing, not rolling", 60, 2, 2, "db",
+  ["Brust", "Trizeps, Unterarme", "Chest", "Triceps, Forearms"],
+  "Ausgangsposition: Hochstütz, Hände fest auf Kurzhantelgriffen.|Endposition: Brust zwischen den Hanteln abgesenkt, Handgelenke gerade.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: High plank, hands firmly on dumbbell handles.|End position: Chest lowered between the dumbbells, wrists straight.|Return to the starting position under control and repeat without momentum.",
+  "Hanteln mit festem Stand, nicht rollend.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Dumbbells on firm footing, not rolling.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "brust", null, "push-up on dumbbells db push up");
+G("standing-cable-chest-press", "Brustdrücken im Stand (Kabelzug)", "Standing Cable Chest Press", "weight", 3, 40, 0,
+  "Rumpf und Rippen stabil, kein Schwung", "Torso and ribs stable, no momentum", 60, 1, 2, "gym",
+  ["Brust", "Trizeps, Vordere Schulter", "Chest", "Triceps, Front delts"],
+  "Ausgangsposition: Schrittstellung, Kabelzug im Rücken, Hände vor der Brust.|Endposition: Arme nach vorn gestreckt auf Brusthöhe.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Split stance, cable behind you, hands in front of your chest.|End position: Arms straight forward at chest height.|Return to the starting position under control and repeat without momentum.",
+  "Rumpf und Rippen stabil, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Torso and ribs stable, no momentum.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "brust", null, "standing cable chest press standing cable chest press");
+G("pendlay-row", "Pendlay-Rudern", "Pendlay Row", "weight back", 3, 40, 0,
+  "Stange jede Wiederholung am Boden ablegen, Rücken neutral, nicht explosiv schwingen", "Set the bar down on the floor every rep, neutral back, don't swing", 60, 3, 2, "gym",
+  ["Breiter Rückenmuskel", "Oberer Rücken, Rückenstrecker", "Lats", "Upper back, Spinal erectors"],
+  "Ausgangsposition: Oberkörper waagerecht, Rücken gerade, Stange ruht auf dem Boden.|Endposition: Stange explosiv zum Unterbrustbein gezogen, Oberkörper bleibt waagerecht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Torso horizontal, back straight, bar resting on the floor.|End position: Bar pulled explosively to your lower breastbone, torso stays horizontal.|Return to the starting position under control and repeat without momentum.",
+  "Stange jede Wiederholung am Boden ablegen, Rücken neutral, nicht explosiv schwingen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Set the bar down on the floor every rep, neutral back, don't swing.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "ruecken", null, "pendlay row pendlay row");
+G("cable-reverse-fly", "Reverse Fly (Kabelzug)", "Cable Reverse Fly", "weight", 3, 40, 0,
+  "Ellbogen leicht gebeugt, kein Schwung", "Elbows slightly bent, no momentum", 60, 1, 2, "gym",
+  ["Hintere Schulter", "Oberer Rücken", "Rear delts", "Upper back"],
+  "Ausgangsposition: Aufrecht, Griffe gekreuzt vor dem Körper, Arme leicht gebeugt.|Endposition: Arme seitlich auf Schulterhöhe geöffnet.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, handles crossed in front of you, arms slightly bent.|End position: Arms open out to the sides at shoulder height.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen leicht gebeugt, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Elbows slightly bent, no momentum.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "cable reverse fly cable reverse fly");
+G("kb-deadlift", "Kreuzheben (Kettlebell)", "Kettlebell Deadlift", "weight legs", 3, 40, 0,
+  "Neutraler Rücken", "Neutral back", 60, 1, 2, "kb",
+  ["Gesäß", "Oberschenkel hinten, Rückenstrecker", "Glutes", "Hamstrings, Spinal erectors"],
+  "Ausgangsposition: Hüfte nach hinten, Rücken gerade, Hände greifen die Kettlebell zwischen den Füßen.|Endposition: Aufrecht, Hüfte gestreckt, Kettlebell hängt vor den Oberschenkeln.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Hips back, back straight, hands grip the kettlebell between your feet.|End position: Standing tall, hips extended, kettlebell hanging in front of your thighs.|Return to the starting position under control and repeat without momentum.",
+  "Neutraler Rücken.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Neutral back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "kettlebell deadlift kb deadlift");
+G("seated-barbell-shoulder-press", "Sitzendes Schulterdrücken (Langhantel)", "Seated Barbell Shoulder Press", "weight", 3, 40, 0,
+  "Spotter oder Rack nutzen", "Use a spotter or rack", 60, 2, 2, "gym",
+  ["Vordere Schulter", "Trizeps", "Front delts", "Triceps"],
+  "Ausgangsposition: Aufrecht sitzend mit Rückenlehne, Stange auf Schulterhöhe.|Endposition: Arme gestreckt, Stange über dem Kopf.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Seated upright with back support, bar at shoulder height.|End position: Arms straight, bar overhead.|Return to the starting position under control and repeat without momentum.",
+  "Spotter oder Rack nutzen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Use a spotter or rack.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "seated barbell shoulder press seated barbell shoulder press");
+G("landmine-press", "Landmine Press", "Landmine Press", "weight", 3, 40, 1,
+  "Rumpf und Rippen stabil, kein Schwung", "Torso and ribs stable, no momentum", 60, 1, 2, "gym",
+  ["Vordere Schulter", "Obere Brust, Rumpf", "Front delts", "Upper chest, Core"],
+  "Ausgangsposition: Aufrecht, Stangenende an der Schulter, andere Seite im Boden fixiert.|Endposition: Arm schräg nach oben gestreckt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, end of the bar at your shoulder, other end fixed in the floor.|End position: Arm straight up and forward.|Return to the starting position under control and repeat without momentum.",
+  "Rumpf und Rippen stabil, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Torso and ribs stable, no momentum.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "landmine press landmine press");
+G("cable-front-raise", "Frontheben (Kabelzug)", "Cable Front Raise", "weight", 3, 40, 0,
+  "Bis auf Schulterhöhe, kein Schwung", "Up to shoulder height only, no momentum", 60, 1, 2, "gym",
+  ["Vordere Schulter", "Oberer Trapez", "Front delts", "Upper traps"],
+  "Ausgangsposition: Aufrecht, Kabelzug im Rücken, Arm hängt vor den Oberschenkeln.|Endposition: Arm gestreckt bis auf Schulterhöhe gehoben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, cable behind you, arm hanging in front of your thigh.|End position: Arm straight, raised to shoulder height.|Return to the starting position under control and repeat without momentum.",
+  "Bis auf Schulterhöhe, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Up to shoulder height only, no momentum.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "cable front raise cable front raise");
+G("seated-lateral-raise", "Sitzendes Seitheben", "Seated Lateral Raise", "weight", 3, 40, 0,
+  "Kein Schwung, Rumpf stabil", "No momentum, torso stable", 60, 1, 2, "db",
+  ["Seitliche Schulter", "Oberer Trapez", "Side delts", "Upper traps"],
+  "Ausgangsposition: Aufrecht auf der Bank sitzend, Kurzhanteln seitlich.|Endposition: Arme leicht gebeugt seitlich bis auf Schulterhöhe gehoben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Seated upright on the bench, dumbbells at your sides.|End position: Arms slightly bent, raised out to the sides to shoulder height.|Return to the starting position under control and repeat without momentum.",
+  "Kein Schwung, Rumpf stabil.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "No momentum, torso stable.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "seated lateral raise seated lateral raise");
+G("plate-front-raise", "Frontheben (Hantelscheibe)", "Plate Front Raise", "weight", 3, 40, 0,
+  "Bis auf Schulterhöhe, Scheibe nicht nach vorn schwingen", "Up to shoulder height only, don't swing the plate forward", 60, 1, 2, "gym",
+  ["Vordere Schulter", "Oberer Trapez", "Front delts", "Upper traps"],
+  "Ausgangsposition: Aufrecht, Scheibe mit beiden Händen vor den Oberschenkeln.|Endposition: Scheibe mit gestreckten Armen bis auf Schulterhöhe gehoben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, plate held in both hands in front of your thighs.|End position: Plate raised to shoulder height with straight arms.|Return to the starting position under control and repeat without momentum.",
+  "Bis auf Schulterhöhe, Scheibe nicht nach vorn schwingen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Up to shoulder height only, don't swing the plate forward.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "plate front raise plate front raise");
+G("cable-upright-row", "Aufrechtes Rudern (Kabelzug)", "Cable Upright Row", "weight", 3, 40, 0,
+  "Griff schulterbreit, Ellbogen nicht über Schulterhöhe", "Shoulder-width grip, elbows no higher than shoulder level", 60, 2, 2, "gym",
+  ["Seitliche Schulter", "Trapez", "Side delts", "Traps"],
+  "Ausgangsposition: Aufrecht, Griff vor den Oberschenkeln.|Endposition: Griff dicht am Körper bis zur Brust gezogen, Ellbogen höher als die Hände.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, handle in front of your thighs.|End position: Handle pulled up close to your body to your chest, elbows higher than your hands.|Return to the starting position under control and repeat without momentum.",
+  "Griff schulterbreit, Ellbogen nicht über Schulterhöhe.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Shoulder-width grip, elbows no higher than shoulder level.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "cable upright row cable upright row");
+G("ez-curl", "Bizepscurl (SZ-Stange)", "EZ-Bar Curl", "weight arms", 3, 40, 0,
+  "Ellbogen fixieren, kein Schwung", "Elbows fixed, no swinging", 60, 1, 2, "gym",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Aufrecht, SZ-Stange im Untergriff vor den Oberschenkeln.|Endposition: Stange zu den Schultern gebeugt, Ellbogen am Körper.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, EZ bar in an underhand grip in front of your thighs.|End position: Bar curled up to your shoulders, elbows at your body.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen fixieren, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Elbows fixed, no swinging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "ez-bar curl ez curl");
+G("ez-reverse-curl", "Reverse Curl (SZ-Stange)", "EZ-Bar Reverse Curl", "weight arms", 3, 40, 0,
+  "Ellbogen fixieren, kein Schwung", "Elbows fixed, no swinging", 60, 1, 2, "gym",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Aufrecht, SZ-Stange im Obergriff vor den Oberschenkeln.|Endposition: Stange zu den Schultern gebeugt, Ellbogen am Körper.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, EZ bar in an overhand grip in front of your thighs.|End position: Bar curled up to your shoulders, elbows at your body.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen fixieren, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Elbows fixed, no swinging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "ez-bar reverse curl ez reverse curl");
+G("cable-hammer-curl", "Hammercurl (Kabelzug)", "Cable Hammer Curl", "weight arms", 3, 40, 0,
+  "Ellbogen fixiert, kein Schwung", "Elbows fixed, no swinging", 60, 1, 2, "gym",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Aufrecht vor dem Kabelturm, Seilgriff im Hammergriff, Arme gestreckt.|Endposition: Unterarme zu den Schultern gebeugt, Daumen oben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall facing the cable tower, rope in a hammer grip, arms straight.|End position: Forearms curled to your shoulders, thumbs up.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen fixiert, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Elbows fixed, no swinging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "cable hammer curl cable hammer curl");
+G("db-bulgarian-split-squat", "Bulgarische Kniebeuge (Kurzhantel)", "Dumbbell Bulgarian Split Squat", "weight legs", 3, 40, 1,
+  "Standbein weit genug vor, Knie nicht einknicken", "Front foot far enough forward, don't let the knee cave in", 60, 2, 2, "db",
+  ["Oberschenkel vorn", "Gesäß", "Quads", "Glutes"],
+  "Ausgangsposition: Hinterer Fuß auf einer Bank, vorderes Bein gestreckt, Kurzhanteln hängend.|Endposition: Vorderes Knie etwa 90°, Oberkörper aufrecht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back foot on a bench, front leg straight, dumbbells hanging.|End position: Front knee about 90°, torso upright.|Return to the starting position under control and repeat without momentum.",
+  "Standbein weit genug vor, Knie nicht einknicken.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Front foot far enough forward, don't let the knee cave in.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "dumbbell bulgarian split squat db bulgarian split squat");
+G("db-walking-lunge", "Ausfallschritt gehend (Kurzhantel)", "Dumbbell Walking Lunge", "weight legs", 3, 40, 1,
+  "Schritt groß genug, Knie nicht einknicken", "Take a long enough step, don't let the knees cave in", 60, 1, 2, "db",
+  ["Oberschenkel vorn", "Gesäß", "Quads", "Glutes"],
+  "Ausgangsposition: Aufrecht, Kurzhanteln seitlich.|Endposition: Großer Schritt nach vorn, beide Knie etwa 90°, Oberkörper aufrecht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, dumbbells at your sides.|End position: Long step forward, both knees about 90°, torso upright.|Return to the starting position under control and repeat without momentum.",
+  "Schritt groß genug, Knie nicht einknicken.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Take a long enough step, don't let the knees cave in.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "dumbbell walking lunge db walking lunge");
+G("barbell-step-up", "Step-up (Langhantel)", "Barbell Step-up", "weight legs", 3, 40, 1,
+  "Bank maximal kniehoch, mit leerer Stange beginnen, Rack oder Spotter", "Bench knee height at most, start with an empty bar, rack or spotter", 60, 2, 2, "gym",
+  ["Oberschenkel vorn", "Gesäß", "Quads", "Glutes"],
+  "Ausgangsposition: Stange im Nacken, ein Fuß auf der Bank, anderes Bein am Boden.|Endposition: Aufrecht auf der Bank, Standbein gestreckt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bar on your upper back, one foot on the bench, other leg on the floor.|End position: Standing tall on the bench, standing leg straight.|Return to the starting position under control and repeat without momentum.",
+  "Bank maximal kniehoch, mit leerer Stange beginnen, Rack oder Spotter.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Bench knee height at most, start with an empty bar, rack or spotter.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "barbell step-up barbell step up");
+G("kb-front-squat", "Frontkniebeuge (Kettlebell)", "Kettlebell Front Squat", "weight legs", 3, 40, 0,
+  "Oberkörper aufrecht, Knie über den Füßen", "Torso upright, knees over your feet", 60, 1, 2, "kb",
+  ["Oberschenkel vorn", "Gesäß, Rumpf", "Quads", "Glutes, Core"],
+  "Ausgangsposition: Aufrecht, Kettlebell in Rackposition vor der Brust, Ellbogen vorn.|Endposition: Tiefe Hocke, Oberkörper aufrecht, Kettlebell an der Brust.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, kettlebell in rack position in front of your chest, elbows forward.|End position: Deep squat, torso upright, kettlebell at your chest.|Return to the starting position under control and repeat without momentum.",
+  "Oberkörper aufrecht, Knie über den Füßen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Torso upright, knees over your feet.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "kettlebell front squat kb front squat");
+G("single-leg-hip-thrust", "Einbeiniger Hip Thrust", "Single-Leg Hip Thrust", "weight legs", 3, 40, 1,
+  "Hüfte gerade, Becken nicht kippen", "Hips level, don't tip the pelvis", 60, 2, 3, "gym",
+  ["Gesäß", "Oberschenkel hinten", "Glutes", "Hamstrings"],
+  "Ausgangsposition: Oberer Rücken auf der Bank, Hüfte abgesenkt, ein Bein gestreckt gehoben.|Endposition: Hüfte gestreckt, Körper bildet eine Linie, anderes Bein gestreckt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Upper back on the bench, hips lowered, one leg raised straight.|End position: Hips extended, body forms one line, other leg straight.|Return to the starting position under control and repeat without momentum.",
+  "Hüfte gerade, Becken nicht kippen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Hips level, don't tip the pelvis.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "single-leg hip thrust single leg hip thrust");
+G("barbell-glute-bridge", "Glute Bridge (Langhantel)", "Barbell Glute Bridge", "weight legs", 3, 40, 0,
+  "Stange polstern und sichern", "Pad and secure the bar", 60, 2, 2, "gym",
+  ["Gesäß", "Oberschenkel hinten", "Glutes", "Hamstrings"],
+  "Ausgangsposition: Rückenlage, Knie gebeugt, Stange auf der Hüfte (gepolstert).|Endposition: Hüfte gestreckt, Körper bildet eine Linie von Schulter bis Knie.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back, knees bent, bar (padded) across your hips.|End position: Hips extended, body forms a line from shoulder to knee.|Return to the starting position under control and repeat without momentum.",
+  "Stange polstern und sichern.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Pad and secure the bar.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "barbell glute bridge barbell glute bridge");
+G("db-calf-raise", "Wadenheben (Kurzhantel)", "Dumbbell Calf Raise", "weight legs", 3, 40, 0,
+  "Auf Gleichgewicht achten, bei Bedarf festhalten", "Mind your balance, hold on if needed", 60, 1, 2, "db",
+  ["Waden", "Vorderer Schienbeinmuskel", "Calves", "Shin muscles"],
+  "Ausgangsposition: Aufrecht, Kurzhanteln seitlich, Fersen am Boden.|Endposition: Fersen so hoch wie möglich, Waden angespannt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, dumbbells at your sides, heels on the floor.|End position: Heels as high as possible, calves tensed.|Return to the starting position under control and repeat without momentum.",
+  "Auf Gleichgewicht achten, bei Bedarf festhalten.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Mind your balance, hold on if needed.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "dumbbell calf raise db calf raise");
+G("hollow-rock", "Hollow Rock", "Hollow Rock", "bw core", 3, 30, 0,
+  "Lendenwirbel am Boden; bei Rückenproblemen Hollow Hold", "Lower back on the floor; with back problems use the hollow hold", 45, 3, 2, "none",
+  ["Gerader Bauch", "Hüftbeuger", "Abs", "Hip flexors"],
+  "Ausgangsposition: Rückenlage, Arme und Beine gestreckt, Schultern und Beine leicht abgehoben.|Endposition: Körper als Schale nach vorn geschaukelt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back, arms and legs straight, shoulders and legs slightly off the floor.|End position: Body rocked forward like a bowl.|Return to the starting position under control and repeat without momentum.",
+  "Lendenwirbel am Boden; bei Rückenproblemen Hollow Hold.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Lower back on the floor; with back problems use the hollow hold.", "Rushing the movement or losing body tension.",
+  "bauch", null, "hollow rock hollow rock");
+G("butterfly-sit-up", "Butterfly Sit-up", "Butterfly Sit-up", "bw core", 3, 30, 0,
+  "Nicht am Nacken ziehen, Rücken kontrolliert abrollen", "Don't pull on your neck, roll down under control", 45, 1, 2, "none",
+  ["Gerader Bauch", "Schräge Bauchmuskeln", "Abs", "Obliques"],
+  "Ausgangsposition: Rückenlage, Fußsohlen zusammen, Knie nach außen, Arme über dem Kopf.|Endposition: Oberkörper aufgerichtet, Arme nach vorn gestreckt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back, soles together, knees out, arms overhead.|End position: Torso raised, arms reaching forward.|Return to the starting position under control and repeat without momentum.",
+  "Nicht am Nacken ziehen, Rücken kontrolliert abrollen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Don't pull on your neck, roll down under control.", "Rushing the movement or losing body tension.",
+  "bauch", null, "butterfly sit-up butterfly sit up");
+G("plank-jacks", "Plank Jacks", "Plank Jacks", "bw core", 3, 30, 0,
+  "Schulter über Handgelenk, Hüfte nicht durchhängen", "Shoulders over wrists, don't let your hips sag", 45, 2, 3, "none",
+  ["Rumpf", "Schultern, Gesäß", "Core", "Shoulders, Glutes"],
+  "Ausgangsposition: Hochstütz, Füße zusammen.|Endposition: Füße im Sprung gespreizt, Hüfte bleibt ruhig.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: High plank, feet together.|End position: Feet jumped apart, hips stay still.|Return to the starting position under control and repeat without momentum.",
+  "Schulter über Handgelenk, Hüfte nicht durchhängen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Shoulders over wrists, don't let your hips sag.", "Rushing the movement or losing body tension.",
+  "bauch", null, "plank jacks plank jacks");
+G("side-plank-hip-dip", "Seitstütz mit Hüftsenken", "Side Plank Hip Dip", "bw core", 3, 30, 0,
+  "Schulter über Ellbogen, Becken nicht rollen", "Shoulder over elbow, don't roll the pelvis", 45, 2, 2, "none",
+  ["Schräge Bauchmuskeln", "Gerader Bauch", "Obliques", "Abs"],
+  "Ausgangsposition: Seitstütz auf dem Unterarm, Hüfte angehoben.|Endposition: Hüfte zum Boden abgesenkt und wieder gehoben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Side plank on your forearm, hips raised.|End position: Hips lowered to the floor and raised again.|Return to the starting position under control and repeat without momentum.",
+  "Schulter über Ellbogen, Becken nicht rollen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Shoulder over elbow, don't roll the pelvis.", "Rushing the movement or losing body tension.",
+  "bauch", null, "side plank hip dip side plank hip dip");
+G("side-plank-leg-raise", "Seitstütz mit Beinheben", "Side Plank with Leg Raise", "bw core", 3, 30, 0,
+  "Schulter über Ellbogen, Becken nicht rollen", "Shoulder over elbow, don't roll the pelvis", 45, 2, 2, "none",
+  ["Schräge Bauchmuskeln", "Seitliches Gesäß", "Obliques", "Side glutes"],
+  "Ausgangsposition: Seitstütz auf dem Unterarm, Beine übereinander.|Endposition: Oberes Bein gestreckt angehoben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Side plank on your forearm, legs stacked.|End position: Top leg raised straight.|Return to the starting position under control and repeat without momentum.",
+  "Schulter über Ellbogen, Becken nicht rollen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Shoulder over elbow, don't roll the pelvis.", "Rushing the movement or losing body tension.",
+  "bauch", null, "side plank with leg raise side plank leg raise");
+G("weighted-russian-twist", "Ukraine Twist (Kettlebell)", "Ukraine Twist (Kettlebell)", "weight core", 3, 40, 0,
+  "Bei Rückenproblemen Füße am Boden lassen", "With back problems keep your feet on the floor", 60, 2, 2, "kb",
+  ["Schräge Bauchmuskeln", "Gerader Bauch", "Obliques", "Abs"],
+  "Ausgangsposition: Zurückgelehnt, Füße angehoben, Gewicht neben der Hüfte.|Endposition: Oberkörper zur anderen Seite gedreht, Gewicht neben der Hüfte.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Leaning back, feet raised, weight beside your hip.|End position: Torso rotated to the other side, weight beside your hip.|Return to the starting position under control and repeat without momentum.",
+  "Bei Rückenproblemen Füße am Boden lassen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "With back problems keep your feet on the floor.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "bauch", null, "ukraine twist (kettlebell) weighted russian twist");
+G("twisting-sit-up", "Sit-up mit Drehung", "Twisting Sit-up", "bw core", 3, 30, 0,
+  "Nicht am Nacken ziehen, Rücken kontrolliert abrollen", "Don't pull on your neck, roll down under control", 45, 1, 2, "none",
+  ["Schräge Bauchmuskeln", "Gerader Bauch", "Obliques", "Abs"],
+  "Ausgangsposition: Rückenlage, Knie gebeugt, Hände am Kopf.|Endposition: Oberkörper aufgerichtet und gedreht, Ellbogen zum Knie.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back, knees bent, hands at your head.|End position: Torso raised and rotated, elbow towards the knee.|Return to the starting position under control and repeat without momentum.",
+  "Nicht am Nacken ziehen, Rücken kontrolliert abrollen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Don't pull on your neck, roll down under control.", "Rushing the movement or losing body tension.",
+  "bauch", null, "twisting sit-up twisting sit up");
+G("cross-body-mountain-climbers", "Mountain Climbers über Kreuz", "Cross-Body Mountain Climbers", "cardio", 4, 30, 0,
+  "Schulter über Handgelenk, Hüfte nicht durchhängen", "Shoulders over wrists, don't let your hips sag", 30, 2, 3, "none",
+  ["Rumpf", "Hüftbeuger, Schultern", "Core", "Hip flexors, Shoulders"],
+  "Ausgangsposition: Hochstütz, ein Knie diagonal zum gegenüberliegenden Ellbogen gezogen.|Endposition: Beinwechsel, anderes Knie diagonal zum Ellbogen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: High plank, one knee drawn diagonally to the opposite elbow.|End position: Legs switch, other knee diagonally to the elbow.|Return to the starting position under control and repeat without momentum.",
+  "Schulter über Handgelenk, Hüfte nicht durchhängen.", "Hart oder steif landen und die Technik verlieren.",
+  "Shoulders over wrists, don't let your hips sag.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "cross-body mountain climbers cross body mountain climbers");
+G("broad-jump", "Standweitsprung", "Standing Broad Jump", "cardio", 4, 30, 0,
+  "Weiche Landung, Knie in Fußrichtung", "Land softly, knees over your feet", 30, 2, 3, "none",
+  ["Oberschenkel vorn", "Gesäß, Waden", "Quads", "Glutes, Calves"],
+  "Ausgangsposition: Tiefe Hocke, Arme nach hinten geschwungen.|Endposition: Sprung nach vorn, Körper gestreckt, Arme nach vorn.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Deep squat, arms swung back.|End position: Jump forward, body extended, arms forward.|Return to the starting position under control and repeat without momentum.",
+  "Weiche Landung, Knie in Fußrichtung.", "Hart oder steif landen und die Technik verlieren.",
+  "Land softly, knees over your feet.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "standing broad jump broad jump");
+G("crab-walk", "Krabbengang", "Crab Walk", "bw", 3, 30, 0,
+  "Handgelenke und Schultern schonen, nicht überstrecken", "Go easy on wrists and shoulders, don't overextend", 45, 1, 2, "none",
+  ["Trizeps", "Gesäß, Hintere Schulter", "Triceps", "Glutes, Rear delts"],
+  "Ausgangsposition: Hände hinter dem Körper, Hüfte angehoben, Knie gebeugt.|Endposition: Gegengleich Hand und Fuß versetzt, Hüfte bleibt oben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Hands behind you, hips raised, knees bent.|End position: Opposite hand and foot step alternately, hips stay up.|Return to the starting position under control and repeat without momentum.",
+  "Handgelenke und Schultern schonen, nicht überstrecken.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Go easy on wrists and shoulders, don't overextend.", "Rushing the movement or losing body tension.",
+  "beine", null, "crab walk crab walk");
+G("inchworm", "Inchworm", "Inchworm", "bw", 3, 30, 0,
+  "Handgelenke und Schultern schonen, Beine nicht überstrecken", "Go easy on wrists and shoulders, don't overextend your legs", 45, 1, 2, "none",
+  ["Oberschenkel hinten", "Rumpf, Schultern", "Hamstrings", "Core, Shoulders"],
+  "Ausgangsposition: Vorgebeugt mit Händen am Boden, Beine fast gestreckt.|Endposition: Mit den Händen in den Hochstütz gewandert, Körper gerade.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bent forward with hands on the floor, legs almost straight.|End position: Walked out with your hands to the high plank, body straight.|Return to the starting position under control and repeat without momentum.",
+  "Handgelenke und Schultern schonen, Beine nicht überstrecken.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Go easy on wrists and shoulders, don't overextend your legs.", "Rushing the movement or losing body tension.",
+  "schulter", null, "inchworm inchworm");
+G("lateral-shuffle", "Seitlicher Shuffle", "Lateral Shuffle", "cardio", 4, 30, 0,
+  "Weiche Landung, Knie in Fußrichtung", "Land softly, knees over your feet", 30, 1, 3, "none",
+  ["Seitliches Gesäß", "Oberschenkel vorn, Waden", "Side glutes", "Quads, Calves"],
+  "Ausgangsposition: Athletische Hocke, Hände vor dem Körper.|Endposition: Seitlicher Schritt, Hocke bleibt, Füße kreuzen nicht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Athletic squat, hands in front of you.|End position: Sideways step, squat stays, feet don't cross.|Return to the starting position under control and repeat without momentum.",
+  "Weiche Landung, Knie in Fußrichtung.", "Hart oder steif landen und die Technik verlieren.",
+  "Land softly, knees over your feet.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "lateral shuffle lateral shuffle");
+G("kb-one-arm-swing", "Einarmiger Kettlebell-Swing", "One-Arm Kettlebell Swing", "weight", 3, 40, 1,
+  "Erst beidhändig üben", "Practise two-handed first", 60, 2, 3, "kb",
+  ["Gesäß", "Oberschenkel hinten, Rumpf", "Glutes", "Hamstrings, Core"],
+  "Ausgangsposition: Hüfte nach hinten, Kettlebell schwingt zwischen den Beinen.|Endposition: Hüfte explosiv gestreckt, Kettlebell auf Brusthöhe.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Hips back, kettlebell swings between your legs.|End position: Hips explosively extended, kettlebell at chest height.|Return to the starting position under control and repeat without momentum.",
+  "Erst beidhändig üben.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Practise two-handed first.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "one-arm kettlebell swing kb one arm swing");
+G("db-neutral-grip-press", "Bankdrücken mit Kurzhanteln im Hammergriff", "Neutral-Grip Dumbbell Bench Press", "weight", 3, 40, 0,
+  "Schonender für die Schulter als der Obergriff", "Easier on the shoulder than the overhand grip", 60, 1, 2, "db",
+  ["Brust", "Trizeps, Vordere Schulter", "Chest", "Triceps, Front delts"],
+  "Ausgangsposition: Rücken auf der Flachbank, Kurzhanteln über der Brust, Handflächen zueinander.|Endposition: Hanteln zur Brust abgesenkt, Ellbogen nah am Körper.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back on the flat bench, dumbbells above your chest, palms facing each other.|End position: Dumbbells lowered to your chest, elbows close to your body.|Return to the starting position under control and repeat without momentum.",
+  "Schonender für die Schulter als der Obergriff.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Easier on the shoulder than the overhand grip.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "brust", null, "neutral-grip dumbbell bench press db neutral grip press");
+G("db-incline-neutral-press", "Schrägbankdrücken im Hammergriff", "Neutral-Grip Incline Dumbbell Press", "weight", 3, 40, 0,
+  "Rippen unten, Handgelenke gerade", "Ribs down, wrists straight", 60, 1, 2, "db",
+  ["Obere Brust", "Vordere Schulter, Trizeps", "Upper chest", "Front delts, Triceps"],
+  "Ausgangsposition: Rücken auf der Schrägbank, Kurzhanteln auf Schulterhöhe, Handflächen zueinander.|Endposition: Arme gestreckt über der Brust.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back on the incline bench, dumbbells at shoulder height, palms facing each other.|End position: Arms straight above your chest.|Return to the starting position under control and repeat without momentum.",
+  "Rippen unten, Handgelenke gerade.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Ribs down, wrists straight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "brust", null, "neutral-grip incline dumbbell press db incline neutral press");
+G("db-one-arm-bench-press", "Einarmiges Bankdrücken (Kurzhantel)", "One-Arm Dumbbell Bench Press", "weight", 3, 40, 1,
+  "Nicht seitlich wegkippen", "Don't tip sideways", 60, 2, 2, "db",
+  ["Brust", "Trizeps, Schräge Bauchmuskeln", "Chest", "Triceps, Obliques"],
+  "Ausgangsposition: Rücken auf der Flachbank, eine Hantel über der Brust, andere Hand am Körper.|Endposition: Hantel zur Brust abgesenkt, Rumpf bleibt ruhig.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back on the flat bench, one dumbbell above your chest, other hand at your body.|End position: Dumbbell lowered to your chest, torso stays still.|Return to the starting position under control and repeat without momentum.",
+  "Nicht seitlich wegkippen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Don't tip sideways.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "brust", null, "one-arm dumbbell bench press db one arm bench press");
+G("db-lying-one-arm-triceps-extension", "Einarmiges Trizepsstrecken liegend", "Lying One-Arm Triceps Extension", "weight arms", 3, 40, 1,
+  "Leichtes Gewicht, andere Hand sichert", "Light weight, other hand spots", 60, 2, 2, "db",
+  ["Trizeps", "Vordere Schulter", "Triceps", "Front delts"],
+  "Ausgangsposition: Rücken auf der Flachbank, ein Arm gestreckt über der Schulter, Hantel in der Hand.|Endposition: Unterarm zum Kopf gebeugt, Oberarm bleibt senkrecht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back on the flat bench, one arm straight above your shoulder, dumbbell in hand.|End position: Forearm bent towards your head, upper arm stays vertical.|Return to the starting position under control and repeat without momentum.",
+  "Leichtes Gewicht, andere Hand sichert.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight, other hand spots.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "lying one-arm triceps extension db lying one arm triceps extension");
+G("db-incline-triceps-extension", "Trizepsstrecken (Schrägbank)", "Incline Dumbbell Triceps Extension", "weight arms", 3, 40, 0,
+  "Leichtes Gewicht, Ellbogen eng", "Light weight, elbows close", 60, 2, 2, "db",
+  ["Trizeps", "Vordere Schulter", "Triceps", "Front delts"],
+  "Ausgangsposition: Rücken auf der Schrägbank, Arme gestreckt über dem Kopf, Hanteln in beiden Händen.|Endposition: Unterarme hinter den Kopf gebeugt, Oberarme bleiben oben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back on the incline bench, arms straight overhead, dumbbells in both hands.|End position: Forearms bent behind your head, upper arms stay up.|Return to the starting position under control and repeat without momentum.",
+  "Leichtes Gewicht, Ellbogen eng.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight, elbows close.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "incline dumbbell triceps extension db incline triceps extension");
+G("db-one-arm-triceps-extension", "Einarmiges Trizepsstrecken über Kopf", "One-Arm Overhead Triceps Extension", "weight arms", 3, 40, 1,
+  "Rippen unten, kein Hohlkreuz", "Ribs down, no hollow back", 60, 1, 2, "db",
+  ["Trizeps", "Vordere Schulter", "Triceps", "Front delts"],
+  "Ausgangsposition: Aufrecht, eine Hantel hinter dem Kopf, Ellbogen zeigt nach oben.|Endposition: Arm gestreckt über dem Kopf.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, one dumbbell behind your head, elbow pointing up.|End position: Arm straight overhead.|Return to the starting position under control and repeat without momentum.",
+  "Rippen unten, kein Hohlkreuz.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Ribs down, no hollow back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "one-arm overhead triceps extension db one arm triceps extension");
+G("db-one-arm-curl", "Einarmiger Kurzhantelcurl", "One-Arm Dumbbell Curl", "weight arms", 3, 40, 1,
+  "Ellbogen fixieren, kein Schwung", "Elbow fixed, no swinging", 60, 1, 2, "db",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Aufrecht, eine Hantel hängt am Körper, Handfläche nach vorn.|Endposition: Unterarm zur Schulter gebeugt, Ellbogen bleibt am Körper.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, one dumbbell hanging at your side, palm facing forward.|End position: Forearm curled to your shoulder, elbow stays at your body.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen fixieren, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Elbow fixed, no swinging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "one-arm dumbbell curl db one arm curl");
+G("db-reverse-curl", "Reverse Curl (Kurzhantel)", "Dumbbell Reverse Curl", "weight arms", 3, 40, 0,
+  "Ellbogen fixiert, kein Schwung", "Elbows fixed, no swinging", 60, 1, 2, "db",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Aufrecht, Hanteln im Obergriff vor den Oberschenkeln.|Endposition: Unterarme zu den Schultern gebeugt, Handrücken nach vorn.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, dumbbells in an overhand grip in front of your thighs.|End position: Forearms curled to your shoulders, backs of your hands facing forward.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen fixiert, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Elbows fixed, no swinging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "dumbbell reverse curl db reverse curl");
+G("db-seated-hammer-curl", "Sitzender Hammercurl", "Seated Hammer Curl", "weight arms", 3, 40, 0,
+  "Ellbogen fixiert, kein Schwung", "Elbows fixed, no swinging", 60, 1, 2, "db",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Aufrecht sitzend, Hanteln seitlich hängend, Daumen nach vorn.|Endposition: Unterarme zu den Schultern gebeugt, Daumen oben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Seated upright, dumbbells hanging at your sides, thumbs forward.|End position: Forearms curled to your shoulders, thumbs up.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen fixiert, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Elbows fixed, no swinging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "seated hammer curl db seated hammer curl");
+G("db-seated-curl", "Sitzender Kurzhantelcurl", "Seated Dumbbell Curl", "weight arms", 3, 40, 0,
+  "Ellbogen fixiert, kein Schwung", "Elbows fixed, no swinging", 60, 1, 2, "db",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Aufrecht sitzend, Hanteln seitlich hängend, Handflächen nach vorn.|Endposition: Unterarme zu den Schultern gebeugt, Ellbogen am Körper.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Seated upright, dumbbells hanging at your sides, palms forward.|End position: Forearms curled to your shoulders, elbows at your body.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen fixiert, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Elbows fixed, no swinging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "seated dumbbell curl db seated curl");
+G("db-one-arm-preacher-curl", "Einarmiger Preacher Curl (Kurzhantel)", "One-Arm Dumbbell Preacher Curl", "weight arms", 3, 40, 1,
+  "Unten Ellbogen nicht überstrecken", "Don't overextend your elbow at the bottom", 60, 2, 2, "db",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Oberarm auf dem Preacher-Pult, Arm fast gestreckt.|Endposition: Unterarm zur Schulter gebeugt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Upper arm on the preacher pad, arm almost straight.|End position: Forearm curled to your shoulder.|Return to the starting position under control and repeat without momentum.",
+  "Unten Ellbogen nicht überstrecken.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Don't overextend your elbow at the bottom.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "one-arm dumbbell preacher curl db one arm preacher curl");
+G("db-front-raise-alternating", "Frontheben im Wechsel", "Alternating Dumbbell Front Raise", "weight", 3, 40, 0,
+  "Kein Schwung", "No swinging", 60, 1, 2, "db",
+  ["Vordere Schulter", "Oberer Trapez", "Front delts", "Upper traps"],
+  "Ausgangsposition: Aufrecht, Hanteln vor den Oberschenkeln.|Endposition: Ein Arm gestreckt bis auf Schulterhöhe gehoben, dann Wechsel.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, dumbbells in front of your thighs.|End position: One arm raised straight to shoulder height, then switch.|Return to the starting position under control and repeat without momentum.",
+  "Kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "No swinging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "alternating dumbbell front raise db front raise alternating");
+G("db-front-raise-overhead", "Frontheben bis über den Kopf", "Front Raise to Overhead", "weight", 3, 40, 0,
+  "Leichtes Gewicht, kein Hohlkreuz", "Light weight, no hollow back", 60, 2, 2, "db",
+  ["Vordere Schulter", "Trapez", "Front delts", "Traps"],
+  "Ausgangsposition: Aufrecht, Hanteln vor den Oberschenkeln.|Endposition: Arme gestreckt über den Kopf gehoben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, dumbbells in front of your thighs.|End position: Arms raised straight overhead.|Return to the starting position under control and repeat without momentum.",
+  "Leichtes Gewicht, kein Hohlkreuz.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight, no hollow back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "front raise to overhead db front raise overhead");
+G("db-lateral-to-front-raise", "Seitheben mit Frontheben", "Lateral-to-Front Raise", "weight", 3, 40, 0,
+  "Leichtes Gewicht", "Light weight", 60, 2, 2, "db",
+  ["Seitliche Schulter", "Vordere Schulter", "Side delts", "Front delts"],
+  "Ausgangsposition: Aufrecht, Hanteln seitlich.|Endposition: Arme seitlich auf Schulterhöhe gehoben, dann nach vorn geführt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, dumbbells at your sides.|End position: Arms raised out to the sides to shoulder height, then swung forward.|Return to the starting position under control and repeat without momentum.",
+  "Leichtes Gewicht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "lateral-to-front raise db lateral to front raise");
+G("db-full-can-lateral-raise", "Seitheben mit Daumen oben", "Full-Can Lateral Raise", "weight", 3, 40, 0,
+  "Nicht über Schulterhöhe", "Not above shoulder height", 60, 1, 2, "db",
+  ["Seitliche Schulter", "Rotatorenmanschette", "Side delts", "Rotator cuff"],
+  "Ausgangsposition: Aufrecht, Hanteln seitlich, Daumen zeigen nach oben.|Endposition: Arme etwa 30° vor der Seite bis Schulterhöhe gehoben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, dumbbells at your sides, thumbs pointing up.|End position: Arms raised about 30° in front of the side up to shoulder height.|Return to the starting position under control and repeat without momentum.",
+  "Nicht über Schulterhöhe.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Not above shoulder height.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "full-can lateral raise db full can lateral raise");
+G("db-one-arm-lateral-raise-supported", "Einarmiges Seitheben mit Stütze", "One-Arm Lateral Raise with Support", "weight", 3, 40, 1,
+  "Rumpf stabil, kein Schwung", "Torso stable, no momentum", 60, 1, 2, "db",
+  ["Seitliche Schulter", "Oberer Trapez", "Side delts", "Upper traps"],
+  "Ausgangsposition: Seitlich zu einer Stütze, eine Hand hält sich fest, andere Hand hält die Hantel.|Endposition: Arm seitlich auf Schulterhöhe gehoben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Side-on to a support, one hand holding on, other hand holding the dumbbell.|End position: Arm raised out to the side to shoulder height.|Return to the starting position under control and repeat without momentum.",
+  "Rumpf stabil, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Torso stable, no momentum.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "one-arm lateral raise with support db one arm lateral raise supported");
+G("db-prone-rear-raise", "Rear Raise in Bauchlage", "Prone Rear Delt Raise", "weight", 3, 40, 0,
+  "Leichtes Gewicht", "Light weight", 60, 2, 2, "db",
+  ["Hintere Schulter", "Oberer Rücken", "Rear delts", "Upper back"],
+  "Ausgangsposition: Bauchlage auf der Schrägbank, Arme hängen nach unten.|Endposition: Arme seitlich auf Schulterhöhe gehoben, Schulterblätter zusammen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying face down on the incline bench, arms hanging down.|End position: Arms raised out to the sides to shoulder height, shoulder blades together.|Return to the starting position under control and repeat without momentum.",
+  "Leichtes Gewicht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "prone rear delt raise db prone rear raise");
+G("db-w-press", "W-Press", "W-Press", "weight", 3, 40, 0,
+  "Leichtes Gewicht", "Light weight", 60, 2, 2, "db",
+  ["Schultern", "Trizeps", "Shoulders", "Triceps"],
+  "Ausgangsposition: Aufrecht, Hanteln vor den Schultern, Ellbogen unten und außen.|Endposition: Arme über den Kopf gedrückt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, dumbbells in front of your shoulders, elbows low and out.|End position: Arms pressed overhead.|Return to the starting position under control and repeat without momentum.",
+  "Leichtes Gewicht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "w-press db w press");
+G("db-one-arm-shoulder-press", "Einarmiges Schulterdrücken (Kurzhantel)", "One-Arm Dumbbell Shoulder Press", "weight", 3, 40, 1,
+  "Rippen unten", "Ribs down", 60, 1, 2, "db",
+  ["Vordere Schulter", "Trizeps, Rumpf", "Front delts", "Triceps, Core"],
+  "Ausgangsposition: Aufrecht, eine Hantel auf Schulterhöhe.|Endposition: Arm gestreckt über dem Kopf, Rumpf stabil.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, one dumbbell at shoulder height.|End position: Arm straight overhead, torso stable.|Return to the starting position under control and repeat without momentum.",
+  "Rippen unten.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Ribs down.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "one-arm dumbbell shoulder press db one arm shoulder press");
+G("db-alternating-press", "Schulterdrücken im Wechsel", "Alternating Dumbbell Shoulder Press", "weight", 3, 40, 0,
+  "Rippen unten, kein Hohlkreuz", "Ribs down, no hollow back", 60, 1, 2, "db",
+  ["Vordere Schulter", "Trizeps", "Front delts", "Triceps"],
+  "Ausgangsposition: Aufrecht, beide Hanteln auf Schulterhöhe.|Endposition: Ein Arm gestreckt über dem Kopf, dann Wechsel.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, both dumbbells at shoulder height.|End position: One arm straight overhead, then switch.|Return to the starting position under control and repeat without momentum.",
+  "Rippen unten, kein Hohlkreuz.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Ribs down, no hollow back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "alternating dumbbell shoulder press db alternating press");
+G("db-palms-in-press", "Schulterdrücken im Hammergriff", "Palms-In Dumbbell Shoulder Press", "weight", 3, 40, 0,
+  "Schonender für die Schulter", "Easier on the shoulder", 60, 1, 2, "db",
+  ["Vordere Schulter", "Trizeps", "Front delts", "Triceps"],
+  "Ausgangsposition: Aufrecht, Hanteln auf Schulterhöhe, Handflächen zueinander.|Endposition: Arme gestreckt über dem Kopf.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, dumbbells at shoulder height, palms facing each other.|End position: Arms straight overhead.|Return to the starting position under control and repeat without momentum.",
+  "Schonender für die Schulter.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Easier on the shoulder.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "palms-in dumbbell shoulder press db palms in press");
+G("db-upright-row", "Aufrechtes Rudern (Kurzhantel)", "Dumbbell Upright Row", "weight", 3, 40, 0,
+  "Griff schulterbreit, Ellbogen nicht über Schulterhöhe", "Shoulder-width grip, elbows no higher than shoulder level", 60, 2, 2, "db",
+  ["Seitliche Schulter", "Trapez", "Side delts", "Traps"],
+  "Ausgangsposition: Aufrecht, Hanteln vor den Oberschenkeln.|Endposition: Hanteln dicht am Körper bis zur Brust gezogen, Ellbogen höher als die Hände.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, dumbbells in front of your thighs.|End position: Dumbbells pulled up close to your body to your chest, elbows higher than your hands.|Return to the starting position under control and repeat without momentum.",
+  "Griff schulterbreit, Ellbogen nicht über Schulterhöhe.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Shoulder-width grip, elbows no higher than shoulder level.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "dumbbell upright row db upright row");
+G("db-one-arm-upright-row", "Einarmiges aufrechtes Rudern", "One-Arm Upright Row", "weight", 3, 40, 1,
+  "Ellbogen nicht über Schulterhöhe", "Elbow no higher than shoulder level", 60, 2, 2, "db",
+  ["Seitliche Schulter", "Trapez", "Side delts", "Traps"],
+  "Ausgangsposition: Aufrecht, eine Hantel vor dem Oberschenkel.|Endposition: Hantel dicht am Körper bis zur Brust gezogen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, one dumbbell in front of your thigh.|End position: Dumbbell pulled up close to your body to your chest.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen nicht über Schulterhöhe.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Elbow no higher than shoulder level.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "one-arm upright row db one arm upright row");
+G("db-incline-shrug", "Schulterheben (Schrägbank)", "Incline Dumbbell Shrug", "weight", 3, 40, 0,
+  "Kein Nackenzug", "No neck pull", 60, 1, 2, "db",
+  ["Trapez", "Oberer Rücken", "Traps", "Upper back"],
+  "Ausgangsposition: Brust auf der Schrägbank, Arme hängen mit Hanteln.|Endposition: Schultern zu den Ohren gezogen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Chest on the incline bench, arms hanging with dumbbells.|End position: Shoulders pulled up to your ears.|Return to the starting position under control and repeat without momentum.",
+  "Kein Nackenzug.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "No neck pull.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "incline dumbbell shrug db incline shrug");
+G("db-straight-arm-pullover", "Pullover mit gestreckten Armen", "Straight-Arm Dumbbell Pullover", "weight back", 3, 40, 0,
+  "Leichtes Gewicht, Rippen unten", "Light weight, ribs down", 60, 2, 2, "db",
+  ["Breiter Rückenmuskel", "Brust", "Lats", "Chest"],
+  "Ausgangsposition: Rücken auf der Bank, Hantel gestreckt über der Brust.|Endposition: Hantel mit gestreckten Armen hinter den Kopf gesenkt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back on the bench, dumbbell straight above your chest.|End position: Dumbbell lowered behind your head with straight arms.|Return to the starting position under control and repeat without momentum.",
+  "Leichtes Gewicht, Rippen unten.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight, ribs down.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "ruecken", null, "straight-arm dumbbell pullover db straight arm pullover");
+G("db-squat", "Kniebeuge (Kurzhantel)", "Dumbbell Squat", "weight legs", 3, 40, 0,
+  "Knie in Fußrichtung, Rumpf aufrecht", "Knees over your feet, torso upright", 60, 2, 2, "db",
+  ["Oberschenkel vorn", "Gesäß", "Quads", "Glutes"],
+  "Ausgangsposition: Aufrecht, Hanteln seitlich, Füße schulterbreit.|Endposition: Tiefe Hocke, Oberkörper aufrecht, Hanteln seitlich am Körper.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, dumbbells at your sides, feet shoulder-width.|End position: Deep squat, torso upright, dumbbells at your sides.|Return to the starting position under control and repeat without momentum.",
+  "Knie in Fußrichtung, Rumpf aufrecht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Knees over your feet, torso upright.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "dumbbell squat db squat");
+G("db-box-squat", "Kniebeuge zur Bank (Kurzhantel)", "Dumbbell Box Squat", "weight legs", 3, 40, 0,
+  "Nicht auf die Bank fallen lassen", "Don't drop onto the bench", 60, 2, 2, "db",
+  ["Oberschenkel vorn", "Gesäß", "Quads", "Glutes"],
+  "Ausgangsposition: Aufrecht vor der Bank, Hanteln seitlich.|Endposition: Gesäß kontrolliert auf der Bank abgesetzt, Oberkörper aufrecht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall in front of the bench, dumbbells at your sides.|End position: Glutes set down on the bench under control, torso upright.|Return to the starting position under control and repeat without momentum.",
+  "Nicht auf die Bank fallen lassen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Don't drop onto the bench.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "dumbbell box squat db box squat");
+G("db-lunge", "Ausfallschritt (Kurzhantel)", "Dumbbell Lunge", "weight legs", 3, 40, 1,
+  "Knie über dem Fuß", "Knee over your foot", 60, 2, 2, "db",
+  ["Oberschenkel vorn", "Gesäß", "Quads", "Glutes"],
+  "Ausgangsposition: Aufrecht, Hanteln seitlich.|Endposition: Ausfallschritt vorwärts, beide Knie etwa 90°, Oberkörper aufrecht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, dumbbells at your sides.|End position: Lunge forward, both knees about 90°, torso upright.|Return to the starting position under control and repeat without momentum.",
+  "Knie über dem Fuß.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Knee over your foot.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "dumbbell lunge db lunge");
+G("db-single-leg-squat", "Einbeinige Kniebeuge (Kurzhantel)", "Dumbbell Single-Leg Squat", "weight legs", 3, 40, 1,
+  "Zuerst mit Halt üben; Knie nicht nach innen", "Practise with support first; knee doesn't cave in", 60, 3, 2, "db",
+  ["Oberschenkel vorn", "Gesäß", "Quads", "Glutes"],
+  "Ausgangsposition: Auf einem Bein, Hantel vor der Brust, anderes Bein nach vorn gestreckt.|Endposition: Tiefe einbeinige Hocke, Oberkörper leicht vorgeneigt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: On one leg, dumbbell in front of your chest, other leg extended forward.|End position: Deep single-leg squat, torso leaning slightly forward.|Return to the starting position under control and repeat without momentum.",
+  "Zuerst mit Halt üben; Knie nicht nach innen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Practise with support first; knee doesn't cave in.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "dumbbell single-leg squat db single leg squat");
+G("db-plyo-squat", "Sprungkniebeuge (Kurzhantel)", "Dumbbell Jump Squat", "cardio", 4, 30, 0,
+  "Sehr leicht, Hanteln fest halten, weich landen, nicht bei Knieproblemen", "Very light, hold the dumbbells firmly, land softly, not with knee problems", 30, 3, 3, "db",
+  ["Oberschenkel vorn", "Gesäß, Waden", "Quads", "Glutes, Calves"],
+  "Ausgangsposition: Hocke, Hanteln seitlich oder vor der Brust.|Endposition: Explosiver Sprung nach oben, Körper gestreckt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Squat, dumbbells at your sides or in front of your chest.|End position: Explosive jump upward, body extended.|Return to the starting position under control and repeat without momentum.",
+  "Sehr leicht, Hanteln fest halten, weich landen, nicht bei Knieproblemen.", "Hart oder steif landen und die Technik verlieren.",
+  "Very light, hold the dumbbells firmly, land softly, not with knee problems.", "Landing hard or stiff and losing your technique.",
+  "beine", null, "dumbbell jump squat db plyo squat");
+G("db-lying-leg-curl", "Beinbeugen liegend (Kurzhantel)", "Lying Dumbbell Leg Curl", "weight legs", 3, 40, 0,
+  "Hantel fest zwischen den Fußsohlen klemmen, sehr leicht, besser mit Partner", "Lower legs curled to your glutes", 60, 2, 2, "db",
+  ["Oberschenkel hinten", "Gesäß", "Hamstrings", "Glutes"],
+  "Ausgangsposition: Bauchlage auf der Bank, Hantel zwischen den Füßen, Beine gestreckt.|Endposition: Unterschenkel zum Gesäß gebeugt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying face down on the bench, dumbbell between your feet, legs straight.|End position: Lower legs curled to your glutes.|Return to the starting position under control and repeat without momentum.",
+  "Hantel fest zwischen den Fußsohlen klemmen, sehr leicht, besser mit Partner.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Clamp the dumbbell firmly between the soles of your feet, very light, better with a partner.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "lying dumbbell leg curl db lying leg curl");
+G("db-seated-calf-raise", "Sitzendes einbeiniges Wadenheben", "Seated Single-Leg Calf Raise", "weight legs", 3, 40, 0,
+  "Kein Federn", "No bouncing", 60, 1, 2, "db",
+  ["Waden (Schollenmuskel)", "Vorderer Schienbeinmuskel", "Calves (soleus)", "Shin muscles"],
+  "Ausgangsposition: Aufrecht sitzend, Hantel auf dem Knie, Ferse am Boden.|Endposition: Ferse so hoch wie möglich.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Seated upright, dumbbell on your knee, heel on the floor.|End position: Heel as high as possible.|Return to the starting position under control and repeat without momentum.",
+  "Kein Federn.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "No bouncing.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "seated single-leg calf raise db seated calf raise");
+G("db-wrist-curl-one-arm", "Einarmiger Handgelenkcurl", "One-Arm Wrist Curl", "weight arms", 3, 40, 1,
+  "Sehr leichtes Gewicht", "Very light weight", 60, 1, 2, "db",
+  ["Unterarme", "Bizeps", "Forearms", "Biceps"],
+  "Ausgangsposition: Unterarm auf dem Oberschenkel, Handfläche nach oben, Hand hängt.|Endposition: Handgelenk nach oben gebeugt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Forearm on your thigh, palm up, hand hanging.|End position: Wrist curled upward.|Return to the starting position under control and repeat without momentum.",
+  "Sehr leichtes Gewicht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Very light weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "one-arm wrist curl db wrist curl one arm");
+G("db-wrist-curl-hammer", "Handgelenkcurl im Hammergriff", "Neutral-Grip Wrist Curl", "weight arms", 3, 40, 0,
+  "Sehr leichtes Gewicht", "Very light weight", 60, 1, 2, "db",
+  ["Unterarme", "Bizeps", "Forearms", "Biceps"],
+  "Ausgangsposition: Unterarm auf dem Oberschenkel, Daumen oben, Hand hängt.|Endposition: Hand nach oben gekippt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Forearm on your thigh, thumb up, hand hanging.|End position: Hand tilted upward.|Return to the starting position under control and repeat without momentum.",
+  "Sehr leichtes Gewicht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Very light weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "neutral-grip wrist curl db wrist curl hammer");
+G("cable-shrug", "Schulterheben (Kabelzug)", "Cable Shrug", "weight", 3, 40, 0,
+  "Kein Nackenzug, langsam senken", "No neck pull, lower slowly", 60, 1, 2, "gym",
+  ["Trapez", "Oberer Rücken", "Traps", "Upper back"],
+  "Ausgangsposition: Aufrecht, Griff vor den Oberschenkeln, Kabel von unten.|Endposition: Schultern zu den Ohren gezogen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, handle in front of your thighs, cable from below.|End position: Shoulders pulled up to your ears.|Return to the starting position under control and repeat without momentum.",
+  "Kein Nackenzug, langsam senken.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "No neck pull, lower slowly.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "cable shrug cable shrug");
+G("cable-side-bend", "Seitbeugen (Kabelzug)", "Cable Side Bend", "weight core", 3, 40, 0,
+  "Kein schweres Gewicht", "No heavy weight", 60, 1, 2, "gym",
+  ["Schräge Bauchmuskeln", "Gerader Bauch", "Obliques", "Abs"],
+  "Ausgangsposition: Aufrecht, Kabel von unten seitlich in einer Hand.|Endposition: Oberkörper weg vom Kabel gebeugt, dann aufgerichtet.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, cable from below at your side in one hand.|End position: Torso bent away from the cable, then straightened.|Return to the starting position under control and repeat without momentum.",
+  "Kein schweres Gewicht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "No heavy weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "bauch", null, "cable side bend cable side bend");
+G("cable-standing-row", "Rudern im Stand (Kabelzug)", "Standing Cable Row", "weight back", 3, 40, 0,
+  "Rumpf fest, kein Rückwärtsneigen", "Firm torso, don't lean back", 60, 1, 2, "gym",
+  ["Breiter Rückenmuskel", "Oberer Rücken, Bizeps", "Lats", "Upper back, Biceps"],
+  "Ausgangsposition: Aufrecht vor dem Kabelturm, Arme nach vorn gestreckt.|Endposition: Griff zum Bauch gezogen, Schulterblätter zusammen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall in front of the cable tower, arms straight forward.|End position: Handle pulled to your belly, shoulder blades together.|Return to the starting position under control and repeat without momentum.",
+  "Rumpf fest, kein Rückwärtsneigen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Firm torso, don't lean back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "ruecken", null, "standing cable row cable standing row");
+G("cable-rear-delt-row", "Rudern zur hinteren Schulter (Kabelzug)", "Cable Rear Delt Row", "weight", 3, 40, 0,
+  "Leichtes Gewicht", "Light weight", 60, 1, 2, "gym",
+  ["Hintere Schulter", "Oberer Rücken", "Rear delts", "Upper back"],
+  "Ausgangsposition: Aufrecht, Arme auf Brusthöhe nach vorn gestreckt.|Endposition: Ellbogen seitlich nach hinten, Hände auf Schulterhöhe.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, arms straight forward at chest height.|End position: Elbows out and back, hands at shoulder height.|Return to the starting position under control and repeat without momentum.",
+  "Leichtes Gewicht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "cable rear delt row cable rear delt row");
+G("cable-lying-fly", "Fliegende liegend (Kabelzug)", "Lying Cable Fly", "weight", 3, 40, 0,
+  "Ellbogen nicht tiefer als die Schulter", "Elbows no lower than your shoulders", 60, 1, 2, "gym",
+  ["Brust", "Vordere Schulter", "Chest", "Front delts"],
+  "Ausgangsposition: Rückenlage auf der Bank, Arme über der Brust, Kabel von unten.|Endposition: Arme weit geöffnet, Ellbogen leicht gebeugt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back on the bench, arms above your chest, cable from below.|End position: Arms wide open, elbows slightly bent.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen nicht tiefer als die Schulter.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Elbows no lower than your shoulders.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "brust", null, "lying cable fly cable lying fly");
+G("cable-lying-triceps-extension", "Trizepsstrecken liegend (Kabelzug)", "Lying Cable Triceps Extension", "weight arms", 3, 40, 0,
+  "Ellbogen eng", "Elbows close", 60, 1, 2, "gym",
+  ["Trizeps", "Vordere Schulter", "Triceps", "Front delts"],
+  "Ausgangsposition: Rückenlage auf der Bank, Arme über den Schultern, Kabel hinter dem Kopf.|Endposition: Unterarme zum Kopf gebeugt, Oberarme bleiben oben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back on the bench, arms above your shoulders, cable behind your head.|End position: Forearms bent towards your head, upper arms stay up.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen eng.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Elbows close.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "lying cable triceps extension cable lying triceps extension");
+G("cable-incline-fly", "Schrägbank-Fliegende (Kabelzug)", "Incline Cable Fly", "weight", 3, 40, 0,
+  "Bank etwa 30°", "Bench about 30°", 60, 1, 2, "gym",
+  ["Obere Brust", "Vordere Schulter", "Upper chest", "Front delts"],
+  "Ausgangsposition: Rücken auf der Schrägbank, Arme über der Brust.|Endposition: Arme weit geöffnet, Ellbogen leicht gebeugt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back on the incline bench, arms above your chest.|End position: Arms wide open, elbows slightly bent.|Return to the starting position under control and repeat without momentum.",
+  "Bank etwa 30°.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Bench about 30°.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "brust", null, "incline cable fly cable incline fly");
+G("cable-incline-press", "Schrägbankdrücken (Kabelzug)", "Incline Cable Press", "weight", 3, 40, 0,
+  "Rippen unten", "Ribs down", 60, 2, 2, "gym",
+  ["Obere Brust", "Vordere Schulter, Trizeps", "Upper chest", "Front delts, Triceps"],
+  "Ausgangsposition: Rücken auf der Schrägbank, Griffe auf Brusthöhe.|Endposition: Arme gestreckt über der Brust.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Back on the incline bench, handles at chest height.|End position: Arms straight above your chest.|Return to the starting position under control and repeat without momentum.",
+  "Rippen unten.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Ribs down.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "brust", null, "incline cable press cable incline press");
+G("cable-lying-curl", "Bizepscurl liegend (Kabelzug)", "Lying Cable Curl", "weight arms", 3, 40, 0,
+  "Kein Schwung", "No swinging", 60, 1, 2, "gym",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Rückenlage auf der Bank, Arme nach unten gestreckt, Kabel am Fußende.|Endposition: Unterarme zu den Schultern gebeugt, Ellbogen am Körper.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back on the bench, arms straight down, cable at the foot end.|End position: Forearms curled to your shoulders, elbows at your body.|Return to the starting position under control and repeat without momentum.",
+  "Kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "No swinging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "lying cable curl cable lying curl");
+G("cable-reverse-curl", "Reverse Curl (Kabelzug)", "Cable Reverse Curl", "weight arms", 3, 40, 0,
+  "Ellbogen am Körper", "Elbows at your body", 60, 1, 2, "gym",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Aufrecht, Griff im Obergriff vor den Oberschenkeln, Kabel von unten.|Endposition: Unterarme zu den Schultern gebeugt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, handle in an overhand grip in front of your thighs, cable from below.|End position: Forearms curled to your shoulders.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen am Körper.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Elbows at your body.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "cable reverse curl cable reverse curl");
+G("cable-wrist-curl", "Handgelenkcurl (Kabelzug)", "Cable Wrist Curl", "weight arms", 3, 40, 0,
+  "Sehr leichtes Gewicht", "Very light weight", 60, 1, 2, "gym",
+  ["Unterarme", "Bizeps", "Forearms", "Biceps"],
+  "Ausgangsposition: Sitzend, Unterarm auf dem Oberschenkel, Hand hängt, Kabel von unten.|Endposition: Handgelenk nach oben gebeugt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Seated, forearm on your thigh, hand hanging, cable from below.|End position: Wrist curled upward.|Return to the starting position under control and repeat without momentum.",
+  "Sehr leichtes Gewicht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Very light weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "cable wrist curl cable wrist curl");
+G("cable-standing-twist-row", "Rudern mit Rumpfdrehung (Kabelzug)", "Cable Twisting Row", "weight back", 3, 40, 0,
+  "Drehung aus Hüfte und Rumpf", "Rotate from hip and torso, not from the back, light weight", 60, 2, 2, "gym",
+  ["Breiter Rückenmuskel", "Schräge Bauchmuskeln", "Lats", "Obliques"],
+  "Ausgangsposition: Aufrecht, ein Arm nach vorn gestreckt am Kabel.|Endposition: Griff zur Hüfte gezogen, Rumpf dreht mit.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, one arm straight forward at the cable.|End position: Handle pulled to your hip, torso rotates with it.|Return to the starting position under control and repeat without momentum.",
+  "Drehung aus Hüfte und Rumpf.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Rotate from hip and torso, not from the back, light weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "ruecken", null, "cable twisting row cable standing twist row");
+G("cable-single-arm-bent-row", "Vorgebeugtes einarmiges Rudern (Kabelzug)", "Single-Arm Bent-Over Cable Row", "weight back", 3, 40, 1,
+  "Rücken neutral", "Neutral back", 60, 2, 2, "gym",
+  ["Breiter Rückenmuskel", "Oberer Rücken", "Lats", "Upper back"],
+  "Ausgangsposition: Vorgebeugt, Rücken gerade, ein Arm nach unten gestreckt am Kabel.|Endposition: Ellbogen zur Hüfte gezogen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bent forward, back straight, one arm straight down at the cable.|End position: Elbow pulled to your hip.|Return to the starting position under control and repeat without momentum.",
+  "Rücken neutral.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Neutral back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "ruecken", null, "single-arm bent-over cable row cable single arm bent row");
+G("cable-single-arm-shoulder-press", "Einarmiges Schulterdrücken (Kabelzug)", "Single-Arm Cable Shoulder Press", "weight", 3, 40, 1,
+  "Rippen unten, kein Hohlkreuz", "Ribs down, no hollow back", 60, 2, 2, "gym",
+  ["Vordere Schulter", "Trizeps, Rumpf", "Front delts", "Triceps, Core"],
+  "Ausgangsposition: Aufrecht, Griff auf Schulterhöhe, Kabel von unten.|Endposition: Arm gestreckt über dem Kopf.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, handle at shoulder height, cable from below.|End position: Arm straight overhead.|Return to the starting position under control and repeat without momentum.",
+  "Rippen unten, kein Hohlkreuz.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Ribs down, no hollow back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "single-arm cable shoulder press cable single arm shoulder press");
+G("cable-decline-fly", "Fliegende von oben nach unten (Kabelzug)", "High-to-Low Cable Fly", "weight", 3, 40, 0,
+  "Ellbogen leicht gebeugt", "Elbows slightly bent", 60, 1, 2, "gym",
+  ["Untere Brust", "Vordere Schulter", "Lower chest", "Front delts"],
+  "Ausgangsposition: Aufrecht, Arme seitlich schräg nach oben, Kabel von oben.|Endposition: Hände vor dem Unterbauch zusammengeführt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, arms diagonally up to the sides, cable from above.|End position: Hands brought together in front of your lower belly.|Return to the starting position under control and repeat without momentum.",
+  "Ellbogen leicht gebeugt.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Elbows slightly bent.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "brust", null, "high-to-low cable fly cable decline fly");
+G("hamstring-walkout", "Brücke mit Fersengang", "Hamstring Walkout", "bw legs", 3, 30, 0,
+  "Kleine Schritte, bei Krampf abbrechen, Boden rutschfest", "Small steps, stop if it cramps, non-slip floor", 45, 2, 2, "none",
+  ["Oberschenkel hinten", "Gesäß", "Hamstrings", "Glutes"],
+  "Ausgangsposition: Schulterbrücke, Füße nah am Gesäß.|Endposition: Fersen in kleinen Schritten nach vorn, Hüfte bleibt hoch.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Glute bridge, feet close to your glutes.|End position: Heels walked out in small steps, hips stay high.|Return to the starting position under control and repeat without momentum.",
+  "Kleine Schritte, bei Krampf abbrechen, Boden rutschfest.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Small steps, stop if it cramps, non-slip floor.", "Rushing the movement or losing body tension.",
+  "beine", null, "hamstring walkout hamstring walkout");
+G("step-up", "Step-up", "Step-up", "bw legs", 3, 30, 1,
+  "Stufe maximal kniehoch", "Step knee height at most", 45, 1, 2, "none",
+  ["Oberschenkel vorn", "Gesäß", "Quads", "Glutes"],
+  "Ausgangsposition: Ein Fuß ganz auf der Stufe.|Endposition: Aufgerichtet auf der Stufe, dann kontrolliert zurück.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: One foot fully on the step.|End position: Standing tall on the step, then back down under control.|Return to the starting position under control and repeat without momentum.",
+  "Stufe maximal kniehoch.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Step knee height at most.", "Rushing the movement or losing body tension.",
+  "beine", null, "step-up step up");
+G("chair-squat", "Kniebeuge zum Stuhl", "Chair Squat", "bw legs", 3, 30, 0,
+  "Stuhl gegen Wegrutschen sichern", "Secure the chair against sliding away", 45, 1, 2, "none",
+  ["Oberschenkel vorn", "Gesäß", "Quads", "Glutes"],
+  "Ausgangsposition: Aufrecht vor dem Stuhl, Füße hüftbreit.|Endposition: Setzen bis zur Berührung der Sitzfläche, Gewicht auf den Füßen, dann aufstehen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall in front of the chair, feet hip-width.|End position: Sit down until you touch the seat, weight on your feet, then stand up.|Return to the starting position under control and repeat without momentum.",
+  "Stuhl gegen Wegrutschen sichern.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Secure the chair against sliding away.", "Rushing the movement or losing body tension.",
+  "beine", null, "chair squat chair squat");
+G("hindu-push-up", "Hindu-Liegestütz", "Hindu Push-up", "bw", 3, 30, 0,
+  "Bei Schulter- oder Rückenproblemen auslassen", "Skip with shoulder or back problems", 45, 2, 2, "none",
+  ["Schultern", "Brust, Trizeps, Rückenstrecker", "Shoulders", "Chest, Triceps, Spinal erectors"],
+  "Ausgangsposition: Hüfte hoch im umgekehrten V.|Endposition: Brust gleitet dicht am Boden nach vorn, Oberkörper aufgerichtet.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Hips high in an inverted V.|End position: Chest glides forward close to the floor, torso raised.|Return to the starting position under control and repeat without momentum.",
+  "Bei Schulter- oder Rückenproblemen auslassen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Skip with shoulder or back problems.", "Rushing the movement or losing body tension.",
+  "brust", null, "hindu push-up hindu push up");
+G("elevated-pike-push-up", "Pike-Liegestütz mit erhöhten Füßen", "Elevated Pike Push-up", "bw", 3, 30, 0,
+  "Weicher Untergrund, nicht bei Schulterproblemen", "Soft surface, not with shoulder problems", 45, 3, 2, "none",
+  ["Vordere Schulter", "Trizeps", "Front delts", "Triceps"],
+  "Ausgangsposition: Füße auf der Stufe, Hüfte hoch, Kopf zwischen den Armen.|Endposition: Kopf Richtung Boden gebeugt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Feet on the step, hips high, head between your arms.|End position: Head lowered towards the floor.|Return to the starting position under control and repeat without momentum.",
+  "Weicher Untergrund, nicht bei Schulterproblemen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Soft surface, not with shoulder problems.", "Rushing the movement or losing body tension.",
+  "schulter", null, "elevated pike push-up elevated pike push up");
+G("wall-angel", "Wandengel", "Wall Angel", "stretch", 1, 30, 0,
+  "Rippen unten, kein Hohlkreuz, nur im schmerzfreien Bereich", "Ribs down, no hollow back, only in the pain-free range", 5, 1, 1, "none",
+  ["Hintere Schulter", "Oberer Rücken", "Rear delts", "Upper back"],
+  "Ausgangsposition: Rücken, Kopf und Gesäß an der Wand, Arme seitlich gewinkelt.|Endposition: Arme an der Wand nach oben geschoben, Rücken bleibt an der Wand.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Back, head and glutes against the wall, arms bent out to the sides.|End position: Arms slid up the wall, back stays on the wall.|Hold the position calmly while breathing evenly, then release under control.",
+  "Rippen unten, kein Hohlkreuz, nur im schmerzfreien Bereich.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Ribs down, no hollow back, only in the pain-free range.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "wall angel wall angel");
+G("boat-hold", "Boot-Haltung", "Boat Hold", "bw core", 3, 30, 0,
+  "Rücken nicht rund durchhängen", "Don't let your back round and sag", 45, 2, 1, "none",
+  ["Gerader Bauch", "Hüftbeuger", "Abs", "Hip flexors"],
+  "Ausgangsposition: Sitz, Beine angewinkelt abgehoben.|Endposition: Oberkörper leicht zurück, Beine schräg gestreckt, Arme nach vorn, Haltung gehalten.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Seated, legs bent and raised.|End position: Torso leaning back slightly, legs straight at an angle, arms forward, position held.|Hold the position calmly while breathing evenly, then release under control.",
+  "Rücken nicht rund durchhängen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Don't let your back round and sag.", "Rushing the movement or losing body tension.",
+  "bauch", null, "boat hold boat hold");
+G("lunge-with-rotation", "Ausfallschritt mit Rumpfdrehung", "Lunge with Rotation", "bw", 3, 30, 1,
+  "Knie über dem Fuß, nicht ruckartig; bei Knieproblemen auslassen", "Knee over your foot, not jerky; skip with knee problems", 45, 1, 2, "none",
+  ["Oberschenkel vorn", "Gesäß, Schräge Bauchmuskeln", "Quads", "Glutes, Obliques"],
+  "Ausgangsposition: Aufrecht, Hände vor der Brust.|Endposition: Schritt nach vorn, Oberkörper zur Seite des vorderen Beins gedreht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, hands in front of your chest.|End position: Step forward, torso rotated towards the side of the front leg.|Return to the starting position under control and repeat without momentum.",
+  "Knie über dem Fuß, nicht ruckartig; bei Knieproblemen auslassen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Knee over your foot, not jerky; skip with knee problems.", "Rushing the movement or losing body tension.",
+  "beine", null, "lunge with rotation lunge with rotation");
+G("shadow-boxing", "Schattenboxen", "Shadow Boxing", "cardio", 4, 30, 0,
+  "Weicher, federnder Stand", "Soft, springy stance", 30, 1, 3, "none",
+  ["Schultern", "Rumpf, Waden", "Shoulders", "Core, Calves"],
+  "Ausgangsposition: Lockerer Stand, Fäuste an der Wange.|Endposition: Gerade und Haken im Wechsel, Hüfte dreht mit.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Relaxed stance, fists at your cheek.|End position: Straights and hooks alternating, hips rotate with you.|Return to the starting position under control and repeat without momentum.",
+  "Weicher, federnder Stand.", "Hart oder steif landen und die Technik verlieren.",
+  "Soft, springy stance.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "shadow boxing shadow boxing");
+G("leg-swing", "Beinpendeln", "Leg Swing", "stretch", 1, 30, 0,
+  "Kontrollierter Schwung", "Controlled swing", 5, 1, 3, "none",
+  ["Hüftbeuger", "Oberschenkel hinten", "Hip flexors", "Hamstrings"],
+  "Ausgangsposition: Standbein, Hand an der Wand.|Endposition: Schwungbein locker vor und zurück, Oberkörper bleibt aufrecht.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Standing leg, hand on the wall.|End position: Swinging leg swings loosely forward and back, torso stays upright.|Hold the position calmly while breathing evenly, then release under control.",
+  "Kontrollierter Schwung.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Controlled swing.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "leg swing leg swing");
+G("hip-90-90-switch", "90/90-Hüftwechsel", "90/90 Hip Switch", "stretch", 1, 30, 0,
+  "Nicht ruckartig, keine Schmerzen; bei Knieproblemen auslassen", "Not jerky, no pain; skip with knee problems", 5, 1, 1, "none",
+  ["Gesäß", "Adduktoren", "Glutes", "Adductors"],
+  "Ausgangsposition: Sitz, beide Knie 90° zur selben Seite.|Endposition: Knie zur anderen Seite umgelegt, Oberkörper aufrecht.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Seated, both knees at 90° to the same side.|End position: Knees dropped to the other side, torso upright.|Hold the position calmly while breathing evenly, then release under control.",
+  "Nicht ruckartig, keine Schmerzen; bei Knieproblemen auslassen.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Not jerky, no pain; skip with knee problems.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "90/90 hip switch hip 90 90 switch");
+G("thread-the-needle", "Nadelöhr", "Thread the Needle", "stretch", 1, 30, 0,
+  "Nicht ruckartig, keine Schmerzen", "Not jerky, no pain", 5, 1, 1, "none",
+  ["Oberer Rücken", "Hintere Schulter", "Upper back", "Rear delts"],
+  "Ausgangsposition: Vierfüßlerstand.|Endposition: Ein Arm unter dem Körper durchgeschoben, Schulter sinkt zum Boden.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: On all fours.|End position: One arm threaded under your body, shoulder sinks towards the floor.|Hold the position calmly while breathing evenly, then release under control.",
+  "Nicht ruckartig, keine Schmerzen.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Not jerky, no pain.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "thread the needle thread the needle");
+G("lat-stretch", "Latissimus-Dehnung", "Lat Stretch", "stretch", 1, 30, 0,
+  "Sanft, keine Schmerzen", "Gentle, no pain", 5, 1, 1, "none",
+  ["Breiter Rückenmuskel", "Oberer Rücken", "Lats", "Upper back"],
+  "Ausgangsposition: Kindhaltung, beide Hände vorn.|Endposition: Hände zur Seite gewandert, Gesäß Richtung Ferse, Seite wechseln.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Child's pose, both hands forward.|End position: Hands walked to one side, glutes towards your heels, switch sides.|Hold the position calmly while breathing evenly, then release under control.",
+  "Sanft, keine Schmerzen.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Gentle, no pain.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "lat stretch lat stretch");
+G("knee-to-wall-ankle-mobilization", "Sprunggelenk lösen (Knie zur Wand)", "Knee-to-Wall Ankle Mobilization", "stretch", 1, 30, 0,
+  "Ferse bleibt am Boden, keine Schmerzen", "Heel stays on the floor, no pain", 5, 1, 1, "none",
+  ["Waden", "Vorderer Schienbeinmuskel", "Calves", "Shin muscles"],
+  "Ausgangsposition: Fuß eine Handbreit von der Wand, Ferse am Boden.|Endposition: Knie zur Wand geschoben, Ferse bleibt am Boden.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Foot a hand's width from the wall, heel on the floor.|End position: Knee pushed to the wall, heel stays on the floor.|Hold the position calmly while breathing evenly, then release under control.",
+  "Ferse bleibt am Boden, keine Schmerzen.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Heel stays on the floor, no pain.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "knee-to-wall ankle mobilization knee to wall ankle mobilization");
+G("archer-pull-up", "Archer-Klimmzug", "Archer Pull-up", "calis back", 3, 30, 1,
+  "Vorstufe: Klimmzug im weiten Griff", "Preparation: wide-grip pull-up", 60, 3, 2, "bar",
+  ["Breiter Rückenmuskel", "Bizeps, Oberer Rücken", "Lats", "Biceps, Upper back"],
+  "Ausgangsposition: Weiter Griff, Hang.|Endposition: Zu einer Hand gezogen, anderer Arm fast gestreckt, mittig abgelassen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Wide grip, hanging.|End position: Pulled up towards one hand, other arm almost straight, lowered in the middle.|Return to the starting position under control and repeat without momentum.",
+  "Vorstufe: Klimmzug im weiten Griff.", "Mit Schwung arbeiten oder ohne sicheren Griff und Stand üben.",
+  "Preparation: wide-grip pull-up.", "Using momentum or training without a secure grip and footing.",
+  "ruecken", null, "archer pull-up archer pull up");
+G("pseudo-planche-push-up", "Pseudo-Planche-Liegestütz", "Pseudo Planche Push-up", "bw", 3, 30, 0,
+  "Handgelenke aufwärmen", "Warm up your wrists", 45, 3, 2, "none",
+  ["Vordere Schulter", "Brust, Trizeps", "Front delts", "Chest, Triceps"],
+  "Ausgangsposition: Hände neben der Hüfte, Finger nach hinten, Schultern über den Händen.|Endposition: Gebeugt, Schultern bleiben weit vor den Händen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Hands beside your hips, fingers pointing back, shoulders over your hands.|End position: Bent, shoulders stay far in front of your hands.|Return to the starting position under control and repeat without momentum.",
+  "Handgelenke aufwärmen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Warm up your wrists.", "Rushing the movement or losing body tension.",
+  "brust", null, "pseudo planche push-up pseudo planche push up");
+G("tuck-front-lever-hold", "Front Lever (Tuck) halten", "Tuck Front Lever Hold", "calis back", 3, 30, 0,
+  "Rücken waagerecht angehoben, Arme gestreckt, Haltung gehalten", "Back raised horizontal, arms straight, position held", 60, 3, 1, "bar",
+  ["Breiter Rückenmuskel", "Gerader Bauch", "Lats", "Abs"],
+  "Ausgangsposition: Hang, Knie zur Brust gezogen.|Endposition: Rücken waagerecht angehoben, Arme gestreckt, Haltung gehalten.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Hanging, knees drawn to your chest.|End position: Back raised horizontal, arms straight, position held.|Hold the position calmly while breathing evenly, then release under control.",
+  "Schulter und Ellbogen-Beugesehnen: langsam steigern, nur mit sicherem Griff, Matte darunter.", "Mit Schwung arbeiten oder ohne sicheren Griff und Stand üben.",
+  "Shoulder and elbow flexor tendons: increase slowly, only with a secure grip, mat underneath.", "Using momentum or training without a secure grip and footing.",
+  "ruecken", null, "tuck front lever hold tuck front lever hold");
+G("wall-handstand-hold", "Handstand an der Wand halten", "Wall Handstand Hold", "bw", 3, 30, 0,
+  "Freie Fläche, Sturzrisiko, nicht bei Schulterproblemen", "Clear space, risk of falling, not with shoulder problems", 45, 3, 1, "none",
+  ["Vordere Schulter", "Trizeps, Rumpf", "Front delts", "Triceps, Core"],
+  "Ausgangsposition: Hände eine Handbreit von der Wand, Hüfte hoch.|Endposition: Füße an der Wand, Körper lang, Haltung gehalten.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Hands a hand's width from the wall, hips high.|End position: Feet on the wall, body long, position held.|Hold the position calmly while breathing evenly, then release under control.",
+  "Freie Fläche, Sturzrisiko, nicht bei Schulterproblemen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Clear space, risk of falling, not with shoulder problems.", "Rushing the movement or losing body tension.",
+  "schulter", null, "wall handstand hold wall handstand hold");
+G("parallel-bar-knee-raise", "Beinheben im Barrenstütz", "Parallel Bar Knee Raise", "calis core", 3, 30, 0,
+  "Nicht schwingen", "Don't swing", 60, 1, 2, "dip",
+  ["Gerader Bauch", "Hüftbeuger", "Abs", "Hip flexors"],
+  "Ausgangsposition: Stütz auf den Barren, Beine hängen.|Endposition: Knie zur Brust gezogen, kontrolliert abgelassen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Support on the bars, legs hanging.|End position: Knees drawn to your chest, lowered under control.|Return to the starting position under control and repeat without momentum.",
+  "Nicht schwingen.", "Mit Schwung arbeiten oder ohne sicheren Griff und Stand üben.",
+  "Don't swing.", "Using momentum or training without a secure grip and footing.",
+  "bauch", null, "parallel bar knee raise parallel bar knee raise");
+G("glute-ham-raise", "Gesäß-Beinbeuger-Heben", "Glute-Ham Raise", "weight legs", 3, 40, 0,
+  "Mit geringem Hebel beginnen", "Start with a short lever", 60, 3, 2, "gym",
+  ["Oberschenkel hinten", "Gesäß, Rückenstrecker", "Hamstrings", "Glutes, Spinal erectors"],
+  "Ausgangsposition: Fersen fixiert, Körper waagerecht über dem Polster.|Endposition: Mit den Beinbeugern aufgerichtet, kontrolliert abgesenkt.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Heels secured, body horizontal over the pad.|End position: Raised with the hamstrings, lowered under control.|Return to the starting position under control and repeat without momentum.",
+  "Mit geringem Hebel beginnen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Start with a short lever.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "glute-ham raise glute ham raise");
+G("sled-push", "Schlitten schieben", "Sled Push", "weight legs", 3, 40, 0,
+  "Mit leichtem Gewicht beginnen", "Start with a light load", 60, 2, 3, "gym",
+  ["Oberschenkel vorn", "Gesäß, Waden", "Quads", "Glutes, Calves"],
+  "Ausgangsposition: Hände am Schlitten, Körper schräg nach vorn.|Endposition: Kleine kräftige Schritte, Schlitten rutscht vorwärts.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Hands on the sled, body leaning forward.|End position: Short powerful steps, sled slides forward.|Return to the starting position under control and repeat without momentum.",
+  "Mit leichtem Gewicht beginnen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Start with a light load.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "sled push sled push");
+G("suitcase-carry", "Einarm-Tragen (Koffer)", "Suitcase Carry", "weight core", 3, 40, 1,
+  "Gewicht moderat, Rumpf aufrecht, nicht seitlich lehnen", "Moderate weight, torso upright, don't lean sideways", 60, 1, 2, "db",
+  ["Schräge Bauchmuskeln", "Unterarme, Trapez", "Obliques", "Forearms, Traps"],
+  "Ausgangsposition: Gewicht an einer Seite hängen, Rumpf aufrecht.|Endposition: Gehen, ohne dass der Rumpf zur Last hin kippt, Seite wechseln.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Weight hanging at one side, torso upright.|End position: Walk without your torso tipping towards the load, switch sides.|Hold the position calmly while breathing evenly, then release under control.",
+  "Gewicht moderat, Rumpf aufrecht, nicht seitlich lehnen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Moderate weight, torso upright, don't lean sideways.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "bauch", null, "suitcase carry suitcase carry");
+G("landmine-row", "Landmine-Rudern", "Landmine Row", "weight back", 3, 40, 0,
+  "Rücken neutral", "Neutral back", 60, 2, 2, "gym",
+  ["Breiter Rückenmuskel", "Oberer Rücken", "Lats", "Upper back"],
+  "Ausgangsposition: Vorgebeugt, Stangenende zwischen den Händen, Arme lang.|Endposition: Ellbogen eng am Körper zur Hüfte gezogen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bent forward, end of the bar between your hands, arms long.|End position: Elbows pulled close to your body to your hip.|Return to the starting position under control and repeat without momentum.",
+  "Rücken neutral.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Neutral back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "ruecken", null, "landmine row landmine row");
+G("couch-stretch", "Couch-Dehnung", "Couch Stretch", "stretch", 1, 30, 1,
+  "Knie auf weichem Untergrund", "Knee on a soft surface", 5, 1, 1, "none",
+  ["Oberschenkel vorn", "Hüftbeuger", "Quads", "Hip flexors"],
+  "Ausgangsposition: Knie an der Wand, Fuß an der Wand hoch, anderes Bein vorn.|Endposition: Becken aufgerichtet, Oberkörper aufrecht, Spannung vorn.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen. Danach die Seite wechseln.",
+  "Starting position: Knee at the wall, foot up the wall, other leg in front.|End position: Pelvis tucked, torso upright, stretch in the front of the hip.|Hold the position calmly while breathing evenly, then release under control. Then switch sides.",
+  "Knie auf weichem Untergrund.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Knee on a soft surface.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "couch stretch couch stretch");
+G("hip-airplane", "Hüftflieger", "Hip Airplane", "stretch", 1, 30, 0,
+  "Zuerst mit Halt üben, Knie nicht überdrehen", "Practise with support first, don't over-twist the knee", 5, 1, 1, "none",
+  ["Gesäß", "Hüftrotatoren, Waden", "Glutes", "Hip rotators, Calves"],
+  "Ausgangsposition: Einbeinstand, Oberkörper vorgeneigt.|Endposition: Hüfte und Oberkörper geöffnet, Arme wie Flügel, Standbein fest.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Standing on one leg, torso leaning forward.|End position: Hips and torso opened, arms out like wings, standing leg firm.|Hold the position calmly while breathing evenly, then release under control.",
+  "Zuerst mit Halt üben, Knie nicht überdrehen.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Practise with support first, don't over-twist the knee.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "hip airplane hip airplane");
+G("single-arm-db-snatch", "Einarmiges Reißen (Kurzhantel)", "Single-Arm Dumbbell Snatch", "weight", 3, 40, 1,
+  "Technikintensiv, mit leichtem Gewicht üben", "Technical, practise with light weight", 60, 3, 3, "db",
+  ["Gesäß", "Schultern, Oberschenkel hinten", "Glutes", "Shoulders, Hamstrings"],
+  "Ausgangsposition: Hantel zwischen den Füßen, Hocke.|Endposition: Hüfte gestreckt, Hantel in einem Zug über den Kopf.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Dumbbell between your feet, squat.|End position: Hips extended, dumbbell pulled overhead in one motion.|Return to the starting position under control and repeat without momentum.",
+  "Technikintensiv, mit leichtem Gewicht üben.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Technical, practise with light weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "single-arm dumbbell snatch single arm db snatch");
+G("band-pull-apart", "Band auseinanderziehen", "Band Pull-Apart", "weight", 3, 40, 0,
+  "Leichter Widerstand", "Light resistance", 60, 1, 2, "band",
+  ["Hintere Schulter", "Oberer Rücken", "Rear delts", "Upper back"],
+  "Ausgangsposition: Band vor der Brust in beiden Händen.|Endposition: Arme zur Seite gezogen, Schulterblätter zusammen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Band held in both hands in front of your chest.|End position: Arms pulled out to the sides, shoulder blades together.|Return to the starting position under control and repeat without momentum.",
+  "Leichter Widerstand.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light resistance.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "band pull-apart band pull apart");
+G("goblet-reverse-lunge", "Ausfallschritt rückwärts mit Hantel vor der Brust", "Goblet Reverse Lunge", "weight legs", 3, 40, 1,
+  "Vorderes Knie über dem Fuß, Oberkörper aufrecht", "Front knee over your foot, torso upright", 60, 2, 2, "db",
+  ["Oberschenkel vorn", "Gesäß", "Quads", "Glutes"],
+  "Ausgangsposition: Aufrecht, Hantel vor der Brust.|Endposition: Schritt rückwärts, beide Knie etwa 90°, Oberkörper aufrecht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, dumbbell in front of your chest.|End position: Step backward, both knees about 90°, torso upright.|Return to the starting position under control and repeat without momentum.",
+  "Vorderes Knie über dem Fuß, Oberkörper aufrecht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Front knee over your foot, torso upright.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "goblet reverse lunge goblet reverse lunge");
+G("pogo-hops", "Fußgelenkhüpfer", "Pogo Hops", "cardio", 4, 30, 0,
+  "Kurze Serien, Achillessehne langsam gewöhnen", "Short sets, get your Achilles tendons used to it slowly", 30, 1, 3, "none",
+  ["Waden", "Vorderer Schienbeinmuskel", "Calves", "Shin muscles"],
+  "Ausgangsposition: Aufrecht, Knie fast gestreckt.|Endposition: Kurze federnde Sprünge aus dem Sprunggelenk.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall, knees almost straight.|End position: Short springy jumps from the ankles.|Return to the starting position under control and repeat without momentum.",
+  "Kurze Serien, Achillessehne langsam gewöhnen.", "Hart oder steif landen und die Technik verlieren.",
+  "Short sets, get your Achilles tendons used to it slowly.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "pogo hops pogo hops");
+G("prone-w-raise", "W-Heben in Bauchlage", "Prone W-Raise", "bw back", 3, 30, 0,
+  "Nacken lang lassen, kein Hohlkreuz", "Keep your neck long, no hollow back", 45, 1, 2, "none",
+  ["Mittlerer Trapez", "Hintere Schulter", "Mid traps", "Rear delts"],
+  "Ausgangsposition: Bauchlage, Arme in W-Form.|Endposition: Schulterblätter zusammen, Arme leicht abheben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying face down, arms in a W shape.|End position: Shoulder blades together, arms lifted slightly.|Return to the starting position under control and repeat without momentum.",
+  "Nacken lang lassen, kein Hohlkreuz.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Keep your neck long, no hollow back.", "Rushing the movement or losing body tension.",
+  "ruecken", null, "prone w-raise prone w raise");
+G("bodyweight-curl", "Körpergewichts-Curl an der Stange", "Bodyweight Curl", "calis arms", 3, 30, 0,
+  "Körper steif halten", "Keep your body stiff", 60, 2, 2, "bar",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Unter niedriger Stange, Untergriff, Körper gerade.|Endposition: Ellbogen beugen, Körper hochziehen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Under a low bar, underhand grip, body straight.|End position: Elbows bent, body pulled up.|Return to the starting position under control and repeat without momentum.",
+  "Körper steif halten.", "Mit Schwung arbeiten oder ohne sicheren Griff und Stand üben.",
+  "Keep your body stiff.", "Using momentum or training without a secure grip and footing.",
+  "arme", null, "bodyweight curl bodyweight curl");
+G("supine-db-curl", "Curl liegend auf der Bank", "Supine Dumbbell Curl", "weight arms", 3, 40, 0,
+  "Leichte Hantel, nicht über dem Gesicht ablegen", "Light dumbbells, don't hold them above your face", 60, 2, 2, "db gym",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Rückenlage, Arme hängen.|Endposition: Ellbogen beugen, Hanteln hoch.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back, arms hanging.|End position: Elbows bent, dumbbells up.|Return to the starting position under control and repeat without momentum.",
+  "Leichte Hantel, nicht über dem Gesicht ablegen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light dumbbells, don't hold them above your face.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "supine dumbbell curl supine db curl");
+G("overhead-cable-curl", "Bizepscurl über Kopf (Kabelzug)", "Overhead Cable Curl", "weight arms", 3, 40, 0,
+  "Leichtes Gewicht, Ellbogen schulterhoch, kein Schwung", "Light weight, elbows at shoulder height, no swinging", 60, 2, 2, "gym",
+  ["Bizeps", "Unterarme", "Biceps", "Forearms"],
+  "Ausgangsposition: Arme seitlich auf Schulterhöhe gestreckt.|Endposition: Hände zum Kopf beugen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Arms straight out to the sides at shoulder height.|End position: Hands curled towards your head.|Return to the starting position under control and repeat without momentum.",
+  "Leichtes Gewicht, Ellbogen schulterhoch, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight, elbows at shoulder height, no swinging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "overhead cable curl overhead cable curl");
+G("reverse-grip-push-up", "Liegestütz im Untergriff", "Reverse-Grip Push-up", "bw", 3, 30, 0,
+  "Starke Handgelenksstreckung: Handgelenke aufwärmen, nicht bei Handgelenkproblemen", "Strong wrist extension: warm up your wrists, not with wrist problems", 45, 3, 2, "none",
+  ["Obere Brust", "Bizeps, Vordere Schulter", "Upper chest", "Biceps, Front delts"],
+  "Ausgangsposition: Stütz, Finger zeigen zu den Füßen.|Endposition: Brust senken und hochdrücken.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Plank, fingers pointing towards your feet.|End position: Lower your chest and push up.|Return to the starting position under control and repeat without momentum.",
+  "Starke Handgelenksstreckung: Handgelenke aufwärmen, nicht bei Handgelenkproblemen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Strong wrist extension: warm up your wrists, not with wrist problems.", "Rushing the movement or losing body tension.",
+  "brust", null, "reverse-grip push-up reverse grip push up");
+G("hand-release-push-up", "Liegestütz mit Handlösen", "Hand-Release Push-up", "bw", 3, 30, 0,
+  "Hüfte ruhig, Körper bleibt gerade", "Hips still, body stays straight", 45, 2, 2, "none",
+  ["Brust", "Trizeps", "Chest", "Triceps"],
+  "Ausgangsposition: Stütz.|Endposition: Brust ablegen, Hände kurz lösen, hochdrücken.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Plank.|End position: Chest set down, hands briefly lifted, push up.|Return to the starting position under control and repeat without momentum.",
+  "Hüfte ruhig, Körper bleibt gerade.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Hips still, body stays straight.", "Rushing the movement or losing body tension.",
+  "brust", null, "hand-release push-up hand release push up");
+G("wall-push-up", "Wand-Liegestütz", "Wall Push-up", "bw", 3, 30, 0,
+  "Gut als erste Stufe", "A good first step", 45, 1, 2, "none",
+  ["Brust", "Trizeps", "Chest", "Triceps"],
+  "Ausgangsposition: Stand vor Wand, Hände auf Brusthöhe.|Endposition: Brust zur Wand, zurückdrücken.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing in front of the wall, hands at chest height.|End position: Chest to the wall, push back.|Return to the starting position under control and repeat without momentum.",
+  "Gut als erste Stufe.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "A good first step.", "Rushing the movement or losing body tension.",
+  "brust", null, "wall push-up wall push up");
+G("single-leg-push-up", "Liegestütz mit Beinheben", "Push-up with Single-Leg Raise", "bw", 3, 30, 1,
+  "Hüfte ruhig, Körper bleibt gerade", "Hips still, body stays straight", 45, 2, 2, "none",
+  ["Brust", "Gesäß, Rumpf", "Chest", "Glutes, Core"],
+  "Ausgangsposition: Stütz, ein Bein angehoben.|Endposition: Liegestütz im Wechsel der Beine.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Plank, one leg raised.|End position: Push-up with alternating legs.|Return to the starting position under control and repeat without momentum.",
+  "Hüfte ruhig, Körper bleibt gerade.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Hips still, body stays straight.", "Rushing the movement or losing body tension.",
+  "brust", null, "push-up with single-leg raise single leg push up");
+G("staggered-hands-push-up", "Liegestütz mit versetzten Händen", "Staggered-Hands Push-up", "bw", 3, 30, 0,
+  "Körper gerade halten, die Handposition nach jedem Satz tauschen", "Keep your body straight, switch the hand positions every set", 45, 2, 2, "none",
+  ["Brust", "Trizeps", "Chest", "Triceps"],
+  "Ausgangsposition: Eine Hand weiter vorn.|Endposition: Liegestütz, Hände später tauschen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: One hand further forward.|End position: Push-up, switch hand positions later.|Return to the starting position under control and repeat without momentum.",
+  "Körper gerade halten, die Handposition nach jedem Satz tauschen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Keep your body straight, switch the hand positions every set.", "Rushing the movement or losing body tension.",
+  "brust", null, "staggered-hands push-up staggered hands push up");
+G("bridge-hold", "Brücke (Rückbeuge) halten", "Bridge Hold", "bw back", 3, 30, 0,
+  "Körper nach oben drücken, Bogen halten", "Body pushed up, arch held", 45, 3, 1, "none",
+  ["Rückenstrecker", "Gesäß, Schultern", "Spinal erectors", "Glutes, Shoulders"],
+  "Ausgangsposition: Rückenlage, Hände neben Kopf.|Endposition: Körper nach oben drücken, Bogen halten.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Lying on your back, hands beside your head.|End position: Body pushed up, arch held.|Hold the position calmly while breathing evenly, then release under control.",
+  "Nur mit guter Schulter- und Wirbelsäulenbeweglichkeit, aufwärmen; nicht bei Rückenproblemen; nicht ins Hohlkreuz pressen. Vorstufe Glute Bridge.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Only with good shoulder and spine mobility, warm up; not with back problems; don't force a hollow back. Preparation: glute bridge.", "Rushing the movement or losing body tension.",
+  "ruecken", null, "bridge hold bridge hold");
+G("wall-walk", "Wandlauf", "Wall Walk", "bw", 3, 30, 0,
+  "Überkopf-Stütz, Handgelenke aufwärmen, Wand nah beim Hochlaufen, langsam zurück", "Feet up, hands towards the wall, and back", 45, 3, 2, "none",
+  ["Schultern", "Rumpf", "Shoulders", "Core"],
+  "Ausgangsposition: Stütz, Füße an der Wand.|Endposition: Füße hoch, Hände zur Wand, zurück.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Plank, feet at the wall.|End position: Feet up, hands towards the wall, and back.|Return to the starting position under control and repeat without momentum.",
+  "Überkopf-Stütz, Handgelenke aufwärmen, Wand nah beim Hochlaufen, langsam zurück.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Overhead support, warm up your wrists, stay close to the wall when walking up, go back slowly.", "Rushing the movement or losing body tension.",
+  "schulter", null, "wall walk wall walk");
+G("crow-pose", "Krähe", "Crow Pose", "bw", 3, 30, 0,
+  "Weich unterlegen, nach vorn fallen lernen, Handgelenke aufwärmen", "Pad the floor, learn to fall forward, warm up your wrists", 45, 3, 1, "none",
+  ["Unterarme", "Rumpf, Bizeps, Trizeps", "Forearms", "Core, Biceps, Triceps"],
+  "Ausgangsposition: Tiefe Hocke, Hände am Boden.|Endposition: Knie auf die Oberarme, Füße lösen.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Deep squat, hands on the floor.|End position: Knees on your upper arms, feet lifted.|Hold the position calmly while breathing evenly, then release under control.",
+  "Weich unterlegen, nach vorn fallen lernen, Handgelenke aufwärmen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Pad the floor, learn to fall forward, warm up your wrists.", "Rushing the movement or losing body tension.",
+  "schulter", null, "crow pose crow pose");
+G("frog-stand", "Froschstand", "Frogstand", "bw", 3, 30, 0,
+  "Weich unterlegen, nach vorn fallen lernen, Handgelenke aufwärmen", "Pad the floor, learn to fall forward, warm up your wrists", 45, 2, 1, "none",
+  ["Schultern", "Unterarme, Rumpf", "Shoulders", "Forearms, Core"],
+  "Ausgangsposition: Hocke, Hände am Boden.|Endposition: Knie auf die Ellbogen, Gleichgewicht halten.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Squat, hands on the floor.|End position: Knees on your elbows, balance held.|Hold the position calmly while breathing evenly, then release under control.",
+  "Weich unterlegen, nach vorn fallen lernen, Handgelenke aufwärmen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Pad the floor, learn to fall forward, warm up your wrists.", "Rushing the movement or losing body tension.",
+  "schulter", null, "frogstand frog stand");
+G("freestanding-handstand", "Freier Handstand", "Freestanding Handstand Hold", "bw", 3, 30, 0,
+  "Körper senkrecht frei halten", "Body held vertical without support", 45, 3, 1, "none",
+  ["Schultern", "Trizeps, Rumpf", "Shoulders", "Triceps, Core"],
+  "Ausgangsposition: Kick-up oder Aufdrücken.|Endposition: Körper senkrecht frei halten.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Kick up or press up.|End position: Body held vertical without support.|Hold the position calmly while breathing evenly, then release under control.",
+  "Platz schaffen, Fallen vorher üben, weicher Untergrund; nicht bei Schulter-, Nacken-, Handgelenkproblemen, hohem Blutdruck oder Augenerkrankungen. Erst Wand-Handstand.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Clear space, practise falling first, soft surface; not with shoulder, neck or wrist problems, high blood pressure or eye conditions. Wall handstand first.", "Rushing the movement or losing body tension.",
+  "schulter", null, "freestanding handstand hold freestanding handstand");
+G("active-hang", "Aktiver Hang", "Active Hang", "calis back", 3, 30, 0,
+  "Schultern nach unten ziehen, ohne die Ellbogen zu beugen, die Zeit langsam steigern", "Pull your shoulders down without bending your elbows, build up the time slowly", 60, 1, 1, "bar",
+  ["Breiter Rückenmuskel", "Unterer Trapez", "Lats", "Lower traps"],
+  "Ausgangsposition: Hang mit lockeren Schultern.|Endposition: Schultern nach unten ziehen, Arme gestreckt.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Hanging with loose shoulders.|End position: Shoulders pulled down, arms straight.|Hold the position calmly while breathing evenly, then release under control.",
+  "Schultern nach unten ziehen, ohne die Ellbogen zu beugen, die Zeit langsam steigern.", "Mit Schwung arbeiten oder ohne sicheren Griff und Stand üben.",
+  "Pull your shoulders down without bending your elbows, build up the time slowly.", "Using momentum or training without a secure grip and footing.",
+  "ruecken", null, "active hang active hang");
+G("weighted-pull-up", "Klimmzug mit Zusatzgewicht", "Weighted Pull-up", "weight back", 3, 40, 0,
+  "Erst saubere Körpergewichts-Wiederholungen, Gewicht fest befestigen, nicht fallen lassen", "Clean bodyweight reps first, attach the weight securely, don't drop it", 60, 3, 2, "db kb",
+  ["Breiter Rückenmuskel", "Bizeps", "Lats", "Biceps"],
+  "Ausgangsposition: Hang mit Gewicht.|Endposition: Kinn über die Stange.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Hanging with extra weight.|End position: Chin over the bar.|Return to the starting position under control and repeat without momentum.",
+  "Erst saubere Körpergewichts-Wiederholungen, Gewicht fest befestigen, nicht fallen lassen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Clean bodyweight reps first, attach the weight securely, don't drop it.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "ruecken", null, "weighted pull-up weighted pull up");
+G("chest-to-bar-pull-up", "Klimmzug Brust zur Stange", "Chest-to-Bar Pull-up", "calis back", 3, 30, 0,
+  "Erst nach sauberen Klimmzügen; leicht zurücklehnen und den Zug kontrolliert halten", "Only after clean pull-ups; lean back slightly and keep the pull controlled", 60, 3, 2, "bar",
+  ["Breiter Rückenmuskel", "Oberer Rücken", "Lats", "Upper back"],
+  "Ausgangsposition: Hang.|Endposition: Brust bis zur Stange ziehen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Hanging.|End position: Pulled up until your chest reaches the bar.|Return to the starting position under control and repeat without momentum.",
+  "Erst nach sauberen Klimmzügen; leicht zurücklehnen und den Zug kontrolliert halten.", "Mit Schwung arbeiten oder ohne sicheren Griff und Stand üben.",
+  "Only after clean pull-ups; lean back slightly and keep the pull controlled.", "Using momentum or training without a secure grip and footing.",
+  "ruecken", null, "chest-to-bar pull-up chest to bar pull up");
+G("tuck-planche-hold", "Planche (Tuck) halten", "Tuck Planche Hold", "bw", 3, 30, 0,
+  "Füße abheben, Knie angezogen", "Feet lifted, knees drawn in", 45, 3, 1, "none",
+  ["Vordere Schulter", "Rumpf, Unterarme", "Front delts", "Core, Forearms"],
+  "Ausgangsposition: Stütz, Hände tief.|Endposition: Füße abheben, Knie angezogen.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Support, hands low.|End position: Feet lifted, knees drawn in.|Hold the position calmly while breathing evenly, then release under control.",
+  "Handgelenke und Ellbogen gut aufwärmen, Bizepssehne langsam gewöhnen, nur nach Vorstufen (Pseudo-Planche).", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Warm up your wrists and elbows well, get your biceps tendons used to it slowly, only after the preparatory steps (pseudo planche).", "Rushing the movement or losing body tension.",
+  "schulter", null, "tuck planche hold tuck planche hold");
+G("tuck-l-sit", "L-Sit (Tuck)", "Tuck L-Sit", "calis core", 3, 30, 0,
+  "Schultern aktiv, Hände fest", "Shoulders active, hands firm", 60, 2, 1, "dip",
+  ["Bauch", "Hüftbeuger, Trizeps", "Abs", "Hip flexors, Triceps"],
+  "Ausgangsposition: Stütz, Knie angezogen.|Endposition: Füße vom Boden, halten.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Support, knees drawn in.|End position: Feet off the floor, held.|Hold the position calmly while breathing evenly, then release under control.",
+  "Schultern aktiv, Hände fest.", "Mit Schwung arbeiten oder ohne sicheren Griff und Stand üben.",
+  "Shoulders active, hands firm.", "Using momentum or training without a secure grip and footing.",
+  "bauch", null, "tuck l-sit tuck l sit");
+G("v-sit", "V-Sit", "V-Sit", "bw core", 3, 30, 0,
+  "Erst nach dem L-Sitz; Rücken lang halten und die Position nicht erzwingen", "Only after the L-sit; keep your back long and don't force the position", 45, 3, 1, "none",
+  ["Bauch", "Hüftbeuger", "Abs", "Hip flexors"],
+  "Ausgangsposition: Sitz, Beine gestreckt.|Endposition: Beine und Oberkörper zum V heben.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Seated, legs straight.|End position: Legs and torso raised into a V.|Hold the position calmly while breathing evenly, then release under control.",
+  "Erst nach dem L-Sitz; Rücken lang halten und die Position nicht erzwingen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Only after the L-sit; keep your back long and don't force the position.", "Rushing the movement or losing body tension.",
+  "bauch", null, "v-sit v sit");
+G("weighted-dip", "Dip mit Zusatzgewicht", "Weighted Dip", "weight arms", 3, 40, 0,
+  "Senken, hochdrücken", "Clean bodyweight reps first, attach the weight securely, no deeper than 90° (shoulder)", 60, 3, 2, "db kb",
+  ["Trizeps", "Brust", "Triceps", "Chest"],
+  "Ausgangsposition: Stütz mit Gewicht.|Endposition: Senken, hochdrücken.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Support with extra weight.|End position: Lower, push up.|Return to the starting position under control and repeat without momentum.",
+  "Erst saubere Körpergewichts-Wiederholungen, Gewicht fest befestigen, nicht tiefer als 90° (Schulter).", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Clean bodyweight reps first, attach the weight securely, no deeper than 90° (shoulder).", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "arme", null, "weighted dip weighted dip");
+G("straight-bar-dip", "Dip an der geraden Stange", "Straight Bar Dip", "calis", 3, 30, 0,
+  "Erst nach Dips am Barren; Schultern stabil halten und nicht zu tief absenken", "Only after parallel-bar dips; keep your shoulders stable and don't go too deep", 60, 3, 2, "bar",
+  ["Brust", "Trizeps", "Chest", "Triceps"],
+  "Ausgangsposition: Stütz über der Stange.|Endposition: Senken, hochdrücken.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Support above the bar.|End position: Lower, push up.|Return to the starting position under control and repeat without momentum.",
+  "Erst nach Dips am Barren; Schultern stabil halten und nicht zu tief absenken.", "Mit Schwung arbeiten oder ohne sicheren Griff und Stand üben.",
+  "Only after parallel-bar dips; keep your shoulders stable and don't go too deep.", "Using momentum or training without a secure grip and footing.",
+  "brust", null, "straight bar dip straight bar dip");
+G("hindu-squat", "Hindu-Kniebeuge", "Hindu Squat", "bw legs", 3, 30, 0,
+  "Knie und Sprunggelenk beobachten; nicht bei Knieproblemen; Fersenheben belastet das Knie", "Watch your knees and ankles; not with knee problems; lifting the heels loads the knee", 45, 2, 2, "none",
+  ["Oberschenkel vorn", "Waden", "Quads", "Calves"],
+  "Ausgangsposition: Stand.|Endposition: Tief, Fersen heben, Arme schwingen mit.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing.|End position: Deep, heels lifted, arms swing along.|Return to the starting position under control and repeat without momentum.",
+  "Knie und Sprunggelenk beobachten; nicht bei Knieproblemen; Fersenheben belastet das Knie.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Watch your knees and ankles; not with knee problems; lifting the heels loads the knee.", "Rushing the movement or losing body tension.",
+  "beine", null, "hindu squat hindu squat");
+G("sumo-squat", "Sumo-Kniebeuge", "Sumo Squat", "bw legs", 3, 30, 0,
+  "Knie in Richtung der Zehen, Oberkörper aufrecht", "Knees in line with your toes, torso upright", 45, 1, 2, "none",
+  ["Adduktoren", "Gesäß", "Adductors", "Glutes"],
+  "Ausgangsposition: Breiter Stand, Zehen auswärts.|Endposition: Absenken, hochdrücken.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Wide stance, toes turned out.|End position: Lower, push up.|Return to the starting position under control and repeat without momentum.",
+  "Knie in Richtung der Zehen, Oberkörper aufrecht.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Knees in line with your toes, torso upright.", "Rushing the movement or losing body tension.",
+  "beine", null, "sumo squat sumo squat");
+G("shrimp-squat", "Shrimp-Kniebeuge", "Shrimp Squat", "bw legs", 3, 30, 1,
+  "Hinteres Knie weich aufsetzen (Matte), nicht aufschlagen; Vorstufe Pistol Squat Assist", "Set the back knee down softly (mat), don't slam it; preparation: pistol squat assist", 45, 3, 2, "none",
+  ["Oberschenkel vorn", "Gesäß", "Quads", "Glutes"],
+  "Ausgangsposition: Einbeinstand, Fuß hinten gehalten.|Endposition: Knie senken zum Boden, hoch.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing on one leg, back foot held.|End position: Knee lowered to the floor, up.|Return to the starting position under control and repeat without momentum.",
+  "Hinteres Knie weich aufsetzen (Matte), nicht aufschlagen; Vorstufe Pistol Squat Assist.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Set the back knee down softly (mat), don't slam it; preparation: pistol squat assist.", "Rushing the movement or losing body tension.",
+  "beine", null, "shrimp squat shrimp squat");
+G("transverse-lunge", "Ausfallschritt quer", "Transverse Lunge", "bw legs", 3, 30, 1,
+  "Knie in Richtung des Fußes, Oberkörper aufrecht, den Schritt kontrolliert setzen", "Knee in line with your foot, torso upright, take the step in a controlled way", 45, 2, 2, "none",
+  ["Gesäß", "Oberschenkel", "Glutes", "Thighs"],
+  "Ausgangsposition: Stand.|Endposition: Schritt schräg zur Seite, Knie beugen, zurück.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing.|End position: Step diagonally to the side, bend your knees, back.|Return to the starting position under control and repeat without momentum.",
+  "Knie in Richtung des Fußes, Oberkörper aufrecht, den Schritt kontrolliert setzen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Knee in line with your foot, torso upright, take the step in a controlled way.", "Rushing the movement or losing body tension.",
+  "beine", null, "transverse lunge transverse lunge");
+G("stair-climbing", "Treppensteigen", "Stair Climbing", "cardio", 4, 30, 0,
+  "Geländer in Reichweite", "Handrail within reach", 30, 1, 2, "none",
+  ["Beine", "Ausdauer", "Legs", "Cardio"],
+  "Ausgangsposition: Aufrecht vor der Treppe.|Endposition: Ein Fuß auf der Stufe, Oberkörper aufrecht.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing tall in front of the stairs.|End position: One foot on the step, torso upright.|Return to the starting position under control and repeat without momentum.",
+  "Geländer in Reichweite.", "Hart oder steif landen und die Technik verlieren.",
+  "Handrail within reach.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "stair climbing stair climbing");
+G("prone-hip-extension", "Beinheben in Bauchlage", "Prone Hip Extension", "bw legs", 3, 30, 0,
+  "Becken ruhig, keine Verdrehung", "Pelvis still, no twisting", 45, 1, 2, "none",
+  ["Gesäß", "Oberschenkel hinten", "Glutes", "Hamstrings"],
+  "Ausgangsposition: Bauchlage.|Endposition: Ein Bein gestreckt anheben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying face down.|End position: One leg raised straight.|Return to the starting position under control and repeat without momentum.",
+  "Becken ruhig, keine Verdrehung.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Pelvis still, no twisting.", "Rushing the movement or losing body tension.",
+  "beine", null, "prone hip extension prone hip extension");
+G("donkey-kick", "Donkey Kick", "Donkey Kick", "bw legs", 3, 30, 1,
+  "Rücken ruhig halten, die Bewegung kommt aus der Hüfte", "Keep your back still, move from the hip", 45, 1, 2, "none",
+  ["Gesäß", "Oberschenkel hinten", "Glutes", "Hamstrings"],
+  "Ausgangsposition: Vierfüßler.|Endposition: Bein gebeugt nach oben schieben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: On all fours.|End position: Leg pushed up with the knee bent.|Return to the starting position under control and repeat without momentum.",
+  "Rücken ruhig halten, die Bewegung kommt aus der Hüfte.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Keep your back still, move from the hip.", "Rushing the movement or losing body tension.",
+  "beine", null, "donkey kick donkey kick");
+G("standing-hip-extension", "Beinrückheben im Stand", "Standing Hip Extension", "bw legs", 3, 30, 0,
+  "Am Stuhl festhalten, Oberkörper aufrecht, Bewegung aus der Hüfte", "Hold on to the chair, torso upright, move from the hip", 45, 1, 2, "none",
+  ["Gesäß", "Oberschenkel hinten", "Glutes", "Hamstrings"],
+  "Ausgangsposition: Stand am Stuhl.|Endposition: Bein gestreckt nach hinten heben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing at a chair.|End position: Leg raised straight backward.|Return to the starting position under control and repeat without momentum.",
+  "Am Stuhl festhalten, Oberkörper aufrecht, Bewegung aus der Hüfte.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Hold on to the chair, torso upright, move from the hip.", "Rushing the movement or losing body tension.",
+  "beine", null, "standing hip extension standing hip extension");
+G("standing-hip-abduction", "Beinheben seitlich im Stand", "Standing Hip Abduction", "bw legs", 3, 30, 1,
+  "Am Stuhl festhalten, Oberkörper aufrecht", "Hold on to the chair, torso upright", 45, 1, 2, "none",
+  ["Seitliches Gesäß", "Hüftstabilisatoren", "Side glutes", "Hip stabilisers"],
+  "Ausgangsposition: Stand am Stuhl.|Endposition: Bein seitlich anheben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing at a chair.|End position: Leg raised to the side.|Return to the starting position under control and repeat without momentum.",
+  "Am Stuhl festhalten, Oberkörper aufrecht.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Hold on to the chair, torso upright.", "Rushing the movement or losing body tension.",
+  "beine", null, "standing hip abduction standing hip abduction");
+G("side-lying-hip-adduction", "Beinanführen in Seitenlage", "Side-Lying Hip Adduction", "bw legs", 3, 30, 1,
+  "Becken ruhig, keine Verdrehung", "Pelvis still, no twisting", 45, 1, 2, "none",
+  ["Adduktoren", "Hüftstabilisatoren", "Adductors", "Hip stabilisers"],
+  "Ausgangsposition: Seitenlage, oberes Bein abgestützt.|Endposition: Unteres Bein anheben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your side, top leg supported.|End position: Bottom leg raised.|Return to the starting position under control and repeat without momentum.",
+  "Becken ruhig, keine Verdrehung.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Pelvis still, no twisting.", "Rushing the movement or losing body tension.",
+  "beine", null, "side-lying hip adduction side lying hip adduction");
+G("clamshell", "Muschel", "Clamshell", "bw legs", 3, 30, 1,
+  "Füße bleiben zusammen, Becken ruhig", "Feet stay together, pelvis still", 45, 1, 2, "none",
+  ["Seitliches Gesäß", "Hüftstabilisatoren", "Side glutes", "Hip stabilisers"],
+  "Ausgangsposition: Seitenlage, Knie angewinkelt.|Endposition: Oberes Knie öffnen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your side, knees bent.|End position: Top knee opened.|Return to the starting position under control and repeat without momentum.",
+  "Füße bleiben zusammen, Becken ruhig.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Feet stay together, pelvis still.", "Rushing the movement or losing body tension.",
+  "beine", null, "clamshell clamshell");
+G("reverse-clamshell", "Umgekehrte Muschel", "Reverse Clamshell", "bw legs", 3, 30, 1,
+  "Becken ruhig, keine Verdrehung", "Pelvis still, no twisting", 45, 1, 2, "none",
+  ["Seitliches Gesäß", "Adduktoren", "Side glutes", "Adductors"],
+  "Ausgangsposition: Seitenlage, Knie angewinkelt.|Endposition: Füße auseinander, Knie zusammen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your side, knees bent.|End position: Feet apart, knees together.|Return to the starting position under control and repeat without momentum.",
+  "Becken ruhig, keine Verdrehung.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Pelvis still, no twisting.", "Rushing the movement or losing body tension.",
+  "beine", null, "reverse clamshell reverse clamshell");
+G("band-standing-leg-curl", "Beinbeugen im Stand (Band)", "Standing Band Hamstring Curl", "weight legs", 3, 40, 0,
+  "Oberschenkel bleiben beieinander, kein Schwung", "Keep your thighs together, don't swing", 60, 1, 2, "band",
+  ["Oberschenkel hinten", "Gesäß", "Hamstrings", "Glutes"],
+  "Ausgangsposition: Stand, Band am Knöchel.|Endposition: Ferse zum Gesäß beugen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing, band at your ankle.|End position: Heel curled to your glutes.|Return to the starting position under control and repeat without momentum.",
+  "Oberschenkel bleiben beieinander, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Keep your thighs together, don't swing.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "standing band hamstring curl band standing leg curl");
+G("band-hip-adduction", "Beinanführen im Stand (Band)", "Standing Band Hip Adduction", "weight legs", 3, 40, 1,
+  "Zum Gleichgewicht festhalten, Oberkörper aufrecht", "Hold on for balance, torso upright", 60, 1, 2, "band",
+  ["Adduktoren", "Hüftstabilisatoren", "Adductors", "Hip stabilisers"],
+  "Ausgangsposition: Stand, Band am Knöchel seitlich.|Endposition: Bein zur Mitte ziehen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing, band at your ankle from the side.|End position: Leg pulled to the middle.|Return to the starting position under control and repeat without momentum.",
+  "Zum Gleichgewicht festhalten, Oberkörper aufrecht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Hold on for balance, torso upright.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "standing band hip adduction band hip adduction");
+G("hip-hinge-drill", "Hüftbeuge-Übung", "Hip Hinge", "bw legs", 3, 30, 0,
+  "Rücken neutral (Besenstiel am Rücken), Knie leicht gebeugt", "Neutral back (broomstick along your back), knees slightly bent", 45, 1, 2, "none",
+  ["Gesäß", "Oberschenkel hinten", "Glutes", "Hamstrings"],
+  "Ausgangsposition: Stand.|Endposition: Hüfte nach hinten, Rücken gerade, wieder aufrichten.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing.|End position: Hips back, back straight, stand up again.|Return to the starting position under control and repeat without momentum.",
+  "Rücken neutral (Besenstiel am Rücken), Knie leicht gebeugt.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Neutral back (broomstick along your back), knees slightly bent.", "Rushing the movement or losing body tension.",
+  "beine", null, "hip hinge hip hinge drill");
+G("db-single-leg-rdl", "Einbeiniges Kreuzheben (Kurzhantel)", "Single-Leg Dumbbell RDL", "weight legs", 3, 40, 1,
+  "Rücken neutral, Hüfte gerade, bei Bedarf an einer Stütze festhalten", "Neutral back, hips level, hold a support if needed", 60, 2, 2, "db",
+  ["Gesäß", "Oberschenkel hinten", "Glutes", "Hamstrings"],
+  "Ausgangsposition: Einbeinstand.|Endposition: Oberkörper vor, anderes Bein hoch, aufrichten.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing on one leg.|End position: Torso forward, other leg up, stand up.|Return to the starting position under control and repeat without momentum.",
+  "Rücken neutral, Hüfte gerade, bei Bedarf an einer Stütze festhalten.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Neutral back, hips level, hold a support if needed.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "single-leg dumbbell rdl db single leg rdl");
+G("b-stance-rdl", "Rumänisches Kreuzheben (B-Stance)", "B-Stance Romanian Deadlift", "weight legs", 3, 40, 1,
+  "Das meiste Gewicht auf dem vorderen Bein, Rücken neutral", "Most weight on the front leg, neutral back", 60, 2, 2, "db",
+  ["Oberschenkel hinten", "Gesäß", "Hamstrings", "Glutes"],
+  "Ausgangsposition: Ein Fuß vorn, anderer nur auf dem Ballen.|Endposition: Hüfte zurück, aufrichten.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: One foot in front, other only on the ball of the foot.|End position: Hips back, stand up.|Return to the starting position under control and repeat without momentum.",
+  "Das meiste Gewicht auf dem vorderen Bein, Rücken neutral.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Most weight on the front leg, neutral back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "b-stance romanian deadlift b stance rdl");
+G("suitcase-deadlift", "Koffer-Kreuzheben", "Suitcase Deadlift", "weight legs", 3, 40, 1,
+  "Rumpf nicht zur Seite neigen, Rücken neutral", "Don't lean your torso to the side, neutral back", 60, 2, 2, "db kb",
+  ["Gesäß", "Rücken, Rumpf", "Glutes", "Back, Core"],
+  "Ausgangsposition: Gewicht seitlich am Körper.|Endposition: Aufrichten.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Weight at your side.|End position: Stand up.|Return to the starting position under control and repeat without momentum.",
+  "Rumpf nicht zur Seite neigen, Rücken neutral.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Don't lean your torso to the side, neutral back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "suitcase deadlift suitcase deadlift");
+G("deficit-deadlift", "Kreuzheben aus dem Defizit", "Deficit Deadlift", "weight legs", 3, 40, 0,
+  "Längerer Weg nach oben", "Raised feet increase the range: start light, neutral back, sturdy platform", 60, 3, 2, "gym",
+  ["Gesäß", "Rücken", "Glutes", "Back"],
+  "Ausgangsposition: Auf Plattform.|Endposition: Längerer Weg nach oben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: On a platform.|End position: Longer way up.|Return to the starting position under control and repeat without momentum.",
+  "Die erhöhte Fußstellung vergrößert den Weg: leicht beginnen, Rücken neutral, stabile Plattform.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Raised feet increase the range: start light, neutral back, sturdy platform.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "deficit deadlift deficit deadlift");
+G("band-deadlift", "Kreuzheben (Band)", "Resistance Band Deadlift", "weight legs", 3, 40, 0,
+  "Band auf Risse prüfen, nicht über Gesicht oder Beine federn lassen, Rücken neutral", "Check the band for tears, don't let it snap towards your face or legs, neutral back", 60, 1, 2, "band",
+  ["Gesäß", "Oberschenkel hinten", "Glutes", "Hamstrings"],
+  "Ausgangsposition: Auf dem Band stehen.|Endposition: Aufrichten.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing on the band.|End position: Stand up.|Return to the starting position under control and repeat without momentum.",
+  "Band auf Risse prüfen, nicht über Gesicht oder Beine federn lassen, Rücken neutral.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Check the band for tears, don't let it snap towards your face or legs, neutral back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "resistance band deadlift band deadlift");
+G("barbell-box-squat", "Kniebeuge zur Bank (Langhantel)", "Barbell Box Squat", "weight legs", 3, 40, 0,
+  "Nicht auf die Bank fallen lassen, Rack oder Sicherheitsstangen, Rücken neutral", "Don't drop onto the bench, rack or safety bars, neutral back", 60, 2, 2, "gym",
+  ["Oberschenkel vorn", "Gesäß", "Quads", "Glutes"],
+  "Ausgangsposition: Stange auf Rücken.|Endposition: Zur Bank setzen, aufstehen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bar on your back.|End position: Sit back to the bench, stand up.|Return to the starting position under control and repeat without momentum.",
+  "Nicht auf die Bank fallen lassen, Rack oder Sicherheitsstangen, Rücken neutral.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Don't drop onto the bench, rack or safety bars, neutral back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "barbell box squat barbell box squat");
+G("barbell-shrug", "Schulterheben (Langhantel)", "Barbell Shrug", "weight back", 3, 40, 0,
+  "Arme gestreckt, kein Nackenzug, Gewicht moderat", "Straight arms, no neck pull, moderate weight", 60, 1, 2, "gym",
+  ["Trapez", "Oberer Rücken", "Traps", "Upper back"],
+  "Ausgangsposition: Stange vor dem Körper.|Endposition: Schultern hoch, senken.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bar in front of your body.|End position: Shoulders up, lower.|Return to the starting position under control and repeat without momentum.",
+  "Arme gestreckt, kein Nackenzug, Gewicht moderat.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Straight arms, no neck pull, moderate weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "ruecken", null, "barbell shrug barbell shrug");
+G("yates-row", "Yates-Rudern", "Yates Row", "weight back", 3, 40, 0,
+  "Oberkörper etwa 45°, Zug zum Bauch, Rücken neutral", "Torso about 45°, pull to the belly, neutral back", 60, 2, 2, "gym",
+  ["Breiter Rückenmuskel", "Trapez", "Lats", "Traps"],
+  "Ausgangsposition: Aufrechterer Oberkörper, Untergriff.|Endposition: Stange zum Bauch.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: More upright torso, underhand grip.|End position: Bar to your belly.|Return to the starting position under control and repeat without momentum.",
+  "Oberkörper etwa 45°, Zug zum Bauch, Rücken neutral.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Torso about 45°, pull to the belly, neutral back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "ruecken", null, "yates row yates row");
+G("kroc-row", "Kroc-Rudern", "Kroc Row", "weight back", 3, 40, 1,
+  "Schwung begrenzen, Rücken flach halten", "Limit the momentum, keep your back flat", 60, 3, 2, "db gym",
+  ["Breiter Rückenmuskel", "Unterarme", "Lats", "Forearms"],
+  "Ausgangsposition: Eine Hand an der Bank.|Endposition: Schwere Hantel zum Körper rudern.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: One hand on the bench.|End position: Heavy dumbbell rowed to your body.|Return to the starting position under control and repeat without momentum.",
+  "Schwung begrenzen, Rücken flach halten.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Limit the momentum, keep your back flat.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "ruecken", null, "kroc row kroc row");
+G("barbell-thruster", "Thruster (Langhantel)", "Barbell Thruster", "weight", 3, 40, 0,
+  "Mit leerer Stange beginnen, Rack nutzen", "Start with an empty bar, use a rack", 60, 3, 3, "gym",
+  ["Beine", "Schultern", "Legs", "Shoulders"],
+  "Ausgangsposition: Frontkniebeuge.|Endposition: Aufstehen, Stange nach oben drücken.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Front squat.|End position: Stand up, press the bar overhead.|Return to the starting position under control and repeat without momentum.",
+  "Mit leerer Stange beginnen, Rack nutzen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Start with an empty bar, use a rack.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "barbell thruster barbell thruster");
+G("hang-clean", "Umsetzen aus dem Hang", "Hang Clean", "weight", 3, 40, 0,
+  "Hochziehen, vor Schultern fangen", "Technical: learn it with light weight or an empty bar, coaching recommended", 60, 3, 3, "gym",
+  ["Beine", "Rücken, Schultern", "Legs", "Back, Shoulders"],
+  "Ausgangsposition: Stange auf Kniehöhe.|Endposition: Hochziehen, vor Schultern fangen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bar at knee height.|End position: Pulled up, caught in front of your shoulders.|Return to the starting position under control and repeat without momentum.",
+  "Technikintensiv: mit leichtem Gewicht oder leerer Stange lernen, Anleitung durch Trainer empfohlen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Technical: learn it with light weight or an empty bar, coaching recommended.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "hang clean hang clean");
+G("barbell-jammer", "Barbell Jammer", "Barbell Jammer", "weight", 3, 40, 0,
+  "Explosiv, aber leicht: Rumpf stabil halten, nur mit fest verankerter Landmine", "Explosive but light: keep your torso stable, only with a fixed landmine anchor", 60, 2, 2, "gym",
+  ["Schultern", "Beine, Rumpf", "Shoulders", "Legs, Core"],
+  "Ausgangsposition: Stange an der Schulter.|Endposition: Mit Beinschub nach oben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Bar at your shoulder.|End position: Pushed up with the leg drive.|Return to the starting position under control and repeat without momentum.",
+  "Explosiv, aber leicht: Rumpf stabil halten, nur mit fest verankerter Landmine.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Explosive but light: keep your torso stable, only with a fixed landmine anchor.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "barbell jammer barbell jammer");
+G("seated-cable-chest-press", "Brustdrücken sitzend (Kabelzug)", "Seated Cable Chest Press", "weight", 3, 40, 0,
+  "Rücken am Polster, kein Schwung", "Back against the pad, no momentum", 60, 1, 2, "gym",
+  ["Brust", "Trizeps", "Chest", "Triceps"],
+  "Ausgangsposition: Sitzend, Griffe an der Brust.|Endposition: Nach vorn drücken.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Seated, handles at your chest.|End position: Pressed forward.|Return to the starting position under control and repeat without momentum.",
+  "Rücken am Polster, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Back against the pad, no momentum.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "brust", null, "seated cable chest press seated cable chest press");
+G("rotational-uppercut", "Drehender Aufwärtshaken", "Rotational Uppercut", "weight", 3, 40, 0,
+  "Drehung aus Hüfte und Rumpf, nicht aus dem Rücken; leichtes Gewicht", "Rotate from hip and torso, not from the back; light weight", 60, 2, 2, "db",
+  ["Rumpf", "Schultern", "Core", "Shoulders"],
+  "Ausgangsposition: Hantel seitlich unten.|Endposition: Mit Drehung diagonal nach oben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Dumbbell low at your side.|End position: Diagonally up with rotation.|Return to the starting position under control and repeat without momentum.",
+  "Drehung aus Hüfte und Rumpf, nicht aus dem Rücken; leichtes Gewicht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Rotate from hip and torso, not from the back; light weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "rotational uppercut rotational uppercut");
+G("rotational-overhead-press", "Drehendes Schulterdrücken", "Rotational Overhead Press", "weight", 3, 40, 0,
+  "Drehung aus Hüfte und Rumpf, leichtes Gewicht", "Rotate from hip and torso, light weight", 60, 2, 2, "db",
+  ["Schultern", "Rumpf", "Shoulders", "Core"],
+  "Ausgangsposition: Hantel an der Schulter.|Endposition: Mit Drehung nach oben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Dumbbell at your shoulder.|End position: Pressed up with rotation.|Return to the starting position under control and repeat without momentum.",
+  "Drehung aus Hüfte und Rumpf, leichtes Gewicht.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Rotate from hip and torso, light weight.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "rotational overhead press rotational overhead press");
+G("v-raise", "V-Heben", "V-Raise", "weight", 3, 40, 0,
+  "Leichtes Gewicht, kein Schwung", "Light weight, no swinging", 60, 1, 2, "db",
+  ["Schultern", "Oberer Trapez", "Shoulders", "Upper traps"],
+  "Ausgangsposition: Arme vorn unten.|Endposition: Schräg nach oben zum V.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Arms low in front.|End position: Diagonally up to a V.|Return to the starting position under control and repeat without momentum.",
+  "Leichtes Gewicht, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight, no swinging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "v-raise v raise");
+G("diagonal-raise", "Diagonales Heben", "Diagonal Raise", "weight", 3, 40, 0,
+  "Leichtes Gewicht, kein Schwung", "Light weight, no swinging", 60, 1, 2, "db",
+  ["Schultern", "Oberer Trapez", "Shoulders", "Upper traps"],
+  "Ausgangsposition: Hantel an der Gegenhüfte.|Endposition: Schräg nach oben außen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Dumbbell at the opposite hip.|End position: Diagonally up and out.|Return to the starting position under control and repeat without momentum.",
+  "Leichtes Gewicht, kein Schwung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight, no swinging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "diagonal raise diagonal raise");
+G("kb-bottoms-up-press", "Bottoms-up-Drücken", "Kettlebell Bottoms-Up Press", "weight", 3, 40, 1,
+  "Leichte Kettlebell, Griff fest, freier Raum um den Kopf", "Light kettlebell, firm grip, clear space around your head", 60, 2, 2, "kb",
+  ["Schultern", "Unterarme", "Shoulders", "Forearms"],
+  "Ausgangsposition: Kettlebell auf dem Kopf stehend.|Endposition: Nach oben drücken.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Kettlebell held upside down.|End position: Pressed up.|Return to the starting position under control and repeat without momentum.",
+  "Leichte Kettlebell, Griff fest, freier Raum um den Kopf.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light kettlebell, firm grip, clear space around your head.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "kettlebell bottoms-up press kb bottoms up press");
+G("kb-half-turkish-get-up", "Halbes Turkish Get-up", "Half Turkish Get-up", "weight", 3, 40, 1,
+  "Erst ohne Gewicht, Blick zum Gewicht, Gewicht nicht über das Gesicht fallen lassen", "First without weight, eyes on the weight, don't let the weight fall over your face", 60, 2, 2, "kb",
+  ["Rumpf", "Schultern", "Core", "Shoulders"],
+  "Ausgangsposition: Rückenlage mit Gewicht.|Endposition: Bis in den Stütz.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back with weight.|End position: Up to the support position.|Return to the starting position under control and repeat without momentum.",
+  "Erst ohne Gewicht, Blick zum Gewicht, Gewicht nicht über das Gesicht fallen lassen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "First without weight, eyes on the weight, don't let the weight fall over your face.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "half turkish get-up kb half turkish get up");
+G("kb-overhead-squat", "Einarmige Überkopf-Kniebeuge (Kettlebell)", "Single-Arm Kettlebell Overhead Squat", "weight", 3, 40, 0,
+  "Braucht Schulterbeweglichkeit; leicht beginnen, Platz um dich lassen", "Needs shoulder mobility; start light with free space around you", 60, 3, 2, "kb",
+  ["Beine", "Schultern, Rumpf", "Legs", "Shoulders, Core"],
+  "Ausgangsposition: Gewicht über Kopf.|Endposition: Tief, aufstehen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Weight overhead.|End position: Deep, stand up.|Return to the starting position under control and repeat without momentum.",
+  "Braucht Schulterbeweglichkeit; leicht beginnen, Platz um dich lassen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Needs shoulder mobility; start light with free space around you.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "single-arm kettlebell overhead squat kb overhead squat");
+G("kb-double-push-press", "Doppel-Push-Press", "Double Kettlebell Push Press", "weight", 3, 40, 0,
+  "Leicht beginnen, Rackposition stabil, nicht ins Hohlkreuz fallen", "Start light, rack position stable, don't hollow your back", 60, 2, 2, "kb",
+  ["Beine", "Schultern", "Legs", "Shoulders"],
+  "Ausgangsposition: Zwei Kettlebells an den Schultern.|Endposition: Mit Kniebeuge hochdrücken.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Two kettlebells at your shoulders.|End position: Pressed up with a knee dip.|Return to the starting position under control and repeat without momentum.",
+  "Leicht beginnen, Rackposition stabil, nicht ins Hohlkreuz fallen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Start light, rack position stable, don't hollow your back.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "double kettlebell push press kb double push press");
+G("waiters-carry", "Kellner-Tragen", "Waiter's Carry", "weight", 3, 30, 0,
+  "Leichtes Gewicht, Schulter und Handgelenk stabil, Blick geradeaus, Boden frei", "Light weight, shoulder and wrist stable, eyes straight ahead, clear floor", 60, 2, 2, "kb",
+  ["Schultern", "Rumpf", "Shoulders", "Core"],
+  "Ausgangsposition: Gewicht über dem Kopf.|Endposition: Gehen.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Weight overhead.|End position: Walk.|Hold the position calmly while breathing evenly, then release under control.",
+  "Leichtes Gewicht, Schulter und Handgelenk stabil, Blick geradeaus, Boden frei.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight, shoulder and wrist stable, eyes straight ahead, clear floor.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "waiter's carry waiters carry");
+G("sleeper-stretch", "Sleeper-Stretch", "Sleeper Stretch", "stretch", 1, 30, 1,
+  "Unterarm sanft nach unten", "Only pain-free, not with shoulder pain, gentle pressure with the free hand, not jerky", 5, 1, 1, "none",
+  ["Hintere Schulter", "Oberer Rücken", "Rear delts", "Upper back"],
+  "Ausgangsposition: Seitenlage auf Schulter, Ellbogen 90°.|Endposition: Unterarm sanft nach unten.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen. Danach die Seite wechseln.",
+  "Starting position: Lying on your shoulder, elbow 90°.|End position: Forearm gently pressed down.|Hold the position calmly while breathing evenly, then release under control. Then switch sides.",
+  "Nur schmerzfrei, nicht bei Schulterschmerz, sanfter Druck mit der freien Hand, nicht ruckartig.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Only pain-free, not with shoulder pain, gentle pressure with the free hand, not jerky.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "sleeper stretch sleeper stretch");
+G("stick-external-rotation", "Außenrotation mit Stab", "Passive External Rotation with Stick", "stretch", 1, 30, 0,
+  "Schmerzfrei, nicht ruckartig, Ellbogen am Körper; bei Schulterproblemen vorher abklären", "Pain-free, not jerky, elbow at your body; with shoulder problems get advice first", 5, 1, 1, "none",
+  ["Rotatorenmanschette", "Hintere Schulter", "Rotator cuff", "Rear delts"],
+  "Ausgangsposition: Ellbogen am Körper, Stab in beiden Händen.|Endposition: Gesunder Arm schiebt den anderen nach außen.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Elbow at your body, stick in both hands.|End position: Healthy arm pushes the other one outward.|Hold the position calmly while breathing evenly, then release under control.",
+  "Schmerzfrei, nicht ruckartig, Ellbogen am Körper; bei Schulterproblemen vorher abklären.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Pain-free, not jerky, elbow at your body; with shoulder problems get advice first.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "passive external rotation with stick stick external rotation");
+G("stick-internal-rotation", "Innenrotation mit Stab", "Passive Internal Rotation with Stick", "stretch", 1, 30, 0,
+  "Schmerzfrei, nicht ruckartig; bei Schulterproblemen vorher abklären", "Pain-free, not jerky; with shoulder problems get advice first", 5, 1, 1, "none",
+  ["Rotatorenmanschette", "Hintere Schulter", "Rotator cuff", "Rear delts"],
+  "Ausgangsposition: Stab hinter dem Rücken.|Endposition: Nach oben führen.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Stick behind your back.|End position: Guided upward.|Hold the position calmly while breathing evenly, then release under control.",
+  "Schmerzfrei, nicht ruckartig; bei Schulterproblemen vorher abklären.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Pain-free, not jerky; with shoulder problems get advice first.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "passive internal rotation with stick stick internal rotation");
+G("scapula-setting", "Schulterblatt-Setzen", "Scapular Setting", "bw", 3, 30, 0,
+  "Kleine, ruhige Bewegung, Schultern nicht hochziehen", "Small, calm movement, don't shrug", 45, 1, 1, "none",
+  ["Mittlerer Trapez", "Sägemuskel (Serratus)", "Mid traps", "Serratus"],
+  "Ausgangsposition: Aufrecht.|Endposition: Schulterblätter sanft zusammen und tief.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Standing tall.|End position: Shoulder blades gently together and down.|Hold the position calmly while breathing evenly, then release under control.",
+  "Kleine, ruhige Bewegung, Schultern nicht hochziehen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Small, calm movement, don't shrug.", "Rushing the movement or losing body tension.",
+  "schulter", null, "scapular setting scapula setting");
+G("band-external-rotation", "Außenrotation (Band)", "Standing Band External Rotation", "weight", 3, 40, 1,
+  "Sehr leichtes Band, Ellbogen (Handtuch) am Körper, keine Ausweichbewegung", "Very light band, elbow (towel) at your body, no evasive movement", 60, 1, 2, "band",
+  ["Rotatorenmanschette", "Hintere Schulter", "Rotator cuff", "Rear delts"],
+  "Ausgangsposition: Ellbogen am Körper, Band.|Endposition: Unterarm nach außen drehen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Elbow at your body, band.|End position: Forearm rotated outward.|Return to the starting position under control and repeat without momentum.",
+  "Sehr leichtes Band, Ellbogen (Handtuch) am Körper, keine Ausweichbewegung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Very light band, elbow (towel) at your body, no evasive movement.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "standing band external rotation band external rotation");
+G("band-internal-rotation", "Innenrotation (Band)", "Standing Band Internal Rotation", "weight", 3, 40, 1,
+  "Sehr leichtes Band, Ellbogen (Handtuch) am Körper, keine Ausweichbewegung", "Very light band, elbow (towel) at your body, no evasive movement", 60, 1, 2, "band",
+  ["Rotatorenmanschette", "Hintere Schulter", "Rotator cuff", "Rear delts"],
+  "Ausgangsposition: Ellbogen am Körper, Band.|Endposition: Unterarm nach innen drehen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Elbow at your body, band.|End position: Forearm rotated inward.|Return to the starting position under control and repeat without momentum.",
+  "Sehr leichtes Band, Ellbogen (Handtuch) am Körper, keine Ausweichbewegung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Very light band, elbow (towel) at your body, no evasive movement.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "standing band internal rotation band internal rotation");
+G("band-external-rotation-90", "Außenrotation mit Band, Arm 90°", "Band External Rotation (Arm Abducted 90°)", "weight", 3, 40, 0,
+  "Unterarm nach oben drehen", "Forearm rotated upward", 60, 2, 2, "band",
+  ["Rotatorenmanschette", "Hintere Schulter", "Rotator cuff", "Rear delts"],
+  "Ausgangsposition: Oberarm waagerecht, Ellbogen 90°.|Endposition: Unterarm nach oben drehen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Upper arm horizontal, elbow 90°.|End position: Forearm rotated upward.|Return to the starting position under control and repeat without momentum.",
+  "Arm in 90°-Position belastet die Schulter stärker; sehr leichtes Band, nicht bei Schulterproblemen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "The 90° arm position loads the shoulder more; very light band, not with shoulder problems.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "band external rotation (arm abducted 90°) band external rotation 90");
+G("side-lying-internal-rotation", "Innenrotation in Seitenlage", "Side-Lying Internal Rotation", "weight", 3, 40, 1,
+  "Sehr leichte Hantel, Ellbogen (Handtuch) am Körper, keine Ausweichbewegung", "Very light dumbbell, elbow (towel) at your body, no evasive movement", 60, 1, 2, "db",
+  ["Rotatorenmanschette", "Hintere Schulter", "Rotator cuff", "Rear delts"],
+  "Ausgangsposition: Seitenlage, Ellbogen am Körper.|Endposition: Unterarm zum Bauch.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your side, elbow at your body.|End position: Forearm to your belly.|Return to the starting position under control and repeat without momentum.",
+  "Sehr leichte Hantel, Ellbogen (Handtuch) am Körper, keine Ausweichbewegung.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Very light dumbbell, elbow (towel) at your body, no evasive movement.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "side-lying internal rotation side lying internal rotation");
+G("scaption-raise", "Heben in der Schulterblattebene", "Scaption Raise", "weight", 3, 40, 0,
+  "Leichtes Gewicht, Daumen oben, Schultern nicht hochziehen", "Light weight, thumbs up, no shrugging", 60, 1, 2, "db",
+  ["Schultern", "Rotatorenmanschette", "Shoulders", "Rotator cuff"],
+  "Ausgangsposition: Arme hängen.|Endposition: Schräg nach vorn-außen auf Schulterhöhe.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Arms hanging.|End position: Diagonally forward and out to shoulder height.|Return to the starting position under control and repeat without momentum.",
+  "Leichtes Gewicht, Daumen oben, Schultern nicht hochziehen.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Light weight, thumbs up, no shrugging.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "schulter", null, "scaption raise scaption raise");
+G("serratus-punch", "Serratus-Punch", "Serratus Punch", "bw", 3, 30, 0,
+  "Nur das Schulterblatt bewegt sich, Ellbogen gestreckt, leichtes oder kein Gewicht", "Only the shoulder blade moves, elbow straight, light or no weight", 45, 1, 2, "none",
+  ["Sägemuskel (Serratus)", "Schultern", "Serratus", "Shoulders"],
+  "Ausgangsposition: Rückenlage, Arm nach oben.|Endposition: Schulterblatt nach vorn schieben.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back, arm up.|End position: Shoulder blade pushed forward.|Return to the starting position under control and repeat without momentum.",
+  "Nur das Schulterblatt bewegt sich, Ellbogen gestreckt, leichtes oder kein Gewicht.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Only the shoulder blade moves, elbow straight, light or no weight.", "Rushing the movement or losing body tension.",
+  "schulter", null, "serratus punch serratus punch");
+G("supine-snow-angels", "Schneeengel in Rückenlage", "Supine Snow Angels", "bw", 3, 30, 0,
+  "Rücken flach halten, nur so weit, wie es schmerzfrei geht", "Keep your back flat, only as far as it is pain-free", 45, 1, 2, "none",
+  ["Schultern", "Brust", "Shoulders", "Chest"],
+  "Ausgangsposition: Rückenlage.|Endposition: Arme bogenförmig über den Boden führen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back.|End position: Arms swept over the floor in an arc.|Return to the starting position under control and repeat without momentum.",
+  "Rücken flach halten, nur so weit, wie es schmerzfrei geht.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Keep your back flat, only as far as it is pain-free.", "Rushing the movement or losing body tension.",
+  "schulter", null, "supine snow angels supine snow angels");
+G("high-plank-thoracic-rotation", "Stütz mit Brustwirbelsäulen-Drehung", "High Plank T-Spine Rotation", "stretch", 1, 30, 0,
+  "Drehung aus dem oberen Rücken, Blick zur Hand, Handgelenke aufwärmen", "Rotate from the upper back, eyes on your hand, warm up your wrists", 5, 1, 1, "none",
+  ["Oberer Rücken", "Schultern", "Upper back", "Shoulders"],
+  "Ausgangsposition: Hoher Stütz.|Endposition: Ein Arm dreht zur Decke.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: High plank.|End position: One arm rotates to the ceiling.|Hold the position calmly while breathing evenly, then release under control.",
+  "Drehung aus dem oberen Rücken, Blick zur Hand, Handgelenke aufwärmen.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Rotate from the upper back, eyes on your hand, warm up your wrists.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "high plank t-spine rotation high plank thoracic rotation");
+G("neck-rotation", "Nackendrehen", "Neck Rotation", "stretch", 1, 30, 0,
+  "Langsam, nicht kreisen, nicht ruckartig, nicht überstrecken", "Slow, don't circle, not jerky, don't overextend", 5, 1, 1, "none",
+  ["Nackenmuskeln", "Oberer Trapez", "Neck muscles", "Upper traps"],
+  "Ausgangsposition: Blick geradeaus.|Endposition: Langsam zur Seite drehen.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Eyes straight ahead.|End position: Slowly turned to the side.|Hold the position calmly while breathing evenly, then release under control.",
+  "Langsam, nicht kreisen, nicht ruckartig, nicht überstrecken.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Slow, don't circle, not jerky, don't overextend.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "neck rotation neck rotation");
+G("ankle-circles", "Fußkreisen", "Ankle Circles", "stretch", 1, 30, 0,
+  "Langsame, lockere Kreise", "Slow, relaxed circles", 5, 1, 1, "none",
+  ["Waden", "Vorderer Schienbeinmuskel", "Calves", "Shin muscles"],
+  "Ausgangsposition: Fuß vom Boden.|Endposition: Kreise in beide Richtungen.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Foot off the floor.|End position: Circles in both directions.|Hold the position calmly while breathing evenly, then release under control.",
+  "Langsame, lockere Kreise.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Slow, relaxed circles.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "ankle circles ankle circles");
+G("band-ankle-dorsiflexion", "Fußheben (Band)", "Band Ankle Dorsiflexion", "weight legs", 3, 40, 0,
+  "Langsam, mäßiger Widerstand", "Slow, moderate resistance", 60, 1, 2, "band",
+  ["Vorderer Schienbeinmuskel", "Waden", "Shin muscles", "Calves"],
+  "Ausgangsposition: Fuß mit Band gestreckt.|Endposition: Fußspitze zu sich ziehen.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Foot extended with a band.|End position: Toes pulled towards you.|Return to the starting position under control and repeat without momentum.",
+  "Langsam, mäßiger Widerstand.", "Mit Schwung arbeiten, ein zu schweres Gewicht wählen oder die Rumpfspannung verlieren.",
+  "Slow, moderate resistance.", "Using momentum, picking a weight that is too heavy or losing core tension.",
+  "beine", null, "band ankle dorsiflexion band ankle dorsiflexion");
+G("single-leg-stand", "Einbeinstand", "Single-Leg Stand", "bw legs", 3, 30, 1,
+  "Halt in Reichweite", "Hold on to something within reach", 45, 1, 1, "none",
+  ["Hüftstabilisatoren", "Waden", "Hip stabilisers", "Calves"],
+  "Ausgangsposition: Beidbeinig.|Endposition: Ein Bein heben, ruhig halten.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Standing on both legs.|End position: Lift one leg, hold steady.|Hold the position calmly while breathing evenly, then release under control.",
+  "Halt in Reichweite.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Hold on to something within reach.", "Rushing the movement or losing body tension.",
+  "beine", null, "single-leg stand single leg stand");
+G("seated-trunk-rotation", "Sitzende Rumpfdrehung", "Seated Upper-Body Twist", "stretch", 1, 30, 0,
+  "Hüfte bleibt nach vorn, Bewegung aus dem Brustkorb", "Hips stay facing forward, movement comes from the ribcage", 5, 1, 1, "none",
+  ["Rumpf", "Oberer Rücken", "Core", "Upper back"],
+  "Ausgangsposition: Aufrecht sitzen.|Endposition: Oberkörper zur Seite drehen.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Sitting tall.|End position: Torso rotated to the side.|Hold the position calmly while breathing evenly, then release under control.",
+  "Hüfte bleibt nach vorn, Bewegung aus dem Brustkorb.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Hips stay facing forward, movement comes from the ribcage.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "seated upper-body twist seated trunk rotation");
+G("pelvic-tilt", "Beckenkippen", "Supine Pelvic Tilt", "bw core", 3, 30, 0,
+  "Bewegung klein halten, nicht bei akutem Rückenschmerz überziehen", "Keep the movement small, don't force it with acute back pain", 45, 1, 2, "none",
+  ["Bauch", "Rückenstrecker", "Abs", "Spinal erectors"],
+  "Ausgangsposition: Rückenlage.|Endposition: Becken kippen, Lendenbereich zum Boden.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Lying on your back.|End position: Pelvis tilted, lower back towards the floor.|Return to the starting position under control and repeat without momentum.",
+  "Bewegung klein halten, nicht bei akutem Rückenschmerz überziehen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Keep the movement small, don't force it with acute back pain.", "Rushing the movement or losing body tension.",
+  "bauch", null, "supine pelvic tilt pelvic tilt");
+G("side-plank-knees", "Seitstütz auf den Knien", "Modified Side Plank", "bw core", 3, 30, 0,
+  "Leichtere Vorstufe zum Seitstütz: Schulter über dem Ellbogen", "Easier step towards the side plank: shoulder over elbow", 45, 1, 1, "none",
+  ["Schräge Bauchmuskeln", "Gerader Bauch", "Obliques", "Abs"],
+  "Ausgangsposition: Seitlich auf Unterarm und Knie.|Endposition: Hüfte heben, halten.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Side-on on your forearm and knee.|End position: Hips raised, held.|Hold the position calmly while breathing evenly, then release under control.",
+  "Leichtere Vorstufe zum Seitstütz: Schulter über dem Ellbogen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Easier step towards the side plank: shoulder over elbow.", "Rushing the movement or losing body tension.",
+  "bauch", null, "modified side plank side plank knees");
+G("single-arm-plank", "Einarm-Plank", "Single-Arm Plank", "bw core", 3, 30, 1,
+  "Füße breit für mehr Stabilität, Hüfte und Schultern auf einer Höhe halten", "Wide feet for stability, keep hips and shoulders level", 45, 3, 1, "none",
+  ["Rumpf", "Schultern", "Core", "Shoulders"],
+  "Ausgangsposition: Stütz.|Endposition: Ein Arm angehoben.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Plank.|End position: One arm raised.|Hold the position calmly while breathing evenly, then release under control.",
+  "Füße breit für mehr Stabilität, Hüfte und Schultern auf einer Höhe halten.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Wide feet for stability, keep hips and shoulders level.", "Rushing the movement or losing body tension.",
+  "bauch", null, "single-arm plank single arm plank");
+G("single-arm-single-leg-plank", "Einarm-Einbein-Plank", "Single-Arm Single-Leg Plank", "bw core", 3, 30, 1,
+  "Hüfte ruhig, nicht verdrehen", "Hips still, don't twist", 45, 2, 1, "none",
+  ["Rumpf", "Schultern", "Core", "Shoulders"],
+  "Ausgangsposition: Stütz.|Endposition: Gegenüberliegender Arm und Bein heben.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Plank.|End position: Opposite arm and leg raised.|Hold the position calmly while breathing evenly, then release under control.",
+  "Hüfte ruhig, nicht verdrehen.", "Hektisch ausführen oder die Körperspannung verlieren.",
+  "Hips still, don't twist.", "Rushing the movement or losing body tension.",
+  "bauch", null, "single-arm single-leg plank single arm single leg plank");
+G("knee-to-chest-stretch", "Knie zur Brust", "Knee-to-Chest Stretch", "stretch", 1, 30, 1,
+  "Bewegung klein halten, nicht bei akutem Rückenschmerz überziehen", "Keep the movement small, don't force it with acute back pain", 5, 1, 1, "none",
+  ["Gesäß", "Unterer Rücken", "Glutes", "Lower back"],
+  "Ausgangsposition: Rückenlage.|Endposition: Ein Knie zur Brust ziehen.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen. Danach die Seite wechseln.",
+  "Starting position: Lying on your back.|End position: One knee pulled to your chest.|Hold the position calmly while breathing evenly, then release under control. Then switch sides.",
+  "Bewegung klein halten, nicht bei akutem Rückenschmerz überziehen.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Keep the movement small, don't force it with acute back pain.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "knee-to-chest stretch knee to chest stretch");
+G("standing-it-band-stretch", "Hüftaußenseite im Stand dehnen", "Standing Hip Side Stretch", "stretch", 1, 30, 1,
+  "Nicht am Knie drücken", "Don't push on the knee", 5, 1, 1, "none",
+  ["Hüftbeuger", "Oberschenkelaußenseite", "Hip flexors", "Outer thighs"],
+  "Ausgangsposition: Beine gekreuzt.|Endposition: Hüfte seitlich wegschieben.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen. Danach die Seite wechseln.",
+  "Starting position: Legs crossed.|End position: Hips pushed out to the side.|Hold the position calmly while breathing evenly, then release under control. Then switch sides.",
+  "Nicht am Knie drücken.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Don't push on the knee.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "standing hip side stretch standing it band stretch");
+G("supine-hamstring-stretch", "Beinrückseite liegend dehnen", "Supine Hamstring Stretch", "stretch", 1, 30, 1,
+  "Das Knie darf leicht gebeugt sein, nicht erzwingen", "Knee slightly bent is fine, don't force it", 5, 1, 1, "none",
+  ["Oberschenkel hinten", "Gesäß", "Hamstrings", "Glutes"],
+  "Ausgangsposition: Rückenlage.|Endposition: Bein nach oben, mit Händen heranziehen.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen. Danach die Seite wechseln.",
+  "Starting position: Lying on your back.|End position: Leg raised and pulled in with your hands.|Hold the position calmly while breathing evenly, then release under control. Then switch sides.",
+  "Das Knie darf leicht gebeugt sein, nicht erzwingen.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Knee slightly bent is fine, don't force it.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "supine hamstring stretch supine hamstring stretch");
+G("thomas-stretch", "Thomas-Dehnung", "Thomas Stretch", "stretch", 1, 30, 1,
+  "Unteren Rücken auf der Bank lassen, sanft dehnen, keine Schmerzen", "Keep your lower back on the bench, stretch gently, no pain", 5, 1, 1, "none",
+  ["Hüftbeuger", "Oberschenkel vorn", "Hip flexors", "Quads"],
+  "Ausgangsposition: Rückenlage an der Kante.|Endposition: Ein Knie zur Brust, anderes Bein hängt.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen. Danach die Seite wechseln.",
+  "Starting position: Lying on your back at the edge of the bench.|End position: One knee to your chest, other leg hanging.|Hold the position calmly while breathing evenly, then release under control. Then switch sides.",
+  "Unteren Rücken auf der Bank lassen, sanft dehnen, keine Schmerzen.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Keep your lower back on the bench, stretch gently, no pain.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "thomas stretch thomas stretch");
+G("seated-straddle-stretch", "Grätschsitz-Dehnung", "Seated Straddle Stretch", "stretch", 1, 30, 0,
+  "Nicht federn, Knie nach oben, Rücken lang; bei Adduktorenzerrung auslassen", "Don't bounce, knees up, back long; skip with an adductor strain", 5, 1, 1, "none",
+  ["Adduktoren", "Rücken", "Adductors", "Back"],
+  "Ausgangsposition: Grätschsitz.|Endposition: Oberkörper nach vorn.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Straddle sit.|End position: Torso forward.|Hold the position calmly while breathing evenly, then release under control.",
+  "Nicht federn, Knie nach oben, Rücken lang; bei Adduktorenzerrung auslassen.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Don't bounce, knees up, back long; skip with an adductor strain.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "seated straddle stretch seated straddle stretch");
+G("side-lying-quad-stretch", "Oberschenkel vorn in Seitenlage", "Side-Lying Quadriceps Stretch", "stretch", 1, 30, 1,
+  "Knie zusammenhalten, nicht ins Hohlkreuz gehen", "Keep your knees together, don't arch your back", 5, 1, 1, "none",
+  ["Oberschenkel vorn", "Hüftbeuger", "Quads", "Hip flexors"],
+  "Ausgangsposition: Seitenlage.|Endposition: Oberen Fuß zum Gesäß ziehen.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen. Danach die Seite wechseln.",
+  "Starting position: Lying on your side.|End position: Top foot pulled to your glutes.|Hold the position calmly while breathing evenly, then release under control. Then switch sides.",
+  "Knie zusammenhalten, nicht ins Hohlkreuz gehen.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Keep your knees together, don't arch your back.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "side-lying quadriceps stretch side lying quad stretch");
+G("seated-rotation-stretch", "Sitzende Rotationsdehnung", "Seated Rotation Stretch", "stretch", 1, 30, 1,
+  "Aufrecht sitzen, sanft drehen, keine Schmerzen", "Sit tall, turn gently, no pain", 5, 1, 1, "none",
+  ["Gesäß", "Rumpf", "Glutes", "Core"],
+  "Ausgangsposition: Sitzend, ein Fuß über das Knie.|Endposition: Oberkörper zum Knie drehen.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen. Danach die Seite wechseln.",
+  "Starting position: Seated, one foot over the knee.|End position: Torso turned towards the knee.|Hold the position calmly while breathing evenly, then release under control. Then switch sides.",
+  "Aufrecht sitzen, sanft drehen, keine Schmerzen.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Sit tall, turn gently, no pain.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "seated rotation stretch seated rotation stretch");
+G("soleus-stretch", "Wadendehnung mit gebeugtem Knie", "Bent-Knee Calf Stretch (Soleus)", "stretch", 1, 30, 1,
+  "Ferse bleibt am Boden, sanfte Dehnung", "Heel stays on the floor, gentle stretch", 5, 1, 1, "none",
+  ["Waden (Schollenmuskel)", "Vorderer Schienbeinmuskel", "Calves (soleus)", "Shin muscles"],
+  "Ausgangsposition: An der Wand, Knie leicht gebeugt.|Endposition: Ferse unten, nach vorn lehnen.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen. Danach die Seite wechseln.",
+  "Starting position: At the wall, knee slightly bent.|End position: Heel down, lean forward.|Hold the position calmly while breathing evenly, then release under control. Then switch sides.",
+  "Ferse bleibt am Boden, sanfte Dehnung.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Heel stays on the floor, gentle stretch.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "bent-knee calf stretch (soleus) soleus stretch");
+G("upward-facing-dog", "Hund aufwärts", "Upward-Facing Dog", "stretch", 1, 30, 0,
+  "Arme strecken, Brust öffnen", "Shoulders away from your ears, don't force your lower back; skip with back problems", 5, 1, 1, "none",
+  ["Rücken", "Bauch", "Back", "Abs"],
+  "Ausgangsposition: Bauchlage.|Endposition: Arme strecken, Brust öffnen.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Lying face down.|End position: Arms straightened, chest opened.|Hold the position calmly while breathing evenly, then release under control.",
+  "Schultern weg von den Ohren, den unteren Rücken nicht zwingen; bei Rückenproblemen auslassen.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Shoulders away from your ears, don't force your lower back; skip with back problems.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "upward-facing dog upward facing dog");
+G("warrior-i", "Krieger I", "Warrior I", "stretch", 1, 30, 1,
+  "Vorderes Knie über dem Fuß, Hüfte nach vorn, nicht ins Hohlkreuz fallen", "Front knee over your foot, hips facing forward, don't hollow your back", 5, 1, 1, "none",
+  ["Beine", "Hüftbeuger", "Legs", "Hip flexors"],
+  "Ausgangsposition: Ausfallschritt, Arme hoch.|Endposition: Halten.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen. Danach die Seite wechseln.",
+  "Starting position: Lunge, arms up.|End position: Held.|Hold the position calmly while breathing evenly, then release under control. Then switch sides.",
+  "Vorderes Knie über dem Fuß, Hüfte nach vorn, nicht ins Hohlkreuz fallen.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Front knee over your foot, hips facing forward, don't hollow your back.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "warrior i warrior i");
+G("single-leg-hop", "Einbeinhüpfen", "Single-Leg Hop", "cardio", 4, 30, 0,
+  "Kleine Sprünge auf dem Bein", "Small hops on the leg", 30, 2, 3, "none",
+  ["Beine", "Waden", "Legs", "Calves"],
+  "Ausgangsposition: Einbeinstand.|Endposition: Kleine Sprünge auf dem Bein.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: Standing on one leg.|End position: Small hops on the leg.|Return to the starting position under control and repeat without momentum.",
+  "Weicher Untergrund, kleine Sprünge, Achillessehne langsam gewöhnen; nicht bei Sprunggelenkproblemen.", "Hart oder steif landen und die Technik verlieren.",
+  "Soft surface, small hops, get your Achilles tendon used to it slowly; not with ankle problems.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "single-leg hop single leg hop");
+G("alternate-leg-push-off", "Wechselbein-Abdruck von der Stufe", "Alternate Leg Push-off", "cardio", 4, 30, 0,
+  "Ganzer Fuß auf der Stufe, weiche Landung, Stufe höchstens kniehoch", "Whole foot on the step, soft landing, step knee height at most", 30, 2, 2, "none",
+  ["Beine", "Gesäß", "Legs", "Glutes"],
+  "Ausgangsposition: Ein Fuß auf Stufe.|Endposition: Hochdrücken, Beine wechseln.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: One foot on the step.|End position: Pushed up, legs switch.|Return to the starting position under control and repeat without momentum.",
+  "Ganzer Fuß auf der Stufe, weiche Landung, Stufe höchstens kniehoch.", "Hart oder steif landen und die Technik verlieren.",
+  "Whole foot on the step, soft landing, step knee height at most.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "alternate leg push-off alternate leg push off");
+G("single-leg-push-off", "Einbein-Abdruck von der Stufe", "Single-Leg Push-off", "cardio", 4, 30, 0,
+  "Ganzer Fuß auf der Stufe, weiche Landung, Stufe höchstens kniehoch", "Whole foot on the step, soft landing, step knee height at most", 30, 2, 2, "none",
+  ["Beine", "Gesäß", "Legs", "Glutes"],
+  "Ausgangsposition: Ein Fuß auf Stufe.|Endposition: Kräftig abdrücken.|Kontrolliert zurück in die Ausgangsposition und ohne Schwung wiederholen.",
+  "Starting position: One foot on the step.|End position: Pushed off forcefully.|Return to the starting position under control and repeat without momentum.",
+  "Ganzer Fuß auf der Stufe, weiche Landung, Stufe höchstens kniehoch.", "Hart oder steif landen und die Technik verlieren.",
+  "Whole foot on the step, soft landing, step knee height at most.", "Landing hard or stiff and losing your technique.",
+  "air-ausdauer", null, "single-leg push-off single leg push off");
+G("neck-isometric", "Nacken isometrisch (vier Richtungen)", "Isometric Neck Press", "stretch", 1, 30, 0,
+  "Sanft gegen die Hand drücken, halten", "Gently press against your hand, hold", 5, 1, 1, "none",
+  ["Nackenmuskeln", "Oberer Trapez", "Neck muscles", "Upper traps"],
+  "Ausgangsposition: Aufrecht sitzend, Hand an Stirn, Schläfe oder Hinterkopf.|Endposition: Sanft gegen die Hand drücken, halten.|Die Position ruhig halten und gleichmäßig weiteratmen, dann kontrolliert lösen.",
+  "Starting position: Seated upright, hand on forehead, temple or back of your head.|End position: Gently press against your hand, hold.|Hold the position calmly while breathing evenly, then release under control.",
+  "Sanfter Druck (ca. 20 bis 30 % Kraft), 5 bis 10 s, ohne Pressatmung; bei Nackenschmerzen, Schwindel, Bluthochdruck oder Gefäßerkrankungen vorher abklären.", "Ruckartig ziehen oder in den Schmerz hineindehnen.",
+  "Gentle pressure (about 20 to 30% effort), 5 to 10 s, no breath-holding; with neck pain, dizziness, high blood pressure or vascular disease get advice first.", "Jerking into the position or stretching into pain.",
+  "air-stretch", null, "isometric neck press neck isometric");
+
+/* Figuren der neuen Übungen */
+ILLU_POSES["sumo-deadlift"] = [Q(null,[50, 36],[50, 62],[[38, 74, 30, 89, 22, 89], [62, 74, 70, 89, 78, 89]],[[44, 50, 44, 70], [56, 50, 56, 70]],"<path class=\"ip\" d=\"M30 72H70\"/><circle class=\"ipf\" cx=\"26\" cy=\"76\" r=\"9\"/><circle class=\"ipf\" cx=\"74\" cy=\"76\" r=\"9\"/>",true,1), Q(null,[50, 20],[50, 50],[[42, 70, 36, 89, 30, 89], [58, 70, 64, 89, 70, 89]],[[44, 34, 44, 52], [56, 34, 56, 52]],"<path class=\"ip\" d=\"M30 54H70\"/><circle class=\"ipf\" cx=\"26\" cy=\"58\" r=\"9\"/><circle class=\"ipf\" cx=\"74\" cy=\"58\" r=\"9\"/>",true,1)];
+ILLU_POSES["trap-bar-deadlift"] = [Q(null,[52, 38],[40, 62],[[54, 72, 48, 89, 56, 89]],[[56, 52, 56, 68]],"<g class=\"gh\" data-at=\"56,70\"><circle class=\"ipf\" cx=\"56\" cy=\"70\" r=\"6\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<g class=\"gh\" data-at=\"51,49\"><circle class=\"ipf\" cx=\"51\" cy=\"49\" r=\"6\"/></g>",false,1)];
+ILLU_POSES["rack-pull"] = [Q(null,[64, 40],[40, 50],[[48, 68, 46, 89, 54, 89]],[[62, 56, 61, 66]],"<g class=\"gh\" data-at=\"61,67\"><circle class=\"ipf\" cx=\"61\" cy=\"67\" r=\"7\"/></g><path class=\"ip\" d=\"M72 70H90M82 70V89\"/>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<g class=\"gh\" data-at=\"53,50\"><circle class=\"ipf\" cx=\"53\" cy=\"50\" r=\"7\"/></g><path class=\"ip\" d=\"M72 70H90M82 70V89\"/>",false,1)];
+ILLU_POSES["overhead-squat"] = [Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[57, 16, 60, 6]],"<g class=\"gh\" data-at=\"60,5\"><circle class=\"ipf\" cx=\"60\" cy=\"5\" r=\"7\"/></g>",false,1), Q(null,[44, 38],[34, 64],[[56, 64, 50, 89, 58, 89]],[[48, 26, 52, 12]],"<g class=\"gh\" data-at=\"52,11\"><circle class=\"ipf\" cx=\"52\" cy=\"11\" r=\"7\"/></g>",false,1)];
+ILLU_POSES["sissy-squat"] = [Q(null,[50, 22],[50, 52],[[50, 70, 50, 86, 58, 85]],[[58, 36, 70, 42]],"<path class=\"ip\" d=\"M72 30V89\"/>",false,1), Q(null,[28, 40],[50, 56],[[66, 68, 52, 86, 60, 85]],[[40, 46, 54, 42]],"",false,1)];
+ILLU_POSES["curtsy-lunge"] = [Q(null,[50, 20],[50, 50],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[46, 34, 50, 44], [54, 34, 50, 44]],"",true,1), Q(null,[48, 30],[48, 58],[[40, 74, 38, 89, 32, 89], [50, 76, 68, 84, 74, 88]],[[44, 44, 50, 50], [52, 44, 50, 50]],"",true,1)];
+ILLU_POSES["lateral-step-up"] = [Q(null,[46, 20],[46, 50],[[42, 70, 38, 89, 32, 89], [52, 66, 62, 80, 68, 80]],[[44, 34, 42, 46], [48, 34, 50, 46]],"<path class=\"ip\" d=\"M54 89V80H90V89\"/>",true,1), Q(null,[70, 12],[70, 42],[[68, 62, 68, 80, 74, 80], [76, 58, 82, 68, 82, 74]],[[68, 26, 66, 38], [72, 26, 74, 38]],"<path class=\"ip\" d=\"M54 89V80H90V89\"/>",true,1)];
+ILLU_POSES["box-jump"] = [Q(null,[32, 36],[22, 62],[[43, 62, 38, 89, 46, 89]],[[46, 38, 60, 37]],"<path class=\"ip\" d=\"M70 89V80H96V89\"/>",false,1), Q(null,[84, 12],[84, 42],[[84, 62, 84, 80, 90, 80]],[[86, 26, 87, 38]],"<path class=\"ip\" d=\"M68 89V80H98V89\"/>",false,1)];
+ILLU_POSES["lateral-box-jump"] = [Q(null,[40, 38],[40, 62],[[36, 74, 32, 89, 26, 89], [46, 74, 50, 89, 56, 89]],[[38, 50, 34, 60], [42, 50, 46, 60]],"<path class=\"ip\" d=\"M62 89V80H94V89\"/>",true,1), Q(null,[78, 12],[78, 42],[[73, 62, 70, 80, 64, 80], [83, 62, 86, 80, 92, 80]],[[75, 26, 72, 38], [81, 26, 84, 38]],"<path class=\"ip\" d=\"M60 89V80H98V89\"/>",true,1)];
+ILLU_POSES["donkey-calf-raise"] = [Q(null,[64, 42],[38, 52],[[40, 70, 40, 86, 50, 83]],[[68, 54, 74, 66]],"<path class=\"ip\" d=\"M28 84H56\"/><path class=\"ip\" d=\"M70 66H92M90 66V89\"/>",false,1), Q(null,[64, 36],[38, 46],[[40, 64, 40, 80, 50, 84]],[[68, 48, 74, 62]],"<path class=\"ip\" d=\"M28 84H56\"/><path class=\"ip\" d=\"M70 66H92M90 66V89\"/>",false,1)];
+ILLU_POSES["reverse-hyperextension"] = [Q(null,[24, 56],[48, 60],[[54, 78, 54, 88]],[[16, 66, 12, 76]],"<path class=\"ip\" d=\"M8 62H56M12 62V89M52 62V89\"/>",false,1), Q(null,[24, 56],[48, 60],[[68, 58, 86, 56]],[[16, 66, 12, 76]],"<path class=\"ip\" d=\"M8 62H56M12 62V89M52 62V89\"/>",false,1)];
+ILLU_POSES["side-lying-leg-raise"] = [Q(null,[22, 82],[50, 82],[[68, 84, 86, 85], [68, 83, 86, 83]],[[30, 86, 24, 82]],"",false,1), Q(null,[22, 82],[50, 82],[[68, 84, 86, 85], [68, 70, 86, 60]],[[30, 86, 24, 82]],"",false,1)];
+ILLU_POSES["fire-hydrant"] = [Q(null,[66, 66],[40, 66],[[40, 88, 22, 88, 18, 89], [40, 88, 22, 88, 18, 89]],[[67, 78, 68, 89]],"",false,1), Q(null,[66, 66],[40, 66],[[40, 88, 22, 88, 18, 89], [48, 72, 30, 78, 26, 79]],[[67, 78, 68, 89]],"",false,1)];
+ILLU_POSES["cable-hip-abduction"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[44, 34, 42, 48], [56, 34, 58, 48]],"<path class=\"ip\" d=\"M94 40V89\"/><circle class=\"ip\" cx=\"90\" cy=\"84\" r=\"3\"/>",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [58, 70, 70, 80, 76, 84]],[[44, 34, 42, 48], [56, 34, 58, 48]],"<path class=\"ip\" d=\"M94 40V89\"/><circle class=\"ip\" cx=\"90\" cy=\"84\" r=\"3\"/><path class=\"ip\" d=\"M76 84L88 84\"/>",true,1)];
+ILLU_POSES["cable-hip-adduction"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [58, 70, 70, 80, 76, 84]],[[44, 34, 42, 48], [56, 34, 58, 48]],"<path class=\"ip\" d=\"M94 40V89\"/><circle class=\"ip\" cx=\"90\" cy=\"84\" r=\"3\"/><path class=\"ip\" d=\"M76 84L88 84\"/>",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [52, 72, 40, 86, 34, 87]],[[44, 34, 42, 48], [56, 34, 58, 48]],"<path class=\"ip\" d=\"M94 40V89\"/><circle class=\"ip\" cx=\"90\" cy=\"84\" r=\"3\"/><path class=\"ip\" d=\"M34 87L88 85\"/>",true,1)];
+ILLU_POSES["band-lateral-walk"] = [Q(null,[50, 28],[50, 58],[[42, 74, 38, 89, 32, 89], [58, 74, 62, 89, 68, 89]],[[44, 42, 42, 52], [56, 42, 58, 52]],"<path class=\"ip\" d=\"M42 78H58\"/>",true,1), Q(null,[50, 28],[50, 58],[[38, 74, 32, 89, 26, 89], [62, 74, 68, 89, 74, 89]],[[44, 42, 42, 52], [56, 42, 58, 52]],"<path class=\"ip\" d=\"M38 78H62\"/>",true,1)];
+ILLU_POSES["barbell-lunge"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[54, 36, 50, 28]],"<g class=\"gh\" data-at=\"49,26\"><circle class=\"ipf\" cx=\"49\" cy=\"26\" r=\"6\"/></g>",false,1), Q(null,[48, 32],[48, 62],[[66, 63, 66, 89, 74, 89], [36, 85, 20, 87, 18, 89]],[[54, 44, 50, 34]],"<g class=\"gh\" data-at=\"49,32\"><circle class=\"ipf\" cx=\"49\" cy=\"32\" r=\"6\"/></g>",false,1)];
+ILLU_POSES["power-clean"] = [Q(null,[64, 40],[40, 50],[[48, 68, 46, 89, 54, 89]],[[62, 56, 61, 68]],"<g class=\"gh\" data-at=\"61,70\"><circle class=\"ipf\" cx=\"61\" cy=\"70\" r=\"7\"/></g>",false,1), Q(null,[50, 22],[50, 52],[[52, 70, 50, 89, 58, 89]],[[60, 36, 55, 27]],"<g class=\"gh\" data-at=\"55,26\"><circle class=\"ipf\" cx=\"55\" cy=\"26\" r=\"7\"/></g>",false,1)];
+ILLU_POSES["clean-and-press"] = [Q(null,[64, 40],[40, 50],[[48, 68, 46, 89, 54, 89]],[[62, 56, 61, 68]],"<g class=\"gh\" data-at=\"61,70\"><circle class=\"ipf\" cx=\"61\" cy=\"70\" r=\"7\"/></g>",false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[54, 16, 53, 5]],"<g class=\"gh\" data-at=\"53,4\"><circle class=\"ipf\" cx=\"53\" cy=\"4\" r=\"6\"/></g>",false,1)];
+ILLU_POSES["decline-bench-press"] = [Q(null,[22, 70],[50, 58],[[66, 52, 72, 66]],[[24, 58, 24, 46]],"<path class=\"ip\" d=\"M10 76L60 56M14 74V89M56 58V89\"/><g class=\"gh\" data-at=\"24,44\"><circle class=\"ipf\" cx=\"24\" cy=\"44\" r=\"7\"/></g>",false,1), Q(null,[22, 70],[50, 58],[[66, 52, 72, 66]],[[14, 66, 24, 62]],"<path class=\"ip\" d=\"M10 76L60 56M14 74V89M56 58V89\"/><g class=\"gh\" data-at=\"24,61\"><circle class=\"ipf\" cx=\"24\" cy=\"61\" r=\"7\"/></g>",false,1)];
+ILLU_POSES["incline-bench-press"] = [Q(null,[24, 48],[46, 70],[[60, 66, 64, 86, 71, 88]],[[28, 60, 34, 50]],"<path class=\"ip gm\" d=\"M16 50L42 74M44 74V89\"/><g class=\"gh\" data-at=\"34,50\"><circle class=\"ipf\" cx=\"34\" cy=\"50\" r=\"6\"/></g>",false,1), Q(null,[24, 48],[46, 70],[[60, 66, 64, 86, 71, 88]],[[34, 38, 40, 27]],"<path class=\"ip gm\" d=\"M16 50L42 74M44 74V89\"/><g class=\"gh\" data-at=\"40,27\"><circle class=\"ipf\" cx=\"40\" cy=\"27\" r=\"6\"/></g>",false,1)];
+ILLU_POSES["close-grip-bench-press"] = [Q([16, 66],[26, 67],[48, 69],[[64, 64, 66, 85, 73, 89]],[[29, 56, 30, 44]],"<path class=\"ip gm\" d=\"M12 73H60M15 73V89M57 73V89\"/><g class=\"gh\" data-at=\"30,42\"><circle class=\"ipf gm\" cx=\"30\" cy=\"42\" r=\"7\"/></g>",false,1), Q([16, 66],[26, 67],[48, 69],[[64, 64, 66, 85, 73, 89]],[[22, 77, 30, 65]],"<path class=\"ip gm\" d=\"M12 73H60M15 73V89M57 73V89\"/><g class=\"gh\" data-at=\"30,62\"><circle class=\"ipf gm\" cx=\"30\" cy=\"62\" r=\"7\"/></g>",false,1)];
+ILLU_POSES["decline-push-up"] = [Q(null,[70, 52],[44, 64],[[28, 66, 14, 66, 8, 64]],[[69, 66, 70, 79]],"<path class=\"ip\" d=\"M0 89V66H22V89\"/>",false,1), Q(null,[70, 66],[44, 66],[[28, 66, 14, 66, 8, 64]],[[58, 66, 66, 79]],"<path class=\"ip\" d=\"M0 89V66H22V89\"/>",false,1)];
+ILLU_POSES["chest-dip"] = [Q(null,[60, 26],[44, 54],[[42, 72, 34, 80, 36, 84]],[[62, 40, 62, 50]],"<path class=\"ip\" d=\"M40 50H70\"/><path class=\"ip\" d=\"M44 50V89M66 50V89\"/>",false,1), Q(null,[64, 44],[48, 66],[[46, 80, 36, 84, 38, 86]],[[52, 50, 62, 50]],"<path class=\"ip\" d=\"M40 50H70\"/><path class=\"ip\" d=\"M44 50V89M66 50V89\"/>",false,1)];
+ILLU_POSES["single-arm-push-up"] = [Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89]],"",false,1), Q(null,[72, 78],[44, 82],[[28, 85, 12, 87, 9, 89]],[[56, 72, 66, 88]],"",false,1)];
+ILLU_POSES["shoulder-tap-push-up"] = [Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89]],"",false,1), Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89], [74, 62, 80, 52]],"",false,1)];
+ILLU_POSES["spiderman-push-up"] = [Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89]],"",false,1), Q(null,[72, 78],[44, 82],[[28, 85, 12, 87, 9, 89], [58, 79, 50, 86, 46, 88]],[[60, 71, 70, 89]],"",false,1)];
+ILLU_POSES["decline-db-fly"] = [Q(null,[22, 70],[50, 58],[[66, 52, 72, 66]],[[24, 58, 24, 46]],"<path class=\"ip\" d=\"M10 76L60 56M14 74V89M56 58V89\"/><g class=\"gh\" data-at=\"24,44\"><path class=\"ip\" d=\"M18 44h12M18 40v8M30 40v8\"/></g>",false,1), Q(null,[22, 70],[50, 58],[[66, 52, 72, 66]],[[18, 72, 10, 66]],"<path class=\"ip\" d=\"M10 76L60 56M14 74V89M56 58V89\"/><g class=\"gh\" data-at=\"10,64\"><path class=\"ip\" d=\"M4 64h12M4 60v8M16 60v8\"/></g>",false,1)];
+ILLU_POSES["handstand-push-up"] = [Q(null,[47.5, 72.3],[47.5, 53.7],[[47.5, 41.3, 51.2, 31.3]],[[47.5, 80.9, 47.5, 89]],"<path class=\"ip\" d=\"M62 6V89\"/>",false,1), Q(null,[47.5, 78.5],[47.5, 59.9],[[47.5, 47.5, 51.2, 37.5]],[[55, 84.7, 47.5, 89]],"<path class=\"ip\" d=\"M62 6V89\"/>",false,1)];
+ILLU_POSES["barbell-front-raise"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[54, 36, 55, 50]],"<g class=\"gh\" data-at=\"55,51\"><circle class=\"ipf\" cx=\"55\" cy=\"51\" r=\"6\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[62, 32, 74, 30]],"<g class=\"gh\" data-at=\"75,30\"><circle class=\"ipf\" cx=\"75\" cy=\"30\" r=\"6\"/></g>",false,1)];
+ILLU_POSES["rear-delt-row"] = [Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[62, 54, 61, 66]],"<g class=\"gh\" data-at=\"61,68\"><path class=\"ip\" d=\"M55 68h12M55 64v8M67 64v8\"/></g>",false,1), Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[50, 38, 58, 48]],"<g class=\"gh\" data-at=\"58,50\"><path class=\"ip\" d=\"M52 50h12M52 46v8M64 46v8\"/></g>",false,1)];
+ILLU_POSES["side-lying-external-rotation"] = [Q(null,[22, 82],[50, 82],[[68, 84, 86, 85]],[[30, 76, 40, 82]],"<g class=\"gh\" data-at=\"40,83\"><path class=\"ip\" d=\"M34 83h12M34 79v8M46 79v8\"/></g>",false,1), Q(null,[22, 82],[50, 82],[[68, 84, 86, 85]],[[30, 76, 34, 64]],"<g class=\"gh\" data-at=\"34,62\"><path class=\"ip\" d=\"M28 62h12M28 58v8M40 58v8\"/></g>",false,1)];
+ILLU_POSES["cable-external-rotation"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[42, 36, 56, 40], [58, 34, 60, 48]],"<path class=\"ip\" d=\"M92 40V89\"/><path class=\"ip\" d=\"M56 40L90 40\"/><circle class=\"ip\" cx=\"90\" cy=\"40\" r=\"3\"/>",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[42, 36, 28, 40], [58, 34, 60, 48]],"<path class=\"ip\" d=\"M92 40V89\"/><path class=\"ip\" d=\"M28 40L90 40\"/><circle class=\"ip\" cx=\"90\" cy=\"40\" r=\"3\"/>",true,1)];
+ILLU_POSES["cable-internal-rotation"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[42, 36, 28, 40], [58, 34, 60, 48]],"<path class=\"ip\" d=\"M92 40V89\"/><path class=\"ip\" d=\"M28 40L90 40\"/><circle class=\"ip\" cx=\"90\" cy=\"40\" r=\"3\"/>",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[42, 36, 56, 40], [58, 34, 60, 48]],"<path class=\"ip\" d=\"M92 40V89\"/><path class=\"ip\" d=\"M56 40L90 40\"/><circle class=\"ip\" cx=\"90\" cy=\"40\" r=\"3\"/>",true,1)];
+ILLU_POSES["underhand-barbell-row"] = [Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[62, 54, 61, 66]],"<g class=\"gh\" data-at=\"61,70\"><circle class=\"ipf gm\" cx=\"61\" cy=\"70\" r=\"7\"/></g>",false,1), Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[50, 36, 56, 48]],"<g class=\"gh\" data-at=\"56,52\"><circle class=\"ipf gm\" cx=\"56\" cy=\"52\" r=\"7\"/></g>",false,1)];
+ILLU_POSES["wide-grip-pull-up"] = [Q(null,[50, 30],[50, 58],[[48, 72, 48, 84], [52, 72, 52, 84]],[[36, 21, 22, 6], [64, 21, 78, 6]],"<path class=\"ip\" d=\"M10 6H90\"/>",true,1), Q([50, 5],[50, 14],[50, 42],[[48, 58, 48, 72], [52, 58, 52, 72]],[[30, 20, 22, 6], [70, 20, 78, 6]],"<path class=\"ip\" d=\"M10 6H90\"/>",true,1)];
+ILLU_POSES["single-arm-lat-pulldown"] = [Q(null,[50, 34],[50, 62],[[44, 68, 44, 86], [56, 68, 56, 86]],[[40, 24, 34, 12], [60, 46, 58, 56]],"<path class=\"ip\" d=\"M36 66H64M50 66V89\"/><path class=\"ip\" d=\"M28 0L34 12\"/><g class=\"gh\" data-at=\"34,12\"><path class=\"ip\" d=\"M34 8v8\"/></g>",true,1), Q(null,[50, 34],[50, 62],[[44, 68, 44, 86], [56, 68, 56, 86]],[[40, 46, 44, 34], [60, 46, 58, 56]],"<path class=\"ip\" d=\"M36 66H64M50 66V89\"/><path class=\"ip\" d=\"M28 0L44 34\"/><g class=\"gh\" data-at=\"44,34\"><path class=\"ip\" d=\"M44 30v8\"/></g>",true,1)];
+ILLU_POSES["drag-curl"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<g class=\"gh\" data-at=\"54,48\"><circle class=\"ipf\" cx=\"54\" cy=\"48\" r=\"5\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[44, 38, 56, 30]],"<g class=\"gh\" data-at=\"56,30\"><circle class=\"ipf\" cx=\"56\" cy=\"30\" r=\"5\"/></g>",false,1)];
+ILLU_POSES["reverse-preacher-curl"] = [Q(null,[46, 37],[40, 64],[[58, 67, 58, 86, 65, 88]],[[56, 46, 66, 55]],"<path class=\"ip gm\" d=\"M30 66H52M41 66V89\"/><path class=\"ip gm\" d=\"M47 41L61 50\"/><g class=\"gh\" data-at=\"66,55\"><circle class=\"ipf\" cx=\"66\" cy=\"55\" r=\"5\"/></g>",false,1), Q(null,[46, 37],[40, 64],[[58, 67, 58, 86, 65, 88]],[[56, 46, 53, 34]],"<path class=\"ip gm\" d=\"M30 66H52M41 66V89\"/><path class=\"ip gm\" d=\"M47 41L61 50\"/><g class=\"gh\" data-at=\"53,34\"><circle class=\"ipf\" cx=\"53\" cy=\"34\" r=\"5\"/></g>",false,1)];
+ILLU_POSES["incline-hammer-curl"] = [Q(null,[24, 48],[46, 70],[[60, 66, 64, 86, 71, 88]],[[30, 62, 36, 76]],"<path class=\"ip\" d=\"M16 50L42 74M44 74V89\"/><g class=\"gh\" data-at=\"36,76\"><path class=\"ip\" d=\"M36 71v10\"/></g>",false,1), Q(null,[24, 48],[46, 70],[[60, 66, 64, 86, 71, 88]],[[30, 62, 46, 58]],"<path class=\"ip\" d=\"M16 50L42 74M44 74V89\"/><g class=\"gh\" data-at=\"46,58\"><path class=\"ip\" d=\"M46 53v10\"/></g>",false,1)];
+ILLU_POSES["db-triceps-kickback"] = [Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[51, 45, 51, 57]],"<g class=\"gh\" data-at=\"51,59\"><path class=\"ip\" d=\"M45 59h12M45 55v8M57 55v8\"/></g>",false,1), Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[51, 45, 38, 49]],"<g class=\"gh\" data-at=\"37,49\"><path class=\"ip\" d=\"M31 49h12M31 45v8M43 45v8\"/></g>",false,1)];
+ILLU_POSES["reverse-wrist-curl"] = [Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[50, 48, 64, 58]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><g class=\"gh\" data-at=\"64,60\"><path class=\"ip\" d=\"M58 60h12M58 56v8M70 56v8\"/></g>",false,1), Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[50, 48, 64, 50]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><g class=\"gh\" data-at=\"64,48\"><path class=\"ip\" d=\"M58 48h12M58 44v8M70 44v8\"/></g>",false,1)];
+ILLU_POSES["flutter-kicks"] = [Q(null,[22, 84],[50, 84],[[68, 80, 86, 72], [68, 84, 86, 82]],[[32, 87, 44, 87]],"",false,1), Q(null,[22, 84],[50, 84],[[68, 84, 86, 82], [68, 80, 86, 72]],[[32, 87, 44, 87]],"",false,1)];
+ILLU_POSES["scissor-kicks"] = [Q(null,[22, 84],[50, 84],[[66, 72, 84, 60], [68, 84, 86, 84]],[[32, 87, 44, 87]],"",false,1), Q(null,[22, 84],[50, 84],[[66, 78, 86, 76], [66, 74, 84, 66]],[[32, 87, 44, 87]],"",false,1)];
+ILLU_POSES["decline-sit-up"] = [Q(null,[22, 70],[50, 58],[[66, 52, 72, 66]],[[26, 66, 20, 62]],"<path class=\"ip\" d=\"M10 76L60 56M14 74V89M56 58V89\"/>",false,1), Q(null,[42, 30],[50, 58],[[66, 52, 72, 66]],[[46, 42, 40, 36]],"<path class=\"ip\" d=\"M10 76L60 56M14 74V89M56 58V89\"/>",false,1)];
+ILLU_POSES["oblique-crunch"] = [Q([14, 83],[24, 84],[46, 86],[[60, 70, 70, 89, 78, 89]],[[20, 78, 14, 80]],"",false,1), Q([22, 70],[30, 74],[46, 86],[[60, 70, 70, 89, 78, 89]],[[28, 66, 22, 66]],"",false,1)];
+ILLU_POSES["heel-touches"] = [Q([14, 83],[24, 84],[46, 86],[[60, 70, 70, 89, 78, 89]],[[36, 86, 44, 88]],"",false,1), Q([20, 74],[28, 77],[46, 86],[[60, 70, 70, 89, 78, 89]],[[44, 84, 62, 88]],"",false,1)];
+ILLU_POSES["reverse-plank"] = [Q(null,[26, 68],[50, 80],[[70, 84, 88, 88, 92, 86]],[[24, 80, 22, 89]],"",false,1), Q(null,[28, 58],[56, 64],[[72, 74, 88, 84, 92, 82]],[[26, 74, 22, 89]],"",false,1)];
+ILLU_POSES["plank-hip-dips"] = [Q([20, 58],[28, 62],[56, 70],[[72, 80, 88, 88, 92, 89]],[[27, 89, 40, 89], [28, 50, 28, 40]],"",true,1), Q([20, 68],[28, 72],[56, 84],[[72, 87, 88, 89, 92, 89]],[[27, 89, 40, 89], [28, 56, 28, 46]],"",true,1)];
+ILLU_POSES["db-side-bend"] = [Q(null,[50, 20],[50, 50],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[46, 34, 44, 48], [54, 34, 56, 48]],"<g class=\"gh\" data-at=\"44,50\"><path class=\"ip\" d=\"M38 50h12M38 46v8M50 46v8\"/></g>",true,1), Q(null,[44, 22],[50, 50],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[40, 36, 38, 52], [48, 34, 52, 46]],"<g class=\"gh\" data-at=\"38,54\"><path class=\"ip\" d=\"M32 54h12M32 50v8M44 50v8\"/></g>",true,1)];
+ILLU_POSES["hanging-leg-raise-twist"] = [Q(null,[50, 30],[50, 58],[[48, 72, 48, 86], [52, 72, 52, 86]],[[40, 21, 34, 6], [60, 21, 66, 6]],"<path class=\"ip\" d=\"M24 6H76\"/>",true,1), Q(null,[50, 30],[50, 58],[[40, 66, 28, 58], [44, 68, 32, 62]],[[40, 21, 34, 6], [60, 21, 66, 6]],"<path class=\"ip\" d=\"M24 6H76\"/>",true,1)];
+ILLU_POSES["jump-rope"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[58, 36, 64, 46]],"<path class=\"ip\" style=\"stroke-width:5\" d=\"M64 46Q78 94 50 92Q22 94 36 48\"/>",false,1), Q(null,[50, 20],[50, 50],[[50, 68, 50, 83, 58, 83]],[[58, 36, 64, 46]],"<path class=\"ip\" style=\"stroke-width:5\" d=\"M64 46Q82 8 50 10Q18 8 36 46\"/>",false,1)];
+ILLU_POSES["butt-kicks"] = [Q(null,[52, 20],[50, 50],[[50, 70, 50, 89, 58, 89], [56, 68, 44, 58]],[[58, 34, 66, 40], [44, 36, 38, 46]],"",false,1), Q(null,[52, 20],[50, 50],[[56, 68, 44, 58], [50, 70, 50, 89, 58, 89]],[[44, 36, 38, 46], [58, 34, 66, 40]],"",false,1)];
+ILLU_POSES["star-jumps"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[44, 34, 42, 48], [56, 34, 58, 48]],"",true,1), Q(null,[50, 17],[50, 49],[[42, 67, 34, 84, 28, 86], [58, 67, 66, 84, 72, 86]],[[38, 13, 28, 1], [62, 13, 72, 1]],"",true,1)];
+ILLU_POSES["squat-jacks"] = [Q(null,[50, 38],[50, 64],[[36, 76, 32, 89, 26, 89], [64, 76, 68, 89, 74, 89]],[[44, 48, 50, 56], [56, 48, 50, 56]],"",true,1), Q(null,[50, 38],[50, 64],[[46, 76, 48, 89, 42, 89], [54, 76, 52, 89, 58, 89]],[[44, 48, 44, 62], [56, 48, 56, 62]],"",true,1)];
+ILLU_POSES["turkish-get-up"] = [Q([14, 83],[24, 84],[46, 86],[[60, 70, 70, 89, 78, 89]],[[32, 72, 32, 60]],"<g class=\"gh\" data-at=\"32,58\"><circle class=\"ipf\" cx=\"32\" cy=\"62\" r=\"5\"/><path class=\"ip\" d=\"M29 59q3-5 6 0\"/></g>",false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 17, 64, 7]],"<g class=\"gh\" data-at=\"64,5\"><circle class=\"ipf\" cx=\"64\" cy=\"9\" r=\"5\"/><path class=\"ip\" d=\"M61 6q3-5 6 0\"/></g>",false,1)];
+ILLU_POSES["kb-windmill"] = [Q(null,[50, 40.7],[50, 61.7],[[43, 75.7, 38.8, 89, 34.6, 89], [57, 75.7, 61.2, 89, 65.4, 89]],[[52.8, 33.7, 52.8, 22.5], [45.8, 50.5, 44.4, 60.3]],"<g class=\"gh\" data-at=\"54,-8\"><circle class=\"ipf\" cx=\"54\" cy=\"-4\" r=\"5\"/><path class=\"ip\" d=\"M51 -7q3-5 6 0\"/></g>",true,1), Q(null,[38.8, 53.3],[50, 61.7],[[43, 75.7, 38.8, 89, 34.6, 89], [57, 75.7, 61.2, 89, 65.4, 89]],[[38.8, 42.1, 38.8, 30.9], [38.8, 63.1, 37.4, 77.1]],"<g class=\"gh\" data-at=\"34,4\"><circle class=\"ipf\" cx=\"34\" cy=\"8\" r=\"5\"/><path class=\"ip\" d=\"M31 5q3-5 6 0\"/></g>",true,1)];
+ILLU_POSES["kb-snatch"] = [Q(null,[64, 40],[40, 50],[[46, 70, 44, 89, 52, 89]],[[60, 56, 52, 70]],"<g class=\"gh\" data-at=\"52,70\"><circle class=\"ipf\" cx=\"52\" cy=\"74\" r=\"5\"/><path class=\"ip\" d=\"M49 71q3-5 6 0\"/></g>",false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 17, 64, 7]],"<g class=\"gh\" data-at=\"64,5\"><circle class=\"ipf\" cx=\"64\" cy=\"9\" r=\"5\"/><path class=\"ip\" d=\"M61 6q3-5 6 0\"/></g>",false,1)];
+ILLU_POSES["kb-press"] = [Q(null,[50, 22],[50, 52],[[52, 70, 50, 89, 58, 89]],[[60, 36, 56, 28]],"<g class=\"gh\" data-at=\"56,26\"><circle class=\"ipf\" cx=\"56\" cy=\"30\" r=\"5\"/><path class=\"ip\" d=\"M53 27q3-5 6 0\"/></g>",false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 17, 64, 7]],"<g class=\"gh\" data-at=\"64,5\"><circle class=\"ipf\" cx=\"64\" cy=\"9\" r=\"5\"/><path class=\"ip\" d=\"M61 6q3-5 6 0\"/></g>",false,1)];
+ILLU_POSES["kb-sumo-high-pull"] = [Q(null,[50, 40],[50, 66],[[38, 76, 30, 89, 24, 89], [62, 76, 70, 89, 76, 89]],[[48, 56, 50, 70], [52, 56, 50, 70]],"<g class=\"gh\" data-at=\"50,70\"><circle class=\"ipf\" cx=\"50\" cy=\"74\" r=\"5\"/><path class=\"ip\" d=\"M47 71q3-5 6 0\"/></g>",true,1), Q(null,[50, 22],[50, 52],[[42, 70, 36, 89, 30, 89], [58, 70, 64, 89, 70, 89]],[[36, 30, 46, 38], [64, 30, 54, 38]],"<g class=\"gh\" data-at=\"50,38\"><circle class=\"ipf\" cx=\"50\" cy=\"42\" r=\"5\"/><path class=\"ip\" d=\"M47 39q3-5 6 0\"/></g>",true,1)];
+ILLU_POSES["kb-figure-8"] = [Q(null,[64, 40],[40, 50],[[46, 70, 44, 89, 52, 89]],[[60, 56, 56, 70]],"<g class=\"gh\" data-at=\"56,70\"><circle class=\"ipf\" cx=\"56\" cy=\"74\" r=\"5\"/><path class=\"ip\" d=\"M53 71q3-5 6 0\"/></g>",false,1), Q(null,[64, 40],[40, 50],[[46, 70, 44, 89, 52, 89]],[[50, 56, 42, 72]],"<g class=\"gh\" data-at=\"42,72\"><circle class=\"ipf\" cx=\"42\" cy=\"76\" r=\"5\"/><path class=\"ip\" d=\"M39 73q3-5 6 0\"/></g>",false,1)];
+ILLU_POSES["kb-halo"] = [Q(null,[50, 22],[50, 52],[[50, 70, 50, 89, 58, 89]],[[60, 36, 62, 28]],"<g class=\"gh\" data-at=\"62,26\"><circle class=\"ipf\" cx=\"62\" cy=\"30\" r=\"5\"/><path class=\"ip\" d=\"M59 27q3-5 6 0\"/></g>",false,1), Q(null,[50, 22],[50, 52],[[50, 70, 50, 89, 58, 89]],[[38, 30, 30, 20]],"<g class=\"gh\" data-at=\"30,18\"><circle class=\"ipf\" cx=\"30\" cy=\"22\" r=\"5\"/><path class=\"ip\" d=\"M27 19q3-5 6 0\"/></g>",false,1)];
+ILLU_POSES["incline-db-fly"] = [Q(null,[24, 48],[46, 70],[[60, 66, 64, 86, 71, 88]],[[30, 58, 34, 46]],"<path class=\"ip\" d=\"M16 50L42 74M44 74V89\"/><g class=\"gh\" data-at=\"34,44\"><path class=\"ip\" d=\"M28 44h12M28 40v8M40 40v8\"/></g>",false,1), Q(null,[24, 48],[46, 70],[[60, 66, 64, 86, 71, 88]],[[26, 62, 20, 72]],"<path class=\"ip\" d=\"M16 50L42 74M44 74V89\"/><g class=\"gh\" data-at=\"20,74\"><path class=\"ip\" d=\"M14 74h12M14 70v8M26 70v8\"/></g>",false,1)];
+ILLU_POSES["wide-push-up"] = [Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89], [74, 73, 86, 86]],"<path class=\"ip gb\" d=\"M58 90H90\"/>",false,1), Q(null,[72, 78],[44, 82],[[28, 85, 12, 87, 9, 89]],[[60, 71, 70, 89], [66, 70, 86, 86]],"<path class=\"ip gb\" d=\"M58 90H90\"/>",false,1)];
+ILLU_POSES["push-up-rotation"] = [Q(null,[72, 78],[44, 82],[[28, 85, 12, 87, 9, 89]],[[60, 71, 70, 89]],"",false,1), Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89], [74, 60, 72, 46]],"",false,1)];
+ILLU_POSES["db-push-up"] = [Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89]],"<g class=\"gh\" data-at=\"70,86\"><path class=\"ip\" d=\"M64 86h12M64 82v8M76 82v8\"/></g>",false,1), Q(null,[72, 78],[44, 82],[[28, 85, 12, 87, 9, 89]],[[60, 71, 70, 89]],"<g class=\"gh\" data-at=\"60,86\"><path class=\"ip\" d=\"M54 86h12M54 82v8M66 82v8\"/></g>",false,1)];
+ILLU_POSES["standing-cable-chest-press"] = [Q(null,[50, 22],[50, 52],[[56, 70, 52, 89, 60, 89], [46, 74, 40, 89]],[[56, 38, 60, 32]],"<path class=\"ip\" d=\"M4 20V89\"/><circle class=\"ip\" cx=\"8\" cy=\"24\" r=\"3\"/><path class=\"ip\" d=\"M60 32L8 24\"/><g class=\"gh\" data-at=\"60,32\"><path class=\"ip\" d=\"M60 28v8\"/></g>",false,1), Q(null,[50, 22],[50, 52],[[56, 70, 52, 89, 60, 89], [46, 74, 40, 89]],[[64, 32, 76, 28]],"<path class=\"ip\" d=\"M4 20V89\"/><circle class=\"ip\" cx=\"8\" cy=\"24\" r=\"3\"/><path class=\"ip\" d=\"M76 28L8 24\"/><g class=\"gh\" data-at=\"76,28\"><path class=\"ip\" d=\"M76 24v8\"/></g>",false,1)];
+ILLU_POSES["pendlay-row"] = [Q(null,[66, 50],[40, 56],[[44, 72, 44, 89, 52, 89]],[[66, 62, 66, 78]],"<g class=\"gh\" data-at=\"66,80\"><circle class=\"ipf\" cx=\"66\" cy=\"80\" r=\"7\"/></g>",false,1), Q(null,[66, 50],[40, 56],[[44, 72, 44, 89, 52, 89]],[[56, 62, 62, 62]],"<g class=\"gh\" data-at=\"62,64\"><circle class=\"ipf\" cx=\"62\" cy=\"64\" r=\"7\"/></g>",false,1)];
+ILLU_POSES["cable-reverse-fly"] = [Q(null,[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[52, 36, 44, 46], [48, 36, 56, 46]],"<path class=\"ip\" d=\"M8 2L44 46M92 2L56 46\"/>",true,1), Q(null,[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[40, 34, 28, 40], [60, 34, 72, 40]],"<path class=\"ip\" d=\"M8 2L28 40M92 2L72 40\"/>",true,1)];
+ILLU_POSES["kb-deadlift"] = [Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[62, 56, 60, 74]],"<g class=\"gh\" data-at=\"60,74\"><circle class=\"ipf\" cx=\"60\" cy=\"78\" r=\"5\"/><path class=\"ip\" d=\"M57 75q3-5 6 0\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<g class=\"gh\" data-at=\"52,50\"><circle class=\"ipf\" cx=\"52\" cy=\"54\" r=\"5\"/><path class=\"ip\" d=\"M49 51q3-5 6 0\"/></g>",false,1)];
+ILLU_POSES["seated-barbell-shoulder-press"] = [Q(null,[40, 34],[40, 64],[[58, 64, 58, 86, 64, 88]],[[46, 46, 44, 34]],"<path class=\"ip\" d=\"M28 66H54M40 66V89M30 30V66\"/><g class=\"gh\" data-at=\"44,32\"><circle class=\"ipf\" cx=\"44\" cy=\"32\" r=\"6\"/></g>",false,1), Q(null,[40, 34],[40, 64],[[58, 64, 58, 86, 64, 88]],[[44, 22, 44, 8]],"<path class=\"ip\" d=\"M28 66H54M40 66V89M30 30V66\"/><g class=\"gh\" data-at=\"44,6\"><circle class=\"ipf\" cx=\"44\" cy=\"6\" r=\"6\"/></g>",false,1)];
+ILLU_POSES["landmine-press"] = [Q(null,[50, 22],[50, 52],[[50, 70, 50, 89, 58, 89]],[[58, 38, 56, 30]],"<path class=\"ip\" d=\"M10 88L56 30\"/><g class=\"gh\" data-at=\"56,29\"><circle class=\"ipf\" cx=\"56\" cy=\"29\" r=\"5\"/></g>",false,1), Q(null,[50, 22],[50, 52],[[50, 70, 50, 89, 58, 89]],[[64, 22, 70, 10]],"<path class=\"ip\" d=\"M10 88L70 10\"/><g class=\"gh\" data-at=\"70,9\"><circle class=\"ipf\" cx=\"70\" cy=\"9\" r=\"5\"/></g>",false,1)];
+ILLU_POSES["cable-front-raise"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 54, 48]],"<path class=\"ip\" d=\"M6 86L54 48\"/><circle class=\"ip\" cx=\"6\" cy=\"86\" r=\"3\"/><g class=\"gh\" data-at=\"54,48\"><path class=\"ip\" d=\"M54 44v8\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[62, 30, 74, 24]],"<path class=\"ip\" d=\"M6 86L74 24\"/><circle class=\"ip\" cx=\"6\" cy=\"86\" r=\"3\"/><g class=\"gh\" data-at=\"74,24\"><path class=\"ip\" d=\"M74 20v8\"/></g>",false,1)];
+ILLU_POSES["seated-lateral-raise"] = [Q(null,[50, 30],[50, 60],[[46, 64, 46, 86], [54, 64, 54, 86]],[[44, 44, 42, 56], [56, 44, 58, 56]],"<path class=\"ip\" d=\"M36 62H64M50 62V89\"/><g class=\"gh\" data-at=\"42,58\"><path class=\"ip\" d=\"M36 58h12M36 54v8M48 54v8\"/></g><g class=\"gh\" data-at=\"58,58\"><path class=\"ip\" d=\"M52 58h12M52 54v8M64 54v8\"/></g>",true,1), Q(null,[50, 30],[50, 60],[[46, 64, 46, 86], [54, 64, 54, 86]],[[38, 36, 28, 34], [62, 36, 72, 34]],"<path class=\"ip\" d=\"M36 62H64M50 62V89\"/><g class=\"gh\" data-at=\"28,34\"><path class=\"ip\" d=\"M22 34h12M22 30v8M34 30v8\"/></g><g class=\"gh\" data-at=\"72,34\"><path class=\"ip\" d=\"M66 34h12M66 30v8M78 30v8\"/></g>",true,1)];
+ILLU_POSES["plate-front-raise"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[54, 36, 55, 50]],"<g class=\"gh\" data-at=\"55,51\"><circle class=\"ipf\" cx=\"55\" cy=\"51\" r=\"9\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[62, 30, 74, 28]],"<g class=\"gh\" data-at=\"75,28\"><circle class=\"ipf\" cx=\"75\" cy=\"28\" r=\"9\"/></g>",false,1)];
+ILLU_POSES["cable-upright-row"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 54, 48]],"<path class=\"ip\" d=\"M90 88L54 48\"/><g class=\"gh\" data-at=\"54,48\"><path class=\"ip\" d=\"M50 48h8\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[62, 30, 56, 22]],"<path class=\"ip\" d=\"M90 88L56 22\"/><g class=\"gh\" data-at=\"56,22\"><path class=\"ip\" d=\"M52 22h8\"/></g>",false,1)];
+ILLU_POSES["ez-curl"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 32, 53, 44]],"<g class=\"gh\" data-at=\"53,44\"><path class=\"ip gm\" d=\"M46 44L49 41L52 47L55 41L58 47L60 44\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 32, 60, 23]],"<g class=\"gh\" data-at=\"60,23\"><path class=\"ip gm\" d=\"M53 23L56 20L59 26L62 20L65 26L67 23\"/></g>",false,1)];
+ILLU_POSES["ez-reverse-curl"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 32, 53, 44]],"<g class=\"gh\" data-at=\"53,44\"><path class=\"ip gm\" d=\"M46 44L49 41L52 47L55 41L58 47L60 44\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 32, 60, 23]],"<g class=\"gh\" data-at=\"60,23\"><path class=\"ip gm\" d=\"M53 23L56 20L59 26L62 20L65 26L67 23\"/></g>",false,1)];
+ILLU_POSES["cable-hammer-curl"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 32, 54, 44]],"<path class=\"ip gm\" d=\"M74 40V89\"/><circle class=\"ip gm\" cx=\"70\" cy=\"84\" r=\"3\"/><g class=\"gh\" data-at=\"54,44\"><path class=\"ip\" d=\"M54 40v8\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 32, 60, 23]],"<path class=\"ip gm\" d=\"M74 40V89\"/><circle class=\"ip gm\" cx=\"70\" cy=\"84\" r=\"3\"/><g class=\"gh\" data-at=\"60,23\"><path class=\"ip\" d=\"M60 19v8\"/></g>",false,1)];
+ILLU_POSES["db-bulgarian-split-squat"] = [Q(null,[50, 18],[50, 48],[[58, 68, 62, 89, 70, 89], [38, 62, 26, 70, 20, 70]],[[57, 33, 51, 43]],"<path class=\"ip\" d=\"M6 70H30M9 70V89M27 70V89\"/><g class=\"gh\" data-at=\"51,45\"><path class=\"ip\" d=\"M45 45h12M45 41v8M57 41v8\"/></g>",false,1), Q(null,[50, 32],[50, 62],[[66, 64, 66, 89, 74, 89], [40, 80, 26, 70, 20, 70]],[[57, 47, 51, 57]],"<path class=\"ip\" d=\"M6 70H30M9 70V89M27 70V89\"/><g class=\"gh\" data-at=\"51,59\"><path class=\"ip\" d=\"M45 59h12M45 55v8M57 55v8\"/></g>",false,1)];
+ILLU_POSES["db-walking-lunge"] = [Q(null,[48, 32],[48, 62],[[66, 63, 66, 89, 74, 89], [36, 85, 20, 87, 18, 89]],[[55, 48, 49, 57]],"<g class=\"gh\" data-at=\"49,59\"><path class=\"ip\" d=\"M43 59h12M43 55v8M55 55v8\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[57, 69, 62, 89, 70, 89], [43, 69, 38, 89, 46, 89]],[[57, 35, 51, 45]],"<g class=\"gh\" data-at=\"51,47\"><path class=\"ip\" d=\"M45 47h12M45 43v8M57 43v8\"/></g>",false,1)];
+ILLU_POSES["barbell-step-up"] = [Q(null,[40, 22],[40, 52],[[56, 58, 60, 74, 68, 74], [40, 71, 40, 89, 48, 89]],[[44, 32, 40, 22]],"<path class=\"ip\" d=\"M54 89V80H86V89\"/><g class=\"gh\" data-at=\"40,20\"><circle class=\"ipf\" cx=\"40\" cy=\"20\" r=\"6\"/></g>",false,1), Q(null,[62, 12],[62, 42],[[62, 62, 62, 80, 70, 80], [60, 54, 56, 64]],[[66, 22, 62, 12]],"<path class=\"ip\" d=\"M54 89V80H86V89\"/><g class=\"gh\" data-at=\"62,10\"><circle class=\"ipf\" cx=\"62\" cy=\"10\" r=\"6\"/></g>",false,1)];
+ILLU_POSES["kb-front-squat"] = [Q(null,[50, 22],[50, 52],[[52, 70, 50, 89, 58, 89]],[[60, 36, 55, 27]],"<g class=\"gh\" data-at=\"55,26\"><circle class=\"ipf\" cx=\"55\" cy=\"30\" r=\"5\"/><path class=\"ip\" d=\"M52 27q3-5 6 0\"/></g>",false,1), Q(null,[44, 38],[36, 64],[[56, 64, 50, 89, 58, 89]],[[52, 50, 50, 42]],"<g class=\"gh\" data-at=\"50,40\"><circle class=\"ipf\" cx=\"50\" cy=\"44\" r=\"5\"/><path class=\"ip\" d=\"M47 41q3-5 6 0\"/></g>",false,1)];
+ILLU_POSES["single-leg-hip-thrust"] = [Q(null,[28, 62],[46, 80],[[60, 66, 66, 86, 73, 88], [64, 58, 84, 52]],[[36, 70, 46, 75]],"<path class=\"ip gm\" d=\"M6 66H32M9 66V89M29 66V89\"/><g class=\"gh\" data-at=\"46,74\"><circle class=\"ipf gm\" cx=\"46\" cy=\"74\" r=\"6\"/></g>",false,1), Q(null,[28, 62],[50, 60],[[64, 62, 66, 86, 73, 88], [60, 46, 80, 38]],[[38, 64, 50, 55]],"<path class=\"ip gm\" d=\"M6 66H32M9 66V89M29 66V89\"/><g class=\"gh\" data-at=\"50,54\"><circle class=\"ipf gm\" cx=\"50\" cy=\"54\" r=\"6\"/></g>",false,1)];
+ILLU_POSES["barbell-glute-bridge"] = [Q([14, 83],[24, 84],[46, 86],[[60, 70, 70, 89, 78, 89]],[[33, 88, 43, 88]],"<circle class=\"ipf\" cx=\"46\" cy=\"82\" r=\"7\"/>",false,1), Q([14, 83],[24, 84],[46, 68],[[62, 64, 70, 89, 78, 89]],[[33, 88, 43, 88]],"<circle class=\"ipf\" cx=\"46\" cy=\"64\" r=\"7\"/>",false,1)];
+ILLU_POSES["db-calf-raise"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<g class=\"gh\" data-at=\"53,50\"><path class=\"ip\" d=\"M47 50h12M47 46v8M59 46v8\"/></g>",false,1), Q(null,[50, 15],[50, 45],[[50, 65, 50, 84, 58, 89]],[[52, 29, 53, 42]],"<g class=\"gh\" data-at=\"53,45\"><path class=\"ip\" d=\"M47 45h12M47 41v8M59 41v8\"/></g>",false,1)];
+ILLU_POSES["hollow-rock"] = [Q(null,[26, 74],[50, 84],[[68, 80, 86, 74, 90, 72]],[[14, 68, 4, 64]],"",false,1), Q(null,[22, 80],[48, 84],[[66, 74, 84, 64, 88, 62]],[[12, 74, 2, 70]],"",false,1)];
+ILLU_POSES["butterfly-sit-up"] = [Q(null,[50, 62],[50, 74],[[34, 78, 50, 86], [66, 78, 50, 86]],[[42, 72, 36, 82], [58, 72, 64, 82]],"",true,1), Q(null,[50, 42],[50, 74],[[34, 78, 50, 86], [66, 78, 50, 86]],[[44, 52, 46, 66], [56, 52, 54, 66]],"",true,1)];
+ILLU_POSES["plank-jacks"] = [Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89]],"",false,1), Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89], [30, 80, 18, 88, 14, 89]],[[69, 75, 70, 89]],"",false,1)];
+ILLU_POSES["side-plank-hip-dip"] = [Q([20, 58],[28, 62],[56, 70],[[72, 80, 88, 88, 92, 89]],[[27, 89, 40, 89], [28, 50, 28, 40]],"",true,1), Q([20, 68],[28, 72],[56, 84],[[72, 87, 88, 89, 92, 89]],[[27, 89, 40, 89], [28, 56, 28, 46]],"",true,1)];
+ILLU_POSES["side-plank-leg-raise"] = [Q([20, 58],[28, 64],[56, 76],[[72, 82, 88, 88, 92, 89]],[[27, 89, 40, 89], [28, 50, 28, 38]],"",true,1), Q([20, 58],[28, 64],[56, 76],[[72, 82, 88, 88, 92, 89], [72, 68, 88, 60]],[[27, 89, 40, 89], [28, 50, 28, 38]],"",true,1)];
+ILLU_POSES["weighted-russian-twist"] = [Q(null,[26, 62],[44, 84],[[60, 70, 76, 76, 82, 74]],[[38, 70, 47, 68]],"<g class=\"gh\" data-at=\"34,80\"><circle class=\"ipf\" cx=\"34\" cy=\"84\" r=\"5\"/><path class=\"ip\" d=\"M31 81q3-5 6 0\"/></g>",false,1), Q(null,[27, 62],[44, 84],[[60, 70, 76, 76, 82, 74]],[[34, 75, 39, 85]],"<g class=\"gh\" data-at=\"58,76\"><circle class=\"ipf\" cx=\"58\" cy=\"80\" r=\"5\"/><path class=\"ip\" d=\"M55 77q3-5 6 0\"/></g>",false,1)];
+ILLU_POSES["twisting-sit-up"] = [Q([14, 83],[24, 84],[46, 86],[[60, 70, 70, 89, 78, 89]],[[20, 78, 14, 80]],"",false,1), Q(null,[42, 58],[46, 86],[[60, 70, 70, 89, 78, 89]],[[50, 64, 60, 62]],"",false,1)];
+ILLU_POSES["cross-body-mountain-climbers"] = [Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89], [54, 74, 44, 80, 42, 84]],[[69, 75, 70, 89]],"",false,1), Q(null,[72, 60],[44, 72],[[54, 74, 44, 80, 42, 84], [28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89]],"",false,1)];
+ILLU_POSES["broad-jump"] = [Q(null,[46, 36],[36, 62],[[57, 62, 52, 89, 60, 89]],[[40, 50, 28, 56]],"",false,1), Q(null,[62, 24],[48, 48],[[66, 60, 76, 68, 80, 70], [58, 60, 70, 72]],[[72, 20, 84, 14]],"",false,1)];
+ILLU_POSES["crab-walk"] = [Q(null,[34, 56],[56, 66],[[66, 56, 74, 72, 78, 74]],[[34, 72, 24, 89], [40, 72, 34, 89]],"",false,1), Q(null,[34, 56],[56, 66],[[66, 56, 74, 72, 78, 74], [72, 56, 86, 72]],[[34, 72, 24, 89], [42, 60, 52, 50]],"",false,1)];
+ILLU_POSES["inchworm"] = [Q(null,[54, 62],[36, 38],[[38, 62, 40, 86, 48, 88]],[[56, 76, 58, 89]],"",false,1), Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89]],"",false,1)];
+ILLU_POSES["lateral-shuffle"] = [Q(null,[50, 34],[50, 60],[[40, 74, 34, 89, 28, 89], [60, 74, 66, 89, 72, 89]],[[42, 46, 36, 56], [58, 46, 64, 56]],"<path class=\"ip\" d=\"M30 14H70M63 8L70 14L63 20\"/>",true,1), Q(null,[62, 34],[62, 60],[[52, 74, 46, 89, 40, 89], [72, 74, 78, 89, 84, 89]],[[54, 46, 48, 56], [70, 46, 76, 56]],"<path class=\"ip\" d=\"M30 14H70M63 8L70 14L63 20\"/>",true,1)];
+ILLU_POSES["kb-one-arm-swing"] = [Q(null,[64, 40],[40, 50],[[46, 70, 44, 89, 52, 89]],[[60, 56, 52, 70], [44, 56, 34, 62]],"<g class=\"gh\" data-at=\"52,70\"><circle class=\"ipf\" cx=\"52\" cy=\"74\" r=\"5\"/><path class=\"ip\" d=\"M49 71q3-5 6 0\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[63, 25, 76, 25], [44, 34, 34, 40]],"<g class=\"gh\" data-at=\"79,21\"><circle class=\"ipf\" cx=\"79\" cy=\"25\" r=\"5\"/><path class=\"ip\" d=\"M76 22q3-5 6 0\"/></g>",false,1)];
+ILLU_POSES["db-neutral-grip-press"] = [Q([14, 78],[24, 79],[46, 81],[[64, 72, 66, 89, 74, 89]],[[30, 83, 32, 71]],"<g class=\"gh\" data-at=\"32,69\"><path class=\"ip gm\" d=\"M26 69h12M26 65v8M38 65v8\"/></g><path class=\"ip gm\" d=\"M6 84H62M9 84V89M59 84V89\"/>",false,1), Q([14, 78],[24, 79],[46, 81],[[64, 72, 66, 89, 74, 89]],[[28, 67, 29, 55]],"<g class=\"gh\" data-at=\"29,53\"><path class=\"ip gm\" d=\"M23 53h12M23 49v8M35 49v8\"/></g><path class=\"ip gm\" d=\"M6 84H62M9 84V89M59 84V89\"/>",false,1)];
+ILLU_POSES["db-incline-neutral-press"] = [Q(null,[24, 48],[46, 70],[[60, 66, 64, 86, 71, 88]],[[28, 60, 34, 50]],"<path class=\"ip gm\" d=\"M16 50L42 74M44 74V89\"/><g class=\"gh\" data-at=\"34,48\"><path class=\"ip gm\" d=\"M28 48h12M28 44v8M40 44v8\"/></g>",false,1), Q(null,[24, 48],[46, 70],[[60, 66, 64, 86, 71, 88]],[[34, 38, 40, 27]],"<path class=\"ip gm\" d=\"M16 50L42 74M44 74V89\"/><g class=\"gh\" data-at=\"40,25\"><path class=\"ip gm\" d=\"M34 25h12M34 21v8M46 21v8\"/></g>",false,1)];
+ILLU_POSES["db-one-arm-bench-press"] = [Q([14, 78],[24, 79],[46, 81],[[64, 72, 66, 89, 74, 89]],[[30, 83, 32, 71]],"<g class=\"gh\" data-at=\"32,69\"><path class=\"ip gm\" d=\"M26 69h12M26 65v8M38 65v8\"/></g><path class=\"ip gm\" d=\"M6 84H62M9 84V89M59 84V89\"/>",false,1), Q([14, 78],[24, 79],[46, 81],[[64, 72, 66, 89, 74, 89]],[[28, 67, 29, 55]],"<g class=\"gh\" data-at=\"29,53\"><path class=\"ip gm\" d=\"M23 53h12M23 49v8M35 49v8\"/></g><path class=\"ip gm\" d=\"M6 84H62M9 84V89M59 84V89\"/>",false,1)];
+ILLU_POSES["db-lying-one-arm-triceps-extension"] = [Q([16, 66],[26, 67],[48, 69],[[64, 64, 66, 85, 73, 89]],[[27, 55, 28, 43]],"<path class=\"ip gm\" d=\"M12 73H60M15 73V89M57 73V89\"/><g class=\"gh\" data-at=\"28,43\"><path class=\"ip\" d=\"M22 43h12M22 39v8M34 39v8\"/></g>",false,1), Q([16, 66],[26, 67],[48, 69],[[64, 64, 66, 85, 73, 89]],[[27, 55, 17, 60]],"<path class=\"ip gm\" d=\"M12 73H60M15 73V89M57 73V89\"/><g class=\"gh\" data-at=\"17,60\"><path class=\"ip\" d=\"M11 60h12M11 56v8M23 56v8\"/></g>",false,1)];
+ILLU_POSES["db-incline-triceps-extension"] = [Q(null,[24, 48],[46, 70],[[60, 66, 64, 86, 71, 88]],[[30, 56, 32, 44]],"<path class=\"ip\" d=\"M16 50L42 74M44 74V89\"/><g class=\"gh\" data-at=\"32,42\"><path class=\"ip\" d=\"M26 42h12M26 38v8M38 38v8\"/></g>",false,1), Q(null,[24, 48],[46, 70],[[60, 66, 64, 86, 71, 88]],[[30, 54, 18, 54]],"<path class=\"ip\" d=\"M16 50L42 74M44 74V89\"/><g class=\"gh\" data-at=\"18,56\"><path class=\"ip\" d=\"M12 56h12M12 52v8M24 52v8\"/></g>",false,1)];
+ILLU_POSES["db-one-arm-triceps-extension"] = [Q(null,[50, 22],[50, 52],[[50, 70, 50, 89, 58, 89]],[[56, 8, 46, 14]],"<g class=\"gh\" data-at=\"46,16\"><path class=\"ip\" d=\"M40 16h12M40 12v8M52 12v8\"/></g>",false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 17, 64, 7]],"<g class=\"gh\" data-at=\"64,5\"><path class=\"ip\" d=\"M58 5h12M58 1v8M70 1v8\"/></g>",false,1)];
+ILLU_POSES["db-one-arm-curl"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 32, 53, 44], [47, 34, 47, 46]],"<g class=\"gh\" data-at=\"53,46\"><path class=\"ip gm\" d=\"M47 46h12M47 42v8M59 42v8\"/></g><g class=\"gh\" data-at=\"47,48\"><path class=\"ip gm\" d=\"M41 48h12M41 44v8M53 44v8\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 32, 60, 23], [47, 34, 55, 26]],"<g class=\"gh\" data-at=\"61,21\"><path class=\"ip gm\" d=\"M55 21h12M55 17v8M67 17v8\"/></g><g class=\"gh\" data-at=\"56,24\"><path class=\"ip gm\" d=\"M50 24h12M50 20v8M62 20v8\"/></g>",false,1)];
+ILLU_POSES["db-reverse-curl"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 32, 53, 44]],"<g class=\"gh\" data-at=\"53,44\"><path class=\"ip\" d=\"M47 44h12M47 40v8M59 40v8\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 32, 60, 23]],"<g class=\"gh\" data-at=\"60,23\"><path class=\"ip\" d=\"M54 23h12M54 19v8M66 19v8\"/></g>",false,1)];
+ILLU_POSES["db-seated-hammer-curl"] = [Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[44, 48, 45, 60]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><g class=\"gh\" data-at=\"45,60\"><path class=\"ip\" d=\"M45 55v10\"/></g>",false,1), Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[44, 48, 52, 38]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><g class=\"gh\" data-at=\"52,38\"><path class=\"ip\" d=\"M52 33v10\"/></g>",false,1)];
+ILLU_POSES["db-seated-curl"] = [Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[44, 48, 45, 60]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><g class=\"gh\" data-at=\"45,62\"><path class=\"ip\" d=\"M39 62h12M39 58v8M51 58v8\"/></g>",false,1), Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[44, 48, 52, 38]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><g class=\"gh\" data-at=\"53,36\"><path class=\"ip\" d=\"M47 36h12M47 32v8M59 32v8\"/></g>",false,1)];
+ILLU_POSES["db-one-arm-preacher-curl"] = [Q(null,[46, 37],[40, 64],[[58, 67, 58, 86, 65, 88]],[[56, 46, 66, 55]],"<path class=\"ip gm\" d=\"M30 66H52M41 66V89\"/><path class=\"ip gm\" d=\"M47 41L61 50\"/><g class=\"gh\" data-at=\"66,55\"><path class=\"ip\" d=\"M60 55h12M60 51v8M72 51v8\"/></g>",false,1), Q(null,[46, 37],[40, 64],[[58, 67, 58, 86, 65, 88]],[[56, 46, 53, 34]],"<path class=\"ip gm\" d=\"M30 66H52M41 66V89\"/><path class=\"ip gm\" d=\"M47 41L61 50\"/><g class=\"gh\" data-at=\"53,34\"><path class=\"ip\" d=\"M47 34h12M47 30v8M59 30v8\"/></g>",false,1)];
+ILLU_POSES["db-front-raise-alternating"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<g class=\"gh\" data-at=\"53,49\"><path class=\"ip gm\" d=\"M47 49h12M47 45v8M59 45v8\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[63, 25, 76, 25]],"<g class=\"gh\" data-at=\"76,25\"><path class=\"ip gm\" d=\"M70 25h12M70 21v8M82 21v8\"/></g>",false,1)];
+ILLU_POSES["db-front-raise-overhead"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[54, 36, 56, 48]],"<g class=\"gh\" data-at=\"56,50\"><path class=\"ip\" d=\"M50 50h12M50 46v8M62 46v8\"/></g>",false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 17, 64, 7]],"<g class=\"gh\" data-at=\"64,5\"><path class=\"ip\" d=\"M58 5h12M58 1v8M70 1v8\"/></g>",false,1)];
+ILLU_POSES["db-lateral-to-front-raise"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[44, 32, 42, 44], [56, 32, 58, 44]],"<g class=\"gh\" data-at=\"42,46\"><path class=\"ip gm\" d=\"M36 46h12M36 42v8M48 42v8\"/></g><g class=\"gh\" data-at=\"58,46\"><path class=\"ip gm\" d=\"M52 46h12M52 42v8M64 42v8\"/></g>",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[39, 22, 27, 22], [61, 22, 73, 22]],"<g class=\"gh\" data-at=\"27,22\"><path class=\"ip gm\" d=\"M21 22h12M21 18v8M33 18v8\"/></g><g class=\"gh\" data-at=\"73,22\"><path class=\"ip gm\" d=\"M67 22h12M67 18v8M79 18v8\"/></g>",true,1)];
+ILLU_POSES["db-full-can-lateral-raise"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[44, 32, 42, 44], [56, 32, 58, 44]],"<g class=\"gh\" data-at=\"42,46\"><path class=\"ip gm\" d=\"M36 46h12M36 42v8M48 42v8\"/></g><g class=\"gh\" data-at=\"58,46\"><path class=\"ip gm\" d=\"M52 46h12M52 42v8M64 42v8\"/></g>",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[39, 22, 27, 22], [61, 22, 73, 22]],"<g class=\"gh\" data-at=\"27,22\"><path class=\"ip gm\" d=\"M21 22h12M21 18v8M33 18v8\"/></g><g class=\"gh\" data-at=\"73,22\"><path class=\"ip gm\" d=\"M67 22h12M67 18v8M79 18v8\"/></g>",true,1)];
+ILLU_POSES["db-one-arm-lateral-raise-supported"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[44, 32, 42, 44], [56, 32, 58, 44]],"<g class=\"gh\" data-at=\"42,46\"><path class=\"ip gm\" d=\"M36 46h12M36 42v8M48 42v8\"/></g><g class=\"gh\" data-at=\"58,46\"><path class=\"ip gm\" d=\"M52 46h12M52 42v8M64 42v8\"/></g>",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[39, 22, 27, 22], [61, 22, 73, 22]],"<g class=\"gh\" data-at=\"27,22\"><path class=\"ip gm\" d=\"M21 22h12M21 18v8M33 18v8\"/></g><g class=\"gh\" data-at=\"73,22\"><path class=\"ip gm\" d=\"M67 22h12M67 18v8M79 18v8\"/></g>",true,1)];
+ILLU_POSES["db-prone-rear-raise"] = [Q(null,[50, 38],[50, 52],[[42, 70, 38, 89, 32, 89], [58, 70, 62, 89, 68, 89]],[[46, 51, 45, 63], [54, 51, 55, 63]],"<g class=\"gh\" data-at=\"45,65\"><path class=\"ip gm\" d=\"M39 65h12M39 61v8M51 61v8\"/></g><g class=\"gh\" data-at=\"55,65\"><path class=\"ip gm\" d=\"M49 65h12M49 61v8M61 61v8\"/></g>",true,1), Q(null,[50, 38],[50, 52],[[42, 70, 38, 89, 32, 89], [58, 70, 62, 89, 68, 89]],[[38, 40, 26, 40], [62, 40, 74, 40]],"<g class=\"gh\" data-at=\"26,40\"><path class=\"ip gm\" d=\"M20 40h12M20 36v8M32 36v8\"/></g><g class=\"gh\" data-at=\"74,40\"><path class=\"ip gm\" d=\"M68 40h12M68 36v8M80 36v8\"/></g>",true,1)];
+ILLU_POSES["db-w-press"] = [Q(null,[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[40, 38, 34, 28], [60, 38, 66, 28]],"<g class=\"gh\" data-at=\"34,26\"><path class=\"ip\" d=\"M28 26h12M28 22v8M40 22v8\"/></g><g class=\"gh\" data-at=\"66,26\"><path class=\"ip\" d=\"M60 26h12M60 22v8M72 22v8\"/></g>",true,1), Q(null,[50, 28.7],[50, 55.7],[[46.4, 71.9, 45.5, 89, 40.1, 89], [53.6, 71.9, 54.5, 89, 59.9, 89]],[[41, 23.3, 39.2, 14.3], [59, 23.3, 60.8, 14.3]],"<g class=\"gh\" data-at=\"38,4\"><path class=\"ip\" d=\"M32 4h12M32 0v8M44 0v8\"/></g><g class=\"gh\" data-at=\"62,4\"><path class=\"ip\" d=\"M56 4h12M56 0v8M68 0v8\"/></g>",true,1)];
+ILLU_POSES["db-one-arm-shoulder-press"] = [Q(null,[50, 22],[50, 52],[[52, 70, 50, 89, 58, 89]],[[60, 36, 56, 28]],"<g class=\"gh\" data-at=\"56,26\"><path class=\"ip\" d=\"M50 26h12M50 22v8M62 22v8\"/></g>",false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 17, 64, 7]],"<g class=\"gh\" data-at=\"64,5\"><path class=\"ip\" d=\"M58 5h12M58 1v8M70 1v8\"/></g>",false,1)];
+ILLU_POSES["db-alternating-press"] = [Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 40, 57, 30]],"<g class=\"gh\" data-at=\"57,28\"><path class=\"ip\" d=\"M51 28h12M51 24v8M63 24v8\"/></g>",false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 17, 64, 7]],"<g class=\"gh\" data-at=\"65,6\"><path class=\"ip\" d=\"M59 6h12M59 2v8M71 2v8\"/></g>",false,1)];
+ILLU_POSES["db-palms-in-press"] = [Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 40, 57, 30]],"<g class=\"gh\" data-at=\"57,28\"><path class=\"ip\" d=\"M51 28h12M51 24v8M63 24v8\"/></g>",false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 17, 64, 7]],"<g class=\"gh\" data-at=\"65,6\"><path class=\"ip\" d=\"M59 6h12M59 2v8M71 2v8\"/></g>",false,1)];
+ILLU_POSES["db-upright-row"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 35, 54, 47]],"<g class=\"gh\" data-at=\"55,48\"><circle class=\"ipf gm\" cx=\"55\" cy=\"48\" r=\"5\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[58, 26, 56, 32]],"<g class=\"gh\" data-at=\"57,33\"><circle class=\"ipf gm\" cx=\"57\" cy=\"33\" r=\"5\"/></g>",false,1)];
+ILLU_POSES["db-one-arm-upright-row"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 35, 54, 47]],"<g class=\"gh\" data-at=\"55,48\"><circle class=\"ipf gm\" cx=\"55\" cy=\"48\" r=\"5\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[58, 26, 56, 32]],"<g class=\"gh\" data-at=\"57,33\"><circle class=\"ipf gm\" cx=\"57\" cy=\"33\" r=\"5\"/></g>",false,1)];
+ILLU_POSES["db-incline-shrug"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 33, 53, 46]],"<g class=\"gh\" data-at=\"53,48\"><path class=\"ip gm\" d=\"M47 48h12M47 44v8M59 44v8\"/></g>",false,1), Q(null,[50, 16],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 29, 53, 42]],"<g class=\"gh\" data-at=\"53,44\"><path class=\"ip gm\" d=\"M47 44h12M47 40v8M59 40v8\"/></g>",false,1)];
+ILLU_POSES["db-straight-arm-pullover"] = [Q([16, 66],[26, 67],[48, 69],[[64, 64, 66, 85, 73, 89]],[[27, 55, 28, 43]],"<path class=\"ip gm\" d=\"M12 73H60M15 73V89M57 73V89\"/><g class=\"gh\" data-at=\"28,41\"><path class=\"ip gm\" d=\"M22 41h12M22 37v8M34 37v8\"/></g>",false,1), Q([16, 66],[26, 67],[48, 69],[[64, 64, 66, 85, 73, 89]],[[16, 62, 5, 60]],"<path class=\"ip gm\" d=\"M12 73H60M15 73V89M57 73V89\"/><g class=\"gh\" data-at=\"5,58\"><path class=\"ip gm\" d=\"M-1 58h12M-1 54v8M11 54v8\"/></g>",false,1)];
+ILLU_POSES["db-squat"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<g class=\"gh\" data-at=\"53,50\"><path class=\"ip\" d=\"M47 50h12M47 46v8M59 46v8\"/></g>",false,1), Q(null,[46, 36],[36, 62],[[57, 62, 52, 89, 60, 89]],[[52, 48, 52, 60]],"<g class=\"gh\" data-at=\"52,62\"><path class=\"ip\" d=\"M46 62h12M46 58v8M58 58v8\"/></g>",false,1)];
+ILLU_POSES["db-box-squat"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<path class=\"ip\" d=\"M10 62H34M13 62V89M31 62V89\"/><g class=\"gh\" data-at=\"53,49\"><path class=\"ip\" d=\"M47 49h12M47 45v8M59 45v8\"/></g>",false,1), Q(null,[44, 38],[36, 64],[[56, 64, 50, 89, 58, 89]],[[52, 50, 50, 60]],"<path class=\"ip\" d=\"M14 66H40M17 66V89M37 66V89\"/><g class=\"gh\" data-at=\"50,62\"><path class=\"ip\" d=\"M44 62h12M44 58v8M56 58v8\"/></g>",false,1)];
+ILLU_POSES["db-lunge"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<g class=\"gh\" data-at=\"53,49\"><path class=\"ip\" d=\"M47 49h12M47 45v8M59 45v8\"/></g>",false,1), Q(null,[48, 32],[48, 62],[[66, 63, 66, 89, 74, 89], [36, 85, 20, 87, 18, 89]],[[55, 48, 49, 57]],"<g class=\"gh\" data-at=\"49,59\"><path class=\"ip\" d=\"M43 59h12M43 55v8M55 55v8\"/></g>",false,1)];
+ILLU_POSES["db-single-leg-squat"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89], [68, 58, 85, 62, 90, 61]],[[63, 25, 76, 25]],"<g class=\"gh\" data-at=\"76,25\"><path class=\"ip\" d=\"M70 25h12M70 21v8M82 21v8\"/></g>",false,1), Q(null,[48, 46],[40, 72],[[56, 66, 50, 89, 58, 89], [58, 74, 76, 74, 80, 70]],[[62, 48, 76, 48]],"<g class=\"gh\" data-at=\"76,48\"><path class=\"ip\" d=\"M70 48h12M70 44v8M82 44v8\"/></g>",false,1)];
+ILLU_POSES["db-plyo-squat"] = [Q(null,[46, 36],[36, 62],[[57, 62, 52, 89, 60, 89]],[[60, 38, 74, 37]],"<g class=\"gh\" data-at=\"74,39\"><path class=\"ip\" d=\"M68 39h12M68 35v8M80 35v8\"/></g>",false,1), Q(null,[50, 16],[50, 46],[[52, 63, 50, 80, 57, 80]],[[45, 30, 41, 42]],"<g class=\"gh\" data-at=\"41,44\"><path class=\"ip\" d=\"M35 44h12M35 40v8M47 40v8\"/></g>",false,1)];
+ILLU_POSES["db-lying-leg-curl"] = [Q(null,[24, 83],[52, 84],[[70, 86, 88, 87, 92, 89]],[[14, 88, 4, 88]],"<g class=\"gh\" data-at=\"90,86\"><path class=\"ip\" d=\"M84 86h12M84 82v8M96 82v8\"/></g>",false,-1), Q(null,[24, 83],[52, 84],[[70, 86, 72, 66, 66, 62]],[[14, 88, 4, 88]],"<g class=\"gh\" data-at=\"72,64\"><path class=\"ip\" d=\"M66 64h12M66 60v8M78 60v8\"/></g>",false,-1)];
+ILLU_POSES["db-seated-calf-raise"] = [Q(null,[40, 34],[40, 64],[[60, 62, 60, 86, 68, 87]],[[46, 50, 56, 58]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><g class=\"gh\" data-at=\"60,58\"><path class=\"ip\" d=\"M54 58h12M54 54v8M66 54v8\"/></g>",false,1), Q(null,[40, 34],[40, 64],[[60, 62, 60, 80, 68, 86]],[[46, 50, 56, 58]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><g class=\"gh\" data-at=\"60,58\"><path class=\"ip\" d=\"M54 58h12M54 54v8M66 54v8\"/></g>",false,1)];
+ILLU_POSES["db-wrist-curl-one-arm"] = [Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[50, 48, 64, 56]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><g class=\"gh\" data-at=\"64,60\"><path class=\"ip\" d=\"M58 60h12M58 56v8M70 56v8\"/></g>",false,1), Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[50, 48, 64, 50]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><g class=\"gh\" data-at=\"64,48\"><path class=\"ip\" d=\"M58 48h12M58 44v8M70 44v8\"/></g>",false,1)];
+ILLU_POSES["db-wrist-curl-hammer"] = [Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[50, 48, 64, 56]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><g class=\"gh\" data-at=\"64,58\"><path class=\"ip\" d=\"M64 53v10\"/></g>",false,1), Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[50, 48, 64, 50]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><g class=\"gh\" data-at=\"64,48\"><path class=\"ip\" d=\"M64 43v10\"/></g>",false,1)];
+ILLU_POSES["cable-shrug"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 48]],"<path class=\"ip\" d=\"M62 89L53 48\"/><g class=\"gh\" data-at=\"53,48\"><path class=\"ip\" d=\"M49 48h8\"/></g>",false,1), Q(null,[50, 16],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 30, 53, 44]],"<path class=\"ip\" d=\"M62 89L53 44\"/><g class=\"gh\" data-at=\"53,44\"><path class=\"ip\" d=\"M49 44h8\"/></g>",false,1)];
+ILLU_POSES["cable-side-bend"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[46, 34, 44, 48], [54, 34, 56, 48]],"<path class=\"ip\" d=\"M92 89L56 48\"/><g class=\"gh\" data-at=\"56,48\"><path class=\"ip\" d=\"M56 44v8\"/></g>",true,1), Q(null,[44, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[40, 36, 38, 52], [48, 34, 54, 46]],"<path class=\"ip\" d=\"M92 89L54 46\"/><g class=\"gh\" data-at=\"54,46\"><path class=\"ip\" d=\"M54 42v8\"/></g>",true,1)];
+ILLU_POSES["cable-standing-row"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[60, 32, 70, 38]],"<path class=\"ip\" d=\"M94 38L70 38\"/><g class=\"gh\" data-at=\"70,38\"><path class=\"ip\" d=\"M70 34v8\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[46, 40, 56, 44]],"<path class=\"ip\" d=\"M94 38L56 44\"/><g class=\"gh\" data-at=\"56,44\"><path class=\"ip\" d=\"M56 40v8\"/></g>",false,1)];
+ILLU_POSES["cable-rear-delt-row"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[60, 28, 70, 32]],"<path class=\"ip\" d=\"M94 32L70 32\"/><g class=\"gh\" data-at=\"70,32\"><path class=\"ip\" d=\"M70 28v8\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[44, 30, 58, 32]],"<path class=\"ip\" d=\"M94 32L58 32\"/><g class=\"gh\" data-at=\"58,32\"><path class=\"ip\" d=\"M58 28v8\"/></g>",false,1)];
+ILLU_POSES["cable-lying-fly"] = [Q([16, 66],[26, 67],[48, 69],[[64, 64, 66, 85, 73, 89]],[[27, 55, 28, 43]],"<path class=\"ip\" d=\"M12 73H60M15 73V89M57 73V89\"/><path class=\"ip\" d=\"M4 89L28 42M96 89L28 42\"/><g class=\"gh\" data-at=\"28,42\"><path class=\"ip\" d=\"M28 38v8\"/></g>",false,1), Q([16, 66],[26, 67],[48, 69],[[64, 64, 66, 85, 73, 89]],[[18, 62, 12, 74]],"<path class=\"ip\" d=\"M12 73H60M15 73V89M57 73V89\"/><path class=\"ip\" d=\"M4 89L12 72M96 89L12 72\"/><g class=\"gh\" data-at=\"12,72\"><path class=\"ip\" d=\"M12 68v8\"/></g>",false,1)];
+ILLU_POSES["cable-lying-triceps-extension"] = [Q([16, 66],[26, 67],[48, 69],[[64, 64, 66, 85, 73, 89]],[[27, 55, 28, 43]],"<path class=\"ip\" d=\"M12 73H60M15 73V89M57 73V89\"/><path class=\"ip\" d=\"M6 84L28 42\"/><g class=\"gh\" data-at=\"28,42\"><path class=\"ip\" d=\"M25 42h6\"/></g>",false,1), Q([16, 66],[26, 67],[48, 69],[[64, 64, 66, 85, 73, 89]],[[27, 55, 17, 60]],"<path class=\"ip\" d=\"M12 73H60M15 73V89M57 73V89\"/><path class=\"ip\" d=\"M6 84L16 60\"/><g class=\"gh\" data-at=\"16,60\"><path class=\"ip\" d=\"M13 60h6\"/></g>",false,1)];
+ILLU_POSES["cable-incline-fly"] = [Q(null,[24, 48],[46, 70],[[60, 66, 64, 86, 71, 88]],[[30, 58, 34, 46]],"<path class=\"ip\" d=\"M16 50L42 74M44 74V89\"/><path class=\"ip\" d=\"M6 89L34 46M94 89L34 46\"/><g class=\"gh\" data-at=\"34,46\"><path class=\"ip\" d=\"M34 42v8\"/></g>",false,1), Q(null,[24, 48],[46, 70],[[60, 66, 64, 86, 71, 88]],[[26, 62, 20, 72]],"<path class=\"ip\" d=\"M16 50L42 74M44 74V89\"/><path class=\"ip\" d=\"M6 89L20 74M94 89L20 74\"/><g class=\"gh\" data-at=\"20,74\"><path class=\"ip\" d=\"M20 70v8\"/></g>",false,1)];
+ILLU_POSES["cable-incline-press"] = [Q(null,[24, 48],[46, 70],[[60, 66, 64, 86, 71, 88]],[[28, 60, 34, 50]],"<path class=\"ip gm\" d=\"M16 50L42 74M44 74V89\"/><path class=\"ip\" d=\"M6 89L34 50M94 89L34 50\"/><g class=\"gh\" data-at=\"34,50\"><path class=\"ip\" d=\"M34 46v8\"/></g>",false,1), Q(null,[24, 48],[46, 70],[[60, 66, 64, 86, 71, 88]],[[34, 38, 40, 27]],"<path class=\"ip gm\" d=\"M16 50L42 74M44 74V89\"/><path class=\"ip\" d=\"M6 89L40 27M94 89L40 27\"/><g class=\"gh\" data-at=\"40,27\"><path class=\"ip\" d=\"M40 23v8\"/></g>",false,1)];
+ILLU_POSES["cable-lying-curl"] = [Q([16, 66],[26, 67],[48, 69],[[64, 64, 66, 85, 73, 89]],[[26, 74, 22, 86]],"<path class=\"ip\" d=\"M12 73H60M15 73V89M57 73V89\"/><path class=\"ip\" d=\"M94 86L22 88\"/><g class=\"gh\" data-at=\"22,88\"><path class=\"ip\" d=\"M19 88h6\"/></g>",false,1), Q([16, 66],[26, 67],[48, 69],[[64, 64, 66, 85, 73, 89]],[[27, 55, 34, 48]],"<path class=\"ip\" d=\"M12 73H60M15 73V89M57 73V89\"/><path class=\"ip\" d=\"M94 86L34 48\"/><g class=\"gh\" data-at=\"34,48\"><path class=\"ip\" d=\"M31 48h6\"/></g>",false,1)];
+ILLU_POSES["cable-reverse-curl"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 32, 54, 44]],"<path class=\"ip gm\" d=\"M74 40V89\"/><circle class=\"ip gm\" cx=\"70\" cy=\"84\" r=\"3\"/><g class=\"gh\" data-at=\"54,44\"><path class=\"ip gm\" d=\"M51 44h6\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 32, 60, 23]],"<path class=\"ip gm\" d=\"M74 40V89\"/><circle class=\"ip gm\" cx=\"70\" cy=\"84\" r=\"3\"/><g class=\"gh\" data-at=\"60,23\"><path class=\"ip gm\" d=\"M57 23h6\"/></g>",false,1)];
+ILLU_POSES["cable-wrist-curl"] = [Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[50, 48, 64, 56]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><path class=\"ip\" d=\"M94 89L64 58\"/>",false,1), Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[50, 48, 64, 50]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><path class=\"ip\" d=\"M94 89L64 52\"/>",false,1)];
+ILLU_POSES["cable-standing-twist-row"] = [Q(null,[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[58, 30, 72, 38], [44, 34, 44, 46]],"<path class=\"ip\" d=\"M96 38L72 38\"/><g class=\"gh\" data-at=\"72,38\"><path class=\"ip\" d=\"M72 34v8\"/></g>",true,1), Q(null,[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[56, 38, 56, 46], [44, 34, 44, 46]],"<path class=\"ip\" d=\"M96 38L56 46\"/><g class=\"gh\" data-at=\"56,46\"><path class=\"ip\" d=\"M56 42v8\"/></g>",true,1)];
+ILLU_POSES["cable-single-arm-bent-row"] = [Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[62, 58, 62, 72]],"<path class=\"ip\" d=\"M94 89L62 72\"/><g class=\"gh\" data-at=\"62,72\"><path class=\"ip\" d=\"M62 68v8\"/></g>",false,1), Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[50, 38, 58, 52]],"<path class=\"ip\" d=\"M94 89L58 52\"/><g class=\"gh\" data-at=\"58,52\"><path class=\"ip\" d=\"M58 48v8\"/></g>",false,1)];
+ILLU_POSES["cable-single-arm-shoulder-press"] = [Q(null,[50, 22],[50, 52],[[52, 70, 50, 89, 58, 89]],[[60, 36, 56, 28]],"<path class=\"ip\" d=\"M94 89L56 28\"/><g class=\"gh\" data-at=\"56,28\"><path class=\"ip\" d=\"M56 24v8\"/></g>",false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 17, 64, 7]],"<path class=\"ip\" d=\"M94 89L64 7\"/><g class=\"gh\" data-at=\"64,7\"><path class=\"ip\" d=\"M64 3v8\"/></g>",false,1)];
+ILLU_POSES["cable-decline-fly"] = [Q(null,[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[36, 28, 24, 18], [64, 28, 76, 18]],"<path class=\"ip\" d=\"M6 0L24 18M94 0L76 18\"/><g class=\"gh\" data-at=\"24,18\"><path class=\"ip\" d=\"M24 14v8\"/></g><g class=\"gh\" data-at=\"76,18\"><path class=\"ip\" d=\"M76 14v8\"/></g>",true,1), Q(null,[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[42, 40, 46, 54], [58, 40, 54, 54]],"<path class=\"ip\" d=\"M6 0L46 54M94 0L54 54\"/><g class=\"gh\" data-at=\"46,54\"><path class=\"ip\" d=\"M46 50v8\"/></g>",true,1)];
+ILLU_POSES["hamstring-walkout"] = [Q([14, 83],[24, 84],[46, 68],[[62, 64, 70, 89, 78, 89]],[[33, 88, 43, 88]],"",false,1), Q([14, 83],[24, 84],[46, 70],[[66, 76, 88, 88]],[[33, 88, 43, 88]],"",false,1)];
+ILLU_POSES["step-up"] = [Q(null,[40, 22],[40, 52],[[56, 58, 60, 74, 68, 74], [40, 71, 40, 89, 48, 89]],[[42, 36, 43, 49]],"<path class=\"ip\" d=\"M54 89V76H86V89\"/>",false,1), Q(null,[62, 16],[62, 44],[[62, 60, 62, 76, 70, 76], [52, 58, 48, 70, 52, 72]],[[64, 29, 65, 41]],"<path class=\"ip\" d=\"M54 89V76H86V89\"/>",false,1)];
+ILLU_POSES["chair-squat"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<path class=\"ip\" d=\"M12 66H36M16 66V89M32 66V89M12 38V66\"/>",false,1), Q(null,[34, 40],[30, 64],[[50, 64, 52, 89, 60, 89]],[[44, 52, 56, 50]],"<path class=\"ip\" d=\"M12 66H36M16 66V89M32 66V89M12 38V66\"/>",false,1)];
+ILLU_POSES["hindu-push-up"] = [Q(null,[56, 58],[34, 44],[[32, 66, 36, 87, 44, 88]],[[60, 74, 62, 89]],"",false,1), Q(null,[62, 52],[38, 84],[[24, 87, 12, 89]],[[64, 70, 64, 89]],"",false,1)];
+ILLU_POSES["elevated-pike-push-up"] = [Q(null,[58, 60],[38, 42],[[30, 54, 24, 66, 18, 66]],[[62, 74, 64, 89]],"<path class=\"ip\" d=\"M10 89V66H28V89\"/>",false,1), Q(null,[60, 74],[40, 50],[[32, 60, 26, 66, 20, 66]],[[70, 82, 62, 89]],"<path class=\"ip\" d=\"M10 89V66H28V89\"/>",false,1)];
+ILLU_POSES["wall-angel"] = [Q(null,[46, 22],[44, 52],[[50, 70, 50, 89, 58, 89]],[[44, 36, 40, 28]],"<path class=\"ip\" d=\"M36 6V89\"/>",false,1), Q(null,[46, 22],[44, 52],[[50, 70, 50, 89, 58, 89]],[[44, 14, 40, 2]],"<path class=\"ip\" d=\"M36 6V89\"/>",false,1)];
+ILLU_POSES["boat-hold"] = [Q(null,[36, 56],[48, 84],[[62, 70, 78, 58]],[[48, 66, 62, 66]],"",false,1)];
+ILLU_POSES["lunge-with-rotation"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[56, 34, 62, 32]],"",false,1), Q(null,[48, 32],[48, 62],[[66, 63, 66, 89, 74, 89], [36, 85, 20, 87, 18, 89]],[[58, 42, 68, 38]],"",false,1)];
+ILLU_POSES["shadow-boxing"] = [Q(null,[50, 22],[50, 52],[[46, 70, 40, 89, 32, 89], [56, 70, 64, 89, 72, 89]],[[58, 34, 62, 26], [48, 36, 52, 28]],"",false,1), Q(null,[50, 22],[50, 52],[[46, 70, 40, 89, 32, 89], [56, 70, 64, 89, 72, 89]],[[66, 30, 80, 30], [48, 36, 52, 28]],"",false,1)];
+ILLU_POSES["leg-swing"] = [Q(null,[46, 20],[46, 50],[[46, 70, 46, 89, 54, 89], [66, 60, 82, 56]],[[58, 30, 72, 42]],"<path class=\"ip\" d=\"M76 6V89\"/>",false,1), Q(null,[46, 20],[46, 50],[[46, 70, 46, 89, 54, 89], [40, 72, 26, 68]],[[58, 30, 72, 42]],"<path class=\"ip\" d=\"M76 6V89\"/>",false,1)];
+ILLU_POSES["hip-90-90-switch"] = [Q(null,[44, 52],[44, 84],[[62, 70, 48, 80], [28, 86, 12, 88]],[[50, 64, 56, 70]],"",false,1), Q(null,[56, 52],[56, 84],[[38, 70, 52, 80], [72, 86, 88, 88]],[[50, 64, 44, 70]],"",false,-1)];
+ILLU_POSES["thread-the-needle"] = [Q(null,[66, 66],[40, 66],[[40, 88, 22, 88, 18, 89]],[[67, 78, 68, 89]],"",false,1), Q(null,[60, 74],[40, 66],[[40, 88, 22, 88, 18, 89]],[[67, 78, 68, 89], [54, 82, 40, 86]],"",false,1)];
+ILLU_POSES["lat-stretch"] = [Q([68, 74],[60, 68],[32, 74],[[40, 86, 22, 88]],[[72, 76, 88, 82]],"",false,1), Q([62, 76],[54, 70],[28, 80],[[40, 86, 22, 88]],[[68, 78, 88, 84]],"",false,1)];
+ILLU_POSES["knee-to-wall-ankle-mobilization"] = [Q(null,[44, 22],[44, 52],[[48, 70, 52, 89, 60, 89], [44, 72, 38, 89]],[[52, 34, 70, 40]],"<path class=\"ip\" d=\"M78 6V89\"/>",false,1), Q(null,[52, 24],[50, 54],[[62, 70, 56, 89, 64, 89], [44, 72, 38, 89]],[[58, 36, 72, 42]],"<path class=\"ip\" d=\"M78 6V89\"/>",false,1)];
+ILLU_POSES["archer-pull-up"] = [Q(null,[50, 30],[50, 58],[[48, 72, 48, 84], [52, 72, 52, 84]],[[36, 21, 22, 6], [64, 21, 78, 6]],"<path class=\"ip\" d=\"M10 6H90\"/>",true,1), Q([66, 6],[62, 14],[58, 42],[[56, 58, 58, 72], [60, 58, 62, 72]],[[70, 20, 78, 6], [44, 24, 22, 6]],"<path class=\"ip\" d=\"M10 6H90\"/>",true,1)];
+ILLU_POSES["pseudo-planche-push-up"] = [Q(null,[78, 56],[48, 70],[[32, 76, 16, 84, 12, 86]],[[70, 72, 66, 86]],"",false,1), Q(null,[78, 72],[48, 78],[[32, 82, 16, 86]],[[64, 78, 66, 87]],"",false,1)];
+ILLU_POSES["tuck-front-lever-hold"] = [Q(null,[50, 34],[22, 34],[[30, 46, 22, 52]],[[50, 20, 50, 6]],"<path class=\"ip\" d=\"M30 6H70\"/>",false,1)];
+ILLU_POSES["wall-handstand-hold"] = [Q(null,[47.5, 72.3],[47.5, 53.7],[[47.5, 41.3, 51.2, 31.3]],[[47.5, 80.9, 47.5, 89]],"<path class=\"ip\" d=\"M62 6V89\"/>",false,1)];
+ILLU_POSES["parallel-bar-knee-raise"] = [Q(null,[52, 24],[52, 52],[[50, 68, 50, 86]],[[54, 37, 56, 50]],"<path class=\"ip\" d=\"M40 50H70\"/><path class=\"ip\" d=\"M44 50V89M66 50V89\"/>",false,1), Q(null,[52, 24],[52, 52],[[64, 56, 56, 70]],[[54, 37, 56, 50]],"<path class=\"ip\" d=\"M40 50H70\"/><path class=\"ip\" d=\"M44 50V89M66 50V89\"/>",false,1)];
+ILLU_POSES["glute-ham-raise"] = [Q(null,[24, 72],[44, 64],[[62, 66, 80, 66]],[[16, 80, 10, 86]],"<path class=\"ip\" d=\"M50 70H68M59 70V89\"/>",false,1), Q(null,[36, 36],[48, 62],[[62, 66, 80, 66]],[[40, 50, 46, 58]],"<path class=\"ip\" d=\"M50 70H68M59 70V89\"/>",false,1)];
+ILLU_POSES["sled-push"] = [Q(null,[62, 30],[42, 60],[[50, 76, 46, 89, 54, 89], [58, 70, 70, 80, 74, 86]],[[72, 36, 84, 48]],"<path class=\"ip\" d=\"M82 48V80M82 80H98\"/>",false,1), Q(null,[62, 30],[42, 60],[[58, 70, 70, 80, 74, 86], [50, 76, 46, 89, 54, 89]],[[72, 36, 84, 48]],"<path class=\"ip\" d=\"M82 48V80M82 80H98\"/>",false,1)];
+ILLU_POSES["suitcase-carry"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[44, 34, 44, 50], [56, 34, 58, 46]],"<g class=\"gh\" data-at=\"44,52\"><path class=\"ip\" d=\"M38 52h12M38 48v8M50 48v8\"/></g>",true,1), Q(null,[50, 20],[50, 52],[[44, 70, 38, 89, 32, 89], [56, 68, 62, 86, 68, 89]],[[44, 34, 44, 50], [56, 34, 58, 46]],"<g class=\"gh\" data-at=\"44,52\"><path class=\"ip\" d=\"M38 52h12M38 48v8M50 48v8\"/></g>",true,1)];
+ILLU_POSES["landmine-row"] = [Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[62, 58, 62, 72]],"<path class=\"ip\" d=\"M8 88L66 74\"/><g class=\"gh\" data-at=\"62,72\"><circle class=\"ipf\" cx=\"62\" cy=\"72\" r=\"4\"/></g>",false,1), Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[50, 38, 58, 52]],"<path class=\"ip\" d=\"M8 88L66 74\"/><g class=\"gh\" data-at=\"58,54\"><circle class=\"ipf\" cx=\"58\" cy=\"54\" r=\"4\"/></g>",false,1)];
+ILLU_POSES["couch-stretch"] = [Q(null,[52, 40],[62, 64],[[68, 86, 80, 66], [40, 70, 34, 89, 28, 89]],[[56, 54, 52, 64]],"<path class=\"ip\" d=\"M80 6V89\"/>",false,1), Q(null,[62, 34],[62, 62],[[68, 86, 80, 66], [40, 70, 34, 89, 28, 89]],[[62, 48, 60, 60]],"<path class=\"ip\" d=\"M80 6V89\"/>",false,1)];
+ILLU_POSES["hip-airplane"] = [Q(null,[62, 40],[40, 50],[[42, 70, 42, 89, 50, 89], [24, 56, 10, 52]],[[62, 54, 61, 66]],"",false,1), Q(null,[60, 40],[40, 50],[[42, 70, 42, 89, 50, 89], [24, 54, 10, 44]],[[62, 36, 74, 30], [50, 44, 44, 34]],"",false,1)];
+ILLU_POSES["single-arm-db-snatch"] = [Q(null,[64, 40],[40, 50],[[46, 70, 44, 89, 52, 89]],[[60, 56, 52, 70]],"<g class=\"gh\" data-at=\"52,70\"><path class=\"ip\" d=\"M46 70h12M46 66v8M58 66v8\"/></g>",false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 17, 64, 7]],"<g class=\"gh\" data-at=\"64,5\"><path class=\"ip\" d=\"M58 5h12M58 1v8M70 1v8\"/></g>",false,1)];
+ILLU_POSES["band-pull-apart"] = [Q(null,[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[46, 36, 48, 42], [54, 36, 52, 42]],"<path class=\"ip\" d=\"M48 42H52\"/>",true,1), Q(null,[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[40, 36, 28, 40], [60, 36, 72, 40]],"<path class=\"ip\" d=\"M28 40H72\"/>",true,1)];
+ILLU_POSES["goblet-reverse-lunge"] = [Q(null,[50, 22],[50, 52],[[52, 70, 50, 89, 58, 89]],[[56, 38, 58, 32]],"<g class=\"gh\" data-at=\"58,30\"><path class=\"ip\" d=\"M52 30h12M52 26v8M64 26v8\"/></g>",false,1), Q(null,[48, 32],[48, 62],[[66, 63, 66, 89, 74, 89], [36, 85, 20, 87, 18, 89]],[[54, 46, 58, 40]],"<g class=\"gh\" data-at=\"58,38\"><path class=\"ip\" d=\"M52 38h12M52 34v8M64 34v8\"/></g>",false,1)];
+ILLU_POSES["pogo-hops"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"",false,1), Q(null,[50, 20],[50, 50],[[50, 68, 50, 82, 58, 87]],[[52, 34, 53, 46]],"",false,1)];
+ILLU_POSES["prone-w-raise"] = [Q(null,[24, 83],[52, 84],[[70, 86, 88, 87, 92, 89]],[[29, 87, 33, 89]],"<path class=\"ip\" d=\"M8 14L14 30L19 18L24 30L30 14\" style=\"stroke-width:2;opacity:.65\"/>",false,-1), Q(null,[24, 83],[52, 84],[[70, 86, 88, 87, 92, 89]],[[30, 79.5, 33, 75], [31, 80.5, 35, 76.5]],"<path class=\"ip\" d=\"M8 14L14 30L19 18L24 30L30 14\" style=\"stroke-width:2;opacity:.65\"/>",false,-1)];
+ILLU_POSES["bodyweight-curl"] = [Q(null,[38, 76],[62, 82],[[76, 85, 88, 87, 90, 81]],[[40, 66, 44, 57]],"<path class=\"ip\" d=\"M30 57H58\"/><path class=\"ip\" d=\"M32 57V89\"/>",false,1), Q(null,[40, 63],[62, 74],[[76, 80, 88, 87, 90, 81]],[[34, 58, 44, 57]],"<path class=\"ip\" d=\"M30 57H58\"/><path class=\"ip\" d=\"M32 57V89\"/>",false,1)];
+ILLU_POSES["supine-db-curl"] = [Q([16, 66],[26, 67],[48, 69],[[64, 64, 66, 85, 73, 89]],[[26, 74, 22, 86]],"<path class=\"ip\" d=\"M12 73H60M15 73V89M57 73V89\"/><g class=\"gh\" data-at=\"22,88\"><path class=\"ip\" d=\"M16 88h12M16 84v8M28 84v8\"/></g>",false,1), Q([16, 66],[26, 67],[48, 69],[[64, 64, 66, 85, 73, 89]],[[27, 55, 34, 48]],"<path class=\"ip\" d=\"M12 73H60M15 73V89M57 73V89\"/><g class=\"gh\" data-at=\"34,46\"><path class=\"ip\" d=\"M28 46h12M28 42v8M40 42v8\"/></g>",false,1)];
+ILLU_POSES["overhead-cable-curl"] = [Q(null,[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[38, 26, 26, 28], [62, 26, 74, 28]],"<path class=\"ip\" d=\"M4 28L26 28M96 28L74 28\"/>",true,1), Q(null,[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[36, 22, 44, 12], [64, 22, 56, 12]],"<path class=\"ip\" d=\"M4 28L44 12M96 28L56 12\"/>",true,1)];
+ILLU_POSES["reverse-grip-push-up"] = [Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89]],"",false,1), Q(null,[72, 78],[44, 82],[[28, 85, 12, 87, 9, 89]],[[60, 71, 70, 89]],"",false,1)];
+ILLU_POSES["hand-release-push-up"] = [Q(null,[72, 78],[44, 82],[[28, 85, 12, 87, 9, 89]],[[60, 71, 64, 77]],"",false,1), Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89]],"",false,1)];
+ILLU_POSES["wall-push-up"] = [Q(null,[48, 20],[48, 50],[[50, 70, 50, 89, 58, 89]],[[60, 28, 72, 34]],"<path class=\"ip\" d=\"M76 6V89\"/>",false,1), Q(null,[60, 26],[44, 52],[[46, 70, 42, 89, 50, 89]],[[66, 32, 72, 34]],"<path class=\"ip\" d=\"M76 6V89\"/>",false,1)];
+ILLU_POSES["single-leg-push-up"] = [Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89], [30, 70, 16, 62]],[[69, 75, 70, 89]],"",false,1), Q(null,[72, 78],[44, 82],[[28, 85, 12, 87, 9, 89], [30, 78, 16, 70]],[[60, 71, 70, 89]],"",false,1)];
+ILLU_POSES["staggered-hands-push-up"] = [Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 76, 89], [64, 76, 58, 89]],"",false,1), Q(null,[72, 78],[44, 82],[[28, 85, 12, 87, 9, 89]],[[60, 71, 76, 89], [56, 72, 56, 89]],"",false,1)];
+ILLU_POSES["bridge-hold"] = [Q(null,[28, 68],[54, 56],[[70, 66, 82, 88]],[[26, 80, 24, 89]],"",false,1)];
+ILLU_POSES["wall-walk"] = [Q(null,[72, 60],[44, 66],[[28, 62, 16, 56]],[[69, 75, 70, 89]],"<path class=\"ip\" d=\"M10 6V89\"/>",false,1), Q(null,[62, 64],[36, 44],[[26, 34, 14, 22]],[[62, 78, 60, 89]],"<path class=\"ip\" d=\"M10 6V89\"/>",false,1)];
+ILLU_POSES["crow-pose"] = [Q(null,[58, 58],[34, 50],[[48, 62, 34, 68]],[[66, 70, 64, 89]],"",false,1)];
+ILLU_POSES["frog-stand"] = [Q(null,[60, 62],[36, 60],[[52, 68, 38, 72]],[[62, 76, 62, 89]],"",false,1)];
+ILLU_POSES["freestanding-handstand"] = [Q(null,[47.5, 72.3],[47.5, 53.7],[[47.5, 41.3, 51.2, 31.3]],[[47.5, 80.9, 47.5, 89]],"",false,1)];
+ILLU_POSES["active-hang"] = [Q(null,[50, 30],[50, 58],[[48, 72, 48, 84], [52, 72, 52, 84]],[[40, 21, 34, 6], [60, 21, 66, 6]],"<path class=\"ip\" d=\"M24 6H76\"/>",true,1), Q(null,[50, 34],[50, 62],[[48, 76, 48, 86], [52, 76, 52, 86]],[[40, 26, 34, 6], [60, 26, 66, 6]],"<path class=\"ip\" d=\"M24 6H76\"/>",true,1)];
+ILLU_POSES["weighted-pull-up"] = [Q(null,[50, 30],[50, 58],[[48, 72, 48, 84], [52, 72, 52, 84]],[[40, 21, 34, 6], [60, 21, 66, 6]],"<path class=\"ip\" d=\"M24 6H76\"/><path class=\"ip\" d=\"M50 60V70\"/><g class=\"gh\" data-at=\"50,74\"><path class=\"ip\" d=\"M44 74h12M44 70v8M56 70v8\"/></g>",true,1), Q([50, 5],[50, 14],[50, 42],[[48, 58, 48, 72], [52, 58, 52, 72]],[[34, 20, 42, 6], [66, 20, 58, 6]],"<path class=\"ip\" d=\"M24 6H76\"/><path class=\"ip\" d=\"M50 44V54\"/><g class=\"gh\" data-at=\"50,58\"><path class=\"ip\" d=\"M44 58h12M44 54v8M56 54v8\"/></g>",true,1)];
+ILLU_POSES["chest-to-bar-pull-up"] = [Q(null,[50, 30],[50, 58],[[48, 72, 48, 84], [52, 72, 52, 84]],[[40, 21, 34, 6], [60, 21, 66, 6]],"<path class=\"ip\" d=\"M24 6H76\"/>",true,1), Q([44, 4],[50, 14],[58, 42],[[60, 56, 52, 70, 56, 72]],[[44, 14, 40, 6], [56, 14, 60, 6]],"<path class=\"ip\" d=\"M24 6H76\"/>",false,1)];
+ILLU_POSES["tuck-planche-hold"] = [Q(null,[62, 62],[38, 56],[[52, 58, 42, 64]],[[64, 76, 64, 89]],"",false,1)];
+ILLU_POSES["tuck-l-sit"] = [Q(null,[52, 24],[52, 52],[[62, 56, 56, 68]],[[54, 37, 56, 50]],"<path class=\"ip\" d=\"M40 50H70\"/><path class=\"ip\" d=\"M44 50V89M66 50V89\"/>",false,1)];
+ILLU_POSES["v-sit"] = [Q(null,[34, 52],[48, 84],[[64, 66, 82, 52]],[[46, 62, 60, 62]],"",false,1)];
+ILLU_POSES["weighted-dip"] = [Q(null,[52, 24],[52, 52],[[50, 68, 42, 80, 44, 84]],[[54, 37, 56, 50]],"<path class=\"ip\" d=\"M40 50H70\"/><path class=\"ip\" d=\"M44 50V89M66 50V89\"/><g class=\"gh\" data-at=\"50,74\"><path class=\"ip\" d=\"M44 74h12M44 70v8M56 70v8\"/></g>",false,1), Q(null,[54, 38],[52, 64],[[50, 76, 40, 84, 42, 86]],[[44, 40, 56, 50]],"<path class=\"ip\" d=\"M40 50H70\"/><path class=\"ip\" d=\"M44 50V89M66 50V89\"/><g class=\"gh\" data-at=\"50,80\"><path class=\"ip\" d=\"M44 80h12M44 76v8M56 76v8\"/></g>",false,1)];
+ILLU_POSES["straight-bar-dip"] = [Q(null,[52, 24],[52, 52],[[50, 68, 42, 80, 44, 84]],[[54, 37, 56, 50]],"<circle class=\"ip gm\" cx=\"56\" cy=\"50\" r=\"3\"/><path class=\"ip\" d=\"M56 53V89\"/>",false,1), Q(null,[54, 38],[52, 64],[[50, 76, 40, 84, 42, 86]],[[44, 40, 56, 50]],"<circle class=\"ip gm\" cx=\"56\" cy=\"50\" r=\"3\"/><path class=\"ip\" d=\"M56 53V89\"/>",false,1)];
+ILLU_POSES["hindu-squat"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"",false,1), Q(null,[44, 38],[34, 64],[[56, 64, 52, 84, 60, 89]],[[52, 50, 40, 58]],"",false,1)];
+ILLU_POSES["sumo-squat"] = [Q(null,[50, 20],[50, 50],[[40, 70, 32, 89, 24, 89], [60, 70, 68, 89, 76, 89]],[[46, 36, 50, 46], [54, 36, 50, 46]],"",true,1), Q(null,[50, 40],[50, 66],[[34, 76, 30, 89, 24, 89], [66, 76, 70, 89, 76, 89]],[[46, 52, 50, 60], [54, 52, 50, 60]],"",true,1)];
+ILLU_POSES["shrimp-squat"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89], [56, 66, 44, 62]],[[56, 30, 52, 44]],"",false,1), Q(null,[56, 44],[48, 70],[[62, 70, 56, 89, 64, 89], [44, 84, 30, 76]],[[60, 48, 56, 60]],"",false,1)];
+ILLU_POSES["transverse-lunge"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[45, 38, 50, 44], [55, 38, 50, 44]],"",true,1), Q(null,[46, 36],[46, 64],[[34, 70, 26, 89, 20, 89], [58, 76, 74, 84, 82, 88]],[[46, 50, 52, 54], [52, 48, 52, 54]],"<path class=\"ip gb\" d=\"M48 90Q66 94 82 90\"/>",true,1)];
+ILLU_POSES["stair-climbing"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<path class=\"ip\" d=\"M58 89V78H76V67H94\"/>",false,1), Q(null,[46, 20],[46, 50],[[56, 62, 62, 76, 68, 76], [46, 70, 44, 89, 50, 89]],[[50, 34, 50, 46]],"<path class=\"ip\" d=\"M58 89V78H76V67H94\"/>",false,1)];
+ILLU_POSES["prone-hip-extension"] = [Q(null,[24, 83],[52, 84],[[70, 86, 88, 87, 92, 89]],[[14, 88, 4, 88]],"",false,-1), Q(null,[24, 83],[52, 84],[[70, 86, 90, 76, 94, 72]],[[14, 88, 4, 88]],"",false,-1)];
+ILLU_POSES["donkey-kick"] = [Q(null,[66, 66],[40, 66],[[40, 88, 22, 88, 18, 89]],[[67, 78, 68, 89]],"",false,1), Q(null,[66, 66],[40, 66],[[20, 68, 16, 50], [40, 88, 24, 88]],[[67, 78, 68, 89]],"",false,1)];
+ILLU_POSES["standing-hip-extension"] = [Q(null,[46, 20],[46, 50],[[46, 70, 46, 89, 54, 89]],[[58, 30, 72, 42]],"<path class=\"ip\" d=\"M76 6V89\"/>",false,1), Q(null,[46, 20],[46, 50],[[46, 70, 46, 89, 54, 89], [40, 72, 26, 68]],[[58, 30, 72, 42]],"<path class=\"ip\" d=\"M76 6V89\"/>",false,1)];
+ILLU_POSES["standing-hip-abduction"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[44, 34, 42, 48], [56, 34, 58, 48]],"",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [58, 70, 70, 80, 76, 84]],[[44, 34, 42, 48], [56, 34, 58, 48]],"",true,1)];
+ILLU_POSES["side-lying-hip-adduction"] = [Q(null,[22, 82],[50, 82],[[68, 84, 86, 85], [62, 70, 70, 84]],[[30, 86, 24, 82]],"",false,1), Q(null,[22, 82],[50, 82],[[68, 76, 86, 70], [62, 70, 70, 84]],[[30, 86, 24, 82]],"",false,1)];
+ILLU_POSES["clamshell"] = [Q(null,[22, 82],[50, 82],[[62, 84, 70, 88], [62, 84, 70, 88]],[[30, 86, 24, 82]],"",false,1), Q(null,[22, 82],[50, 82],[[62, 84, 70, 88], [60, 66, 70, 84]],[[30, 86, 24, 82]],"",false,1)];
+ILLU_POSES["reverse-clamshell"] = [Q(null,[22, 82],[50, 82],[[62, 84, 70, 88], [62, 84, 70, 88]],[[30, 86, 24, 82]],"",false,1), Q(null,[22, 82],[50, 82],[[62, 84, 70, 88], [62, 82, 74, 68]],[[30, 86, 24, 82]],"",false,1)];
+ILLU_POSES["band-standing-leg-curl"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89], [50, 70, 44, 89, 38, 89]],[[52, 34, 53, 47]],"<path class=\"ip\" d=\"M40 88L14 88\"/>",false,1), Q(null,[52, 20],[50, 50],[[50, 70, 50, 89, 58, 89], [56, 68, 44, 58]],[[58, 34, 66, 40], [44, 36, 38, 46]],"<path class=\"ip\" d=\"M44 58L14 86\"/>",false,1)];
+ILLU_POSES["band-hip-adduction"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [58, 70, 70, 80, 76, 84]],[[44, 34, 42, 48], [56, 34, 58, 48]],"<path class=\"ip\" d=\"M94 40V89\"/><circle class=\"ip\" cx=\"90\" cy=\"84\" r=\"3\"/><path class=\"ip\" d=\"M76 84L88 84\"/>",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [52, 72, 40, 86, 34, 87]],[[44, 34, 42, 48], [56, 34, 58, 48]],"<path class=\"ip\" d=\"M94 40V89\"/><circle class=\"ip\" cx=\"90\" cy=\"84\" r=\"3\"/><path class=\"ip\" d=\"M34 87L88 85\"/>",true,1)];
+ILLU_POSES["hip-hinge-drill"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<path class=\"ip\" d=\"M40 12V60\"/>",false,1), Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[62, 54, 61, 66]],"<path class=\"ip\" d=\"M44 42L68 30\"/>",false,1)];
+ILLU_POSES["db-single-leg-rdl"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89], [46, 72, 40, 84]],[[52, 34, 53, 47]],"",false,1), Q(null,[68, 48],[42, 50],[[44, 70, 44, 89, 52, 89], [22, 50, 4, 50]],[[68, 60, 68, 72]],"",false,1)];
+ILLU_POSES["b-stance-rdl"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89], [46, 72, 40, 84]],[[52, 34, 53, 47]],"",false,1), Q(null,[68, 48],[42, 50],[[44, 70, 44, 89, 52, 89], [22, 50, 4, 50]],[[68, 60, 68, 72]],"",false,1)];
+ILLU_POSES["suitcase-deadlift"] = [Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[60, 56, 60, 68]],"<g class=\"gh\" data-at=\"60,70\"><path class=\"ip\" d=\"M54 70h12M54 66v8M66 66v8\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<g class=\"gh\" data-at=\"53,49\"><path class=\"ip\" d=\"M47 49h12M47 45v8M59 45v8\"/></g>",false,1)];
+ILLU_POSES["deficit-deadlift"] = [Q(null,[67, 47],[40, 53],[[54, 63, 52, 81, 60, 84]],[[66, 60, 64, 72]],"<path class=\"ip gb\" d=\"M32 84H78V89\"/><g class=\"gh\" data-at=\"64,75\"><circle class=\"ipf gm\" cx=\"64\" cy=\"75\" r=\"8\"/></g>",false,1), Q(null,[50, 15],[50, 45],[[50, 65, 50, 84, 58, 84]],[[52, 29, 53, 41]],"<path class=\"ip gb\" d=\"M32 84H78V89\"/><g class=\"gh\" data-at=\"54,43\"><circle class=\"ipf gm\" cx=\"54\" cy=\"43\" r=\"8\"/></g>",false,1)];
+ILLU_POSES["band-deadlift"] = [Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[62, 56, 61, 68]],"<path class=\"ip\" d=\"M61 68L50 89\"/>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<path class=\"ip\" d=\"M53 50L50 89\"/>",false,1)];
+ILLU_POSES["barbell-box-squat"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[50, 36, 46, 26]],"<g class=\"gh\" data-at=\"46,24\"><circle class=\"ipf\" cx=\"46\" cy=\"24\" r=\"6\"/></g><path class=\"ip\" d=\"M8 64H32M11 64V89M29 64V89\"/>",false,1), Q(null,[44, 38],[36, 64],[[56, 64, 50, 89, 58, 89]],[[50, 48, 44, 38]],"<g class=\"gh\" data-at=\"44,36\"><circle class=\"ipf\" cx=\"44\" cy=\"36\" r=\"6\"/></g><path class=\"ip\" d=\"M12 66H40M15 66V89M37 66V89\"/>",false,1)];
+ILLU_POSES["barbell-shrug"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 33, 53, 46]],"<g class=\"gh\" data-at=\"53,46\"><circle class=\"ipf\" cx=\"53\" cy=\"46\" r=\"5\"/></g>",false,1), Q(null,[50, 16],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 29, 53, 42]],"<g class=\"gh\" data-at=\"53,42\"><circle class=\"ipf\" cx=\"53\" cy=\"42\" r=\"5\"/></g>",false,1)];
+ILLU_POSES["yates-row"] = [Q(null,[58, 32],[40, 50],[[44, 70, 44, 89, 52, 89]],[[56, 46, 55, 62]],"<g class=\"gh\" data-at=\"55,66\"><circle class=\"ipf gm\" cx=\"55\" cy=\"66\" r=\"7\"/></g>",false,1), Q(null,[58, 32],[40, 50],[[44, 70, 44, 89, 52, 89]],[[50, 42, 48, 54]],"<g class=\"gh\" data-at=\"48,57\"><circle class=\"ipf gm\" cx=\"48\" cy=\"57\" r=\"7\"/></g>",false,1)];
+ILLU_POSES["kroc-row"] = [Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[62, 54, 61, 66], [66, 52, 68, 62]],"<g class=\"gh\" data-at=\"61,68\"><path class=\"ip\" d=\"M55 68h12M55 64v8M67 64v8\"/></g><path class=\"ip\" d=\"M62 62H90M65 62V89M87 62V89\"/>",false,1), Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[50, 36, 56, 48], [66, 52, 68, 62]],"<g class=\"gh\" data-at=\"56,50\"><path class=\"ip\" d=\"M50 50h12M50 46v8M62 46v8\"/></g><path class=\"ip\" d=\"M62 62H90M65 62V89M87 62V89\"/>",false,1)];
+ILLU_POSES["barbell-thruster"] = [Q(null,[44, 40],[36, 66],[[56, 66, 50, 89, 58, 89]],[[52, 52, 48, 42]],"<g class=\"gh\" data-at=\"48,40\"><circle class=\"ipf\" cx=\"48\" cy=\"40\" r=\"6\"/></g>",false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[54, 16, 53, 5]],"<g class=\"gh\" data-at=\"53,4\"><circle class=\"ipf\" cx=\"53\" cy=\"4\" r=\"6\"/></g>",false,1)];
+ILLU_POSES["hang-clean"] = [Q(null,[60, 36],[40, 48],[[46, 66, 46, 89, 54, 89]],[[58, 52, 58, 62]],"<g class=\"gh\" data-at=\"58,64\"><circle class=\"ipf gm\" cx=\"58\" cy=\"64\" r=\"7\"/></g>",false,1), Q(null,[48, 36],[38, 64],[[56, 64, 50, 89, 58, 89]],[[56, 48, 58, 42]],"<g class=\"gh\" data-at=\"58,40\"><circle class=\"ipf gm\" cx=\"58\" cy=\"40\" r=\"7\"/></g>",false,1)];
+ILLU_POSES["barbell-jammer"] = [Q(null,[52, 26],[48, 58],[[54, 72, 50, 89, 58, 89]],[[60, 40, 58, 32]],"<path class=\"ip gb\" d=\"M10 88L58 31\"/><g class=\"gh\" data-at=\"58,30\"><circle class=\"ipf gm\" cx=\"58\" cy=\"30\" r=\"5\"/></g>",false,1), Q(null,[54, 18],[50, 50],[[52, 70, 52, 86, 58, 86]],[[64, 22, 70, 10]],"<path class=\"ip gb\" d=\"M10 88L70 10\"/><g class=\"gh\" data-at=\"70,9\"><circle class=\"ipf gm\" cx=\"70\" cy=\"9\" r=\"5\"/></g>",false,1)];
+ILLU_POSES["seated-cable-chest-press"] = [Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[46, 46, 54, 44]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><path class=\"ip\" d=\"M4 44H54\"/><path class=\"ip\" d=\"M54 44V44\"/>",false,1), Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[56, 40, 70, 40]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><path class=\"ip\" d=\"M4 44H70\"/>",false,1)];
+ILLU_POSES["rotational-uppercut"] = [Q(null,[50, 26],[50, 56],[[44, 72, 40, 89, 48, 89], [58, 72, 64, 89, 72, 89]],[[46, 44, 40, 56]],"<g class=\"gh\" data-at=\"40,58\"><path class=\"ip\" d=\"M34 58h12M34 54v8M46 54v8\"/></g>",true,1), Q(null,[50, 22],[50, 52],[[44, 70, 40, 89, 48, 89], [58, 70, 64, 89, 72, 89]],[[56, 34, 64, 20]],"<g class=\"gh\" data-at=\"64,18\"><path class=\"ip\" d=\"M58 18h12M58 14v8M70 14v8\"/></g>",true,1)];
+ILLU_POSES["rotational-overhead-press"] = [Q(null,[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[40, 38, 34, 28], [60, 38, 66, 28]],"<g class=\"gh\" data-at=\"34,26\"><path class=\"ip\" d=\"M28 26h12M28 22v8M40 22v8\"/></g><g class=\"gh\" data-at=\"66,26\"><path class=\"ip\" d=\"M60 26h12M60 22v8M72 22v8\"/></g>",true,1), Q(null,[50, 28.7],[50, 55.7],[[46.4, 71.9, 45.5, 89, 40.1, 89], [53.6, 71.9, 54.5, 89, 59.9, 89]],[[41, 23.3, 39.2, 14.3], [59, 23.3, 60.8, 14.3]],"<g class=\"gh\" data-at=\"38,4\"><path class=\"ip\" d=\"M32 4h12M32 0v8M44 0v8\"/></g><g class=\"gh\" data-at=\"62,4\"><path class=\"ip\" d=\"M56 4h12M56 0v8M68 0v8\"/></g>",true,1)];
+ILLU_POSES["v-raise"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[44, 32, 42, 44], [56, 32, 58, 44]],"<g class=\"gh\" data-at=\"42,46\"><path class=\"ip gm\" d=\"M36 46h12M36 42v8M48 42v8\"/></g><g class=\"gh\" data-at=\"58,46\"><path class=\"ip gm\" d=\"M52 46h12M52 42v8M64 42v8\"/></g>",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[39, 22, 27, 22], [61, 22, 73, 22]],"<g class=\"gh\" data-at=\"27,22\"><path class=\"ip gm\" d=\"M21 22h12M21 18v8M33 18v8\"/></g><g class=\"gh\" data-at=\"73,22\"><path class=\"ip gm\" d=\"M67 22h12M67 18v8M79 18v8\"/></g>",true,1)];
+ILLU_POSES["diagonal-raise"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[44, 32, 42, 44], [56, 32, 58, 44]],"<g class=\"gh\" data-at=\"42,46\"><path class=\"ip gm\" d=\"M36 46h12M36 42v8M48 42v8\"/></g><g class=\"gh\" data-at=\"58,46\"><path class=\"ip gm\" d=\"M52 46h12M52 42v8M64 42v8\"/></g>",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[39, 22, 27, 22], [61, 22, 73, 22]],"<g class=\"gh\" data-at=\"27,22\"><path class=\"ip gm\" d=\"M21 22h12M21 18v8M33 18v8\"/></g><g class=\"gh\" data-at=\"73,22\"><path class=\"ip gm\" d=\"M67 22h12M67 18v8M79 18v8\"/></g>",true,1)];
+ILLU_POSES["kb-bottoms-up-press"] = [Q(null,[50, 22],[50, 52],[[52, 70, 50, 89, 58, 89]],[[60, 36, 56, 28]],"<g class=\"gh\" data-at=\"56,28\"><circle class=\"ipf\" cx=\"56\" cy=\"23\" r=\"5\"/><path class=\"ip\" d=\"M53 27q3 5 6 0\"/></g>",false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 17, 64, 7]],"<g class=\"gh\" data-at=\"64,7\"><circle class=\"ipf\" cx=\"64\" cy=\"2\" r=\"5\"/><path class=\"ip\" d=\"M61 6q3 5 6 0\"/></g>",false,1)];
+ILLU_POSES["kb-half-turkish-get-up"] = [Q([14, 83],[24, 84],[46, 86],[[60, 70, 70, 89, 78, 89]],[[32, 72, 32, 60]],"<g class=\"gh\" data-at=\"32,58\"><circle class=\"ipf\" cx=\"32\" cy=\"62\" r=\"5\"/><path class=\"ip\" d=\"M29 59q3-5 6 0\"/></g>",false,1), Q(null,[40, 56],[30, 84],[[48, 74, 56, 88]],[[34, 78, 40, 89], [44, 44, 44, 32]],"<g class=\"gh\" data-at=\"44,30\"><circle class=\"ipf\" cx=\"44\" cy=\"34\" r=\"5\"/><path class=\"ip\" d=\"M41 31q3-5 6 0\"/></g>",false,1)];
+ILLU_POSES["kb-overhead-squat"] = [Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 17, 64, 7]],"<g class=\"gh\" data-at=\"64,5\"><circle class=\"ipf\" cx=\"64\" cy=\"9\" r=\"5\"/><path class=\"ip\" d=\"M61 6q3-5 6 0\"/></g>",false,1), Q(null,[44, 38],[34, 64],[[56, 64, 50, 89, 58, 89]],[[48, 26, 52, 12]],"<g class=\"gh\" data-at=\"52,10\"><circle class=\"ipf\" cx=\"52\" cy=\"14\" r=\"5\"/><path class=\"ip\" d=\"M49 11q3-5 6 0\"/></g>",false,1)];
+ILLU_POSES["kb-double-push-press"] = [Q(null,[50, 24],[50, 54],[[46, 72, 45, 89, 39, 89], [54, 72, 55, 89, 61, 89]],[[44, 38, 44, 30], [56, 38, 56, 30]],"<g class=\"gh\" data-at=\"44,28\"><circle class=\"ipf\" cx=\"44\" cy=\"32\" r=\"5\"/><path class=\"ip\" d=\"M41 29q3-5 6 0\"/></g><g class=\"gh\" data-at=\"56,28\"><circle class=\"ipf\" cx=\"56\" cy=\"32\" r=\"5\"/><path class=\"ip\" d=\"M53 29q3-5 6 0\"/></g>",true,1), Q(null,[50, 20],[50, 50],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[44, 22, 44, 8], [56, 22, 56, 8]],"<g class=\"gh\" data-at=\"44,6\"><circle class=\"ipf\" cx=\"44\" cy=\"10\" r=\"5\"/><path class=\"ip\" d=\"M41 7q3-5 6 0\"/></g><g class=\"gh\" data-at=\"56,6\"><circle class=\"ipf\" cx=\"56\" cy=\"10\" r=\"5\"/><path class=\"ip\" d=\"M53 7q3-5 6 0\"/></g>",true,1)];
+ILLU_POSES["waiters-carry"] = [Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[58, 17, 64, 7]],"<g class=\"gh\" data-at=\"64,5\"><circle class=\"ipf\" cx=\"64\" cy=\"9\" r=\"5\"/><path class=\"ip\" d=\"M61 6q3-5 6 0\"/></g>",false,1), Q(null,[50, 22],[50, 52],[[57, 69, 62, 89, 70, 89], [43, 69, 38, 89, 46, 89]],[[58, 17, 64, 7]],"<g class=\"gh\" data-at=\"64,5\"><circle class=\"ipf\" cx=\"64\" cy=\"9\" r=\"5\"/><path class=\"ip\" d=\"M61 6q3-5 6 0\"/></g>",false,1)];
+ILLU_POSES["sleeper-stretch"] = [Q(null,[22, 82],[50, 82],[[68, 84, 86, 85]],[[30, 70, 30, 58]],"",false,1), Q(null,[22, 82],[50, 82],[[68, 84, 86, 85]],[[30, 70, 40, 76]],"",false,1)];
+ILLU_POSES["stick-external-rotation"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[42, 36, 50, 42], [58, 36, 50, 42]],"<path class=\"ip\" d=\"M30 42H70\"/>",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[42, 36, 34, 42], [58, 36, 46, 42]],"<path class=\"ip\" d=\"M18 42H58\"/>",true,1)];
+ILLU_POSES["stick-internal-rotation"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[46, 36, 44, 52]],"<path class=\"ip\" d=\"M40 40V56\"/>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[46, 32, 44, 40]],"<path class=\"ip\" d=\"M40 32V48\"/>",false,1)];
+ILLU_POSES["scapula-setting"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"",false,1), Q(null,[52, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[46, 36, 44, 48]],"",false,1)];
+ILLU_POSES["band-external-rotation"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[42, 36, 56, 40], [58, 34, 60, 48]],"<path class=\"ip\" d=\"M92 40V89\"/><path class=\"ip\" d=\"M56 40L90 40\"/><circle class=\"ip\" cx=\"90\" cy=\"40\" r=\"3\"/>",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[42, 36, 28, 40], [58, 34, 60, 48]],"<path class=\"ip\" d=\"M92 40V89\"/><path class=\"ip\" d=\"M28 40L90 40\"/><circle class=\"ip\" cx=\"90\" cy=\"40\" r=\"3\"/>",true,1)];
+ILLU_POSES["band-internal-rotation"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[42, 36, 28, 40], [58, 34, 60, 48]],"<path class=\"ip\" d=\"M92 40V89\"/><path class=\"ip\" d=\"M28 40L90 40\"/><circle class=\"ip\" cx=\"90\" cy=\"40\" r=\"3\"/>",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[42, 36, 56, 40], [58, 34, 60, 48]],"<path class=\"ip\" d=\"M92 40V89\"/><path class=\"ip\" d=\"M56 40L90 40\"/><circle class=\"ip\" cx=\"90\" cy=\"40\" r=\"3\"/>",true,1)];
+ILLU_POSES["band-external-rotation-90"] = [Q(null,[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[34, 26, 32, 40], [58, 34, 60, 48]],"",true,1), Q(null,[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[34, 26, 30, 12], [58, 34, 60, 48]],"",true,1)];
+ILLU_POSES["side-lying-internal-rotation"] = [Q(null,[22, 82],[50, 82],[[68, 84, 86, 85]],[[30, 76, 34, 64]],"<g class=\"gh\" data-at=\"34,62\"><path class=\"ip\" d=\"M28 62h12M28 58v8M40 58v8\"/></g>",false,1), Q(null,[22, 82],[50, 82],[[68, 84, 86, 85]],[[30, 76, 40, 82]],"<g class=\"gh\" data-at=\"40,83\"><path class=\"ip\" d=\"M34 83h12M34 79v8M46 79v8\"/></g>",false,1)];
+ILLU_POSES["scaption-raise"] = [Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[44, 32, 42, 44], [56, 32, 58, 44]],"<g class=\"gh\" data-at=\"42,46\"><path class=\"ip gm\" d=\"M36 46h12M36 42v8M48 42v8\"/></g><g class=\"gh\" data-at=\"58,46\"><path class=\"ip gm\" d=\"M52 46h12M52 42v8M64 42v8\"/></g>",true,1), Q(null,[50, 20],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[39, 22, 27, 22], [61, 22, 73, 22]],"<g class=\"gh\" data-at=\"27,22\"><path class=\"ip gm\" d=\"M21 22h12M21 18v8M33 18v8\"/></g><g class=\"gh\" data-at=\"73,22\"><path class=\"ip gm\" d=\"M67 22h12M67 18v8M79 18v8\"/></g>",true,1)];
+ILLU_POSES["serratus-punch"] = [Q(null,[22, 84],[50, 84],[[68, 85, 86, 85, 88, 78]],[[30, 72, 30, 60]],"",false,1), Q(null,[22, 82],[50, 84],[[68, 85, 86, 85, 88, 78]],[[30, 72, 30, 56]],"",false,1)];
+ILLU_POSES["supine-snow-angels"] = [Q(null,[22, 84],[50, 84],[[68, 85, 86, 85, 88, 78]],[[32, 87, 44, 87]],"",false,1), Q(null,[22, 84],[50, 84],[[68, 85, 86, 85, 88, 78]],[[18, 84, 6, 84]],"",false,1)];
+ILLU_POSES["high-plank-thoracic-rotation"] = [Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89], [74, 64, 68, 54]],"",false,1), Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89], [78, 54, 70, 50]],"",false,1)];
+ILLU_POSES["neck-rotation"] = [Q([44, 12],[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[44, 36, 42, 48], [56, 36, 58, 48]],"",true,1), Q([56, 12],[50, 22],[50, 52],[[46, 70, 45, 89, 39, 89], [54, 70, 55, 89, 61, 89]],[[44, 36, 42, 48], [56, 36, 58, 48]],"",true,1)];
+ILLU_POSES["ankle-circles"] = [Q(null,[40, 32],[40, 64],[[62, 62, 84, 58, 88, 62]],[[48, 50, 56, 60]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/>",false,1), Q(null,[40, 32],[40, 64],[[62, 62, 84, 58, 86, 52]],[[48, 50, 56, 60]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/>",false,1)];
+ILLU_POSES["band-ankle-dorsiflexion"] = [Q(null,[40, 32],[40, 64],[[62, 62, 84, 58, 88, 62]],[[48, 50, 56, 60]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><path class=\"ip\" d=\"M88 62L98 62\"/>",false,1), Q(null,[40, 32],[40, 64],[[62, 62, 84, 58, 86, 52]],[[48, 50, 56, 60]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/><path class=\"ip\" d=\"M86 52L98 54\"/>",false,1)];
+ILLU_POSES["single-leg-stand"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89], [62, 60, 66, 76]],[[52, 34, 53, 47]],"",false,1)];
+ILLU_POSES["seated-trunk-rotation"] = [Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[46, 48, 52, 46]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/>",false,1), Q(null,[44, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[40, 44, 28, 46]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/>",false,1)];
+ILLU_POSES["pelvic-tilt"] = [Q([14, 83],[24, 84],[46, 82],[[60, 70, 70, 89, 78, 89]],[[33, 88, 43, 88]],"",false,1), Q([14, 84],[24, 85],[46, 86],[[60, 72, 70, 89, 78, 89]],[[33, 88, 43, 88]],"",false,1)];
+ILLU_POSES["side-plank-knees"] = [Q([20, 58],[28, 64],[56, 76],[[70, 86, 80, 89]],[[27, 89, 40, 89], [28, 50, 28, 40]],"",true,1), Q([20, 58],[28, 64],[56, 76],[[70, 86, 80, 89]],[[27, 89, 40, 89], [28, 50, 28, 40]],"",true,1)];
+ILLU_POSES["single-arm-plank"] = [Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89], [60, 66, 50, 62]],"",false,1), Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89], [76, 62, 88, 58]],"",false,1)];
+ILLU_POSES["single-arm-single-leg-plank"] = [Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89]],[[69, 75, 70, 89]],"",false,1), Q(null,[72, 60],[44, 72],[[28, 78, 12, 86, 9, 89], [30, 70, 14, 58]],[[69, 75, 70, 89], [74, 60, 86, 56]],"",false,1)];
+ILLU_POSES["knee-to-chest-stretch"] = [Q([14, 83],[24, 84],[46, 86],[[60, 70, 70, 89, 78, 89]],[[33, 88, 43, 88]],"",false,1), Q([14, 83],[24, 84],[46, 86],[[58, 66, 66, 82], [56, 66, 52, 76]],[[40, 72, 50, 70]],"",false,1)];
+ILLU_POSES["standing-it-band-stretch"] = [Q(null,[50, 20],[50, 52],[[48, 70, 44, 89, 38, 89], [52, 70, 56, 89, 62, 89]],[[44, 34, 42, 48], [56, 34, 58, 48]],"",true,1), Q(null,[42, 22],[50, 52],[[48, 70, 44, 89, 38, 89], [52, 70, 56, 89, 62, 89]],[[44, 34, 42, 48], [50, 20, 56, 6]],"",true,1)];
+ILLU_POSES["supine-hamstring-stretch"] = [Q(null,[22, 84],[50, 84],[[68, 85, 86, 85, 88, 78]],[[32, 87, 44, 87]],"",false,1), Q(null,[22, 84],[50, 84],[[56, 60, 58, 38], [68, 85, 86, 85]],[[40, 74, 56, 52]],"",false,1)];
+ILLU_POSES["thomas-stretch"] = [Q([16, 60],[26, 61],[48, 64],[[62, 68, 64, 84, 72, 89], [44, 52, 34, 54, 32, 60]],[[30, 62, 38, 50]],"<path class=\"ip\" d=\"M12 73H66M15 73V89M63 73V89\"/>",false,1)];
+ILLU_POSES["seated-straddle-stretch"] = [Q(null,[50, 50],[50, 76],[[34, 82, 22, 86], [66, 82, 78, 86]],[[44, 62, 36, 72], [56, 62, 64, 72]],"",true,1), Q(null,[50, 66],[50, 76],[[34, 82, 22, 86], [66, 82, 78, 86]],[[44, 72, 36, 84], [56, 72, 64, 84]],"",true,1)];
+ILLU_POSES["side-lying-quad-stretch"] = [Q([12, 78],[22, 80],[50, 82],[[68, 83, 86, 84, 92, 86], [56, 76, 66, 66, 62, 56]],[[36, 76, 52, 66]],"",false,1)];
+ILLU_POSES["seated-rotation-stretch"] = [Q(null,[44, 52],[44, 84],[[60, 70, 50, 80], [62, 86, 80, 88]],[[50, 64, 56, 72]],"",false,1), Q(null,[46, 52],[44, 84],[[60, 70, 50, 80], [62, 86, 80, 88]],[[52, 58, 64, 66]],"",false,1)];
+ILLU_POSES["soleus-stretch"] = [Q(null,[44, 22],[44, 52],[[48, 70, 52, 89, 60, 89], [44, 72, 38, 89]],[[52, 34, 70, 40]],"<path class=\"ip\" d=\"M78 6V89\"/>",false,1), Q(null,[52, 24],[50, 54],[[62, 70, 56, 89, 64, 89], [44, 72, 38, 89]],[[58, 36, 72, 42]],"<path class=\"ip\" d=\"M78 6V89\"/>",false,1)];
+ILLU_POSES["upward-facing-dog"] = [Q(null,[24, 83],[52, 84],[[70, 86, 88, 87, 92, 89]],[[32, 88, 36, 89]],"",false,-1), Q(null,[30, 52],[54, 78],[[70, 84, 86, 87, 92, 89]],[[34, 66, 32, 89]],"",false,-1)];
+ILLU_POSES["warrior-i"] = [Q(null,[48, 22],[48, 54],[[62, 68, 64, 89, 72, 89], [34, 72, 18, 87, 12, 89]],[[52, 36, 56, 28]],"",false,1), Q(null,[48, 22],[48, 54],[[62, 68, 64, 89, 72, 89], [34, 72, 18, 87, 12, 89]],[[50, 20, 50, 4], [54, 20, 54, 4]],"",false,1)];
+ILLU_POSES["single-leg-hop"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89], [56, 68, 44, 66]],[[52, 34, 53, 47]],"",false,1), Q(null,[50, 14],[50, 44],[[50, 64, 50, 80, 58, 82], [56, 62, 44, 60]],[[52, 28, 53, 41]],"",false,1)];
+ILLU_POSES["alternate-leg-push-off"] = [Q(null,[40, 22],[40, 52],[[56, 58, 60, 74, 68, 74], [40, 71, 40, 89, 48, 89]],[[42, 36, 43, 49]],"<path class=\"ip\" d=\"M54 89V76H86V89\"/>",false,1), Q(null,[62, 16],[62, 40],[[56, 54, 52, 64, 56, 66], [66, 54, 76, 62, 80, 66]],[[64, 29, 65, 39]],"<path class=\"ip\" d=\"M54 89V76H86V89\"/>",false,1)];
+ILLU_POSES["single-leg-push-off"] = [Q(null,[40, 22],[40, 52],[[56, 58, 60, 74, 68, 74], [40, 71, 40, 89, 48, 89]],[[42, 36, 43, 49]],"<path class=\"ip\" d=\"M54 89V76H86V89\"/>",false,1), Q(null,[62, 16],[62, 42],[[62, 56, 62, 68, 70, 68], [52, 52, 44, 60, 48, 64]],[[64, 29, 65, 41]],"<path class=\"ip\" d=\"M54 89V76H86V89\"/>",false,1)];
+ILLU_POSES["neck-isometric"] = [Q(null,[40, 32],[40, 64],[[60, 64, 60, 86, 66, 88]],[[50, 44, 46, 24]],"<path class=\"ip\" d=\"M28 66H54M40 66V89\"/>",false,1)];
+
+/* Hauptbereiche und Geräte der neuen Übungen */
+EX_MAIN_ROWS.stange += " chest-dip wide-grip-pull-up hanging-leg-raise-twist archer-pull-up tuck-front-lever-hold parallel-bar-knee-raise bodyweight-curl active-hang chest-to-bar-pull-up tuck-l-sit straight-bar-dip";
+EX_MAIN_ROWS.rumpf += " flutter-kicks scissor-kicks oblique-crunch heel-touches reverse-plank plank-hip-dips hollow-rock butterfly-sit-up plank-jacks side-plank-hip-dip side-plank-leg-raise twisting-sit-up boat-hold v-sit pelvic-tilt side-plank-knees single-arm-plank single-arm-single-leg-plank";
+EX_MAIN_ROWS.ausdauer += " box-jump lateral-box-jump jump-rope butt-kicks star-jumps squat-jacks cross-body-mountain-climbers broad-jump lateral-shuffle shadow-boxing pogo-hops stair-climbing single-leg-hop alternate-leg-push-off single-leg-push-off";
+var GERAET_NEU = {"sumo-deadlift": "lh", "trap-bar-deadlift": "lh", "rack-pull": "lh", "overhead-squat": "lh", "cable-hip-abduction": "kabel", "cable-hip-adduction": "kabel", "barbell-lunge": "lh", "power-clean": "lh", "clean-and-press": "lh", "decline-bench-press": "lh", "incline-bench-press": "lh", "close-grip-bench-press": "lh", "decline-db-fly": "kh", "barbell-front-raise": "lh", "rear-delt-row": "kh", "side-lying-external-rotation": "kh", "cable-external-rotation": "kabel", "cable-internal-rotation": "kabel", "underhand-barbell-row": "lh", "single-arm-lat-pulldown": "kabel", "drag-curl": "lh", "reverse-preacher-curl": "lh", "incline-hammer-curl": "kh", "db-triceps-kickback": "kh", "reverse-wrist-curl": "kh", "db-side-bend": "kh", "incline-db-fly": "kh", "db-push-up": "kh", "standing-cable-chest-press": "kabel", "pendlay-row": "lh", "cable-reverse-fly": "kabel", "seated-barbell-shoulder-press": "lh", "landmine-press": "lh", "cable-front-raise": "kabel", "seated-lateral-raise": "kh", "cable-upright-row": "kabel", "ez-curl": "lh", "ez-reverse-curl": "lh", "cable-hammer-curl": "kabel", "db-bulgarian-split-squat": "kh", "db-walking-lunge": "kh", "barbell-step-up": "lh", "barbell-glute-bridge": "lh", "db-calf-raise": "kh", "db-neutral-grip-press": "kh", "db-incline-neutral-press": "kh", "db-one-arm-bench-press": "kh", "db-lying-one-arm-triceps-extension": "kh", "db-incline-triceps-extension": "kh", "db-one-arm-triceps-extension": "kh", "db-one-arm-curl": "kh", "db-reverse-curl": "kh", "db-seated-hammer-curl": "kh", "db-seated-curl": "kh", "db-one-arm-preacher-curl": "kh", "db-front-raise-alternating": "kh", "db-front-raise-overhead": "kh", "db-lateral-to-front-raise": "kh", "db-full-can-lateral-raise": "kh", "db-one-arm-lateral-raise-supported": "kh", "db-prone-rear-raise": "kh", "db-w-press": "kh", "db-one-arm-shoulder-press": "kh", "db-alternating-press": "kh", "db-palms-in-press": "kh", "db-upright-row": "kh", "db-one-arm-upright-row": "kh", "db-incline-shrug": "kh", "db-straight-arm-pullover": "kh", "db-squat": "kh", "db-box-squat": "kh", "db-lunge": "kh", "db-single-leg-squat": "kh", "db-plyo-squat": "kh", "db-lying-leg-curl": "kh", "db-seated-calf-raise": "kh", "db-wrist-curl-one-arm": "kh", "db-wrist-curl-hammer": "kh", "cable-shrug": "kabel", "cable-side-bend": "kabel", "cable-standing-row": "kabel", "cable-rear-delt-row": "kabel", "cable-lying-fly": "kabel", "cable-lying-triceps-extension": "kabel", "cable-incline-fly": "kabel", "cable-incline-press": "kabel", "cable-lying-curl": "kabel", "cable-reverse-curl": "kabel", "cable-wrist-curl": "kabel", "cable-standing-twist-row": "kabel", "cable-single-arm-bent-row": "kabel", "cable-single-arm-shoulder-press": "kabel", "cable-decline-fly": "kabel", "glute-ham-raise": "maschine", "suitcase-carry": "kh", "landmine-row": "lh", "single-arm-db-snatch": "kh", "goblet-reverse-lunge": "kh", "supine-db-curl": "kh", "overhead-cable-curl": "kabel", "weighted-pull-up": "kh", "weighted-dip": "kh", "db-single-leg-rdl": "kh", "b-stance-rdl": "kh", "suitcase-deadlift": "kh", "deficit-deadlift": "lh", "barbell-box-squat": "lh", "barbell-shrug": "lh", "yates-row": "lh", "kroc-row": "kh", "barbell-thruster": "lh", "hang-clean": "lh", "barbell-jammer": "lh", "seated-cable-chest-press": "kabel", "rotational-uppercut": "kh", "rotational-overhead-press": "kh", "v-raise": "kh", "diagonal-raise": "kh", "side-lying-internal-rotation": "kh", "scaption-raise": "kh"};
+var NAMEN_NEU = {"jump-squats": ["Sprung-Kniebeuge", "Jump Squat", "Jump Squats", "Jump Squats"], "box-step-ups": ["Schnelle Step-ups (Kasten)", "Fast Box Step-up", "Box Step-ups schnell", "Fast Box Step-ups"], "kb-swing": ["Kettlebell-Swing", "Kettlebell Swing", "Kettlebell Swing", "Kettlebell Swing"], "db-thruster": ["Thruster (Kurzhantel)", "Dumbbell Thruster", "Dumbbell Thruster", "Dumbbell Thruster"], "romanian-deadlift": ["Rumänisches Kreuzheben (Kurzhantel)", "Dumbbell Romanian Deadlift", "Romanian Deadlift", "Romanian Deadlift"], "db-deadlift": ["Kreuzheben (Kurzhantel)", "Dumbbell Deadlift", "Dumbbell Deadlift", "Dumbbell Deadlift"], "bent-over-row": ["Vorgebeugtes Rudern (Kurzhantel)", "Dumbbell Bent-over Row", "Bent-over Row", "Bent-over Row"], "one-arm-row": ["Einarmiges Rudern (Kurzhantel)", "One-Arm Dumbbell Row", "Einarmiges Rudern", "One-arm Row"], "floor-press": ["Floor Press (Kurzhantel)", "Dumbbell Floor Press", "Floor Press", "Floor Press"], "shoulder-press": ["Schulterdrücken (Kurzhantel)", "Dumbbell Shoulder Press", "Shoulder Press", "Shoulder Press"], "push-press": ["Push Press (Kurzhantel)", "Dumbbell Push Press", "Push Press", "Push Press"], "weighted-reverse-lunge": ["Ausfallschritt rückwärts (Kurzhantel)", "Dumbbell Reverse Lunge", "Reverse Lunge mit Gewicht", "Weighted Reverse Lunge"], "push-ups": ["Liegestütz", "Push-up", "Push-ups", "Push-ups"], "triceps-dips": ["Dips an der Bank", "Bench Dip", "Triceps Dips", "Triceps Dips"], "walking-lunges": ["Ausfallschritt gehend", "Walking Lunge", "Walking Lunges", "Walking Lunges"], "reverse-lunges": ["Ausfallschritt rückwärts", "Reverse Lunge", "Reverse Lunges", "Reverse Lunges"], "side-lunges": ["Ausfallschritt seitlich", "Side Lunge", "Side Lunges", "Side Lunges"], "deep-squats": ["Tiefe Kniebeuge", "Deep Squat", "Deep Squats", "Deep Squats"], "air-squats": ["Kniebeuge", "Bodyweight Squat", "Air Squats", "Air Squats"], "bulgarian-split-squats": ["Bulgarische Kniebeuge", "Bulgarian Split Squat", "Bulgarian Split Squats", "Bulgarian Split Squats"], "forward-lunges": ["Ausfallschritt vorwärts", "Forward Lunge", "Forward Lunges", "Forward Lunges"], "triceps-curls": ["Trizepsstrecken über Kopf (Kurzhantel)", "Overhead Dumbbell Triceps Extension", "Trizeps über Kopf (Kurzhantel)", "Overhead Triceps Extension"], "close-grip-push-ups": ["Enger Liegestütz", "Close-grip Push-up", "Enge Liegestütz", "Close-grip Push-ups"], "diamond-push-ups": ["Diamant-Liegestütz", "Diamond Push-up", "Diamant-Liegestütz", "Diamond Push-ups"], "leg-press": ["Beinpresse (Maschine)", "Machine Leg Press", "Beinpresse (sitzend)", "Seated Leg Press"], "leg-extension": ["Beinstrecken (Maschine)", "Machine Leg Extension", "Beinstrecker", "Leg Extension"], "leg-curl": ["Beinbeugen sitzend (Maschine)", "Seated Machine Leg Curl", "Beinbeuger (sitzend)", "Seated Leg Curl"], "adductor-machine": ["Beinanführen (Maschine)", "Machine Hip Adduction", "Adduktoren", "Adductor Machine"], "abductor-machine": ["Beinabspreizen (Maschine)", "Machine Hip Abduction", "Abduktoren", "Abductor Machine"], "chest-press-machine": ["Brustdrücken (Maschine)", "Machine Chest Press", "Brustpresse", "Chest Press Machine"], "butterfly": ["Butterfly (Maschine)", "Pec Deck", "Butterfly", "Pec Deck (Butterfly)"], "pullover": ["Überzug (Kurzhantel)", "Dumbbell Pullover", "Überzug (Pullover)", "Dumbbell Pullover"], "lat-pulldown": ["Latziehen (Kabelzug)", "Cable Lat Pulldown", "Latzug", "Lat Pulldown"], "row-machine": ["Rudern (Maschine)", "Machine Row", "Rudermaschine", "Machine Row"], "cable-row": ["Rudern sitzend (Kabelzug)", "Seated Cable Row", "Rudern am Kabel (sitzend)", "Seated Cable Row"], "reverse-butterfly": ["Reverse Fly (Maschine)", "Machine Reverse Fly", "Butterfly reverse", "Reverse Fly Machine"], "shoulder-press-machine": ["Schulterdrücken (Maschine)", "Machine Shoulder Press", "Schulterpresse", "Shoulder Press Machine"], "cable-curl": ["Bizepscurl (Kabelzug)", "Cable Biceps Curl", "Bizepscurl am Kabel", "Cable Biceps Curl"], "triceps-pushdown": ["Trizepsdrücken (Kabelzug)", "Cable Triceps Pushdown", "Trizepsdrücken am Kabel", "Triceps Pushdown"], "skull-crusher": ["Stirndrücken liegend (SZ-Stange)", "Skull Crusher (EZ-Bar)", "French Press (liegend)", "Skull Crusher"], "ab-crunch-machine": ["Crunch (Maschine)", "Machine Crunch", "Bauchmaschine", "Ab Crunch Machine"], "smith-squat": ["Kniebeuge (Multipresse)", "Smith Machine Squat", "Kniebeuge an der Multipresse", "Smith Machine Squat"], "glute-kickback-cable": ["Gesäß-Kickback (Kabelzug)", "Cable Glute Kickback", "Kickback am Kabel", "Cable Glute Kickback"], "incline-chest-press": ["Schrägbankdrücken (Maschine)", "Incline Machine Chest Press", "Schrägbankpresse (Maschine)", "Incline Chest Press Machine"], "close-grip-pulldown": ["Latziehen eng (Kabelzug)", "Close-Grip Cable Pulldown", "Latzug eng", "Close-Grip Pulldown"], "t-bar-row": ["T-Bar-Rudern (Langhantel)", "T-Bar Row", "T-Bar-Rudern", "T-Bar Row"], "barbell-row": ["Vorgebeugtes Rudern (Langhantel)", "Barbell Bent-over Row", "Langhantelrudern", "Barbell Row"], "straight-arm-pulldown": ["Gestreckter Armzug (Kabelzug)", "Straight-Arm Cable Pulldown", "Überzug am Kabel", "Straight-Arm Pulldown"], "lateral-raise": ["Seitheben (Kurzhantel)", "Dumbbell Lateral Raise", "Seitheben", "Lateral Raise"], "shrugs": ["Schulterheben (Kurzhantel)", "Dumbbell Shrug", "Schulterheben (Shrugs)", "Shrugs"], "hammer-curl": ["Hammercurl (Kurzhantel)", "Dumbbell Hammer Curl", "Hammercurl", "Hammer Curl"], "barbell-curl": ["Bizepscurl (Langhantel)", "Barbell Curl", "Langhantel-/SZ-Curl", "Barbell Curl"], "overhead-cable-triceps": ["Trizepsstrecken über Kopf (Kabelzug)", "Overhead Cable Triceps Extension", "Trizeps über Kopf am Kabel", "Overhead Cable Extension"], "lying-leg-curl": ["Beinbeugen liegend (Maschine)", "Lying Machine Leg Curl", "Beinbeuger liegend", "Lying Leg Curl"], "lateral-raise-machine": ["Seitheben (Maschine)", "Machine Lateral Raise", "Seitheber-Maschine", "Lateral Raise Machine"], "cable-lateral-raise": ["Seitheben (Kabelzug)", "Cable Lateral Raise", "Seitheben am Kabel", "Cable Lateral Raise"], "smith-bench-press": ["Bankdrücken (Multipresse)", "Smith Machine Bench Press", "Bankdrücken an der Multipresse", "Smith Machine Bench Press"], "cable-crunch": ["Crunch kniend (Kabelzug)", "Kneeling Cable Crunch", "Kabel-Crunch kniend", "Kneeling Cable Crunch"], "cable-pull-through": ["Pull-Through (Kabelzug)", "Cable Pull-Through", "Pull-Through am Kabel", "Cable Pull-Through"], "cable-woodchop": ["Holzhacker (Kabelzug)", "Cable Woodchop", "Holzhacker am Kabel", "Cable Woodchop"], "captains-chair": ["Beinheben im Stütz (Römischer Stuhl)", "Captain's Chair Leg Raise", "Knieheben am Gerät", "Captain's Chair Knee Raise"], "knee-push-ups": ["Liegestütz auf den Knien", "Knee Push-up", "Knie-Liegestütz", "Knee Push-ups"], "copenhagen-plank": ["Copenhagen Plank (leicht)", "Copenhagen Plank (short lever)", "Copenhagen Plank (kurzer Hebel)", "Short-Lever Copenhagen Plank"], "db-bench-press": ["Bankdrücken (Kurzhantel)", "Dumbbell Bench Press", "Kurzhantel-Bankdrücken", "Dumbbell Bench Press"], "db-step-ups": ["Step-up (Kurzhantel)", "Dumbbell Step-up", "Step-ups mit Kurzhanteln", "Dumbbell Step-ups"], "sumo-squat-db": ["Sumo-Kniebeuge (Kurzhantel)", "Dumbbell Sumo Squat", "Sumo-Kniebeuge mit Kurzhantel", "Dumbbell Sumo Squat"], "nordic-curl": ["Nordic Curl", "Nordic Hamstring Curl", "Nordic Curl (Oberschenkelrückseite)", "Nordic Hamstring Curl"], "neck-stretch": ["Nacken dehnen (seitlich)", "Neck Stretch (side)", "Nacken seitlich", "Neck Side Stretch"], "shoulder-stretch": ["Schulter dehnen (Arm quer)", "Cross-body Shoulder Stretch", "Schulter (Arm vor der Brust)", "Cross-body Shoulder Stretch"], "triceps-stretch": ["Trizeps dehnen (über Kopf)", "Triceps Stretch (overhead)", "Trizeps über Kopf", "Overhead Triceps Stretch"], "biceps-stretch": ["Bizeps dehnen (Wand)", "Biceps Stretch (wall)", "Bizeps an der Wand", "Wall Biceps Stretch"], "chest-stretch": ["Brust dehnen (Wand)", "Chest Stretch (wall)", "Brust an der Wand", "Wall Chest Stretch"], "hip-flexor-stretch": ["Hüftbeuger dehnen (kniend)", "Hip Flexor Stretch (kneeling)", "Hüftbeuger kniend", "Kneeling Hip Flexor Stretch"], "quad-stretch": ["Oberschenkel vorn dehnen (stehend)", "Quad Stretch (standing)", "Oberschenkel vorn im Stand", "Standing Quad Stretch"], "hamstring-stretch": ["Beinrückseite dehnen (sitzend)", "Hamstring Stretch (seated)", "Beinrückseite im Sitzen", "Seated Hamstring Stretch"], "calf-stretch": ["Wade dehnen (Wand)", "Calf Stretch (wall)", "Waden an der Wand", "Wall Calf Stretch"], "figure-four": ["Gesäß dehnen (Figur 4)", "Figure-Four Glute Stretch", "Gesäß liegend (Figur 4)", "Figure-Four Glute Stretch"], "band-standing-row": ["Rudern im Stand (Band)", "Standing Band Row", "Rudern im Stand mit Band", "Standing Band Row"], "band-bent-over-row": ["Vorgebeugtes Rudern (Band)", "Bent-over Band Row", "Vorgebeugtes Rudern mit Band", "Bent-over Band Row"], "band-pull-down": ["Zug nach unten (Band)", "Band Pull-down", "Zug nach unten mit Band", "Band Pull-down"], "band-push-ups": ["Liegestütze (Band)", "Band Push-ups", "Liegestütze mit Band", "Band Push-ups"], "band-chest-fly": ["Brust-Fly (Band)", "Band Chest Fly", "Brust-Fly mit Band", "Band Chest Fly"], "band-reverse-fly": ["Reverse Fly (Band)", "Band Reverse Fly", "Reverse Fly mit Band", "Band Reverse Fly"], "band-chest-fly-up": ["Fly von unten nach oben (Band)", "Low-to-high Band Fly", "Fly von unten nach oben mit Band", "Low-to-high Band Fly"], "band-chest-cross": ["Brust-Überkreuzen (Band)", "Band Chest Cross", "Brust-Überkreuzen mit Band", "Band Chest Cross"], "band-lateral-raise": ["Seitheben (Band)", "Band Lateral Raise", "Seitheben mit Band", "Band Lateral Raise"], "band-upright-row": ["Aufrechtes Rudern (Band)", "Band Upright Row", "Aufrechtes Rudern mit Band", "Band Upright Row"], "band-front-raise": ["Frontheben (Band)", "Band Front Raise", "Frontheben mit Band", "Band Front Raise"], "band-shoulder-press": ["Schulterdrücken (Band)", "Band Shoulder Press", "Schulterdrücken mit Band", "Band Shoulder Press"], "band-one-arm-press": ["Einarm-Schulterdrücken (Band)", "One-arm Band Press", "Einarm-Schulterdrücken mit Band", "One-arm Band Press"], "band-russian-twist": ["Rumpfdrehung im Sitzen (Band)", "Seated Band Twist", "Rumpfdrehung im Sitzen mit Band", "Seated Band Twist"], "band-kneeling-twist": ["Kniende Rumpfdrehung (Band)", "Kneeling Band Rotation", "Kniende Rumpfdrehung mit Band", "Kneeling Band Rotation"], "band-side-bend": ["Seitbeuge (Band)", "Band Side Bend", "Seitbeuge mit Band", "Band Side Bend"], "band-kneeling-crunch": ["Crunch kniend (Band)", "Kneeling Band Crunch", "Crunch kniend mit Band", "Kneeling Band Crunch"], "band-crunch": ["Crunch liegend (Band)", "Lying Band Crunch", "Crunch liegend mit Band", "Lying Band Crunch"], "band-hammer-curl": ["Hammer-Curls (Band)", "Band Hammer Curl", "Hammer-Curls mit Band", "Band Hammer Curl"], "band-one-arm-curl": ["Einarm-Curl (Band)", "One-arm Band Curl", "Einarm-Curl mit Band", "One-arm Band Curl"], "band-biceps-curl": ["Bizeps-Curls (Band)", "Band Biceps Curl", "Bizeps-Curls mit Band", "Band Biceps Curl"], "band-concentration-curl": ["Konzentrations-Curl (Band)", "Seated Band Concentration Curl", "Konzentrations-Curl mit Band", "Seated Band Concentration Curl"], "band-overhead-triceps": ["Trizeps-Strecken über Kopf (Band)", "Overhead Band Triceps Press", "Trizeps-Strecken über Kopf mit Band", "Overhead Band Triceps Press"], "band-triceps-pressdown": ["Trizeps-Drücken nach unten (Band)", "Band Triceps Pushdown", "Trizeps-Drücken nach unten mit Band", "Band Triceps Pushdown"], "band-side-triceps": ["Einarm-Trizeps seitlich (Band)", "One-arm Side Triceps Extension", "Einarm-Trizeps seitlich mit Band", "One-arm Side Triceps Extension"], "band-triceps-kickback": ["Trizeps-Kickback (Band)", "Band Triceps Kickback", "Trizeps-Kickback mit Band", "Band Triceps Kickback"], "band-clamshell": ["Muschel (Band)", "Band Clamshell", "Muschel mit Band", "Band Clamshell"], "band-leg-abduction": ["Beinheben zur Seite (Band)", "Standing Band Leg Abduction", "Beinheben zur Seite mit Band", "Standing Band Leg Abduction"], "band-single-leg-deadlift": ["Einbeiniges Kreuzheben (Band)", "Single-leg Band Deadlift", "Einbeiniges Kreuzheben mit Band", "Single-leg Band Deadlift"], "band-glute-bridge": ["Glute Bridge (Band)", "Band Glute Bridge", "Glute Bridge mit Band", "Band Glute Bridge"], "band-donkey-kick": ["Fersenstoß im Vierfüßler (Band)", "Band Donkey Kick", "Fersenstoß im Vierfüßler mit Band", "Band Donkey Kick"], "band-squat": ["Kniebeuge (Band)", "Band Squat", "Kniebeuge mit Band", "Band Squat"], "band-prone-leg-curl": ["Beinbeugen im Liegen (Band)", "Prone Band Leg Curl", "Beinbeugen im Liegen mit Band", "Prone Band Leg Curl"], "band-lunge-squat": ["Ausfallschritt (Band)", "Band Split Squat", "Ausfallschritt mit Band", "Band Split Squat"], "band-lying-leg-press": ["Beinstrecken im Liegen (Band)", "Lying Band Leg Press", "Beinstrecken im Liegen mit Band", "Lying Band Leg Press"], "cable-chest-fly": ["Brust-Fly (Kabelzug)", "Cable Chest Fly", "Brust-Fly am Kabel", "Cable Chest Fly"], "cable-shoulder-press": ["Schulterdrücken (Kabelzug)", "Cable Shoulder Press", "Schulterdrücken am Kabel", "Cable Shoulder Press"], "one-arm-cable-curl": ["Einarmiger Bizepscurl (Kabelzug)", "One-Arm Cable Curl", "Einarmiger Bizepscurl am Kabel", "One-Arm Cable Curl"], "one-arm-cable-triceps-extension": ["Einarmiges Trizepsdrücken (Kabelzug)", "One-Arm Cable Triceps Extension", "Einarmiges Trizepsdrücken am Kabel", "One-Arm Cable Triceps Extension"], "db-skull-crusher": ["Stirndrücken (Kurzhantel)", "Dumbbell Skull Crusher", "Stirndrücken mit Kurzhanteln", "Dumbbell Skull Crusher"], "db-bench-squat": ["Kniebeuge zur Bank (Kurzhantel)", "Dumbbell Bench Squat", "Kniebeuge zur Bank mit Kurzhantel", "Dumbbell Bench Squat"], "cable-twist": ["Rumpfdrehung (Kabelzug)", "Cable Twist", "Rumpfdrehung am Kabel", "Cable Twist"], "cable-reverse-crunch": ["Reverse Crunch (Kabelzug)", "Cable Reverse Crunch", "Reverse Crunch am Kabel", "Cable Reverse Crunch"], "smith-overhead-press": ["Schulterdrücken (Multipresse)", "Smith Machine Overhead Press", "Schulterdrücken an der Multipresse", "Smith Machine Overhead Press"], "smith-incline-press": ["Schrägbankdrücken (Multipresse)", "Smith Machine Incline Press", "Schrägbankdrücken an der Multipresse", "Smith Machine Incline Press"], "smith-bent-over-row": ["Vorgebeugtes Rudern (Multipresse)", "Smith Machine Bent-Over Row", "Vorgebeugtes Rudern an der Multipresse", "Smith Machine Bent-Over Row"], "smith-split-squat": ["Ausfallschritt (Multipresse)", "Smith Machine Split Squat", "Ausfallschritt an der Multipresse", "Smith Machine Split Squat"], "smith-hip-thrust": ["Hip Thrust (Multipresse)", "Smith Machine Hip Thrust", "Hip Thrust an der Multipresse", "Smith Machine Hip Thrust"], "smith-calf-raise": ["Wadenheben (Multipresse)", "Smith Machine Calf Raise", "Wadenheben an der Multipresse", "Smith Machine Calf Raise"], "smith-shrug": ["Schulterheben (Multipresse)", "Smith Machine Shrug", "Schulterheben an der Multipresse", "Smith Machine Shrug"], "barbell-good-morning": ["Good Morning (Langhantel)", "Barbell Good Morning", "Good Morning mit Langhantel", "Barbell Good Morning"], "barbell-push-press": ["Push Press (Langhantel)", "Barbell Push Press", "Push Press mit Langhantel", "Barbell Push Press"]};
+var LEVEL_NEU = {"burpees": 2, "jump-squats": 2, "mountain-climbers": 2, "high-knees": 1, "jumping-jacks": 1, "skater-jumps": 2, "jump-lunges": 3, "plank-burpees": 2, "burpee-squat-jumps": 3, "jump-forward-squats": 2, "jump-forward-burpees": 3, "frogs": 2, "stand-up-jumps": 2, "lateral-hops": 2, "fast-feet": 1, "box-step-ups": 2, "sprint-in-place": 2, "goblet-squat": 2, "kb-swing": 2, "db-thruster": 2, "romanian-deadlift": 2, "db-deadlift": 2, "bent-over-row": 2, "one-arm-row": 1, "floor-press": 2, "shoulder-press": 2, "push-press": 2, "weighted-reverse-lunge": 2, "front-rack-carry": 2, "farmer-carry": 2, "kb-clean": 3, "renegade-row": 3, "push-ups": 2, "pike-push-ups": 3, "triceps-dips": 2, "squat-hold": 1, "walking-lunges": 2, "reverse-lunges": 1, "side-lunges": 2, "cossack-squats": 3, "deep-squats": 2, "pistol-assist": 2, "plank-steps": 2, "bear-crawl": 2, "wall-sit": 1, "calf-raises": 1, "glute-bridge": 1, "pull-ups": 3, "negative-pull-ups": 2, "inverted-rows": 2, "superman-hold": 1, "reverse-snow-angels": 1, "bird-dog": 1, "prone-y-raise": 1, "prone-t-raise": 1, "good-mornings": 1, "swimmers": 1, "scapular-push-ups": 1, "scapular-pull-ups": 1, "dead-hang": 1, "air-squats": 1, "split-squats": 2, "bulgarian-split-squats": 2, "forward-lunges": 2, "single-leg-glute-bridge": 2, "lateral-lunge-pulses": 2, "plank": 1, "side-plank": 2, "dead-bug": 1, "bicycle-crunches": 1, "leg-raises": 2, "jackknives": 3, "reverse-crunch": 2, "side-jackknives": 3, "hollow-hold": 3, "russian-twists": 2, "sit-ups": 1, "toe-touches": 1, "plank-shoulder-taps": 2, "toes-to-bar": 3, "triceps-curls": 1, "close-grip-push-ups": 2, "diamond-push-ups": 3, "sphinx-push-ups": 3, "leg-press": 2, "leg-press-45": 2, "leg-extension": 1, "leg-curl": 1, "adductor-machine": 1, "abductor-machine": 1, "calf-machine": 1, "chest-press-machine": 2, "butterfly": 1, "pullover": 2, "lat-pulldown": 2, "row-machine": 2, "cable-row": 2, "reverse-butterfly": 1, "back-extension": 1, "shoulder-press-machine": 2, "biceps-machine": 1, "cable-curl": 1, "triceps-pushdown": 1, "skull-crusher": 2, "ab-crunch-machine": 1, "bench-press": 2, "barbell-squat": 3, "barbell-deadlift": 3, "hack-squat": 2, "smith-squat": 2, "leg-press-single": 2, "hip-thrust": 2, "glute-kickback-cable": 1, "seated-calf": 1, "incline-chest-press": 2, "cable-crossover": 2, "incline-db-press": 2, "db-fly": 2, "assisted-pullup": 1, "close-grip-pulldown": 2, "t-bar-row": 2, "barbell-row": 2, "face-pull": 1, "straight-arm-pulldown": 1, "lateral-raise": 1, "shrugs": 1, "hammer-curl": 1, "barbell-curl": 1, "overhead-cable-triceps": 1, "triceps-machine": 1, "glute-machine": 1, "calf-press": 1, "lying-leg-curl": 1, "rotary-torso": 1, "back-extension-machine": 1, "triceps-extension-machine": 1, "lateral-raise-machine": 1, "cable-lateral-raise": 1, "smith-bench-press": 2, "assisted-dip": 1, "high-row-machine": 2, "cable-crunch": 2, "cable-pull-through": 2, "cable-woodchop": 2, "captains-chair": 1, "barbell-overhead-press": 2, "barbell-rdl": 2, "knee-push-ups": 1, "single-leg-calf-raise": 2, "negative-dips": 2, "pallof-press": 1, "copenhagen-plank": 2, "db-bench-press": 2, "db-step-ups": 2, "sumo-squat-db": 2, "single-leg-rdl": 2, "nordic-curl": 3, "chin-ups": 2, "commando-pull-ups": 3, "rung-pull-ups": 2, "parallel-bar-dips": 3, "support-hold": 2, "hanging-knee-raise": 2, "hanging-leg-raise": 3, "hanging-l-sit": 3, "l-sit": 3, "windshield-wipers": 3, "muscle-ups": 3, "monkey-bar-traverse": 2, "skin-the-cat": 3, "archer-push-ups": 3, "pistol-squats": 3, "dragon-flags": 3, "clap-push-ups": 3, "tuck-jumps": 3, "burpee-pull-ups": 3, "band-standing-row": 2, "band-bent-over-row": 2, "band-lat-pull-apart": 1, "band-pull-down": 1, "band-assisted-pull-up": 2, "band-push-ups": 2, "band-chest-fly": 1, "band-reverse-fly": 1, "band-chest-fly-up": 1, "band-chest-cross": 1, "band-lateral-raise": 1, "band-upright-row": 2, "band-front-raise": 1, "band-shoulder-press": 2, "band-one-arm-press": 2, "band-russian-twist": 1, "band-kneeling-twist": 1, "band-side-bend": 1, "band-kneeling-crunch": 1, "band-crunch": 1, "band-hammer-curl": 1, "band-one-arm-curl": 1, "band-biceps-curl": 1, "band-concentration-curl": 1, "band-overhead-triceps": 1, "band-triceps-pressdown": 1, "band-side-triceps": 1, "band-triceps-kickback": 1, "band-overhead-extension": 1, "band-clamshell": 1, "band-leg-abduction": 1, "band-single-leg-deadlift": 2, "band-glute-bridge": 1, "band-donkey-kick": 1, "band-squat": 2, "band-prone-leg-curl": 1, "band-lunge-squat": 2, "band-lying-leg-press": 1, "decline-db-bench": 2, "around-world-pullover": 2, "cable-chest-fly": 2, "standing-cable-fly": 2, "low-to-high-cable-fly": 2, "incline-push-up": 1, "deficit-push-up": 2, "ring-push-up": 3, "wide-grip-lat-pulldown": 2, "reverse-grip-lat-pulldown": 2, "rope-lat-pulldown": 2, "wide-grip-cable-row": 2, "underhand-cable-row": 2, "one-arm-cable-row": 2, "alternating-cable-row": 2, "one-arm-high-cable-row": 2, "chest-supported-row": 2, "cambered-bar-row": 2, "neutral-grip-pull-up": 2, "meadows-row": 2, "seated-db-shoulder-press": 2, "arnold-press": 2, "cable-shoulder-press": 2, "lean-away-lateral-raise": 2, "db-front-raise": 2, "front-raise-overhead": 2, "db-rear-delt-fly": 2, "one-arm-rear-delt-fly": 2, "seated-rear-delt-fly": 2, "upright-row": 2, "cuban-press": 2, "db-curl": 1, "alternating-db-curl": 1, "close-grip-ez-curl": 1, "high-cable-curl": 1, "one-arm-cable-curl": 1, "cross-body-hammer-curl": 1, "preacher-curl": 1, "hammer-preacher-curl": 1, "incline-db-curl": 2, "spider-curl": 2, "concentration-curl": 1, "standing-concentration-curl": 1, "zottman-curl": 2, "rope-triceps-pushdown": 1, "one-arm-cable-triceps-extension": 1, "kneeling-cable-triceps-extension": 1, "incline-cable-triceps-extension": 1, "lying-cable-triceps-extension": 1, "close-grip-db-press": 2, "db-skull-crusher": 2, "single-arm-skull-crusher": 2, "supinated-triceps-extension": 1, "ez-jm-press": 2, "tate-press": 2, "db-bench-squat": 2, "db-clean": 2, "stiff-leg-deadlift": 2, "standing-cable-crunch": 2, "cable-lift": 2, "cable-twist": 2, "cable-reverse-crunch": 2, "judo-flip": 2, "crunch": 1, "crunch-arms-straight": 2, "crunch-hands-overhead": 2, "cross-body-crunch": 2, "bear-plank-rockback-push-up": 2, "plank-toe-touch": 2, "wrist-curl": 2, "reverse-curl": 2, "wrist-pronation": 2, "wrist-supination": 2, "plate-pinch-hold": 2, "cross-jacks": 2, "smith-overhead-press": 2, "smith-incline-press": 2, "smith-bent-over-row": 2, "smith-split-squat": 2, "smith-hip-thrust": 2, "smith-calf-raise": 1, "smith-shrug": 1, "front-squat": 3, "pause-squat": 3, "zercher-squat": 3, "barbell-good-morning": 3, "barbell-push-press": 2};
+EXERCISE_ROWS.forEach(function(r){ var n = NAMEN_NEU[r[0]]; if(n){ r[1] = n[0]; r[2] = n[1];
+  EX_SUCH_ALIAS[r[0]] = (EX_SUCH_ALIAS[r[0]] ? EX_SUCH_ALIAS[r[0]] + " " : "") + (n[2] + " " + n[3]).toLowerCase(); } });
+Object.keys(LEVEL_NEU).forEach(function(id){ EX_LEVEL[id] = LEVEL_NEU[id]; });
+BAND_ANKER["band-lateral-walk"] = ["knoechel"];
+BAND_ANKER["band-pull-apart"] = ["haende"];
+BAND_ANKER["band-standing-leg-curl"] = ["fuss1"];
+BAND_ANKER["band-hip-adduction"] = ["tuer", "tief"];
+BAND_ANKER["band-deadlift"] = ["fuss"];
+BAND_ANKER["band-external-rotation"] = ["tuer", "brust"];
+BAND_ANKER["band-internal-rotation"] = ["tuer", "brust"];
+BAND_ANKER["band-external-rotation-90"] = ["tuer", "brust"];
+BAND_ANKER["band-ankle-dorsiflexion"] = ["tuer", "tief"];
+
 /* Gruppen im Studio-Reiter und Bereichszuordnung: Studio-Übungen kommen in ihre Gruppe, „Cardio & Ausdauer“ ist neu (Battle Rope);
    Übungen ohne Gerät (air-…) laufen über die Hauptgruppen von Air. Battle Ropes und Haltegriffe zählen nach Zeit: Ziel in Sekunden statt Wiederholungen. */
 (function(){
@@ -3753,6 +6216,8 @@ var STUDIO_GERAET = {};
     else if(eq.indexOf(" db ") > -1) STUDIO_GERAET[id] = "kh";
   }); });
 })();
+
+Object.keys(GERAET_NEU).forEach(function(id){ STUDIO_GERAET[id] = GERAET_NEU[id]; });
 
 window.BLOC_DATEN = {
   EX_ALIAS:EX_ALIAS,
