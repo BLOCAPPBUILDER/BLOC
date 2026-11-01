@@ -147,7 +147,7 @@ var KK_REGELN = [
 var KK_AUSNAHME = {
   "swimmers":["schulter_h"], "mountain-climbers":["schulter_v"], "bear-crawl":["schulter_v"], "plank-steps":["schulter_v"], "plank-shoulder-taps":["schulter_v"],
   "burpees":["schulter_v"], "jump-forward-burpees":["schulter_v"], "muscle-ups":["schulter_v", "schulter_h"], "skin-the-cat":["schulter_v", "schulter_h"],
-  "archer-push-ups":["schulter_v"], "kb-clean":["schulter_v", "schulter_s"], "jumping-jacks":["schulter_s"],
+  "archer-push-ups":["schulter_v"], "kb-clean":["schulter_v", "schulter_s"], "jumping-jacks":["schulter_s"], "star-jumps":["schulter_s"],
   "childs-pose":["schulter_h"], "downward-dog":["schulter_h"]   // gedehnt wird die hintere Schulter (Arme über Kopf), nicht vorn/seitlich
 };
 /* gespeicherte Auswahl (egal ob grob oder fein, auch ältere Namen) in die Zonen der gewählten Ansicht übersetzen; Unbekanntes fällt weg */

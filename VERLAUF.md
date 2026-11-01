@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-01 · Körperkarte der neuen Übungen nach Fachprüfung (Fassung 2026-11-01-2)
+
+- **Muskeln:** Hauptmuskel und Hilfsmuskeln der 271 neuen Übungen nach Prüfung des Sportwissenschaftlers korrigiert: Kniebeugen und Ausfallschritte mit Gesäß als Hauptmuskel, Pressen mit Schultern und Trizeps, Hammer- und Reverse-Curls mit Unterarmen, Doppelzählungen und falsche Gegenspieler bei Hilfsmuskeln entfernt, Innenrotation vordere Schulter statt hintere.
+- **Körperkarte:** Star Jumps zählen wie Jumping Jacks zur seitlichen Schulter.
+
 ## 2026-11-01 · 271 neue Übungen und Schwierigkeitsfilter (Fassung 2026-11-01-1)
 
 - **Übungen:** 271 neue Übungen (jetzt 600), alle mit eigener Figur aus zwei Posen, Anleitung in drei Schritten (DE/EN), Muskeln, Hinweis und Gerät. Einsortiert nach Trainingsart (Fitnessstudio, Calisthenic-Park, Körpergewicht) und Bereich; Dehnen und Mobilität unter Stretch, Springen und Ausdauer unter Ausdauer. 25 ähnliche Varianten (z. B. SZ-Stange, Defizit, versetzte Hände) haben eine eigene Figur; reine Doubletten und riskante Übungen (Levers, Olympisches Heben, Tiefsprung u. a.) sind bewusst nicht dabei.
