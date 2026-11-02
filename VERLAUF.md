@@ -3,7 +3,7 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
-## 2026-11-02 · 210 Strichfiguren nach den neuen Bildern (Fassung 2026-11-02-5)
+## 2026-11-02 · 210 Strichfiguren nach den neuen Bildern (Fassung 2026-11-02-7)
 
 - **Figuren:** Die bewegten Figuren von 210 neuen Übungen sind nach den neuen Übungsbildern neu gezeichnet: gleiche Ansicht (von vorn oder von der Seite), Körper-, Arm- und Beinstellung wie im Bild, Geräte als orange Striche. Wo ein Bild reicht (Pose doppelt oder nur eine aussagekräftig), zeigt die Figur nur diese eine Pose. Die sieben Übungen, deren Bild neu gemacht werden muss, und die 54 Übungen ohne Bild behalten die alte Figur.
 - **Test:** Der Schnelltest läuft bis auf die schon vorher offene Prüfung der Filterkarte durch (erwartet drei statt vier Filter-Schritte).
