@@ -3,6 +3,12 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-02 · Deep Dive auch ohne Training sichtbar (Fassung 2026-11-02-4)
+
+- **Deep Dive:** „Wie oft pro Muskelgruppe“, „Balance“ und „Anteil der Muskelgruppen“ stehen jetzt auch dann da, wenn noch nichts trainiert oder geplant ist (leere Balken und Figur). So sieht man gleich, was die Seite zeigt, und bekommt Lust loszulegen.
+
+## 2026-11-02 · Logbuch im Deep Dive (Fassung 2026-11-02-4)
+
 ## 2026-11-02 · Logbuch im Deep Dive (Fassung 2026-11-02-4)
 
 - **Logbuch:** „Fortschritt je Übung“ heißt jetzt Logbuch und wandert aus dem Fortschritt in Path › Deep Dive (unter die Häufigkeit der Muskelgruppen), zugeklappt. Oben Rubrik-Chips (Alle, Brust, Rücken … wie im Übungskatalog, mit Anzahl), darunter die Übungen als Kacheln mit der bewegten Figur, Bestwert erste → jetzt und Steigerung. Ein Tipp auf die Kachel öffnet die Auswertung, „Schließen“ führt zurück zu den Kacheln (ein Schritt).
