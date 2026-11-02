@@ -111,12 +111,12 @@ function mainTagsHTML(mains){
 }
 /* Farbe eines Workouts nach Ort: Fitnessstudio orange, Freiluft blau (auf Seiten eines anderen Bereichs dessen Farbe) */
 function woFarbe(exs){ return katWoOrt(exs) === "studio" ? "var(--gym-color)" : "var(--bereich, var(--tp-color))"; }
-function libWoCard(lw, exs, hidden, dur, mains){
+function libWoCard(lw, exs, hidden, dur, mains, schw){
   // --bereich: gesetzt auf Seiten eines anderen Bereichs (Aufwärmen & Dehnen), sonst Workouts-Grün
   return '<div class="list-item entry tpl-item lib-card'+(hidden?' is-hidden':'')+'" style="--cat:'+woFarbe(exs)+'" data-cover="lib/'+lw.id+'" data-q="'+esc(woSearchText(lw.name.de+" "+lw.name.en, exs))+'">'+
     '<button class="playbtn cat" data-cover="lib/'+lw.id+'" title="'+t("startTemplate")+'" aria-label="'+t("startTemplate")+'">'+ICON_PLAY+'</button>'+
     '<div class="meta"><div class="name">'+esc(tplText(lw.name))+'</div>'+
-    '<div class="sub">'+mainTagsHTML(mains)+exAnzText(exs.length)+SEP+fmtDauerKurz(dur)+'</div>'+
+    '<div class="sub">'+mainTagsHTML(mains)+exAnzText(exs.length)+SEP+fmtDauerKurz(dur)+(schw ? SEP+esc(t("schw_"+schw)) : '')+'</div>'+
     '</div>'+kkMiniHTML(exs)+   // kleine Körperfigur: welche Muskelgruppen das Workout trainiert (wie in Path › Deep Dive)
     '<div class="card-aside"><div class="card-acts">'+
       (hidden ? '<button type="button" class="tpl-adopt" data-unhideone="wo:'+lw.id+'">'+svgIcon(ICON_EYE)+' '+t("unhide")+'</button>'

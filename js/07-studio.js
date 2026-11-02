@@ -156,6 +156,16 @@ function ausrPasst(ex, fAusr){ return !fAusr.length || exAusr(ex).some(function(
 /* Schwierigkeit (Filter, Mehrfachwahl, leer = alles): leicht, mittel, schwer nach der Stufe der Übung (EX_LEVEL 1, 2, 3) */
 var SCHW_IDS = ["leicht", "mittel", "schwer"];
 function exSchw(ex){ return SCHW_IDS[Math.min(3, Math.max(1, ex.level || 2)) - 1]; }
+/* Schwierigkeit eines fertigen Workouts: die Pläne tragen sie im Namen der ID (-leicht, -mittel, -schwer); alle anderen nach dem Durchschnitt der Übungs-Stufen
+   (bis 1,5 leicht, ab 2,5 schwer, dazwischen mittel). Dauer und Anzahl zählen nicht: ein langes Workout mit leichten Übungen bleibt leicht. */
+function woSchw(lw, exs){
+  var m = /-(leicht|mittel|schwer)$/.exec(lw.id || "");
+  if(m) return m[1];
+  var l = (exs || []).filter(Boolean);
+  if(!l.length) return "mittel";
+  var avg = l.reduce(function(a, ex){ return a + (ex.level || 2); }, 0) / l.length;
+  return avg <= 1.5 ? "leicht" : (avg >= 2.5 ? "schwer" : "mittel");
+}
 function studioSchwWahl(){ return selArr(state.db.settings.stSchw).filter(function(a){ return SCHW_IDS.indexOf(a) > -1; }); }
 function schwPasst(ex, fSchw){ return !fSchw || !fSchw.length || fSchw.indexOf(exSchw(ex)) > -1; }
 function schwChipsHTML(attr, fSchw){ return '<div class="fc-chips af-schw">'+SCHW_IDS.map(function(a){ return filterChip(attr, a, fSchw.indexOf(a) > -1, '', t("schw_"+a)); }).join("")+'</div>'; }
@@ -241,7 +251,7 @@ function filterSchrittHTML(nr, titel){ return '<div class="bau-schritt af-schrit
 function studioFilterHTML(gruppen, fGr, fTrain, fAusr, anzahl, zonen, opt){
   var s = state.db.settings;
   opt = opt || {};
-  var mitTrain = true, fSchw = opt.art === "Wo" ? [] : studioSchwWahl();
+  var mitTrain = true, fSchw = studioSchwWahl();
   var namen = fGr.map(function(id){ var g = gruppen.filter(function(x){ return x.id === id; })[0]; return g ? g.name : id; })
     .concat(mitTrain ? fTrain.map(function(a){ return t("trArt_"+a); }) : [], fAusr.map(function(g){ return t("stGer_"+g); }), zonen.map(kkName), fSchw.map(function(a){ return t("schw_"+a); }));
   /* Muskel (Chips + Figur, eine Auswahl); außer Muskeln gibt es nur noch Cardio & Ausdauer (orangenes Leuchten hinter der Figur) und Eigene Übungen */
@@ -256,7 +266,7 @@ function studioFilterHTML(gruppen, fGr, fTrain, fAusr, anzahl, zonen, opt){
         return filterChip("data-stausr", g, fAusr.indexOf(g) > -1, svgIcon(STUDIO_GERAET_ICON[g] || STUDIO_AUSR_ICON[g]), t("stGer_"+g)); }).join("")+'</div>'+
       filterSchrittHTML(mitTrain ? 3 : 2, t("trSchritt3"))+
       kkMuskelHTML("data-stzone", "data-stgrp", zonen, { extra:extra, glow:fGr.indexOf("cardio") > -1, ohneLabel:true })+
-      (opt.art === "Wo" ? '' : filterSchrittHTML(mitTrain ? 4 : 3, t("schwSchritt"))+schwChipsHTML("data-stschw", fSchw)) });
+      filterSchrittHTML(mitTrain ? 4 : 3, t("schwSchritt"))+schwChipsHTML("data-stschw", fSchw) });
 }
 function studioFilterBinden(fGr, fTrain, fAusr, zonen, neuZeichnen){
   var s = state.db.settings;
