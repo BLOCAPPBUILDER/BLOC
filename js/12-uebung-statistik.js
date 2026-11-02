@@ -152,7 +152,7 @@ function wocheHTML(opt){
    der in den letzten 4 Wochen am meisten genutzte steht oben. Grundlage: Kurz-Verlauf (31 Tage) + Wochensummen (statW), bei Run die Läufe selbst. */
 var statKalOffen = false;   // Kalender startet zugeklappt (nur innerhalb des Besuchs gemerkt)
 var statOffen = {};   // auf- oder zugeklappte Karten (WHO, Bereiche) innerhalb des Besuchs; ohne Eintrag gilt die Voreinstellung
-var statFortAnz = 5;   // wie viele Übungen unter „Fortschritt je Übung“ stehen (Mehr anzeigen: +10)
+var statFortAnz = 6;   // wie viele Kacheln im Logbuch stehen (Mehr anzeigen: +12)
 /* Große Bestätigung nach „Satz eintragen“: Haken und Satz in der Bildschirmmitte, verschwindet von selbst (fängt keine Berührungen ab) */
 function satzFeedback(n, text, rekord){
   var alt = document.getElementById("satz-fb"); if(alt) alt.remove();
@@ -164,28 +164,51 @@ function satzFeedback(n, text, rekord){
   setTimeout(function(){ d.classList.add("weg"); }, 900);
   setTimeout(function(){ d.remove(); }, 1300);
 }
-/* Fortschritt je Übung: erstes gegen heutiges Bestgewicht (ohne Gewicht: Wiederholungen), mit Wochenkurve; Tipp = Statistik der Übung */
+/* Logbuch (Path › Deep Dive, zugeklappt): Fortschritt je Übung - erstes gegen heutiges Bestgewicht (ohne Gewicht: Wiederholungen) als Kacheln mit der bewegten Figur.
+   Die Chips filtern nach Rubrik (Brust, Rücken … wie im Übungskatalog) und zeigen, wo wie viel geschafft ist; ein Tipp auf die Kachel öffnet die Auswertung der Übung,
+   „Schließen“ führt wieder zu den Kacheln (ein Schritt zurück). */
+var statFortGr = "";   // gewählte Rubrik des Logbuchs ("" = alle)
+function statFortRubrik(ex){ var g = katGruppeVon(ex); return g === "eigene" ? (katBereichEigene(ex) || "eigene") : g; }
+function statFortRubrikName(id){ var g = KAT_GRUPPEN.filter(function(x){ return x.id === id; })[0]; return g ? t(g.key) : t("stOwn"); }
 function statFortschrittHTML(){
   var alle = studioAlle(), l = [];
   Object.keys(alle).forEach(function(id){
     var ex = findExercise(id), log = ((alle[id] && alle[id].log) || []).filter(function(x){ return arbeitsSaetze(x).length; });
     if(!ex || log.length < 2) return;
     var erst = studioBestwerte(log.slice(0, 1)), jetzt = studioBestwerte(log), mitKg = jetzt.kg > 0;
-    l.push({ id:id, name:tplText(ex.name), n:log.length, mitKg:mitKg, von:mitKg ? erst.kg : erst.wdh, bis:mitKg ? jetzt.kg : jetzt.wdh, at:log[log.length-1].at });
+    l.push({ id:id, ex:ex, name:tplText(ex.name), gr:statFortRubrik(ex), n:log.length, mitKg:mitKg, von:mitKg ? erst.kg : erst.wdh, bis:mitKg ? jetzt.kg : jetzt.wdh, at:log[log.length-1].at });
   });
-  var kopf = '<div class="sk-kopf"><b>'+esc(t("statFort"))+'</b><span class="sk-sub">'+esc(t("statFortSub"))+'</span></div>';
-  if(!l.length) return '<div class="card stat-karte stat-fort">'+kopf+'<div class="sk-unter">'+esc(t("statFortLeer"))+'</div></div>';
-  l.sort(function(a, b){ return b.at - a.at; });
-  var zeilen = l.slice(0, statFortAnz).map(function(x){
+  var kopf = '<summary><b>'+esc(t("statFort"))+'</b><span class="sk-sub">'+esc(t("statFortSub"))+'</span><span class="sk-chev">'+ICON_CHEV+'</span></summary>';
+  var tag = '<details class="card stat-karte stat-kal stat-falt stat-fort" data-statfalt="logbuch"'+(statOffen.logbuch ? ' open' : '')+'>';
+  if(!l.length) return tag+kopf+'<div class="sk-unter">'+esc(t("statFortLeer"))+'</div></details>';
+  // Rubriken, in denen es etwas zu sehen gibt (Reihenfolge wie im Übungskatalog)
+  var rub = KAT_GRUPPEN.map(function(g){ return g.id; }).concat(["eigene"]).filter(function(id){ return l.some(function(x){ return x.gr === id; }); });
+  if(rub.indexOf(statFortGr) < 0) statFortGr = "";
+  var chips = filterChip("data-sfgr", "", !statFortGr, "", t("statFortAlle")+" · "+l.length)+rub.map(function(id){
+    return filterChip("data-sfgr", id, statFortGr === id, "", statFortRubrikName(id)+" · "+l.filter(function(x){ return x.gr === id; }).length); }).join("");
+  var sicht = (statFortGr ? l.filter(function(x){ return x.gr === statFortGr; }) : l).sort(function(a, b){ return b.at - a.at; });
+  var besser = sicht.filter(function(x){ return x.bis > x.von; }).length;
+  var kacheln = sicht.slice(0, statFortAnz).map(function(x){
     var d = Math.round((x.bis - x.von)*100)/100, p = x.von > 0 ? Math.round(d/x.von*100) : 0, einheit = x.mitKg ? " kg" : " "+t("wdhKurz");
     var delta = d > 0 ? "+"+studioKg(d)+einheit+(p ? " (+"+p+" %)" : "") : d < 0 ? "−"+studioKg(-d)+einheit : t("statFortGleich");
-    return '<button type="button" class="sf-zeile" data-sfuebung="'+esc(x.id)+'"><span class="sf-links"><b>'+esc(x.name)+'</b><small>'+esc(t("statFortEinh", { n:x.n }))+'</small></span>'+
-      wochenKurve(studioWochen(x.id, x.mitKg ? "kg" : "wdh"), "sf-kurve")+
-      '<span class="sf-rechts"><b>'+esc(studioKg(x.von)+" → "+studioKg(x.bis)+einheit)+'</b><small class="'+(d > 0 ? 'auf' : d < 0 ? 'ab' : '')+'">'+esc(delta)+'</small></span></button>';
+    return uebKachel({ bild:x.id, name:x.name, attr:'data-sfuebung="'+esc(x.id)+'"', cat:studioFarbe(x.ex), ico:exSymbol(x.ex),
+      unter:'<span class="st-sub an">'+esc(studioKg(x.von)+" → "+studioKg(x.bis)+einheit)+'</span><span class="sf-delta'+(d > 0 ? ' auf' : d < 0 ? ' ab' : '')+'">'+esc(delta)+'</span>'+
+        '<span class="sf-einh">'+esc((statFortGr ? "" : statFortRubrikName(x.gr)+" · ")+t("statFortEinh", { n:x.n }))+'</span>' });
   }).join("");
-  var rest = l.length - statFortAnz;
-  return '<div class="card stat-karte stat-fort">'+kopf+zeilen+
-    (rest > 0 ? '<button type="button" class="btn btn-secondary tr-mehr" data-sfmehr>'+esc(t("trMehr", { n:rest }))+'</button>' : '')+'</div>';
+  var rest = sicht.length - statFortAnz;
+  return tag+kopf+'<div class="fc-chips sf-chips">'+chips+'</div>'+
+    '<div class="sk-unter sf-summe">'+esc(t("statFortSumme", { n:sicht.length, b:besser }))+'</div>'+
+    '<div class="fig-grid">'+kacheln+'</div>'+
+    (rest > 0 ? '<button type="button" class="btn btn-secondary tr-mehr" data-sfmehr>'+esc(t("trMehr", { n:rest }))+'</button>' : '')+'</details>';
+}
+/* Tipps im Logbuch: Übung öffnen (Auswertung), Rubrik wählen, mehr anzeigen, auf-/zuklappen; neu() zeichnet die Seite neu */
+function statFortBinden(neu){
+  kachelKlick(app, ".stat-fort [data-sfuebung]", function(el){ openStudioStats(el.getAttribute("data-sfuebung")); });
+  app.querySelectorAll("[data-sfgr]").forEach(function(b){ b.addEventListener("click", function(){ statFortGr = b.getAttribute("data-sfgr"); statFortAnz = 6; neu(); }); });
+  var m = app.querySelector("[data-sfmehr]");
+  if(m) m.addEventListener("click", function(){ statFortAnz += 12; neu(); });
+  var d = app.querySelector('details[data-statfalt="logbuch"]');
+  if(d) d.addEventListener("toggle", function(){ statOffen.logbuch = d.open; });
 }
 var statModus = "zeit";   // Verlauf-Diagramm: "zeit" | "n"
 var statGran = "woche";   // Zeitraum je Balken: "woche" | "monat" | "jahr"
@@ -449,7 +472,6 @@ function renderStats(){
   }
   html += statBlocsHTML();   // die trainierten BLOCs im Verlauf (Anzahl, zuletzt, Volumen)
   html += statTrainingsHTML();   // zuletzt gespeicherte Trainings (Training speichern auf Plan-Seite, Karte und im Timer)
-  html += statFortschrittHTML(); // Fortschritt je Übung (Bestgewicht erste → jetzt)
   html += statEinblickeHTML(voll);   // Mehr Einblicke (zugeklappt): Volumen, Rekorde, Drücken : Ziehen
   // Bereiche wie auf der Startseite: Workout, dann Mobility & Stretch, danach der Timer, Run zuletzt
   var folge = statGruppen(aktiv).map(function(k, i){ return { k:k, n:bes(k, 28).length, i:i }; }).sort(function(a, b){
@@ -506,8 +528,6 @@ function renderStats(){
     d.addEventListener("toggle", function(){ statOffen[d.getAttribute("data-statfalt").replace(/^b-/, "b-")] = d.open; });
   });
   app.querySelectorAll("[data-sfuebung]").forEach(function(b){ b.addEventListener("click", function(){ openStudioStats(b.getAttribute("data-sfuebung")); }); });
-  var sfm = app.querySelector("[data-sfmehr]");
-  if(sfm) sfm.addEventListener("click", function(){ statFortAnz += 10; var y = window.scrollY; renderStats(); window.scrollTo(0, y); });
   app.querySelectorAll(".bscroll").forEach(function(b){ b.scrollLeft = b.scrollWidth; });
   var kal = app.querySelector("[data-statkal]");
   if(kal) kal.addEventListener("toggle", function(){ statKalOffen = kal.open; });

@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-02 · Logbuch im Deep Dive (Fassung 2026-11-02-1)
+
+- **Logbuch:** „Fortschritt je Übung“ heißt jetzt Logbuch und wandert aus dem Fortschritt in Path › Deep Dive (unter die Häufigkeit der Muskelgruppen), zugeklappt. Oben Rubrik-Chips (Alle, Brust, Rücken … wie im Übungskatalog, mit Anzahl), darunter die Übungen als Kacheln mit der bewegten Figur, Bestwert erste → jetzt und Steigerung. Ein Tipp auf die Kachel öffnet die Auswertung, „Schließen“ führt zurück zu den Kacheln (ein Schritt).
+- **Tests:** Der Statistik-Test prüft Kacheln statt Zeilen.
+
 ## 2026-11-01 · Trainingspläne mit mehr neuen Übungen (Fassung 2026-11-01-4)
 
 - **Pläne:** 29 der 53 Trainingspläne enthalten jetzt mehr der neuen Übungen (knapp die Hälfte aller Übungsplätze). Reihenfolge, Level-Passung und Burpee-Finisher bleiben. Rucksack-Rudern kommt nicht vor.

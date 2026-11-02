@@ -610,7 +610,7 @@
       gleich(W.protZiel(), 0, "ohne Gewicht kein Ziel");
     } finally { s.protein = alt; s.koerper = altK; }
   });
-  test("Statistik: Fortschritt je Übung (erstes gegen bestes Gewicht, ohne Gewicht Wiederholungen, nur ab zwei Einheiten)", function () {
+  test("Statistik: Logbuch / Fortschritt je Übung (erstes gegen bestes Gewicht, ohne Gewicht Wiederholungen, nur ab zwei Einheiten)", function () {
     var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();
     try {
       s.studio = {
@@ -619,13 +619,13 @@
         "air-squats": { log: [{ at: n - 1*tag, s: [[0, 20]] }] }   // nur eine Einheit: erscheint nicht
       };
       var h = W.statFortschrittHTML(), d = document.createElement("div"); d.innerHTML = h;
-      var zeilen = d.querySelectorAll(".sf-zeile");
+      var zeilen = d.querySelectorAll("[data-sfuebung]");
       gleich(zeilen.length, 2, "Übungen mit mindestens zwei Einheiten");
       wahr(/60 → 80 kg/.test(h) && /\+20 kg \(\+33 %\)/.test(h), "Beinpresse: 60 → 80 kg, +20 kg (+33 %): " + d.textContent.slice(0, 200));
       wahr(/12 → 18 Wdh\./.test(h) && /\+6 Wdh\. \(\+50 %\)/.test(h), "Liegestütze: 12 → 18 Wdh.");
       wahr(h.indexOf("air-squats") < 0, "Übung mit einer Einheit darf nicht erscheinen");
       s.studio = {};
-      wahr(/stat-fort/.test(W.statFortschrittHTML()) && W.statFortschrittHTML().indexOf("sf-zeile") < 0, "ohne Daten ein Hinweis statt Zeilen");
+      wahr(/stat-fort/.test(W.statFortschrittHTML()) && W.statFortschrittHTML().indexOf("data-sfuebung") < 0, "ohne Daten ein Hinweis statt Kacheln");
     } finally { s.studio = alt; }
   });
 
