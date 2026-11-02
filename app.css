@@ -2048,7 +2048,7 @@ body.mit-tabs .fab-menu{ bottom:calc(166px + env(safe-area-inset-bottom)); }
 .stat-falt > summary{ cursor:pointer; }
 .stat-falt > summary + *{ margin-top:12px; }
 .stat-falt .sb-name{ display:flex; align-items:center; gap:8px; }
-.stat-fort .sf-chips{ margin-top:12px; } .stat-fort .sf-summe{ margin:10px 0 12px; } .stat-fort .fig-grid{ margin-top:0; }
+.stat-fort .sf-chips{ margin-top:12px; } .stat-fort .sf-summe{ margin:14px 0 12px; } .stat-fort .sf-verlauf{ margin:14px 0 8px; } .stat-fort .fig-grid{ margin-top:0; }
 .sf-delta, .sf-einh{ display:block; font-size:12px; color:var(--text-dim); text-align:center; } .sf-delta.auf{ color:var(--ok, #1f9d63); font-weight:600; } .sf-delta.ab{ color:var(--danger, #d6453d); }
 .sf-zeile{ display:grid; grid-template-columns:minmax(0,1fr) 56px auto; gap:10px; align-items:center; width:100%; text-align:left; background:none; border:0; border-top:1px solid var(--border); padding:10px 0; color:inherit; font:inherit; cursor:pointer; }
 .sf-zeile:first-of-type{ border-top:0; }

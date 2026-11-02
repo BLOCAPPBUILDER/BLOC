@@ -170,6 +170,40 @@ function satzFeedback(n, text, rekord){
 var statFortGr = "";   // gewählte Rubrik des Logbuchs ("" = alle)
 function statFortRubrik(ex){ var g = katGruppeVon(ex); return g === "eigene" ? (katBereichEigene(ex) || "eigene") : g; }
 function statFortRubrikName(id){ var g = KAT_GRUPPEN.filter(function(x){ return x.id === id; })[0]; return g ? t(g.key) : t("stOwn"); }
+var statFortModus = "gew";   // Verlauf im Logbuch: "gew" (Top-Gewicht) | "wdh" (Wiederholungen) | "vol" (Volumen)
+var statFortGran = "woche";   // Zeitraum je Balken: "woche" | "monat" | "jahr"
+/* Verlauf über die Zeit (wie „Verlauf“ im Fortschritt): je Woche/Monat/Jahr das schwerste Arbeitsgewicht, die Wiederholungen oder das Volumen aller Übungen der gewählten Rubrik */
+function statFortVerlaufHTML(){
+  var alle = studioAlle(), logs = [];
+  Object.keys(alle).forEach(function(id){
+    var ex = findExercise(id); if(!ex || (statFortGr && statFortRubrik(ex) !== statFortGr)) return;
+    ((alle[id] && alle[id].log) || []).forEach(function(l){ if(arbeitsSaetze(l).length) logs.push(l); });
+  });
+  if(!logs.length) return "";
+  var fr = Math.min.apply(null, logs.map(function(l){ return l.at; })), mo = new Date(); mo.setHours(0, 0, 0, 0); mo.setDate(mo.getDate() - (mo.getDay() + 6) % 7);
+  var weeks = [], wk = new Date(fr); wk.setHours(0, 0, 0, 0); wk.setDate(wk.getDate() - (wk.getDay() + 6) % 7);
+  for(; wk.getTime() <= mo.getTime() && weeks.length < 1040; wk.setDate(wk.getDate() + 7)) weeks.push({ ab:wk.getTime(), n:0, s:0, a:{} });
+  var reihe = statBuckets(statFortGran === "woche" ? weeks.slice(-104) : weeks, statFortGran, statFortGran === "woche" ? 8 : statFortGran === "monat" ? 6 : 3);
+  var vals = reihe.map(function(b){
+    var top = 0, wdh = 0, vol = 0;
+    logs.forEach(function(l){
+      if(l.at < b.ab || l.at >= b.bis) return;
+      arbeitsSaetze(l).forEach(function(x){
+        if(x[0] > top) top = x[0];
+        if(x[4] !== 1){ wdh += x[1]; vol += x[0]*x[1]; }   // Haltezeiten (Sekunden) zählen nicht als Wiederholungen
+      });
+    });
+    return statFortModus === "gew" ? top : statFortModus === "wdh" ? wdh : vol;
+  });
+  function kurz(v){ return statFortModus === "vol" && v >= 1000 ? String(Math.round(v/100)/10).replace(".", ",")+"t" : statFortModus === "gew" ? studioKg(Math.round(v*10)/10) : String(Math.round(v)); }
+  function knopf(attr, wert, aktivWert, text){ return '<button type="button" data-'+attr+'="'+wert+'" class="'+(aktivWert === wert ? 'active' : '')+'">'+esc(text)+'</button>'; }
+  var einheit = t(statFortGran === "woche" ? "statUWoche" : statFortGran === "monat" ? "statUMonat" : "statUJahr");
+  return '<div class="sk-kopf sf-verlauf"><b>'+esc(t("statVerlauf"))+'</b><span class="stat-seg">'+
+      knopf("sfmod", "gew", statFortModus, t("statFortMod_gew"))+knopf("sfmod", "wdh", statFortModus, t("wdhKurz"))+knopf("sfmod", "vol", statFortModus, t("statFortMod_vol"))+'</span></div>'+
+    '<div class="sk-kopf stat-gran"><span class="stat-seg">'+knopf("sfgran", "woche", statFortGran, t("statGranWoche"))+knopf("sfgran", "monat", statFortGran, t("statGranMonat"))+knopf("sfgran", "jahr", statFortGran, t("statGranJahr"))+'</span></div>'+
+    statBalken(vals, reihe.map(function(b){ return b.label; }), kurz)+
+    '<div class="sk-unter">'+esc(t("statFortHint_"+statFortModus, { u:einheit })+" – "+t("statWischen"))+'</div>';
+}
 function statFortschrittHTML(){
   var alle = studioAlle(), l = [];
   Object.keys(alle).forEach(function(id){
@@ -197,6 +231,7 @@ function statFortschrittHTML(){
   }).join("");
   var rest = sicht.length - statFortAnz;
   return tag+kopf+'<div class="fc-chips sf-chips">'+chips+'</div>'+
+    statFortVerlaufHTML()+
     '<div class="sk-unter sf-summe">'+esc(t("statFortSumme", { n:sicht.length, b:besser }))+'</div>'+
     '<div class="fig-grid">'+kacheln+'</div>'+
     (rest > 0 ? '<button type="button" class="btn btn-secondary tr-mehr" data-sfmehr>'+esc(t("trMehr", { n:rest }))+'</button>' : '')+'</details>';
@@ -207,8 +242,12 @@ function statFortBinden(neu){
   app.querySelectorAll("[data-sfgr]").forEach(function(b){ b.addEventListener("click", function(){ statFortGr = b.getAttribute("data-sfgr"); statFortAnz = 6; neu(); }); });
   var m = app.querySelector("[data-sfmehr]");
   if(m) m.addEventListener("click", function(){ statFortAnz += 12; neu(); });
+  app.querySelectorAll("[data-sfmod]").forEach(function(b){ b.addEventListener("click", function(){ statFortModus = b.getAttribute("data-sfmod"); neu(); }); });
+  app.querySelectorAll("[data-sfgran]").forEach(function(b){ b.addEventListener("click", function(){ statFortGran = b.getAttribute("data-sfgran"); neu(); }); });
+  function ans(){ app.querySelectorAll(".stat-fort .bscroll").forEach(function(b){ b.scrollLeft = b.scrollWidth; }); }   // neuester Zeitraum rechts im Blick
   var d = app.querySelector('details[data-statfalt="logbuch"]');
-  if(d) d.addEventListener("toggle", function(){ statOffen.logbuch = d.open; });
+  if(d) d.addEventListener("toggle", function(){ statOffen.logbuch = d.open; if(d.open) ans(); });
+  if(d && d.open) ans();
 }
 var statModus = "zeit";   // Verlauf-Diagramm: "zeit" | "n"
 var statGran = "woche";   // Zeitraum je Balken: "woche" | "monat" | "jahr"
