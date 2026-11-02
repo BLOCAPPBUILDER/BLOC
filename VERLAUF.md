@@ -9,8 +9,6 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 ## 2026-11-02 · Logbuch im Deep Dive (Fassung 2026-11-02-4)
 
-## 2026-11-02 · Logbuch im Deep Dive (Fassung 2026-11-02-4)
-
 - **Logbuch:** „Fortschritt je Übung“ heißt jetzt Logbuch und wandert aus dem Fortschritt in Path › Deep Dive (unter die Häufigkeit der Muskelgruppen), zugeklappt. Oben Rubrik-Chips (Alle, Brust, Rücken … wie im Übungskatalog, mit Anzahl), darunter die Übungen als Kacheln mit der bewegten Figur, Bestwert erste → jetzt und Steigerung. Ein Tipp auf die Kachel öffnet die Auswertung, „Schließen“ führt zurück zu den Kacheln (ein Schritt).
 - **Tests:** Der Statistik-Test prüft Kacheln statt Zeilen.
 
