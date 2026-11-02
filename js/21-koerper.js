@@ -159,14 +159,14 @@ function renderDeepDive(){
 
   // Balance: Drücken ↔ Ziehen, Oberkörper ↔ Unterkörper
   var bal = ddBalance(ids);
-  var balKarte = !hatDaten ? '' : '<section class="card dd-karte"><div class="dd-titel" style="display:flex;align-items:center;justify-content:space-between">'+esc(t("ddBalTitel"))+
+  var balKarte = '<section class="card dd-karte"><div class="dd-titel" style="display:flex;align-items:center;justify-content:space-between">'+esc(t("ddBalTitel"))+
     '<button type="button" class="info-btn" data-ddbalinfo aria-label="'+esc(t("info"))+'" title="'+esc(t("info"))+'">i</button></div>'+
     ddBalken(t("ddPush"), t("ddPull"), bal.push, bal.pull)+ddBalken(t("ddOben"), t("ddUnten"), bal.oben, bal.unten)+
     '<div class="dd-fussnote">'+esc(t("ddBalHinweis"))+'</div></section>';
 
   // Anteil der sechs Muskelgruppen, daneben der Unterschied zur Vorwoche (nur Trainiertes; mit Plan: die Auswahl oben)
   var r = mgProzent(ids), rv = mgProzent(alleIds(vorher)), verteilung = '';
-  if(!r.leer){
+  {   // auch ohne Training sichtbar (leere Balken): zeigt, was die Seite später kann
     verteilung = '<section class="card dd-karte"><div class="dd-titel">'+esc(t("ddAnteil"))+'</div><div class="dd-verteilung">'+r.rows.map(function(x, i){
       var d = rv.leer ? 0 : x.pct - rv.rows[i].pct;
       return '<div class="ausw-row'+(x.pct ? '' : ' null')+'"><span class="ausw-n">'+esc(t(x.key))+'</span><span class="ausw-bar"><i style="width:'+x.pct+'%"></i></span><b>'+x.pct+'%</b>'+
@@ -195,7 +195,7 @@ function renderDeepDive(){
     '<div class="dd-nav"><button type="button" class="iconbtn" data-ddwoche="-1" aria-label="'+esc(t("ddVor"))+'">&#8249;</button><b>'+esc(kopf)+'</b>'+
       '<button type="button" class="iconbtn" data-ddwoche="1" aria-label="'+esc(t("ddNach"))+'"'+(ddWoche >= 0 ? ' disabled' : '')+'>&#8250;</button></div>' +
     chips + umschalter + kkModusHTML() +
-    (hatDaten ? freqKarte : '') + statFortschrittHTML() + kalKarte + balKarte + verteilung + vorschlag +
+    freqKarte + statFortschrittHTML() + kalKarte + balKarte + verteilung + vorschlag +
     (eintraege.length ? '<div class="section-title"><span>'+esc(t("ddWorkout"))+'</span></div>'+eintraege.map(function(e){
       var dauer = e.dur > 0 ? " · "+fmtDuration(Math.max(60, Math.round(e.dur/60)*60)) : "";
       return '<section class="card dd-karte"><div class="dd-titel">'+esc(datum(e.at, { weekday:"long", day:"numeric", month:"short" }))+'</div>'+
