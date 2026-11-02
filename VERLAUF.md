@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-02 · Logbuch im Deep Dive (Fassung 2026-11-02-4)
+
+- **Logbuch:** „Fortschritt je Übung“ heißt jetzt Logbuch und wandert aus dem Fortschritt in Path › Deep Dive (unter die Häufigkeit der Muskelgruppen), zugeklappt. Oben Rubrik-Chips (Alle, Brust, Rücken … wie im Übungskatalog, mit Anzahl), darunter die Übungen als Kacheln mit der bewegten Figur, Bestwert erste → jetzt und Steigerung. Ein Tipp auf die Kachel öffnet die Auswertung, „Schließen“ führt zurück zu den Kacheln (ein Schritt).
+- **Tests:** Der Statistik-Test prüft Kacheln statt Zeilen.
+
 ## 2026-11-02 · 122 neue Übungsbilder (Fassung 2026-11-02-3)
 
 - **Bilder:** 122 der neuen Übungen haben jetzt ein Bild (Umschalter Figur | Bild im Info-Fenster), freigestellt auf 384 × 384 mit weißer Kontur und angeglichenem Orange. Aufgenommen sind die Bilder, die der Sportwissenschaftler mit „gut“ bewertet hat, dazu das sitzende einbeinige Wadenheben (Fassung ausgewählt). Wo ein Bild reicht (Pose doppelt oder nur eine passt: Schulterheben mit Langhantel, sitzendes einbeiniges Wadenheben), steht nur eine Pose im Bild. Alle anderen neuen Übungen behalten vorerst nur die Strichfigur.

@@ -195,7 +195,7 @@ function renderDeepDive(){
     '<div class="dd-nav"><button type="button" class="iconbtn" data-ddwoche="-1" aria-label="'+esc(t("ddVor"))+'">&#8249;</button><b>'+esc(kopf)+'</b>'+
       '<button type="button" class="iconbtn" data-ddwoche="1" aria-label="'+esc(t("ddNach"))+'"'+(ddWoche >= 0 ? ' disabled' : '')+'>&#8250;</button></div>' +
     chips + umschalter + kkModusHTML() +
-    (hatDaten ? freqKarte : '') + kalKarte + balKarte + verteilung + vorschlag +
+    (hatDaten ? freqKarte : '') + statFortschrittHTML() + kalKarte + balKarte + verteilung + vorschlag +
     (eintraege.length ? '<div class="section-title"><span>'+esc(t("ddWorkout"))+'</span></div>'+eintraege.map(function(e){
       var dauer = e.dur > 0 ? " · "+fmtDuration(Math.max(60, Math.round(e.dur/60)*60)) : "";
       return '<section class="card dd-karte"><div class="dd-titel">'+esc(datum(e.at, { weekday:"long", day:"numeric", month:"short" }))+'</div>'+
@@ -204,6 +204,7 @@ function renderDeepDive(){
     '<button type="button" class="dd-link" data-zumfortschritt><span>'+esc(t("ddZuFortschritt"))+'</span><span aria-hidden="true">&#8250;</span></button>' +
     '<div style="height:90px"></div>';
   bindCommon();
+  statFortBinden(function(){ var y = window.scrollY; renderKoerper(); window.scrollTo(0, y); });   // Logbuch (Fortschritt je Übung)
   app.querySelectorAll("[data-ddbalinfo]").forEach(function(b){ b.addEventListener("click", function(){ ddInfoFenster(t("ddBalTitel"), t("ddBalInfo")); }); });
   app.querySelectorAll("[data-zumfortschritt]").forEach(function(b){ b.addEventListener("click", function(){ state.db.settings.koerperTab = "fortschritt"; save(); tabLeiste("koerper"); renderKoerper(); window.scrollTo(0, 0); }); });
   app.querySelectorAll("[data-ddwoche]").forEach(function(b){
