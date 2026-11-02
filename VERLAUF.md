@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-02 · 122 neue Übungsbilder (Fassung 2026-11-02-3)
+
+- **Bilder:** 122 der neuen Übungen haben jetzt ein Bild (Umschalter Figur | Bild im Info-Fenster), freigestellt auf 384 × 384 mit weißer Kontur und angeglichenem Orange. Aufgenommen sind die Bilder, die der Sportwissenschaftler mit „gut“ bewertet hat, dazu das sitzende einbeinige Wadenheben (Fassung ausgewählt). Wo ein Bild reicht (Pose doppelt oder nur eine passt: Schulterheben mit Langhantel, sitzendes einbeiniges Wadenheben), steht nur eine Pose im Bild. Alle anderen neuen Übungen behalten vorerst nur die Strichfigur.
+
 ## 2026-11-01 · Trainingspläne mit mehr neuen Übungen (Fassung 2026-11-01-4)
 
 - **Pläne:** 29 der 53 Trainingspläne enthalten jetzt mehr der neuen Übungen (knapp die Hälfte aller Übungsplätze). Reihenfolge, Level-Passung und Burpee-Finisher bleiben. Rucksack-Rudern kommt nicht vor.
