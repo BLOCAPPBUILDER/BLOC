@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-02 · Logbuch mit Verlauf über die Zeit (Fassung 2026-11-02-5)
+
+- **Logbuch:** Über den Kacheln steht jetzt ein Verlauf wie im Fortschritt: je Woche, Monat oder Jahr das schwerste Arbeitsgewicht, die Wiederholungen oder das Volumen. Er gilt für die gewählte Rubrik (oder alle Übungen) und zählt alle gespeicherten Einheiten, nicht nur Übungen mit mindestens zwei.
+
 ## 2026-11-02 · 88 weitere Übungsbilder und Kreuzheben von vorn (Fassung 2026-11-02-4)
 
 - **Bilder:** Auch die als „okay“ bewerteten Bilder sind jetzt in der App (88 weitere, zusammen 210 neue Übungsbilder). Wo eine Pose doppelt ist oder nur eine aussagekräftig, steht nur diese eine im Bild (zum Beispiel Curtsy Lunge, Butt Kicks, Kettlebell Figure 8, Hängen aktiv, Froschstand).
