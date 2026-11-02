@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-02 · Figuren mit nur einem Bild wieder bewegt (Fassung 2026-11-02-9)
+
+- **Figuren:** Bei den 24 Übungen, bei denen nur ein Bild reicht (zum Beispiel Butt Kicks, Walking Lunge mit Kurzhanteln, Shrugs, Reverse Plank, Dehnübungen), stand die Figur still, weil nur eine Pose gezeichnet war. Jede hat jetzt eine zweite Pose und bewegt sich wieder; die erste Pose bleibt wie im Bild.
+- **Bild:** Donkey Calf Raise: die Waden sind jetzt schwarz wie der Rest, nur die Schuhe bleiben orange (Bild und Vorschaubild).
+
 ## 2026-11-02 · Kürzere Texte, Butterfly reverse, Curtsy Lunge bewegt (Fassung 2026-11-02-8)
 
 - **Texte:** Hinweis- und Erklärtexte der Oberfläche (76 Schlüssel, Deutsch und Englisch) sind auf höchstens zwei Zeilen gekürzt und einheitlich formuliert („Wdh.“, kurze Sätze, Fachhinweise nur noch als Kern).
