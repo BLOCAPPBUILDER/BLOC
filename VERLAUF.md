@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-02 · 88 weitere Übungsbilder und Kreuzheben von vorn (Fassung 2026-11-02-4)
+
+- **Bilder:** Auch die als „okay“ bewerteten Bilder sind jetzt in der App (88 weitere, zusammen 210 neue Übungsbilder). Wo eine Pose doppelt ist oder nur eine aussagekräftig, steht nur diese eine im Bild (zum Beispiel Curtsy Lunge, Butt Kicks, Kettlebell Figure 8, Hängen aktiv, Froschstand).
+- **Strichfiguren:** Sumo-Kreuzheben und Kreuzheben (Trap-Bar) sind neu gezeichnet, jetzt von vorn mit Stange und Scheiben als orange Striche; die Trap-Bar ist als Sechskant-Rahmen angedeutet.
+
 ## 2026-11-02 · 122 neue Übungsbilder (Fassung 2026-11-02-3)
 
 - **Bilder:** 122 der neuen Übungen haben jetzt ein Bild (Umschalter Figur | Bild im Info-Fenster), freigestellt auf 384 × 384 mit weißer Kontur und angeglichenem Orange. Aufgenommen sind die Bilder, die der Sportwissenschaftler mit „gut“ bewertet hat, dazu das sitzende einbeinige Wadenheben (Fassung ausgewählt). Wo ein Bild reicht (Pose doppelt oder nur eine passt: Schulterheben mit Langhantel, sitzendes einbeiniges Wadenheben), steht nur eine Pose im Bild. Alle anderen neuen Übungen behalten vorerst nur die Strichfigur.
