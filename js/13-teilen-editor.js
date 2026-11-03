@@ -79,7 +79,7 @@ function shareDraft(d){
 function draftFromShare(p){
   if(!p || !Array.isArray(p.i)) return null;
   (p.c || []).forEach(function(c){
-    if(c && c.id && c.name && !findExercise(c.id)){
+    if(c && typeof c.id === "string" && c.id === idSauber(c.id) && c.id && c.name && !findExercise(c.id)){
       var ex = customToEx(c); ex.sharedDef = c; EXERCISES.push(ex);
     }
   });

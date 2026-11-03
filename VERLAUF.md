@@ -3,6 +3,14 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-03 · Sicherheitsprüfung, Lücken geschlossen (Fassung 2026-11-03-5)
+
+- **Befund:** Über die Hülle kommt niemand ans Handy (keine Deep Links, keine fremden Skripte, keine Schlüssel, kein Netzwerkzugriff im Code). Die einzige echte Lücke war in der Web-Schicht: Kennungen aus einer fremden Sicherungsdatei oder einem Teilen-Link landeten ungeprüft in der Oberfläche (HTML-Einschleusung).
+- **Eingelesene Daten:** Beim Import und Laden werden Kennungen auf Buchstaben, Ziffern und `_ : . -` beschränkt, Laufstrecken bleiben reine Zahlenpaare, `__proto__` wird entfernt. Teilen-Links mit auffälligen Übungs-Kennungen werden ignoriert.
+- **Content-Security-Policy:** In der App lädt und sendet nichts nach außen (nur lokale Quellen). In der Web-Version zusätzlich ohne Inline-Skripte.
+- **Android:** Der Standort-Dienst des GPS-Plugins ist nicht mehr für fremde Apps erreichbar; das WebView-Debugging ist ausgeschaltet; alte Sicherungs- und GPX-Dateien im App-Cache werden beim Start (nach einer Stunde) gelöscht.
+- **Nicht geändert:** Die installierte Debug-APK bleibt debuggable (nur ein Release-Build mit eigener Signatur ändert das); `useLegacyBridge` und die INTERNET-Berechtigung bleiben, weil sie ohne Gerätetest nicht angefasst werden.
+
 ## 2026-11-03 · Trizepsdrücken liegend mit schrägem Oberarm (Fassung 2026-11-03-4)
 
 - **Figur:** Der Oberarm steht schräg über der Brust, so ist die Streckung vollständig möglich. Start gebeugt, Ende gestreckt gegen den Zug. Der Text nennt die Oberarme „schräg über der Brust“.

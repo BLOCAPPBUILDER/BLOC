@@ -20,6 +20,13 @@
             </intent-filter>
         </activity>
 
+        <!-- Der Standort-Dienst des Plugins ist dort exportiert; BLOC bindet ihn nur aus dem eigenen Prozess, fremde Apps sollen ihn nicht anstoßen können -->
+        <service
+            android:name="com.equimaps.capacitor_background_geolocation.BackgroundGeolocationService"
+            android:exported="false"
+            tools:node="merge"
+            tools:replace="android:exported" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

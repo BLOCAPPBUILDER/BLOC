@@ -159,9 +159,31 @@ function summitEntfernen(db){
   db.history = (db.history || []).filter(function(e){ return e && e.b !== "reps"; });
   if(st.statW) Object.keys(st.statW).forEach(function(w){ if(st.statW[w] && st.statW[w].a) delete st.statW[w].a.reps; });
 }
+/* Schutz beim Einlesen (Sicherungsdatei, Teilen-Link): Kennungen landen in Attributen von Oberflächen-Code. Alles außer Buchstaben, Ziffern und _ : . - fliegt raus,
+   so kann eine fremde Datei kein Attribut verlassen. Laufstrecken bleiben reine Zahlenpaare. */
+var ID_FELDER = { id:1, ex:1, ref:1, plan:1, parent:1, fromWo:1, fromPlan:1, key:1, src:1 }, ID_LISTEN = { ids:1, folge:1, ex:1 };
+function idSauber(v){ return String(v).replace(/[^\w:.\-]/g, "").slice(0, 64); }
+function idBereinigen(o, tiefe){
+  if(!o || typeof o !== "object" || (tiefe || 0) > 12) return;
+  if(Object.prototype.hasOwnProperty.call(o, "__proto__")) delete o.__proto__;
+  Object.keys(o).forEach(function(k){
+    var v = o[k];
+    if(typeof v === "string" && ID_FELDER[k]) o[k] = idSauber(v);
+    else if(Array.isArray(v) && ID_LISTEN[k]) o[k] = v.map(function(x){ return typeof x === "string" ? idSauber(x) : x; });
+    else if(v && typeof v === "object") idBereinigen(v, (tiefe || 0) + 1);
+  });
+}
+function streckenSauber(r){
+  if(!Array.isArray(r)) return;
+  r.forEach(function(x){
+    if(!x || typeof x !== "object") return;
+    x.pts = (Array.isArray(x.pts) ? x.pts : []).filter(function(p){ return Array.isArray(p) && isFinite(p[0]) && isFinite(p[1]); }).map(function(p){ return [+p[0], +p[1]]; });
+  });
+}
 /* Aus einem gelesenen Stand (localStorage, Sicherungsdatei, Schnappschuss) die Datenbank bauen */
 function dbAusRoh(parsed){
   var db = defaultDB();
+  if(parsed && typeof parsed === "object"){ idBereinigen(parsed); if(parsed.settings) streckenSauber(parsed.settings.runs); }
   db.blocks = Array.isArray(parsed.blocks) ? parsed.blocks : [];
   db.workouts = Array.isArray(parsed.workouts) ? parsed.workouts : [];
   db.myWorkouts = Array.isArray(parsed.myWorkouts) ? parsed.myWorkouts : [];

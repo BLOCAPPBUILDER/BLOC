@@ -38,6 +38,23 @@ function dateiAusgeben(name, text, mime){
   });
 }
 
+/* Ausgegebene Sicherungen und Laufstrecken (Klartext, auch Standortdaten) liegen im App-Cache: beim Start alte Dateien wegräumen.
+   Nicht sofort nach dem Teilen, die Ziel-App liest die Datei evtl. verzögert - deshalb erst, wenn sie über eine Stunde alt ist. */
+function nativCacheAufraeumen(){
+  var fs = nativPlugin("Filesystem");
+  if(!fs) return;
+  try{
+    fs.readdir({ path:"", directory:"CACHE" }).then(function(r){
+      (r.files || []).forEach(function(f){
+        var name = typeof f === "string" ? f : f && f.name;
+        var alt = !f || typeof f === "string" || !f.mtime || Date.now() - f.mtime > 3600000;
+        if(name && alt && /^bloc-(sicherung|lauf)-.*\.(json|gpx)$/.test(name)) fs.deleteFile({ path:name, directory:"CACHE" }).catch(function(){});
+      });
+    }).catch(function(){});
+  }catch(e){}
+}
+if(IST_NATIV) setTimeout(nativCacheAufraeumen, 4000);
+
 /* navigator.share gibt es im Android-WebView nicht: einfache Texte und Links gehen über das Teilen-Menü der App */
 if(IST_NATIV && !navigator.share){
   navigator.share = function(d){
