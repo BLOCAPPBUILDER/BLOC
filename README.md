@@ -73,7 +73,10 @@ Design C60 (Kassetten-Look mit Walzenzähler) gibt es nicht mehr; gespeicherte S
 - **Trainingsverlauf:** `history` hält 31 Tage einzeln, ältere Einträge werden als **Wochensummen** (`settings.statW`, über
   Jahre) behalten. Läufe (`settings.runs`) bleiben vollständig.
 - **Sicherung speichern/einlesen** in den Einstellungen (JSON); **Schnappschuss** alle 7 Tage automatisch in IndexedDB.
-- Datenschutzerklärung: [privacy.html](privacy.html).
+- **Einlesen ist abgesichert** (Sicherung, Schnappschuss, Teilen-Link): `idBereinigen` und `streckenSauber` in `js/01-basis.js` beschränken Kennungen auf Buchstaben, Ziffern und `_ : . -`, halten Laufstrecken als reine Zahlenpaare und entfernen `__proto__`. Hintergrund: Kennungen landen in Attributen von Oberflächen-Code, eine fremde Datei darf dort nichts einschleusen. Neue Felder mit Kennungen in `ID_FELDER`/`ID_LISTEN` eintragen.
+- **Workouts teilen:** als Link (`#import/…`) oder in der App als Datei `bloc-workout-….json` (Teilen-Menü). Öffnen über Einstellungen, Daten, „Workout-Datei öffnen“ (`workoutDateiOeffnen`, `js/13-teilen-editor.js`); gelesen wird nur der Code, geprüft wird wie beim Link. Es gibt bewusst keinen Eingang von außen (keine Deep Links).
+- **Content-Security-Policy:** im Web in `index.html` (nur eigene Quellen, keine Inline-Skripte), in der App beim Bauen eingefügt (`scripts/www-bauen.mjs`, mit `'unsafe-inline'` für Skripte, weil Capacitor seine Brücke inline einfügt). Neue externe Quellen (Schriften, Bilder, Verbindungen) werden dadurch blockiert.
+- Datenschutzerklärung: [privacy.html](privacy.html) (bei neuen Funktionen mit Daten, Berechtigungen oder Verbindungen mit aktualisieren; Stand-Datum oben nachziehen).
 
 ## Dateien
 
@@ -114,6 +117,8 @@ wieder her. Was er **nicht** prüfen kann (echte Töne, echtes GPS, Wake Lock), 
 Die Web-App steckt unverändert in einer Android-Hülle (Capacitor 8). Der Web-Code bleibt die einzige Quelle; `js/00-native.js` ist die Brücke zu Gerätefunktionen und fällt im Browser auf die Web-Varianten zurück (`IST_NATIV` ist dort `false`).
 
 **Was die App anders macht:** GPS läuft als Vordergrund-Dienst (Hinweis in der Statusleiste), damit der Lauf auch bei gesperrtem Bildschirm zählt · Display-an über das Plugin statt Wake Lock · Sicherung und GPX gehen über das Teilen-Menü (Drive, Dateien, Mail) · kein Service Worker, die Dateien liegen im Paket · kein Installationshinweis. Plugins: Filesystem, Share, KeepAwake, BackgroundGeolocation, LocalNotifications (nur die Erlaubnis für den Hinweis).
+
+**Gehärtet (2026-11-03):** Standort-Dienst des Plugins nicht exportiert (Manifest), WebView-Debugging aus (`capacitor.config.json`), alte Sicherungs-, Workout- und GPX-Dateien im Cache werden beim Start gelöscht (`nativCacheAufraeumen`). Bewusst offen: Debug-Build bleibt debuggable (nur ein Release mit eigener Signatur ändert das), `useLegacyBridge` und INTERNET-Recht ohne Gerätetest unverändert.
 
 **Voraussetzungen (einmalig):** Node 22 oder neuer, JDK 21, Android Studio (bringt SDK 36 mit). Danach im Projektordner `npm install`.
 

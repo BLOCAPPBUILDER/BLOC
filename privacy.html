@@ -32,7 +32,7 @@ hr{ border:none; border-top:1px solid var(--border); margin:44px 0 8px; }
 <nav><a href="./">&larr; Zur App</a><a href="#haftung">Haftungsausschluss</a><a href="#en">English</a></nav>
 
 <h1>Datenschutz &amp; Haftungsausschluss</h1>
-<p class="dim">BLOC – Modular Training Builder · Stand: 6. Oktober 2026</p>
+<p class="dim">BLOC – Modular Training Builder · Stand: 3. November 2026</p>
 
 <div class="card">
 <h2>Kurz gesagt</h2>
@@ -48,17 +48,18 @@ hr{ border:none; border-top:1px solid var(--border); margin:44px 0 8px; }
 <p>Zur Sicherheit legt die App alle 7 Tage automatisch einen Schnappschuss deiner Daten an – ebenfalls nur auf deinem Gerät (im Browser-Speicher „IndexedDB“). Es gibt immer nur einen, der ältere wird überschrieben. Du kannst ihn in den Einstellungen wiederherstellen. Nichts davon wird hochgeladen.</p>
 
 <h2>Verbindungen ins Internet</h2>
-<p>Die App wird von GitHub Pages ausgeliefert. Beim Laden der App verarbeitet GitHub technisch notwendige Verbindungsdaten wie die IP-Adresse (siehe <a href="https://docs.github.com/de/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">Datenschutzerklärung von GitHub</a>). Danach funktioniert die App auch offline. Sie lädt keine Schriften, Skripte oder anderen Inhalte von fremden Servern.</p>
+<p>Die App wird von GitHub Pages ausgeliefert. Beim Laden der App verarbeitet GitHub technisch notwendige Verbindungsdaten wie die IP-Adresse (siehe <a href="https://docs.github.com/de/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">Datenschutzerklärung von GitHub</a>). Danach funktioniert die App auch offline. Sie lädt keine Schriften, Skripte oder anderen Inhalte von fremden Servern. Die Android-App enthält alle Dateien im Paket, lädt nichts nach und sendet keine Daten; ihre Oberfläche darf technisch nur lokale Quellen verwenden.</p>
 
 <h2>Workouts teilen</h2>
 <p>Wenn du ein Workout teilst, steckt es als komprimierte (nicht verschlüsselte) Zeichenfolge im Link selbst. Es wird nirgends hochgeladen – wer den Link hat, kann das Workout lesen. Wohin der Link geht, entscheidest du über die App, mit der du ihn verschickst (z. B. einen Messenger). Für diese Apps gelten deren eigene Datenschutzbestimmungen.</p>
+<p>In der Android-App teilst du ein Workout zusätzlich als Datei (<code>bloc-workout-….json</code>). Sie enthält dieselbe Zeichenfolge und ist ebenfalls nicht verschlüsselt. Für den Versand legt die App die Datei kurz im App-Zwischenspeicher ab; Sicherungs-, Workout- und GPX-Dateien dort werden beim nächsten App-Start gelöscht, sobald sie über eine Stunde alt sind. Eine erhaltene Datei öffnest du selbst in den Einstellungen („Workout-Datei öffnen“); die App liest daraus nur den Workout-Code.</p>
 
 <h2>Sprachansagen, Ton und Vibration</h2>
 <p>Die Sprachansagen nutzen die Sprachausgabe deines Betriebssystems. Die App bevorzugt Stimmen, die auf dem Gerät selbst laufen. Töne und Vibration werden direkt auf dem Gerät erzeugt.</p>
 
 <h2>Berechtigungen</h2>
-<p>Die App fragt keine Berechtigungen für Kamera, Mikrofon, Kontakte oder Ähnliches an. Sie nutzt „Bildschirm anlassen“ während eines Trainings (abschaltbar) und die Zwischenablage, wenn du einen Link kopierst.</p>
-<p><strong>Standort (nur beim Lauf-Tracker):</strong> Den Standort fragt die App ausschließlich ab, wenn du selbst einen Lauf startest – und nur, solange der Lauf aufgezeichnet wird. Dein Browser fragt dich vorher um Erlaubnis. Die Positionen werden nur auf deinem Gerät verarbeitet; es gibt keine Karte aus dem Internet und nichts wird hochgeladen. Gespeichert werden Strecke, Zeit, Kilometer-Zwischenzeiten und die Route (Folge von Koordinaten) zusammen mit den übrigen App-Daten lokal auf deinem Gerät. Du kannst jeden Lauf in der App löschen, „Alle Daten löschen“ entfernt sie ebenfalls. Wenn du eine Lauf-Datei (GPX) exportierst und weitergibst, enthält sie deine Route – wohin sie geht, entscheidest du.</p>
+<p>Die App fragt keine Berechtigungen für Kamera, Mikrofon, Kontakte oder Ähnliches an. Sie nutzt „Bildschirm anlassen“ während eines Trainings (abschaltbar) und die Zwischenablage, wenn du einen Link kopierst. Die Android-App nutzt außerdem Vibration und fragt nach der Erlaubnis für Benachrichtigungen (für den Hinweis, solange ein Lauf aufgezeichnet wird).</p>
+<p><strong>Standort (nur beim Lauf-Tracker):</strong> Den Standort fragt die App ausschließlich ab, wenn du selbst einen Lauf startest – und nur, solange der Lauf aufgezeichnet wird. Dein Browser bzw. Android fragt dich vorher um Erlaubnis. In der Android-App läuft die Ortung während des Laufs als Vordergrunddienst mit sichtbarer Benachrichtigung, damit die Strecke auch bei gesperrtem Bildschirm weiterzählt; mit dem Ende des Laufs endet auch die Ortung. Die Standortbestimmung selbst übernehmen die Standortdienste deines Geräts (unter Android die Google Play-Dienste); für sie gelten deren eigene Datenschutzbestimmungen. Die Positionen werden nur auf deinem Gerät verarbeitet; es gibt keine Karte aus dem Internet und nichts wird hochgeladen. Gespeichert werden Strecke, Zeit, Kilometer-Zwischenzeiten und die Route (Folge von Koordinaten) zusammen mit den übrigen App-Daten lokal auf deinem Gerät. Du kannst jeden Lauf in der App löschen, „Alle Daten löschen“ entfernt sie ebenfalls. Wenn du eine Lauf-Datei (GPX) exportierst und weitergibst, enthält sie deine Route – wohin sie geht, entscheidest du.</p>
 
 <h2>Kinder</h2>
 <p>Die App erhebt keine Daten, auch nicht von Kindern.</p>
@@ -91,7 +92,7 @@ hr{ border:none; border-top:1px solid var(--border); margin:44px 0 8px; }
 <hr>
 
 <h1 id="en">Privacy &amp; disclaimer</h1>
-<p class="dim">BLOC – Modular Training Builder · Last updated: 6 October 2026</p>
+<p class="dim">BLOC – Modular Training Builder · Last updated: 3 November 2026</p>
 
 <div class="card">
 <h2>In short</h2>
@@ -107,17 +108,18 @@ hr{ border:none; border-top:1px solid var(--border); margin:44px 0 8px; }
 <p>As a safety net the app automatically keeps a snapshot of your data every 7 days – also only on your device (in the browser storage “IndexedDB”). There is only ever one; the older one is overwritten. You can restore it in the settings. None of this is uploaded.</p>
 
 <h2>Internet connections</h2>
-<p>The app is served by GitHub Pages. When the app loads, GitHub processes technically necessary connection data such as your IP address (see <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub's privacy statement</a>). After that the app also works offline. It does not load fonts, scripts or other content from third-party servers.</p>
+<p>The app is served by GitHub Pages. When the app loads, GitHub processes technically necessary connection data such as your IP address (see <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub's privacy statement</a>). After that the app also works offline. It does not load fonts, scripts or other content from third-party servers. The Android app contains all files in its package, downloads nothing and sends no data; its interface is technically limited to local sources.</p>
 
 <h2>Sharing workouts</h2>
 <p>When you share a workout, it is compressed (not encrypted) inside the link itself. It is not uploaded anywhere – anyone with the link can read the workout. You decide where the link goes through the app you send it with (e.g. a messenger). Those apps' own privacy policies apply.</p>
+<p>In the Android app you can also share a workout as a file (<code>bloc-workout-….json</code>). It contains the same string and is not encrypted either. For sending, the app briefly places the file in its cache; backup, workout and GPX files there are deleted at the next app start once they are older than one hour. You open a file you received yourself in Settings (“Open workout file”); the app reads only the workout code from it.</p>
 
 <h2>Voice announcements, sound and vibration</h2>
 <p>Voice announcements use your operating system's speech output. The app prefers voices that run on the device itself. Sounds and vibration are generated on the device.</p>
 
 <h2>Permissions</h2>
-<p>The app does not request access to camera, microphone, contacts or similar. It uses “keep screen on” during a workout (can be turned off) and the clipboard when you copy a link.</p>
-<p><strong>Location (run tracker only):</strong> The app asks for your location only when you start a run yourself – and only while the run is being recorded. Your browser asks for permission first. Positions are processed on your device only; no map is loaded from the internet and nothing is uploaded. Distance, time, kilometre splits and the route (a series of coordinates) are stored locally on your device together with the other app data. You can delete each run in the app, and “Delete all data” removes them too. If you export a run file (GPX) and share it, it contains your route – where it goes is up to you.</p>
+<p>The app does not request access to camera, microphone, contacts or similar. It uses “keep screen on” during a workout (can be turned off) and the clipboard when you copy a link. The Android app also uses vibration and asks for permission to show notifications (for the notice while a run is being recorded).</p>
+<p><strong>Location (run tracker only):</strong> The app asks for your location only when you start a run yourself – and only while the run is being recorded. Your browser or Android asks for permission first. In the Android app, positioning runs during the run as a foreground service with a visible notification so the route keeps counting while the screen is locked; when the run ends, positioning ends too. Determining the position itself is done by your device's location services (on Android the Google Play services); their own privacy policies apply. Positions are processed on your device only; no map is loaded from the internet and nothing is uploaded. Distance, time, kilometre splits and the route (a series of coordinates) are stored locally on your device together with the other app data. You can delete each run in the app, and “Delete all data” removes them too. If you export a run file (GPX) and share it, it contains your route – where it goes is up to you.</p>
 
 <h2>Children</h2>
 <p>The app does not collect any data, including from children.</p>
