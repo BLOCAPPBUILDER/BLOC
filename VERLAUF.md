@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-03 · Workouts als Datei teilen und öffnen (Fassung 2026-11-03-6)
+
+- **Teilen in der App:** Ein Workout geht jetzt als Datei (`bloc-workout-….json`) über das Teilen-Menü hinaus, Nachricht mit Link liegt dabei. Das Ziel kann Mail, Messenger, OneDrive oder SharePoint sein.
+- **Öffnen:** Einstellungen, Daten, „Workout-Datei öffnen“. Die Dateiauswahl des Handys zeigt auch OneDrive/SharePoint, wenn die Apps installiert sind. Gelesen wird nur der Code aus der Datei (oder ein Teilen-Link in einer Textdatei); die Prüfung ist dieselbe wie beim Link. Es gibt weiter keinen Eingang von außen in die App.
+
 ## 2026-11-03 · Sicherheitsprüfung, Lücken geschlossen (Fassung 2026-11-03-5)
 
 - **Befund:** Über die Hülle kommt niemand ans Handy (keine Deep Links, keine fremden Skripte, keine Schlüssel, kein Netzwerkzugriff im Code). Die einzige echte Lücke war in der Web-Schicht: Kennungen aus einer fremden Sicherungsdatei oder einem Teilen-Link landeten ungeprüft in der Oberfläche (HTML-Einschleusung).

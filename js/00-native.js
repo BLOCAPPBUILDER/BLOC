@@ -23,7 +23,7 @@ var NATIV_FASSUNG = (function(){
 function nativAbbruch(e){ return !!(e && /cancel|abort/i.test((e.name || "") + " " + (e.message || e))); }
 
 /* Datei ausgeben: in der App Teilen-Menü (Drive, Dateien, Mail …), im Browser der übliche Download */
-function dateiAusgeben(name, text, mime){
+function dateiAusgeben(name, text, mime, nachricht){
   if(!IST_NATIV){
     var blob = new Blob([text], { type:mime }), url = URL.createObjectURL(blob), a = document.createElement("a");
     a.href = url; a.download = name;
@@ -34,7 +34,7 @@ function dateiAusgeben(name, text, mime){
   var fs = nativPlugin("Filesystem"), sh = nativPlugin("Share");
   if(!fs || !sh) return Promise.reject(new Error("Dateien nicht verfügbar"));
   return fs.writeFile({ path:name, data:text, directory:"CACHE", encoding:"utf8" }).then(function(res){
-    return sh.share({ title:name, dialogTitle:name, files:[res.uri] });
+    return sh.share({ title:name, dialogTitle:name, text:nachricht || undefined, files:[res.uri] });
   });
 }
 
@@ -48,7 +48,7 @@ function nativCacheAufraeumen(){
       (r.files || []).forEach(function(f){
         var name = typeof f === "string" ? f : f && f.name;
         var alt = !f || typeof f === "string" || !f.mtime || Date.now() - f.mtime > 3600000;
-        if(name && alt && /^bloc-(sicherung|lauf)-.*\.(json|gpx)$/.test(name)) fs.deleteFile({ path:name, directory:"CACHE" }).catch(function(){});
+        if(name && alt && /^bloc-(sicherung|lauf|workout)-.*\.(json|gpx)$/.test(name)) fs.deleteFile({ path:name, directory:"CACHE" }).catch(function(){});
       });
     }).catch(function(){});
   }catch(e){}
