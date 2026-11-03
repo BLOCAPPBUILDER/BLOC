@@ -68,12 +68,33 @@ function shareDraft(d){
   if(!d || !d.items.length) return;
   encodeShare(sharePayload(d)).then(function(code){
     var url = appUrl()+"#import/"+code, msg = t("shareMsg", { n:d.name });
+    if(IST_NATIV){   // App: das Workout als Datei (die Gegenseite öffnet sie in BLOC über „Workout-Datei öffnen“), dazu der Link im Text
+      dateiAusgeben("bloc-workout-"+String(d.name).replace(/[^\w\-]+/g, "_").slice(0, 40)+".json", JSON.stringify({ bloc:"workout", v:1, n:d.name, code:code }), "application/json", msg+" "+url)
+        .catch(function(err){ if(!nativAbbruch(err)) copyText(url, t("shareLinkCopied")); });
+      return;
+    }
     if(navigator.share){
       navigator.share({ title:d.name, text:msg, url:url }).catch(function(err){
         if(!err || err.name !== "AbortError") copyText(url, t("shareLinkCopied"));
       });
     } else copyText(msg+" "+url, t("shareLinkCopied"));
   });
+}
+/* Workout-Datei öffnen (bloc-workout-….json von Freunden, auch aus OneDrive/SharePoint über die Dateiauswahl) oder eine Textdatei mit dem Teilen-Link.
+   Es wird nur der Code herausgelesen; alles Weitere läuft wie beim Link (Prüfung in draftFromShare). */
+function workoutDateiOeffnen(file){
+  if(!file) return;
+  if(file.size > 300000){ showToast(t("fileError")); return; }
+  var reader = new FileReader();
+  reader.onload = function(){
+    var text = String(reader.result || ""), code = "";
+    try{ var j = JSON.parse(text); if(j && typeof j === "object" && typeof j.code === "string") code = j.code; }catch(e){}
+    if(!code){ var m = /#import\/([A-Za-z0-9_\-]+)/.exec(text); if(m) code = m[1]; }
+    if(!/^[zj][A-Za-z0-9_\-]{2,200000}$/.test(code)){ showToast(t("fileError")); return; }
+    go("#import/"+code);
+  };
+  reader.onerror = function(){ showToast(t("fileError")); };
+  reader.readAsText(file);
 }
 /* Link öffnen: Workout auf dem Deckblatt zeigen - speichern erst mit „Als Eigenes speichern“ */
 function draftFromShare(p){

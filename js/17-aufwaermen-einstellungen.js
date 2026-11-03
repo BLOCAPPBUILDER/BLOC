@@ -330,6 +330,8 @@ function renderSettings(){
       '<button class="btn btn-secondary" data-export>'+ICON_DOWNLOAD+' '+t("exportBackup")+'</button>'+
       '<button class="btn btn-secondary" data-import>'+ICON_UPLOAD+' '+t("importBackup")+'</button>'+
       '<input type="file" id="import-file" style="display:none">'+
+      '<button class="btn btn-secondary" data-openwo>'+ICON_UPLOAD+' '+t("openWoFile")+'</button>'+
+      '<input type="file" id="openwo-file" style="display:none">'+
     '</div>'+
     '<div class="section-title">'+t("optMehr")+'</div>'+
     einstMehr("timer", t("mehrTimer"), t("mehrTimerSub"),
@@ -410,6 +412,8 @@ function renderSettings(){
   if(teilBtn) teilBtn.addEventListener("click", function(){ shareBackup(); });
   bindSnapZeile();
   fassungZeigen();
+  app.querySelector("[data-openwo]").addEventListener("click", function(){ app.querySelector("#openwo-file").click(); });
+  app.querySelector("#openwo-file").addEventListener("change", function(ev){ var f = ev.target.files[0]; ev.target.value = ""; workoutDateiOeffnen(f); });
   app.querySelector("[data-import]").addEventListener("click", function(){
     app.querySelector("#import-file").click();
   });
