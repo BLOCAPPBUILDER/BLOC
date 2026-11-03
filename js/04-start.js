@@ -17,7 +17,7 @@ var ICON_STAR = '<path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1
 /* art: "gross" (Workouts, der wichtigste Bereich) oder "zeile" (die übrigen, als ruhige Liste) */
 function areaTile(key, href, titel, unter, farbe, art){
   return '<div class="area-tile'+(art ? ' '+art : '')+'" data-nav="'+href+'" data-bereich="'+key+'" role="button" tabindex="0" style="--c:'+farbe+'">'+
-      '<span class="at-ico">'+svgIcon(HOME_ICON[key])+'</span>'+
+      '<i class="at-foto" aria-hidden="true"></i><span class="at-ico">'+svgIcon(HOME_ICON[key])+'</span>'+
       '<span class="at-text"><b class="at-name">'+esc(titel)+'</b><small class="at-sub">'+esc(unter)+'</small></span>'+
       '<span class="at-chev">'+ICON_CHEV+'</span>'+
     '</div>';

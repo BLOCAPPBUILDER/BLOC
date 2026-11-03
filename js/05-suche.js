@@ -347,9 +347,11 @@ function renderTraining(){
   var fotos = bereichFotosNeu();
   app.querySelectorAll(".training-seite .area-tile[data-bereich]").forEach(function(el){
     var k = el.getAttribute("data-bereich");
-    if(k === "faq"){ el.style.backgroundImage = "url(img/neu-faq.jpg)"; el.style.backgroundPosition = "50% 55%"; return; }
-    if(k === "protein"){ el.style.backgroundImage = "url(img/neu-protein.jpg)"; el.style.backgroundPosition = "50% 27%"; return; }   // Hände mit den Eierschalen
-    if(fotos[k]){ el.style.backgroundImage = "url(" + fotos[k] + ")"; var fk = fotoFokus(fotos[k]); if(fk) el.style.backgroundPosition = fk; }
+    var ft = el.querySelector(".at-foto");   // das Foto liegt rechts in eigener Fläche, links bleibt Platz für Symbol und Text
+    if(!ft) return;
+    if(k === "faq"){ ft.style.backgroundImage = "url(img/neu-faq.jpg)"; ft.style.backgroundPosition = "50% 55%"; return; }
+    if(k === "protein"){ ft.style.backgroundImage = "url(img/neu-protein.jpg)"; ft.style.backgroundPosition = "50% 27%"; return; }   // Hände mit den Eierschalen
+    if(fotos[k]){ ft.style.backgroundImage = "url(" + fotos[k] + ")"; ft.style.backgroundPosition = fotoFokus(fotos[k]) || "50% 50%"; }
   });
   app.querySelectorAll("[data-bereich]:not([data-bereich=\"faq\"])").forEach(function(el){ langDruck(el, openBereicheSheet); });
   var wib = app.querySelector("[data-wasistwas]");
