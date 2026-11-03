@@ -3,6 +3,12 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-03 · Neue Bilder, zwei Übungen gelöscht, Kabel-Curl neu (Fassung 2026-11-03-1)
+
+- **Gelöscht:** Schulterblatt-Setzen (Bild zeigte Überkopfdrücken) und Serratus-Punch (Bild zeigte hochgestellte Beine statt Armstoß). Sie sind aus Katalog, Figuren, dem Plan „Schultern Einstieg (Körpergewicht)“ und der Zuordnungstabelle entfernt.
+- **Bilder:** Acht neue Bilder von zwei Posen sind freigestellt in der App: Bizepscurl liegend (Kabelzug), W-Heben in Bauchlage, Kreuzheben (Band), Außenrotation (Band), Seitbeugen (Kurzhantel), Sissy Squat, Curtsy Lunge und Donkey Calf Raise (ersetzen die bisherigen). Front Lever (Tuck) halten ist nicht aufgenommen: die Figur hängt kopfüber eingerollt statt waagerecht.
+- **Figur:** Der liegende Kabel-Curl ist nach dem neuen Bild neu gezeichnet: Kabelturm am Kopfende, Umlenkrolle, Kabel bis zur Hand, zwei Posen.
+
 ## 2026-11-02 · Figuren mit nur einem Bild wieder bewegt (Fassung 2026-11-02-9)
 
 - **Figuren:** Bei den 24 Übungen, bei denen nur ein Bild reicht (zum Beispiel Butt Kicks, Walking Lunge mit Kurzhanteln, Shrugs, Reverse Plank, Dehnübungen), stand die Figur still, weil nur eine Pose gezeichnet war. Jede hat jetzt eine zweite Pose und bewegt sich wieder; die erste Pose bleibt wie im Bild.
