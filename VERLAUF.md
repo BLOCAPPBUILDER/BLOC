@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-03 · Neue Übung Trizepsdrücken liegend, drei liegende Kabelübungen fachlich geprüft (Fassung 2026-11-03-3)
+
+- **Neu:** „Trizepsdrücken liegend (Kabelzug)“ mit dem alten Foto und der alten Bewegung (Turm am Kopfende, Oberarme am Oberkörper). Start gebeugt, Ende gestreckt gegen den Zug.
+- **Texte nach Fachprüfung:** Der Bizepscurl liegend nennt Füße zum Turm und als Hilfsmuskel Oberarmmuskel/Unterarme. Der alte Trizepsstrecken-Eintrag heißt jetzt „Stirndrücken liegend (Kabelzug)“ (Oberarme senkrecht, Hilfsmuskel Breiter Rückenmuskel), damit er sich vom Trizepsdrücken unterscheidet. Die id bleibt.
+
 ## 2026-11-03 · Kabel-Curl liegend als echte Bizepsübung (Fassung 2026-11-03-2)
 
 - **Korrektur:** Die Figur und das Foto zeigten das Kabel am Kopfende. Die Hand wanderte vom Turm weg, das ist die Bewegung der Trizepsstreckung und nicht des Curls. Die Figur ist neu: Kabelturm am Fußende (tiefe Rolle), Ellbogen bleiben am Körper, die Hand geht vom Oberschenkel zur Schulter. Das passt zur Beschreibung der Übung.
