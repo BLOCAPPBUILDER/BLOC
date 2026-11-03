@@ -1,6 +1,6 @@
 # Entwurf: Anbieterangaben für BLOC (nicht veröffentlicht)
 
-Stand: 2026-10-14. Das ist ein **Entwurf zum Ausfüllen**, keine Rechtsberatung. Ob ein Impressum nötig ist, hängt davon ab, ob das Angebot als
+Stand: 2026-11-03 (Datenschutzerklärung am selben Tag auf die Android-App, Dateiteilen und Standort-Dienst nachgezogen; ein Impressum steht weiterhin aus). Das ist ein **Entwurf zum Ausfüllen**, keine Rechtsberatung. Ob ein Impressum nötig ist, hängt davon ab, ob das Angebot als
 „geschäftsmäßig“ gilt (z. B. Werbung, Einnahmen, öffentliche Bewerbung). Bei Unsicherheit kurz bei einer Anwältin oder einem Anwalt für IT-/Medienrecht
 nachfragen oder einen Impressums-Generator nutzen. **Nichts davon steht in der App**, bis du es einträgst.
 

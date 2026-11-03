@@ -73,7 +73,10 @@ Design C60 (Kassetten-Look mit Walzenzähler) gibt es nicht mehr; gespeicherte S
 - **Trainingsverlauf:** `history` hält 31 Tage einzeln, ältere Einträge werden als **Wochensummen** (`settings.statW`, über
   Jahre) behalten. Läufe (`settings.runs`) bleiben vollständig.
 - **Sicherung speichern/einlesen** in den Einstellungen (JSON); **Schnappschuss** alle 7 Tage automatisch in IndexedDB.
-- Datenschutzerklärung: [privacy.html](privacy.html).
+- **Einlesen ist abgesichert** (Sicherung, Schnappschuss, Teilen-Link): `idBereinigen` und `streckenSauber` in `js/01-basis.js` beschränken Kennungen auf Buchstaben, Ziffern und `_ : . -`, halten Laufstrecken als reine Zahlenpaare und entfernen `__proto__`. Neue Felder mit Kennungen in `ID_FELDER`/`ID_LISTEN` eintragen.
+- **Workouts teilen:** als Link (`#import/…`). Eine Datei `bloc-workout-….json` (aus der Android-App) oder eine Textdatei mit dem Link öffnest du über Einstellungen, Daten, „Workout-Datei öffnen“ (`workoutDateiOeffnen`, `js/13-teilen-editor.js`).
+- **Content-Security-Policy** in `index.html`: nur eigene Quellen, keine Inline-Skripte. Neue externe Quellen werden dadurch blockiert.
+- Datenschutzerklärung: [privacy.html](privacy.html) (bei neuen Funktionen mit Daten, Berechtigungen oder Verbindungen mit aktualisieren; Stand-Datum oben nachziehen).
 
 ## Dateien
 

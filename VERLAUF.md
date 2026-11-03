@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-03 · Datenschutzerklärung und README nachgezogen (Fassung 2026-11-03-8)
+
+- **privacy.html (de/en, Stand 3. November 2026):** Android-App (nichts nachgeladen, nichts gesendet), Workout als Datei teilen und öffnen, kurzer Zwischenspeicher mit Löschung nach einer Stunde, Standort als Vordergrunddienst mit Benachrichtigung über die Standortdienste des Geräts, Erlaubnis für Benachrichtigungen und Vibration.
+- **README:** Abschnitte Einlesen, Teilen, Content-Security-Policy und Android-Härtung ergänzt. Anbieterangaben-Entwurf datiert; ein Impressum steht weiterhin aus (braucht Name und Anschrift).
+
 ## 2026-11-03 · Workouts als Datei teilen und öffnen (Fassung 2026-11-03-6)
 
 - **Teilen in der App:** Ein Workout geht jetzt als Datei (`bloc-workout-….json`) über das Teilen-Menü hinaus, Nachricht mit Link liegt dabei. Das Ziel kann Mail, Messenger, OneDrive oder SharePoint sein.
