@@ -572,8 +572,6 @@ Eigene Namen, Muskeln und Posen; Figuren im BLOC-Stil neu gezeichnet. Trainingsa
 | clamshell | Muschel | Ohne Geräte | leicht | Seitliches Gesäß | Gesäß |
 | reverse-clamshell | Umgekehrte Muschel | Ohne Geräte | leicht | Seitliches Gesäß | Adduktoren |
 | hip-hinge-drill | Hüftbeuge-Übung | Ohne Geräte | leicht | Gesäß | Oberschenkel hinten |
-| scapula-setting | Schulterblatt-Setzen | Ohne Geräte | leicht | Mittlerer Trapez | Sägemuskel (Serratus) |
-| serratus-punch | Serratus-Punch | Ohne Geräte | leicht | Sägemuskel (Serratus) | Schultern |
 | supine-snow-angels | Schneeengel in Rückenlage | Ohne Geräte | leicht | Schultern | Oberer Rücken |
 | single-leg-stand | Einbeinstand | Ohne Geräte (Wand oder Stuhl) | leicht | Hüftstabilisatoren | Waden |
 | pelvic-tilt | Beckenkippen | Ohne Geräte | leicht | Bauch | Gesäß, Rückenstrecker |
