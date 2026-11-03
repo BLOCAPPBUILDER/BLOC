@@ -68,7 +68,7 @@ function shareDraft(d){
   if(!d || !d.items.length) return;
   encodeShare(sharePayload(d)).then(function(code){
     var url = appUrl()+"#import/"+code, msg = t("shareMsg", { n:d.name });
-    if(IST_NATIV){   // App: das Workout als Datei (die Gegenseite öffnet sie in BLOC über „Workout-Datei öffnen“), dazu der Link im Text
+    if(typeof IST_NATIV !== "undefined" && IST_NATIV){   // App: das Workout als Datei (die Gegenseite öffnet sie in BLOC über „Workout-Datei öffnen“), dazu der Link im Text
       dateiAusgeben("bloc-workout-"+String(d.name).replace(/[^\w\-]+/g, "_").slice(0, 40)+".json", JSON.stringify({ bloc:"workout", v:1, n:d.name, code:code }), "application/json", msg+" "+url)
         .catch(function(err){ if(!nativAbbruch(err)) copyText(url, t("shareLinkCopied")); });
       return;
