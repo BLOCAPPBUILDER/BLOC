@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-03 · Baukasten-Karte hell mit Rack-Foto (Fassung 2026-11-03-9)
+
+- **Heute, Hellmodus:** Die Baukasten-Karte zeigt `neu-h-rack.jpg`, eng auf die bunten Gewichte zugeschnitten (vergrößert, Scheiben rechts neben dem Text). Dunkel bleibt das bisherige Foto (`layout-new.css`).
+
 ## 2026-11-03 · Datenschutzerklärung und README nachgezogen (Fassung 2026-11-03-8)
 
 - **privacy.html (de/en, Stand 3. November 2026):** Android-App (nichts nachgeladen, nichts gesendet), Workout als Datei teilen und öffnen, kurzer Zwischenspeicher mit Löschung nach einer Stunde, Standort als Vordergrunddienst mit Benachrichtigung über die Standortdienste des Geräts, Erlaubnis für Benachrichtigungen und Vibration.
