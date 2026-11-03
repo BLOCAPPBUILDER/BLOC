@@ -427,10 +427,11 @@ Eigene Namen, Muskeln und Posen; Figuren im BLOC-Stil neu gezeichnet. Trainingsa
 | cable-standing-row | Rudern im Stand (Kabelzug) | Kabelzug | leicht | Breiter Rückenmuskel, Oberer Rücken | Bizeps |
 | cable-rear-delt-row | Rudern zur hinteren Schulter (Kabelzug) | Kabelzug | leicht | Hintere Schulter | Oberer Rücken |
 | cable-lying-fly | Fliegende liegend (Kabelzug) | Kabelzug | leicht | Brust | Vordere Schulter |
-| cable-lying-triceps-extension | Trizepsstrecken liegend (Kabelzug) | Kabelzug | leicht | Trizeps | Vordere Schulter |
+| cable-lying-triceps-extension | Stirndrücken liegend (Kabelzug) | Kabelzug | leicht | Trizeps | Breiter Rückenmuskel |
+| cable-lying-triceps-press | Trizepsdrücken liegend (Kabelzug) | Kabelzug | leicht | Trizeps | – |
 | cable-incline-fly | Schrägbank-Fliegende (Kabelzug) | Kabelzug | leicht | Obere Brust | Vordere Schulter |
 | cable-incline-press | Schrägbankdrücken (Kabelzug) | Kabelzug | mittel | Obere Brust | Vordere Schulter, Trizeps |
-| cable-lying-curl | Bizepscurl liegend (Kabelzug) | Kabelzug | leicht | Bizeps | Unterarme |
+| cable-lying-curl | Bizepscurl liegend (Kabelzug) | Kabelzug | leicht | Bizeps | Oberarmmuskel, Unterarme |
 | cable-reverse-curl | Reverse Curl (Kabelzug) | Kabelzug | leicht | Bizeps, Unterarme | – |
 | cable-wrist-curl | Handgelenkcurl (Kabelzug) | Kabelzug | leicht | Unterarme | – |
 | cable-standing-twist-row | Rudern mit Rumpfdrehung (Kabelzug) | Kabelzug | mittel | Breiter Rückenmuskel, Oberer Rücken | Bizeps |
