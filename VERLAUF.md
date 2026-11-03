@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-03 · Trizepsdrücken liegend mit schrägem Oberarm (Fassung 2026-11-03-4)
+
+- **Figur:** Der Oberarm steht schräg über der Brust, so ist die Streckung vollständig möglich. Start gebeugt, Ende gestreckt gegen den Zug. Der Text nennt die Oberarme „schräg über der Brust“.
+
 ## 2026-11-03 · Neue Übung Trizepsdrücken liegend, drei liegende Kabelübungen fachlich geprüft (Fassung 2026-11-03-3)
 
 - **Neu:** „Trizepsdrücken liegend (Kabelzug)“ mit dem alten Foto und der alten Bewegung (Turm am Kopfende, Oberarme am Oberkörper). Start gebeugt, Ende gestreckt gegen den Zug.
