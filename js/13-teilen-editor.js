@@ -88,13 +88,183 @@ function workoutDateiOeffnen(file){
   var reader = new FileReader();
   reader.onload = function(){
     var text = String(reader.result || ""), code = "";
-    try{ var j = JSON.parse(text); if(j && typeof j === "object" && typeof j.code === "string") code = j.code; }catch(e){}
+    try{
+      var j = JSON.parse(text);
+      if(j && j.bloc === "programm"){ programmDateiOeffnen(j); return; }
+      if(j && j.bloc === "plan"){ planDateiOeffnen(j); return; }
+      if(j && j.bloc === "uebung"){ uebungDateiOeffnen(j); return; }
+      if(j && typeof j === "object" && typeof j.code === "string") code = j.code;
+    }catch(e){}
     if(!code){ var m = /#import\/([A-Za-z0-9_\-]+)/.exec(text); if(m) code = m[1]; }
     if(!/^[zj][A-Za-z0-9_\-]{2,200000}$/.test(code)){ showToast(t("fileError")); return; }
     go("#import/"+code);
   };
   reader.onerror = function(){ showToast(t("fileError")); };
   reader.readAsText(file);
+}
+/* ---------- Teilen als Datei: Trainingsplan (TrainingsBLOC), BLOC und eigene Übung ----------
+   Eine Datei ist JSON mit „bloc“ als Art: "programm" (Trainingsplan), "plan" (BLOC mit Sätzen), "uebung" (eigene Übung). Das Öffnen läuft über
+   „Workout- oder Plan-Datei öffnen“ (workoutDateiOeffnen); alles wird beim Einlesen geprüft und erst nach einem Tipp auf „hinzufügen“ angelegt. */
+function dateiTeilenBloc(art, name, obj, msg){
+  var text = JSON.stringify(obj), fname = "bloc-"+art+"-"+String(name).replace(/[^\w\-]+/g, "_").slice(0, 40)+".json";
+  function nurText(){ if(navigator.share) navigator.share({ title:name, text:msg }).catch(function(err){ if(!err || err.name !== "AbortError") copyText(msg, t("shareLinkCopied")); }); else copyText(msg, t("shareLinkCopied")); }
+  if(typeof IST_NATIV !== "undefined" && IST_NATIV){
+    dateiAusgeben(fname, text, "application/json", msg).catch(function(err){ if(!nativAbbruch(err)) nurText(); });
+    return;
+  }
+  try{   // Browser: die Datei über das Teilen-Menü des Systems, sonst als Download
+    var f = new File([text], fname, { type:"application/json" });
+    if(navigator.canShare && navigator.canShare({ files:[f] })){
+      navigator.share({ files:[f], title:name, text:msg }).catch(function(err){ if(!err || err.name !== "AbortError") dateiAusgeben(fname, text, "application/json"); });
+      return;
+    }
+  }catch(e){}
+  dateiAusgeben(fname, text, "application/json");
+}
+/* Eigene Übung: nur die Felder, die BLOC kennt, und gültige Werte (auch beim Einlesen aus einer fremden Datei) */
+function customSauber(c){
+  if(!c || typeof c !== "object" || typeof c.name !== "string" || !c.name.trim()) return null;
+  var cats = (Array.isArray(c.cats) ? c.cats : []).filter(function(x){ return LIB_CATS.some(function(k){ return k.id === x; }); });
+  var equip = (Array.isArray(c.equip) ? c.equip : []).filter(function(x){ return EQUIPS.some(function(k){ return k.id === x; }); });
+  var id = typeof c.id === "string" && c.id && c.id === idSauber(c.id) && c.id !== "__proto__" ? c.id : "my-"+uid();
+  return { id:id, name:c.name.trim().slice(0, 40), cats:cats, equip:equip.length ? equip : ["none"], perSide:!!c.perSide,
+           reps:clamp(parseInt(c.reps)||4, 1, 30), work:clamp(parseInt(c.work)||30, 5, 600), rest:clamp(parseInt(c.rest)||0, 0, 300), hint:String(c.hint || "").slice(0, 80) };
+}
+function uebungTeilen(id){
+  var c = findCustom(id);
+  if(!c) return;
+  dateiTeilenBloc("uebung", c.name, { bloc:"uebung", v:1, c:customDefOf({ id:id }) }, t("shareExMsg", { n:c.name }));
+}
+function uebungDateiOeffnen(j){
+  var c = customSauber(j.c);
+  if(!c){ showToast(t("fileError")); return; }
+  if(findCustom(c.id)){ showToast(t("exSchonDa", { n:c.name })); return; }
+  if(findExercise(c.id)) c.id = "my-"+uid();   // die Kennung gehört schon einer anderen Übung: als eigene, neue Übung anlegen
+  openActionSheet(c.name, [{ ico:P_CHECK, label:t("exDateiOk"), fn:function(){
+    if(!state.db.customEx) state.db.customEx = [];
+    state.db.customEx.push(c); save(); syncCustomEx();
+    showToast(t("exDateiOk2", { n:c.name })); go("#library");
+  } }]);
+}
+/* BLOC (Plan aus Übungen mit Sätzen): Übungen, Art, Pause und je Übung die Ziele (Sätze, Wiederholungen, Pause, Einheit, Timer) - ohne Gewichte und Verlauf */
+function planPayload(p){
+  var ids = stPlanIds(p), custom = [], z = {}, m = {};
+  ids.forEach(function(id){
+    var ex = findExercise(id), e = studioEintrag(id) || {}, r = {};
+    if(ex && ex.custom) custom.push(customDefOf(ex));
+    if(e.ziel && e.ziel.saetze > 0) r.s = e.ziel.saetze;
+    if(e.ziel && e.ziel.wdh > 0) r.w = e.ziel.wdh;
+    if(e.pause != null) r.p = e.pause;
+    if(e.einheit === "wdh" || e.einheit === "zeit") r.e = e.einheit;
+    if(e.timer && typeof e.timer === "object") r.t = [e.timer.reps || 0, e.timer.work || 0, e.timer.rest != null ? e.timer.rest : -1];
+    if(Object.keys(r).length) z[id] = r;
+    if(p.modus && (p.modus[id] === "timer" || p.modus[id] === "saetze")) m[id] = p.modus[id];
+  });
+  var o = { n:p.name, i:ids, b:p.blockRest != null ? p.blockRest : 45, s:planStartArt(p), m:m, z:z };
+  if(custom.length) o.c = custom;
+  return o;
+}
+function planTeilen(p){
+  if(!p || !stPlanIds(p).length){ showToast(t("progTeilenLeer")); return; }
+  var namen = stPlanIds(p).map(function(id){ return tplText(findExercise(id).name); });
+  dateiTeilenBloc("plan", p.name, Object.assign({ bloc:"plan", v:1 }, planPayload(p)), t("shareBlocMsg", { n:p.name })+"\n"+namen.map(function(n, i){ return (i + 1)+". "+n; }).join("\n"));
+}
+/* Eingelesener BLOC: prüft alles; fremde eigene Übungen stehen vorläufig in EXERCISES (wie beim Link), angelegt wird erst mit planAnlegen */
+function planAusShare(x){
+  if(!x || typeof x !== "object" || !Array.isArray(x.i)) return null;
+  (Array.isArray(x.c) ? x.c : []).forEach(function(raw){
+    var c = customSauber(raw);
+    if(c && raw.id === c.id && !findExercise(c.id)){ var ex = customToEx(c); ex.sharedDef = c; EXERCISES.push(ex); }
+  });
+  var ids = [];
+  x.i.slice(0, 80).forEach(function(id){ if(typeof id === "string" && findExercise(id) && ids.indexOf(id) < 0) ids.push(id); });
+  if(!ids.length) return null;
+  var d = { name:String(x.n || t("planDefault", { n:stPlaene().filter(function(q){ return !q.entwurf; }).length + 1 })).slice(0, 40), ids:ids,
+            std:x.s === "timer" || x.s === "saetze" ? x.s : null, br:clamp(parseInt(x.b)||0, 0, 600), modus:{}, z:{}, fehlt:x.i.length - ids.length };
+  ids.forEach(function(id){
+    var m = x.m && x.m[id], r = x.z && x.z[id], o = {};
+    if(m === "timer" || m === "saetze") d.modus[id] = m;
+    if(!r || typeof r !== "object") return;
+    if(parseInt(r.s) > 0) o.s = clamp(parseInt(r.s), 1, 30);
+    if(parseInt(r.w) > 0) o.w = clamp(parseInt(r.w), 1, 100);
+    if(r.p != null && isFinite(+r.p)) o.p = clamp(Math.round(+r.p), 0, 600);
+    if(r.e === "wdh" || r.e === "zeit") o.e = r.e;
+    if(Array.isArray(r.t)) o.t = { reps:clamp(parseInt(r.t[0])||0, 0, 30), work:clamp(parseInt(r.t[1])||0, 0, 600), rest:clamp(parseInt(r.t[2]) >= 0 ? parseInt(r.t[2]) : -1, -1, 300) };
+    if(Object.keys(o).length) d.z[id] = o;
+  });
+  return d;
+}
+/* legt den eingelesenen BLOC an; eigene Werte des Empfängers (Ziele, Pause …) bleiben unberührt */
+function planAnlegen(d){
+  adoptSharedCustoms({ items:d.ids.map(function(id){ return { ex:id }; }) });
+  var p = { id:uid(), name:d.name, ids:d.ids.slice(), blockRest:d.br, updatedAt:Date.now() };
+  if(d.std) p.standard = d.std;
+  if(Object.keys(d.modus).length) p.modus = d.modus;
+  stPlaene().push(p);
+  var a = studioAlle();
+  d.ids.forEach(function(id){
+    var o = d.z[id];
+    if(!o) return;
+    var e = a[id] || (a[id] = { log:[] });
+    if((o.s || o.w) && !e.ziel){ e.ziel = {}; if(o.s) e.ziel.saetze = o.s; if(o.w) e.ziel.wdh = o.w; e.manuell = Date.now(); }
+    if(o.p != null && e.pause == null) e.pause = o.p;
+    if(o.e && !e.einheit) e.einheit = o.e;
+    if(o.t && !e.timer){ e.timer = {}; if(o.t.reps) e.timer.reps = o.t.reps; if(o.t.work) e.timer.work = o.t.work; if(o.t.rest >= 0) e.timer.rest = o.t.rest; }
+  });
+  save();
+  return p;
+}
+function planDateiOeffnen(j){
+  var d = planAusShare(j);
+  if(!d){ showToast(t("fileError")); return; }
+  openActionSheet(d.name, [{ ico:P_CHECK, label:t("planDateiOk", { n:d.ids.length }), fn:function(){
+    var p = planAnlegen(d);
+    stPlanAktiv = p.id; stPlanBauen = false; stPlanQuery = "";
+    showToast(t("planDateiOk2", { n:p.name })); go("#katalog");
+  } }]);
+}
+/* TrainingsBLOC (Programm): Einträge aus dem Katalog bleiben Verweise, eigene Workouts und BLOCs stecken mit allem Nötigen in der Datei
+   ({ bloc:"programm", v:1, n:Name, w:Wochen, d:Tage, i:[„lib:…“ | „run“ | „zufall“ | { w:Workout wie beim Link } | { p:BLOC }] }). Timer-Workouts (tw:) gehen nicht mit. */
+function programmTeilen(p){
+  if(!p || !p.items.length) return;
+  var i = [];
+  p.items.forEach(function(ref){
+    ref = String(ref || "");
+    var mw = ref.indexOf("my:") === 0 ? findMy(ref.slice(3)) : null, sp = ref.indexOf("plan:") === 0 ? stPlanFind(ref.slice(5)) : null;
+    if(mw) i.push({ w:sharePayload(draftFromMy(mw)) });
+    else if(sp && stPlanIds(sp).length) i.push({ p:planPayload(sp) });
+    else if(ref.indexOf("lib:") === 0 || ref === "run" || ref === "zufall") i.push(ref);
+  });
+  if(!i.length){ showToast(t("progTeilenLeer")); return; }
+  dateiTeilenBloc("trainingsplan", p.name, { bloc:"programm", v:1, n:p.name, w:p.wochen || null, d:p.tage || [], i:i }, t("shareProgMsg", { n:p.name })+"\n"+programmText(p));
+}
+/* Erhaltene Plan-Datei: erst fragen, dann als neuer TrainingsBLOC anlegen (eigene Workouts und BLOCs darin kommen unter Meine bzw. Katalog › Meine) */
+function programmDateiOeffnen(j){
+  var liste = Array.isArray(j.i) ? j.i.slice(0, 60) : [], eintraege = [];
+  liste.forEach(function(x){
+    if(typeof x === "string"){
+      if(x === "run" || x === "zufall" || (x.indexOf("lib:") === 0 && x === idSauber(x) && findLibWorkout(x.slice(4)))) eintraege.push(x);
+    } else if(x && typeof x === "object" && x.w){
+      var d = draftFromShare(x.w);
+      if(d) eintraege.push(d);
+    } else if(x && typeof x === "object" && x.p){
+      var pd = planAusShare(x.p);
+      if(pd) eintraege.push({ plan:pd });
+    }
+  });
+  if(!eintraege.length){ showToast(t("fileError")); return; }
+  var name = String(j.n || t("progName", { n:programmListe().length + 1 })).slice(0, 40);
+  openActionSheet(name, [{ ico:P_CHECK, label:t("progDateiOk", { n:eintraege.length }), fn:function(){
+    var items = eintraege.map(function(e){
+      if(typeof e === "string") return e;
+      if(e.plan) return "plan:"+planAnlegen(e.plan).id;
+      adoptSharedCustoms(e);
+      return "my:"+createMyFromDraft(e).id;
+    });
+    var tage = (Array.isArray(j.d) ? j.d : []).filter(function(d, k, a){ return d === (d|0) && d >= 0 && d <= 6 && a.indexOf(d) === k; });
+    programmListe().push({ id:uid(), name:name, items:items, tage:tage, wochen:KP_WOCHEN.indexOf(j.w) > -1 ? j.w : null, am:"alle", pos:0, updatedAt:Date.now() });
+    save(); showToast(t("progDateiOk2", { n:name })); go("#koerper");
+  } }]);
 }
 /* Link öffnen: Workout auf dem Deckblatt zeigen - speichern erst mit „Als Eigenes speichern“ */
 function draftFromShare(p){

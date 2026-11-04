@@ -33,6 +33,7 @@ function renderExEdit(id){
         '<input type="text" id="x-hint" value="'+esc(d.hint||"")+'" maxlength="80" placeholder="'+esc(t("exHintPh"))+'">'+
       '</div>'+
       '<button class="btn btn-primary" data-xsave>'+ICON_SAVE+' '+t("exSave")+'</button>'+
+      (isNew ? '' : '<button class="btn btn-secondary" data-xshare>'+ICON_SHARE+' '+t("share")+'</button>')+
       (isNew ? '' : '<button class="btn btn-danger" data-xdel>'+ICON_TRASH+' '+t("exDelete")+'</button>')+
       '<div style="height:60px"></div>';
     bindCommon();
@@ -66,6 +67,8 @@ function renderExEdit(id){
       showToast(t("exSaved"));
       goBack("#library");
     });
+    var shr = app.querySelector("[data-xshare]");
+    if(shr) shr.addEventListener("click", function(){ uebungTeilen(id); });
     var del = app.querySelector("[data-xdel]");
     if(del) del.addEventListener("click", function(){
       confirmSheet(t("exDeleteQ"), t("exDeleteText"), t("del"), function(){

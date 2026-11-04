@@ -48,7 +48,7 @@ function nativCacheAufraeumen(){
       (r.files || []).forEach(function(f){
         var name = typeof f === "string" ? f : f && f.name;
         var alt = !f || typeof f === "string" || !f.mtime || Date.now() - f.mtime > 3600000;
-        if(name && alt && /^bloc-(sicherung|lauf|workout)-.*\.(json|gpx)$/.test(name)) fs.deleteFile({ path:name, directory:"CACHE" }).catch(function(){});
+        if(name && alt && /^bloc-(sicherung|lauf|workout|trainingsplan|plan|uebung)-.*\.(json|gpx)$/.test(name)) fs.deleteFile({ path:name, directory:"CACHE" }).catch(function(){});
       });
     }).catch(function(){});
   }catch(e){}

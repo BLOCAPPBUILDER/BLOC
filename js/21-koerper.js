@@ -539,11 +539,7 @@ function umbenennenSheet(alt, fn){
 function programmMenue(p, neu){
   openActionSheet(p.name, [
     { ico:ICON_EDIT, label:t("umbenennen"), fn:function(){ umbenennenSheet(p.name, function(v){ p.name = v; p.updatedAt = Date.now(); save(); neu(); }); } },
-    { ico:P_SHARE, label:t("share"), fn:function(){
-      var text = programmText(p);
-      if(navigator.share) navigator.share({ title:p.name, text:text }).catch(function(err){ if(!err || err.name !== "AbortError") copyText(text, t("shareLinkCopied")); });
-      else copyText(text, t("shareLinkCopied"));
-    } },
+    { ico:P_SHARE, label:t("share"), fn:function(){ programmTeilen(p); } },
     { ico:ICON_COPY, label:t("actCopy"), fn:function(){
       var q = JSON.parse(JSON.stringify(p)); q.id = uid(); q.name = t("planKopieName", { n:p.name }); q.updatedAt = Date.now();
       programmListe().push(q); save(); showToast(t("planKopiert", { n:q.name })); neu();
@@ -676,7 +672,7 @@ function blocMenueBinden(neu){
   }
   app.querySelectorAll(".plan-item[data-plan]").forEach(function(el){
     var p = stPlanFind(el.getAttribute("data-plan"));
-    if(p) langDruck(el, function(){ menue(p.name, function(){ return planKopie(p); }, function(){ shareDraft(draftFromMy(planMw(p))); }, el, function(v){ p.name = v; p.updatedAt = Date.now(); }); });
+    if(p) langDruck(el, function(){ menue(p.name, function(){ return planKopie(p); }, function(){ planTeilen(p); }, el, function(v){ p.name = v; p.updatedAt = Date.now(); }); });
   });
   app.querySelectorAll(".my-item[data-cover]").forEach(function(el){
     var mw = findMy(el.getAttribute("data-cover").replace(/^my\//, ""));
