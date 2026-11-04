@@ -628,7 +628,7 @@ function ptsD(start, pts){
 /* Widerstandsband in der Animation: Linien mit data-bd (Marken: h = Hand, f = Fuß, k = Knie, sonst fester Punkt) werden aus den festen Geräteteilen
    gelöst und in jedem Bild neu gezeichnet. Je länger das Band, desto dünner (gedehnt); ist es kürzer als in Ruhe, hängt es leicht durch. */
 function bandSplit(gs){
-  var re = /<path class="ip gb( gv)?" d="[^"]*" data-bd="([^"]+)"\/>/g, alle = [];
+  var re = /<path class="ip gb( gv| gk)?" d="[^"]*" data-bd="([^"]+)"\/>/g, alle = [];
   gs.forEach(function(g){
     var l = [];
     g.fest.replace(re, function(m, v, d){
@@ -636,7 +636,7 @@ function bandSplit(gs){
         var m2 = /^([hfk])(\d)$/.exec(s);
         if(m2) return { a:m2[1], i:+m2[2] };
         var xy = s.split(","); return { x:+xy[0], y:+xy[1] };
-      }); arr.v = !!v; l.push(arr);
+      }); arr.v = v === " gv"; arr.kabel = v === " gk"; l.push(arr);
       return m;
     });
     alle.push(l);
@@ -716,7 +716,7 @@ function illuSetup(svg){
   if(gleich || gs.length > 2) html += gs[0].fest;
   else html += '<g class="gx-a">'+gs[0].fest+'</g><g class="gx-b" style="opacity:0">'+gs[1].fest+'</g>';
   var bandVorn = "";   // Bänder mit gv liegen vor dem Körper (z. B. zwischen den Händen vor der Brust)
-  if(bands) bands[0].forEach(function(b, i){ var el = '<path class="ip gb" data-band="'+i+'"/>'; if(b.v) bandVorn += el; else html += el; });
+  if(bands) bands[0].forEach(function(b, i){ var el = '<path class="ip gb'+(b.kabel ? ' gk' : '')+'" data-band="'+i+'"/>'; if(b.v) bandVorn += el; else html += el; });
   var vorn = "";
   gears.forEach(function(g, i){
     var el = '<g class="gear" data-g="'+i+'">'+g.svg+'</g>';
@@ -781,6 +781,7 @@ function illuDraw(f, b){
   });
   if(f.bands) f.bandEls.forEach(function(el, n){
     var a = bandPunkte(f.bands[b.i][n], P), c = bandPunkte(f.bands[b.j][n], P), pts = a.map(function(p, m){ return [p[0] + (c[m][0]-p[0])*t, p[1] + (c[m][1]-p[1])*t]; });
+    if(f.bands[0][n].kabel){ el.setAttribute("d", ptsD(pts[0], pts.slice(1))); return; }   // Kabel: immer gerade gespannt, gleich dick (Stärke aus .gk)
     var r = bandPfad(pts, f.bandRuhe[n]);
     el.setAttribute("d", r.d); el.style.strokeWidth = r.w.toFixed(2);
   });

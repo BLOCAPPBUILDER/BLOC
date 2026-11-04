@@ -87,6 +87,7 @@ function exZuProgramm(id, ws){   // ws: „warm“ / „dehn“ aus Mobility & S
   // Fitnessstudio-Übungen: erst der Plan (Gewicht × Wiederholungen), dann das Workout mit Timer; sonst umgekehrt
   var wo = { ico:HOME_ICON.lib, label:t("zpAir"), fn:workoutWahl }, pl = { ico:HOME_ICON.timer, label:t("zpStudio"), fn:planWahl };
   if(exIstStudio(ex)) acts.push(pl, wo); else acts.push(wo, pl);
+  if(ex.custom) acts.push({ ico:ICON_SHARE, label:t("share"), fn:function(){ uebungTeilen(id); } });
   if(!ex.custom) acts.push({ ico:ICON_EYE_OFF, label:t("hideShort"), fn:function(){ libHide("ex:"+id); showToast(t("hiddenToast")); render(); } });   // Übung ausblenden (unten im Reiter wieder einblendbar)
   openActionSheet(name, acts);
 }

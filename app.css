@@ -646,6 +646,7 @@ body.dz-mode{ user-select:none; -webkit-user-select:none; cursor:grabbing; }
 .illu .ipf{ fill:currentColor; stroke:none; }
 /* Widerstandsband: dünne Linie in der Gerätefarbe */
 .illu .gb{ stroke-width:2.6; stroke:var(--accent); }
+.illu .gk{ stroke-width:1.8; }   /* Kabelzug: Seil von der Rolle zum Griff */
 .player .illu .gb{ stroke:currentColor; opacity:.7; }
 /* Studio-Geräte: blau, damit man sieht, wogegen man drückt; Ringe (Rollen, Stangenenden) hohl */
 .illu circle.ip{ fill:none; }

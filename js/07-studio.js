@@ -858,7 +858,7 @@ function renderStudioPlan(){
     openActionSheet(p.name, [
       { ico:ICON_EDIT, label:t("umbenennen"), fn:function(){ umbenennenSheet(p.name, function(v){ p.name = v; p.updatedAt = Date.now(); save(); neu(); }); } },
       { ico:ICON_COPY, label:t("actCopy"), fn:function(){ var q = planKopie(p); showToast(t("planKopiert", { n:q.name })); } },
-      { ico:P_SHARE, label:t("share"), fn:function(){ var mw = planMw(p); shareDraft(draftFromMy(mw)); } },
+      { ico:P_SHARE, label:t("share"), fn:function(){ planTeilen(p); } },
       { ico:P_TRASH, label:t("del"), danger:true, fn:function(){ var d = app.querySelector("[data-plandel]"); if(d) d.click(); else planLoeschen(); } }
     ]);
   });

@@ -6241,6 +6241,128 @@ var STUDIO_GERAET = {};
 
 Object.keys(GERAET_NEU).forEach(function(id){ STUDIO_GERAET[id] = GERAET_NEU[id]; });
 
+/* ---------- Kabelzüge: das Seil läuft von der Umlenkrolle zum Griff (2026-11) ----------
+   Eine dünne Linie (Klasse „gb gk“) von der Rolle zur Hand bzw. zum Fuß. Die Animation zeichnet sie in jedem Bild neu (bandSplit in js/02-bibliothek.js),
+   sie bleibt also immer gerade gespannt. Feste Seillinien, die es vorher nur in einer Pose gab, fallen weg.
+   KABEL: Übung → [[x, y, Ziel], …] (Rolle bzw. Turm; Ziel h0/h1 = Hand, f = Fuß am Griff); KABEL_WEG: Übung → Linien (Pfad d), die ersetzt werden. */
+(function(){
+  function r1(v){ return Math.round(v*10)/10; }
+  function wie(id, von){ KABEL[id] = KABEL[von]; }
+  var KABEL = {
+    "lat-pulldown":[[50,0,"h0"],[50,0,"h1"]],
+    "rope-lat-pulldown":[[50,0,"h0"],[50,0,"h1"]],
+    "single-arm-lat-pulldown":[[28,0,"h0"]],
+    "cable-row":[[82,52,"h0"]],
+    "alternating-cable-row":[[82,52,"h0"],[82,52,"h1"]],
+    "cable-curl":[[70,84,"h0"]],
+    "triceps-pushdown":[[68,4,"h0"]],
+    "glute-kickback-cable":[[74,84,"f"]],
+    "cable-crossover":[[12,2,"h0"],[88,2,"h1"]],
+    "face-pull":[[86,16,"h0"]],
+    "straight-arm-pulldown":[[80,4,"h0"]],
+    "overhead-cable-triceps":[[26,14,"h0"]],
+    "cable-lateral-raise":[[20,84,"h0"]],
+    "cable-crunch":[[86,6,"h0"]],
+    "cable-pull-through":[[12,84,"h0"]],
+    "cable-woodchop":[[14,4,"h0"]],
+    "cable-chest-fly":[[14,25,"h0"],[86,25,"h1"]],
+    "standing-cable-fly":[[18,5,"h0"],[18,5,"h1"]],
+    "low-to-high-cable-fly":[[18,84,"h0"],[18,84,"h1"]],
+    "one-arm-high-cable-row":[[82,5,"h0"]],
+    "cable-shoulder-press":[[14,84,"h0"],[86,84,"h1"]],
+    "lean-away-lateral-raise":[[34,84,"h0"]],
+    "high-cable-curl":[[14,24,"h0"],[86,24,"h1"]],
+    "kneeling-cable-triceps-extension":[[14,24,"h0"]],
+    "incline-cable-triceps-extension":[[9,84,"h0"]],
+    "lying-cable-triceps-extension":[[8,60,"h0"]],
+    "cable-lift":[[16,84,"h0"]],
+    "cable-twist":[[14,26,"h0"]],
+    "cable-reverse-crunch":[[8,70,"f"]],
+    "cable-external-rotation":[[90,40,"h0"]],
+    "cable-shrug":[[10,84,"h0"]],
+    "cable-standing-row":[[94,38,"h0"]],
+    "cable-standing-twist-row":[[97,36,"h0"]],
+    "cable-rear-delt-row":[[8,31,"h0"],[92,31,"h1"]],
+    "cable-lying-fly":[[6,89,"h0"],[94,89,"h0"]],
+    "cable-lying-triceps-extension":[[5,84,"h0"]],
+    "cable-lying-triceps-press":[[10,14,"h0"]],
+    "cable-lying-curl":[[94,78,"h0"]],
+    "cable-wrist-curl":[[94,86,"h0"]],
+    "cable-single-arm-bent-row":[[94,86,"h0"]],
+    "cable-single-arm-shoulder-press":[[94,89,"h0"]],
+    "cable-decline-fly":[[6,0,"h0"],[94,0,"h1"]],
+    "overhead-cable-curl":[[10,4,"h0"]],
+    "pallof-press":[[8,34,"h0"]],
+    "cable-hip-abduction":[[10,84,"f0"]], "cable-hip-adduction":[[10,84,"f0"]]
+  };
+  ["wide-grip-lat-pulldown", "reverse-grip-lat-pulldown", "close-grip-pulldown"].forEach(function(id){ wie(id, "lat-pulldown"); });
+  ["wide-grip-cable-row", "underhand-cable-row", "one-arm-cable-row"].forEach(function(id){ wie(id, "cable-row"); });
+  ["one-arm-cable-curl", "cable-reverse-curl"].forEach(function(id){ wie(id, "cable-curl"); });
+  ["rope-triceps-pushdown", "supinated-triceps-extension", "one-arm-cable-triceps-extension"].forEach(function(id){ wie(id, "triceps-pushdown"); });
+  wie("standing-cable-crunch", "cable-crunch");
+  wie("cable-internal-rotation", "cable-external-rotation");
+  wie("cable-side-bend", "cable-shrug");
+  wie("cable-incline-fly", "cable-lying-fly"); wie("cable-incline-press", "cable-lying-fly");
+  var KABEL_WEG = {
+    "rope-lat-pulldown":["M50 0V9M50 9L45 11M50 9L55 11"], "single-arm-lat-pulldown":["M28 0L34 12"], "cable-reverse-curl":["M54 44L70 84"],
+    "rope-triceps-pushdown":["M68 6L62 31"], "cable-crunch":["M86 6L58 24"], "cable-woodchop":["M14 4L33 11"],
+    "kneeling-cable-triceps-extension":["M14 24L46 30"], "lying-cable-triceps-extension":["M10 60L28 43"], "cable-reverse-crunch":["M10 70L68 66"],
+    "cable-external-rotation":["M56 40L90 40"], "cable-internal-rotation":["M28 40L90 40"], "cable-shrug":["M10 84L42 51"], "cable-side-bend":["M10 84L43 50"],
+    "cable-standing-row":["M94 38L70 38"], "cable-standing-twist-row":["M97 36L74 36"], "cable-rear-delt-row":["M8 31H46M92 31H54"],
+    "cable-lying-fly":["M6 89L36 40M94 89L36 40"], "cable-incline-fly":["M6 89L31 29M94 89L31 29"], "cable-incline-press":["M6 89L34 53M94 89L34 53"],
+    "cable-lying-triceps-extension":["M5 84L35 39"], "cable-lying-triceps-press":["M10 14L41 55"], "cable-lying-curl":["M94 78L57 72"],
+    "cable-wrist-curl":["M72 62L94 86"], "cable-single-arm-bent-row":["M94 86L66 66"], "cable-single-arm-shoulder-press":["M94 89L54 27"],
+    "cable-decline-fly":["M6 0L24 18M94 0L76 18"],
+    "cable-hip-abduction":["~", "M39 86H45", "M57 78L63 82"], "cable-hip-adduction":["~"]   // „~“: die dünne Seillinie (Strichstärke 1.6), liegt je Pose an anderer Stelle
+  };
+  /* Pallof-Press hatte keinen Turm: Kabelturm auf Brusthöhe links */
+  var KABEL_PLUS = { "pallof-press":'<path class="ip gm" d="M8 12V89"/><circle class="ip gm" cx="8" cy="34" r="3"/>' };
+  function esc(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+  function fussIndex(q){   // Bein, dessen Knöchel am nächsten zum Fußgriff (Klasse gf) liegt; sonst das erste
+    var m = /<g class="gf" data-at="([\d.\-]+),([\d.\-]+)"/.exec(q.x || ""), best = 0, bd = Infinity;
+    if(m) q.l.forEach(function(l, i){ var d = Math.pow(l[2]-m[1], 2) + Math.pow(l[3]-m[2], 2); if(d < bd){ bd = d; best = i; } });
+    return best;
+  }
+  Object.keys(KABEL).forEach(function(id){
+    var pp = ILLU_POSES[id];
+    if(!pp) return;
+    var fi = fussIndex(pp[0]);
+    ILLU_POSES[id] = pp.map(function(q){
+      if(!q) return q;
+      var x = q.x || "";
+      (KABEL_WEG[id] || []).forEach(function(d){ x = x.replace(new RegExp('<path class="ip gm"'+(d === "~" ? ' style="stroke-width:1\\.6" d="[^"]*"' : '(?: style="[^"]*")? d="'+esc(d)+'"')+'\\/>', "g"), ""); });
+      x += KABEL_PLUS[id] || "";
+      KABEL[id].forEach(function(k){
+        var m = k[2], e;
+        if(m.charAt(0) === "f"){ var fx = m.length > 1 ? +m.charAt(1) : fi, l = q.l[fx]; e = [l[2], l[3], "f"+fx]; }
+        else { var a = q.a[+m.charAt(1)] || q.a[0]; e = [a[a.length-2], a[a.length-1], m]; }
+        x += '<path class="ip gb gk" d="M'+r1(k[0])+' '+r1(k[1])+'L'+r1(e[0])+' '+r1(e[1])+'" data-bd="'+r1(k[0])+','+r1(k[1])+'|'+e[2]+'"/>';
+      });
+      return Object.assign({}, q, { x:x });
+    });
+  });
+})();
+
+/* ---------- Bänder, die in der Animation fehlten oder starr in einer Pose standen (2026-11) ----------
+   Dehnbare Linie (Klasse „gb“) mit Marken: h0/h1 Hand, k0/k1 Knie, f0/f1 Fuß oder ein fester Punkt [x, y] - die Animation zeichnet sie in jedem Bild neu. */
+(function(){
+  function r1(v){ return Math.round(v*10)/10; }
+  function bandLinie(q, marken){
+    var pts = marken.map(function(m){
+      if(typeof m !== "string") return [m[0], m[1], r1(m[0])+","+r1(m[1])];
+      var g = m.charAt(0), i = +m.charAt(1), a = q.a[i] || q.a[0], l = q.l[i] || q.l[0];
+      return g === "h" ? [a[a.length-2], a[a.length-1], m] : g === "k" ? [l[0], l[1], m] : [l[2], l[3], m];
+    });
+    return '<path class="ip gb" d="'+pts.map(function(p, n){ return (n ? "L" : "M")+r1(p[0])+" "+r1(p[1]); }).join("")+'" data-bd="'+pts.map(function(p){ return p[2]; }).join("|")+'"/>';
+  }
+  function neu(id, weg, fn){
+    ILLU_POSES[id] = ILLU_POSES[id].map(function(q){ return q ? Object.assign({}, q, { x:(q.x || "").replace(weg, "") + fn(q) }) : q; });
+  }
+  neu("band-lateral-walk", /<path class="ip" style="stroke-width:4\.5" d="[^"]*"\/>/g, function(q){ return bandLinie(q, ["k0", "k1"]); });   // Band über den Knien
+  neu("band-deadlift", /<path class="ip" d="M\d+ \d+L50 89"\/>/g, function(q){ return bandLinie(q, ["h0", [50, 89]]); });   // Band unter dem Fuß
+  neu("band-external-rotation-90", /(?!)/g, function(q){ return '<circle class="ip" cx="6" cy="26" r="2.4"/>'+bandLinie(q, [[6, 26], "h0"]); });   // an der Tür auf Ellbogenhöhe befestigt
+})();
+
 window.BLOC_DATEN = {
   EX_ALIAS:EX_ALIAS,
   EX_GRIFF:EX_GRIFF,

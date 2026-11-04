@@ -3,6 +3,13 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-04 · Teilen als Datei für Trainingsplan, BLOC und eigene Übung; Seile und Bänder in den Figuren (Fassung 2026-11-04-1)
+
+- **Teilen als Datei:** Ein TrainingsBLOC (Trainingsplan, Teilen im Menü nach langem Drücken), ein BLOC (Plan mit Sätzen) und eine selbst angelegte Übung gehen jetzt wie ein Workout als Datei über das Teilen-Menü (`bloc-trainingsplan-….json`, `bloc-plan-….json`, `bloc-uebung-….json`), die Nachricht liegt dabei (bei Plänen mit der Liste der Übungen). Vorher schickte der TrainingsBLOC nur Text. Im Browser teilt das System die Datei, sonst lädt sie herunter.
+- **Öffnen:** Einstellungen, Daten, „Workout- oder Plan-Datei öffnen“ erkennt die Art selbst und fragt vor dem Anlegen („Als BLOC / TrainingsBLOC / eigene Übung hinzufügen“). Ein TrainingsBLOC bringt seine eigenen Workouts und BLOCs mit, Katalog-Workouts bleiben Verweise. Ein BLOC trägt Übungen, Art (Sätze/Timer), Pause und je Übung die Ziele (Sätze, Wiederholungen, Pause, Einheit, Timer), aber keine Gewichte und keinen Verlauf; eigene Übungen darin werden mit angelegt. Vorhandene Werte des Empfängers werden nicht überschrieben. Alles wird beim Einlesen geprüft (`customSauber`, `planAusShare`); Timer-Workouts (tw:) gehen in einem TrainingsBLOC nicht mit.
+- **Figuren:** Alle Kabelzug-Übungen (rund 60) zeigen jetzt das Seil von der Umlenkrolle zum Griff bzw. Fuß, in der Animation immer gerade gespannt (Klasse `gk`, `KABEL` in `daten.js`, Verarbeitung in `bandSplit` und `illuDraw`). Starre Seillinien, die nur in einer Pose stimmten, sind ersetzt; Pallof-Press hat einen Kabelturm. Bänder: Seitschritt (Band über den Knien) und Kreuzheben (Band unter dem Fuß) laufen mit den Gliedern mit, Außenrotation mit Band hat jetzt ein Band an der Tür.
+- Schnelltest: 1 Punkt war schon vorher rot (Filterkarte bleibt beim Mehrfachwählen offen), sonst grün.
+
 ## 2026-11-03 · Baukasten-Karte hell mit Rack-Foto (Fassung 2026-11-03-10)
 
 - **Heute, Hellmodus:** Die Baukasten-Karte zeigt `neu-h-rack.jpg`, eng auf die bunten Gewichte zugeschnitten (vergrößert, Scheiben rechts neben dem Text). Dunkel bleibt das bisherige Foto (`layout-new.css`).

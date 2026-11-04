@@ -180,6 +180,7 @@ function renderWarmStretch(){
     if(!ex) return;
     var acts = [];
     if(ex.custom) acts.push({ ico:ICON_EDIT, label:t("edit"), fn:function(){ go("#exedit/"+ex.id); } });
+    if(ex.custom) acts.push({ ico:ICON_SHARE, label:t("share"), fn:function(){ uebungTeilen(ex.id); } });
     if(EX_INFO[ex.id]) acts.push({ ico:ICON_INFO, label:t("infoLong"), fn:function(){ openExInfo(ex.id, false, { onChange:neu }); } });
     acts.push({ ico:P_PLUS, label:t("zpWs"), fn:function(){ exZuProgramm(ex.id, art); } });
     acts.push({ ico:ICON_TIMERBLOCK, label:t("adoptBlockTitle"), fn:function(){ adoptExercise(ex); showToast(t("adoptedBlock", { n:tplText(ex.name) })); } });
