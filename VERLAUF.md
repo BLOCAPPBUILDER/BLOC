@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-06 · Baukasten-Karte hell mit Calisthenics-Park am Meer (Fassung 2026-11-06-5)
+
+- **Heute, Hellmodus:** Die Baukasten-Karte zeigt `neu-freiluft.jpg` (Calisthenics-Park am Meer) statt des Rack-Fotos mit den Gewichten. Dunkel bleibt wie es war (`layout-new.css`).
+
 ## 2026-11-06 · Heller Hintergrund wie im Dunkel, weich und cremig; „Howdy“ raus (Fassung 2026-11-06-4)
 
 - **Hell:** Hinter allen Seiten liegt wie im Dunkel das Meer-Foto geblurrt, hier stark verwischt (30 px), aufgehellt und satter, darüber ein warmer, cremiger Schleier statt Weiß (`layout-new.css`, am Ende, `:not([data-glas])`). Der Foto-Kopf von Heute blendet unten weich in diesen Grund aus (Maske wie im Dunkel), keine harte Kante mehr. Karten bleiben weiß; Run-Aufnahme, Timer und Satz-Training behalten ihr dunkles Foto.
