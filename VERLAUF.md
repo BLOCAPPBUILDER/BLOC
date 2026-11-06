@@ -3,6 +3,13 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-06 · Höhenmeter im Run, 5 Fatburner-Pläne, helleres Weiß, weißer Kopf (Fassung 2026-11-06-8)
+
+- **Run: Höhenmeter.** Aufgezeichnet wird der Aufstieg (`runHoehe` in `js/16-lauf.js`): GPS-Höhe geglättet, erst ab 3 m Anstieg gezählt, Abstieg zählt nicht, nur wenn die Strecke wächst. Zu sehen live (eigene Kachel), in der Abschlusskarte, im Lauf-Detail und im Verlauf („↑ 42 m“); gespeichert als `hm` im Lauf (ohne Höhe vom Gerät fehlt das Feld). Bereinigung beim Einlesen in `streckenSauber`. Test mit simulierten Punkten: 30 m Anstieg ergaben 29 m.
+- **5 Fatburner-Pläne** (Katalog, Ganzkörper; Entwurf und Prüfung: Sportwissenschaftler): Einstieg (leicht, Körpergewicht), Aufbau Kurzhantel und HIIT Körpergewicht (mittel), Kraft Park und Kraft Kurzhantel (schwer), je mit Zirkel-Takt und Infotext. `woSchw` erkennt jetzt auch Plan-IDs mit Nummer am Ende (`-schwer-1`).
+- **Hell:** Hintergrund noch heller, fast weiß, weniger Creme. Auf Heute ist die Schrift im Kopf (Gruß, Datum, Untertitel) weiß auf dem Wellen-Foto.
+- **Play-Knopf ohne Plan:** statt „Keine Pläne im Kalender“ öffnet sich „Heute ist noch nichts geplant“ mit „Trainingsplan anlegen“ und „Im Kalender einplanen“.
+
 ## 2026-11-06 · Heller Hintergrund: weißer Stein, stark geblurrt (Fassung 2026-11-06-7)
 
 - **Hell:** Hinter den Seiten liegt wieder das Pexels-Foto (`img/neu-hell-hintergrund.jpg`, Laura Paredis), aber nur der weiße Stein (unterer Ausschnitt, 240 %, ohne Himmel), mit 30 px stark geblurrt und warm-weißem Schleier: ein ruhiger, cremig weißer Grund. Das Meer-Foto im Hellen ist wieder raus. Der Foto-Kopf von Heute blendet länger aus (Maske ab 66 %), kein harter Rand. Bildnachweis in `quellen.html`.

@@ -177,6 +177,7 @@ function streckenSauber(r){
   if(!Array.isArray(r)) return;
   r.forEach(function(x){
     if(!x || typeof x !== "object") return;
+    if(x.hm != null) x.hm = isFinite(x.hm) ? Math.max(0, Math.round(+x.hm)) : undefined;   // Höhenmeter
     x.pts = (Array.isArray(x.pts) ? x.pts : []).filter(function(p){ return Array.isArray(p) && isFinite(p[0]) && isFinite(p[1]); }).map(function(p){ return [+p[0], +p[1]]; });
   });
 }

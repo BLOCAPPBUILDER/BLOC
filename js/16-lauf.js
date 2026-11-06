@@ -47,8 +47,19 @@ function runWachen(an){
 }
 document.addEventListener("visibilitychange", function(){ if(document.visibilityState === "visible" && run){ if(!run.pauseAb) runWachen(true); runAnzeige(); } });   // nach dem Entsperren sofort nachziehen (Zeit, Strecke, Karte)
 
+/* Höhenmeter (nur Aufstieg): die GPS-Höhe schwankt um mehrere Meter, daher erst geglättet und erst ab 3 m Anstieg gegenüber dem letzten Bezugspunkt gezählt;
+   Abstieg setzt den Bezugspunkt nur nach unten. Gezählt wird nur, wenn die Strecke wächst (nicht im Stand). Ohne Höhe vom Gerät bleibt r.hasAlt false. */
+function runHoehe(r, alt, altAcc){
+  if(alt == null || !isFinite(alt) || (altAcc != null && altAcc > 25)) return;
+  r.hasAlt = true;
+  r.alt = r.alt == null ? alt : r.alt + 0.25*(alt - r.alt);
+  if(r.hRef == null){ r.hRef = r.alt; return; }
+  var diff = r.alt - r.hRef;
+  if(diff >= 3){ r.hm = (r.hm || 0) + diff; r.hRef = r.alt; }
+  else if(diff <= -3) r.hRef = r.alt;
+}
 /* Ein GPS-Punkt: filtert Ungenaues, Stillstand-Rauschen und Sprünge, zählt Strecke und Kilometer-Zwischenzeiten */
-function runPunkt(lat, lon, acc, ts, speed){
+function runPunkt(lat, lon, acc, ts, speed, alt, altAcc){
   var r = run;
   if(!r) return;
   r.fixAm = Date.now();   // letzter Standort: Auto-Pause braucht frische Punkte (siehe runAutoPruefen)
@@ -69,6 +80,7 @@ function runPunkt(lat, lon, acc, ts, speed){
   var vor = r.dist, nun = runZeit(r);
   if(speed == null || speed >= 0.5) r.lastMove = Date.now();   // Zittern im Stand (Tempo ~0) zählt nicht als Bewegung
   r.dist += d; r.letzte = { p:p, ts:ts };
+  runHoehe(r, alt, altAcc);
   while(Math.floor(r.dist/1000) > r.splits.length){   // Kilometer-Marke überschritten: Zeit anteilig berechnen
     var k = r.splits.length + 1, anteil = (k*1000 - vor)/(r.dist - vor);
     r.splits.push(Math.round(r.tZ + anteil*(nun - r.tZ)));
@@ -229,7 +241,7 @@ function runVorLos(){
 }
 function runLosgehts(){
   var art = runArt();
-  run = { id:uid(), start:Date.now(), pauseAb:0, pausenMs:0, dist:0, pts:[], letzte:null, splits:[], tZ:0, verlauf:[], gps:null, fehler:0, stumm:false, gesagt:[], n:0, sumAcc:0,
+  run = { id:uid(), start:Date.now(), pauseAb:0, pausenMs:0, dist:0, pts:[], letzte:null, splits:[], tZ:0, verlauf:[], gps:null, fehler:0, stumm:false, gesagt:[], n:0, sumAcc:0, hm:0, alt:null, hRef:null, hasAlt:false,
     lastMove:Date.now(), auto:false, art:art, iv:art !== "rad" && runIvEinst().an ? runIvEinst() : null, ivPhase:null,
     ziel:runGeplant && Date.now() - runGeplant.t < 6*3600000 ? runGeplant : null };
   runGeplant = null;
@@ -241,7 +253,7 @@ function runLosgehts(){
 function runLauschen(){
   var r = run;
   r.watch = navigator.geolocation.watchPosition(function(pos){
-    runPunkt(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy, pos.timestamp || Date.now(), pos.coords.speed);
+    runPunkt(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy, pos.timestamp || Date.now(), pos.coords.speed, pos.coords.altitude, pos.coords.altitudeAccuracy);
     runAnzeige();
   }, function(err){ r.fehler = err && err.code || 2; runAnzeige(); }, { enableHighAccuracy:true, maximumAge:1000, timeout:20000 });
 }
@@ -263,6 +275,7 @@ function runSichern(){   // alle 10 s eine Kopie, damit ein beendeter Browser de
   if(!r || Date.now() - runSichernAm < 10000) return;
   runSichernAm = Date.now();
   state.db.settings.runLive = { id:r.id, start:r.start, dur:runZeit(r), dist:r.dist, pts:r.pts, splits:r.splits, at:Date.now() };
+  if(r.hasAlt) state.db.settings.runLive.hm = Math.round(r.hm || 0);
   if(r.art === "rad") state.db.settings.runLive.art = "rad";
   save();
 }
@@ -270,6 +283,7 @@ function runSpeichern(d){   // d: { id, start, dur, dist, pts, splits } -> in de
   var s = state.db.settings;
   if(d.dist < 50){ showToast(t("runShort")); return false; }
   var x = { id:d.id, at:d.start, dur:Math.round(d.dur), dist:Math.round(d.dist), pts:d.pts, splits:d.splits };
+  if(d.hm != null && isFinite(d.hm)) x.hm = Math.max(0, Math.round(d.hm));   // Höhenmeter (Aufstieg, m); fehlt, wenn das Gerät keine Höhe liefert
   if(d.pause > 1000) x.pause = Math.round(d.pause);   // herausgerechnete Pausen/Stehzeit (ms)
   if(d.iv) x.iv = { lauf:d.iv.lauf, geh:d.iv.geh };
   if(d.name) x.name = d.name;
@@ -290,7 +304,7 @@ function runBeenden(speichern){
   var dunkel = document.getElementById("run-dunkel"); if(dunkel) dunkel.remove();
   run = null;
   delete state.db.settings.runLive;
-  var ok = speichern ? runSpeichern({ id:r.id, start:r.start, dur:dauer, dist:r.dist, pts:r.pts, splits:r.splits, pause:pausen, iv:iv, name:r.ziel && r.ziel.name, art:r.art }) : (save(), false);
+  var ok = speichern ? runSpeichern({ id:r.id, start:r.start, dur:dauer, dist:r.dist, pts:r.pts, splits:r.splits, hm:r.hasAlt ? r.hm : null, pause:pausen, iv:iv, name:r.ziel && r.ziel.name, art:r.art }) : (save(), false);
   if(ok){ runNeu = r.id; go("#rundetail/"+r.id); } else renderRun();   // runNeu: Abschlusskarte oben im Detail
 }
 var runNeu = null;
@@ -498,6 +512,7 @@ function runAnzeige(){
   function setze(id, txt){ var el = document.getElementById(id); if(el && el.textContent !== txt) el.textContent = txt; }
   var zeit = fmtUhr(runZeit(r)), tempo = runTempo(r, sek, r.dist);
   setze("run-kcal", runKcalText(r.dist, runZeit(r)/1000, runIstRad(r)));
+  setze("run-hm", r.hasAlt ? String(Math.round(r.hm || 0)) : "–");
   setze("run-zeit", zeit); setze("run-km", runKm(r.dist)); setze("run-pace", tempo); setze("run-jetzt", runTempoJetzt(r));
   setze("run-dz", zeit); setze("run-dk", runKm(r.dist)+" km"); setze("run-dp", tempo+" "+runTempoEinheit(r));   // abgedunkelt: Zeit, Kilometer und Tempo bleiben zu sehen
   var gps = r.fehler === 1 ? t("runGpsDenied") : r.fehler ? t("runGpsLost") : r.gps == null ? t("runGpsWait") :
@@ -647,7 +662,7 @@ function renderRun(){
     (runs.length ? runs.map(function(x){
       var d = new Date(x.at);
       return '<div class="list-item entry run-item" data-nav="#rundetail/'+x.id+'"><div class="meta"><div class="name">'+esc(runKm(x.dist))+' km'+(runIstRad(x) ? '<span class="run-name"> · '+esc(t("runArtRad"))+'</span>' : '')+(x.name ? '<span class="run-name"> · '+esc(x.name)+'</span>' : '')+'</div>'+
-        '<div class="sub">'+esc(d.toLocaleDateString(currentLang() === "en" ? "en-GB" : "de-DE", { weekday:"short", day:"numeric", month:"short" }))+SEP+esc(fmtUhr(x.dur))+SEP+esc(runTempo(x, x.dur/1000, x.dist))+' '+runTempoEinheit(x)+'</div></div>'+
+        '<div class="sub">'+esc(d.toLocaleDateString(currentLang() === "en" ? "en-GB" : "de-DE", { weekday:"short", day:"numeric", month:"short" }))+SEP+esc(fmtUhr(x.dur))+SEP+esc(runTempo(x, x.dur/1000, x.dist))+' '+runTempoEinheit(x)+(x.hm != null ? SEP+'↑ '+esc(String(x.hm))+' m' : '')+'</div></div>'+
         '<div class="card-aside"><div class="card-acts">'+trashBtn("run", x.id, runKm(x.dist)+" km")+'</div></div></div>';
     }).join("") : '<div class="empty" style="padding:24px 20px;">'+esc(t("runNone"))+'</div>')+'</details>'+
     '<div class="page-hint">'+esc(t("runBetaHint"))+'</div>'+
@@ -717,7 +732,7 @@ function renderRun(){
   var lv = app.querySelector("[data-runlivesave]");
   if(lv) lv.addEventListener("click", function(){
     var l = s.runLive; delete s.runLive;
-    if(runSpeichern({ id:l.id, start:l.start, dur:l.dur, dist:l.dist, pts:l.pts, splits:l.splits, art:l.art })) go("#rundetail/"+l.id); else renderRun();
+    if(runSpeichern({ id:l.id, start:l.start, dur:l.dur, dist:l.dist, pts:l.pts, splits:l.splits, hm:l.hm, art:l.art })) go("#rundetail/"+l.id); else renderRun();
   });
   var ld = app.querySelector("[data-runlivedel]");
   if(ld) ld.addEventListener("click", function(){ delete s.runLive; save(); renderRun(); });
@@ -732,7 +747,7 @@ function renderRunLive(){
     '<div class="run-raster">'+
       '<div><b id="run-km">0,00</b><small>'+esc(t("runDist"))+' (km)</small></div>'+
       '<div><b id="run-pace">'+(runIstRad(r) ? '–,–' : '–:––')+'</b><small>'+esc(t(runIstRad(r) ? "runSpeedAvg" : "runPaceAvg"))+' '+runTempoEinheit(r)+'</small></div>'+
-      '<div><b id="run-jetzt">'+(runIstRad(r) ? '–,–' : '–:––')+'</b><small>'+esc(t("runPaceNow"))+' '+runTempoEinheit(r)+'</small></div>'+'<div><b id="run-kcal">–</b><small>kcal</small></div></div>'+
+      '<div><b id="run-jetzt">'+(runIstRad(r) ? '–,–' : '–:––')+'</b><small>'+esc(t("runPaceNow"))+' '+runTempoEinheit(r)+'</small></div>'+'<div><b id="run-kcal">–</b><small>kcal</small></div>'+'<div><b id="run-hm">–</b><small>'+esc(t("runElev"))+' (m)</small></div></div>'+
     '<div class="run-karte-wrap"><div id="run-karte" class="run-karte" data-n="-1"></div>'+runKarteKnopfHTML()+'</div>'+
     '<div class="run-knoepfe"><button type="button" class="btn btn-secondary" data-runpause>'+esc(t(r.pauseAb ? "runResume" : "runPause"))+'</button>'+
       '<button type="button" class="btn btn-secondary run-dunkelbtn" data-rundark>'+svgIcon(ICON_MOON)+' '+esc(t("runDark"))+'</button>'+
@@ -789,7 +804,7 @@ function renderRunDetail(id){
     topbar(t("runDetail"), { back:"#run" }) +
     // Abschlusskarte direkt nach dem Lauf: was geschafft wurde (der Lauf ist schon gespeichert)
     (neu ? '<div class="card run-fertig"><div class="rf-titel">'+esc(t("runGeschafft"))+'</div><div class="rf-km">'+esc(runKm(x.dist))+' <small>km</small></div>'+
-      '<div class="rf-zeile">'+esc(fmtUhr(x.dur))+SEP+esc(runTempo(x, x.dur/1000, x.dist))+' '+runTempoEinheit(x)+(runKcal(x.dist, x.dur/1000, runIstRad(x)) ? SEP+esc(runKcalText(x.dist, x.dur/1000, runIstRad(x)))+' kcal' : '')+'</div>'+
+      '<div class="rf-zeile">'+esc(fmtUhr(x.dur))+SEP+esc(runTempo(x, x.dur/1000, x.dist))+' '+runTempoEinheit(x)+(runKcal(x.dist, x.dur/1000, runIstRad(x)) ? SEP+esc(runKcalText(x.dist, x.dur/1000, runIstRad(x)))+' kcal' : '')+(x.hm != null ? SEP+'↑ '+esc(String(x.hm))+' m' : '')+'</div>'+
       (hl.length ? '<ul class="rf-liste">'+hl.map(function(h){ return '<li>'+svgIcon(ICON_STAR)+'<span>'+esc(h)+'</span></li>'; }).join("")+'</ul>' : '')+
       '<div class="rf-gespeichert">'+esc(t("runGespeichert"))+'</div></div>' : '')+
     '<div class="meta-zeile">'+esc(d.toLocaleDateString(currentLang() === "en" ? "en-GB" : "de-DE", { weekday:"long", day:"numeric", month:"long", year:"numeric" }))+
@@ -797,7 +812,7 @@ function renderRunDetail(id){
     '<div class="card run-notiz"><input type="text" id="run-name" maxlength="40" value="'+esc(x.name || "")+'" placeholder="'+esc(t("runNamePh"))+'" aria-label="'+esc(t("runNamePh"))+'">'+
       '<textarea id="run-note" rows="2" maxlength="400" placeholder="'+esc(t("runNotePh"))+'" aria-label="'+esc(t("runNotePh"))+'">'+esc(x.note || "")+'</textarea></div>'+
     '<div class="run-raster"><div><b>'+esc(runKm(x.dist))+'</b><small>'+esc(t("runDist"))+' (km)</small></div><div><b>'+esc(fmtUhr(x.dur))+'</b><small>'+esc(t("runTime"))+'</small></div>'+
-      '<div><b>'+esc(runTempo(x, x.dur/1000, x.dist))+'</b><small>'+esc(t(runIstRad(x) ? "runSpeedAvg" : "runPaceAvg"))+' '+runTempoEinheit(x)+'</small></div>'+(koerperDaten() ? '<div><b>'+esc(runKcalText(x.dist, x.dur/1000, runIstRad(x)))+'</b><small>kcal</small></div>' : '')+'</div>'+
+      '<div><b>'+esc(runTempo(x, x.dur/1000, x.dist))+'</b><small>'+esc(t(runIstRad(x) ? "runSpeedAvg" : "runPaceAvg"))+' '+runTempoEinheit(x)+'</small></div>'+(koerperDaten() ? '<div><b>'+esc(runKcalText(x.dist, x.dur/1000, runIstRad(x)))+'</b><small>kcal</small></div>' : '')+(x.hm != null ? '<div><b>'+esc(String(x.hm))+'</b><small>'+esc(t("runElev"))+' (m)</small></div>' : '')+'</div>'+
     (koerperDaten() ? '<div class="sk-unter run-kcal-hinweis">'+esc(t("runKcalHint"))+'</div>' : '<button type="button" class="kh-mehr" data-koerper>'+esc(t("statKcalLink"))+' &#8250;</button>')+
     '<div class="section-title">'+esc(t("runRoute"))+'</div>'+runStreckeNeu(x)+
     (sp.length ? '<div class="section-title">'+esc(t("runSplits"))+'</div><div class="card run-kms">'+runKmZeilen(x)+'</div>' : '')+
