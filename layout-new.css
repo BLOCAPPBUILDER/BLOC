@@ -1433,9 +1433,14 @@ body.prot-sheet-offen{ overflow:hidden; }
    Run-Aufnahme, Timer und Satz-Training bringen ihr eigenes dunkles Foto mit. Der Foto-Kopf von Heute läuft unten weich in diesen Grund aus (wie im Dunkel). ---------- */
 :root[data-layout="new"]:not([data-glas]){ background:var(--bg); }
 :root[data-layout="new"]:not([data-glas]) body{ background:transparent; }
-:root[data-layout="new"]:not([data-glas]) .glas-bg{ display:block; position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; background:#f6f1e8; }
+:root[data-layout="new"]:not([data-glas]) .glas-bg{ display:block; position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; background:#fbfbfa; }
 :root[data-layout="new"]:not([data-glas]) body:has(#app .run-bg) .glas-bg{ display:none; }
 :root[data-layout="new"]:not([data-glas]) .glas-bg i{ position:absolute; inset:-60px; background:url("img/neu-hell-hintergrund.jpg") 50% 100%/240% auto no-repeat; filter:blur(30px) saturate(1.05); }
-:root[data-layout="new"]:not([data-glas]) .glas-bg::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(252,248,240,.3), rgba(252,248,240,.3) 55%, rgba(252,248,240,.4)); }
+:root[data-layout="new"]:not([data-glas]) .glas-bg::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(255,255,255,.62), rgba(255,255,255,.66) 55%, rgba(255,255,255,.72)); }
 :root[data-layout="new"]:not([data-glas]) .kopf-neu{ -webkit-mask-image:linear-gradient(180deg, #000 66%, transparent 100%); mask-image:linear-gradient(180deg, #000 66%, transparent 100%); }
-:root[data-layout="new"]:not([data-glas]) .kopf-neu::after{ background:linear-gradient(180deg, rgba(252,246,234,0) 45%, rgba(252,246,234,.55) 85%, rgba(252,246,234,.7) 100%); }
+:root[data-layout="new"]:not([data-glas]) .kopf-neu::after{ background:linear-gradient(180deg, rgba(255,255,255,0) 45%, rgba(255,255,255,.4) 85%, rgba(255,255,255,.6) 100%); }
+/* Heute, Hell: Schrift im Kopf (Gruß, Datum, Untertitel) weiß auf dem Wellen-Foto; dunkler Schleier links statt des hellen Glanzes */
+:root[data-layout="new"]:not([data-glas]) .kopf-neu{ color:#fff; text-shadow:0 1px 8px rgba(0,0,0,.35); }
+:root[data-layout="new"]:not([data-glas]) .kopf-neu::before{ background:radial-gradient(ellipse 95% 80% at 0% 40%, rgba(6,7,9,.5) 0%, rgba(6,7,9,.3) 45%, rgba(6,7,9,0) 80%); }
+:root[data-layout="new"]:not([data-glas]) .marke-neu small, :root[data-layout="new"]:not([data-glas]) .kn-gruss span{ color:#fff; opacity:.92; }
+:root[data-layout="new"]:not([data-glas]) .kn-sym .iconbtn{ text-shadow:none; }

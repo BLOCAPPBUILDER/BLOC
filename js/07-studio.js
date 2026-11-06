@@ -159,7 +159,7 @@ function exSchw(ex){ return SCHW_IDS[Math.min(3, Math.max(1, ex.level || 2)) - 1
 /* Schwierigkeit eines fertigen Workouts: die Pläne tragen sie im Namen der ID (-leicht, -mittel, -schwer); alle anderen nach dem Durchschnitt der Übungs-Stufen
    (bis 1,5 leicht, ab 2,5 schwer, dazwischen mittel). Dauer und Anzahl zählen nicht: ein langes Workout mit leichten Übungen bleibt leicht. */
 function woSchw(lw, exs){
-  var m = /-(leicht|mittel|schwer)$/.exec(lw.id || "");
+  var m = /-(leicht|mittel|schwer)(-\d+)?$/.exec(lw.id || "");
   if(m) return m[1];
   var l = (exs || []).filter(Boolean);
   if(!l.length) return "mittel";

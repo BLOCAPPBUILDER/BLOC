@@ -296,7 +296,11 @@ function hauptAktionNeu(route){
     if(hk && hk.getAttribute("data-herostart") === "plan"){ hk.click(); return; }   // heute eingeplant: dieses Training starten
     var ph = programmHeute();                                                        // sonst: ein Programm, das heute (Wochentag) dran ist
     if(ph) return programmStarten(ph.p, ph.i);
-    showToast(t("keinePlaene"));                                                    // nichts im Kalender und in keinem Programm
+    /* nichts im Kalender und in keinem Programm: Hinweis auf Trainingsplan bzw. Kalender-Eintrag */
+    openActionSheet(t("keinePlaeneTitel"), [
+      { ico:P_PLUS, label:t("keinePlaeneAnlegen"), fn:function(){ go("#koerper"); } },
+      { ico:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/>', label:t("keinePlaeneKalender"), fn:function(){ go("#kalender"); } }
+    ]);
   } };
   if(route === "kalender") return { svg:P_PLUS, label:t("kalAdd"), fn:function(){ kalHinzuMenue(kalAnsicht === "monat" && kalAuswahl ? kalAuswahl : kalTagKey(Date.now())); } };
   return route === "home" ? null : hauptAktionNeu("home");   // der runde Knopf steht auf allen Hauptseiten (Arena › Fortschritt, Fragen: wie auf Heute)
