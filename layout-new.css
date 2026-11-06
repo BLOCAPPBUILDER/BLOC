@@ -405,9 +405,9 @@
   :root[data-layout="new"]:not([data-theme]) .kn-gruss span, :root[data-layout="new"]:not([data-theme]) .kn-gruss b{ text-shadow:0 0 10px rgba(255,255,255,.95), 0 0 3px rgba(255,255,255,.85); }
 }
 /* Hell: der Baukasten auf Heute zeigt das Rack-Foto, eng auf die bunten Gewichte zugeschnitten (Hochformat vergrößert, Scheiben rechts neben dem Text) */
-:root[data-layout="new"][data-theme="light"] .builder-neu::after{ background-image:url("img/neu-h-rack.jpg"); background-position:8% 59%; background-size:150% auto; }
+:root[data-layout="new"][data-theme="light"] .builder-neu::after{ background-image:url("img/neu-freiluft.jpg"); background-position:50% 66%; background-size:cover; }
 @media (prefers-color-scheme: light){
-  :root[data-layout="new"]:not([data-theme]) .builder-neu::after{ background-image:url("img/neu-h-rack.jpg"); background-position:8% 59%; background-size:150% auto; }
+  :root[data-layout="new"]:not([data-theme]) .builder-neu::after{ background-image:url("img/neu-freiluft.jpg"); background-position:50% 66%; background-size:cover; }
 }
 /* Meine Woche: der Untertitel darf umbrechen statt mit ... abzuschneiden (auch im Dunkeln) */
 :root[data-layout="new"] .woche-neu .wo-summe{ white-space:normal; overflow:visible; text-overflow:clip; line-height:1.3; }
