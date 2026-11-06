@@ -3,9 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
-## 2026-11-06 · Heller Hintergrund mit Foto, „Howdy“ raus (Fassung 2026-11-06-3)
+## 2026-11-06 · Heller Hintergrund wie im Dunkel, weich und cremig; „Howdy“ raus (Fassung 2026-11-06-4)
 
-- **Hell:** Wie im Dunkel liegt jetzt auch im hellen Design ein geblurrtes Foto hinter allen Seiten (`img/neu-hell-hintergrund.jpg`, weißer Stein und blauer Himmel, Foto von Laura Paredis, Pexels), darüber ein heller Schleier. Die aufgehellte Meer-Variante wurde wieder verworfen. Bildnachweis in `quellen.html`. Regeln am Ende von `layout-new.css` (`:not([data-glas])`); die Karten bleiben weiß, Run-Aufnahme, Timer und Satz-Training behalten ihr dunkles Foto.
+- **Hell:** Hinter allen Seiten liegt wie im Dunkel das Meer-Foto geblurrt, hier stark verwischt (30 px), aufgehellt und satter, darüber ein warmer, cremiger Schleier statt Weiß (`layout-new.css`, am Ende, `:not([data-glas])`). Der Foto-Kopf von Heute blendet unten weich in diesen Grund aus (Maske wie im Dunkel), keine harte Kante mehr. Karten bleiben weiß; Run-Aufnahme, Timer und Satz-Training behalten ihr dunkles Foto.
+- **Verworfen:** weißer Schleier über dem Meer; Pexels-Foto (weißer Stein, Laura Paredis) - die Datei `img/neu-hell-hintergrund.jpg` liegt noch im Ordner, wird aber nicht mehr geladen.
 - **Begrüßung:** „Howdy“ ist aus der englischen Tagesbegrüßung entfernt (jetzt „Hey | Hi there | Hello“).
 
 ## 2026-11-04 · Teilen als Datei für Trainingsplan, BLOC und eigene Übung; Seile und Bänder in den Figuren (Fassung 2026-11-04-1)
