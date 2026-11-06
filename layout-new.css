@@ -1097,7 +1097,7 @@ body:has(.kal-nav) #app{ touch-action:pan-y; }   /* waagerechte Wischer gehören
 .satz-aw-karte{ flex:0 0 100%; scroll-snap-align:center; max-height:52vh; overflow-y:auto; text-align:center; }
 .satz-aw-karte h3{ margin:0 0 10px; font-size:16px; opacity:.9; }
 .satz-aw-punkte{ display:flex; justify-content:center; gap:6px; margin:4px 0 12px; }
-.satz-aw-punkte i{ width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.3); }
+.satz-aw-punkte i{ width:7px; height:7px; border-radius:50%; background:linear-gradient(180deg, rgba(255,255,255,.26), rgba(255,255,255,.34) 55%, rgba(255,255,255,.56)); }
 .satz-aw-punkte i.an{ background:#fff; }
 
 /* ---------- Path › Deep Dive (2026-10-23): Muskelgruppen auf der Körperfigur, pro Woche und pro Workout ---------- */
@@ -1428,11 +1428,11 @@ body.prot-sheet-offen{ overflow:hidden; }
 }
 .bau-karte .bk-t b{ font-size:19px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-/* ---------- Heller Hintergrund (2026-11-06): wie im Dunkel liegt ein geblurrtes Foto hinter allen Seiten, hier hell (weißer Stein, blauer Himmel; Foto: Laura Paredis, Pexels).
+/* ---------- Heller Hintergrund (2026-11-06): wie im Dunkel liegt dasselbe geblurrte Meer-Foto hinter allen Seiten, hier deutlich aufgehellt (brightness, heller Schleier, unten etwas stärker für den Text).
    Gilt, wenn data-glas fehlt (Hell, oder System bei hellem Gerät). Die Karten bleiben weiß; Run-Aufnahme, Timer und Satz-Training bringen ihr eigenes dunkles Foto mit. */
 :root[data-layout="new"]:not([data-glas]){ background:var(--bg); }
 :root[data-layout="new"]:not([data-glas]) body{ background:transparent; }
 :root[data-layout="new"]:not([data-glas]) .glas-bg{ display:block; position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; background:#eef3f8; }
 :root[data-layout="new"]:not([data-glas]) body:has(#app .run-bg) .glas-bg{ display:none; }
-:root[data-layout="new"]:not([data-glas]) .glas-bg i{ position:absolute; inset:-30px; background:url("img/neu-hell-hintergrund.jpg") 50% 40%/cover no-repeat; filter:blur(11px) saturate(1.05); }
-:root[data-layout="new"]:not([data-glas]) .glas-bg::after{ content:""; position:absolute; inset:0; background:rgba(255,255,255,.34); }
+:root[data-layout="new"]:not([data-glas]) .glas-bg i{ position:absolute; inset:-30px; background:url("img/neu-p-freiluft-meer.jpg") center/cover no-repeat; filter:blur(11px) brightness(1.55) saturate(1.35); }
+:root[data-layout="new"]:not([data-glas]) .glas-bg::after{ content:""; position:absolute; inset:0; background:rgba(255,255,255,.3); }
