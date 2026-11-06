@@ -3,9 +3,9 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
-## 2026-11-06 · Heller Hintergrund: weißer Stein, stark geblurrt (Fassung 2026-11-06-6)
+## 2026-11-06 · Heller Hintergrund: weißer Stein, stark geblurrt (Fassung 2026-11-06-7)
 
-- **Hell:** Hinter den Seiten liegt wieder das Pexels-Foto (`img/neu-hell-hintergrund.jpg`, Laura Paredis), aber nur der weiße Stein (unterer Ausschnitt, 240 %, ohne Himmel), mit 30 px stark geblurrt und warm-weißem Schleier: ein ruhiger, cremig weißer Grund. Das Meer-Foto im Hellen ist wieder raus. Kopf-Ausblendung bleibt. Bildnachweis in `quellen.html`.
+- **Hell:** Hinter den Seiten liegt wieder das Pexels-Foto (`img/neu-hell-hintergrund.jpg`, Laura Paredis), aber nur der weiße Stein (unterer Ausschnitt, 240 %, ohne Himmel), mit 30 px stark geblurrt und warm-weißem Schleier: ein ruhiger, cremig weißer Grund. Das Meer-Foto im Hellen ist wieder raus. Der Foto-Kopf von Heute blendet länger aus (Maske ab 66 %), kein harter Rand. Bildnachweis in `quellen.html`.
 
 ## 2026-11-06 · Baukasten-Karte hell mit Calisthenics-Park am Meer (Fassung 2026-11-06-5)
 
