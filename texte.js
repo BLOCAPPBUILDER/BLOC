@@ -1935,7 +1935,7 @@ window.BLOC_TEXTE = {
     runZielFrei:"Open",
     runPaceVorgabe:"Pace target",
     gruMorgenListe:"Morning|Good morning|Rise and shine",
-    gruTagListe:"Hey|Hi there|Howdy",
+    gruTagListe:"Hey|Hi there|Hello",
     gruAbendListe:"Evening|Hey|Hi there",
     heroGeplantNeu:"Planned for today",
     trainingSuche:"Exercises, workouts, timers …",
