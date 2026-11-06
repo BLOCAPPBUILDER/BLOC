@@ -1427,3 +1427,12 @@ body.prot-sheet-offen{ overflow:hidden; }
     linear-gradient(180deg, rgba(8,9,11,0) 0%, rgba(8,9,11,.25) 60%, rgba(8,9,11,.55) 100%);
 }
 .bau-karte .bk-t b{ font-size:19px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* ---------- Heller Hintergrund (2026-11-06): wie im Dunkel liegt ein geblurrtes Foto hinter allen Seiten, hier hell (weißer Stein, blauer Himmel; Foto: Laura Paredis, Pexels).
+   Gilt, wenn data-glas fehlt (Hell, oder System bei hellem Gerät). Die Karten bleiben weiß; Run-Aufnahme, Timer und Satz-Training bringen ihr eigenes dunkles Foto mit. */
+:root[data-layout="new"]:not([data-glas]){ background:var(--bg); }
+:root[data-layout="new"]:not([data-glas]) body{ background:transparent; }
+:root[data-layout="new"]:not([data-glas]) .glas-bg{ display:block; position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; background:#eef3f8; }
+:root[data-layout="new"]:not([data-glas]) body:has(#app .run-bg) .glas-bg{ display:none; }
+:root[data-layout="new"]:not([data-glas]) .glas-bg i{ position:absolute; inset:-30px; background:url("img/neu-hell-hintergrund.jpg") 50% 40%/cover no-repeat; filter:blur(11px) saturate(1.05); }
+:root[data-layout="new"]:not([data-glas]) .glas-bg::after{ content:""; position:absolute; inset:0; background:rgba(255,255,255,.34); }

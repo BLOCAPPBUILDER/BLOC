@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-06 · Heller Hintergrund mit Foto, „Howdy“ raus (Fassung 2026-11-06-1)
+
+- **Hell:** Wie im Dunkel liegt jetzt auch im hellen Design ein geblurrtes Foto hinter allen Seiten (`img/neu-hell-hintergrund.jpg`, weißer Stein und blauer Himmel, Foto von Laura Paredis, Pexels), darüber ein heller Schleier. Regeln am Ende von `layout-new.css` (`:not([data-glas])`); die Karten bleiben weiß, Run-Aufnahme, Timer und Satz-Training behalten ihr dunkles Foto. Bildnachweis in `quellen.html` ergänzt.
+- **Begrüßung:** „Howdy“ ist aus der englischen Tagesbegrüßung entfernt (jetzt „Hey | Hi there | Hello“).
+
 ## 2026-11-04 · Teilen als Datei für Trainingsplan, BLOC und eigene Übung; Seile und Bänder in den Figuren (Fassung 2026-11-04-1)
 
 - **Teilen als Datei:** Ein TrainingsBLOC (Trainingsplan, Teilen im Menü nach langem Drücken), ein BLOC (Plan mit Sätzen) und eine selbst angelegte Übung gehen jetzt wie ein Workout als Datei über das Teilen-Menü (`bloc-trainingsplan-….json`, `bloc-plan-….json`, `bloc-uebung-….json`), die Nachricht liegt dabei (bei Plänen mit der Liste der Übungen). Vorher schickte der TrainingsBLOC nur Text. Im Browser teilt das System die Datei, sonst lädt sie herunter.
