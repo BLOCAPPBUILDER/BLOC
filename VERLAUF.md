@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-07 · Tools: zweites Suchfeld entfernt (Fassung 2026-11-07-5)
+
+- **Tools:** Das Suchfeld unter der Kopfzeile ist weg; gesucht wird über das Lupen-Symbol oben rechts (`js/05-suche.js`).
+
 ## 2026-11-07 · Tools: Protein und Wissensaustausch mit weißem Symbolfeld (Fassung 2026-11-07-4)
 
 - **Tools:** Das Symbolfeld von Protein-Tracker und Wissensaustausch ist weiß mit dunklem Symbol (`layout-new.css`, Ende).
