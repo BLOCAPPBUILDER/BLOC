@@ -452,7 +452,6 @@ function renderTraining(){
   var reihe = toolsReihe();
   app.innerHTML =
     topbar(t("tabTraining"), { back:"#home", right:kopfSymboleNeu("training") }) +
-    '<button type="button" class="suchfeld-neu" data-nav="#search">'+svgIcon('<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5l5 5"/>')+'<span>'+esc(t("trainingSuche"))+'</span></button>'+
     '<div class="training-seite">'+
       '<div class="tools-kopf"><span>'+esc(t("toolsAlle"))+'</span><span>'+esc(t("toolsAnz", { n:reihe.length }))+'</span></div>'+
       '<div class="tools-raster">'+reihe.map(toolKachelHTML).join("")+'</div>'+
