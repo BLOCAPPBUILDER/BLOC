@@ -3,6 +3,13 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-07 · Tools als versetzte Fotokacheln mit Ziehen, neue Ausrüstung Sprungseil (Fassung 2026-11-07-1)
+
+- **Tools neu gebaut (Entwurf „Variante 3“):** Die oberste Kachel steht groß (Standard: Workout-Builder mit Symbol, „Herzstück“, Zahlen als Pillen, rundem Pfeil), darunter zwei Spalten versetzter Fotokacheln mit Glas-Pille (weiße Schrift, dieselben Symbole und Farben wie bisher); bei ungerader Restzahl steht die letzte (Wissensaustausch) über die ganze Breite. Kopfzeile „Alle Tools · 6 Tools“. Nur die Kacheln wurden geändert, der Seitenhintergrund bleibt in Hell und Dunkel wie er war (`js/05-suche.js` `renderTraining`, `layout-new.css` am Ende, Klassen `.tk`).
+- **Verschieben:** Kachel 0,5 s lang drücken, dann ziehen; die anderen rücken live nach, am Rand scrollt die Seite mit. Die Stelle bestimmt die Größe: wer ganz oben steht, ist die große Kachel. Reihenfolge in `settings.toolsReihe` (Standard: Workout, Run, Mobility, Protein, Timer, Fragen); alle sechs sind verschiebbar. Das frühere Sortier-Fenster mit Pfeilen entfällt auf Tools.
+- **Sprungseil als Ausrüstung:** neuer Chip „Sprungseil“ im Filter (Baukasten, Übungen, Suche, Plan-Bau; auch bei eigenen Übungen wählbar), Ausrüstung `rope` (`EQUIPS`, `AUSR_IDS`, `EQUIP_ICON.rope`). Seilspringen gehört jetzt dazu, neu: Boxer-Skip, Seilspringen mit Kniehub, Double Unders (je mit Figur, Anleitung, Haltung). Trainingsart bleibt Körpergewicht.
+- Schnelltest und Einheitstest auf acht Ausrüstungs-Chips und die neuen Tools-Kacheln angepasst.
+
 ## 2026-11-06 · Höhenmeter im Run, 5 Fatburner-Pläne, helleres Weiß, weißer Kopf (Fassung 2026-11-06-9)
 
 - **Run: Höhenmeter.** Aufgezeichnet wird der Aufstieg (`runHoehe` in `js/16-lauf.js`): GPS-Höhe geglättet, erst ab 3 m Anstieg gezählt, Abstieg zählt nicht, nur wenn die Strecke wächst. Zu sehen live (eigene Kachel), in der Abschlusskarte, im Lauf-Detail und im Verlauf („↑ 42 m“); gespeichert als `hm` im Lauf (ohne Höhe vom Gerät fehlt das Feld). Bereinigung beim Einlesen in `streckenSauber`. Test mit simulierten Punkten: 30 m Anstieg ergaben 29 m.
