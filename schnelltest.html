@@ -1049,7 +1049,6 @@
       var kmSag = said.filter(function (x) { return x !== "Los!"; });
       pruefe(said[0] === "Los!" && kmSag.length === 1 && /1 Kilometer/.test(kmSag[0]) && /Pace/.test(kmSag[0]) && /pro Kilometer/.test(kmSag[0]), "Ansage bei 1 km fehlt oder falsch: " + said.join("|"));
       klick("[data-runend]");
-      klick(await bis(function () { return $("#overlayRoot [data-ok]"); }, 2000, "Beenden bestätigen"));
       await bis(function () { return /^#rundetail/.test(W.location.hash) && $(".run-fertig"); }, 3000, "Lauf-Detail mit Abschlusskarte");
       pruefe(/erster Lauf/.test($(".run-fertig").textContent), "Abschlusskarte ohne Highlight");
       pruefe($$(".run-kms .rk").length >= 1 && /\/km/.test($(".run-kms").textContent), "Pace je Kilometer fehlt");
@@ -1097,7 +1096,6 @@
       for (var j = 0; j < 4; j++) { lat += 10 / 111320; ts += 2000; cb({ coords: { latitude: lat, longitude: 11, accuracy: 8, speed: 3 }, timestamp: ts }); }
       await bis(function () { return !/Auto-Pause/.test($("#run-gps").textContent) && /Pause/.test($("[data-runpause]").textContent) && !/Weiter/.test($("[data-runpause]").textContent); }, 3000, "Weiter von selbst nach Bewegung");
       klick("[data-runend]");
-      klick(await bis(function () { return $("#overlayRoot [data-ok]"); }, 2000, "Beenden bestätigen"));
       await bis(function () { return /^#rundetail/.test(W.location.hash); }, 3000, "Lauf-Detail");
       var rr = daten().settings.runs.filter(function (r) { return r.iv; })[0];
       pruefe(rr && rr.iv.lauf === 60 && rr.pause > 3000, "Intervall/Pausenzeit nicht gespeichert: " + JSON.stringify(rr && { iv: rr.iv, p: rr.pause }));
@@ -1120,7 +1118,6 @@
       pruefe(pb.classList.contains("halten") && !/Weiter/.test(pb.textContent), "nach 1,5 s darf noch nichts passiert sein");
       await bis(function () { return /Weiter/.test($("[data-runpause]").textContent); }, 3000, "Pause nach 3 s Halten");
       klick("[data-runend]");
-      klick(await bis(function () { return $("#overlayRoot [data-ok]"); }, 2000, "Beenden bestätigen"));
       await bis(function () { return /^#run/.test(W.location.hash) && !W.document.getElementById("run-dunkel"); }, 3000, "nach dem Lauf kein Abdunkeln");
     }],
     ["Leiste unten, Statistik und Fokus", async function () {

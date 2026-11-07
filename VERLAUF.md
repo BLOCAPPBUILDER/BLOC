@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-07 · Tools-Kacheln freigestellt, Run beenden ohne zweite Frage (Fassung 2026-11-07-2)
+
+- **Tools:** „Herzstück“-Marke raus. Bei den kleinen Kacheln liegt kein grauer Block mehr hinter allem: Symbol und Titel stehen frei auf dem Foto, nur die zweite Zeile (z. B. „2 Workouts · 2 Blöcke“) sitzt in einer grau umrandeten Pille (`layout-new.css`, Ende).
+- **Run beenden:** „Beenden“ wird 1 Sekunde gehalten und speichert dann sofort; die Rückfrage „Lauf beenden? Der Lauf wird gespeichert“ entfällt (`js/16-lauf.js`). Schnelltest angepasst.
+
 ## 2026-11-07 · Tools als versetzte Fotokacheln mit Ziehen, neue Ausrüstung Sprungseil (Fassung 2026-11-07-1)
 
 - **Tools neu gebaut (Entwurf „Variante 3“):** Die oberste Kachel steht groß (Standard: Workout-Builder mit Symbol, „Herzstück“, Zahlen als Pillen, rundem Pfeil), darunter zwei Spalten versetzter Fotokacheln mit Glas-Pille (weiße Schrift, dieselben Symbole und Farben wie bisher); bei ungerader Restzahl steht die letzte (Wissensaustausch) über die ganze Breite. Kopfzeile „Alle Tools · 6 Tools“. Nur die Kacheln wurden geändert, der Seitenhintergrund bleibt in Hell und Dunkel wie er war (`js/05-suche.js` `renderTraining`, `layout-new.css` am Ende, Klassen `.tk`).
