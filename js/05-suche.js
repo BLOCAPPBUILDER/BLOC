@@ -344,9 +344,13 @@ function toolsReihe(){
   return r;
 }
 function toolDaten(k){
-  if(k === "protein") return ["#protein", protT("titel"), protT("kachelSub")];
+  if(k === "protein") return ["#protein", protT("titel"), t("toolsSubProtein")];
   if(k === "faq") return ["#faq", t("faqTitel"), t("faqKachelSub", { n:(window.BLOC_FAQ ? window.BLOC_FAQ.fragen.length : 0) })];
-  return bereichDaten(k);
+  var d = bereichDaten(k).slice();   // auf den Kacheln stehen kurze Untertitel (die ausführlichen bleiben auf den Seiten selbst)
+  if(k === "run" && !run) d[2] = t("toolsSubRun");
+  else if(k === "warm") d[2] = t("toolsSubWarm");
+  else if(k === "intervall" && !(state.db.workouts.length || state.db.blocks.length)) d[2] = t("toolsSubTimer");
+  return d;
 }
 var ICON_PFEIL = '<path d="M5 12h14M13 6l6 6-6 6"/>';
 function toolKachelHTML(k){
