@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-07 · Tools: Protein und Wissensaustausch mit weißem Symbolfeld (Fassung 2026-11-07-4)
+
+- **Tools:** Das Symbolfeld von Protein-Tracker und Wissensaustausch ist weiß mit dunklem Symbol (`layout-new.css`, Ende).
+
 ## 2026-11-07 · Tools: Run blau, Timer lila, Symbole oben links (Fassung 2026-11-07-3)
 
 - **Tools:** Das Symbol von Run ist blau, das von Timer lila (Workout orange und Mobility grün wie bisher). Bei allen Kacheln sitzt das Symbol oben links wie bei der großen, Titel und Pille unten; die breite Kachel ist dafür etwas höher (`layout-new.css`, Ende).
