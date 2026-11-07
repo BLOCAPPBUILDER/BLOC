@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-07 · Tools: kürzere Untertitel auf den Kacheln (Fassung 2026-11-07-6)
+
+- **Tools:** Run „GPS · Pace“, Mobility „Vorher & nachher“, Protein „Tagesziel“, Timer ohne Einträge „Intervalle“; nichts wird mehr abgeschnitten. Nur auf den Kacheln, die Texte der Seiten bleiben (`toolsSub…` in `texte.js`, `toolDaten` in `js/05-suche.js`).
+
 ## 2026-11-07 · Tools: zweites Suchfeld entfernt (Fassung 2026-11-07-5)
 
 - **Tools:** Das Suchfeld unter der Kopfzeile ist weg; gesucht wird über das Lupen-Symbol oben rechts (`js/05-suche.js`).
