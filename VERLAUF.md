@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-07 · Tools: Run blau, Timer lila, Symbole oben links (Fassung 2026-11-07-3)
+
+- **Tools:** Das Symbol von Run ist blau, das von Timer lila (Workout orange und Mobility grün wie bisher). Bei allen Kacheln sitzt das Symbol oben links wie bei der großen, Titel und Pille unten; die breite Kachel ist dafür etwas höher (`layout-new.css`, Ende).
+
 ## 2026-11-07 · Tools-Kacheln freigestellt, Run beenden ohne zweite Frage (Fassung 2026-11-07-2)
 
 - **Tools:** „Herzstück“-Marke raus. Bei den kleinen Kacheln liegt kein grauer Block mehr hinter allem: Symbol und Titel stehen frei auf dem Foto, nur die zweite Zeile (z. B. „2 Workouts · 2 Blöcke“) sitzt in einer grau umrandeten Pille (`layout-new.css`, Ende).
