@@ -353,7 +353,6 @@ function toolKachelHTML(k){
   var d = toolDaten(k);
   return '<div class="tk" data-tool="'+k+'" data-nav="'+d[0]+'" role="button" tabindex="0">'+
     '<i class="tk-foto" aria-hidden="true"></i>'+
-    (k === "katalog" ? '<span class="tk-badge">'+esc(t("toolsHerz"))+'</span>' : '')+
     '<span class="tk-glas"><span class="tk-ico">'+svgIcon(HOME_ICON[k])+'</span>'+
       '<span class="tk-text"><b>'+esc(d[1])+'</b><small>'+String(d[2]).split(" · ").map(function(x){ return '<em>'+esc(x)+'</em>'; }).join("")+'</small></span></span>'+
     '<span class="tk-go" aria-hidden="true">'+svgIcon(ICON_PFEIL)+'</span></div>';

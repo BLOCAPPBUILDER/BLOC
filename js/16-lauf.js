@@ -821,9 +821,7 @@ function renderRunLive(){
     if(r.stumm) try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
     renderRunLive();
   });
-  runHalten(app.querySelector("[data-runend]"), function(){
-    confirmSheet(t("runEndQ"), t("runEndText"), t("runSave"), function(){ runBeenden(true); });
-  }, RUN_HALTEN_ENDE);
+  runHalten(app.querySelector("[data-runend]"), function(){ runBeenden(true); }, RUN_HALTEN_ENDE);   // 1 s halten genügt als Bestätigung: der Lauf wird gleich gespeichert, keine zweite Frage
   runAnzeige();
 }
 function renderRunDetail(id){

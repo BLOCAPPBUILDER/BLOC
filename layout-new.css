@@ -1478,7 +1478,7 @@ body.prot-sheet-offen{ overflow:hidden; }
 :root[data-layout="new"] .tk-text small{ font-size:12px; line-height:1.3; color:rgba(255,255,255,.88); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 :root[data-layout="new"] .tk-text em{ font-style:normal; }
 :root[data-layout="new"] .tk-text em + em::before{ content:" \00b7  "; }
-:root[data-layout="new"] .tk-go, :root[data-layout="new"] .tk-badge{ display:none; }
+:root[data-layout="new"] .tk-go{ display:none; }
 :root[data-layout="new"] .tk.tk-voll .tk-glas{ align-self:flex-end; }
 
 /* oberste Kachel: groß, Symbol oben links, Titel groß, Zahlen als Pillen, runder Pfeil unten rechts */
@@ -1494,8 +1494,6 @@ body.prot-sheet-offen{ overflow:hidden; }
 :root[data-layout="new"] .tk.tk-gross .tk-text em + em::before{ content:none; }
 :root[data-layout="new"] .tk.tk-gross .tk-go{ display:flex; position:absolute; right:16px; bottom:16px; width:46px; height:46px; align-items:center; justify-content:center; border-radius:50%; background:#fff; color:#1c1c1e; }
 :root[data-layout="new"] .tk.tk-gross .tk-go .ico{ width:20px; height:20px; }
-:root[data-layout="new"] .tk.tk-gross .tk-badge{ display:block; position:absolute; top:16px; right:16px; padding:7px 12px; border-radius:999px; background:rgba(18,19,22,.5); border:1px solid rgba(255,255,255,.22); font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#fff;
-  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
 
 /* Ziehen: die Kachel an ihrem Platz wird blass, die gehobene Kopie folgt dem Finger */
 :root[data-layout="new"] .tk.tk-platz{ opacity:.28; }
@@ -1508,3 +1506,16 @@ body.prot-sheet-offen{ overflow:hidden; }
 :root[data-layout="new"] .tk:not(.tk-gross):not(.tk-voll) .tk-ico{ width:32px; height:32px; border-radius:10px; }
 :root[data-layout="new"] .tk:not(.tk-gross):not(.tk-voll) .tk-text{ width:100%; flex:none; }
 :root[data-layout="new"] .tk:not(.tk-gross):not(.tk-voll) .tk-text small{ -webkit-line-clamp:1; }
+
+/* 2026-11-07 (2): Symbol und Titel stehen frei auf dem Foto, nur die zweite Zeile (z. B. „2 Workouts · 2 Blöcke“) liegt in einer grau umrandeten Pille. Der große Kopf bleibt wie er war. */
+:root[data-layout="new"] .tk:not(.tk-gross)::before{ background:linear-gradient(180deg, rgba(8,9,11,0) 22%, rgba(8,9,11,.66) 100%); }
+:root[data-layout="new"] .tk:not(.tk-gross) .tk-glas{ background:none; border:0; -webkit-backdrop-filter:none; backdrop-filter:none; padding:4px; }
+:root[data-layout="new"] .tk:not(.tk-gross):not(.tk-voll) .tk-glas{ padding:4px; }
+:root[data-layout="new"] .tk:not(.tk-gross) .tk-text b{ text-shadow:0 1px 9px rgba(0,0,0,.7); }
+:root[data-layout="new"] .tk:not(.tk-gross):not([data-tool="katalog"]):not([data-tool="warm"]) .tk-ico{
+  background:rgba(18,19,22,.5); border:1px solid rgba(255,255,255,.18); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
+:root[data-layout="new"] .tk:not(.tk-gross) .tk-ico{ box-shadow:0 2px 10px rgba(0,0,0,.3); }
+:root[data-layout="new"] .tk:not(.tk-gross) .tk-text small{
+  display:block; align-self:flex-start; width:fit-content; max-width:100%; margin-top:6px; padding:4px 10px; border-radius:999px;
+  background:rgba(18,19,22,.56); border:1px solid rgba(255,255,255,.22); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+  color:#fff; font-size:12px; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
