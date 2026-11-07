@@ -519,7 +519,7 @@ Eigene Namen, Muskeln und Posen; Figuren im BLOC-Stil neu gezeichnet. Trainingsa
 | heel-touches | Heel Touches (Fersenberühren) | Ohne Geräte | leicht | Schräge Bauchmuskeln | Gerader Bauch |
 | reverse-plank | Reverse Plank | Ohne Geräte | mittel | Gesäß | Rückenstrecker, Hintere Schulter, Oberschenkel hinten |
 | plank-hip-dips | Plank Hip Dips | Ohne Geräte | mittel | Schräge Bauchmuskeln | Hüftstabilisatoren |
-| jump-rope | Seilspringen | Ohne Geräte (Springseil) | leicht | Waden | Schultern, Unterarme |
+| jump-rope | Seilspringen | Sprungseil (Filter „Sprungseil“, Art Körpergewicht) | leicht | Waden | Schultern, Unterarme |
 | butt-kicks | Butt Kicks | Ohne Geräte | leicht | Oberschenkel hinten | Waden |
 | star-jumps | Star Jumps | Ohne Geräte | mittel | Oberschenkel vorn, Gesäß | Waden, Schultern |
 | squat-jacks | Squat Jacks | Ohne Geräte | mittel | Oberschenkel vorn | Gesäß, Adduktoren |

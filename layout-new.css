@@ -1445,3 +1445,66 @@ body.prot-sheet-offen{ overflow:hidden; }
 :root[data-layout="new"]:not([data-glas]) .marke-neu small, :root[data-layout="new"]:not([data-glas]) .kn-gruss span{ color:#fff; opacity:.92; }
 :root[data-layout="new"]:not([data-glas]) .kn-sym .iconbtn{ text-shadow:none; }
 :root[data-layout="new"]:not([data-glas]) .kn-gruss span, :root[data-layout="new"]:not([data-glas]) .kn-gruss b, :root[data-layout="new"]:not([data-glas]) .marke-neu small{ text-shadow:none; }
+
+/* ---------- Tools (2026-11-07, Entwurf „Variante 3“): oberste Kachel groß, darunter versetzte Fotokacheln mit Glas-Pille (weiße Schrift, dieselben Symbole).
+   Nur die Kacheln; der Hintergrund der Seite bleibt in Hell und Dunkel unverändert. Die Schrift liegt in jedem Modus hell auf dem Foto. ---------- */
+:root[data-layout="new"] .tools-kopf{ display:flex; align-items:baseline; justify-content:space-between; margin:2px 4px 12px; font-size:12px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--text-dim); }
+:root[data-layout="new"] .tools-kopf span:last-child{ letter-spacing:0; font-weight:500; text-transform:none; }
+:root[data-layout="new"] .tools-raster{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; padding-bottom:18px; }
+:root[data-layout="new"] .tools-hinweis{ margin:6px 8px 18px; font-size:12.5px; line-height:1.45; text-align:center; color:var(--text-dim); }
+:root[data-layout="new"] .tk{
+  position:relative; isolation:isolate; overflow:hidden; display:flex; align-items:flex-end; padding:10px; min-height:158px;
+  background:#1b1c20; color:#fff; border:0; box-shadow:none; cursor:pointer;
+  border-radius:var(--radius); border-top-left-radius:var(--ecke);
+  -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent;
+}
+:root[data-layout="new"] .tk.tk-r{ translate:0 18px; }
+:root[data-layout="new"] .tk.tk-voll{ grid-column:1 / -1; min-height:92px; margin-top:18px; }
+:root[data-layout="new"] .tk:active{ filter:brightness(.94); }
+:root[data-layout="new"] .tk-foto{ position:absolute; inset:0; z-index:-2; background-size:cover; background-repeat:no-repeat; background-position:50% 50%; }
+:root[data-layout="new"] .tk::before{ content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(180deg, rgba(8,9,11,0) 40%, rgba(8,9,11,.5) 100%); }
+:root[data-layout="new"] .tk-glas{
+  display:flex; align-items:center; gap:10px; width:100%; min-width:0; padding:9px 12px 9px 9px; border-radius:18px; border-top-left-radius:6px;
+  background:rgba(18,19,22,.56); border:1px solid rgba(255,255,255,.16);
+  -webkit-backdrop-filter:blur(14px) saturate(140%); backdrop-filter:blur(14px) saturate(140%);
+}
+/* Symbolfelder wie bisher: Workout orange, Mobility grün, die übrigen ein ruhiges neutrales Feld; Symbole und Farben unverändert */
+:root[data-layout="new"] .tk-ico{ flex:none; width:36px; height:36px; border-radius:11px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.16); color:#fff; }
+:root[data-layout="new"] .tk[data-tool="katalog"] .tk-ico{ background:color-mix(in srgb, #ff5a36 78%, #000); }
+:root[data-layout="new"] .tk[data-tool="warm"] .tk-ico{ background:color-mix(in srgb, #1fa56f 78%, #000); }
+:root[data-layout="new"] .tk-ico .ico{ width:20px; height:20px; }
+:root[data-layout="new"] .tk-text{ display:flex; flex-direction:column; gap:1px; min-width:0; flex:1; }
+:root[data-layout="new"] .tk-text b{ font-size:15px; line-height:1.2; color:#fff; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+:root[data-layout="new"] .tk-text small{ font-size:12px; line-height:1.3; color:rgba(255,255,255,.88); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+:root[data-layout="new"] .tk-text em{ font-style:normal; }
+:root[data-layout="new"] .tk-text em + em::before{ content:" \00b7  "; }
+:root[data-layout="new"] .tk-go, :root[data-layout="new"] .tk-badge{ display:none; }
+:root[data-layout="new"] .tk.tk-voll .tk-glas{ align-self:flex-end; }
+
+/* oberste Kachel: groß, Symbol oben links, Titel groß, Zahlen als Pillen, runder Pfeil unten rechts */
+:root[data-layout="new"] .tk.tk-gross{ grid-column:1 / -1; flex-direction:column; align-items:flex-start; justify-content:space-between; min-height:232px; padding:16px; }
+:root[data-layout="new"] .tk.tk-gross::before{ background:linear-gradient(180deg, rgba(8,9,11,.14) 0%, rgba(8,9,11,.34) 45%, rgba(8,9,11,.82) 100%); }
+:root[data-layout="new"] .tk.tk-gross .tk-glas{ display:contents; }
+:root[data-layout="new"] .tk.tk-gross .tk-ico{ width:50px; height:50px; border-radius:15px; border-top-left-radius:6px; }
+:root[data-layout="new"] .tk.tk-gross .tk-ico .ico{ width:27px; height:27px; }
+:root[data-layout="new"] .tk.tk-gross .tk-text{ flex:none; width:100%; padding-right:56px; gap:10px; }
+:root[data-layout="new"] .tk.tk-gross .tk-text b{ font-size:27px; line-height:1.12; letter-spacing:-.01em; -webkit-line-clamp:3; }
+:root[data-layout="new"] .tk.tk-gross .tk-text small{ display:flex; flex-wrap:wrap; gap:8px; font-size:12.5px; }
+:root[data-layout="new"] .tk.tk-gross .tk-text em{ padding:6px 12px; border-radius:999px; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.2); color:#fff; -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
+:root[data-layout="new"] .tk.tk-gross .tk-text em + em::before{ content:none; }
+:root[data-layout="new"] .tk.tk-gross .tk-go{ display:flex; position:absolute; right:16px; bottom:16px; width:46px; height:46px; align-items:center; justify-content:center; border-radius:50%; background:#fff; color:#1c1c1e; }
+:root[data-layout="new"] .tk.tk-gross .tk-go .ico{ width:20px; height:20px; }
+:root[data-layout="new"] .tk.tk-gross .tk-badge{ display:block; position:absolute; top:16px; right:16px; padding:7px 12px; border-radius:999px; background:rgba(18,19,22,.5); border:1px solid rgba(255,255,255,.22); font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#fff;
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
+
+/* Ziehen: die Kachel an ihrem Platz wird blass, die gehobene Kopie folgt dem Finger */
+:root[data-layout="new"] .tk.tk-platz{ opacity:.28; }
+:root[data-layout="new"] .tk.tk-geist{ position:fixed; z-index:9999; margin:0; translate:none; pointer-events:none; transform:scale(1.04); box-shadow:0 18px 44px rgba(0,0,0,.5); }
+@media (prefers-reduced-motion: reduce){ :root[data-layout="new"] .tk{ transition:none; } }
+
+/* schmale Kacheln (halbe Breite): Symbol über dem Text, damit der Titel Platz hat */
+:root[data-layout="new"] .tk:not(.tk-gross):not(.tk-voll){ min-height:178px; }
+:root[data-layout="new"] .tk:not(.tk-gross):not(.tk-voll) .tk-glas{ flex-direction:column; align-items:flex-start; gap:8px; padding:9px 11px 10px 9px; }
+:root[data-layout="new"] .tk:not(.tk-gross):not(.tk-voll) .tk-ico{ width:32px; height:32px; border-radius:10px; }
+:root[data-layout="new"] .tk:not(.tk-gross):not(.tk-voll) .tk-text{ width:100%; flex:none; }
+:root[data-layout="new"] .tk:not(.tk-gross):not(.tk-voll) .tk-text small{ -webkit-line-clamp:1; }

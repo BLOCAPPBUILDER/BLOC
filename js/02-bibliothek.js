@@ -123,13 +123,14 @@ function exTrainArten(ex){
   return a === "studio" && ((ex && ex.equip) || []).indexOf("band") > -1 ? ["studio", "cali"] : [a];
 }
 /* Ausrüstung im Filter (Schritt 2): die fünf Geräte-Arten des Fitnessstudios plus Kettlebell und Widerstandsband */
-var AUSR_IDS = ["smith", "kabel", "lh", "kh", "maschine", "kb", "band"];
+var AUSR_IDS = ["smith", "kabel", "lh", "kh", "maschine", "kb", "band", "rope"];
 function exAusr(ex){
   var out = [], g = ex && STUDIO_GERAET[ex.id], eq = (ex && ex.equip) || [];
   if(g) out.push(g);
   if(eq.indexOf("db") > -1 && out.indexOf("kh") < 0) out.push("kh");
   if(eq.indexOf("kb") > -1) out.push("kb");
   if(eq.indexOf("band") > -1) out.push("band");
+  if(eq.indexOf("rope") > -1) out.push("rope");
   return out;
 }
 /* Was in Workouts mit Timer, Plänen und Überrasch mich vorkommen darf: alle Übungen außer Dehnen (die haben ihren eigenen Bereich) */
@@ -359,7 +360,8 @@ var EQUIP_ICON = {
   band:'<path d="M4 12c0-3.5 3.5-6 8-6s8 2.5 8 6-3.5 6-8 6-8-2.5-8-6z"/><path d="M8 12c2-2 6-2 8 0"/>',
   bar:'<path d="M3 6h18M7 6v4M17 6v4M7 10v9M17 10v9"/>',
   dip:'<path d="M3 9h7M14 9h7M5 9v10M8 9v10M16 9v10M19 9v10"/>',
-  gym:'<path d="M5 21V3M5 7h9M14 3v10M10 13h8v3h-8zM5 17h6"/>'
+  gym:'<path d="M5 21V3M5 7h9M14 3v10M10 13h8v3h-8zM5 17h6"/>',
+  rope:'<path d="M6 4v5M18 4v5"/><path d="M6 9c-2 5 0 11 6 11s8-6 6-11"/>'   /* Sprungseil: zwei Griffe, Seil im Bogen */
 };
 function svgIcon(inner, cls){
   return '<svg class="'+(cls||"ico")+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+inner+'</svg>';

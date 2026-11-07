@@ -233,7 +233,8 @@
       // trainPasst folgt exTrainArten: genau die Karten der Liste lassen die Übung durch
       gleich(W.TRAIN_ARTEN.filter(function (a) { return W.trainPasst(ex, [a]); }), W.TRAIN_ARTEN.filter(function (a) { return arten.indexOf(a) > -1; }), "trainPasst von " + ex.id);
       if (!W.libHidden("ex:" + ex.id)) arten.forEach(function (a) { zahlKarte[a]++; });
-      if (art === "body") wahr(!(ex.equip || []).some(function (e) { return e !== "none"; }) && !W.exAusr(ex).length && !W.STUDIO_GERAET[ex.id], ex.id + " ist Körpergewicht, hat aber Ausrüstung " + ex.equip + " oder ein Studio-Gerät");
+      // Das Sprungseil (rope) ist nur ein Filter-Chip: Seilspringen bleibt Körpergewicht
+      if (art === "body") wahr(!(ex.equip || []).some(function (e) { return e !== "none" && e !== "rope"; }) && !W.exAusr(ex).some(function (a) { return a !== "rope"; }) && !W.STUDIO_GERAET[ex.id], ex.id + " ist Körpergewicht, hat aber Ausrüstung " + ex.equip + " oder ein Studio-Gerät");
       if (art === "cali") wahr(!(ex.equip || []).some(function (e) { return e === "gym" || e === "db" || e === "kb" || e === "band"; }), ex.id + " ist Calisthenic-Park, braucht aber Studio-Ausrüstung");
     });
     wahr(n.studio > 20 && n.cali > 5 && n.body > 20, "jede Art ist besetzt: " + JSON.stringify(n));
@@ -258,7 +259,7 @@
     wahr(W.studioFilterOk("band-squat", ["studio"], ["band"]) && !W.studioFilterOk("leg-press", [], ["band"]), "Widerstandsband");
     wahr(!W.studioFilterOk("push-ups", [], ["maschine"]), "Körpergewicht hat kein Gerät");
     wahr(!W.studioFilterOk("gibt-es-nicht", [], []), "unbekannte Übung");
-    gleich(W.AUSR_IDS, ["smith", "kabel", "lh", "kh", "maschine", "kb", "band"], "sieben Ausrüstungs-Chips");
+    gleich(W.AUSR_IDS, ["smith", "kabel", "lh", "kh", "maschine", "kb", "band", "rope"], "acht Ausrüstungs-Chips");
   });
   test("Geräte-Chip im Info-Fenster: Symbol und Name je Ausrüstung, im Timer (live) keiner", function () {
     var band = W.gearChipsHTML(W.findExercise("band-standing-row"), false);

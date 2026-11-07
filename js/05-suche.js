@@ -334,26 +334,146 @@ function faqHTML(){
     '</ol></div></details></div></section>';
   return h;
 }
-/* Aussehen „New“: Seite „Training“ - alle Bereiche (Workout, Mobility & Stretch, Timer, Run) als Fotokarten, darüber die Suche */
+/* Aussehen „New“: Seite „Tools“ - die oberste Kachel steht groß (Standard: Workout-Builder), die übrigen versetzt in zwei Spalten, die letzte bei ungerader Zahl über die ganze Breite.
+   Reihenfolge in settings.toolsReihe; Kachel lange drücken (0,5 s) und ziehen verschiebt sie. */
+var TOOLS_KEYS = ["katalog", "run", "warm", "protein", "intervall", "faq"];
+function toolsReihe(){
+  var r = [];
+  selArr(state.db.settings.toolsReihe).forEach(function(k){ if(TOOLS_KEYS.indexOf(k) > -1 && r.indexOf(k) < 0) r.push(k); });
+  TOOLS_KEYS.forEach(function(k){ if(r.indexOf(k) < 0) r.push(k); });
+  return r;
+}
+function toolDaten(k){
+  if(k === "protein") return ["#protein", protT("titel"), protT("kachelSub")];
+  if(k === "faq") return ["#faq", t("faqTitel"), t("faqKachelSub", { n:(window.BLOC_FAQ ? window.BLOC_FAQ.fragen.length : 0) })];
+  return bereichDaten(k);
+}
+var ICON_PFEIL = '<path d="M5 12h14M13 6l6 6-6 6"/>';
+function toolKachelHTML(k){
+  var d = toolDaten(k);
+  return '<div class="tk" data-tool="'+k+'" data-nav="'+d[0]+'" role="button" tabindex="0">'+
+    '<i class="tk-foto" aria-hidden="true"></i>'+
+    (k === "katalog" ? '<span class="tk-badge">'+esc(t("toolsHerz"))+'</span>' : '')+
+    '<span class="tk-glas"><span class="tk-ico">'+svgIcon(HOME_ICON[k])+'</span>'+
+      '<span class="tk-text"><b>'+esc(d[1])+'</b><small>'+String(d[2]).split(" · ").map(function(x){ return '<em>'+esc(x)+'</em>'; }).join("")+'</small></span></span>'+
+    '<span class="tk-go" aria-hidden="true">'+svgIcon(ICON_PFEIL)+'</span></div>';
+}
+/* Größe und Spalte hängen an der Stelle: Stelle 1 = groß, danach abwechselnd links und rechts (rechts etwas nach unten versetzt), die letzte bei ungerader Restzahl über die ganze Breite */
+function toolsKlassen(raster){
+  var kids = raster.children, n = kids.length;
+  Array.prototype.forEach.call(kids, function(el, i){
+    el.classList.toggle("tk-gross", i === 0);
+    el.classList.toggle("tk-r", i > 0 && (i-1)%2 === 1);
+    el.classList.toggle("tk-voll", i > 0 && i === n-1 && (n-1)%2 === 1);
+  });
+}
+var toolsZieht = false;   // solange eine Kachel gezogen wird, darf die Seite nicht mitscrollen
+document.addEventListener("touchmove", function(e){ if(toolsZieht && e.cancelable) e.preventDefault(); }, { passive:false });
+function toolsZiehenBinden(raster){
+  var tm = 0, x0 = 0, y0 = 0, el = null, geist = null, lx = 0, ly = 0, ox = 0, oy = 0, raf = 0, reduce = false;
+  try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch(err){}
+  function warteStop(){ if(tm){ clearTimeout(tm); tm = 0; } }
+  function ziel(){
+    var best = null;
+    Array.prototype.forEach.call(raster.children, function(k){
+      if(k === el) return;
+      var r = k.getBoundingClientRect();
+      if(lx >= r.left && lx <= r.right && ly >= r.top && ly <= r.bottom) best = k;
+    });
+    return best;
+  }
+  /* Die gedrückte Kachel bleibt im Dokument stehen (sonst bricht der Finger-Kontakt ab); verschoben werden die anderen um sie herum */
+  function umordnen(nach){
+    var kids = Array.prototype.slice.call(raster.children), i = kids.indexOf(el), j = kids.indexOf(nach);
+    if(i < 0 || j < 0 || i === j) return;
+    var vorher = new Map();
+    kids.forEach(function(k){ vorher.set(k, k.getBoundingClientRect()); });
+    kids.splice(i, 1); kids.splice(j, 0, el);
+    var idx = kids.indexOf(el);
+    kids.slice(0, idx).forEach(function(k){ raster.insertBefore(k, el); });
+    var ref = el.nextSibling;
+    kids.slice(idx+1).reverse().forEach(function(k){ raster.insertBefore(k, ref); ref = k; });
+    toolsKlassen(raster);
+    if(reduce || !el.animate) return;
+    Array.prototype.forEach.call(raster.children, function(k){
+      if(k === el) return;
+      var a = vorher.get(k), r = k.getBoundingClientRect();
+      if(!a || Math.abs(a.width - r.width) > 2 || Math.abs(a.height - r.height) > 2) return;
+      var dx = a.left - r.left, dy = a.top - r.top;
+      if(Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+      k.animate([{ transform:"translate("+dx+"px,"+dy+"px)" }, { transform:"none" }], { duration:200, easing:"ease-out" });
+    });
+  }
+  function tick(){
+    if(!geist) return;
+    if(ly < 90) window.scrollBy(0, -10); else if(ly > window.innerHeight - 90) window.scrollBy(0, 10);
+    var z = ziel(); if(z) umordnen(z);
+    raf = requestAnimationFrame(tick);
+  }
+  function bewegen(e){
+    lx = e.clientX; ly = e.clientY;
+    if(geist){ geist.style.left = (lx - ox)+"px"; geist.style.top = (ly - oy)+"px"; }
+    else if(tm && Math.abs(lx - x0) + Math.abs(ly - y0) > 10) warteStop();   // wischt der Finger vorher, scrollt die Seite ganz normal
+  }
+  function ende(){
+    warteStop();
+    document.removeEventListener("pointermove", bewegen); document.removeEventListener("pointerup", ende); document.removeEventListener("pointercancel", ende);
+    if(!geist) return;
+    cancelAnimationFrame(raf);
+    var g = geist, k = el; geist = null; toolsZieht = false;
+    langDruckSperre = Date.now() + 500;   // der Klick nach dem Loslassen öffnet nichts
+    var r = k.getBoundingClientRect();
+    g.style.transition = "left .16s ease, top .16s ease, width .16s ease, height .16s ease, transform .16s ease";
+    g.style.left = r.left+"px"; g.style.top = r.top+"px"; g.style.width = r.width+"px"; g.style.height = r.height+"px"; g.style.transform = "none";
+    setTimeout(function(){ k.classList.remove("tk-platz"); if(g.parentNode) g.parentNode.removeChild(g); }, 170);
+    state.db.settings.toolsReihe = Array.prototype.map.call(raster.children, function(c){ return c.getAttribute("data-tool"); });
+    save();
+  }
+  function start(k, px, py){
+    var r = k.getBoundingClientRect();
+    el = k; lx = px; ly = py; ox = px - r.left; oy = py - r.top;
+    geist = k.cloneNode(true); geist.removeAttribute("data-nav"); geist.classList.add("tk-geist");
+    geist.style.left = r.left+"px"; geist.style.top = r.top+"px"; geist.style.width = r.width+"px"; geist.style.height = r.height+"px";
+    document.body.appendChild(geist);
+    k.classList.add("tk-platz");
+    toolsZieht = true; langDruckSperre = Date.now() + 700;
+    try { if(navigator.vibrate) navigator.vibrate(15); } catch(err){}
+    raf = requestAnimationFrame(tick);
+  }
+  raster.addEventListener("pointerdown", function(e){
+    var k = e.target.closest ? e.target.closest(".tk") : null;
+    if(!k || geist || (e.pointerType === "mouse" && e.button !== 0)) return;
+    x0 = lx = e.clientX; y0 = ly = e.clientY; warteStop();
+    document.addEventListener("pointermove", bewegen); document.addEventListener("pointerup", ende); document.addEventListener("pointercancel", ende);
+    tm = setTimeout(function(){ tm = 0; start(k, lx, ly); }, 500);
+  });
+  raster.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+}
 function renderTraining(){
+  var reihe = toolsReihe();
   app.innerHTML =
     topbar(t("tabTraining"), { back:"#home", right:kopfSymboleNeu("training") }) +
     '<button type="button" class="suchfeld-neu" data-nav="#search">'+svgIcon('<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5l5 5"/>')+'<span>'+esc(t("trainingSuche"))+'</span></button>'+
-    '<div class="training-seite">'+bereicheHTML().replace(/<\/div><\/div>$/, areaTile("protein", "#protein", protT("titel"), protT("kachelSub"), "var(--accent)", "zeile")+areaTile("faq", "#faq", t("faqTitel"), t("faqKachelSub", { n:(window.BLOC_FAQ ? window.BLOC_FAQ.fragen.length : 0) }), "var(--accent)", "zeile")+'</div></div>')+'</div>'+
+    '<div class="training-seite">'+
+      '<div class="tools-kopf"><span>'+esc(t("toolsAlle"))+'</span><span>'+esc(t("toolsAnz", { n:reihe.length }))+'</span></div>'+
+      '<div class="tools-raster">'+reihe.map(toolKachelHTML).join("")+'</div>'+
+      '<p class="tools-hinweis">'+esc(t("toolsHinweis"))+'</p>'+
+    '</div>'+
     '<div class="sec-head"><div class="section-title"></div><button type="button" class="sec-link" data-wasistwas>'+esc(t("wiLink"))+'</button></div>';
   var bkT = app.querySelector(".topbar .back"); if(bkT) bkT.classList.add("zeigen");   // Zurück-Knopf auch auf Training (wie in Path und Kalender)
   bindCommon();
   /* Abwechslung: je Bereich ein Bild aus dem Pool, von Tag zu Tag wechselnd, kein Bild doppelt; dieselben Bilder tragen die Köpfe der Bereichsseiten */
   var fotos = bereichFotosNeu();
-  app.querySelectorAll(".training-seite .area-tile[data-bereich]").forEach(function(el){
-    var k = el.getAttribute("data-bereich");
-    var ft = el.querySelector(".at-foto");   // das Foto liegt rechts in eigener Fläche, links bleibt Platz für Symbol und Text
+  app.querySelectorAll(".tools-raster .tk").forEach(function(el){
+    var k = el.getAttribute("data-tool"), ft = el.querySelector(".tk-foto");
     if(!ft) return;
     if(k === "faq"){ ft.style.backgroundImage = "url(img/neu-faq.jpg)"; ft.style.backgroundPosition = "50% 55%"; return; }
     if(k === "protein"){ ft.style.backgroundImage = "url(img/neu-protein.jpg)"; ft.style.backgroundPosition = "50% 27%"; return; }   // Hände mit den Eierschalen
     if(fotos[k]){ ft.style.backgroundImage = "url(" + fotos[k] + ")"; ft.style.backgroundPosition = fotoFokus(fotos[k]) || "50% 50%"; }
   });
-  app.querySelectorAll("[data-bereich]:not([data-bereich=\"faq\"])").forEach(function(el){ langDruck(el, openBereicheSheet); });
+  var raster = app.querySelector(".tools-raster");
+  toolsKlassen(raster);
+  toolsZiehenBinden(raster);
   var wib = app.querySelector("[data-wasistwas]");
   if(wib) wib.addEventListener("click", openWasIstWas);
 }

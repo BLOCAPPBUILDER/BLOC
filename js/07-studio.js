@@ -179,7 +179,7 @@ function studioAusrOk(id, fArt, fGer){
   return (fArt.length > 0 && studioArtPasst(id, fArt)) || (fGer.length > 0 && studioGeraetOk(id, fGer));
 }
 var STUDIO_GERAET_ICON = { smith:'<path d="M6 3v18M18 3v18M6 10h12"/>', kabel:'<path d="M12 3v6M8 3h8"/><circle cx="12" cy="12" r="3"/><path d="M12 15v6"/>', lh:EQUIP_ICON.bar, kh:EQUIP_ICON.db, maschine:EQUIP_ICON.gym };
-var STUDIO_AUSR_ICON = { kb:EQUIP_ICON.kb, band:EQUIP_ICON.band };
+var STUDIO_AUSR_ICON = { kb:EQUIP_ICON.kb, band:EQUIP_ICON.band, rope:EQUIP_ICON.rope };
 var STUDIO_ART_ICON = { geraet:CAT_ICON.weight, frei:EQUIP_ICON.kb, stange:EQUIP_ICON.bar, band:EQUIP_ICON.band, koerper:EQUIP_ICON.none };
 /* Frühere Gruppen-Chips, die jetzt zur Ausrüstung gehören (Langhantel, Kurzhantel & Kettlebell, Stange & Barren, Körpergewicht), in die Ausrüstung umziehen;
    die früheren Chips „Kabel“ und „Langhantel“ stehen jetzt unter „Fitnessstudio“ */

@@ -166,10 +166,11 @@
       pruefe($(".kopf-neu [data-nav=\"#search\"]") && $(".kopf-neu [data-nav=\"#settings\"]"), "Suche und Einstellungen als Symbole im Kopf");
       // Training: die Bereiche gleichrangig in einer Liste
       klick('#tabbar [data-nav="#training"]');
-      await bis(function () { return $(".training-seite .area-tile"); }, 3000, "Seite Training");
-      var bereiche = $$(".training-seite .area-tile[data-bereich]").map(function (e) { return e.getAttribute("data-bereich"); }).join(",");
-      pruefe(bereiche === "katalog,warm,intervall,run,protein,faq", "Workout, Mobility & Stretch, Timer, Run, Protein und Fragen auf Tools: " + bereiche);
-      pruefe($('.area-tile[data-bereich="intervall"][data-nav="#intervall"]') && $('.area-tile[data-bereich="katalog"][data-nav="#katalog"]'), "Timer und Workout fehlen als Bereich auf Training");
+      await bis(function () { return $(".training-seite .tools-raster .tk"); }, 3000, "Seite Training");
+      var bereiche = $$(".tools-raster .tk").map(function (e) { return e.getAttribute("data-tool"); }).join(",");
+      pruefe(bereiche === "katalog,run,warm,protein,intervall,faq", "Workout (groß oben), Run, Mobility & Stretch, Protein, Timer und Fragen auf Tools: " + bereiche);
+      pruefe($(".tools-raster .tk")  && $(".tools-raster .tk").classList.contains("tk-gross"), "Die oberste Kachel auf Tools steht groß");
+      pruefe($('.tk[data-tool="intervall"][data-nav="#intervall"]') && $('.tk[data-tool="katalog"][data-nav="#katalog"]'), "Timer und Workout fehlen als Kachel auf Tools");
       pruefe($("#tabbar .tab.active") && /Tools/.test($("#tabbar .tab.active").textContent), "In der Leiste soll „Tools“ markiert sein");
       // Workout führt direkt in den Baukasten
       zuWorkout();
@@ -332,7 +333,7 @@
       // kein Ort mehr: Schritt 1 Trainingsart (drei Karten, Standard Körpergewicht), Schritt 2 Ausrüstung (sieben Chips), Schritt 3 Muskel
       pruefe(!$("#overlayRoot [data-bauort]") && !$("#overlayRoot [data-katort]") && !$("#overlayRoot [data-spequip]") && !$("#overlayRoot [data-sport]"), "Überrasch mich: Ort oder alte Ausrüstungs-Chips stehen noch im Fenster");
       pruefe($$("#overlayRoot .ort-foto[data-sptrain]").length === 3 && $$("#overlayRoot [data-sptrain].on").length === 1 && $('#overlayRoot [data-sptrain="body"].on'), "Überrasch mich: drei Karten der Trainingsart, Standard ist Körpergewicht");
-      pruefe($$("#overlayRoot [data-spausr]").length === 7 && $$("#overlayRoot [data-spausr].on").length === 0, "Überrasch mich: sieben Ausrüstungs-Chips, keiner gewählt");
+      pruefe($$("#overlayRoot [data-spausr]").length === 8 && $$("#overlayRoot [data-spausr].on").length === 0, "Überrasch mich: acht Ausrüstungs-Chips, keiner gewählt");
       pruefe($$("#overlayRoot .bau-schritt.af-schritt").length === 3, "Überrasch mich: drei Schritte erwartet, gefunden " + $$("#overlayRoot .bau-schritt.af-schritt").length);
       klick("[data-spgo]");
       await bis(function () { return $$(".wb-ablauf").length >= 2; }, 3000, "Übungen im Deckblatt");
@@ -472,7 +473,7 @@
       // derselbe Filter wie bei den Übungen: Gruppe, Ausrüstung („Fitnessstudio“ statt „Gerät“), Körperkarte
       pruefe(!$('[data-lfcat]') && !$('[data-lfequip]'), "Training-Chips stehen noch im Katalog");
       // auch im Workoutkatalog: 1 Trainingsart (drei Karten mit „n Workouts“), 2 Ausrüstung, 3 Muskel; einen Ort-Schalter gibt es nicht mehr
-      pruefe($$("[data-stgrp]").length === 8 && $('[data-stgrp="rumpf"]') && $$("[data-stausr]").length === 7 && $$("[data-stzone]").length >= 12, "Katalog: Filter hat 8 Muskel-Chips, 7 Ausrüstungs-Chips und die Körperkarte erwartet");
+      pruefe($$("[data-stgrp]").length === 8 && $('[data-stgrp="rumpf"]') && $$("[data-stausr]").length === 8 && $$("[data-stzone]").length >= 12, "Katalog: Filter hat 8 Muskel-Chips, 8 Ausrüstungs-Chips und die Körperkarte erwartet");
       pruefe($$("[data-sttrain]").length === 3 && !$("[data-start]") && !$("[data-stger]") && !$("[data-katort]") && /Fitnessstudio/.test($(".ort-fotos").textContent) && /Workouts/.test($(".ort-fotos").textContent), "Workoutkatalog: Trainingsart als drei Karten mit „n Workouts“ im Filter erwartet, kein Ort-Schalter");
       pruefe($$(".bau-schritt.af-schritt").length === 3, "Workoutkatalog: Filter hat drei Schritte (Trainingsart, Ausrüstung, Muskel), gefunden " + $$(".bau-schritt.af-schritt").length);
       klick('[data-stgrp="beine"]');
@@ -515,7 +516,7 @@
       await bis(function () { return !$('[data-stzone].on') && $$("[data-studio]:not([data-ortfremd])").length === stAlle; }, 2000, "Übungen: Zurücksetzen löscht auch die Zonen");
       // Langhantel, Kurzhantel & Kettlebell, Stange, Widerstandsband und Körpergewicht gehören zur Ausrüstung, nicht zu den Gruppen
       pruefe(!$('[data-stgr="lh"]') && !$('[data-stgr="frei"]') && !$('[data-stgr="stange"]') && !$('[data-stgr="air"]') && !$('[data-stgr="band"]'), "Übungen: Ausrüstung steht noch bei den Gruppen");
-      pruefe(["smith", "kabel", "lh", "kh", "maschine", "kb", "band"].every(function (g) { return $('[data-stausr="' + g + '"]'); }) && $$("[data-stausr]").length === 7, "Übungen: sieben Ausrüstungs-Chips (Smith, Kabelzug, Langhantel, Kurzhantel, Maschine, Kettlebell, Widerstandsband) erwartet, gefunden " + $$("[data-stausr]").length);
+      pruefe(["smith", "kabel", "lh", "kh", "maschine", "kb", "band", "rope"].every(function (g) { return $('[data-stausr="' + g + '"]'); }) && $$("[data-stausr]").length === 8, "Übungen: acht Ausrüstungs-Chips (Smith, Kabelzug, Langhantel, Kurzhantel, Maschine, Kettlebell, Widerstandsband) erwartet, gefunden " + $$("[data-stausr]").length);
       pruefe($$("[data-sttrain]").length === 3 && $('[data-sttrain="studio"]') && $('[data-sttrain="cali"]') && $('[data-sttrain="body"]') && !$('[data-start]') && !$('[data-stger]'), "Übungen: drei Karten der Trainingsart (Fitnessstudio, Calisthenic-Park, Körpergewicht); die alten Chips data-start und data-stger gibt es nicht mehr");
       pruefe($('[data-stgrp="brust"]') && $('[data-stgrp="rumpf"]') && $('[data-stgr="cardio"]') && $$("[data-stgrp]").length === 8, "Übungen: acht Muskel-Chips (Brust, Rücken, Schulter, Arme, Bauch, Core, Beine, Po) erwartet, gefunden " + $$("[data-stgrp]").length);
       // Core = Bauch & Rumpf plus Beine & Po: der Chip schaltet die Zonen beider Gruppen
@@ -900,7 +901,7 @@
       // Filter im Plan-Bau: 1 Trainingsart (drei Karten), 2 Ausrüstung (sieben Chips), 3 Muskel (sieben Chips mit Core und Körperkarte)
       await filterAuf();
       pruefe($$("[data-sttrain]").length === 3 && $$(".ort-foto[data-sttrain]").length === 3, "Plan-Bau: drei Karten der Trainingsart erwartet, gefunden " + $$("[data-sttrain]").length);
-      pruefe($$("[data-stausr]").length === 7 && $$("[data-stgrp]").length === 8 && $('[data-stgrp="rumpf"]') && $$("[data-stzone]").length >= 12, "Plan-Bau: sieben Ausrüstungs-Chips, acht Muskel-Chips mit Core und die Körperkarte erwartet");
+      pruefe($$("[data-stausr]").length === 8 && $$("[data-stgrp]").length === 8 && $('[data-stgrp="rumpf"]') && $$("[data-stzone]").length >= 12, "Plan-Bau: acht Ausrüstungs-Chips, acht Muskel-Chips mit Core und die Körperkarte erwartet");
       pruefe(!$("[data-start]") && !$("[data-stger]") && !$("[data-katort]"), "Plan-Bau: alte Chips oder Ort-Schalter stehen noch da");
       var alleKacheln = $$("[data-planex]").length;
       // Core (Bauch & Rumpf + Beine & Po) zusammen mit Körpergewicht: nie ein Gerät (z. B. keine Bauchmaschine)
@@ -1140,8 +1141,8 @@
       await bis(function () { return $(".stat-hero"); }, 3000, "Statistik");
       pruefe($$(".stat-bereichkarte").length === 4, "Statistik zeigt immer alle vier Bereiche: " + $$(".stat-bereichkarte").length);
       W.go("#training");
-      await bis(function () { return $('.training-seite .area-tile[data-nav="#run"]'); }, 3000, "Run steht auf Training");
-      klick('.training-seite .area-tile[data-nav="#warmstretch"]');
+      await bis(function () { return $('.tools-raster .tk[data-nav="#run"]'); }, 3000, "Run steht auf Training");
+      klick('.tools-raster .tk[data-nav="#warmstretch"]');
       await bis(function () { return /^#warmstretch/.test(W.location.hash) && !$(".tabbar .tab"); }, 3000, "Leiste in Listen ausgeblendet");
       klick("button.back");
       await bis(function () { return $(".training-seite"); }, 3000, "zurück auf Training");
@@ -1236,7 +1237,7 @@
       // 1) gespeicherte Einstellung im alten Format (equips: ["none"], kein Ort, keine Trainingsart): Körpergewicht, keine Studio-Geräte
       await surpriseAuf();
       pruefe($$("#overlayRoot [data-sptrain]").length === 3 && $$("#overlayRoot [data-sptrain].on").length === 1 && $('#overlayRoot [data-sptrain="body"].on'), "Überrasch mich: aus dem alten Format soll Körpergewicht gewählt sein");
-      pruefe(!$('#overlayRoot [data-spequip]') && $$("#overlayRoot [data-spausr]").length === 7, "Überrasch mich: alte Ausrüstungs-Chips (data-spequip) stehen noch da, sieben neue (data-spausr) erwartet");
+      pruefe(!$('#overlayRoot [data-spequip]') && $$("#overlayRoot [data-spausr]").length === 8, "Überrasch mich: alte Ausrüstungs-Chips (data-spequip) stehen noch da, sieben neue (data-spausr) erwartet");
       var cf = await surpriseGo("Körpergewicht");
       pruefe(cf && cf.items.length > 2 && cf.items.every(function (it) { return !W.exIstStudio(W.findExercise(it.ex)); }), "Überrasch mich mit Körpergewicht zieht Geräteübungen");
       pruefe(artenVon(exIds(cf)).every(function (a) { return a === "body"; }), "Überrasch mich mit Körpergewicht zieht Übungen mit Ausrüstung: " + artenVon(exIds(cf)).join());
@@ -1337,8 +1338,8 @@
       await heim();
       var body = W.getComputedStyle(W.document.body).color;
       W.go("#training");
-      await bis(function () { return $(".training-seite .area-tile"); }, 3000, "Seite Training");
-      pruefe($$(".training-seite .area-tile").length === 6, "Tools zeigt sechs Bereiche");
+      await bis(function () { return $(".tools-raster .tk"); }, 3000, "Seite Training");
+      pruefe($$(".tools-raster .tk").length === 6, "Tools zeigt sechs Bereiche");
       pruefe(true, "(Symbole der Startseite: entfällt) Mobility & Stretch in Grün und Workout in Orange)");
       zuWorkout();
       await zuKatalogTab();
