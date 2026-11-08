@@ -112,7 +112,7 @@ function kalAufloesen(e){
     if(!tw) o.ok = false; else { o.name = tw.name || t("untitled"); o.sub = t("timerEintrag")+" · "+fmtDuration(workoutDuration(tw)); }
   } else if(e.art === "programm"){   // ganzer Trainingsplan aus der Arena
     var pg = programmFinde(e.ref);
-    if(!pg) o.ok = false; else { o.name = pg.name; o.sub = pg.items.length === 1 ? t("progMeta1") : t("progMeta", { n:pg.items.length }); }
+    if(!pg) o.ok = false; else { o.name = pg.name; o.sub = (e.leicht && typeof pt === "function" ? pt("leichtwoche")+" · " : "")+(pg.items.length === 1 ? t("progMeta1") : t("progMeta", { n:pg.items.length })); }
   } else if(e.art === "sport"){   // anderer Sport aus dem Plan-Assistenten: fester Termin, nichts zu starten
     o.name = e.name || pt("sportName"); o.sub = pt("sportSub"); o.farbe = "var(--text-dim)";
   } else if(e.art === "run"){

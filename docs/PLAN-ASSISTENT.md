@@ -1,6 +1,6 @@
 # Plan-Assistent: Regeln und Quellen (Stand 2026-11-09)
 
-Der Assistent (`js/25-plan-assistent.js`, Workout-Builder › „Trainingsplan erstellen lassen“) baut aus den Antworten eigene BLOCs und einen Trainingsplan und legt ihn in den Kalender. Die Zahlen stehen in `PA_REGELN`, `PA_CARDIO`, `PA_RIR`; die Ausschlüsse in `PA_AUS`/`PA_NIE`; die Wochenstruktur in `PA_TAGE` und `PA_SLOTS`. Die Literaturliste steht auch in `quellen.html` (Abschnitt „Quellen zum Plan-Assistenten“). **Praxis** = Festlegung von BLOC im Einklang mit den Quellen, keine Studienzahl.
+Der Assistent (`js/25-plan-assistent.js`, Workout-Builder › „Trainingsplan erstellen lassen“) baut aus den Antworten eigene BLOCs und je Trainingstag einen editierbaren TrainingsBLOC und legt alles in den Kalender. Dehnen wird nicht automatisch eingebaut (nur als eigener Mobility-Tag, wenn der Bereich gewählt ist). Die Zahlen stehen in `PA_REGELN`, `PA_CARDIO`, `PA_RIR`; die Ausschlüsse in `PA_AUS`/`PA_NIE`; die Wochenstruktur in `PA_TAGE` und `PA_SLOTS`. Die Literaturliste steht auch in `quellen.html` (Abschnitt „Quellen zum Plan-Assistenten“). **Praxis** = Festlegung von BLOC im Einklang mit den Quellen, keine Studienzahl.
 
 | Regel im Code | Quelle | Status |
 |---|---|---|
@@ -15,6 +15,7 @@ Der Assistent (`js/25-plan-assistent.js`, Workout-Builder › „Trainingsplan e
 | Kraft + Ausdauer im selben Plan möglich, Cardio-/Lauftage getrennt | PA8 | belegt |
 | Laufeinstieg: Gehen und Laufen im Wechsel, bis 3×/Woche mit Ruhetag; Umfang etwa +10 % pro Woche, nie über 30 % | NHS Couch to 5K (Struktur), PA13 | Praxis (10-%-Regel nicht belegt) |
 | Ab 65: eine Gleichgewichtsübung je Einheit (Einbeinstand), keine Stufe-3-Übungen, Pausen +15 s, Wdh. +2 | PA2, PA10, PA11 | belegt / Praxis |
+| Intensität Anfänger/Leicht/Mittel/Schwer: Anfänger 2 Sätze, 3–4 Wdh. in Reserve, nur Stufe-1-Übungen; Schwer nur ab 1–2× pro Woche aktiv, nicht ab 65 | Sportwissenschaftler-Session, PA4 | Praxis |
 | Anderer Sport: am Tag davor, am Sporttag und am Folgetag kein Unterkörper/Ganzkörper, zwei Tage danach kein reiner Unterkörper (bei Klettern/Kampfsport/Schwimmen: Zug und Schulter schonen) | PA12 (Beine nach 48–72 h noch nicht erholt) | Praxis |
 | Übungen je Einheit: 20/30/45/60 min = 4/5/7/9 Hauptübungen (plus Aufwärmen und Dehnen); „Schwer“ nur ab 1–2× pro Woche aktiv, nicht ab 65; 50–64 mindestens 8, ab 65 mindestens 10 Wiederholungen | Sportwissenschaftler-Session (Garber 2011 als Anhalt), PA10 | Praxis, (prüfen gegen ACSM 2026) |
 | Laufeinstieg im Kalender: Woche 1 1 Min laufen/2 Min gehen ×8, dann 2/2 ×6, 3/2 ×5, 4/2 ×4, 5/1 ×4, 8/1 ×3, 10/1 ×3 | Praxis, an Gehen-Laufen-Programme angelehnt (Sportwissenschaftler-Session) | Praxis |

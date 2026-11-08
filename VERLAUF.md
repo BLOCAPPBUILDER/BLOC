@@ -3,6 +3,14 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-09 · Plan-Assistent: BLOC-Attribute, TrainingsBLOC je Trainingstag, Intensität als Frage (Fassung 2026-11-09-3)
+
+- **Fragen mit den Attributen, die BLOC schon hat:** Ziele jetzt **Mehrfachwahl** (das erste ist das Hauptziel), Fokus als echte **Muskelgruppen** (Brust, Rücken, Schultern, Arme, Bauch, Core, Beine, Po; mehrere), **Trainingsart** wie im Katalog (Fitnessstudio · Calisthenic-Park · Körpergewicht, mehrere, mit den Katalog-Fotos), **Geräte** wie im Filter (Multipresse, Kabelzug, Langhantel, Kurzhantel, Maschine, Kettlebell, Widerstandsband, Sprungseil; mehrere, leer = alles) und **BLOC-Bereiche** (Workout, **Run**, Mobility & Stretch, Timer-Intervalle; mehrere, bei Run Einsteiger oder regelmäßig). Calisthenics und Run sind damit immer wählbar. Neue eigene Frage **Intensität: Anfänger · Leicht · Mittel · Schwer** (Vorgabe aus der Aktivität; Schwer nur ab 1–2× aktiv und nicht ab 65). Zwölf Fragen statt neun.
+- **Ein TrainingsBLOC je Trainingstag:** Statt eines Plans mit Wochenplan entsteht für jeden Trainingstag ein ganz normaler, danach frei editierbarer TrainingsBLOC (Wochentag, Wochenzahl, BLOCs hinzufügen/entfernen/umordnen wie gewohnt) mit den Teilen Aufwärmen (vorhandenes Aufwärm-Workout oder bei Einschränkungen ein eigener gefilterter BLOC), Hauptteil (eigener BLOC mit Sätzen, aus den gewählten Trainingsarten und Geräten) bzw. Cardio-Zirkel (Timer) bzw. `run`. Zusammengehalten über `p.gruppe`; langes Drücken auf eine Karte: „Ganzen Plan aus dem Kalender nehmen / in den Kalender übertragen / Plan anpassen / Ganzen Plan löschen“ plus die gewohnten Aktionen für den einzelnen Tag.
+- **Kein Dehnen mehr automatisch:** Dehnen ergänzt man bei Bedarf von Hand im TrainingsBLOC. Mobility & Stretch erscheint nur, wenn der Bereich gewählt ist, als eigener Mobility-Tag.
+- **Hinweistext** über dem Plan ist eingeklappt („Hinweise zum Plan“, nur am ersten Tag).
+- Tests angepasst (Einheitstest: Geräte, Calisthenics, kein Dehnen, Gruppe; Schnelltest: neuer Ablauf).
+
 ## 2026-11-09 · Plan-Assistent im Workout-Builder (Fassung 2026-11-09-1)
 
 - **Trainingsplan erstellen lassen:** Neue Karte im Baukasten (neben „Überrasch mich“ und „Selber bauen“) und ein Knopf auf der Trainingsplan-Seite. Ein Fenster über der Seite stellt Frage für Frage (Ziel, Fokuszone, Aktivität, Trainingstage, Zeit, Ort/Equipment, Einschränkungen, Impact, anderer Sport, Laufen und Mobility nur je nach Ziel) und endet in einer Übersicht mit Vorschau, Schwierigkeit **Leicht / Mittel / Schwer** (Vorgabe aus der Aktivität) und aufklappbaren Extras (Alter, Planlänge 4/6/8 Wochen). Abbrechen (X) jederzeit, eine Antwort in der Übersicht antippen ändert sie.

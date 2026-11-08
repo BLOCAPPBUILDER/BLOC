@@ -268,7 +268,7 @@ function programmAusKalender(p){
 /* Jeder gewählte Wochentag bekommt genau einen Kalender-Baustein: den TrainingsBLOC selbst (er enthält die BLOCs des Tages).
    Ohne gewählte Dauer gilt nur die nächste Woche; frühere offene Termine dieses TrainingsBLOCs ab heute werden dabei ersetzt. */
 function programmUebernehmen(p){
-  if(p.wp && p.wp.length && typeof paKalender === "function") return paKalender(p);   // Plan vom Assistenten: eigener Wochenplan (je Tag ein BLOC, Lauf, Sport)
+  if(p.gen && typeof paKalender === "function") return paKalender(p);   // Trainingstag vom Assistenten: Lauftage mit Laufeinstieg, Leichtwochen, anderer Sport
   if(!p.items.length || !p.tage.length) return 0;
   var start = new Date(); start.setHours(12, 0, 0, 0);
   var wochen = p.wochen || 1;
@@ -407,7 +407,7 @@ function progKarteHTML(p){
       '<button type="button" class="fav-btn'+(progFav(p) ? ' on' : '')+'" data-pgfav="'+esc(p.id)+'" aria-pressed="'+progFav(p)+'" title="'+esc(t("favorite"))+'" aria-label="'+esc(t("favorite"))+'">'+(progFav(p) ? '★' : '☆')+'</button>'+
       '<span class="pg-pfeil" aria-hidden="true">'+svgIcon(PG_ICON_PFEIL)+'</span></summary>'+
     '<div class="pg-innen">'+
-      (p.info ? '<p class="pg-info">'+esc(p.info)+'</p>' : '')+
+      (p.info ? '<details class="pg-infotext"><summary>'+esc(pt("infoTitel"))+'</summary><p class="pg-info">'+esc(p.info)+'</p></details>' : '')+
       (p.items.length ? '<button type="button" class="btn btn-primary pg-go" data-pggo="'+esc(p.id)+'">'+ICON_PLAY+' '+esc(t("letsGoBig"))+'</button>' : '')+
       (p.items.length ? '<ol class="pg-liste">'+p.items.map(function(r, i){ return progZeileHTML(p, r, i); }).join("")+'</ol>' : '')+
       '<button type="button" class="pg-plus" data-pgplus="'+esc(p.id)+'">'+ICON_PLUS+'<span>'+esc(t("progPlus"))+'</span></button>'+
@@ -510,11 +510,13 @@ function umbenennenSheet(alt, fn){
   return p.name+"\n"+p.items.map(function(r, i){ var o = kalAufloesen(progEintrag(r)); return (i + 1)+". "+o.name; }).join("\n");
 }
 function programmMenue(p, neu){
-  var assi = p.assi && typeof paOeffnen === "function";
+  var grp = p.gruppe && typeof paGruppe === "function" ? paGruppe(p.gruppe) : [], erster = grp[0], plan = grp.length > 1 && erster && erster.assi;   // Plan vom Assistenten: mehrere TrainingsBLOCs einer Gruppe
   openActionSheet(p.name, [
+    plan ? { ico:P_CHECK, label:pt("planKalAus"), fn:function(){ var n = paKalenderGruppeAus(p.gruppe); showToast(pt("ausKalenderOk", { n:n })); neu(); } } : null,
+    plan ? { ico:P_PLUS, label:pt("planKalEin"), fn:function(){ var n = paKalenderGruppe(p.gruppe); showToast(pt("inKalenderOk", { n:n })); neu(); } } : null,
+    plan ? { ico:ICON_EDIT, label:pt("planAnpassen"), fn:function(){ paOeffnen(erster.assi, p.gruppe); } } : null,
     { ico:P_CHECK, label:t("progAusKalender"), fn:function(){ var n = programmAusKalender(p); showToast(typeof pt === "function" ? pt("ausKalenderOk", { n:n }) : t("progAusKalenderOk")); neu(); } },
     { ico:P_PLUS, label:t("progInKalender"), fn:function(){ var n = programmUebernehmen(p); showToast(typeof pt === "function" ? pt("inKalenderOk", { n:n }) : String(n)); neu(); } },
-    assi ? { ico:ICON_EDIT, label:pt("planAnpassen"), fn:function(){ paOeffnen(p.assi, p.id); } } : null,
     { ico:ICON_EDIT, label:t("umbenennen"), fn:function(){ umbenennenSheet(p.name, function(v){ p.name = v; p.updatedAt = Date.now(); save(); neu(); }); } },
     { ico:P_SHARE, label:t("share"), fn:function(){ programmTeilen(p); } },
     { ico:ICON_COPY, label:t("actCopy"), fn:function(){
@@ -523,13 +525,15 @@ function programmMenue(p, neu){
     } },
     { ico:P_TRASH, label:t("del"), danger:true, fn:function(){
       confirmSheet(t("progDelQ"), "„"+p.name+"“ – "+t("cantUndo"), t("del"), function(){
-        if(p.gen && typeof paBlocLoeschen === "function") paBlocLoeschen(p.id);   // vom Assistenten erzeugte BLOCs gehen mit
         programmAusKalender(p);
         state.db.settings.programme = programmListe().filter(function(x){ return x.id !== p.id; });
         state.db.settings.favs = (state.db.settings.favs || []).filter(function(k){ return k !== 'prog:'+p.id; }); save(); neu();
         showToast(t("deletedToast", { n:p.name }));
       });
-    } }
+    } },
+    plan ? { ico:P_TRASH, label:pt("planWeg"), danger:true, fn:function(){
+      confirmSheet(pt("planWegQ"), pt("planWegT"), t("del"), function(){ paGruppeLoeschen(p.gruppe); showToast(t("deletedToast", { n:erster.gruppeName || p.name })); neu(); });
+    } } : null
   ].filter(Boolean));
 }
 var P_SHARE = '<circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.4M8.3 13.2l7.4 4.4"/>';
