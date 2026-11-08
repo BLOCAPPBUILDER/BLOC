@@ -839,8 +839,8 @@
 
   test("Plan-Assistent: Plan erzeugen - keine Doppelten, Einschränkungen und Geräte eingehalten, Tage passen, Sport-Regel, kein Dehnen, Intensität", function () {
     var ziele = ["muskel", "kraft", "abnehmen", "ausdauer", "allgemein", "beweglich"], nivs = ["gar", "unreg", "n12", "n3"];
-    var trains = [["body"], ["studio"], ["cali"], ["studio", "cali"], ["cali", "body"], ["studio", "cali", "body"]], ausrL = [[], ["kh"], ["band"], ["kh", "kb", "band"], ["maschine", "kabel"]];
-    var ein = [[], ["knie"], ["schulter"], ["ruecken"], ["handgelenk"], ["sprung"], ["knie", "ruecken", "schulter"]], bereicheL = [["workout"], ["workout", "run"], ["workout", "timer"], ["workout", "run", "mobility", "timer"], ["run"], ["workout", "mobility"]];
+    var trains = [["body"], ["studio"], ["cali"], ["studio", "cali"], ["cali", "body"], ["studio", "cali", "body"]], ausrL = [["keine"], ["kh"], ["band"], ["kh", "kb", "band"], ["maschine", "kabel"]];
+    var ein = [[], ["knie"], ["schulter"], ["ruecken"], ["handgelenk"], ["sprung"], ["knie", "ruecken", "schulter"]], bereicheL = [["workout"], ["workout", "run"], ["workout", "mobility"], ["workout", "run", "mobility"], ["run"], ["run", "mobility"]];
     var tageL = [[2], [0, 3], [0, 2, 4], [0, 1, 3, 4], [0, 1, 2, 4, 5], [0, 1, 2, 3, 4, 5]], n = 0;
     for (var i = 0; i < 300; i++) {
       var a = { ziele:[ziele[i % 6], ziele[(i * 5 + 1) % 6]].filter(function (x, k, l) { return l.indexOf(x) === k; }), niveau:nivs[(i * 3) % 4], schwer:["anfaenger", "leicht", "mittel", "schwer"][i % 4], tage:tageL[(i * 5) % 6], dauer:[20, 30, 45, 60][(i * 2) % 4],
@@ -871,12 +871,18 @@
     }
     gleich(n, 300, "alle Kombinationen erzeugt");
     // Intensität: schwer = mehr Sätze und weniger Wiederholungen als leicht; Anfänger nie mehr als leicht
-    var b = { ziele:["muskel"], niveau:"n12", tage:[0, 2, 4], dauer:45, train:["studio"], impact:"gerne", bereiche:["workout"] }, an = W.paErzeuge(Object.assign({}, b, { schwer:"anfaenger" })), l = W.paErzeuge(Object.assign({}, b, { schwer:"leicht" })), s2 = W.paErzeuge(Object.assign({}, b, { schwer:"schwer" }));
+    var b = { ziele:["muskel"], niveau:"n12", tage:[0, 2, 4], dauer:45, train:["studio"], ausr:["kh", "kb", "band", "lh", "maschine", "kabel", "smith"], impact:"gerne", bereiche:["workout"] }, an = W.paErzeuge(Object.assign({}, b, { schwer:"anfaenger" })), l = W.paErzeuge(Object.assign({}, b, { schwer:"leicht" })), s2 = W.paErzeuge(Object.assign({}, b, { schwer:"schwer" }));
     wahr(s2.saetze > l.saetze && s2.wdh < l.wdh, "schwer hat mehr Sätze und weniger Wiederholungen als leicht: " + l.saetze + "x" + l.wdh + " / " + s2.saetze + "x" + s2.wdh);
     wahr(an.saetze <= l.saetze && an.pause >= l.pause, "Anfänger: nicht mehr Sätze als leicht, mindestens so lange Pause");
     // Calisthenics: nur Stange, Barren und Körpergewicht
-    var cali = W.paErzeuge({ ziele:["kraft"], niveau:"n3", schwer:"mittel", tage:[0, 2, 4], dauer:45, train:["cali"], impact:"gerne", bereiche:["workout"] });
+    var cali = W.paErzeuge({ ziele:["kraft"], niveau:"n3", schwer:"mittel", tage:[0, 2, 4], dauer:45, train:["cali"], ausr:["keine"], impact:"gerne", bereiche:["workout"] });
     cali.tage.forEach(function (t0) { t0.teile.forEach(function (tl) { if (tl.bloc && tl.bloc.main) tl.bloc.ids.forEach(function (id) { var ex = W.findExercise(id); wahr(W.exTrainArt(ex) === "body" || W.exTrainArten(ex).indexOf("cali") > -1, id + " ist keine Calisthenics-/Körpergewichtsübung"); }); }); });
+    // Ohne Geräte (Studio gewählt): nur Übungen ohne Geräte, nie Hanteln oder Maschinen
+    var ohne = W.paErzeuge({ ziele:["muskel"], niveau:"n12", schwer:"mittel", tage:[0, 2, 4], dauer:45, train:["studio"], ausr:["keine"], impact:"gerne", bereiche:["workout"] });
+    ohne.tage.forEach(function (t0) { t0.teile.forEach(function (tl) { if (tl.bloc && tl.bloc.main) tl.bloc.ids.forEach(function (id) { var e = W.findExercise(id); wahr(e.equip.every(function (q) { return q === "none" || q === "bar" || q === "dip"; }), id + " braucht Geräte (" + e.equip + "), obwohl keine gewählt sind"); }); }); });
+    // Mit Kurzhantel: keine Maschinen und kein Kabelzug
+    var kh = W.paErzeuge({ ziele:["muskel"], niveau:"n12", schwer:"mittel", tage:[0, 2, 4], dauer:45, train:["studio"], ausr:["kh"], impact:"gerne", bereiche:["workout"] });
+    kh.tage.forEach(function (t0) { t0.teile.forEach(function (tl) { if (tl.bloc && tl.bloc.main) tl.bloc.ids.forEach(function (id) { var e = W.findExercise(id); wahr(e.equip.indexOf("gym") < 0 && W.exAusr(e).some(function (g) { return g === "kh"; }), id + " passt nicht zu nur Kurzhantel (" + e.equip + ")"); }); }); });
     // Plan anlegen: je Trainingstag ein TrainingsBLOC, Kalender, aus dem Kalender nehmen, anpassen, löschen
     var s0 = W.state.db.settings, vor = { programme:s0.programme, stPlaene:s0.stPlaene, kalender:s0.kalender, studio:s0.studio };
     try {

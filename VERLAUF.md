@@ -3,6 +3,13 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-09 · Plan-Assistent: Körperfigur, Geräte zuerst, kein Timer (Fassung 2026-11-09-4)
+
+- **Muskeln über die Körperfigur:** Die Fokus-Frage nutzt dieselbe Auswahl wie die Filter im Katalog (Figur mit Zonen, Gruppen-Chips, Grob/Fein; `kkMuskelHTML`); gespeichert werden die Zonen (`a.zonen`), die Gruppen (`a.fokus`) leitet der Assistent daraus ab.
+- **Geräte vor der Trainingsart und verpflichtend:** „Welche Geräte hast du?“ steht jetzt vor „Welche Trainingsart passt zu dir?“ und muss beantwortet werden („Keine Geräte“ ist eine eigene Wahl). Es kommen nur Übungen vor, die man damit ausführen kann: Geräte-Übungen brauchen ein gewähltes Gerät, Studio-Übungen (Bank, Rack, Maschine) ein Studio-Gerät (Multipresse, Kabelzug, Langhantel, Maschine), Körpergewicht geht immer, Stangenübungen nur mit Calisthenic-Park.
+- **Timer ist als Bereich entfallen** (das ist etwas Individuelles). Cardio-Tage werden Run und/oder ein Cardio-Zirkel aus dem Workout-Bereich.
+- Tests angepasst (Ohne Geräte, nur Kurzhantel, Ablauf mit Figur und Geräten).
+
 ## 2026-11-09 · Plan-Assistent: BLOC-Attribute, TrainingsBLOC je Trainingstag, Intensität als Frage (Fassung 2026-11-09-3)
 
 - **Fragen mit den Attributen, die BLOC schon hat:** Ziele jetzt **Mehrfachwahl** (das erste ist das Hauptziel), Fokus als echte **Muskelgruppen** (Brust, Rücken, Schultern, Arme, Bauch, Core, Beine, Po; mehrere), **Trainingsart** wie im Katalog (Fitnessstudio · Calisthenic-Park · Körpergewicht, mehrere, mit den Katalog-Fotos), **Geräte** wie im Filter (Multipresse, Kabelzug, Langhantel, Kurzhantel, Maschine, Kettlebell, Widerstandsband, Sprungseil; mehrere, leer = alles) und **BLOC-Bereiche** (Workout, **Run**, Mobility & Stretch, Timer-Intervalle; mehrere, bei Run Einsteiger oder regelmäßig). Calisthenics und Run sind damit immer wählbar. Neue eigene Frage **Intensität: Anfänger · Leicht · Mittel · Schwer** (Vorgabe aus der Aktivität; Schwer nur ab 1–2× aktiv und nicht ab 65). Zwölf Fragen statt neun.

@@ -20,6 +20,7 @@ Der Assistent (`js/25-plan-assistent.js`, Workout-Builder › „Trainingsplan e
 | Übungen je Einheit: 20/30/45/60 min = 4/5/7/9 Hauptübungen (plus Aufwärmen und Dehnen); „Schwer“ nur ab 1–2× pro Woche aktiv, nicht ab 65; 50–64 mindestens 8, ab 65 mindestens 10 Wiederholungen | Sportwissenschaftler-Session (Garber 2011 als Anhalt), PA10 | Praxis, (prüfen gegen ACSM 2026) |
 | Laufeinstieg im Kalender: Woche 1 1 Min laufen/2 Min gehen ×8, dann 2/2 ×6, 3/2 ×5, 4/2 ×4, 5/1 ×4, 8/1 ×3, 10/1 ×3 | Praxis, an Gehen-Laufen-Programme angelehnt (Sportwissenschaftler-Session) | Praxis |
 | Leichtwoche im Kalender markiert: Woche 4 (4-Wochen-Plan), 6 (6), 4 und 8 (8) | PA7 | Praxis |
+| Geräte und Trainingsart: es kommen nur Übungen vor, die mit den gewählten Geräten und Trainingsarten möglich sind (Geräte zuerst, „Keine Geräte“ möglich); Fokus über die Körperfigur wie im Katalog-Filter | – | Konzept von BLOC |
 | Einschränkungen (Knie, Schulter, Rücken, Handgelenk, Sprunggelenk) und „gelenkschonend“: Übungen mit passenden Namensbestandteilen entfallen, Ersatz aus dem Katalog | – | **Praxis, ohne Quelle**; keine Therapie |
 | Hochleistungsfertigkeiten (Planche, Muscle-up …) nie in automatischen Plänen | – | Praxis |
 

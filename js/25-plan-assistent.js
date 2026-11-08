@@ -17,14 +17,14 @@ var PAT = {
     planWegQ:"Ganzen Plan löschen?", planWegT:"Alle Trainingstage des Plans mit ihren BLOCs und Terminen.", abbruchQ:"Abbrechen?", abbruchT:"Deine Antworten gehen verloren.", verwerfen:"Abbrechen", weiterMachen:"Weitermachen",
     eintrag:"Trainingsplan erstellen lassen", eintragSub:"Ein paar Fragen, dann baut BLOC deinen Plan aus TrainingsBLOCs und legt ihn in den Kalender",
     q_ziele:"Was sind deine Ziele?", h_ziele:"Mehrere möglich. Das erste, das du antippst, ist dein Hauptziel.",
-    q_fokus:"Welche Muskelgruppen sollen mehr Aufmerksamkeit bekommen?", h_fokus:"Optional, mehrere möglich. Der Plan bleibt ausgewogen, diese Gruppen bekommen etwas mehr Gewicht.",
+    q_fokus:"Welche Muskeln sollen mehr Aufmerksamkeit bekommen?", h_fokus:"Optional. Tippe auf die Figur oder die Gruppen, mehrere möglich. Der Plan bleibt ausgewogen, diese Muskeln bekommen etwas mehr Gewicht.",
     q_niveau:"Wie aktiv bist du aktuell?", h_niveau:"Das bestimmt Startumfang und Tempo der Steigerung.",
     q_schwer:"Wie intensiv willst du trainieren?", h_schwer:"Von Anfänger bis schwer. Du kannst das später im Plan ändern.",
     q_tage:"An welchen Tagen willst du trainieren?", h_tage:"Tippe die Wochentage an. Jeder Tag wird ein eigener TrainingsBLOC. Zwei Krafttage pro Woche sind ein guter Start.",
     q_dauer:"Wie viel Zeit hast du pro Einheit?", h_dauer:"Das Aufwärmen zählt mit.",
     q_train:"Welche Trainingsart passt zu dir?", h_train:"Wie im Katalog, mehrere möglich. Körpergewicht geht immer dazu.",
-    q_ausr:"Welche Geräte hast du?", h_ausr:"Optional, mehrere möglich. Leer heißt: alles ist erlaubt.",
-    q_bereiche:"Welche BLOC-Bereiche sollen im Plan vorkommen?", h_bereiche:"Mehrere möglich. Workout ist die Basis. Mobility & Stretch wird ein eigener Tag.",
+    q_ausr:"Welche Geräte hast du?", h_ausr:"Mehrere möglich. So kommen nur Übungen vor, die du auch ausführen kannst.", g_keine:"Keine Geräte",
+    q_bereiche:"Welche BLOC-Bereiche sollen im Plan vorkommen?", h_bereiche:"Mehrere möglich. Workout ist die Basis, dazu Run und Mobility & Stretch als eigener Tag.",
     q_einschr:"Gibt es etwas, worauf wir Rücksicht nehmen sollen?", h_einschr:"Betroffene Bewegungen werden durch Alternativen ersetzt. Das ersetzt keine ärztliche Beratung.",
     q_impact:"Wie sieht es mit Sprüngen aus?", h_impact:"Sprünge und harte Landungen belasten Gelenke.",
     q_sport:"Machst du schon einen anderen Sport?", h_sport:"Optional. Er kommt als fester Termin in den Kalender und zählt als Belastung: Rund um den Sport wird nicht an den Beinen trainiert.",
@@ -43,7 +43,7 @@ var PAT = {
     s_anfaenger:"Anfänger", s_anfaenger_s:"Ruhig und sicher starten", s_leicht:"Leicht", s_leicht_s:"Sanft und machbar", s_mittel:"Mittel", s_mittel_s:"Fordernd, aber fair", s_schwer:"Schwer", s_schwer_s:"Hart, für Geübte",
     schwerTitel:"Wie intensiv?", mehr:"Weitere Optionen", alter:"Altersbereich", a_u50:"unter 50", a_50:"50–64", a_65:"65+", wochenT:"Planlänge", wochenN:"{n} Wochen",
     k_ziele:"Ziele", k_fokus:"Fokus", k_niveau:"Aktivität", k_schwer:"Intensität", k_tage:"Tage", k_dauer:"Zeit", k_train:"Trainingsart", k_ausr:"Geräte", k_bereiche:"Bereiche", k_einschr:"Einschränkungen", k_impact:"Impact", k_sport:"Anderer Sport",
-    tagePro:"{n} Tage pro Woche", einheitenSumme:"{n} TrainingsBLOCs pro Woche · {m} Wochen", keinFokus:"ausgewogen", alles:"alles",
+    tagePro:"{n} Tage pro Woche", einheitenSumme:"{n} TrainingsBLOCs pro Woche · {m} Wochen", keinFokus:"ausgewogen", alles:"alle",
     gk:"Ganzkörper", ok:"Oberkörper", uk:"Unterkörper", cardio:"Intervall-Cardio", mob:"Mobility", erh:"Aktive Erholung", lauf:"Run", lauf_ein:"Run: Geh-Lauf", sportName:"Sport", sportSub:"Fester Termin",
     planName:"{z} · {n}× pro Woche", tagName:"{z} · Tag {n} · {p}", blocName:"{z} {t}", aufwaermen:"Aufwärmen", dehnen:"Dehnen", mainBloc:"{z} {t}",
     einEinheit:"Mit nur einem Trainingstag pro Woche bleibt jede Muskelgruppe bei einmal pro Woche. Zwei Tage sind besser (WHO: mindestens zwei Tage Krafttraining).",
@@ -69,14 +69,14 @@ var PAT = {
     planWegQ:"Delete whole plan?", planWegT:"All training days of the plan with their BLOCs and sessions.", abbruchQ:"Cancel?", abbruchT:"Your answers will be lost.", verwerfen:"Cancel", weiterMachen:"Keep going",
     eintrag:"Have a training plan created", eintragSub:"A few questions, then BLOC builds your plan from TrainingsBLOCs and puts it in the calendar",
     q_ziele:"What are your goals?", h_ziele:"Several possible. The first one you tap is your main goal.",
-    q_fokus:"Which muscle groups should get more attention?", h_fokus:"Optional, several possible. The plan stays balanced; these groups get a bit more weight.",
+    q_fokus:"Which muscles should get more attention?", h_fokus:"Optional. Tap the figure or the groups, several possible. The plan stays balanced; these muscles get a bit more weight.",
     q_niveau:"How active are you right now?", h_niveau:"This sets the starting volume and how fast it builds.",
     q_schwer:"How intensely do you want to train?", h_schwer:"From beginner to hard. You can change it in the plan later.",
     q_tage:"Which days do you want to train?", h_tage:"Tap the weekdays. Each day becomes its own TrainingsBLOC. Two strength days a week are a good start.",
     q_dauer:"How much time per session?", h_dauer:"The warm-up is included.",
     q_train:"Which type of training suits you?", h_train:"As in the catalogue, several possible. Bodyweight is always included.",
-    q_ausr:"Which equipment do you have?", h_ausr:"Optional, several possible. Empty means: everything is allowed.",
-    q_bereiche:"Which BLOC areas should the plan include?", h_bereiche:"Several possible. Workout is the base. Mobility & Stretch becomes its own day.",
+    q_ausr:"Which equipment do you have?", h_ausr:"Several possible. Only exercises you can actually do will appear.", g_keine:"No equipment",
+    q_bereiche:"Which BLOC areas should the plan include?", h_bereiche:"Several possible. Workout is the base, plus Run and Mobility & Stretch as its own day.",
     q_einschr:"Is there anything we should take into account?", h_einschr:"Affected movements are swapped for alternatives. This does not replace medical advice.",
     q_impact:"How about jumps?", h_impact:"Jumps and hard landings load the joints.",
     q_sport:"Do you already do another sport?", h_sport:"Optional. It goes into the calendar as a fixed date and counts as load: no leg training around it.",
@@ -95,7 +95,7 @@ var PAT = {
     s_anfaenger:"Beginner", s_anfaenger_s:"Start calm and safe", s_leicht:"Easy", s_leicht_s:"Gentle and doable", s_mittel:"Medium", s_mittel_s:"Demanding but fair", s_schwer:"Hard", s_schwer_s:"Tough, for experienced",
     schwerTitel:"How intense?", mehr:"More options", alter:"Age range", a_u50:"under 50", a_50:"50–64", a_65:"65+", wochenT:"Plan length", wochenN:"{n} weeks",
     k_ziele:"Goals", k_fokus:"Focus", k_niveau:"Activity", k_schwer:"Intensity", k_tage:"Days", k_dauer:"Time", k_train:"Training type", k_ausr:"Equipment", k_bereiche:"Areas", k_einschr:"Limitations", k_impact:"Impact", k_sport:"Other sport",
-    tagePro:"{n} days a week", einheitenSumme:"{n} TrainingsBLOCs a week · {m} weeks", keinFokus:"balanced", alles:"everything",
+    tagePro:"{n} days a week", einheitenSumme:"{n} TrainingsBLOCs a week · {m} weeks", keinFokus:"balanced", alles:"all",
     gk:"Full body", ok:"Upper body", uk:"Lower body", cardio:"Interval cardio", mob:"Mobility", erh:"Active recovery", lauf:"Run", lauf_ein:"Run: walk-run", sportName:"Sport", sportSub:"Fixed date",
     planName:"{z} · {n}× a week", tagName:"{z} · Day {n} · {p}", blocName:"{z} {t}", aufwaermen:"Warm-up", dehnen:"Stretching", mainBloc:"{z} {t}",
     einEinheit:"With one training day a week every muscle group is trained once. Two days are better (WHO: at least two days of strength training).",
@@ -165,9 +165,9 @@ var PA_LIB_WARM = { kraft:"warmup-kraft", cardio:"warmup-hiit", ganz:"warmup-gan
 var PA_LIB_DEHN = { gk:"stretch-full", ok:"stretch-post-upper", uk:"stretch-post-legs", cardio:"stretch-post-legs", run:"stretch-post-legs", kurz:"stretch-quick", mob:["stretch-back-hips", "stretch-hips"], erh:"stretch-evening" };
 
 /* ---------- Antworten ---------- */
-var PA_ZIELE = ["muskel", "kraft", "abnehmen", "ausdauer", "allgemein", "beweglich"], PA_BEREICHE = ["workout", "run", "mobility", "timer"];
+var PA_ZIELE = ["muskel", "kraft", "abnehmen", "ausdauer", "allgemein", "beweglich"], PA_BEREICHE = ["workout", "run", "mobility"];
 function paStandard(){
-  return { ziele:[], ziel:"", fokus:[], niveau:"", schwer:"", tage:[], dauer:0, train:[], ausr:[], bereiche:["workout"], laufen:"", mobility:"", einschr:[], impact:"", sport:null, alter:"u50", wochen:6 };
+  return { ziele:[], ziel:"", fokus:[], niveau:"", schwer:"", tage:[], dauer:0, train:[], ausr:[], zonen:[], bereiche:["workout"], laufen:"", mobility:"", einschr:[], impact:"", sport:null, alter:"u50", wochen:6 };
 }
 function paSchwerErlaubt(a){ return a.niveau !== "gar" && a.niveau !== "unreg" && a.alter !== "65"; }   // „Schwer“ nur ab 1–2× pro Woche aktiv und nicht ab 65
 function paSchwerStandard(a){ return a.niveau === "gar" ? "anfaenger" : a.niveau === "unreg" ? "leicht" : "mittel"; }   // Vorgabe aus dem Aktivitätsniveau
@@ -177,14 +177,18 @@ function paSauber(a){   // gespeicherte oder fremde Antworten auf gültige Werte
   var z = selArr(a.ziele).concat(a.ziel && !selArr(a.ziele).length ? [a.ziel] : []).filter(function(x, i, l){ return ok(x, PA_ZIELE) && l.indexOf(x) === i; });
   s.ziele = z; s.ziel = z[0] || "";
   var gr = MUSKEL_GRP.map(function(g){ return g.id; });
-  s.fokus = selArr(a.fokus).filter(function(x){ return ok(x, gr) || x === "ausgew"; });
+  var zo = selArr(a.zonen).length ? selArr(a.zonen) : [];
+  if(!zo.length) selArr(a.fokus).filter(function(x){ return ok(x, gr); }).forEach(function(g){ (KK_GRUPPE_ZONEN[g] || []).forEach(function(z){ if(zo.indexOf(z) < 0) zo.push(z); }); });   // ältere Antworten: Gruppen
+  s.zonen = kkNorm(zo);
+  s.fokus = gr.filter(function(g){ return (KK_GRUPPE_ZONEN[g] || []).some(function(z){ return s.zonen.indexOf(z) > -1; }); });
   if(ok(a.niveau, ["gar", "unreg", "n12", "n3"])) s.niveau = a.niveau;
   if(ok(a.schwer, ["anfaenger", "leicht", "mittel", "schwer"])) s.schwer = a.schwer;
   s.tage = selArr(a.tage).map(Number).filter(function(d, i, l){ return d >= 0 && d <= 6 && l.indexOf(d) === i; }).sort(function(x, y){ return x - y; }).slice(0, 6);
   if(ok(+a.dauer, [20, 30, 45, 60])) s.dauer = +a.dauer;
   s.train = selArr(a.train).filter(function(x){ return ok(x, TRAIN_ARTEN); });
   if(!s.train.length && Array.isArray(a.ort)) s.train = a.ort.map(function(o){ return o === "studio" || o === "heim1" ? "studio" : o === "draussen" ? "cali" : "body"; }).filter(function(x, i, l){ return l.indexOf(x) === i; });   // ältere Antworten (Ort)
-  s.ausr = selArr(a.ausr).filter(function(x){ return ok(x, AUSR_IDS); });
+  s.ausr = selArr(a.ausr).filter(function(x){ return ok(x, AUSR_IDS) || x === "keine"; });
+  if(s.ausr.indexOf("keine") > -1) s.ausr = ["keine"];
   var b = selArr(a.bereiche).filter(function(x){ return ok(x, PA_BEREICHE); });
   if(!b.length && (a.ziel || a.ziele)) b = ["workout"].concat(a.laufen && a.laufen !== "kein" ? ["run"] : [], a.mobility === "tag" ? ["mobility"] : []);   // ältere Antworten
   s.bereiche = b.length ? b : ["workout"];
@@ -198,7 +202,7 @@ function paSauber(a){   // gespeicherte oder fremde Antworten auf gültige Werte
   if(s.schwer === "schwer" && !paSchwerErlaubt(s)) s.schwer = "mittel";
   return s;
 }
-function paVollstaendig(a){ return !!(a.ziele.length && a.niveau && a.schwer && a.tage.length && a.dauer && a.train.length && a.bereiche.length && a.impact); }
+function paVollstaendig(a){ return !!(a.ziele.length && a.niveau && a.schwer && a.tage.length && a.dauer && a.ausr.length && a.train.length && a.bereiche.length && a.impact); }
 
 /* ---------- Auswahl der Übungen ---------- */
 function paHash(s){ var x = 7; for(var i = 0; i < s.length; i++) x = (x*31 + s.charCodeAt(i)) % 99991; return x/99991; }
@@ -210,15 +214,14 @@ function paAusgeschlossen(ex, a){
   if(PA_NIE.test(id)) return true;
   return l.some(function(re){ return re.test(id) && !(re !== PA_AUS.impact && PA_AUSNAHME.test(id) && re === PA_AUS.handgelenk); });
 }
-/* Passt die Übung zu Trainingsart und Ausrüstung? Körpergewicht geht immer; Stangenübungen nur mit Calisthenic-Park, Geräteübungen nur mit Fitnessstudio; bei gewählten Geräten muss ein Gerät dabei sein */
+/* Passt die Übung zu Geräten und Trainingsart? Nur was man ausführen kann: Geräte-Übungen brauchen ein gewähltes Gerät (Fitnessstudio-Maschinen ein Studio-Gerät),
+   Körpergewicht geht immer, Stangenübungen nur mit Calisthenic-Park, Geräteübungen nur mit Fitnessstudio */
 function paGeraetOk(ex, a){
-  var art = exTrainArt(ex), arten = exTrainArten(ex);
+  var art = exTrainArt(ex), arten = exTrainArten(ex), gear = a.ausr.filter(function(x){ return x !== "keine"; });
   if(art !== "body" && !arten.some(function(x){ return a.train.indexOf(x) > -1; })) return false;
-  if(a.ausr.length){
-    var g = exAusr(ex);
-    if(g.length && !ausrPasst(ex, a.ausr)) return false;
-    if(!g.length && ex.equip.indexOf("gym") > -1) return false;
-  }
+  var g = exAusr(ex);
+  if(g.length && !g.some(function(x){ return gear.indexOf(x) > -1; })) return false;
+  if(ex.equip.indexOf("gym") > -1 && !gear.some(function(x){ return ["smith", "kabel", "lh", "maschine"].indexOf(x) > -1; })) return false;   // Studio-Übungen (Bank, Rack, Maschine) nur mit einem Studio-Gerät
   return true;
 }
 function paSchwerLevel(a){ return a.schwer || paSchwerStandard(a); }
@@ -247,9 +250,9 @@ function paArtBonus(ex, art, a){
   if(a.train.indexOf("studio") > -1 && art === "studio") sc += 1.5;
   if(a.train.indexOf("body") > -1 && art === "body") sc += a.train.length === 1 ? 1.5 : 0.8;
   if(a.train.indexOf("body") < 0 && art === "body") sc -= 1;
-  if(a.ausr.length && exAusr(ex).some(function(g){ return a.ausr.indexOf(g) > -1; })) sc += 2;
+  if(exAusr(ex).some(function(g){ return a.ausr.indexOf(g) > -1; })) sc += 2;
   var gerät = ex.equip.some(function(q){ return q === "gym" || q === "db" || q === "bar" || q === "dip"; }); if(gerät && art !== "body") sc += 0.5;
-  if(ex.equip.indexOf("band") > -1 && a.ausr.indexOf("band") < 0) sc -= 0.8;
+  if(ex.equip.indexOf("band") > -1) sc -= 0.8;
   return sc;
 }
 /* Mehrgelenkübungen (mehrere Muskelgruppen, mit Hilfsmuskeln) vor Isolationsübungen */
@@ -288,7 +291,7 @@ function paLibRef(id){ return findLibWorkout(id) ? "lib:" + id : null; }
 /* gibt { name, tage:[{ tag, typ, name, teile:[{ lib } | { bloc:{ name, ids, std, modus, cardio, ziele } } | { run }] }], sport, info, ... } zurück; legt noch nichts an */
 function paErzeuge(a0){
   var a = paSauber(a0), sw = paSchwerLevel(a), haupt = a.ziel || "allgemein", r = (PA_REGELN[haupt] || PA_REGELN.allgemein)[sw];
-  var hatW = a.bereiche.indexOf("workout") > -1, hatRun = a.bereiche.indexOf("run") > -1, hatTimer = a.bereiche.indexOf("timer") > -1, hatMob = a.bereiche.indexOf("mobility") > -1;
+  var hatW = a.bereiche.indexOf("workout") > -1, hatRun = a.bereiche.indexOf("run") > -1, hatMob = a.bereiche.indexOf("mobility") > -1;
   var saetze = r[0], wdh = r[1], pause = r[2];
   if(a.niveau === "gar"){ saetze = Math.min(saetze, 2); pause += 15; }
   if(a.alter === "65"){ wdh = Math.max(wdh + 2, 10); pause += 15; } else if(a.alter === "50"){ wdh = Math.max(wdh, 8); pause += 10; }
@@ -297,20 +300,20 @@ function paErzeuge(a0){
   var typen = ((PA_TAGE[haupt] || PA_TAGE.allgemein)[nTage] || ["gk"]).slice();
   var weitere = a.ziele.slice(1);
   /* weitere Ziele: Ausdauer/Abnehmen brauchen mindestens einen Cardio-Tag, Beweglichkeit einen Mobility-Teil */
-  if((weitere.indexOf("ausdauer") > -1 || weitere.indexOf("abnehmen") > -1) && typen.indexOf("cardio") < 0 && nTage >= 2){
+  if((weitere.indexOf("ausdauer") > -1 || weitere.indexOf("abnehmen") > -1) && typen.indexOf("cardio") < 0 && nTage >= 2 && (hatRun || hatW)){
     for(var q = typen.length - 1; q >= 0; q--) if(typen[q] === "gk" || typen[q] === "erh"){ typen[q] = "cardio"; break; }
   }
-  /* Bereiche: Cardio-Tage werden Run und/oder Timer-Intervalle; ohne Workout werden Krafttage dazu; ohne Mobility entfällt die aktive Erholung */
-  var optC = []; if(hatRun) optC.push("run"); if(hatTimer) optC.push("cardio");
+  /* Bereiche: Cardio-Tage werden Run und/oder ein Cardio-Zirkel (Workout); ohne Workout werden Krafttage zu Run; ohne Mobility entfällt die aktive Erholung */
+  var optC = []; if(hatRun) optC.push("run"); if(hatW) optC.push("cardio");
   var nC = 0, nRun = 0;
   typen = typen.map(function(t0){
     if(t0 === "cardio" || ((t0 === "gk" || t0 === "ok" || t0 === "uk") && !hatW)){
       if(!optC.length) return hatMob ? "mob" : hatW ? "gk" : "mob";
       var o = optC[nC % optC.length]; nC++;
-      if(o === "run"){ if(nRun >= 3){ return hatTimer ? "cardio" : "mob"; } nRun++; }
+      if(o === "run"){ if(nRun >= 3){ return hatW ? "cardio" : "mob"; } nRun++; }
       return o;
     }
-    if(t0 === "erh" && !hatMob) return optC.length ? optC[(nC++) % optC.length] === "run" && nRun < 3 ? (nRun++, "run") : (hatTimer ? "cardio" : hatW ? "gk" : "mob") : (hatW ? "gk" : "mob");
+    if(t0 === "erh" && !hatMob) return optC.length ? optC[(nC++) % optC.length] === "run" && nRun < 3 ? (nRun++, "run") : (hatW ? "cardio" : "mob") : (hatW ? "gk" : "mob");
     return t0;
   });
   /* Anderer Sport zählt als Belastung: am Tag davor, am Sporttag und am Tag danach keine Beine; zwei Tage danach kein reiner Unterkörpertag. Bei Klettern, Kampfsport oder Schwimmen
@@ -493,16 +496,15 @@ function paAnlegen(a0, ersetzeGid){
 /* ---------- Fenster ---------- */
 var paA = null, paIdx = 0, paEdit = null, paZurUebers = false, paRoot = null;
 function paSchritte(){
-  var gr = MUSKEL_GRP.map(function(g){ return [g.id, "mg"]; }).concat([["ausgew", "all"]]);
   return [
     { id:"ziele", art:"multi", opt:[["muskel", "dumbbell"], ["kraft", "bolt"], ["abnehmen", "flame"], ["ausdauer", "run"], ["allgemein", "check"], ["beweglich", "stretch"]], pre:"z_", sub:1, spalten:2, key:"ziele" },
-    { id:"fokus", art:"multi", opt:gr, pre:"f_", exkl:"ausgew", opt_:1, chips:1, key:"fokus", mg:1 },
+    { id:"fokus", art:"figur", opt_:1 },
     { id:"niveau", art:"eins", opt:[["gar", "zzz"], ["unreg", "wave"], ["n12", "one"], ["n3", "many"]], pre:"n_", sub:1, key:"niveau" },
     { id:"schwer", art:"eins", opt:[["anfaenger", "zzz"], ["leicht", "wave"], ["mittel", "one"], ["schwer", "many"]], pre:"s_", sub:1, key:"schwer" },
     { id:"tage", art:"tage" },
     { id:"dauer", art:"eins", opt:[[20, "t20"], [30, "t30"], [45, "t45"], [60, "t60"]], pre:"d_", spalten:2, key:"dauer" },
+    { id:"ausr", art:"multi", opt:[["keine", "no"]].concat(AUSR_IDS.map(function(x){ return [x, "ausr"]; })), pre:"stGer_", exkl:"keine", chips:1, key:"ausr", t:1 },
     { id:"train", art:"multi", opt:TRAIN_ARTEN.map(function(x){ return [x, "foto"]; }), pre:"trArt_", key:"train", foto:1, sub2:"t_" },
-    { id:"ausr", art:"multi", opt:AUSR_IDS.map(function(x){ return [x, "ausr"]; }), pre:"stGer_", opt_:1, chips:1, key:"ausr", t:1 },
     { id:"bereiche", art:"bereiche" },
     { id:"einschr", art:"multi", opt:[["keine", "ok"], ["knie", "knee"], ["schulter", "shoulder"], ["ruecken", "back"], ["handgelenk", "wrist"], ["sprung", "ankle"]], pre:"e_", exkl:"keine", chips:1, key:"einschr" },
     { id:"impact", art:"eins", opt:[["gerne", "jump"], ["schonend", "soft"]], pre:"i_", sub:1, key:"impact" },
@@ -524,7 +526,7 @@ function paIcoOpt(s, id, ico){
   if(ico === "ausr") return STUDIO_GERAET_ICON[id] || STUDIO_AUSR_ICON[id] || PA_ICO.dumbbell;
   return PA_ICO[ico] || PA_ICO.check;
 }
-function paOptName(s, id){ return s.mg && id !== "ausgew" ? t(MUSKEL_GRP.filter(function(g){ return g.id === id; })[0].key) : (s.t ? t(s.pre + id) : (s.pre === "trArt_" ? t("trArt_" + id) : pt(s.pre + id))); }
+function paOptName(s, id){ return s.t ? (id === "keine" ? pt("g_keine") : t(s.pre + id)) : (s.pre === "trArt_" ? t("trArt_" + id) : pt(s.pre + id)); }
 function paZusammen(a){
   var tn = a.tage.map(progTagName).join(" "), bereicheT = a.bereiche.map(function(b){
     var x = pt("b_" + b);
@@ -532,13 +534,13 @@ function paZusammen(a){
     return x; }).join(", ");
   return [
     ["ziele", pt("k_ziele"), a.ziele.map(function(z){ return pt("z_" + z); }).join(", ") || "–"],
-    ["fokus", pt("k_fokus"), a.fokus.length && a.fokus.indexOf("ausgew") < 0 ? a.fokus.map(function(f){ return t(MUSKEL_GRP.filter(function(g){ return g.id === f; })[0].key); }).join(", ") : pt("keinFokus")],
+    ["fokus", pt("k_fokus"), a.zonen.length ? a.zonen.map(kkName).join(", ") : pt("keinFokus")],
     ["niveau", pt("k_niveau"), a.niveau ? pt("n_" + a.niveau) : "–"],
     ["schwer", pt("k_schwer"), a.schwer ? pt("s_" + a.schwer) : "–"],
     ["tage", pt("k_tage"), tn || "–"],
     ["dauer", pt("k_dauer"), a.dauer ? pt("d_" + a.dauer) : "–"],
+    ["ausr", pt("k_ausr"), a.ausr.map(function(x){ return x === "keine" ? pt("g_keine") : t("stGer_" + x); }).join(", ") || "–"],
     ["train", pt("k_train"), a.train.map(function(x){ return t("trArt_" + x); }).join(", ") || "–"],
-    ["ausr", pt("k_ausr"), a.ausr.length ? a.ausr.map(function(x){ return t("stGer_" + x); }).join(", ") : pt("alles")],
     ["bereiche", pt("k_bereiche"), bereicheT || "–"],
     ["einschr", pt("k_einschr"), a.einschr.length ? a.einschr.map(function(e){ return pt("e_" + e); }).join(", ") : pt("e_keine")],
     ["impact", pt("k_impact"), a.impact ? pt("i_" + a.impact) : "–"],
@@ -569,12 +571,15 @@ function paZeichnen(){
       return nein ? b.replace('<button type="button" class="pa-opt', '<button type="button" disabled title="'+esc(pt("schwerNein"))+'" class="pa-opt aus') : b;
     }).join("")+'</div>';
     weiterOk = s.opt_ ? true : (s.art === "eins" ? !!gew && String(gew) !== "" : (s.id === "einschr" ? true : gew.length > 0));
+  } else if(s.art === "figur"){
+    h += kkMuskelHTML("data-pazone", "data-pagrp", a.zonen, { ohneLabel:true });
+    weiterOk = true;
   } else if(s.art === "tage"){
     h += '<div class="pa-tage" role="group">'+[0, 1, 2, 3, 4, 5, 6].map(function(d){ var an = a.tage.indexOf(d) > -1; return '<button type="button" class="pa-tag'+(an ? ' an' : '')+'" data-pa-tag="'+d+'" aria-pressed="'+an+'">'+esc(progTagName(d))+'</button>'; }).join("")+'</div>'+
       '<p class="pa-summe">'+esc(a.tage.length ? pt("tagePro", { n:a.tage.length }) : "")+'</p>';
     weiterOk = a.tage.length > 0;
   } else if(s.art === "bereiche"){
-    h += '<p class="pa-mehrere">'+esc(pt("mehrere"))+'</p><div class="pa-opts" role="group">'+[["workout", "dumbbell"], ["run", "run"], ["mobility", "stretch"], ["timer", "t30"]].map(function(o){
+    h += '<p class="pa-mehrere">'+esc(pt("mehrere"))+'</p><div class="pa-opts" role="group">'+[["workout", "dumbbell"], ["run", "run"], ["mobility", "stretch"]].map(function(o){
       var an = a.bereiche.indexOf(o[0]) > -1, sub = "";
       if(an && o[0] === "run") sub = '<div class="pa-sub" role="radiogroup">'+[["ein", "l_ein"], ["reg", "l_reg"]].map(function(x){ return '<button type="button" class="pa-chip'+(a.laufen === x[0] ? ' an' : '')+'" data-pa-lauf="'+x[0]+'" aria-pressed="'+(a.laufen === x[0])+'">'+esc(pt(x[1]))+'</button>'; }).join("")+'</div>';
       return '<div class="pa-grp"><button type="button" class="pa-opt'+(an ? ' an' : '')+'" data-pa-bereich="'+o[0]+'" aria-pressed="'+an+'"><span class="pa-ico">'+svgIcon(PA_ICO[o[1]])+'</span><span class="pa-ot"><b>'+esc(pt("b_" + o[0]))+'</b><small>'+esc(pt("b_" + o[0] + "_s"))+'</small></span><i class="pa-haken" aria-hidden="true">'+svgIcon('<path d="M5 12.5l4.5 4.5L19 7"/>')+'</i></button>'+sub+'</div>';
@@ -603,8 +608,7 @@ function paZeichnen(){
   paBinden(s, idx, steps);
 }
 function paHatAntwort(s, a){
-  if(s.id === "fokus") return a.fokus.length > 0 && a.fokus.indexOf("ausgew") < 0;
-  if(s.id === "ausr") return a.ausr.length > 0;
+  if(s.id === "fokus") return a.zonen.length > 0;
   if(s.id === "sport") return !!(a.sport && a.sport.name);
   return true;
 }
@@ -653,6 +657,9 @@ function paBinden(s, idx, steps){
       paZeichnen();
     });
   });
+  paRoot.querySelectorAll("[data-pazone]").forEach(function(b){ b.addEventListener("click", function(){ a.zonen = kkNorm(selToggle(a.zonen, b.getAttribute("data-pazone"))); a.fokus = []; paZeichnen(); }); });
+  paRoot.querySelectorAll("[data-pagrp]").forEach(function(b){ b.addEventListener("click", function(){ a.zonen = kkNorm(kkGrpToggle(a.zonen, b.getAttribute("data-pagrp"))); a.fokus = []; paZeichnen(); }); });
+  paRoot.querySelectorAll("[data-kkmodus]").forEach(function(b){ b.addEventListener("click", function(){ setTimeout(paZeichnen, 0); }); });   // Figur: Grob/Fein
   paRoot.querySelectorAll("[data-pa-bereich]").forEach(function(b){ b.addEventListener("click", function(){
     var v = b.getAttribute("data-pa-bereich"), l = a.bereiche.slice(), i = l.indexOf(v);
     if(i > -1) l.splice(i, 1); else l.push(v);
