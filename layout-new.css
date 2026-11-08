@@ -1671,3 +1671,15 @@ body.prot-sheet-offen{ overflow:hidden; }
 .pa-punkte i{ width:28px; height:28px; border-radius:50%; background:color-mix(in srgb, var(--text) 10%, transparent); }
 .pa-punkte .an i{ background:var(--accent); }
 .pa-punkte small{ font-size:12px; color:var(--text-dim); }
+.pa-grp{ display:flex; flex-direction:column; gap:8px; }
+.pa-sub{ display:flex; flex-wrap:wrap; gap:8px; padding:0 4px 4px 56px; }
+.pa-opt.pa-foto{ position:relative; overflow:hidden; min-height:96px; padding:0; align-items:flex-end; color:#fff; }
+.pa-opt.pa-foto img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:saturate(.8); }
+.pa-opt.pa-foto::before{ content:""; position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(8,9,11,.05) 10%, rgba(8,9,11,.72) 100%); }
+.pa-fotot{ position:relative; z-index:2; display:flex; flex-direction:column; gap:1px; padding:12px 14px; }
+.pa-fotot b{ font-size:16px; } .pa-fotot small{ font-size:12.5px; color:rgba(255,255,255,.85); }
+.pa-opt.pa-foto .pa-haken{ position:absolute; top:10px; right:10px; z-index:2; background:rgba(18,19,22,.45); border-color:rgba(255,255,255,.6); }
+.pa-opt.pa-foto.an{ border-color:var(--accent); }
+.pg-infotext{ margin:2px 0 10px; border-radius:12px; background:color-mix(in srgb, var(--text) 6%, transparent); }
+.pg-infotext summary{ cursor:pointer; padding:10px 12px; font-size:13px; font-weight:600; color:var(--text-dim); }
+.pg-infotext .pg-info{ margin:0; padding:0 12px 12px; }
