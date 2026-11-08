@@ -382,7 +382,7 @@ document.addEventListener("touchmove", function(e){ if(kachelZieht && e.cancelab
    o.loeschen    (id) entfernt die Kachel; dann erscheint beim Ziehen eine Ablagefläche zum Entfernen, und Loslassen ohne Bewegen öffnet o.menue (optional)
    o.menue       (el, id) Menü, wenn die Kachel gehalten und ohne Ziehen losgelassen wird (optional) */
 function kachelZiehen(raster, o){
-  var tm = 0, x0 = 0, y0 = 0, el = null, geist = null, korb = null, imKorb = false, bewegt = false, sx = 0, sy = 0, lx = 0, ly = 0, ox = 0, oy = 0, raf = 0, reduce = false;
+  var tm = 0, x0 = 0, y0 = 0, el = null, geist = null, korb = null, korb2 = null, imKorb = false, bewegt = false, sx = 0, sy = 0, lx = 0, ly = 0, ox = 0, oy = 0, raf = 0, reduce = false;
   try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch(err){}
   function warteStop(){ if(tm){ clearTimeout(tm); tm = 0; } }
   function ziel(){
@@ -417,15 +417,18 @@ function kachelZiehen(raster, o){
       k.animate([{ transform:"translate("+dx+"px,"+dy+"px)" }, { transform:"none" }], { duration:200, easing:"ease-out" });
     });
   }
-  function korbPruefen(){
-    if(!korb) return;
-    var r = korb.getBoundingClientRect();
-    imKorb = lx >= r.left && lx <= r.right && ly >= r.top - 12 && ly <= r.bottom + 12;
-    korb.classList.toggle("aktiv", imKorb);
+  function korbPruefen(){   // zwei Ablageflächen: die Mülltonne oben und die Fläche unten
+    var treffer = false;
+    [korb, korb2].forEach(function(k){
+      if(!k) return;
+      var r = k.getBoundingClientRect(), drin = lx >= r.left - 12 && lx <= r.right + 12 && ly >= r.top - 12 && ly <= r.bottom + 12;
+      k.classList.toggle("aktiv", drin); if(drin) treffer = true;
+    });
+    imKorb = treffer;
   }
   function tick(){
     if(!geist) return;
-    if(ly < 90) window.scrollBy(0, -10); else if(ly > window.innerHeight - 90) window.scrollBy(0, 10);
+    if(!imKorb){ if(ly < 90) window.scrollBy(0, -10); else if(ly > window.innerHeight - 90) window.scrollBy(0, 10); }
     korbPruefen();
     if(!imKorb){ var z = ziel(); if(z) umordnen(z); }
     raf = requestAnimationFrame(tick);
@@ -443,6 +446,7 @@ function kachelZiehen(raster, o){
     var g = geist, k = el, weg = imKorb && o.loeschen, still = !bewegt && o.menue; geist = null; kachelZieht = false;
     langDruckSperre = Date.now() + 500;   // der Klick nach dem Loslassen öffnet nichts
     if(korb){ korb.remove(); korb = null; }
+    if(korb2){ korb2.remove(); korb2 = null; }
     if(weg){
       g.style.transition = "transform .16s ease, opacity .16s ease"; g.style.transform = "scale(.5)"; g.style.opacity = "0";
       setTimeout(function(){ if(g.parentNode) g.parentNode.removeChild(g); }, 170);
@@ -466,6 +470,8 @@ function kachelZiehen(raster, o){
     if(o.loeschen){
       korb = document.createElement("div"); korb.className = "kachel-korb"; korb.textContent = t("fkKorb");
       document.body.appendChild(korb);
+      korb2 = document.createElement("div"); korb2.className = "kachel-tonne"; korb2.setAttribute("aria-hidden", "true"); korb2.innerHTML = svgIcon(P_TRASH);
+      document.body.appendChild(korb2);
     }
     kachelZieht = true; langDruckSperre = Date.now() + 700;
     try { if(navigator.vibrate) navigator.vibrate(15); } catch(err){}
