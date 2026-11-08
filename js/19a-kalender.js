@@ -55,6 +55,7 @@ function kalStatus(tag){   // { Eintrags-ID: erledigt? }
   var a = kalAktivitaet(tag), tr = a.train, rn = a.run, res = {};
   kalAn(tag).forEach(function(e){
     var auto = false;
+    if(e.art === "sport"){ res[e.id] = e.erledigt === true; return; }   // fester Termin: nur von Hand abgehakt
     if(e.art === "run"){ if(rn > 0){ rn--; auto = true; } }
     else if(tr > 0){ tr--; auto = true; }
     res[e.id] = e.erledigt === true ? true : e.erledigt === false ? false : auto;
@@ -112,6 +113,8 @@ function kalAufloesen(e){
   } else if(e.art === "programm"){   // ganzer Trainingsplan aus der Arena
     var pg = programmFinde(e.ref);
     if(!pg) o.ok = false; else { o.name = pg.name; o.sub = pg.items.length === 1 ? t("progMeta1") : t("progMeta", { n:pg.items.length }); }
+  } else if(e.art === "sport"){   // anderer Sport aus dem Plan-Assistenten: fester Termin, nichts zu starten
+    o.name = e.name || pt("sportName"); o.sub = pt("sportSub"); o.farbe = "var(--text-dim)";
   } else if(e.art === "run"){
     o.name = e.name || t(e.rad ? "kalRadName" : "kalRunName");
     o.sub = (e.km > 0 ? runKm(e.km*1000)+" km" : t("kalRunFrei"))+(e.rad ? " · "+t("runArtRad") : "");
@@ -131,6 +134,7 @@ function kalStarten(e){
   else if(e.art === "lib"){ coverDraft = null; go("#cover/lib/"+e.ref); }
   else if(e.art === "timer"){ if(findWorkout(e.ref)) go("#play/"+e.ref); }
   else if(e.art === "plan"){ var pl = stPlanFind(e.ref); if(pl && stPlanIds(pl).length) planAlsWorkout(pl); else go("#studioplan/"+e.ref); }
+  else if(e.art === "sport"){ /* fester Termin: nichts zu starten */ }
   else if(e.art === "run"){ state.db.settings.runArt = e.rad ? "rad" : "lauf"; save(); runGeplant ={ name:e.name || t(e.rad ? "kalRadName" : "kalRunName"), km:e.km || 0, rad:!!e.rad, t:Date.now() }; go("#run"); }
   else openSurprise();
 }

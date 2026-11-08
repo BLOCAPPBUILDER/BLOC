@@ -113,5 +113,5 @@ function bereichBildHTML(key){
 function heroHeutige(){
   if(typeof kalAn !== "function") return [];
   var heute = kalTagKey(Date.now()), st = kalStatus(heute);
-  return kalAn(heute).filter(function(e){ return !st[e.id] && kalAufloesen(e).ok; });
+  return kalAn(heute).filter(function(e){ return e.art !== "sport" && !st[e.id] && kalAufloesen(e).ok; });
 }

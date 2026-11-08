@@ -837,6 +837,53 @@
     gleich(W.satzHeute("leg-press").s.length, 1, "nur der neue Satz");
   });
 
+  test("Plan-Assistent: Plan erzeugen - keine Doppelten, Einschränkungen eingehalten, Tage passen, Sport-Regel, Schwierigkeit", function () {
+    var ziele = ["muskel", "kraft", "abnehmen", "ausdauer", "allgemein", "beweglich"], nivs = ["gar", "unreg", "n12", "n3"];
+    var orte = [["heim0"], ["heim1"], ["studio"], ["draussen"]], ein = [[], ["knie"], ["schulter"], ["ruecken"], ["handgelenk"], ["sprung"], ["knie", "ruecken", "schulter"]];
+    var tageL = [[2], [0, 3], [0, 2, 4], [0, 1, 3, 4], [0, 1, 2, 4, 5], [0, 1, 2, 3, 4, 5]], n = 0;
+    for (var i = 0; i < 300; i++) {
+      var a = { ziel:ziele[i % 6], niveau:nivs[(i * 3) % 4], tage:tageL[(i * 5) % 6], dauer:[20, 30, 45, 60][(i * 2) % 4], ort:orte[(i * 3) % 4], einschr:ein[(i * 5) % 7],
+        impact:i % 2 ? "schonend" : "gerne", laufen:["kein", "ein", "reg"][i % 3], mobility:["nach", "tag", "nein"][(i * 2) % 3], schwer:["leicht", "mittel", "schwer"][i % 3],
+        sport:i % 4 === 0 ? { name:"Fußball", tag:(i * 3) % 7 } : null };
+      var sa = W.paSauber(a), sp = W.paErzeuge(a);
+      sp.bloecke.forEach(function (b) {
+        if (b.run) return;
+        wahr(b.ids.length > 0, "BLOC ohne Übungen: " + JSON.stringify(a));
+        wahr(new Set(b.ids).size === b.ids.length, "Doppelte Übung in " + b.name + ": " + JSON.stringify(a));
+        b.ids.forEach(function (id) { wahr(!W.paAusgeschlossen(W.findExercise(id), sa), id + " verstößt gegen die Einschränkungen " + JSON.stringify(sa.einschr)); });
+      });
+      // Wochenplan: jeder gewählte Tag hat einen Eintrag, jeder Eintrag zeigt auf einen vorhandenen BLOC oder Lauf
+      a.tage.forEach(function (d) { wahr(sp.wp.some(function (w) { return w.tag === d; }), "Trainingstag " + d + " fehlt im Wochenplan"); });
+      sp.wp.forEach(function (w) { if (w.art !== "sport") wahr(sp.bloecke[w.i], "Wochenplan zeigt ins Leere"); });
+      // Sport: der Tag danach bringt kein Beintraining (Unterkörper), nur wenn überhaupt ein Plantag dort liegt
+      if (a.sport) sp.wp.forEach(function (w) {
+        if (w.art !== "sport" && !w.run && (w.tag === a.sport.tag || w.tag === (a.sport.tag + 1) % 7) && a.tage.indexOf(w.tag) > -1) wahr(!/Unterkörper/.test(sp.bloecke[w.i].name) && !/Ganzkörper/.test(sp.bloecke[w.i].name), "Beintraining am Sporttag oder danach: " + sp.bloecke[w.i].name);
+      });
+      n++;
+    }
+    gleich(n, 300, "alle Kombinationen erzeugt");
+    // Schwierigkeit: schwer = mehr Sätze oder weniger Wiederholungen als leicht
+    var b = { ziel:"muskel", niveau:"n12", tage:[0, 2, 4], dauer:45, ort:["studio"], impact:"gerne" }, l = W.paErzeuge(Object.assign({}, b, { schwer:"leicht" })), s2 = W.paErzeuge(Object.assign({}, b, { schwer:"schwer" }));
+    wahr(s2.saetze > l.saetze && s2.wdh < l.wdh, "schwer hat mehr Sätze und weniger Wiederholungen als leicht: " + l.saetze + "x" + l.wdh + " / " + s2.saetze + "x" + s2.wdh);
+    // Plan anlegen, aus dem Kalender nehmen, anpassen, löschen
+    var s0 = W.state.db.settings, vor = { programme:s0.programme, stPlaene:s0.stPlaene, kalender:s0.kalender, studio:s0.studio };
+    try {
+      s0.programme = []; s0.stPlaene = []; s0.kalender = { e:[] }; s0.studio = {};
+      var r = W.paAnlegen(b, null), p = r.p;
+      wahr(p.gen && p.assi && p.items.length === 3 && p.wp.length === 3, "Plan angelegt: " + p.items.length + " BLOCs");
+      gleich(W.stPlaene().filter(function (x) { return x.gen === p.id; }).length, 3, "drei BLOCs gehören zum Plan");
+      gleich(W.kalListe().filter(function (e) { return e.prog && e.prog.id === p.id; }).length, 18, "3 Tage mal 6 Wochen im Kalender");
+      wahr(W.kalListe().every(function (e) { return e.art === "plan" && W.kalAufloesen(e).ok; }), "alle Termine zeigen auf einen BLOC");
+      gleich(W.programmAusKalender(p), 18, "alle offenen Termine entfernt");
+      gleich(W.programmUebernehmen(p), 18, "wieder in den Kalender übertragen");
+      var alt = W.stPlaene().filter(function (x) { return x.gen === p.id; }).map(function (x) { return x.id; });
+      var r2 = W.paAnlegen(Object.assign({}, p.assi, { wochen:4 }), p.id);
+      gleich(r2.p.id, p.id, "Anpassen behält den Plan");
+      gleich(W.stPlaene().filter(function (x) { return alt.indexOf(x.id) > -1; }).length, 0, "die alten BLOCs sind ersetzt");
+      gleich(W.kalListe().filter(function (e) { return e.prog && e.prog.id === p.id; }).length, 12, "nach dem Anpassen 3 Tage mal 4 Wochen");
+      W.paBlocLoeschen(p.id); gleich(W.stPlaene().length, 0, "BLOCs des Plans gelöscht");
+    } finally { s0.programme = vor.programme; s0.stPlaene = vor.stPlaene; s0.kalender = vor.kalender; s0.studio = vor.studio; }
+  });
   test("Neuer Standard: 4 statt 3 Sätze, 10 % mehr Gewicht oder Wiederholungen werden das neue Ziel (nie gesenkt, einmal je Einheit)", function () {
     var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now(), id = "chest-press-machine";
     try {
