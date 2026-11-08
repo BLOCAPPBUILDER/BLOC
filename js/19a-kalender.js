@@ -98,7 +98,7 @@ function kalAufloesen(e){
     }
   } else if(e.art === "plan"){
     var p = stPlanFind(e.ref);
-    if(!p) o.ok = false; else { o.name = p.name; o.sub = planAnzahl(stPlanIds(p).length); o.farbe = kalOrtFarbe(stPlanIds(p).map(findExercise).filter(Boolean)); }
+    if(!p) o.ok = false; else { o.name = p.name; o.sub = (e.leicht && typeof pt === "function" ? pt("leichtwoche")+" · " : "")+planAnzahl(stPlanIds(p).length); o.farbe = kalOrtFarbe(stPlanIds(p).map(findExercise).filter(Boolean)); }
   } else if(e.art === "lib"){
     var lw = findLibWorkout(e.ref);
     if(!lw) o.ok = false;

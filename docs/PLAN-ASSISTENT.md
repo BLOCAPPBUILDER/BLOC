@@ -15,7 +15,10 @@ Der Assistent (`js/25-plan-assistent.js`, Workout-Builder › „Trainingsplan e
 | Kraft + Ausdauer im selben Plan möglich, Cardio-/Lauftage getrennt | PA8 | belegt |
 | Laufeinstieg: Gehen und Laufen im Wechsel, bis 3×/Woche mit Ruhetag; Umfang etwa +10 % pro Woche, nie über 30 % | NHS Couch to 5K (Struktur), PA13 | Praxis (10-%-Regel nicht belegt) |
 | Ab 65: eine Gleichgewichtsübung je Einheit (Einbeinstand), keine Stufe-3-Übungen, Pausen +15 s, Wdh. +2 | PA2, PA10, PA11 | belegt / Praxis |
-| Anderer Sport: am Sporttag und am Folgetag kein Unterkörper/Ganzkörper, zwei Tage danach kein reiner Unterkörper | PA12 (Beine nach 48–72 h noch nicht erholt) | Praxis |
+| Anderer Sport: am Tag davor, am Sporttag und am Folgetag kein Unterkörper/Ganzkörper, zwei Tage danach kein reiner Unterkörper (bei Klettern/Kampfsport/Schwimmen: Zug und Schulter schonen) | PA12 (Beine nach 48–72 h noch nicht erholt) | Praxis |
+| Übungen je Einheit: 20/30/45/60 min = 4/5/7/9 Hauptübungen (plus Aufwärmen und Dehnen); „Schwer“ nur ab 1–2× pro Woche aktiv, nicht ab 65; 50–64 mindestens 8, ab 65 mindestens 10 Wiederholungen | Sportwissenschaftler-Session (Garber 2011 als Anhalt), PA10 | Praxis, (prüfen gegen ACSM 2026) |
+| Laufeinstieg im Kalender: Woche 1 1 Min laufen/2 Min gehen ×8, dann 2/2 ×6, 3/2 ×5, 4/2 ×4, 5/1 ×4, 8/1 ×3, 10/1 ×3 | Praxis, an Gehen-Laufen-Programme angelehnt (Sportwissenschaftler-Session) | Praxis |
+| Leichtwoche im Kalender markiert: Woche 4 (4-Wochen-Plan), 6 (6), 4 und 8 (8) | PA7 | Praxis |
 | Einschränkungen (Knie, Schulter, Rücken, Handgelenk, Sprunggelenk) und „gelenkschonend“: Übungen mit passenden Namensbestandteilen entfallen, Ersatz aus dem Katalog | – | **Praxis, ohne Quelle**; keine Therapie |
 | Hochleistungsfertigkeiten (Planche, Muscle-up …) nie in automatischen Plänen | – | Praxis |
 
