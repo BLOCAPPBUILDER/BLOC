@@ -337,7 +337,7 @@ function faqHTML(){
 /* Aussehen „New“: Seite „Tools“ - die oberste Kachel steht groß (Standard: Workout-Builder), die übrigen versetzt in zwei Spalten, die letzte bei ungerader Zahl über die ganze Breite.
    Reihenfolge in settings.toolsReihe; Kachel lange drücken (0,5 s) und ziehen verschiebt sie. */
 var TOOLS_KEYS = ["katalog", "run", "plan", "warm", "protein", "intervall", "faq"];
-var TOOLS_FOTO = ["katalog", "plan"];
+var TOOLS_FARBE = ["katalog", "plan"];   // Workout-Builder und Trainingsplan zeigen ihr Foto in Farbe, die übrigen Kacheln in Schwarz-Weiß
 function toolsReihe(){
   var r = [];
   selArr(state.db.settings.toolsReihe).forEach(function(k){ if(TOOLS_KEYS.indexOf(k) > -1 && r.indexOf(k) < 0) r.push(k); });
@@ -355,15 +355,12 @@ function toolDaten(k){
   else if(k === "intervall" && !(state.db.workouts.length || state.db.blocks.length)) d[2] = t("toolsSubTimer");
   return d;
 }
-var ICON_PFEIL = '<path d="M5 12h14M13 6l6 6-6 6"/>';
 function toolKachelHTML(k){
   var d = toolDaten(k);
-  var mitFoto = TOOLS_FOTO.indexOf(k) > -1;   // nur Workout-Builder und Trainingsplan tragen ein Foto, alle anderen sind halbdurchsichtiges Glas
-  return '<div class="tk'+(mitFoto ? '' : ' tk-glaskachel')+'" data-tool="'+k+'" data-nav="'+d[0]+'" role="button" tabindex="0">'+
-    (mitFoto ? '<i class="tk-foto" aria-hidden="true"></i>' : '')+
+  return '<div class="tk'+(TOOLS_FARBE.indexOf(k) > -1 ? '' : ' tk-sw')+'" data-tool="'+k+'" data-nav="'+d[0]+'" role="button" tabindex="0">'+
+    '<i class="tk-foto" aria-hidden="true"></i>'+
     '<span class="tk-glas"><span class="tk-ico">'+svgIcon(HOME_ICON[k])+'</span>'+
-      '<span class="tk-text"><b>'+esc(d[1])+'</b><small>'+String(d[2]).split(" · ").map(function(x){ return '<em>'+esc(x)+'</em>'; }).join("")+'</small></span></span>'+
-    '<span class="tk-go" aria-hidden="true">'+svgIcon(ICON_PFEIL)+'</span></div>';
+      '<span class="tk-text"><b>'+esc(d[1])+'</b><small>'+String(d[2]).split(" · ").map(function(x){ return '<em>'+esc(x)+'</em>'; }).join("")+'</small></span></span></div>';
 }
 /* Größe und Spalte hängen an der Stelle: Stelle 1 = groß, danach abwechselnd links und rechts (rechts etwas nach unten versetzt), die letzte bei ungerader Restzahl über die ganze Breite */
 function toolsKlassen(raster){
@@ -492,7 +489,6 @@ function renderTraining(){
     '<div class="training-seite">'+
       '<div class="tools-kopf"><span>'+esc(t("toolsAlle"))+'</span><span>'+esc(t("toolsAnz", { n:reihe.length }))+'</span></div>'+
       '<div class="tools-raster">'+reihe.map(toolKachelHTML).join("")+'</div>'+
-      '<p class="tools-hinweis">'+esc(t("toolsHinweis"))+'</p>'+
     '</div>'+
     '<div class="sec-head"><div class="section-title"></div><button type="button" class="sec-link" data-wasistwas>'+esc(t("wiLink"))+'</button></div>';
   var bkT = app.querySelector(".topbar .back"); if(bkT) bkT.classList.add("zeigen");   // Zurück-Knopf auch auf Training (wie in Path und Kalender)
@@ -501,9 +497,12 @@ function renderTraining(){
   var fotos = bereichFotosNeu();
   app.querySelectorAll(".tools-raster .tk").forEach(function(el){
     var k = el.getAttribute("data-tool"), ft = el.querySelector(".tk-foto");
-    if(!ft) return;   // Glas-Kacheln haben kein Foto
+    if(!ft) return;
     if(k === "plan"){ ft.style.backgroundImage = "url(img/neu-h-rack.jpg)"; ft.style.backgroundPosition = "50% 52%"; return; }   // Rack mit bunten Hantelscheiben (Bildnachweis in quellen.html)
     if(k === "katalog"){ ft.style.backgroundImage = "url(img/neu-p-frau-kniebeuge.jpg)"; ft.style.backgroundPosition = fotoFokus("img/neu-p-frau-kniebeuge.jpg") || "50% 30%"; return; }   // in Hell und Dunkel dieselbe Frau bei der Kniebeuge
+    if(k === "faq"){ ft.style.backgroundImage = "url(img/neu-faq.jpg)"; ft.style.backgroundPosition = "50% 55%"; return; }
+    if(k === "protein"){ ft.style.backgroundImage = "url(img/neu-protein.jpg)"; ft.style.backgroundPosition = "50% 27%"; return; }   // Hände mit den Eierschalen
+    if(fotos[k]){ ft.style.backgroundImage = "url(" + fotos[k] + ")"; ft.style.backgroundPosition = fotoFokus(fotos[k]) || "50% 50%"; }
   });
   var raster = app.querySelector(".tools-raster");
   toolsKlassen(raster);

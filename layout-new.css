@@ -1476,7 +1476,6 @@ body.prot-sheet-offen{ overflow:hidden; }
 :root[data-layout="new"] .tk-text small{ font-size:12px; line-height:1.3; color:rgba(255,255,255,.88); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 :root[data-layout="new"] .tk-text em{ font-style:normal; }
 :root[data-layout="new"] .tk-text em + em::before{ content:" \00b7  "; }
-:root[data-layout="new"] .tk-go{ display:none; }
 :root[data-layout="new"] .tk.tk-voll .tk-glas{ align-self:flex-end; }
 
 /* oberste Kachel: groß, Symbol oben links, Titel groß, Zahlen als Pillen, runder Pfeil unten rechts */
@@ -1485,13 +1484,11 @@ body.prot-sheet-offen{ overflow:hidden; }
 :root[data-layout="new"] .tk.tk-gross .tk-glas{ display:contents; }
 :root[data-layout="new"] .tk.tk-gross .tk-ico{ width:50px; height:50px; border-radius:15px; border-top-left-radius:6px; }
 :root[data-layout="new"] .tk.tk-gross .tk-ico .ico{ width:27px; height:27px; }
-:root[data-layout="new"] .tk.tk-gross .tk-text{ flex:none; width:100%; padding-right:56px; gap:10px; }
+:root[data-layout="new"] .tk.tk-gross .tk-text{ flex:none; width:100%; gap:10px; }
 :root[data-layout="new"] .tk.tk-gross .tk-text b{ font-size:27px; line-height:1.12; letter-spacing:-.01em; -webkit-line-clamp:3; }
 :root[data-layout="new"] .tk.tk-gross .tk-text small{ display:flex; flex-wrap:wrap; gap:8px; font-size:12.5px; }
 :root[data-layout="new"] .tk.tk-gross .tk-text em{ padding:6px 12px; border-radius:999px; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.2); color:#fff; -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
 :root[data-layout="new"] .tk.tk-gross .tk-text em + em::before{ content:none; }
-:root[data-layout="new"] .tk.tk-gross .tk-go{ display:flex; position:absolute; right:16px; bottom:16px; width:46px; height:46px; align-items:center; justify-content:center; border-radius:50%; background:#fff; color:#1c1c1e; }
-:root[data-layout="new"] .tk.tk-gross .tk-go .ico{ width:20px; height:20px; }
 
 /* Ziehen: die Kachel an ihrem Platz wird blass, die gehobene Kopie folgt dem Finger */
 :root[data-layout="new"] .tk.tk-platz{ opacity:.28; }
@@ -1573,32 +1570,5 @@ body.prot-sheet-offen{ overflow:hidden; }
 .fk-zeile.an{ border-color:var(--accent); background:color-mix(in srgb, var(--accent) 12%, transparent); }
 .fk-zeile.an i{ color:var(--accent); }
 
-/* 2026-11-08 (2): Nur Workout-Builder und Trainingsplan tragen ein Foto; alle anderen Kacheln sind halbdurchsichtiges Glas (Hell: weißes Glas mit dunkler Schrift, Dunkel: dunkles Glas mit weißer Schrift). */
-:root[data-layout="new"] .tk.tk-glaskachel{ background:var(--glas); border:1px solid var(--glas-rand); color:var(--glas-text);
-  -webkit-backdrop-filter:blur(18px) saturate(140%); backdrop-filter:blur(18px) saturate(140%); }
-:root[data-layout="new"] .tk.tk-glaskachel::before{ display:none; }
-:root[data-layout="new"] .tk.tk-glaskachel .tk-text b{ color:var(--glas-text); text-shadow:none; }
-:root[data-layout="new"] .tk.tk-glaskachel .tk-text small{ color:var(--glas-text); background:color-mix(in srgb, var(--glas-text) 7%, transparent);
-  border:1px solid color-mix(in srgb, var(--glas-text) 26%, transparent); -webkit-backdrop-filter:none; backdrop-filter:none; }
-:root[data-layout="new"] .tk.tk-glaskachel.tk-gross .tk-text em{ color:var(--glas-text); background:color-mix(in srgb, var(--glas-text) 7%, transparent); border:1px solid color-mix(in srgb, var(--glas-text) 26%, transparent); }
-:root[data-layout="new"] .tk.tk-glaskachel .tk-ico{ border:1px solid rgba(0,0,0,.06); box-shadow:0 2px 10px rgba(0,0,0,.18); }
-:root[data-layout="new"] .tk.tk-glaskachel.tk-gross .tk-go{ box-shadow:0 2px 10px rgba(0,0,0,.2); }
-
-/* 2026-11-08 (3): Hell: die Glas-Kacheln auf Tools schöner - Verlauf, heller Rand mit Lichtkante, weicher Schatten, ein Hauch Farbe oben rechts je Kachel, Symbol in der Kachelfarbe */
-:root[data-layout="new"]:not([data-glas]) .tk.tk-glaskachel{
-  --tk-c:#6b7280;
-  background:
-    radial-gradient(130% 100% at 100% 0%, color-mix(in srgb, var(--tk-c) 20%, transparent) 0%, transparent 62%),
-    linear-gradient(150deg, rgba(255,255,255,.92) 0%, rgba(255,255,255,.62) 100%);
-  border:1px solid rgba(255,255,255,.95);
-  box-shadow:0 12px 30px rgba(32,36,60,.10), 0 2px 6px rgba(32,36,60,.06), inset 0 1px 0 #fff;
-  -webkit-backdrop-filter:blur(22px) saturate(160%); backdrop-filter:blur(22px) saturate(160%);
-}
-:root[data-layout="new"]:not([data-glas]) .tk.tk-glaskachel[data-tool="run"]{ --tk-c:#2a8fe0; }
-:root[data-layout="new"]:not([data-glas]) .tk.tk-glaskachel[data-tool="warm"]{ --tk-c:#1fa56f; }
-:root[data-layout="new"]:not([data-glas]) .tk.tk-glaskachel[data-tool="protein"]{ --tk-c:#e0a020; }
-:root[data-layout="new"]:not([data-glas]) .tk.tk-glaskachel[data-tool="intervall"]{ --tk-c:#8a6cf0; }
-:root[data-layout="new"]:not([data-glas]) .tk.tk-glaskachel .tk-ico{ background:#fff !important; color:var(--tk-c) !important; border:1px solid color-mix(in srgb, var(--tk-c) 22%, #fff) !important; box-shadow:0 4px 12px color-mix(in srgb, var(--tk-c) 28%, transparent); }
-:root[data-layout="new"]:not([data-glas]) .tk.tk-glaskachel .tk-text small{ background:color-mix(in srgb, var(--tk-c) 9%, #fff); border:1px solid color-mix(in srgb, var(--tk-c) 28%, transparent); color:#33353b; }
-:root[data-layout="new"]:not([data-glas]) .tk.tk-glaskachel .tk-text b{ letter-spacing:-.005em; }
-:root[data-layout="new"]:not([data-glas]) .tk:not(.tk-glaskachel){ box-shadow:0 12px 30px rgba(32,36,60,.16); }
+/* 2026-11-08 (4): Alle Kacheln tragen wieder ein Foto: Workout-Builder und Trainingsplan in Farbe, die übrigen in Schwarz-Weiß. Die Hell-Effekte (Lichtkante, Farbhauch, Schatten) entfallen. */
+:root[data-layout="new"] .tk.tk-sw .tk-foto{ filter:grayscale(1) contrast(1.05); }
