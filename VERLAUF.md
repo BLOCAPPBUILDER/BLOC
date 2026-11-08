@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-08 · Tools: Fotos wieder in Farbe, optisch angeglichen (Fassung 2026-11-08-6)
+
+- **Tools:** Alle sieben Fotos sind wieder in Farbe, aber angeglichen: gleiche Sättigung (0,74), Kontrast und Helligkeit, über allen derselbe warme Farbstich (Orange nach Blau-Grau, `soft-light`) und derselbe weiche Verlauf unten für die Schrift. Die Schwarz-Weiß-Klasse `tk-sw` entfällt (`layout-new.css`, Ende; `js/05-suche.js`).
+
 ## 2026-11-08 · Tools: Schwarz-Weiß-Fotos kräftiger (Fassung 2026-11-08-5)
 
 - **Tools:** Die Schwarz-Weiß-Fotos wirkten matt und wie deaktiviert; jetzt mehr Kontrast (1,28) und Helligkeit (1,12) und ein leichterer Verlauf nur unten für die Schrift (`layout-new.css`, Ende).
