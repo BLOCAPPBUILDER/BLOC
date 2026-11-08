@@ -1570,7 +1570,9 @@ body.prot-sheet-offen{ overflow:hidden; }
 .fk-zeile.an{ border-color:var(--accent); background:color-mix(in srgb, var(--accent) 12%, transparent); }
 .fk-zeile.an i{ color:var(--accent); }
 
-/* 2026-11-08 (4): Alle Kacheln tragen wieder ein Foto: Workout-Builder und Trainingsplan in Farbe, die übrigen in Schwarz-Weiß. Die Hell-Effekte (Lichtkante, Farbhauch, Schatten) entfallen. */
-:root[data-layout="new"] .tk.tk-sw .tk-foto{ filter:grayscale(1) contrast(1.28) brightness(1.12); }   /* kräftiges Schwarz-Weiß, nicht ausgegraut */
-:root[data-layout="new"] .tk.tk-sw:not(.tk-gross)::before{ background:linear-gradient(180deg, rgba(8,9,11,0) 38%, rgba(8,9,11,.5) 100%); }
-:root[data-layout="new"] .tk.tk-sw.tk-gross::before{ background:linear-gradient(180deg, rgba(8,9,11,.05) 0%, rgba(8,9,11,.18) 50%, rgba(8,9,11,.62) 100%); }
+/* 2026-11-08 (5): Alle Tools-Fotos in Farbe, aber optisch angeglichen: gleiche Sättigung und Helligkeit, über allen derselbe warme Farbstich (Orange nach Blau-Grau) und derselbe weiche Verlauf unten für die Schrift. */
+:root[data-layout="new"] .tk .tk-foto{ filter:saturate(.74) contrast(1.1) brightness(1.03); }
+:root[data-layout="new"] .tk .tk-foto::after{ content:""; position:absolute; inset:0; mix-blend-mode:soft-light;
+  background:linear-gradient(155deg, rgba(255,112,64,.55) 0%, rgba(255,150,90,.30) 45%, rgba(40,64,120,.45) 100%); }
+:root[data-layout="new"] .tk:not(.tk-gross)::before{ background:linear-gradient(180deg, rgba(8,9,11,0) 36%, rgba(8,9,11,.56) 100%); }
+:root[data-layout="new"] .tk.tk-gross::before{ background:linear-gradient(180deg, rgba(8,9,11,.06) 0%, rgba(8,9,11,.2) 50%, rgba(8,9,11,.66) 100%); }

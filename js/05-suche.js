@@ -337,7 +337,6 @@ function faqHTML(){
 /* Aussehen „New“: Seite „Tools“ - die oberste Kachel steht groß (Standard: Workout-Builder), die übrigen versetzt in zwei Spalten, die letzte bei ungerader Zahl über die ganze Breite.
    Reihenfolge in settings.toolsReihe; Kachel lange drücken (0,5 s) und ziehen verschiebt sie. */
 var TOOLS_KEYS = ["katalog", "run", "plan", "warm", "protein", "intervall", "faq"];
-var TOOLS_FARBE = ["katalog", "plan"];   // Workout-Builder und Trainingsplan zeigen ihr Foto in Farbe, die übrigen Kacheln in Schwarz-Weiß
 function toolsReihe(){
   var r = [];
   selArr(state.db.settings.toolsReihe).forEach(function(k){ if(TOOLS_KEYS.indexOf(k) > -1 && r.indexOf(k) < 0) r.push(k); });
@@ -357,7 +356,7 @@ function toolDaten(k){
 }
 function toolKachelHTML(k){
   var d = toolDaten(k);
-  return '<div class="tk'+(TOOLS_FARBE.indexOf(k) > -1 ? '' : ' tk-sw')+'" data-tool="'+k+'" data-nav="'+d[0]+'" role="button" tabindex="0">'+
+  return '<div class="tk" data-tool="'+k+'" data-nav="'+d[0]+'" role="button" tabindex="0">'+
     '<i class="tk-foto" aria-hidden="true"></i>'+
     '<span class="tk-glas"><span class="tk-ico">'+svgIcon(HOME_ICON[k])+'</span>'+
       '<span class="tk-text"><b>'+esc(d[1])+'</b><small>'+String(d[2]).split(" · ").map(function(x){ return '<em>'+esc(x)+'</em>'; }).join("")+'</small></span></span></div>';
