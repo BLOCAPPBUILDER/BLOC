@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-08 · Tools: alle Fotos mit gleicher Farbstärke (Fassung 2026-11-08-8)
+
+- **Tools:** Jedes Foto bekommt einen eigenen Sättigungswert (`FOTO_SAT` in `js/05-suche.js`, gemessen an den kräftigsten Bildanteilen), damit das Rack-Foto des Trainingsplans mit den bunten Hantelscheiben nicht mehr herausfällt; ausgegeben über `--sat` in `layout-new.css`.
+
 ## 2026-11-08 · Tools: ohne Kopfzeile und ohne „Was ist was?“ (Fassung 2026-11-08-7)
 
 - **Tools:** Die Zeile „Alle Tools · 7 Tools“ über den Kacheln und der Link „Was ist was?“ darunter sind entfernt; es stehen nur noch die Kacheln auf der Seite (`js/05-suche.js`).
