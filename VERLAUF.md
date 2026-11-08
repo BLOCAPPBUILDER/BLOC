@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-08 · Fortschritt: gleich hohe Kacheln je Reihe, Tools Hell schöner und zweite Spalte tiefer (Fassung 2026-11-08-3)
+
+- **Fortschritt:** Das Raster ist jetzt ein Gitter: Kacheln halber Breite stehen paarweise nebeneinander und sind je Reihe gleich hoch (kein Masonry mehr mit unterschiedlichen Höhen); die rechte Spalte sitzt 26 px tiefer, die nächste breite Kachel nach einer geraden Folge bekommt dafür Abstand (`fkKlassen` in `js/24-fortschritt.js`).
+- **Tools:** Die zweite (rechte) Spalte sitzt jetzt 44 px tiefer. Im Hellmodus sind die Glas-Kacheln schöner: Verlauf, heller Rand mit Lichtkante, weicher Schatten, ein Hauch Farbe oben rechts (Run blau, Mobility grün, Protein gelb, Timer lila) und das Symbol in der Kachelfarbe; die Foto-Kacheln bekommen einen Schatten (`layout-new.css`, Ende).
+
 ## 2026-11-08 · Tools: Glas-Kacheln, Workout-Builder mit der Frau in Hell und Dunkel (Fassung 2026-11-08-2)
 
 - **Tools:** Nur der Workout-Builder und der Trainingsplan tragen noch ein Foto. Run, Mobility & Stretch, Protein, Timer und Wissensaustausch sind halbdurchsichtiges Glas (Hell: weißes Glas mit dunkler Schrift, Dunkel: dunkles Glas mit weißer Schrift; Klasse `tk-glaskachel`). Der Workout-Builder zeigt im Dunkeln wie im Hellen die Kniebeuge-Frau (`neu-p-frau-kniebeuge.jpg`) statt des wechselnden Dunkel-Fotos.
