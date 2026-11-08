@@ -1365,14 +1365,12 @@
       pruefe($$("#gs-res .section-title").every(function (e) { return !/Neu anlegen|Create/.test(e.textContent); }), "Aktionen bei gewähltem Ausrüstungs-Filter");
       klick('[data-srausr="band"]');
     }],
-    ["Kleine Hilfen: „Was ist was?“, Bestleistung, Leichter/Schwerer", async function () {
+    ["Kleine Hilfen: Tools ohne Kopfzeile und „Was ist was?“, Bestleistung, Leichter/Schwerer", async function () {
       function daten() { return JSON.parse(W.localStorage.getItem(KEY)); }
       await heim();
       W.go("#training");
-      klick(await bis(function () { return $("[data-wasistwas]"); }, 3000, "Link „Was ist was?“"));
-      await bis(function () { return $$("#overlayRoot .wi-zeile").length === 4; }, 2000, "vier Zeilen Klartext");
-      klick($("#overlayRoot [data-ok]"));
-      await bis(function () { return !$("#overlayRoot .wi-zeile"); }, 2000, "Hinweis schließt");
+      await bis(function () { return $(".tools-raster .tk"); }, 3000, "Tools");
+      pruefe(!$("[data-wasistwas]") && !$(".tools-kopf") && !$(".tools-hinweis"), "Tools: kein „Was ist was?“, keine Kopfzeile „Alle Tools“, kein Hinweistext");
       // Bestleistung: vorheriges Bestgewicht vorgeben, dann einen Satz darüber eintragen
       var db = daten(); db.settings.studio = db.settings.studio || {};
       db.settings.stGruppen = []; db.settings.stArten = []; db.settings.katTab = "workouts";   // keine Filter aus früheren Tests

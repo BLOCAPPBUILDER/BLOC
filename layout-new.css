@@ -1448,8 +1448,6 @@ body.prot-sheet-offen{ overflow:hidden; }
 
 /* ---------- Tools (2026-11-07, Entwurf „Variante 3“): oberste Kachel groß, darunter versetzte Fotokacheln mit Glas-Pille (weiße Schrift, dieselben Symbole).
    Nur die Kacheln; der Hintergrund der Seite bleibt in Hell und Dunkel unverändert. Die Schrift liegt in jedem Modus hell auf dem Foto. ---------- */
-:root[data-layout="new"] .tools-kopf{ display:flex; align-items:baseline; justify-content:space-between; margin:2px 4px 12px; font-size:12px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--text-dim); }
-:root[data-layout="new"] .tools-kopf span:last-child{ letter-spacing:0; font-weight:500; text-transform:none; }
 :root[data-layout="new"] .tools-raster{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; padding-bottom:44px; }
 :root[data-layout="new"] .tools-hinweis{ margin:6px 8px 18px; font-size:12.5px; line-height:1.45; text-align:center; color:var(--text-dim); }
 :root[data-layout="new"] .tk{

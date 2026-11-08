@@ -486,10 +486,8 @@ function renderTraining(){
   app.innerHTML =
     topbar(t("tabTraining"), { back:"#home", right:kopfSymboleNeu("training") }) +
     '<div class="training-seite">'+
-      '<div class="tools-kopf"><span>'+esc(t("toolsAlle"))+'</span><span>'+esc(t("toolsAnz", { n:reihe.length }))+'</span></div>'+
       '<div class="tools-raster">'+reihe.map(toolKachelHTML).join("")+'</div>'+
-    '</div>'+
-    '<div class="sec-head"><div class="section-title"></div><button type="button" class="sec-link" data-wasistwas>'+esc(t("wiLink"))+'</button></div>';
+    '</div>';
   var bkT = app.querySelector(".topbar .back"); if(bkT) bkT.classList.add("zeigen");   // Zurück-Knopf auch auf Training (wie in Path und Kalender)
   bindCommon();
   /* Abwechslung: je Bereich ein Bild aus dem Pool, von Tag zu Tag wechselnd, kein Bild doppelt; dieselben Bilder tragen die Köpfe der Bereichsseiten */
@@ -506,8 +504,6 @@ function renderTraining(){
   var raster = app.querySelector(".tools-raster");
   toolsKlassen(raster);
   toolsZiehenBinden(raster);
-  var wib = app.querySelector("[data-wasistwas]");
-  if(wib) wib.addEventListener("click", openWasIstWas);
 }
 /* Fragen & Antworten: eigene Seite (Kachel unter Run auf Training), alles aufgeklappt wie ein kleines Nachschlagewerk */
 function renderFaq(){

@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-08 · Tools: ohne Kopfzeile und ohne „Was ist was?“ (Fassung 2026-11-08-7)
+
+- **Tools:** Die Zeile „Alle Tools · 7 Tools“ über den Kacheln und der Link „Was ist was?“ darunter sind entfernt; es stehen nur noch die Kacheln auf der Seite (`js/05-suche.js`).
+
 ## 2026-11-08 · Tools: Fotos wieder in Farbe, optisch angeglichen (Fassung 2026-11-08-6)
 
 - **Tools:** Alle sieben Fotos sind wieder in Farbe, aber angeglichen: gleiche Sättigung (0,74), Kontrast und Helligkeit, über allen derselbe warme Farbstich (Orange nach Blau-Grau, `soft-light`) und derselbe weiche Verlauf unten für die Schrift. Die Schwarz-Weiß-Klasse `tk-sw` entfällt (`layout-new.css`, Ende; `js/05-suche.js`).
