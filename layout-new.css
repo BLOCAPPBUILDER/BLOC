@@ -1571,4 +1571,6 @@ body.prot-sheet-offen{ overflow:hidden; }
 .fk-zeile.an i{ color:var(--accent); }
 
 /* 2026-11-08 (4): Alle Kacheln tragen wieder ein Foto: Workout-Builder und Trainingsplan in Farbe, die übrigen in Schwarz-Weiß. Die Hell-Effekte (Lichtkante, Farbhauch, Schatten) entfallen. */
-:root[data-layout="new"] .tk.tk-sw .tk-foto{ filter:grayscale(1) contrast(1.05); }
+:root[data-layout="new"] .tk.tk-sw .tk-foto{ filter:grayscale(1) contrast(1.28) brightness(1.12); }   /* kräftiges Schwarz-Weiß, nicht ausgegraut */
+:root[data-layout="new"] .tk.tk-sw:not(.tk-gross)::before{ background:linear-gradient(180deg, rgba(8,9,11,0) 38%, rgba(8,9,11,.5) 100%); }
+:root[data-layout="new"] .tk.tk-sw.tk-gross::before{ background:linear-gradient(180deg, rgba(8,9,11,.05) 0%, rgba(8,9,11,.18) 50%, rgba(8,9,11,.62) 100%); }

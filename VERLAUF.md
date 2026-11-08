@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-08 · Tools: Schwarz-Weiß-Fotos kräftiger (Fassung 2026-11-08-5)
+
+- **Tools:** Die Schwarz-Weiß-Fotos wirkten matt und wie deaktiviert; jetzt mehr Kontrast (1,28) und Helligkeit (1,12) und ein leichterer Verlauf nur unten für die Schrift (`layout-new.css`, Ende).
+
 ## 2026-11-08 · Tools: Fotos auf allen Kacheln, die übrigen in Schwarz-Weiß; Pfeil, Hinweis und Hell-Effekte raus (Fassung 2026-11-08-4)
 
 - **Tools:** Alle Kacheln tragen wieder ein Foto; Workout-Builder und Trainingsplan in Farbe, Run, Mobility, Protein, Timer und Wissensaustausch in Schwarz-Weiß (`filter:grayscale`, Klasse `tk-sw`). Der Glas-Stil mit den Hell-Effekten (Verlauf, Lichtkante, Farbhauch, Schatten) ist wieder entfernt. Der Pfeil unten rechts auf dem Workout-Builder und der Hinweistext unter den Kacheln sind weg.
