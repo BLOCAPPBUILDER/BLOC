@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-08 · Tools: Fotos auf allen Kacheln, die übrigen in Schwarz-Weiß; Pfeil, Hinweis und Hell-Effekte raus (Fassung 2026-11-08-4)
+
+- **Tools:** Alle Kacheln tragen wieder ein Foto; Workout-Builder und Trainingsplan in Farbe, Run, Mobility, Protein, Timer und Wissensaustausch in Schwarz-Weiß (`filter:grayscale`, Klasse `tk-sw`). Der Glas-Stil mit den Hell-Effekten (Verlauf, Lichtkante, Farbhauch, Schatten) ist wieder entfernt. Der Pfeil unten rechts auf dem Workout-Builder und der Hinweistext unter den Kacheln sind weg.
+
 ## 2026-11-08 · Fortschritt: gleich hohe Kacheln je Reihe, Tools Hell schöner und zweite Spalte tiefer (Fassung 2026-11-08-3)
 
 - **Fortschritt:** Das Raster ist jetzt ein Gitter: Kacheln halber Breite stehen paarweise nebeneinander und sind je Reihe gleich hoch (kein Masonry mehr mit unterschiedlichen Höhen); die rechte Spalte sitzt 26 px tiefer, die nächste breite Kachel nach einer geraden Folge bekommt dafür Abstand (`fkKlassen` in `js/24-fortschritt.js`).
