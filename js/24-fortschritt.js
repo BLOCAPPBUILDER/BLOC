@@ -38,16 +38,6 @@ function fkKachelHTML(id, M){
   if(!inhalt) inhalt = '<div class="card stat-karte fk-leerkarte"><div class="sk-kopf"><b>'+esc(fkName(id))+'</b></div><div class="sk-unter">'+esc(t("fkNoData"))+'</div></div>';
   return '<div class="fk '+(d && d.gross ? 'fk-gross' : 'fk-klein')+'" data-fk="'+esc(id)+'">'+inhalt+'</div>';
 }
-/* Zwei Kacheln halber Breite stehen nebeneinander (Reihe gleich hoch); die rechte sitzt etwas tiefer. Nach einer Folge mit gerader Zahl bekommt die nächste breite Kachel Abstand dafür. */
-function fkKlassen(raster){
-  var pos = 0, lauf = 0;
-  Array.prototype.forEach.call(raster.children, function(el){
-    var klein = el.classList.contains("fk-klein");
-    el.classList.remove("fk-r", "fk-versatz");
-    if(klein){ if(pos % 2 === 1) el.classList.add("fk-r"); pos++; lauf = pos; }
-    else { if(pos >= 2 && pos % 2 === 0) el.classList.add("fk-versatz"); pos = 0; }
-  });
-}
 function renderFortschritt(){
   var st = statModule(), dd = ddModule(), M = {}, wahl = fkWahl();
   Object.keys(st.M).forEach(function(k){ M[k] = st.M[k]; });
@@ -65,9 +55,8 @@ function renderFortschritt(){
   st.bind(neu); dd.bind(neu);
   app.querySelector("[data-fkhinzu]").addEventListener("click", function(){ fkWaehlenSheet(); });
   var raster = app.querySelector(".fk-raster");
-  if(raster) fkKlassen(raster);
   if(raster) kachelZiehen(raster, {
-    tile:".fk", id:"data-fk", klassen:fkKlassen,
+    tile:".fk", id:"data-fk",
     speichern:fkSpeichern,
     loeschen:function(id){ fkSpeichern(fkWahl().filter(function(x){ return x !== id; })); neu(); },
     menue:function(el, id){

@@ -1529,13 +1529,12 @@ body.prot-sheet-offen{ overflow:hidden; }
 
 /* ---------- Fortschritt (2026-11-08): frei zusammenstellbare Kacheln im versetzten Raster (Masonry): schmale Kacheln stehen in zwei Spalten nebeneinander,
    breite über die ganze Breite. Ziehen wie auf Tools; beim Ziehen erscheint unten die Fläche zum Entfernen. ---------- */
-:root[data-layout="new"] .fk-raster{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; align-items:stretch; padding-bottom:26px; }
+:root[data-layout="new"] .fk-raster{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; align-items:stretch; }
 :root[data-layout="new"] .fk{ display:block; min-width:0; margin:0;
   -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; }
 :root[data-layout="new"] .fk.fk-gross{ grid-column:1 / -1; }
+:root[data-layout="new"] .fk.fk-klein{ min-height:174px; }   /* kleine Flächen: mindestens quadratisch, nebeneinander gerade ausgerichtet */
 :root[data-layout="new"] .fk.fk-klein > .card{ height:100%; }
-:root[data-layout="new"] .fk.fk-r{ translate:0 26px; }
-:root[data-layout="new"] .fk.fk-versatz{ margin-top:26px; }
 :root[data-layout="new"] .fk > .card, :root[data-layout="new"] .fk > details.card, :root[data-layout="new"] .fk > section.card{ margin:0; }
 :root[data-layout="new"] .fk.tk-platz{ opacity:.28; }
 :root[data-layout="new"] .fk.tk-geist{ position:fixed; z-index:9999; margin:0; translate:none; pointer-events:none; transform:scale(1.03); box-shadow:0 18px 44px rgba(0,0,0,.5); border-radius:var(--radius); }
@@ -1574,3 +1573,9 @@ body.prot-sheet-offen{ overflow:hidden; }
   background:linear-gradient(155deg, rgba(255,112,64,.55) 0%, rgba(255,150,90,.30) 45%, rgba(40,64,120,.45) 100%); }
 :root[data-layout="new"] .tk:not(.tk-gross)::before{ background:linear-gradient(180deg, rgba(8,9,11,0) 36%, rgba(8,9,11,.56) 100%); }
 :root[data-layout="new"] .tk.tk-gross::before{ background:linear-gradient(180deg, rgba(8,9,11,.06) 0%, rgba(8,9,11,.2) 50%, rgba(8,9,11,.66) 100%); }
+
+/* Mülltonne oben beim Ziehen auf Fortschritt (zusätzlich zur Fläche unten) */
+.kachel-tonne{ position:fixed; z-index:9998; left:50%; top:calc(env(safe-area-inset-top, 0px) + 74px); width:62px; height:62px; margin-left:-31px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; background:rgba(190,45,35,.9); color:#fff; border:1px solid rgba(255,255,255,.35); box-shadow:0 8px 24px rgba(0,0,0,.35); transition:transform .12s, background .12s; }
+.kachel-tonne .ico{ width:28px; height:28px; }
+.kachel-tonne.aktiv{ transform:scale(1.18); background:rgba(215,40,30,.98); }

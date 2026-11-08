@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-08 · Fortschritt: Mülltonne oben beim Ziehen, kleine Kacheln gerade nebeneinander (Fassung 2026-11-08-9)
+
+- **Fortschritt:** Beim Ziehen einer Kachel erscheint oben in der Mitte eine Mülltonne (zusätzlich zur Fläche unten); Fallenlassen darauf entfernt die Kachel. Die kleinen Kacheln stehen gerade nebeneinander (der Versatz der rechten Spalte entfällt hier; auf Tools bleibt er) und sind mindestens quadratisch (174 px hoch, `layout-new.css`, `kachelZiehen` in `js/05-suche.js`).
+
 ## 2026-11-08 · Tools: alle Fotos mit gleicher Farbstärke (Fassung 2026-11-08-8)
 
 - **Tools:** Jedes Foto bekommt einen eigenen Sättigungswert (`FOTO_SAT` in `js/05-suche.js`, gemessen an den kräftigsten Bildanteilen), damit das Rack-Foto des Trainingsplans mit den bunten Hantelscheiben nicht mehr herausfällt; ausgegeben über `--sat` in `layout-new.css`.
