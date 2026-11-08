@@ -401,7 +401,9 @@ function statEinblickeHTML(voll){
   return '<details class="card stat-karte stat-kal stat-falt" data-statfalt="einblicke"'+(statOffen.einblicke ? ' open' : '')+'><summary><b>'+esc(t("statEinTitel"))+'</b>'+
     '<span class="sk-sub">'+esc(t("statEinSub"))+'</span><span class="sk-chev">'+ICON_CHEV+'</span></summary>'+teile.join("")+'</details>';
 }
-function renderStats(){
+/* Die Auswertungen der Seite Fortschritt als einzelne Kacheln: gibt { M: { id: HTML }, bind(neu) } zurück; welche davon zu sehen sind und in welcher Reihenfolge,
+   bestimmt js/24-fortschritt.js (settings.fortschrittKacheln). */
+function statModule(){
   var s = state.db.settings, jetzt = Date.now(), tag = 86400000, runs = s.runs || [];
   pruneHistory(state.db);
   var aktiv = BEREICH_KEYS.filter(function(k){ return !fokusAus(k); });
@@ -430,19 +432,43 @@ function renderStats(){
   while(si >= 0 && voll[si].n){ serie++; si--; }
   var einheit = t(statGran === "woche" ? "statUWoche" : statGran === "monat" ? "statUMonat" : "statUJahr");
   var labels = reihe.map(function(b){ return b.label; });
-  var html = topbar(t("tabKoerper"), { back:"#home", right:kopfSymboleNeu("stats")+'<button type="button" class="iconbtn" data-koerper title="'+esc(t("koerperTitel"))+'" aria-label="'+esc(t("koerperTitel"))+'">'+svgIcon('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>')+'</button>' });
-  if(!aktiv.length){
-    app.innerHTML = html + '<div class="card fokus-leer"><div>'+esc(t("statAlleAus"))+'</div><button type="button" class="btn btn-secondary" data-nav="#settings">'+esc(t("fokusAendern"))+'</button></div>';
-    return bindCommon();
-  }
+  var M = {};
+  // Zahlen-Kacheln: Tage am Stück, gehobenes Gewicht, Trainingstage, Trainingszeit, Kilometer, Höhenmeter
+  var lang0 = currentLang() === "en" ? "en-GB" : "de-DE";
+  function tagKey(ms){ var d0 = new Date(ms); return d0.getFullYear()+"-"+d0.getMonth()+"-"+d0.getDate(); }
+  var tageSet = {}; besA.forEach(function(b){ tageSet[tagKey(b.von)] = 1; });
+  var cur = new Date(); cur.setHours(12, 0, 0, 0);
+  var folgeTage = 0, heuteDa = !!tageSet[tagKey(cur.getTime())];
+  if(!heuteDa) cur.setDate(cur.getDate() - 1);
+  while(tageSet[tagKey(cur.getTime())]){ folgeTage++; cur.setDate(cur.getDate() - 1); }
+  var bestFolge = 0, laufF = 0, vorTag = 0;
+  Object.keys(tageSet).map(function(k){ var q = k.split("-"); return new Date(+q[0], +q[1], +q[2], 12).getTime(); }).sort(function(a, b){ return a - b; }).forEach(function(ms){
+    laufF = vorTag && Math.round((ms - vorTag)/tag) === 1 ? laufF + 1 : 1; if(laufF > bestFolge) bestFolge = laufF; vorTag = ms;
+  });
+  var punkte7 = ""; for(var pi = 6; pi >= 0; pi--){ punkte7 += '<i class="fz-punkt'+(tageSet[tagKey(jetzt - pi*tag)] ? ' an' : '')+'"></i>'; }
+  M.serie = fkZahlHTML('<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>', t("fk_serie"), String(folgeTage), t(folgeTage === 1 ? "fkTag" : "fkTage"),
+    folgeTage ? (heuteDa ? t("fkHeuteDa") : t("fkHeuteNoch")) : t("fkSerieNeu"), '<div class="fz-punkte">'+punkte7+'</div>', t("fkRekordTage", { n:Math.max(bestFolge, folgeTage) }));
+  var kgGesamt = einheitenListe().reduce(function(a, x){ return a + (+x.vol || 0); }, 0);
+  var wVol = voll.slice(-8).map(function(w){ return einheitenListe().filter(function(x){ return x.at >= w.ab && x.at < w.ab + 7*tag; }).reduce(function(a, x){ return a + (+x.vol || 0); }, 0); });
+  var wMax = Math.max.apply(null, wVol.concat([1]));
+  M.kg = fkZahlHTML('<path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/>', t("fk_kg"), Math.round(kgGesamt).toLocaleString(lang0), "kg",
+    kgGesamt > 0 ? t("fkKgSub", { t:(Math.round(kgGesamt/100)/10).toLocaleString(lang0) }) : t("fkKgLeer"),
+    kgGesamt > 0 ? '<div class="fz-saeulen" aria-hidden="true">'+wVol.map(function(v){ return '<i style="height:'+Math.max(6, Math.round(100*v/wMax))+'%"></i>'; }).join("")+'</div>' : "");
+  var zeitGesamt = voll.reduce(function(a, w){ return a + w.s; }, 0);
+  M.tage = fkZahlHTML('<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/>', t("fk_tage"), String(Object.keys(tageSet).length), t("fkTage"), t("fkTageSub", { n:gesamt }));
+  M.zeit = fkZahlHTML('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M9.5 3h5"/>', t("fk_zeit"), zeitGesamt >= 3600 ? String(Math.round(zeitGesamt/360)/10).toLocaleString(lang0) : String(Math.round(zeitGesamt/60)), zeitGesamt >= 3600 ? t("fkStunden") : "min", t("fkZeitSub"));
+  var kmGesamt = runs.reduce(function(a, x){ return a + (x.dist || 0); }, 0), hmGesamt = runs.reduce(function(a, x){ return a + (+x.hm || 0); }, 0);
+  M.km = fkZahlHTML('<circle cx="14" cy="4.5" r="2"/><path d="M6 21l3-6 3 2v5M9 15l1-4 4-1 2 3 3 1M10 11L8 8"/>', t("fk_km"), runKm(kmGesamt), "km", t("fkKmSub", { n:runs.length }));
+  M.hm = fkZahlHTML('<path d="M3 19l6-10 4 6 3-4 5 8z"/>', t("fk_hm"), Math.round(hmGesamt).toLocaleString(lang0), "m", t("fkHmSub"));
+  M.logbuch = statFortschrittHTML();   // Gewichte und Verläufe je Übung bzw. Maschine
   // Willkommen / Kopf
   if(!gesamt && !(aktiv.indexOf("run") > -1 && runs.length)){
-    html += '<div class="card stat-hero leer"><div class="sh-text">'+esc(t("statStart"))+'</div>'+
+    M.woche = '<div class="card stat-hero leer"><div class="sh-text">'+esc(t("statStart"))+'</div>'+
       statBalken([0, 0, 0, 0, 0, 0, 0, 0], labels.slice(-8), function(){ return ""; }).replace('class="bchart"', 'class="bchart geist"')+'</div>';
   } else {
     var delta = n7 > nV ? t("statMehr", { n:n7 - nV }) : n7 === nV ? (n7 ? t("statGleich") : "") : t("statWeniger", { n:nV });
     var anteil = Math.min(1, n7/ziel), R = 74, U = 2*Math.PI*R, geschafft = n7 >= ziel;
-    html += '<div class="card stat-hero'+(geschafft ? ' geschafft' : '')+'"><div class="stat-ring" style="--u:'+U.toFixed(1)+';--p:'+(U*anteil).toFixed(1)+'">'+
+    M.woche = '<div class="card stat-hero'+(geschafft ? ' geschafft' : '')+'"><div class="stat-ring" style="--u:'+U.toFixed(1)+';--p:'+(U*anteil).toFixed(1)+'">'+
       '<svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="'+R+'" class="sr-bg"/>'+(anteil > 0 ? '<circle cx="100" cy="100" r="'+R+'" class="sr-bar" transform="rotate(-90 100 100)"/>' : '')+'</svg>'+
       '<div class="sr-mitte"><b>'+n7+'</b><small>'+esc(t("statRing", { z:ziel }))+'</small></div></div>'+
       '<div class="sh-text">'+esc(t(geschafft ? "statZielGeschafft" : "statHeroWoche"))+'</div>'+
@@ -455,14 +481,14 @@ function renderStats(){
     var nKraft = Object.keys(kraftTage).length, nMin = Math.round(minWo);
     function whoZeile(label, wert, ziel, text){ var p = Math.min(100, Math.round(100*wert/ziel)); return '<div class="who-zeile'+(wert >= ziel ? ' ok' : '')+'"><span>'+esc(label)+'</span><b>'+esc(text)+(wert >= ziel ? ' ✓' : '')+'</b><i class="who-bar"><u style="width:'+p+'%"></u></i></div>'; }
     // zugeklappt: oben steht nur die Zusammenfassung („95 / 150 min · 1 / 2“), die Einzelheiten und die Quelle erst beim Aufklappen
-    html += '<details class="card stat-karte stat-who stat-kal stat-falt" data-statfalt="who"'+(statOffen.who ? ' open' : '')+'><summary><b>'+esc(t("statWhoTitel"))+'</b>'+
+    M.who = '<details class="card stat-karte stat-who stat-kal stat-falt" data-statfalt="who"'+(statOffen.who ? ' open' : '')+'><summary><b>'+esc(t("statWhoTitel"))+'</b>'+
       '<span class="sk-sub">'+esc(nMin+" / 150 min · "+nKraft+" / 2")+'</span><span class="sk-chev">'+ICON_CHEV+'</span></summary>'+
       whoZeile(t("statWhoMin"), nMin, 150, nMin+" / 150 min")+whoZeile(t("statWhoKraft"), nKraft, 2, nKraft+" / 2")+
       '<div class="sk-unter">'+esc(t("statWhoHint"))+' <a class="sk-link" href="quellen.html#belegt" target="_blank" rel="noopener">'+esc(t("sourcesLink"))+'</a></div></details>';
     // Verlauf: Woche / Monat / Jahr, nach links wischen für früher
     var zeit = statModus === "zeit";
     function knopf(attr, wert, aktivWert, text){ return '<button type="button" data-'+attr+'="'+wert+'" class="'+(aktivWert === wert ? 'active' : '')+'">'+esc(text)+'</button>'; }
-    html += '<div class="card stat-karte"><div class="sk-kopf"><b>'+esc(t("statVerlauf"))+'</b><span class="stat-seg">'+
+    M.verlauf = '<div class="card stat-karte"><div class="sk-kopf"><b>'+esc(t("statVerlauf"))+'</b><span class="stat-seg">'+
       knopf("statmodus", "zeit", statModus, t("statModusZeit"))+knopf("statmodus", "n", statModus, t("statModusN"))+'</span></div>'+
       '<div class="sk-kopf stat-gran"><span class="stat-seg">'+knopf("statgran", "woche", statGran, t("statGranWoche"))+knopf("statgran", "monat", statGran, t("statGranMonat"))+knopf("statgran", "jahr", statGran, t("statGranJahr"))+'</span></div>'+
       statBalken(reihe.map(function(b){ return zeit ? b.s : b.n; }), labels, function(v){ return zeit ? statMin(v) : String(v); })+
@@ -491,7 +517,7 @@ function renderStats(){
         if(kcalR > 0) chipsR.push(["≈ "+kcalR.toLocaleString(currentLang() === "en" ? "en-GB" : "de-DE"), t("statRueckKcal")]);
       }
       if(rekR) chipsR.push([rekR+" ★", t("statRueckRek")]);
-      html += '<div class="card stat-karte"><div class="sk-kopf"><b>'+esc(t("statRueck"))+'</b></div>'+
+      M.rueckblick = '<div class="card stat-karte"><div class="sk-kopf"><b>'+esc(t("statRueck"))+'</b></div>'+
         (meil ? '<div class="sh-chips" style="margin:2px 0 8px"><span class="sh-serie">'+svgIcon('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>')+esc(t("statMeilenstein", { n:meil }))+'</span></div>' : '')+
         '<div class="chips-stat">'+chipsR.map(function(c){ return '<span><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></span>'; }).join("")+'</div>'+
         '<div class="sk-unter">'+esc(satzR)+(bestR && zaehlR[bestR] >= 2 ? " "+esc(t("statRueckUebung", { name:tplText(findExercise(bestR).name), n:zaehlR[bestR] })) : "")+'</div>'+
@@ -508,13 +534,13 @@ function renderStats(){
       if(sek > 0 && !zukunft) aktTage++;
       zellen += '<i class="hz l'+lv+(zukunft ? ' z' : '')+(d.getTime() === heute.getTime() ? ' heute' : '')+'" title="'+esc(d.getDate()+"."+(d.getMonth()+1)+". "+(sek ? statMin(sek)+" min" : ""))+'"></i>';
     }
-    html += '<details class="card stat-karte stat-kal" data-statkal'+(statKalOffen ? ' open' : '')+'><summary><b>'+esc(t("statKalender"))+'</b><span class="sk-sub">'+esc(t("statTageAktiv", { n:aktTage }))+'</span><span class="sk-chev">'+ICON_CHEV+'</span></summary>'+
+    M.kalender = '<details class="card stat-karte stat-kal" data-statkal'+(statKalOffen ? ' open' : '')+'><summary><b>'+esc(t("statKalender"))+'</b><span class="sk-sub">'+esc(t("statTageAktiv", { n:aktTage }))+'</span><span class="sk-chev">'+ICON_CHEV+'</span></summary>'+
       '<div class="heat"><div class="heat-tage">'+namen.map(function(x){ return '<small>'+esc(x)+'</small>'; }).join("")+'</div><div class="heat-raster">'+zellen+'</div>'+
       '<div class="heat-legende"><small>'+esc(t("statWeniger2"))+'</small><i class="hz l0"></i><i class="hz l1"></i><i class="hz l2"></i><i class="hz l3"></i><small>'+esc(t("statMehr2"))+'</small></div></div></details>';
   }
-  html += statBlocsHTML();   // die trainierten BLOCs im Verlauf (Anzahl, zuletzt, Volumen)
-  html += statTrainingsHTML();   // zuletzt gespeicherte Trainings (Training speichern auf Plan-Seite, Karte und im Timer)
-  html += statEinblickeHTML(voll);   // Mehr Einblicke (zugeklappt): Volumen, Rekorde, Drücken : Ziehen
+  M.blocs = statBlocsHTML();   // die trainierten BLOCs im Verlauf (Anzahl, zuletzt, Volumen)
+  M.trainings = statTrainingsHTML();   // zuletzt gespeicherte Trainings (Training speichern auf Plan-Seite, Karte und im Timer)
+  M.einblicke = statEinblickeHTML(voll);   // Mehr Einblicke (zugeklappt): Volumen, Rekorde, Drücken : Ziehen
   // Bereiche wie auf der Startseite: Workout, dann Mobility & Stretch, danach der Timer, Run zuletzt
   var folge = statGruppen(aktiv).map(function(k, i){ return { k:k, n:bes(k, 28).length, i:i }; }).sort(function(a, b){
     var fix = function(k){ return k === "katalog" ? 0 : k === "warm" ? 1 : k === "run" ? 3 : 2; };
@@ -530,22 +556,22 @@ function renderStats(){
       : l.length ? [[String(l.length), t("statChipTrainings")], [dauer(summe(l)), t("statChipZeit")], [statTage(tageSeit), t("statZuletzt")]] : null;
     // Der meistgenutzte Bereich steht aufgeklappt, die übrigen sind zu (Zusammenfassung bleibt sichtbar); merkt sich, was du auf- oder zugeklappt hast
     var bOffen = statOffen["b-"+k] !== undefined ? statOffen["b-"+k] : ri === 0 && l.length > 0;
-    html += '<details class="card stat-karte stat-bereichkarte stat-kal stat-falt" data-statfalt="b-'+esc(k)+'" style="--c:'+d[3]+'"'+(bOffen ? ' open' : '')+'><summary><b class="sb-name"><i></i>'+esc(d[1])+'</b>'+
+    var h = '<details class="card stat-karte stat-bereichkarte stat-kal stat-falt" data-statfalt="b-'+esc(k)+'" style="--c:'+d[3]+'"'+(bOffen ? ' open' : '')+'><summary><b class="sb-name"><i></i>'+esc(d[1])+'</b>'+
       '<span class="sk-sub">'+esc(l.length || (k === "run" && runs.length) ? sub : t("statNichts"))+'</span><span class="sk-chev">'+ICON_CHEV+'</span></summary>'+
       (chipsK ? '<div class="chips-stat">'+chipsK.map(function(c){ return '<span><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></span>'; }).join("")+'</div>' : '');
-    if(k !== "run" && vk.some(function(v){ return v > 0; })) html += statBalken(vk, labels, statMin, d[3]);
+    if(k !== "run" && vk.some(function(v){ return v > 0; })) h += statBalken(vk, labels, statMin, d[3]);
     if(k === "run" && runs.length){
       var laeufe = runs.filter(function(x){ return !runIstRad(x); });   // Pace und Rekorde nur aus den Läufen, nicht aus Radfahrten
       var gut = laeufe.filter(function(x){ return x.dist >= 1000; }).sort(function(a, b){ return a.at - b.at; }), letzteL = gut.slice(-60);
       var wk = reihe.map(function(b){ return runs.filter(function(x){ return x.at >= b.ab && x.at < b.bis; }).reduce(function(a, x){ return a + x.dist; }, 0); });
-      if(wk.some(function(v){ return v > 0; })) html += '<div class="sk-unter titel">'+esc(t("statKmPro", { u:einheit }))+'</div>'+statBalken(wk, labels, function(v){ return runKm(v).replace(/[,.]00$/, ""); }, d[3]);
+      if(wk.some(function(v){ return v > 0; })) h += '<div class="sk-unter titel">'+esc(t("statKmPro", { u:einheit }))+'</div>'+statBalken(wk, labels, function(v){ return runKm(v).replace(/[,.]00$/, ""); }, d[3]);
       if(letzteL.length >= 2){
-        html += '<div class="sk-unter titel">'+esc(t("statPaceTitel"))+'</div>'+statPaceSvg(letzteL);
+        h += '<div class="sk-unter titel">'+esc(t("statPaceTitel"))+'</div>'+statPaceSvg(letzteL);
         var pace = letzteL.slice(-12).map(function(x){ return x.dur/1000/(x.dist/1000); }), halb2 = Math.max(1, Math.floor(pace.length/2));
         var davor = pace.slice(0, pace.length - halb2), neu = pace.slice(-halb2);
         function avg(a){ return a.reduce(function(x, y){ return x + y; }, 0)/a.length; }
         var diff = avg(davor) - avg(neu);
-        if(letzteL.length >= 4) html += '<div class="sk-unter">'+esc(diff > 5 ? t("statPaceBesser", { z:statPz(diff) }) : diff < -5 ? t("statPaceLangsamer", { z:statPz(-diff) }) : t("statPaceGleich"))+'</div>';   // erst ab vier Läufen und 5 s Unterschied: Strecke, Wetter und Tagesform schwanken stark
+        if(letzteL.length >= 4) h += '<div class="sk-unter">'+esc(diff > 5 ? t("statPaceBesser", { z:statPz(diff) }) : diff < -5 ? t("statPaceLangsamer", { z:statPz(-diff) }) : t("statPaceGleich"))+'</div>';   // erst ab vier Läufen und 5 s Unterschied: Strecke, Wetter und Tagesform schwanken stark
       }
       var rek = [];
       var l1 = laeufe.reduce(function(m, x){ return !m || x.dist > m.dist ? x : m; }, null);
@@ -554,31 +580,27 @@ function renderStats(){
       if(bk) rek.push([t("statRekKm"), fmtUhr(bk.v)+" /km", bk.at]);
       var bp = gut.reduce(function(m, x){ return !m || x.dur/x.dist < m.dur/m.dist ? x : m; }, null);
       if(bp) rek.push([t("statRekPace"), runPace(bp.dur/1000, bp.dist)+" /km", bp.at]);
-      if(rek.length) html += '<div class="sk-unter titel">'+esc(t("statRekorde"))+'</div><div class="rekorde">'+rek.map(function(x){
+      if(rek.length) h += '<div class="sk-unter titel">'+esc(t("statRekorde"))+'</div><div class="rekorde">'+rek.map(function(x){
         return '<div><span>'+esc(x[0])+'</span><b>'+esc(x[1])+'</b><small>'+esc(new Date(x[2]).toLocaleDateString(currentLang() === "en" ? "en-GB" : "de-DE", { day:"numeric", month:"short" }))+'</small></div>'; }).join("")+'</div>';
     }
-    if(k === "katalog"){
-      // Verteilung, Häufigkeit und Balance der Muskelgruppen stehen in Path › Deep Dive; Fortschritt zeigt Menge und Verlauf
-      html += '<button type="button" class="dd-link" data-zumdeepdive><span>'+esc(t("statZuDeepDive"))+'</span><span aria-hidden="true">&#8250;</span></button>';
-    }
-    html += '</details>';
+    h += '</details>'; M["b-"+k] = h;
   });
-  app.innerHTML = html + '<div style="height:40px"></div>';
-  bindCommon();
-  app.querySelectorAll("[data-zumdeepdive]").forEach(function(b){ b.addEventListener("click", function(){ state.db.settings.koerperTab = "deepdive"; save(); tabLeiste("koerper"); renderKoerper(); window.scrollTo(0, 0); }); });
-  app.querySelectorAll("[data-statfalt]").forEach(function(d){
-    d.addEventListener("toggle", function(){ statOffen[d.getAttribute("data-statfalt").replace(/^b-/, "b-")] = d.open; });
-  });
-  app.querySelectorAll("[data-sfuebung]").forEach(function(b){ b.addEventListener("click", function(){ openStudioStats(b.getAttribute("data-sfuebung")); }); });
-  app.querySelectorAll(".bscroll").forEach(function(b){ b.scrollLeft = b.scrollWidth; });
-  var kal = app.querySelector("[data-statkal]");
-  if(kal) kal.addEventListener("toggle", function(){ statKalOffen = kal.open; });
-  function neu(){ var y = window.scrollY; renderStats(); window.scrollTo(0, y); }
-  app.querySelectorAll("[data-statmodus]").forEach(function(b){ b.addEventListener("click", function(){ statModus = b.getAttribute("data-statmodus"); neu(); }); });
-  app.querySelectorAll("[data-ziel]").forEach(function(b){ b.addEventListener("click", function(){ s.wochenZiel = clamp(ziel + (+b.getAttribute("data-ziel")), 1, 7); save(); neu(); }); });
-  app.querySelectorAll("[data-statgran]").forEach(function(b){ b.addEventListener("click", function(){ statGran = b.getAttribute("data-statgran"); neu(); }); });
-  app.querySelectorAll("[data-koerper]").forEach(function(b){ b.addEventListener("click", function(){ openKoerperSheet(neu); }); });
-  statTrainingsBinden(neu);
+  function bind(neu){
+    app.querySelectorAll("[data-statfalt]").forEach(function(d){
+      d.addEventListener("toggle", function(){ statOffen[d.getAttribute("data-statfalt")] = d.open; });
+    });
+    app.querySelectorAll("[data-sfuebung]:not(.stat-fort [data-sfuebung])").forEach(function(b){ b.addEventListener("click", function(){ openStudioStats(b.getAttribute("data-sfuebung")); }); });
+    app.querySelectorAll(".bscroll").forEach(function(b){ b.scrollLeft = b.scrollWidth; });
+    var kal = app.querySelector("[data-statkal]");
+    if(kal) kal.addEventListener("toggle", function(){ statKalOffen = kal.open; });
+    app.querySelectorAll("[data-statmodus]").forEach(function(b){ b.addEventListener("click", function(){ statModus = b.getAttribute("data-statmodus"); neu(); }); });
+    app.querySelectorAll("[data-ziel]").forEach(function(b){ b.addEventListener("click", function(){ s.wochenZiel = clamp(ziel + (+b.getAttribute("data-ziel")), 1, 7); save(); neu(); }); });
+    app.querySelectorAll("[data-statgran]").forEach(function(b){ b.addEventListener("click", function(){ statGran = b.getAttribute("data-statgran"); neu(); }); });
+    app.querySelectorAll("[data-koerper]").forEach(function(b){ b.addEventListener("click", function(){ openKoerperSheet(neu); }); });
+    statTrainingsBinden(neu);
+    statFortBinden(neu);   // Logbuch: Gewichte und Verläufe je Übung
+  }
+  return { M:M, bind:bind, bereiche:folge.map(function(r){ return r.k; }) };
 }
 function recentExercises(days){
   var since = Date.now() - days*86400000, out = {};

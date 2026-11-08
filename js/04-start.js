@@ -8,6 +8,7 @@ var HOME_ICON = {
   warm:'<circle cx="19" cy="5.6" r="2.6" fill="currentColor" stroke="none"/><path d="M3.5 18H10.2L16.2 9.2M16.2 9.5V18"/><path d="M3 21.5H21"/>',   /* Mobility & Stretch: Figur liegt auf dem Boden und drückt den Oberkörper nach oben (Kobra); klare Linien, Kopf gefüllt, damit es auch klein scharf bleibt */
   protein:'<path d="M12 3.5c3.2 4.1 5.5 7.3 5.5 10.3a5.5 5.5 0 0 1-11 0c0-3 2.3-6.2 5.5-10.3z"/><path d="M9.2 14.2a2.8 2.8 0 0 0 2.8 2.8"/>',   /* Protein: Tropfen */
   faq:'<circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.6 2.2c-.8.5-1.2 1-1.2 1.9M12 16.6v.1"/>',
+  plan:'<circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="5" r="2.2"/><path d="M8.2 19h8.3a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7h8.3"/>',   /* Trainingsplan: Pfad (früher Path) */
   run:'<circle cx="14" cy="4.5" r="2"/><path d="M6 21l3-6 3 2v5M9 15l1-4 4-1 2 3 3 1M10 11L8 8"/>'   /* Lauf: Läufer */
 };
 /* „Überrasch mich“: ein schlichter Würfel (erwachsener als der frühere Zauberstab mit Funken) */

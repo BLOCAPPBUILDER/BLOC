@@ -336,14 +336,16 @@ function faqHTML(){
 }
 /* Aussehen „New“: Seite „Tools“ - die oberste Kachel steht groß (Standard: Workout-Builder), die übrigen versetzt in zwei Spalten, die letzte bei ungerader Zahl über die ganze Breite.
    Reihenfolge in settings.toolsReihe; Kachel lange drücken (0,5 s) und ziehen verschiebt sie. */
-var TOOLS_KEYS = ["katalog", "run", "warm", "protein", "intervall", "faq"];
+var TOOLS_KEYS = ["katalog", "run", "plan", "warm", "protein", "intervall", "faq"];
 function toolsReihe(){
   var r = [];
   selArr(state.db.settings.toolsReihe).forEach(function(k){ if(TOOLS_KEYS.indexOf(k) > -1 && r.indexOf(k) < 0) r.push(k); });
+  if(r.length && r.indexOf("plan") < 0){ var ri = r.indexOf("run"); r.splice(ri < 0 ? r.length : ri + 1, 0, "plan"); }   // gespeicherte Reihenfolge ohne Trainingsplan: er steht nach Run
   TOOLS_KEYS.forEach(function(k){ if(r.indexOf(k) < 0) r.push(k); });
   return r;
 }
 function toolDaten(k){
+  if(k === "plan") return ["#koerper", t("tabKoerper"), t("toolsSubPlan")];
   if(k === "protein") return ["#protein", protT("titel"), t("toolsSubProtein")];
   if(k === "faq") return ["#faq", t("faqTitel"), t("faqKachelSub", { n:(window.BLOC_FAQ ? window.BLOC_FAQ.fragen.length : 0) })];
   var d = bereichDaten(k).slice();   // auf den Kacheln stehen kurze Untertitel (die ausführlichen bleiben auf den Seiten selbst)
@@ -370,10 +372,17 @@ function toolsKlassen(raster){
     el.classList.toggle("tk-voll", i > 0 && i === n-1 && (n-1)%2 === 1);
   });
 }
-var toolsZieht = false;   // solange eine Kachel gezogen wird, darf die Seite nicht mitscrollen
-document.addEventListener("touchmove", function(e){ if(toolsZieht && e.cancelable) e.preventDefault(); }, { passive:false });
-function toolsZiehenBinden(raster){
-  var tm = 0, x0 = 0, y0 = 0, el = null, geist = null, lx = 0, ly = 0, ox = 0, oy = 0, raf = 0, reduce = false;
+var kachelZieht = false;   // solange eine Kachel gezogen wird, darf die Seite nicht mitscrollen
+document.addEventListener("touchmove", function(e){ if(kachelZieht && e.cancelable) e.preventDefault(); }, { passive:false });
+/* Kacheln durch langes Drücken (0,5 s) verschieben; gilt für Tools und Fortschritt.
+   o.tile        Selektor einer Kachel im Raster
+   o.id          Attribut mit dem Schlüssel der Kachel
+   o.klassen     (raster) setzt nach jeder Umordnung Größe/Spalte neu (optional)
+   o.speichern   (ids) merkt die neue Reihenfolge
+   o.loeschen    (id) entfernt die Kachel; dann erscheint beim Ziehen eine Ablagefläche zum Entfernen, und Loslassen ohne Bewegen öffnet o.menue (optional)
+   o.menue       (el, id) Menü, wenn die Kachel gehalten und ohne Ziehen losgelassen wird (optional) */
+function kachelZiehen(raster, o){
+  var tm = 0, x0 = 0, y0 = 0, el = null, geist = null, korb = null, imKorb = false, bewegt = false, sx = 0, sy = 0, lx = 0, ly = 0, ox = 0, oy = 0, raf = 0, reduce = false;
   try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch(err){}
   function warteStop(){ if(tm){ clearTimeout(tm); tm = 0; } }
   function ziel(){
@@ -396,7 +405,8 @@ function toolsZiehenBinden(raster){
     kids.slice(0, idx).forEach(function(k){ raster.insertBefore(k, el); });
     var ref = el.nextSibling;
     kids.slice(idx+1).reverse().forEach(function(k){ raster.insertBefore(k, ref); ref = k; });
-    toolsKlassen(raster);
+    if(o.klassen) o.klassen(raster);
+    bewegt = true;
     if(reduce || !el.animate) return;
     Array.prototype.forEach.call(raster.children, function(k){
       if(k === el) return;
@@ -407,15 +417,22 @@ function toolsZiehenBinden(raster){
       k.animate([{ transform:"translate("+dx+"px,"+dy+"px)" }, { transform:"none" }], { duration:200, easing:"ease-out" });
     });
   }
+  function korbPruefen(){
+    if(!korb) return;
+    var r = korb.getBoundingClientRect();
+    imKorb = lx >= r.left && lx <= r.right && ly >= r.top - 12 && ly <= r.bottom + 12;
+    korb.classList.toggle("aktiv", imKorb);
+  }
   function tick(){
     if(!geist) return;
     if(ly < 90) window.scrollBy(0, -10); else if(ly > window.innerHeight - 90) window.scrollBy(0, 10);
-    var z = ziel(); if(z) umordnen(z);
+    korbPruefen();
+    if(!imKorb){ var z = ziel(); if(z) umordnen(z); }
     raf = requestAnimationFrame(tick);
   }
   function bewegen(e){
     lx = e.clientX; ly = e.clientY;
-    if(geist){ geist.style.left = (lx - ox)+"px"; geist.style.top = (ly - oy)+"px"; }
+    if(geist){ geist.style.left = (lx - ox)+"px"; geist.style.top = (ly - oy)+"px"; if(Math.abs(lx - sx) + Math.abs(ly - sy) > 8) bewegt = true; }
     else if(tm && Math.abs(lx - x0) + Math.abs(ly - y0) > 10) warteStop();   // wischt der Finger vorher, scrollt die Seite ganz normal
   }
   function ende(){
@@ -423,34 +440,48 @@ function toolsZiehenBinden(raster){
     document.removeEventListener("pointermove", bewegen); document.removeEventListener("pointerup", ende); document.removeEventListener("pointercancel", ende);
     if(!geist) return;
     cancelAnimationFrame(raf);
-    var g = geist, k = el; geist = null; toolsZieht = false;
+    var g = geist, k = el, weg = imKorb && o.loeschen, still = !bewegt && o.menue; geist = null; kachelZieht = false;
     langDruckSperre = Date.now() + 500;   // der Klick nach dem Loslassen öffnet nichts
+    if(korb){ korb.remove(); korb = null; }
+    if(weg){
+      g.style.transition = "transform .16s ease, opacity .16s ease"; g.style.transform = "scale(.5)"; g.style.opacity = "0";
+      setTimeout(function(){ if(g.parentNode) g.parentNode.removeChild(g); }, 170);
+      o.loeschen(k.getAttribute(o.id));
+      return;
+    }
     var r = k.getBoundingClientRect();
     g.style.transition = "left .16s ease, top .16s ease, width .16s ease, height .16s ease, transform .16s ease";
     g.style.left = r.left+"px"; g.style.top = r.top+"px"; g.style.width = r.width+"px"; g.style.height = r.height+"px"; g.style.transform = "none";
     setTimeout(function(){ k.classList.remove("tk-platz"); if(g.parentNode) g.parentNode.removeChild(g); }, 170);
-    state.db.settings.toolsReihe = Array.prototype.map.call(raster.children, function(c){ return c.getAttribute("data-tool"); });
-    save();
+    if(still){ o.menue(k, k.getAttribute(o.id)); return; }
+    o.speichern(Array.prototype.map.call(raster.children, function(c){ return c.getAttribute(o.id); }));
   }
   function start(k, px, py){
     var r = k.getBoundingClientRect();
-    el = k; lx = px; ly = py; ox = px - r.left; oy = py - r.top;
+    el = k; lx = sx = px; ly = sy = py; ox = px - r.left; oy = py - r.top; bewegt = false; imKorb = false;
     geist = k.cloneNode(true); geist.removeAttribute("data-nav"); geist.classList.add("tk-geist");
     geist.style.left = r.left+"px"; geist.style.top = r.top+"px"; geist.style.width = r.width+"px"; geist.style.height = r.height+"px";
     document.body.appendChild(geist);
     k.classList.add("tk-platz");
-    toolsZieht = true; langDruckSperre = Date.now() + 700;
+    if(o.loeschen){
+      korb = document.createElement("div"); korb.className = "kachel-korb"; korb.textContent = t("fkKorb");
+      document.body.appendChild(korb);
+    }
+    kachelZieht = true; langDruckSperre = Date.now() + 700;
     try { if(navigator.vibrate) navigator.vibrate(15); } catch(err){}
     raf = requestAnimationFrame(tick);
   }
   raster.addEventListener("pointerdown", function(e){
-    var k = e.target.closest ? e.target.closest(".tk") : null;
+    var k = e.target.closest ? e.target.closest(o.tile) : null;
     if(!k || geist || (e.pointerType === "mouse" && e.button !== 0)) return;
     x0 = lx = e.clientX; y0 = ly = e.clientY; warteStop();
     document.addEventListener("pointermove", bewegen); document.addEventListener("pointerup", ende); document.addEventListener("pointercancel", ende);
     tm = setTimeout(function(){ tm = 0; start(k, lx, ly); }, 500);
   });
   raster.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+}
+function toolsZiehenBinden(raster){
+  kachelZiehen(raster, { tile:".tk", id:"data-tool", klassen:toolsKlassen, speichern:function(ids){ state.db.settings.toolsReihe = ids; save(); } });
 }
 function renderTraining(){
   var reihe = toolsReihe();
@@ -470,6 +501,7 @@ function renderTraining(){
     var k = el.getAttribute("data-tool"), ft = el.querySelector(".tk-foto");
     if(!ft) return;
     if(k === "faq"){ ft.style.backgroundImage = "url(img/neu-faq.jpg)"; ft.style.backgroundPosition = "50% 55%"; return; }
+    if(k === "plan"){ ft.style.backgroundImage = "url(img/neu-h-rack.jpg)"; ft.style.backgroundPosition = "50% 52%"; return; }   // Rack mit bunten Hantelscheiben (Bildnachweis in quellen.html)
     if(k === "protein"){ ft.style.backgroundImage = "url(img/neu-protein.jpg)"; ft.style.backgroundPosition = "50% 27%"; return; }   // Hände mit den Eierschalen
     if(fotos[k]){ ft.style.backgroundImage = "url(" + fotos[k] + ")"; ft.style.backgroundPosition = fotoFokus(fotos[k]) || "50% 50%"; }
   });
