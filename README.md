@@ -17,7 +17,7 @@ Dieses Dokument beschreibt den **aktuellen Stand**. Die Geschichte der Änderung
 
 ## Aufbau der App
 
-**Unten eine Leiste** (nur auf den Hauptseiten): **Start · Suche · Kalender · Statistik · Einstellungen** (im Aussehen New: **Heute · Training · Path · Kalender** mit rundem Hauptknopf, siehe Designs).
+**Unten eine Leiste** (nur auf den Hauptseiten): **Start · Suche · Kalender · Statistik · Einstellungen** (im Aussehen New: **Heute · Tools · Fortschritt · Kalender** mit rundem Hauptknopf, siehe Designs).
 
 **Startseite:** Wochenzeile (Trainings dieser Woche), Favoriten (☆, höchstens vier sichtbar) und die Bereiche in der
 Reihenfolge **Workout, Timer, Run, Mobility & Stretch** (langes Drücken zum Sortieren). Welche Bereiche sichtbar sind,
@@ -31,11 +31,11 @@ stellt man unter **Einstellungen › Fokus** ein (ausgeblendete Bereiche bleiben
 
 **Speicherformat:** `db.v` zählt die Fassung (3 = ohne Summit). Laden, Import und Schnappschuss laufen über `dbAusRoh` und `dbMigrieren` (`js/01-basis.js`); jede Formatänderung bekommt dort eine Stufe. Summit (Challenges) wurde in Stufe 3 entfernt; alle Daten dazu werden beim Laden gelöscht.
 
-**Path** (früher Arena, dritter Reiter der unteren Leiste im Aussehen New; `js/21-koerper.js`): drei Reiter. **Trainingspläne** (Einträge der Reihe nach, Wochenplan, Kalender) · **Deep Dive** (die Muskelgruppen auf der Körperfigur, pro Woche und pro Workout mit den Kennzahlen Trainings, Zeit und Übungen, der Verteilung auf sechs Gruppen mit Unterschied zur Vorwoche und einem Vorschlag aus dem Katalog für die Gruppe, die zu kurz kam; Wochen mit den Pfeilen wechseln, Daten aus dem Trainingsverlauf) · **Fortschritt** (die Statistik, siehe unten).
+**Trainingsplan** (früher Path; Kachel unter Tools, `js/21-koerper.js`): die Liste der Trainingspläne (Einträge der Reihe nach, Wochenplan, Kalender), „Neuer TrainingsBLOC“, ohne Reiter; Zurück führt nach Tools. Fortschritt und Deep Dive stehen seit 2026-11-08 zusammen auf der Seite **Fortschritt** (dritter Reiter der unteren Leiste, `js/24-fortschritt.js`): frei zusammenstellbare Kacheln im versetzten Raster (Masonry). Standard: Tage am Stück, gehobenes Gewicht (kg), Gewichte & Verläufe je Übung; unten „Weitere Auswertungen hinzufügen“ (24 Auswertungen: Zahlen, Gewichte & Verläufe, Training, Bereiche, Muskeln). Kachel lange drücken und ziehen verschiebt sie, auf die Fläche „Entfernen“ gezogen (oder nach dem Halten im Menü) verschwindet sie; Auswahl und Reihenfolge in `settings.fortschrittKacheln`. Die Inhalte liefern `statModule` (`js/12-uebung-statistik.js`) und `ddModule` (`js/21-koerper.js`; Muskel-Kacheln immer für die laufende Woche).
 
 **Katalog (2026-10-23):** Workout-Karten zeigen eine kleine Körperfigur mit den trainierten Muskelgruppen (`kkMiniHTML`). Die Ortskarten und Übungskacheln tragen die Farbe des Ortes: Fitnessstudio rot, Freiluft blau, Mobility & Stretch grün (auch in der Auswahl der Trainingspläne). Für Gruppen mit nur ein oder zwei Workouts gibt es 15 zusätzliche zusammengestellte Workouts (`daten.js`, Block „Mehr Abwechslung“), je Gruppe und Ort mit höchstens 25 % gleichen Übungen wie in den vorhandenen.
 
-**Aufgabenteilung Fortschritt und Deep Dive** (2026-10-23): **Fortschritt** zeigt Menge und Verlauf über Wochen (Zeit, Serie, Läufe, Volumen, Rekorde, die trainierten **BLOCs im Verlauf** und die gespeicherten Trainings); **Deep Dive** zeigt die Verteilung einer Woche (Häufigkeit pro Muskelgruppe, Muskel-Kalender mit Plan-Vorschau, Balance, Anteil). Beide verweisen aufeinander. Die Kalorien für Radfahrten rechnen mit Rad-Werten nach Tempo, nicht wie Läufe (`runKcal`).
+**Aufgabenteilung Fortschritt und Deep Dive** (2026-10-23; seit 2026-11-08 Kacheln derselben Seite „Fortschritt“): **Fortschritt** zeigt Menge und Verlauf über Wochen (Zeit, Serie, Läufe, Volumen, Rekorde, die trainierten **BLOCs im Verlauf** und die gespeicherten Trainings); **Deep Dive** zeigt die Verteilung einer Woche (Häufigkeit pro Muskelgruppe, Muskel-Kalender mit Plan-Vorschau, Balance, Anteil). Beide verweisen aufeinander. Die Kalorien für Radfahrten rechnen mit Rad-Werten nach Tempo, nicht wie Läufe (`runKcal`).
 
 **Statistik** (alles lokal berechnet): Kopf mit Trainings der letzten 7 Tage und Serie, Verlauf als Balken (Zeit oder
 Anzahl, **Woche · Monat · Jahr**, nach links wischen für früher, so weit Daten da sind), Kalender der letzten 4 Wochen
@@ -59,7 +59,7 @@ die Hauptaktion, das Logo und die Arbeitsphase im Timer. „Ausgewählt“ ist r
 **Aussehen: nur Modern** (das frühere „Classic“ ist seit 2026-10-23 aus dem Code entfernt; es gibt keine Auswahl mehr, `data-layout="new"` wird in `applyTheme` immer gesetzt; Standard bei einem frischen Start: Dunkel). Der Look steht in
 `layout-new.css` (alles unter `:root[data-layout="new"]`, gesetzt in `applyTheme`): größere Rundungen mit kleiner Ecke oben links, ruhige
 Konturen, Wochenpunkte weiß / orange / Ring, die untere Leiste als schwebende Pille mit orangenem aktivem Reiter. Dazu ändert „New“ die
-Navigation: unten **Heute · Training · Path · Kalender**; Suche und Einstellungen sind Symbole oben auf
+Navigation: unten **Heute · Tools · Fortschritt · Kalender** (Trainingsplan als Kachel unter Tools); Suche und Einstellungen sind Symbole oben auf
 Heute und Training (`kopfSymboleNeu` in `js/03-router.js`); die Bereiche (Workout, Mobility & Stretch, Timer, Run) stehen
 als Fotokarten auf der neuen Seite **Training** (`#training`, `renderTraining` in `js/05-suche.js`); auf Heute ersetzt der **Workout-Builder**
 (Überrasch mich · Selber bauen, `builderKarteHTML`) die Bereichsliste. Fotos für New: `img/neu-*.jpg` und `img/neu-builder.webp`. Das frühere

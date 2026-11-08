@@ -1,24 +1,15 @@
 "use strict";
-/* ============ Arena: Trainingspläne · Fortschritt (dritter Reiter der unteren Leiste) ============
-   Zwei Seiten unter einem Reiter (die Wahl merkt sich settings.koerperTab):
-   - Trainingspläne: Einträge, die der Reihe nach abgearbeitet werden. Ein Trainingsplan hat einen Namen, eine Liste von Einträgen (nur aus Vorhandenem: BLOCs,
-     Favoriten, Workouts aus dem Katalog; Rubriken Mobility, Workout, Run, Stretch) und einen Wochenplan (Wochentage + 4/6/8/12 Wochen), der als normale
-     Kalender-Einträge übernommen wird. Gespeichert wird settings.programme = [{ id, name, items:["my:ID" | "lib:ID" | "plan:ID" | "run" | "zufall"],
-     tage:[0-6], wochen, pos, fav, updatedAt }]; pos = nächster Eintrag. Die Karten stehen zugeklappt; Kopieren · Teilen · Löschen per langem Drücken.
-   - Fortschritt: die Statistik (renderStats).
+/* ============ Trainingsplan (früher Path; Kachel unter Tools) ============
+   Trainingspläne: Einträge, die der Reihe nach abgearbeitet werden. Ein Trainingsplan hat einen Namen, eine Liste von Einträgen (nur aus Vorhandenem: BLOCs,
+   Favoriten, Workouts aus dem Katalog; Rubriken Mobility, Workout, Run, Stretch) und einen Wochenplan (Wochentage + 4/6/8/12 Wochen), der als normale
+   Kalender-Einträge übernommen wird. Gespeichert wird settings.programme = [{ id, name, items:["my:ID" | "lib:ID" | "plan:ID" | "run" | "zufall"],
+   tage:[0-6], wochen, pos, fav, updatedAt }]; pos = nächster Eintrag. Die Karten stehen zugeklappt; Kopieren · Teilen · Löschen per langem Drücken.
+   Fortschritt und Deep Dive stehen zusammen auf der Seite Fortschritt (js/24-fortschritt.js); dort liefert ddModule die Muskel-Kacheln.
    Alles bleibt auf dem Gerät. */
 var KP_WOCHEN = [4, 6, 8, 12];
 var PG_RUBRIKEN = ["mobility", "workout", "run", "stretch"];
 var pgOffen = {};   // aufgeklappte Karten und Wochenpläne (nur für diesen Besuch)
 
-function koerperTab(){
-  var k = state.db.settings.koerperTab;
-  return k === "fortschritt" ? "fortschritt" : k === "deepdive" ? "deepdive" : "programm";   // früher „plan“ und „uebungen“ führen zu den Trainingsplänen
-}
-function koerperSegHTML(){
-  function b(k, label){ return '<button type="button" data-koerpertab="'+k+'" class="'+(koerperTab() === k ? 'active' : '')+'" aria-pressed="'+(koerperTab() === k)+'">'+esc(label)+'</button>'; }
-  return '<div class="rz koerper-rz drei" role="group">'+b("programm", t("arenaProgramm"))+b("deepdive", t("arenaDeepDive"))+b("fortschritt", t("arenaFortschritt"))+'</div>';
-}
 /* Deep Dive: die Muskelgruppen auf der Körperfigur, pro Woche (alle Übungen der Woche) und pro Workout (jedes Training der Woche mit Übungen).
    Die Figur und die Zeilen (viel · am Rande · Lücken) sind die der Körperkarte (kkKopfHTML); die Daten kommen aus dem Trainingsverlauf (history[].ex). */
 var ddWoche = 0;   // 0 = diese Woche, -1 = die vorherige … (nur für diesen Besuch)
@@ -95,7 +86,8 @@ function ddKalenderWahl(id){
   }
   openActionSheet(tplText(lw.name)+" · "+t("ddKalWann"), acts);
 }
-function renderDeepDive(){
+function ddModule(){
+  ddWoche = 0; ddModus = null;   // auf der Seite Fortschritt zählt immer die laufende Woche
   var tag = 86400000, von = ddWochenStart(), bis = von + 7*tag, lang = currentLang() === "en" ? "en-GB" : "de-DE";
   function woche(a, b){ return (state.db.history || []).filter(function(e){ return e && e.at >= a && e.at < b && e.ex && e.ex.length; }).sort(function(x, y){ return y.at - x.at; }); }
   function alleIds(l){ var ids = []; l.forEach(function(e){ e.ex.forEach(function(id){ ids.push(id); }); }); return ids; }
@@ -190,32 +182,13 @@ function renderDeepDive(){
         '<button type="button" class="dd-vs-play" data-ddgo="'+esc(lw.id)+'" aria-label="'+esc(t("ddAnsehen"))+'">'+ICON_PLAY+'</button></div></div>';
     }
   }
-  app.innerHTML =
-    topbar(t("tabKoerper"), { back:"#home", right:kopfSymboleNeu("stats") }) +
-    '<div class="dd-nav"><button type="button" class="iconbtn" data-ddwoche="-1" aria-label="'+esc(t("ddVor"))+'">&#8249;</button><b>'+esc(kopf)+'</b>'+
-      '<button type="button" class="iconbtn" data-ddwoche="1" aria-label="'+esc(t("ddNach"))+'"'+(ddWoche >= 0 ? ' disabled' : '')+'>&#8250;</button></div>' +
-    chips + umschalter + kkModusHTML() +
-    freqKarte + statFortschrittHTML() + kalKarte + balKarte + verteilung + vorschlag +
-    (eintraege.length ? '<div class="section-title"><span>'+esc(t("ddWorkout"))+'</span></div>'+eintraege.map(function(e){
-      var dauer = e.dur > 0 ? " · "+fmtDuration(Math.max(60, Math.round(e.dur/60)*60)) : "";
-      return '<section class="card dd-karte"><div class="dd-titel">'+esc(datum(e.at, { weekday:"long", day:"numeric", month:"short" }))+'</div>'+
-        '<div class="dd-sub">'+esc(exAnzText(e.ex.length)+dauer)+'</div>'+kkKopfHTML(e.ex, false, { ohneModus:true })+'</section>';
-    }).join("") : '') +
-    '<button type="button" class="dd-link" data-zumfortschritt><span>'+esc(t("ddZuFortschritt"))+'</span><span aria-hidden="true">&#8250;</span></button>' +
-    '<div style="height:90px"></div>';
-  bindCommon();
-  statFortBinden(function(){ var y = window.scrollY; renderKoerper(); window.scrollTo(0, y); });   // Logbuch (Fortschritt je Übung)
-  app.querySelectorAll("[data-ddbalinfo]").forEach(function(b){ b.addEventListener("click", function(){ ddInfoFenster(t("ddBalTitel"), t("ddBalInfo")); }); });
-  app.querySelectorAll("[data-zumfortschritt]").forEach(function(b){ b.addEventListener("click", function(){ state.db.settings.koerperTab = "fortschritt"; save(); tabLeiste("koerper"); renderKoerper(); window.scrollTo(0, 0); }); });
-  app.querySelectorAll("[data-ddwoche]").forEach(function(b){
-    b.addEventListener("click", function(){ ddWoche = Math.min(0, ddWoche + (+b.getAttribute("data-ddwoche"))); renderKoerper(); window.scrollTo(0, 0); });
-  });
-  app.querySelectorAll("[data-ddmodus]").forEach(function(b){
-    b.addEventListener("click", function(){ ddModus = b.getAttribute("data-ddmodus"); var y = window.scrollY; renderKoerper(); window.scrollTo(0, y); });
-  });
-  app.querySelectorAll("[data-ddkal]").forEach(function(b){ b.addEventListener("click", function(){ ddKalenderWahl(b.getAttribute("data-ddkal")); }); });
-  app.querySelectorAll(".dd-vorschlag [data-fav]").forEach(function(b){ b.addEventListener("click", function(){ toggleFav(b.getAttribute("data-fav")); var y = window.scrollY; renderKoerper(); window.scrollTo(0, y); }); });
-  app.querySelectorAll("[data-ddgo]").forEach(function(b){ b.addEventListener("click", function(){ coverDraft = null; go("#cover/lib/"+b.getAttribute("data-ddgo")); }); });
+  function bind(neu){
+    app.querySelectorAll("[data-ddbalinfo]").forEach(function(b){ b.addEventListener("click", function(){ ddInfoFenster(t("ddBalTitel"), t("ddBalInfo")); }); });
+    app.querySelectorAll("[data-ddkal]").forEach(function(b){ b.addEventListener("click", function(){ ddKalenderWahl(b.getAttribute("data-ddkal")); }); });
+    app.querySelectorAll(".dd-vorschlag [data-fav]").forEach(function(b){ b.addEventListener("click", function(){ toggleFav(b.getAttribute("data-fav")); neu(); }); });
+    app.querySelectorAll("[data-ddgo]").forEach(function(b){ b.addEventListener("click", function(){ coverDraft = null; go("#cover/lib/"+b.getAttribute("data-ddgo")); }); });
+  }
+  return { M:{ dd_freq:freqKarte, dd_woche:kalKarte, dd_balance:balKarte, dd_anteil:verteilung, dd_idee:vorschlag }, bind:bind };
 }
 /* Kleines Infofenster mit Text (ein Tipp auf den Hintergrund oder „OK“ schließt es) */
 function ddInfoFenster(titel, text){
@@ -226,13 +199,9 @@ function ddInfoFenster(titel, text){
   root.querySelector("[data-ok]").addEventListener("click", zu);
   root.querySelector(".confirm-overlay").addEventListener("click", function(e){ if(e.target === this) zu(); });
 }
-function renderKoerper(){
-  if(koerperTab() === "fortschritt") renderStats(); else if(koerperTab() === "deepdive") renderDeepDive(); else renderProgramme();
-  var tb = app.querySelector(".topbar");
-  if(tb){ tb.insertAdjacentHTML("afterend", koerperSegHTML()); var bk = tb.querySelector(".back"); if(bk) bk.classList.add("zeigen"); }   // Zurück-Knopf auch in der Arena (wie Training und Kalender)
-  app.querySelectorAll("[data-koerpertab]").forEach(function(b){
-    b.addEventListener("click", function(){ koerperWechseln(b.getAttribute("data-koerpertab")); });
-  });
+function renderKoerper(){   // Trainingsplan (früher Path): nur noch die Pläne; Fortschritt und Deep Dive stehen auf der Seite Fortschritt
+  renderProgramme();
+  var bk = app.querySelector(".topbar .back"); if(bk) bk.classList.add("zeigen");
 }
 
 /* ---------- Daten ---------- */
@@ -454,7 +423,7 @@ function progKarteHTML(p){
 function renderProgramme(){
   var liste = progSortiert();
   app.innerHTML =
-    topbar(t("tabKoerper"), { back:"#home", right:kopfSymboleNeu("stats") }) +
+    topbar(t("tabKoerper"), { back:"#training", right:kopfSymboleNeu("training") }) +
     (liste.length ? '<div class="pg-liste-karten">'+liste.map(progKarteHTML).join("")+'</div>' : '<div class="pg-leerseite">'+svgIcon('<circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="5" r="2.2"/><path d="M8.2 19h8.3a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7h8.3"/>')+'<p>'+esc(t("progLeer"))+'</p></div>')+
     '<button type="button" class="btn btn-primary pg-neu" data-pgneu>'+ICON_PLUS+' '+esc(t("progNeu"))+'</button>'+
     '<div style="height:90px"></div>';
@@ -744,4 +713,3 @@ var WISCH_AN = false;   // aus: im Browser ruckelt das Folgen des Fingers noch; 
   }, { passive:true });
 })();
 /* Path: Reiter wechseln (Knopf oder Wischen) */
-function koerperWechseln(k){ state.db.settings.koerperTab = k; save(); tabLeiste("koerper"); renderKoerper(); window.scrollTo(0, 0); }

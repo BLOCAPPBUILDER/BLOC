@@ -305,7 +305,7 @@ function hauptAktionNeu(route){
   if(route === "kalender") return { svg:P_PLUS, label:t("kalAdd"), fn:function(){ kalHinzuMenue(kalAnsicht === "monat" && kalAuswahl ? kalAuswahl : kalTagKey(Date.now())); } };
   return route === "home" ? null : hauptAktionNeu("home");   // der runde Knopf steht auf allen Hauptseiten (Arena › Fortschritt, Fragen: wie auf Heute)
 }
-var NEU_TABS = { home:"#home", training:"#training", kalender:"#kalender", koerper:"#koerper", stats:"#koerper", faq:"#training" };
+var NEU_TABS = { home:"#home", training:"#training", kalender:"#kalender", koerper:"#training", stats:"#stats", faq:"#training" };   // Trainingsplan liegt unter Tools; Fortschritt hat einen eigenen Reiter
 function tabLeiste(route){
   var el = document.getElementById("tabbar");
   if(!el) return;
@@ -315,7 +315,7 @@ function tabLeiste(route){
   var eintraege = [
     ["#home", t("tabHeute"), '<path d="M4 11l8-7 8 7"/><path d="M6 10v10h12V10"/>'],
     ["#training", t("tabTraining"), '<path d="M6 7v10M3 10v4M18 7v10M21 10v4M6 12h12"/>'],
-    ["#koerper", t("tabArena"), '<circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="5" r="2.2"/><path d="M8.2 19h8.3a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7h8.3"/>'],
+    ["#stats", t("tabFortschritt"), '<path d="M4 4v16h16"/><path d="M8 15l3.5-4.5 3 2.5L20 7"/>'],
     ["#kalender", t("tabKalender"), '<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/>']
   ];
   var tabsHTML = eintraege.map(function(x){
@@ -382,7 +382,7 @@ function render(){
   if(route==="settings") return renderSettings();
   if(route==="search") return renderSearch();
   if(route==="koerper") return renderKoerper();
-  if(route==="stats"){ state.db.settings.koerperTab = "fortschritt"; return renderKoerper(); }
+  if(route==="stats") return renderFortschritt();
   if(route==="studio") return renderStudioKarte(parts[1]);
   if(route==="install") return renderInstallGuide();
   if(route==="play") return startPlayer(parts[1]);
