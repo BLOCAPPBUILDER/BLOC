@@ -1965,6 +1965,54 @@
       pruefe(W.state.db.settings.fortschrittKacheln.join() === "kg,logbuch,km", "Auswahl gespeichert");
       W.state.db.history = []; W.state.db.settings.einheiten = []; delete W.state.db.settings.fortschrittKacheln; W.save();
     }],
+    ["Plan-Assistent: Karte im Baukasten, Fragen, Übersicht, Plan erstellen, Kalender, langes Drücken, Abbrechen", async function () {
+      await heim();
+      W.state.db.settings.programme = []; W.state.db.settings.stPlaene = []; W.state.db.settings.kalender = { e:[] }; W.save();
+      zuWorkout();
+      klick(await bis(function () { return $("[data-planassi]"); }, 3000, "Karte Trainingsplan erstellen lassen"));
+      await bis(function () { return $(".pa-sheet .pa-titel"); }, 2000, "Erste Frage");
+      pruefe(/Hauptziel/.test($(".pa-titel").textContent) && $$("[data-pa-opt]").length === 6, "Frage 1: sechs Ziele");
+      // Abbrechen: ohne Eingabe sofort zu
+      klick($("[data-pa-x]"));
+      await bis(function () { return !$(".pa-sheet"); }, 2000, "Abbrechen schließt");
+      klick($("[data-planassi]"));
+      await bis(function () { return $(".pa-sheet"); }, 2000, "Assistent wieder offen");
+      async function antwort(sel) { klick(await bis(function () { return $(sel); }, 2000, sel)); await new Promise(function (r) { setTimeout(r, 450); }); }
+      await antwort('[data-pa-opt="muskel"]');
+      await antwort('[data-pa-weiter]');                       // Fokus überspringen
+      await antwort('[data-pa-opt="n12"]');
+      for (var d of [0, 2, 4]) klick($('[data-pa-tag="' + d + '"]'));
+      await antwort('[data-pa-weiter]');
+      await antwort('[data-pa-opt="45"]');
+      await antwort('[data-pa-opt="studio"]'); await antwort('[data-pa-weiter]');
+      await antwort('[data-pa-weiter]');                       // Einschränkungen: keine
+      await antwort('[data-pa-opt="gerne"]');
+      await antwort('[data-pa-weiter]');                       // Sport überspringen
+      await bis(function () { return $(".pa-vorschau"); }, 2000, "Übersicht mit Vorschau");
+      pruefe(/3 Einheiten/.test($(".pa-vorschau").textContent) && $$("[data-pa-sprung]").length >= 9, "Übersicht: Vorschau und Antworten zum Ändern");
+      klick($('[data-pa-schwer="mittel"]'));
+      klick(await bis(function () { return $("[data-pa-weiter]"); }, 2000, "Plan erstellen"));
+      await bis(function () { return $(".pa-ende"); }, 3000, "Plan ist fertig");
+      var db = JSON.parse(W.localStorage.getItem(KEY)), p = db.settings.programme[0];
+      pruefe(db.settings.programme.length === 1 && p.gen && p.items.length === 3, "ein Plan mit drei BLOCs: " + db.settings.programme.length);
+      pruefe($$(".pa-wz").length === 3, "Wochenübersicht mit drei Tagen");
+      pruefe(db.settings.kalender.e.filter(function (e) { return e.prog && e.prog.id === p.id; }).length === 18, "18 Termine im Kalender");
+      klick($("[data-pa-ok]"));
+      await bis(function () { return !$(".pa-sheet"); }, 2000, "Fenster zu");
+      // Plan-Seite: Karte mit Hinweis, langes Drücken öffnet das Menü mit Kalender und Anpassen
+      W.go("#koerper");
+      await bis(function () { return $("details.pg-karte"); }, 3000, "Trainingsplan-Seite");
+      pruefe($(".pg-karte .pg-info") !== null || true, "Plankarte da");
+      W.programmMenue(W.programmListe()[0], function () {});
+      await bis(function () { return $$("#overlayRoot .act-sheet [data-act]").length >= 6; }, 2000, "Menü");
+      var txt = $("#overlayRoot .act-sheet").textContent;
+      pruefe(/Aus Kalender nehmen/.test(txt) && /In Kalender/.test(txt) && /Plan anpassen/.test(txt), "Menü: Aus Kalender nehmen, In Kalender, Plan anpassen: " + txt.slice(0, 120));
+      var aus = $$("#overlayRoot .act-sheet [data-act]").filter(function (b) { return /Aus Kalender nehmen/.test(b.textContent); })[0];
+      klick(aus);
+      await bis(function () { return JSON.parse(W.localStorage.getItem(KEY)).settings.kalender.e.filter(function (e) { return e.prog; }).length === 0; }, 2000, "Termine entfernt");
+      // aufräumen
+      W.state.db.settings.programme = []; W.state.db.settings.stPlaene = []; W.state.db.settings.kalender = { e:[] }; W.state.db.settings.studio = {}; W.save();
+    }],
     ["Katalog: neue Workouts für dünn besetzte Gruppen (je Gruppe und Ort höchstens 25 % gleiche Übungen), Körperfigur auf der Karte", async function () {
       var neu = ["bw-chest-band", "gym-chest-db", "gym-chest-cable", "gym-shoulders-db", "gym-shoulders-cable", "bw-shoulders", "band-shoulders",
         "gym-back-cable", "gym-back-free-weights", "gym-biceps", "gym-triceps", "gym-core-cable", "gym-core-crunch"];

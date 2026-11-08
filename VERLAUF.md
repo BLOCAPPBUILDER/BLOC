@@ -3,6 +3,14 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-09 · Plan-Assistent im Workout-Builder (Fassung 2026-11-09-1)
+
+- **Trainingsplan erstellen lassen:** Neue Karte im Baukasten (neben „Überrasch mich“ und „Selber bauen“) und ein Knopf auf der Trainingsplan-Seite. Ein Fenster über der Seite stellt Frage für Frage (Ziel, Fokuszone, Aktivität, Trainingstage, Zeit, Ort/Equipment, Einschränkungen, Impact, anderer Sport, Laufen und Mobility nur je nach Ziel) und endet in einer Übersicht mit Vorschau, Schwierigkeit **Leicht / Mittel / Schwer** (Vorgabe aus der Aktivität) und aufklappbaren Extras (Alter, Planlänge 4/6/8 Wochen). Abbrechen (X) jederzeit, eine Antwort in der Übersicht antippen ändert sie.
+- **Ergebnis:** eigene BLOCs je Trainingstag (Aufwärmen, Hauptteil mit Sätzen, Dehnen am Ende; Cardio-Zirkel mit Timer; Mobility-Tag), ein Trainingsplan mit Wochenplan, Hinweisen (Steigerung, Leichtwoche, Sicherheit, Quellenhinweis) und alle Termine im Kalender (Laufen als Run-Termin, anderer Sport als fester Termin „Sport“). Regeln: jede Gruppe möglichst 2× pro Woche, Einschränkungen und „gelenkschonend“ ersetzen Übungen, nach anderem Sport kein Beintag (Sporttag und Folgetag, zwei Tage danach kein reiner Unterkörper), ab 65 Gleichgewichtsübung. Auswahl nach Mehrgelenkübungen und vorhandenem Equipment.
+- **Entfernen und Anpassen:** Langes Drücken auf die Plankarte: „Aus Kalender nehmen“ (sofort), „In Kalender übertragen“, „Plan anpassen“ (Assistent mit den gespeicherten Antworten, ersetzt die BLOCs und die Termine). Löschen nimmt BLOCs und Termine mit.
+- Quellen und Regeln: `docs/PLAN-ASSISTENT.md`, Abschnitt „Quellen zum Plan-Assistenten“ in `quellen.html` (offen zugängliche Literatur, Recherche vom Recherche-Kollegen); Zahlen für Sätze, Pausen und Steigerung sind Festlegungen von BLOC.
+- Tests: Einheitstest (300 Kombinationen: keine Doppelten, Einschränkungen eingehalten, Wochenplan, Sport-Regel, Anlegen/Anpassen/Löschen), Schnelltest (Ablauf mit Abbrechen, Kalender, Menü).
+
 ## 2026-11-08 · Fortschritt: Mülltonne oben beim Ziehen, kleine Kacheln gerade nebeneinander (Fassung 2026-11-08-9)
 
 - **Fortschritt:** Beim Ziehen einer Kachel erscheint oben in der Mitte eine Mülltonne (zusätzlich zur Fläche unten); Fallenlassen darauf entfernt die Kachel. Die kleinen Kacheln stehen gerade nebeneinander (der Versatz der rechten Spalte entfällt hier; auf Tools bleibt er) und sind mindestens quadratisch (174 px hoch, `layout-new.css`, `kachelZiehen` in `js/05-suche.js`).

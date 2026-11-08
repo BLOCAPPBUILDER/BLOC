@@ -268,6 +268,7 @@ function programmAusKalender(p){
 /* Jeder gewählte Wochentag bekommt genau einen Kalender-Baustein: den TrainingsBLOC selbst (er enthält die BLOCs des Tages).
    Ohne gewählte Dauer gilt nur die nächste Woche; frühere offene Termine dieses TrainingsBLOCs ab heute werden dabei ersetzt. */
 function programmUebernehmen(p){
+  if(p.wp && p.wp.length && typeof paKalender === "function") return paKalender(p);   // Plan vom Assistenten: eigener Wochenplan (je Tag ein BLOC, Lauf, Sport)
   if(!p.items.length || !p.tage.length) return 0;
   var start = new Date(); start.setHours(12, 0, 0, 0);
   var wochen = p.wochen || 1;
@@ -406,6 +407,7 @@ function progKarteHTML(p){
       '<button type="button" class="fav-btn'+(progFav(p) ? ' on' : '')+'" data-pgfav="'+esc(p.id)+'" aria-pressed="'+progFav(p)+'" title="'+esc(t("favorite"))+'" aria-label="'+esc(t("favorite"))+'">'+(progFav(p) ? '★' : '☆')+'</button>'+
       '<span class="pg-pfeil" aria-hidden="true">'+svgIcon(PG_ICON_PFEIL)+'</span></summary>'+
     '<div class="pg-innen">'+
+      (p.info ? '<p class="pg-info">'+esc(p.info)+'</p>' : '')+
       (p.items.length ? '<button type="button" class="btn btn-primary pg-go" data-pggo="'+esc(p.id)+'">'+ICON_PLAY+' '+esc(t("letsGoBig"))+'</button>' : '')+
       (p.items.length ? '<ol class="pg-liste">'+p.items.map(function(r, i){ return progZeileHTML(p, r, i); }).join("")+'</ol>' : '')+
       '<button type="button" class="pg-plus" data-pgplus="'+esc(p.id)+'">'+ICON_PLUS+'<span>'+esc(t("progPlus"))+'</span></button>'+
@@ -426,10 +428,12 @@ function renderProgramme(){
     topbar(t("tabKoerper"), { back:"#training", right:kopfSymboleNeu("training") }) +
     (liste.length ? '<div class="pg-liste-karten">'+liste.map(progKarteHTML).join("")+'</div>' : '<div class="pg-leerseite">'+svgIcon('<circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="5" r="2.2"/><path d="M8.2 19h8.3a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7h8.3"/>')+'<p>'+esc(t("progLeer"))+'</p></div>')+
     '<button type="button" class="btn btn-primary pg-neu" data-pgneu>'+ICON_PLUS+' '+esc(t("progNeu"))+'</button>'+
+    '<button type="button" class="btn btn-secondary pg-neu pg-assi" data-pgassi>'+svgIcon(HOME_ICON.plan)+' '+esc(pt("eintrag"))+'</button>'+
     '<div style="height:90px"></div>';
   bindCommon();
   function neu(){ var y = window.scrollY; renderKoerper(); window.scrollTo(0, y); }
   function teile(v){ var a = v.split(":"); return { p:programmFinde(a[0]), n:+a[1] }; }
+  app.querySelectorAll("[data-pgassi]").forEach(function(b){ b.addEventListener("click", function(){ paOeffnen(null, null); }); });
   app.querySelectorAll("[data-pgneu]").forEach(function(b){ b.addEventListener("click", function(){ programmNeu(); renderKoerper(); window.scrollTo(0, 0); }); });
   app.querySelectorAll("[data-pgfav]").forEach(function(b){ b.addEventListener("click", function(e){ e.preventDefault(); e.stopPropagation(); var p = programmFinde(b.getAttribute("data-pgfav")); if(!p) return; toggleFav("prog:"+p.id); neu(); }); });
   app.querySelectorAll("[data-pgplus]").forEach(function(b){ b.addEventListener("click", function(){ var p = programmFinde(b.getAttribute("data-pgplus")); if(p) openProgrammWahl(p, neu); }); });
@@ -506,7 +510,11 @@ function umbenennenSheet(alt, fn){
   return p.name+"\n"+p.items.map(function(r, i){ var o = kalAufloesen(progEintrag(r)); return (i + 1)+". "+o.name; }).join("\n");
 }
 function programmMenue(p, neu){
+  var assi = p.assi && typeof paOeffnen === "function";
   openActionSheet(p.name, [
+    { ico:P_CHECK, label:t("progAusKalender"), fn:function(){ var n = programmAusKalender(p); showToast(typeof pt === "function" ? pt("ausKalenderOk", { n:n }) : t("progAusKalenderOk")); neu(); } },
+    { ico:P_PLUS, label:t("progInKalender"), fn:function(){ var n = programmUebernehmen(p); showToast(typeof pt === "function" ? pt("inKalenderOk", { n:n }) : String(n)); neu(); } },
+    assi ? { ico:ICON_EDIT, label:pt("planAnpassen"), fn:function(){ paOeffnen(p.assi, p.id); } } : null,
     { ico:ICON_EDIT, label:t("umbenennen"), fn:function(){ umbenennenSheet(p.name, function(v){ p.name = v; p.updatedAt = Date.now(); save(); neu(); }); } },
     { ico:P_SHARE, label:t("share"), fn:function(){ programmTeilen(p); } },
     { ico:ICON_COPY, label:t("actCopy"), fn:function(){
@@ -515,12 +523,14 @@ function programmMenue(p, neu){
     } },
     { ico:P_TRASH, label:t("del"), danger:true, fn:function(){
       confirmSheet(t("progDelQ"), "„"+p.name+"“ – "+t("cantUndo"), t("del"), function(){
+        if(p.gen && typeof paBlocLoeschen === "function") paBlocLoeschen(p.id);   // vom Assistenten erzeugte BLOCs gehen mit
+        programmAusKalender(p);
         state.db.settings.programme = programmListe().filter(function(x){ return x.id !== p.id; });
         state.db.settings.favs = (state.db.settings.favs || []).filter(function(k){ return k !== 'prog:'+p.id; }); save(); neu();
         showToast(t("deletedToast", { n:p.name }));
       });
     } }
-  ]);
+  ].filter(Boolean));
 }
 var P_SHARE = '<circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.4M8.3 13.2l7.4 4.4"/>';
 
