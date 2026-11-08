@@ -1569,3 +1569,14 @@ body.prot-sheet-offen{ overflow:hidden; }
 .fk-zeile i{ font-style:normal; font-weight:700; width:22px; text-align:center; color:var(--text-dim); }
 .fk-zeile.an{ border-color:var(--accent); background:color-mix(in srgb, var(--accent) 12%, transparent); }
 .fk-zeile.an i{ color:var(--accent); }
+
+/* 2026-11-08 (2): Nur Workout-Builder und Trainingsplan tragen ein Foto; alle anderen Kacheln sind halbdurchsichtiges Glas (Hell: weißes Glas mit dunkler Schrift, Dunkel: dunkles Glas mit weißer Schrift). */
+:root[data-layout="new"] .tk.tk-glaskachel{ background:var(--glas); border:1px solid var(--glas-rand); color:var(--glas-text);
+  -webkit-backdrop-filter:blur(18px) saturate(140%); backdrop-filter:blur(18px) saturate(140%); }
+:root[data-layout="new"] .tk.tk-glaskachel::before{ display:none; }
+:root[data-layout="new"] .tk.tk-glaskachel .tk-text b{ color:var(--glas-text); text-shadow:none; }
+:root[data-layout="new"] .tk.tk-glaskachel .tk-text small{ color:var(--glas-text); background:color-mix(in srgb, var(--glas-text) 7%, transparent);
+  border:1px solid color-mix(in srgb, var(--glas-text) 26%, transparent); -webkit-backdrop-filter:none; backdrop-filter:none; }
+:root[data-layout="new"] .tk.tk-glaskachel.tk-gross .tk-text em{ color:var(--glas-text); background:color-mix(in srgb, var(--glas-text) 7%, transparent); border:1px solid color-mix(in srgb, var(--glas-text) 26%, transparent); }
+:root[data-layout="new"] .tk.tk-glaskachel .tk-ico{ border:1px solid rgba(0,0,0,.06); box-shadow:0 2px 10px rgba(0,0,0,.18); }
+:root[data-layout="new"] .tk.tk-glaskachel.tk-gross .tk-go{ box-shadow:0 2px 10px rgba(0,0,0,.2); }
