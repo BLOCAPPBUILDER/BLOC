@@ -337,6 +337,7 @@ function faqHTML(){
 /* Aussehen „New“: Seite „Tools“ - die oberste Kachel steht groß (Standard: Workout-Builder), die übrigen versetzt in zwei Spalten, die letzte bei ungerader Zahl über die ganze Breite.
    Reihenfolge in settings.toolsReihe; Kachel lange drücken (0,5 s) und ziehen verschiebt sie. */
 var TOOLS_KEYS = ["katalog", "run", "plan", "warm", "protein", "intervall", "faq"];
+var TOOLS_FOTO = ["katalog", "plan"];
 function toolsReihe(){
   var r = [];
   selArr(state.db.settings.toolsReihe).forEach(function(k){ if(TOOLS_KEYS.indexOf(k) > -1 && r.indexOf(k) < 0) r.push(k); });
@@ -357,8 +358,9 @@ function toolDaten(k){
 var ICON_PFEIL = '<path d="M5 12h14M13 6l6 6-6 6"/>';
 function toolKachelHTML(k){
   var d = toolDaten(k);
-  return '<div class="tk" data-tool="'+k+'" data-nav="'+d[0]+'" role="button" tabindex="0">'+
-    '<i class="tk-foto" aria-hidden="true"></i>'+
+  var mitFoto = TOOLS_FOTO.indexOf(k) > -1;   // nur Workout-Builder und Trainingsplan tragen ein Foto, alle anderen sind halbdurchsichtiges Glas
+  return '<div class="tk'+(mitFoto ? '' : ' tk-glaskachel')+'" data-tool="'+k+'" data-nav="'+d[0]+'" role="button" tabindex="0">'+
+    (mitFoto ? '<i class="tk-foto" aria-hidden="true"></i>' : '')+
     '<span class="tk-glas"><span class="tk-ico">'+svgIcon(HOME_ICON[k])+'</span>'+
       '<span class="tk-text"><b>'+esc(d[1])+'</b><small>'+String(d[2]).split(" · ").map(function(x){ return '<em>'+esc(x)+'</em>'; }).join("")+'</small></span></span>'+
     '<span class="tk-go" aria-hidden="true">'+svgIcon(ICON_PFEIL)+'</span></div>';
@@ -499,11 +501,9 @@ function renderTraining(){
   var fotos = bereichFotosNeu();
   app.querySelectorAll(".tools-raster .tk").forEach(function(el){
     var k = el.getAttribute("data-tool"), ft = el.querySelector(".tk-foto");
-    if(!ft) return;
-    if(k === "faq"){ ft.style.backgroundImage = "url(img/neu-faq.jpg)"; ft.style.backgroundPosition = "50% 55%"; return; }
+    if(!ft) return;   // Glas-Kacheln haben kein Foto
     if(k === "plan"){ ft.style.backgroundImage = "url(img/neu-h-rack.jpg)"; ft.style.backgroundPosition = "50% 52%"; return; }   // Rack mit bunten Hantelscheiben (Bildnachweis in quellen.html)
-    if(k === "protein"){ ft.style.backgroundImage = "url(img/neu-protein.jpg)"; ft.style.backgroundPosition = "50% 27%"; return; }   // Hände mit den Eierschalen
-    if(fotos[k]){ ft.style.backgroundImage = "url(" + fotos[k] + ")"; ft.style.backgroundPosition = fotoFokus(fotos[k]) || "50% 50%"; }
+    if(k === "katalog"){ ft.style.backgroundImage = "url(img/neu-p-frau-kniebeuge.jpg)"; ft.style.backgroundPosition = fotoFokus("img/neu-p-frau-kniebeuge.jpg") || "50% 30%"; return; }   // in Hell und Dunkel dieselbe Frau bei der Kniebeuge
   });
   var raster = app.querySelector(".tools-raster");
   toolsKlassen(raster);

@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-08 · Tools: Glas-Kacheln, Workout-Builder mit der Frau in Hell und Dunkel (Fassung 2026-11-08-2)
+
+- **Tools:** Nur der Workout-Builder und der Trainingsplan tragen noch ein Foto. Run, Mobility & Stretch, Protein, Timer und Wissensaustausch sind halbdurchsichtiges Glas (Hell: weißes Glas mit dunkler Schrift, Dunkel: dunkles Glas mit weißer Schrift; Klasse `tk-glaskachel`). Der Workout-Builder zeigt im Dunkeln wie im Hellen die Kniebeuge-Frau (`neu-p-frau-kniebeuge.jpg`) statt des wechselnden Dunkel-Fotos.
+
 ## 2026-11-08 · Fortschritt frei zusammenstellbar, Trainingsplan unter Tools, neues Ladebild (Fassung 2026-11-08-1)
 
 - **Fortschritt (neuer Reiter statt Path):** Fortschritt und Deep Dive stehen zusammen auf einer Seite aus einzelnen Auswertungs-Kacheln (`js/24-fortschritt.js`; Inhalte aus `statModule` in `js/12-uebung-statistik.js` und `ddModule` in `js/21-koerper.js`). Standard: **Tage am Stück**, **gehobenes Gewicht (kg)** und **Gewichte & Verläufe je Übung** (das frühere Logbuch). Unten „Weitere Auswertungen hinzufügen“ (Auswahlfenster mit allen 24 Auswertungen: Zahlen, Gewichte & Verläufe, Training, Bereiche, Muskeln). Versetztes Raster (Masonry): schmale Kacheln in zwei Spalten, breite über die ganze Breite. Kachel 0,5 s drücken und ziehen verschiebt sie; auf die Fläche „Hierher ziehen zum Entfernen“ gezogen oder nach dem Halten ohne Ziehen im Menü verschwindet sie. Auswahl und Reihenfolge in `settings.fortschrittKacheln`. Neu: Zahlen-Kacheln Tage am Stück (mit Rekord und den letzten 7 Tagen), gehobenes Gewicht (Summe kg × Wiederholungen aller gespeicherten Sätze, mit Säulen der letzten 8 Wochen), Trainingstage, Trainingszeit, Kilometer, Höhenmeter. Die Muskel-Kacheln zeigen immer die laufende Woche (Wochen-Blättern und der Umschalter Trainiert/Mit Plan entfallen).
