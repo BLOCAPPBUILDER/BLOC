@@ -334,6 +334,7 @@ function renderSettings(){
       themeBtn("system",t("thSystem"))+themeBtn("light",t("thLight"))+themeBtn("dark",t("thDark"))+
     '</div>'+
     '</div>'+
+    zeile('data-koerperzeile role="button" tabindex="0"', t("koerperTitel"), t("koerperRowSub"))+
     '<div class="card">'+einstKopf(EINST_ICON.training, t("optTraining"))+
       '<div class="range-row"><div class="label">'+t("volume")+' <span id="f-volume-label">'+Math.round(s.volume*100)+'%</span></div>'+
       '<input type="range" id="f-volume" min="0" max="100" step="5" value="'+Math.round(s.volume*100)+'">'+
@@ -404,6 +405,7 @@ function renderSettings(){
   /* App teilen: Link kopieren, per WhatsApp oder über das Teilen-Menü des Handys */
   app.querySelector("[data-sharecopy]").addEventListener("click", function(){ copyText(appUrl(), t("shareCopied")); });
   app.querySelector("[data-intro]").addEventListener("click", openIntro);
+  app.querySelector("[data-koerperzeile]").addEventListener("click", function(){ openKoerperSheet(function(){ renderSettings(); }); });
   app.querySelector("[data-opensounds]").addEventListener("click", function(){
     openSoundSheet(function(){ renderSettings(); });
   });

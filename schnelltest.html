@@ -1798,6 +1798,20 @@
       // Alle Einträge löschen: nur nach zwei Sekunden gedrückt halten, ein Tipp löscht nichts
       klick($(".woche-link"));
       await bis(function () { return W.location.hash === "#kalender" && $("[data-kalloeschen]"); }, 3000, "Kalender mit Knopf „Alle Einträge löschen“");
+      // Woche kopieren: die Einträge der gezeigten Woche auf die nächsten Wochen (hier 2), nichts doppelt
+      var nVor = daten().settings.kalender.e.length;
+      klick($("[data-kalkopieren]"));
+      await bis(function () { return $("#overlayRoot #kk-n"); }, 2000, "Fenster „Woche kopieren“");
+      $("#overlayRoot #kk-n").value = "2";
+      klick($("#overlayRoot [data-ok]"));
+      await bis(function () { return daten().settings.kalender.e.length >= nVor + 2; }, 2000, "Woche auf zwei weitere Wochen kopiert");
+      var nNach = daten().settings.kalender.e.length;
+      klick($("[data-kalkopieren]"));
+      await bis(function () { return $("#overlayRoot #kk-n"); }, 2000, "Fenster noch einmal");
+      $("#overlayRoot #kk-n").value = "2";
+      klick($("#overlayRoot [data-ok]"));
+      await warte(300);
+      pruefe(daten().settings.kalender.e.length === nNach, "Zweites Kopieren legt nichts doppelt an");
       var n0 = daten().settings.kalender.e.length;
       var knopf = $("[data-kalloeschen]");
       knopf.dispatchEvent(new W.PointerEvent("pointerdown", { bubbles: true, button: 0 }));

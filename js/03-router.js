@@ -274,35 +274,18 @@ function bereichFotosNeu(){
   out.run = "img/bereich-run.jpg";   // Run behält das klassische Läuferbild (Karte und Kopf der Run-Seite)
   return out;
 }var builderAuto = null;   // "zufall" | "selber": der Workout-Builder auf Heute löst im Baukasten gleich die Wahl aus
-/* Kopfzeilen-Symbole im Aussehen „New“ wie im Entwurf: Heute = Hell/Dunkel + Suche + Einstellungen, Training = Suche + Einstellungen,
-   Fortschritt = Einstellungen */
+/* Kopfzeilen-Symbole im Aussehen „New“: fester Aufbau, überall nur Suche + Einstellungen rechts. Hell/Dunkel und Körperdaten stehen in den Einstellungen. */
 var SYM_SUCHE = '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5l5 5"/>';
-var SYM_SONNE = '<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>';
 function themeIstDunkel(){
   var th = state.db.settings.theme;
   if(th === "dark") return true;
   if(th === "light") return false;
   return !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
 }
-function kopfSymboleNeu(art){
-  var s = "";
-  if(art === "home"){
-    var d = themeIstDunkel();
-    s += '<button type="button" class="iconbtn kopf-sym" data-themetoggle aria-label="'+esc(t("themeWechsel"))+'">'+svgIcon(d ? ICON_MOON : SYM_SONNE)+'</button>';
-  }
-  if(art === "home" || art === "training")
-    s += '<button type="button" class="iconbtn kopf-sym" data-nav="#search" aria-label="'+esc(t("search"))+'">'+svgIcon(SYM_SUCHE)+'</button>';
+function kopfSymboleNeu(){
+  var s = '<button type="button" class="iconbtn kopf-sym" data-nav="#search" aria-label="'+esc(t("search"))+'">'+svgIcon(SYM_SUCHE)+'</button>';
   s += '<button type="button" class="iconbtn kopf-sym" data-nav="#settings" aria-label="'+esc(t("settings"))+'">'+ICON_SETTINGS+'</button>';
   return s;
-}
-function bindThemeToggle(){
-  var b = app.querySelector("[data-themetoggle]");
-  if(b) b.addEventListener("click", function(){
-    /* Wechsel: Hell ↔ Dunkel (aus „System“ wird das Gegenteil des aktuellen Aussehens) */
-    var th = state.db.settings.theme;
-    state.db.settings.theme = th === "light" ? "dark" : th === "dark" ? "light" : (themeIstDunkel() ? "light" : "dark");
-    save(); applyTheme(); render();
-  });
 }
 /* Runder Hauptknopf rechts neben der Leiste (New): Heute = Training starten, Training = Bauen, Kalender = Einplanen, Fortschritt = keiner */
 function hauptAktionNeu(route){

@@ -223,7 +223,6 @@ function renderHome(){
     builderKarteHTML();
   bindCommon();
   bindBuilderKarte();
-  bindThemeToggle();
   app.querySelectorAll("[data-bereich]:not([data-bereich=\"faq\"])").forEach(function(el){ langDruck(el, openBereicheSheet); });
   var heroKnopf = app.querySelector("[data-herostart]");
   if(heroKnopf) heroKnopf.addEventListener("click", function(){
@@ -254,11 +253,14 @@ function renderHome(){
 /* opt (optional): { foto, fotoHell } festes Bild statt der Tageszuteilung (Kalender, Katalog); zurueck: Ziel des Zurück-Knopfs oder false (Hauptseite); ohneSuche: eigene Lupe steckt schon in extra */
 function bereichKopfNeuHTML(key, titel, kicker, extra, opt){
   opt = opt || {};
+  var lupe = "", rest = extra || "", lm = rest.match(/<button type="button" class="iconbtn lib-lupe[\s\S]*?<\/button>/);   // Suche der Liste ersetzt die allgemeine Lupe
+  if(lm){ lupe = lm[0]; rest = rest.replace(lm[0], ""); }
   var foto = opt.foto ? (themeIstDunkel() || !opt.fotoHell ? opt.foto : opt.fotoHell) : (bereichFotosNeu()[key] || "img/neu-timer.jpg");   // sonst dasselbe Bild wie die Karte auf Training
   return '<section class="kopf-bereich'+(opt.klar ? ' klar' : '')+'">'+(opt.klar ? '' : '<img class="kb-bild" src="'+foto+'" alt="" draggable="false"'+(fotoFokus(foto) ? ' style="object-position:'+fotoFokus(foto)+'"' : '')+'>')+
     '<div class="kb-zeile">'+(opt.zurueck === false ? '<span></span>' : '<button type="button" class="iconbtn kb-rund" data-back="'+(opt.zurueck || "#training")+'" aria-label="'+esc(t("back"))+'">'+ICON_BACK+'</button>')+
-    '<span class="kb-rechts">'+(extra || "")+(opt.ohneSuche ? "" : '<button type="button" class="iconbtn kb-rund" data-nav="#search" aria-label="'+esc(t("search"))+'">'+svgIcon(SYM_SUCHE)+'</button>')+'</span></div>'+
-    '<div class="kb-text"><span class="kb-kicker">'+esc(kicker)+'</span><h1>'+esc(titel)+'</h1></div></section>';
+    '<span class="kb-rechts">'+(lupe || '<button type="button" class="iconbtn kb-rund" data-nav="#search" aria-label="'+esc(t("search"))+'">'+svgIcon(SYM_SUCHE)+'</button>')+
+      '<button type="button" class="iconbtn kb-rund" data-nav="#settings" aria-label="'+esc(t("settings"))+'">'+ICON_SETTINGS+'</button></span></div>'+
+    '<div class="kb-text"><span class="kb-kicker">'+esc(kicker)+'</span><h1>'+esc(titel)+'</h1>'+(rest ? '<span class="kb-rechts kb-extra">'+rest+'</span>' : '')+'</div></section>';
 }
 /* Aussehen „New“: Kopf von Heute wie im Entwurf - Foto mit Logo, Symbolen und Gruß (ohne Namen: die App kennt keinen) */
 /* Begrüßung: lockere Varianten je Tageszeit (texte.js, durch | getrennt); pro Tag und Tageszeit stabil, damit sie beim Neuzeichnen nicht wechselt */

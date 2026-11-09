@@ -189,7 +189,7 @@ function renderKalender(){
   var sichtbar = tage.filter(function(d){ return !monat || d.getMonth() === kalBasis.getMonth(); }).map(kalTagKey);
   var sum = kalSumme(sichtbar);
   var heuteKnopf = '<button type="button" class="kal-heutebtn" data-kalheute aria-label="'+esc(t("kalHeuteSpringen"))+'">'+svgIcon('<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/>')+'<span>'+esc(t("kalHeute"))+'</span></button>';
-  html = bereichKopfNeuHTML("kal", t("tabKalender"), t("kalKicker"), heuteKnopf, { klar:true, foto:"img/neu-d-kalender.jpg", fotoHell:"img/neu-h-kettlebell.jpg", zurueck:"#home", ohneSuche:true }) +
+  html = bereichKopfNeuHTML("kal", t("tabKalender"), t("kalKicker"), heuteKnopf, { klar:true, foto:"img/neu-d-kalender.jpg", fotoHell:"img/neu-h-kettlebell.jpg", zurueck:"#home" }) +
     '<div class="card lib-tabs-card"><div class="theme-pick lib-tabs seg-2">'+
       '<button type="button" data-kalansicht="woche" class="'+(!monat ? 'active' : '')+'">'+esc(t("kalWoche"))+'</button>'+
       '<button type="button" data-kalansicht="monat" class="'+(monat ? 'active' : '')+'">'+esc(t("kalMonat"))+'</button></div></div>'+
@@ -199,7 +199,8 @@ function renderKalender(){
     // Woche: dieselbe Karte wie „Diese Woche“ auf der Startseite (Tage mit Punkt = trainiert, Ring = geplant); Monat: nur die Summe
     (!monat ? wocheHTML({ basis:tage[0], kal:true, titel:kalTagKey(tage[0]) === kalTagKey(kalMontag(new Date())) ? t("weekTitle") : t("kalKW", { n:kalKW(tage[0]) }) })+
       (sum.km > 0 ? '<div class="kal-summe">'+esc(runKm(sum.km*1000).replace(/[,.]00$/, "")+" km Run")+'</div>' : '')+
-      (sum.n ? '<button type="button" class="btn btn-secondary kal-kopieren" data-kalloeschen>'+svgIcon('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12h10l1-12M9 7V4h6v3"/>')+' '+esc(t("kalAlleLoeschen"))+'</button>' : '') : '')+
+      (sum.n ? '<div class="kal-aktionen"><button type="button" class="btn btn-secondary kal-kopieren" data-kalkopieren>'+svgIcon('<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>')+' '+esc(t("kalKopieren"))+'</button>'+
+        '<button type="button" class="btn btn-secondary kal-kopieren" data-kalloeschen>'+svgIcon('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12h10l1-12M9 7V4h6v3"/>')+' '+esc(t("kalAlleLoeschen"))+'</button></div>' : '') : '')+
     (monat ? '<div class="kal-summe">'+esc(sum.n ? t("kalGeplant", { n:sum.n })+(sum.ok ? " · "+t("kalErledigtN", { n:sum.ok }) : "")+(sum.km > 0 ? " · "+runKm(sum.km*1000).replace(/[,.]00$/, "")+" km Run" : "") : t("kalNichtsGeplant"))+'</div>' : '');
   if(!monat){
     html += tage.map(function(d, i){
@@ -244,6 +245,8 @@ function renderKalender(){
     if(z && z.scrollIntoView) z.scrollIntoView({ block:"center", behavior:"smooth" });
   });
   app.querySelectorAll("[data-kaladd]").forEach(function(b){ b.addEventListener("click", function(){ kalHinzuMenue(b.getAttribute("data-kaladd")); }); });
+  var kk = app.querySelector("[data-kalkopieren]");
+  if(kk) kk.addEventListener("click", function(){ kalKopierenSheet(tage.map(kalTagKey), kopfText, sum.n); });
   var kl = app.querySelector("[data-kalloeschen]");
   if(kl) kalHaltenLoeschen(kl, tage.map(kalTagKey));
   app.querySelectorAll("[data-kaltap]").forEach(function(b){

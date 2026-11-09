@@ -130,7 +130,7 @@ function katSuche(q, standard){
 /* ---------- Kopf: Titel, Reiter, Überrasch mich ---------- */
 function katKopfHTML(tab, right){
   function b(k, label){ return '<button type="button" data-kattab="'+k+'" class="'+(tab === k ? 'active' : '')+'">'+esc(label)+'</button>'; }
-  var kopf = bereichKopfNeuHTML("kat", t("katalog"), t("katKicker"), right || "", { klar:true, foto:"img/neu-d-katalog.jpg", fotoHell:"img/neu-h-halle.jpg", zurueck:"#home", ohneSuche:(right || "").indexOf("lib-lupe") > -1 }) +
+  var kopf = bereichKopfNeuHTML("kat", t("katalog"), t("katKicker"), right || "", { klar:true, foto:"img/neu-d-katalog.jpg", fotoHell:"img/neu-h-halle.jpg", zurueck:"#home" }) +
     '<div class="rz kat-rz" style="--rz:var(--text)">'+b("baukasten", t("katTabBaukasten"))+b("blocs", t("katTabBlocs"))+'</div>'+
     (tab !== "katalog" ? '<p class="dd-fussnote kat-fav-hinweis">'+esc(t("katFavHinweis"))+'</p>' : '');
   if(tab !== "katalog") return kopf;
