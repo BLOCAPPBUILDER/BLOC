@@ -3,6 +3,15 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-09 · Angleichen und Fehlerbehebung nach dem App-Durchgang (Fassung 2026-11-09-5)
+
+- **Zweige angeglichen:** `main` (HTML-Version) hat jetzt dieselben Web-Dateien wie `capacitor`, auch `js/00-native.js`. Damit tut das Teilen eines BLOCs im Browser wieder etwas (vorher `dateiAusgeben is not defined`). `main` behält die Content-Security-Policy in `index.html`.
+- **Geteilter Link bei laufender App:** `#import/…` wird im `popstate`-Handler (`js/03-router.js`) als neuer Link erkannt und geöffnet, statt als „Zurück“ nach Heute gedeutet zu werden.
+- **Ein Ruheumsatz:** `grundumsatzMifflin` (`js/12-uebung-statistik.js`) ist die einzige Formel; Protein-Seite und Lauf-Kalorien rechnen gleich (ohne Geschlecht der Mittelwert beider Formeln). Einheitstest dazu.
+- **Ungültige Körperdaten:** Gewicht, Größe, Alter außerhalb des Bereichs zeigen eine Fehlerzeile („Bitte 30 bis 250 kg eingeben …“), der bisherige Wert bleibt; ein leeres Feld löscht den Wert (jetzt auch in der Einführung).
+- **Teilen im Browser:** Fällt das Teilen-Menü aus und die Datei wird heruntergeladen, sagt eine Meldung „Datei gespeichert – im Chat als Anhang einfügen“ und der Text wird kopiert.
+- **Aufgeräumt:** doppelte Definitionen (`BUCHSTABE_T`, `BUCHSTABE_Y`, `KUGEL_BECKEN`) in `daten.js` entfernt; beim Einbeinigen Kreuzheben (Band) endet das gestreckte Bein nicht mehr am Bildrand. Schnelltest: vier Filterschritte im Workoutkatalog, neuer Schritt für den Link bei laufender App.
+
 ## 2026-11-09 · Plan-Assistent: Körperfigur, Geräte zuerst, kein Timer (Fassung 2026-11-09-4)
 
 - **Muskeln über die Körperfigur:** Die Fokus-Frage nutzt dieselbe Auswahl wie die Filter im Katalog (Figur mit Zonen, Gruppen-Chips, Grob/Fein; `kkMuskelHTML`); gespeichert werden die Zonen (`a.zonen`), die Gruppen (`a.fokus`) leitet der Assistent daraus ab.

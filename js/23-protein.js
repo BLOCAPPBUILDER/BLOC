@@ -204,7 +204,7 @@ function protZiel(){
 /* Grundumsatz nach Mifflin-St-Jeor (an Erwachsenen geprüft: erst ab 18); ohne Angabe zum Geschlecht der Mittelwert beider Formeln. Ohne Größe und Alter: 0 */
 function protGrundumsatz(kd){
   if(!kd || !(kd.cm >= 120 && kd.cm <= 230) || !(kd.alter >= 18)) return 0;
-  return 10*kd.kg + 6.25*kd.cm - 5*kd.alter + (kd.sex === "m" ? 5 : kd.sex === "w" ? -161 : -78);
+  return grundumsatzMifflin(kd, kd.alter);   // dieselbe Formel wie die Kalorien-Schätzung für Läufe (js/12-uebung-statistik.js)
 }
 /* Erhaltungsbedarf = Grundumsatz × Aktivität (ohne Angabe 1,55), auf 100 kcal gerundet - eine Schätzung, 10 bis 20 % Abweichung sind möglich */
 function protKcal(){

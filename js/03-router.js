@@ -55,6 +55,13 @@ function parseHash(){
 /* System-Zurück (Android-Taste/-Geste, Browser-Zurück) */
 window.addEventListener("popstate", function(){
   if(navSkipPop > 0){ navSkipPop--; setUrl(navTop()); return; }
+  // 0. Geteilter Link bei bereits laufender App (#import/…): Der Browser meldet auch das als popstate. Das ist kein „Zurück“, sondern ein neuer Eintrag oben im Verlauf - der dient ab jetzt als Wächter.
+  var neuerHash = location.hash || "";
+  if(neuerHash.indexOf("#import/") === 0 && navTop() !== neuerHash){
+    navGuard = true;
+    go(neuerHash);
+    return;
+  }
   navGuard = false;
   // 1. offenes Einblendfenster schließen (so, als hätte man daneben getippt)
   var ov = document.getElementById("overlayRoot");

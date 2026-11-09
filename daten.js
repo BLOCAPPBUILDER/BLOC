@@ -493,10 +493,6 @@ function gBench(x1, x2, y){ return '<path class="ip" d="M'+x1+' '+y+'H'+x2+'M'+(
 var BUCHSTABE_T = '<path class="ip" d="M8 14H30M19 14V30" style="stroke-width:2;opacity:.65"/>';
 var BUCHSTABE_Y = '<path class="ip" d="M8 12L19 24L30 12M19 24V34" style="stroke-width:2;opacity:.65"/>';
 var KUGEL_BECKEN = '<circle class="ipf" cx="42" cy="65.5" r="2.6"/>';
-/* Buchstaben T und Y als Hinweis in der Seitenansicht (Bauchlage von oben wirkte wie eine stehende Person); Kugel auf dem Kreuzbein bei Plank Shoulder Taps */
-var BUCHSTABE_T = '<path class="ip" d="M8 14H30M19 14V30" style="stroke-width:2;opacity:.65"/>';
-var BUCHSTABE_Y = '<path class="ip" d="M8 12L19 24L30 12M19 24V34" style="stroke-width:2;opacity:.65"/>';
-var KUGEL_BECKEN = '<circle class="ipf" cx="42" cy="65.5" r="2.6"/>';
 /* Grundposen */
 var P_ST    = Q(null,[50,20],[50,50],[[50,70,50,89,58,89]],[[52,34,53,47]]);
 var P_STF   = qWith(P_ST, { a:[[63,25,76,25]] });                       // Arme nach vorn
@@ -6403,6 +6399,9 @@ Object.keys(GERAET_NEU).forEach(function(id){ STUDIO_GERAET[id] = GERAET_NEU[id]
   neu("band-lateral-walk", /<path class="ip" style="stroke-width:4\.5" d="[^"]*"\/>/g, function(q){ return bandLinie(q, ["k0", "k1"]); });   // Band über den Knien
   neu("band-deadlift", /<path class="ip" d="M\d+ \d+L50 89"\/>/g, function(q){ return bandLinie(q, ["h0", [50, 89]]); });   // Band unter dem Fuß
   neu("band-external-rotation-90", /(?!)/g, function(q){ return '<circle class="ip" cx="6" cy="26" r="2.4"/>'+bandLinie(q, [[6, 26], "h0"]); });   // an der Tür auf Ellbogenhöhe befestigt
+  // Einbeiniges Kreuzheben (Band): das gestreckte Bein reichte in der zweiten Pose bis x=1 an den Bildrand; jetzt endet der Fuß bei x=4 wie beim Kurzhantel-Kreuzheben
+  var sld = ILLU_POSES["band-single-leg-deadlift"];
+  if(sld && sld[1] && sld[1].l && sld[1].l[1]) ILLU_POSES["band-single-leg-deadlift"] = sld.map(function(q, i){ return i === 1 ? Object.assign({}, q, { l:q.l.map(function(l, j){ return j === 1 ? [27, 51, 10, 51.6, 4, 51.6] : l; }) }) : q; });
 })();
 
 window.BLOC_DATEN = {

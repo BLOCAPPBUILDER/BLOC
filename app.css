@@ -2122,6 +2122,8 @@ body.mit-tabs .fab-menu{ bottom:calc(166px + env(safe-area-inset-bottom)); }
 .my-edit{ font-size:20px; }
 /* Körperdaten (Einstellungen): Beschriftung links, Zahl rechts */
 .koerper-feld{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:6px 0; font-size:15px; }
+.koerper-fehler{ font-size:12px; color:var(--danger, #ff6b6b); text-align:right; margin:-2px 0 4px; }
+.koerper-feld input.ungueltig{ border-color:var(--danger, #ff6b6b); }
 .koerper-feld input{ width:110px; text-align:right; padding:8px 10px; border-radius:10px; border:1px solid var(--border); background:var(--surface); color:var(--text); font:inherit; }
 /* Band befestigen: Übersicht aller Arten mit Bildern */
 .band-uebersicht .bu-art{ border:1px solid var(--border); border-radius:14px; padding:10px 12px 4px; margin:12px 0; text-align:left; }

@@ -15,7 +15,7 @@ function introSpracheHTML(){
 function introProfilHTML(){
   var s = state.db.settings, k = s.koerper || {};
   function feld(id, label, wert, min, max){
-    return '<label class="koerper-feld"><span>'+esc(label)+'</span><input type="number" inputmode="decimal" id="'+id+'" min="'+min+'" max="'+max+'" value="'+(wert ? esc(String(wert)) : "")+'"></label>';
+    return '<label class="koerper-feld"><span>'+esc(label)+'</span><input type="number" inputmode="decimal" id="'+id+'" min="'+min+'" max="'+max+'" value="'+(wert ? esc(String(wert)) : "")+'"></label><div class="koerper-fehler" id="'+id+'-f" role="alert" hidden></div>';
   }
   return '<div class="koerper-form intro-profil"><label class="koerper-feld"><span>'+esc(t("koerperName"))+'</span>'+
     '<input type="text" id="i-name" maxlength="30" autocomplete="given-name" value="'+esc(s.name || "")+'"></label>'+
@@ -25,11 +25,10 @@ function introProfilSpeichern(wurzel){
   var n = wurzel.querySelector("#i-name");
   if(!n) return;   // diese Seite war nicht zu sehen
   var s = state.db.settings, kk = s.koerper = s.koerper || {};
-  function zahl(id, lo, hi){ var v = parseFloat(String(wurzel.querySelector("#"+id).value).replace(",", ".")); return v >= lo && v <= hi ? v : 0; }
-  var name = String(n.value).replace(/\s+/g, " ").trim().slice(0, 30), kg = zahl("i-kg", 30, 250), cm = zahl("i-cm", 120, 230);
+  var name = String(n.value).replace(/\s+/g, " ").trim().slice(0, 30);
   if(name || n.value === "") s.name = name;
-  if(kg) kk.kg = Math.round(kg*10)/10;
-  if(cm) kk.cm = Math.round(cm);
+  koerperZahl(wurzel, "i-kg", 30, 250, "koerperEinhKg", kk, "kg");   // wie im Fenster „Körperdaten“: leer löscht, ungültig zeigt eine Fehlerzeile
+  koerperZahl(wurzel, "i-cm", 120, 230, "koerperEinhCm", kk, "cm", true);
   save();
 }
 /* Seite 3: Aufbau als kleines selbstgezeichnetes Schaubild (nur Stil nach der Vorlage von Kevin): Trainingsplan → Trainingstage (Tag A/B) → BLOCs mit Übungen.
