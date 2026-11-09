@@ -189,6 +189,22 @@
       await bis(function () { return W.location.hash === "#import/AAAA" && W.navTop() === "#import/AAAA"; }, 3000, "Link öffnet die Import-Seite: " + W.location.hash + " / " + W.navTop());
       W.go("#home");
     }],
+    ["BLOC-Datei von außen (.bloc angetippt): Seite BLOCs, Frage „speichern?“, danach funktioniert ein Link bei laufender App weiter", async function () {
+      W.go("#settings");
+      await bis(function () { return W.navTop() === "#settings"; }, 2000, "Einstellungen");
+      var plan = { bloc: "plan", v: 1, n: "Datei-Test", i: W.EXERCISES.slice(0, 2).map(function (e) { return e.id; }), b: 45, m: {}, z: {} };
+      var vorher = W.stPlaene().length;
+      W.blocDateiVonAussen({ text: JSON.stringify(plan) });   // so liefert es die App-Hülle (BlocDateiPlugin) oder launchQueue
+      await bis(function () { return W.navTop() === "#katalog" && $('[data-kattab="blocs"].active') && $(".act-sheet"); }, 3000, "Seite BLOCs mit Frage");
+      pruefe(/Datei-Test/.test($(".act-sheet h3").textContent) && /speichern\?/.test($(".act-sheet h3").textContent), "Frage mit Namen: " + $(".act-sheet h3").textContent);
+      pruefe(W.stPlaene().length === vorher, "vor dem Tipp darf nichts angelegt sein");
+      klick("[data-actclose]");
+      pruefe(W.stPlaene().length === vorher, "Abbrechen legt nichts an");
+      await new Promise(function (r) { setTimeout(r, 600); });
+      W.location.hash = "#import/AAAA";   // Router: Link bei laufender App nach dem Datei-Öffnen
+      await bis(function () { return W.navTop() === "#import/AAAA"; }, 3000, "Link öffnet weiter die Import-Seite: " + W.navTop());
+      W.go("#home");
+    }],
     ["Workout: Reiter Baukasten · BLOCs, Katalog als Karte im Baukasten, Überrasch mich im Baukasten", async function () {
       zuWorkout();
       await bis(function () { return $$("[data-kattab]").length === 2; }, 3000, "Reiter");

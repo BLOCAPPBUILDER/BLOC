@@ -11,6 +11,9 @@
   "background_color": "#121214",
   "theme_color": "#121214",
   "categories": ["health", "fitness", "sports"],
+  "file_handlers": [
+    { "action": "./", "accept": { "application/x-bloc": [".bloc"] } }
+  ],
   "icons": [
     { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
