@@ -23,13 +23,14 @@ function introProfilHTML(){
 }
 function introProfilSpeichern(wurzel){
   var n = wurzel.querySelector("#i-name");
-  if(!n) return;   // diese Seite war nicht zu sehen
+  if(!n) return true;   // diese Seite war nicht zu sehen
   var s = state.db.settings, kk = s.koerper = s.koerper || {};
   var name = String(n.value).replace(/\s+/g, " ").trim().slice(0, 30);
   if(name || n.value === "") s.name = name;
   koerperZahl(wurzel, "i-kg", 30, 250, "koerperEinhKg", kk, "kg");   // wie im Fenster „Körperdaten“: leer löscht, ungültig zeigt eine Fehlerzeile
   koerperZahl(wurzel, "i-cm", 120, 230, "koerperEinhCm", kk, "cm", true);
   save();
+  return !wurzel.querySelector(".koerper-feld input.ungueltig");   // false: ein Wert liegt außerhalb des Bereichs, die Fehlerzeile steht unter dem Feld
 }
 /* Seite 3: Aufbau als kleines selbstgezeichnetes Schaubild (nur Stil nach der Vorlage von Kevin): Trainingsplan → Trainingstage (Tag A/B) → BLOCs mit Übungen.
    Die Beschriftungen kommen aus texte.js, die Zeichnung selbst ist reines SVG ohne Bilddatei. */
@@ -73,9 +74,10 @@ function openIntro(){
     if(!state.db.settings.introGesehen){ state.db.settings.introGesehen = true; }
     save();
   }
-  function blaettern(d){ var n = nr + d; if(n < 0 || n >= seiten.length) return; introProfilSpeichern(root); nr = n; draw(); }
+  function blaettern(d){ var n = nr + d; if(n < 0 || n >= seiten.length) return; if(!introProfilSpeichern(root)) return; nr = n; draw(); }   // bei ungültigem Wert bleibt man auf der Seite „Über dich“ (mit Fehlerzeile)
   function draw(){
     var s = seiten[nr], letzte = nr === seiten.length - 1;
+    if(s.art === "profil") s.extra = introProfilHTML();   // jedes Mal frisch aus den gespeicherten Werten (sonst wäre das Formular nach Zurück leer und „leer löscht“ griffe)
     root.innerHTML = '<div class="confirm-overlay intro-overlay"><div class="confirm-sheet intro-sheet'+(s.art === "profil" || s.art === "aufbau" ? ' kompakt' : '')+'" role="dialog" aria-label="'+esc(t("introTitle"))+'" style="--intro-farbe:'+s.farbe+'">'+
       '<div class="intro-kopf"><div class="intro-punkte" aria-hidden="true">'+seiten.map(function(x, i){ return '<i class="'+(i === nr ? 'an' : '')+'"></i>'; }).join("")+'</div>'+
         (letzte ? '' : '<button type="button" class="intro-weg" data-introweg>'+esc(t("introSkip"))+'</button>')+'</div>'+
