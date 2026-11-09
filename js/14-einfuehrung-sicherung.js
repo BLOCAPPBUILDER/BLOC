@@ -38,17 +38,20 @@ function introSchaubildHTML(){
   function box(x, y, w, h, cls){ return '<rect class="'+cls+'" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="8"/>'; }
   function txt(x, y, s, cls){ return '<text class="'+cls+'" x="'+x+'" y="'+y+'" text-anchor="middle">'+esc(s)+'</text>'; }
   function bloc(x, namen){
-    return box(x, 118, 100, 82, "sb-bloc")+txt(x+50, 138, "BLOC", "sb-bt")+namen.map(function(n, i){ return txt(x+50, 156+i*15, n, "sb-ex"); }).join("");
+    return box(x, 128, 100, 82, "sb-bloc")+txt(x+50, 148, "BLOC", "sb-bt")+namen.map(function(n, i){ return txt(x+50, 166+i*15, n, "sb-ex"); }).join("");
+  }
+  function tag(x, name){   // TrainingsBLOC = ein Trainingstag: zwei Zeilen (Art und Name)
+    return box(x, 70, 100, 38, "sb-kasten sb-tag")+txt(x+50, 85, "TrainingsBLOC", "sb-tb")+txt(x+50, 100, name, "sb-t");
   }
   var a = [t("inExKniebeuge"), t("inExBankdruecken"), t("inExKreuzheben")], b = [t("inExKlimmzug"), t("inExRudern"), t("inExSchulterdruecken")];
-  return '<svg class="intro-schaubild" viewBox="0 0 340 208" role="img" aria-label="'+esc(t("inSchaubildAlt"))+'">'+
-    '<path class="sb-linie" d="M170 38V54M60 54H280M60 54V70M170 54V70M280 54V70M60 100V118M170 100V118"/>'+
+  return '<svg class="intro-schaubild" viewBox="0 0 340 218" role="img" aria-label="'+esc(t("inSchaubildAlt"))+'">'+
+    '<path class="sb-linie" d="M170 38V54M60 54H280M60 54V70M170 54V70M280 54V70M60 108V128M170 108V128"/>'+
     box(100, 8, 140, 30, "sb-kasten")+txt(170, 28, t("inDPlan"), "sb-t")+
-    box(10, 70, 100, 30, "sb-kasten")+txt(60, 90, t("inDTag")+" A", "sb-t")+
-    box(120, 70, 100, 30, "sb-kasten")+txt(170, 90, t("inDTag")+" B", "sb-t")+
-    box(230, 70, 100, 30, "sb-kasten")+txt(280, 90, "Run", "sb-t")+
+    tag(10, t("inDTag")+" A")+tag(120, t("inDTag")+" B")+
+    box(230, 70, 100, 38, "sb-kasten")+txt(280, 85, "TrainingsBLOC", "sb-tb")+txt(280, 100, "Run", "sb-t")+
     bloc(10, a)+bloc(120, b)+'</svg>'+
-    '<p class="intro-kette">'+esc(t("inKette"))+'</p>';
+    '<p class="intro-kette">'+esc(t("inKette"))+'</p>'+
+    '<ul class="intro-legende">'+["inLegBloc", "inLegTag", "inLegPlan"].map(function(k){ var q = t(k).split(":"); return '<li><b>'+esc(q[0])+'</b>'+esc(q.slice(1).join(":").trim())+'</li>'; }).join("")+'</ul>';
 }
 function introSeiten(){
   var mitgeliefert = EXERCISES.filter(function(ex){ return !ex.custom; });

@@ -172,7 +172,7 @@
 :root[data-layout="new"] .kn-sym .iconbtn{ width:48px; height:48px; margin:0; background:rgba(20,22,26,.46); color:#fff; border:1px solid rgba(255,255,255,.2);
   -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
 :root[data-layout="new"] .marke-neu b{ display:block; font-family:"Helvetica Neue","Arial Black",Roboto,Arial,sans-serif; font-weight:900;
-  font-size:clamp(42px,12.5vw,56px); line-height:.95; letter-spacing:-.035em; color:#ff5a36; }
+  font-size:clamp(42px,12.5vw,56px); line-height:.95; letter-spacing:-.035em; color:var(--accent); }
 :root[data-layout="new"] .marke-neu small{ display:block; margin-top:6px; font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.9); }
 :root[data-layout="new"] .kn-gruss{ display:flex; flex-direction:column; gap:2px; margin-top:auto; }
 :root[data-layout="new"] .kn-gruss span{ font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.82); }
@@ -310,6 +310,11 @@
 :root[data-layout="new"] .timer-panel .name{ font-size:17px; }
 :root[data-layout="new"] .timer-panel .fav-empty{ border-radius:var(--radius); border-top-left-radius:var(--ecke); }
 :root[data-layout="new"] .kb-rechts{ display:flex; gap:8px; }
+/* Hilfe-Knopf und „Heute“ stehen nicht mehr in der Symbolzeile (dort nur Suche und Einstellungen), sondern unten rechts im Titelblock */
+:root[data-layout="new"] .kb-text{ position:relative; }
+:root[data-layout="new"] .kb-text .kb-extra{ position:absolute; right:0; bottom:0; }
+:root[data-layout="new"] .kb-text:has(.kb-extra) h1{ padding-right:60px; }
+:root[data-layout="new"] .kb-text:has(.kal-heutebtn) h1{ padding-right:124px; }
 :root[data-layout="new"] .kb-rechts .iconbtn:not(.kb-rund), :root[data-layout="new"] .kb-rechts .hint-btn{ width:48px; height:48px; border-radius:50%; background:rgba(20,22,26,.55); color:#fff; border:0; box-shadow:none; }
 
 /* ---------- Reiter als Pille (Mobility, Workout) wie im Entwurf ---------- */
@@ -389,7 +394,6 @@
 :root[data-layout="new"][data-theme="light"] .ff-stern{ color:#c98200; }
 :root[data-layout="new"][data-theme="light"] .training-seite .area-tile[data-bereich="intervall"] .at-ico,
 :root[data-layout="new"][data-theme="light"] .training-seite .area-tile[data-bereich="run"] .at-ico{ background:rgba(28,28,30,.1); color:var(--text); }
-:root[data-layout="new"][data-theme="light"] .marke-neu b{ color:#df4a22; }
 :root[data-layout="new"][data-theme="light"] .kn-sym .iconbtn{ background:rgba(255,255,255,.66); color:var(--text); border-color:rgba(0,0,0,.1); }
 :root[data-layout="new"][data-theme="light"] .kn-gruss span, :root[data-layout="new"][data-theme="light"] .kn-gruss b{ text-shadow:0 0 10px rgba(255,255,255,.95), 0 0 3px rgba(255,255,255,.85); }
 @media (prefers-color-scheme: light){
@@ -400,7 +404,6 @@
   :root[data-layout="new"]:not([data-theme]) .ff-stern{ color:#c98200; }
   :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile[data-bereich="intervall"] .at-ico,
   :root[data-layout="new"]:not([data-theme]) .training-seite .area-tile[data-bereich="run"] .at-ico{ background:rgba(28,28,30,.1); color:var(--text); }
-  :root[data-layout="new"]:not([data-theme]) .marke-neu b{ color:#df4a22; }
   :root[data-layout="new"]:not([data-theme]) .kn-sym .iconbtn{ background:rgba(255,255,255,.66); color:var(--text); border-color:rgba(0,0,0,.1); }
   :root[data-layout="new"]:not([data-theme]) .kn-gruss span, :root[data-layout="new"]:not([data-theme]) .kn-gruss b{ text-shadow:0 0 10px rgba(255,255,255,.95), 0 0 3px rgba(255,255,255,.85); }
 }

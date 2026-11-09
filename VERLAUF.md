@@ -3,6 +3,13 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-09 · Einheitliche Köpfe, Logo-Farbe, Aufbau-Schaubild, Woche kopieren (Fassung 2026-11-09-9)
+
+- **Köpfe:** Überall steht rechts nur Suche und Einstellungen (`kopfSymboleNeu` in `js/03-router.js`, `bereichKopfNeuHTML` in `js/05-suche.js`; auf Workout ist die Lupe die Suche der Liste). Hell/Dunkel gibt es nur noch unter Einstellungen › Darstellung, die Körperdaten als eigene Zeile in den Einstellungen. Der Hilfe-Knopf „?“ und „Heute“ im Kalender stehen unten rechts im Titelblock (`.kb-extra`).
+- **Logo:** „BLOC“ nutzt `var(--accent)` wie die Knöpfe (vorher zwei feste Orangetöne, im hellen Aussehen ein dunkleres).
+- **Einführung, Aufbau:** Das Schaubild zeigt den TrainingsBLOC als Tag (Tag A, Tag B, Run) zwischen Trainingsplan und BLOC; darunter eine Legende mit je einem Satz zu BLOC, TrainingsBLOC und Trainingsplan.
+- **Kalender:** Neben „Alle Einträge löschen“ steht wieder „Woche kopieren“ (1 bis 12 weitere Wochen, nichts doppelt; `kalKopierenSheet`). Test im Schnelltest ergänzt.
+
 ## 2026-11-09 · Zahlen auf einen Blick, Tools-Reihenfolge (Fassung 2026-11-09-8)
 
 - **Fortschritt: Zahlen auf einen Blick:** Oben steht eine feste Reihe mit Tage am Stück, Trainingstage, Trainingszeit, gehobenes Gewicht und, wenn Läufe da sind, Kilometer und Höhenmeter (`fkZahlenHTML` in `js/24-fortschritt.js`, Werte aus `statModule().zahlen`). Die sechs früheren Zahlen-Kacheln sind darin aufgegangen; sie stehen nicht mehr im Auswahlfenster, der Standard der wählbaren Kacheln ist nur noch „Gewichte & Verläufe“.

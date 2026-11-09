@@ -76,7 +76,7 @@ function renderFortschritt(){
   Object.keys(dd.M).forEach(function(k){ M[k] = dd.M[k]; });
   function neu(){ var y = window.scrollY; renderFortschritt(); window.scrollTo(0, y); }
   app.innerHTML =
-    topbar(t("tabFortschritt"), { back:"#home", right:kopfSymboleNeu("stats")+'<button type="button" class="iconbtn" data-koerper title="'+esc(t("koerperTitel"))+'" aria-label="'+esc(t("koerperTitel"))+'">'+svgIcon('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>')+'</button>' }) +
+    topbar(t("tabFortschritt"), { back:"#home", right:kopfSymboleNeu() }) +
     fkZahlenHTML(st.zahlen)+
     (wahl.length ? '<div class="fk-raster">'+wahl.map(function(id){ return fkKachelHTML(id, M); }).join("")+'</div>'
                  : '<div class="card fk-leerseite">'+svgIcon('<path d="M4 4v16h16"/><path d="M8 15l3.5-4.5 3 2.5L20 7"/>')+'<p>'+esc(t("fkLeer"))+'</p></div>')+
