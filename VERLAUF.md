@@ -3,6 +3,18 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-09 · Befunde des App-Testers abgearbeitet (Fassung 2026-11-09-7)
+
+- **Zurück-Falle:** Eine Seite ohne Inhalt (Deckblatt ohne Entwurf nach dem Neuladen, gelöschter BLOC) wird beim Weiterleiten im Navigations-Stack ersetzt (`goErsetze` in `js/03-router.js`), nicht überdeckt; „Zurück“ führt wieder aus der Seite heraus.
+- **Einführung „Über dich“:** Das Formular wird beim Blättern frisch aus den gespeicherten Werten gebaut; ein ungültiger Wert hält auf der Seite und zeigt die Fehlerzeile (vorher gingen Werte verloren).
+- **Schmale Handys:** In der Leiste „Training speichern“ / „LOS GEHTS!“ schrumpft der linke Knopf, der rechte bleibt ganz im Bild.
+- **Katalog-Filter:** „Eigene Übungen“ stehen im Workoutkatalog nur ohne Filter oder wenn sie selbst gewählt sind; Zähler und Liste stimmen überein.
+- **Beenden-Dialog:** Solange „Workout beenden?“ offen ist, steht der Timer; „Abbrechen“ lässt ihn weiterlaufen (`beendenFragen`, auch für Android-Zurück).
+- **Deckblatt:** Hinweis „Karte gedrückt halten für Speichern, Teilen und Ausblenden“.
+- **Begriffe:** „BLOC speichern“ statt „Plan speichern“, „BLOCs mit Gewicht × Wdh.“ im Katalog.
+- **Plan-Assistent:** Die Übersicht warnt, wenn ein gewähltes Gerät im Plan gar nicht vorkommt (z. B. Langhantel bei Trainingsart Körpergewicht); der Bereich Mobility erklärt, dass er einen zusätzlichen Tag an einem freien Wochentag bekommt.
+- Einheitstest: Router-Weiterleitung. Schnelltest/Einheitstest laufen grün (siehe unten im Verlauf der Sitzung).
+
 ## 2026-11-09 · Eigene Dateiendung .bloc: Antippen öffnet BLOC (Fassung 2026-11-09-6)
 
 - **Teilen als `.bloc`:** Workout, BLOC, TrainingsBLOC und eigene Übung gehen als `bloc-….bloc` (Inhalt wie bisher JSON, Typ `application/x-bloc`). Alte `.json`-Dateien öffnen weiter über „Workout- oder Plan-Datei öffnen“; im Browser fällt das Teilen-Menü auf `.json` zurück, wenn es `.bloc` nicht annimmt (sonst Download als `.bloc`).

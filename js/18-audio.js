@@ -22,7 +22,7 @@ function renderInstallGuide(){
 }
 
 /* ============ Confirm sheet ============ */
-function confirmSheet(title, desc, actionLabel, onConfirm){
+function confirmSheet(title, desc, actionLabel, onConfirm, onCancel){   // onCancel (optional): bei „Abbrechen“ und Tippen daneben
   var root = document.getElementById("overlayRoot");
   root.innerHTML = '<div class="confirm-overlay"><div class="confirm-sheet">'+
     '<h3>'+esc(title)+'</h3><p>'+esc(desc)+'</p>'+
@@ -30,8 +30,9 @@ function confirmSheet(title, desc, actionLabel, onConfirm){
     '<button class="btn btn-danger" style="background:var(--danger);color:#fff" data-ok>'+esc(actionLabel)+'</button></div>'+
     '</div></div>';
   function close(){ root.innerHTML=""; }
-  root.querySelector("[data-cancel]").addEventListener("click", close);
-  root.querySelector(".confirm-overlay").addEventListener("click", function(e){ if(e.target.classList.contains("confirm-overlay")) close(); });
+  function abbrechen(){ close(); if(onCancel) onCancel(); }
+  root.querySelector("[data-cancel]").addEventListener("click", abbrechen);
+  root.querySelector(".confirm-overlay").addEventListener("click", function(e){ if(e.target.classList.contains("confirm-overlay")) abbrechen(); });
   root.querySelector("[data-ok]").addEventListener("click", function(){ close(); onConfirm(); });
 }
 

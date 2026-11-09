@@ -380,7 +380,7 @@ function renderMyBuild(id){
       if(bauNeuWs){ bauEntwurf.d.ws = bauNeuWs; if(bauNeuWs === "dehn") bauEntwurf.d.work = 30; }
       bauNeuWs = "";
     }
-    else { var mw = findMy(id); if(!mw){ go("#library"); return; } bauEntwurf = { key:id, d:draftCopy(mw) }; }
+    else { var mw = findMy(id); if(!mw){ goErsetze("#library"); return; } bauEntwurf = { key:id, d:draftCopy(mw) }; }
   }
   renderDraftPage(bauEntwurf.d, { cover:false, back:bauEntwurf.d.ws ? "#warmstretch" : "#library", id:bauEntwurf.d.id, bau:bauEntwurf });
 }
@@ -414,9 +414,9 @@ function bauSpeichern(b){
 function renderCover(kind, id){
   var key = kind+":"+(id||"");
   if(!coverDraft || coverDraft.key !== key){
-    if(kind==="lib"){ var lw = findLibWorkout(id); if(!lw){ go("#library"); return; } coverDraft = draftFromLib(lw); }
-    else if(kind==="my"){ var mw = findMy(id); if(!mw){ go("#library"); return; } coverDraft = draftFromMy(mw); }
-    else { go("#library"); return; }
+    if(kind==="lib"){ var lw = findLibWorkout(id); if(!lw){ goErsetze("#library"); return; } coverDraft = draftFromLib(lw); }
+    else if(kind==="my"){ var mw = findMy(id); if(!mw){ goErsetze("#library"); return; } coverDraft = draftFromMy(mw); }
+    else { goErsetze("#library"); return; }
   }
   renderDraftPage(coverDraft, { cover:true, back:coverDraft.ws ? "#warmstretch" : "#library" });
 }
@@ -606,6 +606,7 @@ function renderDraftPage(d, cfg){
           : '<button class="btn btn-primary" data-go'+(exs.length?'':' disabled')+'>'+ICON_PLAY+' '+t("letsGo")+'</button>')+
         (d.src==="surprise" ? '<button class="btn btn-secondary wb-mischen" data-reroll>'+ICON_MISCHEN+' '+t("wbMischen")+'</button>' : '')+
         coverActs+
+        (exs.length ? '<div class="cover-langhinweis">'+esc(t("coverLangHint"))+'</div>' : '')+
       '</div>'
     : '<div class="card"><label for="m-name">'+t("name")+'</label>'+
         '<input type="text" id="m-name" value="'+esc(d.name)+'" maxlength="40">'+

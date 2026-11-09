@@ -23,7 +23,7 @@ var PAT = {
     q_tage:"An welchen Tagen willst du trainieren?", h_tage:"Tippe die Wochentage an. Jeder Tag wird ein eigener TrainingsBLOC. Zwei Krafttage pro Woche sind ein guter Start.",
     q_dauer:"Wie viel Zeit hast du pro Einheit?", h_dauer:"Das Aufwärmen zählt mit.",
     q_train:"Welche Trainingsart passt zu dir?", h_train:"Wie im Katalog, mehrere möglich. Körpergewicht geht immer dazu.",
-    q_ausr:"Welche Geräte hast du?", h_ausr:"Mehrere möglich. So kommen nur Übungen vor, die du auch ausführen kannst.", g_keine:"Keine Geräte",
+    q_ausr:"Welche Geräte hast du?", h_ausr:"Mehrere möglich. So kommen nur Übungen vor, die du auch ausführen kannst.", g_keine:"Keine Geräte", geraetFehlt:"Hinweis: {g} kommt im Plan nicht vor. Zur gewählten Trainingsart gibt es dafür keine passende Übung. Ergänze Fitnessstudio oder Calisthenic-Park als Trainingsart oder nimm das Gerät heraus.",
     q_bereiche:"Welche BLOC-Bereiche sollen im Plan vorkommen?", h_bereiche:"Mehrere möglich. Workout ist die Basis, dazu Run und Mobility & Stretch als eigener Tag.",
     q_einschr:"Gibt es etwas, worauf wir Rücksicht nehmen sollen?", h_einschr:"Betroffene Bewegungen werden durch Alternativen ersetzt. Das ersetzt keine ärztliche Beratung.",
     q_impact:"Wie sieht es mit Sprüngen aus?", h_impact:"Sprünge und harte Landungen belasten Gelenke.",
@@ -38,7 +38,7 @@ var PAT = {
     e_keine:"Keine", e_knie:"Knie", e_schulter:"Schulter", e_ruecken:"Rücken", e_handgelenk:"Handgelenk", e_sprung:"Sprunggelenk",
     i_gerne:"Gerne mit Sprüngen", i_gerne_s:"Auch explosiv und mit Cardio-Sprüngen", i_schonend:"Lieber gelenkschonend", i_schonend_s:"Ohne Sprünge und harte Landungen",
     sp_name:"Sportart, z. B. Fußball", sp_tag:"An welchem Tag?", sp_keiner:"Kein anderer Sport",
-    b_workout:"Workout", b_workout_s:"Kraft, Calisthenics, Körpergewicht", b_run:"Run", b_run_s:"Laufen mit Aufzeichnung", b_mobility:"Mobility & Stretch", b_mobility_s:"Ein eigener Mobility-Tag", b_timer:"Timer-Intervalle", b_timer_s:"Cardio-Zirkel mit Timer",
+    b_workout:"Workout", b_workout_s:"Kraft, Calisthenics, Körpergewicht", b_run:"Run", b_run_s:"Laufen mit Aufzeichnung", b_mobility:"Mobility & Stretch", b_mobility_s:"Zusätzlich ein eigener Mobility-Tag an einem freien Wochentag", b_timer:"Timer-Intervalle", b_timer_s:"Cardio-Zirkel mit Timer",
     l_ein:"Einsteiger (Geh-Lauf)", l_reg:"Ich laufe regelmäßig", m_nach:"Nach jeder Einheit", m_tag:"Eigener Tag", m_beide:"Beides",
     s_anfaenger:"Anfänger", s_anfaenger_s:"Ruhig und sicher starten", s_leicht:"Leicht", s_leicht_s:"Sanft und machbar", s_mittel:"Mittel", s_mittel_s:"Fordernd, aber fair", s_schwer:"Schwer", s_schwer_s:"Hart, für Geübte",
     schwerTitel:"Wie intensiv?", mehr:"Weitere Optionen", alter:"Altersbereich", a_u50:"unter 50", a_50:"50–64", a_65:"65+", wochenT:"Planlänge", wochenN:"{n} Wochen",
@@ -75,7 +75,7 @@ var PAT = {
     q_tage:"Which days do you want to train?", h_tage:"Tap the weekdays. Each day becomes its own TrainingsBLOC. Two strength days a week are a good start.",
     q_dauer:"How much time per session?", h_dauer:"The warm-up is included.",
     q_train:"Which type of training suits you?", h_train:"As in the catalogue, several possible. Bodyweight is always included.",
-    q_ausr:"Which equipment do you have?", h_ausr:"Several possible. Only exercises you can actually do will appear.", g_keine:"No equipment",
+    q_ausr:"Which equipment do you have?", h_ausr:"Several possible. Only exercises you can actually do will appear.", g_keine:"No equipment", geraetFehlt:"Note: {g} does not appear in the plan. There is no matching exercise for the chosen training type. Add gym or calisthenics park as a training type, or remove the equipment.",
     q_bereiche:"Which BLOC areas should the plan include?", h_bereiche:"Several possible. Workout is the base, plus Run and Mobility & Stretch as its own day.",
     q_einschr:"Is there anything we should take into account?", h_einschr:"Affected movements are swapped for alternatives. This does not replace medical advice.",
     q_impact:"How about jumps?", h_impact:"Jumps and hard landings load the joints.",
@@ -90,7 +90,7 @@ var PAT = {
     e_keine:"None", e_knie:"Knee", e_schulter:"Shoulder", e_ruecken:"Back", e_handgelenk:"Wrist", e_sprung:"Ankle",
     i_gerne:"Jumps are fine", i_gerne_s:"Explosive moves and jumping cardio too", i_schonend:"Easy on the joints", i_schonend_s:"No jumps or hard landings",
     sp_name:"Sport, e.g. football", sp_tag:"On which day?", sp_keiner:"No other sport",
-    b_workout:"Workout", b_workout_s:"Strength, calisthenics, bodyweight", b_run:"Run", b_run_s:"Running with tracking", b_mobility:"Mobility & Stretch", b_mobility_s:"Its own mobility day", b_timer:"Timer intervals", b_timer_s:"Cardio circuit with timer",
+    b_workout:"Workout", b_workout_s:"Strength, calisthenics, bodyweight", b_run:"Run", b_run_s:"Running with tracking", b_mobility:"Mobility & Stretch", b_mobility_s:"Plus its own mobility day on a free weekday", b_timer:"Timer intervals", b_timer_s:"Cardio circuit with timer",
     l_ein:"Beginner (walk-run)", l_reg:"I run regularly", m_nach:"After every session", m_tag:"Its own day", m_beide:"Both",
     s_anfaenger:"Beginner", s_anfaenger_s:"Start calm and safe", s_leicht:"Easy", s_leicht_s:"Gentle and doable", s_mittel:"Medium", s_mittel_s:"Demanding but fair", s_schwer:"Hard", s_schwer_s:"Tough, for experienced",
     schwerTitel:"How intense?", mehr:"More options", alter:"Age range", a_u50:"under 50", a_50:"50–64", a_65:"65+", wochenT:"Plan length", wochenN:"{n} weeks",
@@ -593,7 +593,14 @@ function paZeichnen(){
   } else if(s.art === "fertig"){
     var sp2 = null, geht = paVollstaendig(a);
     if(geht){ try { sp2 = paErzeuge(a); } catch(err){ sp2 = null; } }
-    h += (sp2 ? '<div class="pa-vorschau"><b>'+esc(sp2.name)+'</b><small>'+esc(pt("einheitenSumme", { n:sp2.nTage, m:a.wochen }))+'</small><small>'+esc(pt("who", { m:sp2.minuten, k:sp2.kraftTage }))+'</small></div>' : "")+
+    var fehlt = [];
+    if(sp2 && a.bereiche.indexOf("workout") > -1){   // gewählte Geräte, die im fertigen Plan gar nicht vorkommen (z. B. Langhantel, aber nur Trainingsart Körpergewicht)
+      var benutzt = {};
+      (sp2.tage || []).forEach(function(tg){ (tg.teile || []).forEach(function(te){ ((te.bloc && te.bloc.ids) || []).forEach(function(id){ var ex = findExercise(id); if(ex) exAusr(ex).forEach(function(g){ benutzt[g] = true; }); }); }); });
+      fehlt = a.ausr.filter(function(x){ return x !== "keine" && !benutzt[x]; });
+    }
+    h += (fehlt.length ? '<p class="pa-warn" role="note">'+esc(pt("geraetFehlt", { g:fehlt.map(function(x){ return t("stGer_" + x); }).join(", ") }))+'</p>' : '')+
+      (sp2 ? '<div class="pa-vorschau"><b>'+esc(sp2.name)+'</b><small>'+esc(pt("einheitenSumme", { n:sp2.nTage, m:a.wochen }))+'</small><small>'+esc(pt("who", { m:sp2.minuten, k:sp2.kraftTage }))+'</small></div>' : "")+
       '<div class="pa-liste">'+paZusammen(a).map(function(r){ return '<button type="button" class="pa-zeile" data-pa-sprung="'+r[0]+'"><span>'+esc(r[1])+'</span><b>'+esc(r[2])+'</b><i>'+esc(pt("aendern"))+'</i></button>'; }).join("")+'</div>'+
       '<details class="pa-mehr"'+(paEdit ? ' open' : '')+'><summary>'+esc(pt("mehr"))+'</summary><div class="pa-mehr-in"><div class="pa-label">'+esc(pt("alter"))+'</div><div class="pa-chips">'+
         [["u50", "a_u50"], ["50", "a_50"], ["65", "a_65"]].map(function(x){ return '<button type="button" class="pa-chip'+(a.alter === x[0] ? ' an' : '')+'" data-pa-alter="'+x[0]+'" aria-pressed="'+(a.alter === x[0])+'">'+esc(pt(x[1]))+'</button>'; }).join("")+

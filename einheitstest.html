@@ -542,6 +542,17 @@
     gleich(W.einheitTagKey(new Date(2026, 9, 5, 23, 59).getTime()), "2026-10-05", "Datum mit führenden Nullen");
   });
 
+  test("Router: eine tote Seite (Deckblatt ohne Entwurf) wird beim Weiterleiten ersetzt, nicht überdeckt", function () {
+    var alt = W.navStack.slice();
+    try {
+      W.navStack = ["#home", "#cover/surprise"];
+      W.goErsetze("#library");
+      gleich(W.navStack.join(","), "#home,#library", "Stack nach dem Weiterleiten: Heute, Katalog (ohne die tote Seite)");
+      W.goErsetze("#library");
+      gleich(W.navStack.join(","), "#home,#library", "zweimal weiterleiten verdoppelt nichts");
+    } finally { W.navStack = alt; W.go("#home"); }
+  });
+
   test("Ruheumsatz: Protein-Seite und Lauf-Schätzung rechnen mit derselben Formel (auch ohne Angabe zum Geschlecht)", function () {
     var kd = { kg: 80.5, cm: 180, alter: 30, sex: "" };
     ["", "w", "m"].forEach(function (sx) {

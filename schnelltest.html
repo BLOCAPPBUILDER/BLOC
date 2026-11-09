@@ -1908,7 +1908,7 @@
       pruefe(/Speichern & weiter mit BLOC E2/.test(h.textContent) && !$(".satz-stat"), "Trainingsplan: Speichern & weiter mit …, keine Auswertung: " + h.textContent);
       klick(h);
       await bis(function () { return W.progKontext && W.progKontext.i === 1 && (W.progBericht || []).length === 1 && $("#playerRoot .player"); }, 4000, "BLOC E2 (Timer) startet nach Speichern & weiter");
-      pruefe(!$("#satzRoot") && D.elementFromPoint(40, 300) && D.elementFromPoint(40, 300).closest(".player"), "Der Timer liegt oben, die Satz-Seite ist weg");
+      pruefe(!$("#satzRoot") && (W.innerWidth < 100 || (D.elementFromPoint(40, 300) && D.elementFromPoint(40, 300).closest(".player"))), "Der Timer liegt oben, die Satz-Seite ist weg");   // bei ausgeblendetem Fenster (Breite 0) gibt es keinen Punkt zum Prüfen
       pruefe(!$("[data-plkg]"), "Timer ohne Eintragen");
       W.exitPlayer();
       pruefe(W.location.hash === "#koerper", "zurück in der Arena");
