@@ -169,7 +169,7 @@
       klick('#tabbar [data-nav="#training"]');
       await bis(function () { return $(".training-seite .tools-raster .tk"); }, 3000, "Seite Training");
       var bereiche = $$(".tools-raster .tk").map(function (e) { return e.getAttribute("data-tool"); }).join(",");
-      pruefe(bereiche === "katalog,run,plan,warm,protein,intervall,faq", "Workout (groß oben), Run, Trainingsplan, Mobility & Stretch, Protein, Timer und Fragen auf Tools: " + bereiche);
+      pruefe(bereiche === "katalog,run,plan,warm,intervall,protein,faq", "Workout (groß oben), Run, Trainingsplan, Mobility & Stretch, Timer, dann ganz unten Protein Tracker und Wissensaustausch: " + bereiche);
       pruefe($(".tools-raster .tk")  && $(".tools-raster .tk").classList.contains("tk-gross"), "Die oberste Kachel auf Tools steht groß");
       pruefe($('.tk[data-tool="intervall"][data-nav="#intervall"]') && $('.tk[data-tool="katalog"][data-nav="#katalog"]'), "Timer und Workout fehlen als Kachel auf Tools");
       pruefe($("#tabbar .tab.active") && /Tools/.test($("#tabbar .tab.active").textContent), "In der Leiste soll „Tools“ markiert sein");
@@ -1151,7 +1151,7 @@
       pruefe($$("#tabbar .tab").length === 4 && $(".kopf-neu [data-nav=\"#settings\"]"), "Leiste mit vier Zielen fehlt oder Einstellungen nicht im Kopf");
       klick('#tabbar [data-nav="#stats"]');
       await bis(function () { return $(".fk-raster") && $("#tabbar .tab.active") && /Fortschritt/.test($("#tabbar .tab.active").textContent); }, 3000, "Fortschritt mit aktiver Leiste");
-      pruefe($$(".fk").map(function (e) { return e.getAttribute("data-fk"); }).join() === "serie,kg,logbuch", "Fortschritt: Standard sind Tage am Stück, gehobenes Gewicht und Gewichte & Verläufe: " + $$(".fk").map(function (e) { return e.getAttribute("data-fk"); }).join());
+      pruefe($$(".fk").map(function (e) { return e.getAttribute("data-fk"); }).join() === "logbuch" && $(".fk-blick .fz-mini"), "Fortschritt: Standard ist Gewichte & Verläufe, darüber stehen die Zahlen auf einen Blick: " + $$(".fk").map(function (e) { return e.getAttribute("data-fk"); }).join());
       pruefe($$("#tabbar .tab").map(function (e) { return e.textContent.trim(); }).join() === "Heute,Tools,Fortschritt,Kalender", "Leiste: Heute, Tools, Fortschritt, Kalender: " + $$("#tabbar .tab").map(function (e) { return e.textContent.trim(); }).join());
       alleAuswertungen(); W.renderFortschritt();
       pruefe($(".stat-hero") && $$(".stat-bereichkarte").length === 4 && !$(".woche") && /Workout/.test($$(".stat-bereichkarte .sb-name").map(function (e) { return e.textContent; }).join("|")) && !/Air|Studio/.test($$(".stat-bereichkarte .sb-name").map(function (e) { return e.textContent; }).join("|")), "Statistik ohne fünf Bereiche (Air und Studio als Workout), oder mit Wochenzeile");
@@ -1965,7 +1965,7 @@
       pruefe(/info-historie/.test(W.kkInfoHTML(W.findExercise(ids[0]))), "Übungsinfo zeigt die Zeile „Letzte 30 Tage“");
       W.state.db.history = []; delete W.state.db.settings.fortschrittKacheln; W.save();
     }],
-    ["Fortschritt: Kacheln wählen, Zahlen (Tage am Stück, gehobenes Gewicht), Gewichte & Verläufe, Entfernen", async function () {
+    ["Fortschritt: Zahlen auf einen Blick mit Verlauf, Kacheln wählen, Gewichte & Verläufe, Entfernen", async function () {
       await heim();
       var jetzt = Date.now(), D = 86400000;
       W.state.db.history = [0, 1, 2].map(function (i) { return { at:jetzt - i * D - 3600000, dur:1200, ex:["push-ups"], b:"lib" }; });
@@ -1973,20 +1973,35 @@
       delete W.state.db.settings.fortschrittKacheln; W.save();
       W.go("#stats");
       await bis(function () { return $(".fk-raster"); }, 3000, "Fortschritt");
-      pruefe($$(".fk-zahl").length === 2, "zwei Zahlen-Kacheln: " + $$(".fk-zahl").length);
-      var serie = $('.fk[data-fk="serie"] .fz-wert b'), kg = $('.fk[data-fk="kg"] .fz-wert b');
+      pruefe($$(".fk-blick .fz-mini").length === 4, "vier Zahlen auf einen Blick (ohne Läufe kein km/hm): " + $$(".fk-blick .fz-mini").length);
+      var serie = $('.fz-mini[data-zahl="serie"] .fz-wert b'), kg = $('.fz-mini[data-zahl="kg"] .fz-wert b');
       pruefe(serie && serie.textContent === "3", "Tage am Stück: " + (serie && serie.textContent));
       pruefe(kg && /4\.000|4,000|4000/.test(kg.textContent), "Gehobenes Gewicht insgesamt: " + (kg && kg.textContent));
       pruefe($('.fk[data-fk="logbuch"] .stat-fort'), "Gewichte & Verläufe je Übung als Kachel");
+      // Antippen: kein Diagramm auf der Seite -> Fenster mit Balken; Monat/Jahr umschaltbar
+      klick($('.fz-mini[data-zahl="kg"]'));
+      await bis(function () { return $("#overlayRoot .fk-graphsheet .bchart"); }, 2000, "Verlauf des gehobenen Gewichts");
+      pruefe($$("#overlayRoot .bc .bw").some(function (b) { return /1\.500|1,500|1500|2\.500|2,500|2500|4\.000|4,000|4000/.test(b.textContent); }), "Balken mit dem Gewicht der Woche");
+      klick($('#overlayRoot [data-fkg="monat"]'));
+      await bis(function () { return $('#overlayRoot [data-fkg="monat"].active'); }, 2000, "Monatsansicht im Fenster");
+      klick($("#overlayRoot [data-ok]"));
+      await bis(function () { return !$("#overlayRoot .fk-graphsheet"); }, 2000, "Fenster geschlossen");
+      klick($('.fz-mini[data-zahl="serie"]'));
+      await bis(function () { return $("#overlayRoot .fk-graphsheet .bchart"); }, 2000, "Verlauf der Trainingstage");
+      klick($("#overlayRoot [data-ok]"));
+      // Gibt es den Verlauf schon als Kachel, springt die Seite dorthin statt ein zweites Diagramm zu öffnen
       klick($("[data-fkhinzu]"));
       await bis(function () { return $$("#overlayRoot [data-fkw]").length === W.FK_MODULE.length; }, 2000, "Auswahlfenster mit allen Auswertungen");
-      pruefe($$("#overlayRoot .fk-zeile.an").length === 3, "drei sind angehakt");
-      klick($('#overlayRoot [data-fkw="km"]'));
-      klick($('#overlayRoot [data-fkw="serie"]'));
+      pruefe($$("#overlayRoot .fk-zeile.an").length === 1, "eine ist angehakt (Gewichte & Verläufe)");
+      pruefe(!$('#overlayRoot [data-fkw="serie"]'), "Zahlen stehen nicht mehr im Auswahlfenster");
+      klick($('#overlayRoot [data-fkw="verlauf"]'));
       klick($("#overlayRoot [data-ok]"));
-      await bis(function () { return !$("#overlayRoot .fk-sheet") && $('.fk[data-fk="km"]'); }, 2000, "Kachel Kilometer hinzugefügt");
-      pruefe($$(".fk").map(function (e) { return e.getAttribute("data-fk"); }).join() === "kg,logbuch,km", "Reihenfolge nach Wahl: " + $$(".fk").map(function (e) { return e.getAttribute("data-fk"); }).join());
-      pruefe(W.state.db.settings.fortschrittKacheln.join() === "kg,logbuch,km", "Auswahl gespeichert");
+      await bis(function () { return !$("#overlayRoot .fk-sheet") && $('.fk[data-fk="verlauf"]'); }, 2000, "Kachel Verlauf hinzugefügt");
+      pruefe($$(".fk").map(function (e) { return e.getAttribute("data-fk"); }).join() === "logbuch,verlauf", "Reihenfolge nach Wahl: " + $$(".fk").map(function (e) { return e.getAttribute("data-fk"); }).join());
+      klick($('.fz-mini[data-zahl="tage"]'));
+      await bis(function () { return $('.fk[data-fk="verlauf"] .stat-seg button.active[data-statmodus="n"]'); }, 2000, "Verlauf springt auf Anzahl der Trainings");
+      pruefe(!$("#overlayRoot .fk-graphsheet"), "Trainingstage: kein zweites Diagramm, wenn der Verlauf schon da ist");
+      pruefe(W.state.db.settings.fortschrittKacheln.join() === "logbuch,verlauf", "Auswahl gespeichert");
       W.state.db.history = []; W.state.db.settings.einheiten = []; delete W.state.db.settings.fortschrittKacheln; W.save();
     }],
     ["Plan-Assistent: Karte im Baukasten, Fragen, Übersicht, Plan erstellen, TrainingsBLOCs je Tag, Kalender, Menü, Abbrechen", async function () {

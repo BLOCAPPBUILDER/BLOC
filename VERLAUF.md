@@ -3,6 +3,13 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-09 · Zahlen auf einen Blick, Tools-Reihenfolge (Fassung 2026-11-09-8)
+
+- **Fortschritt: Zahlen auf einen Blick:** Oben steht eine feste Reihe mit Tage am Stück, Trainingstage, Trainingszeit, gehobenes Gewicht und, wenn Läufe da sind, Kilometer und Höhenmeter (`fkZahlenHTML` in `js/24-fortschritt.js`, Werte aus `statModule().zahlen`). Die sechs früheren Zahlen-Kacheln sind darin aufgegangen; sie stehen nicht mehr im Auswahlfenster, der Standard der wählbaren Kacheln ist nur noch „Gewichte & Verläufe“.
+- **Antippen zeigt den Verlauf:** Gibt es das Diagramm schon als Kachel (Trainingstage und Trainingszeit im „Verlauf“, Kilometer im Run-Bereich), springt die Seite dorthin; sonst öffnet sich ein Fenster mit Balken je Woche, Monat oder Jahr (`fkZahlSheet`, `zahlGraph`). Bisher ohne Diagramm: Tage am Stück (Trainingstage je Zeitraum), gehobenes Gewicht, Höhenmeter.
+- **Tools:** Protein Tracker und Wissensaustausch stehen standardmäßig ganz unten (`TOOLS_KEYS` in `js/05-suche.js`); eine selbst verschobene Reihenfolge bleibt erhalten.
+- Schnelltest und Einheitstest angepasst (53/53, 69/69).
+
 ## 2026-11-09 · Befunde des App-Testers abgearbeitet (Fassung 2026-11-09-7)
 
 - **Zurück-Falle:** Eine Seite ohne Inhalt (Deckblatt ohne Entwurf nach dem Neuladen, gelöschter BLOC) wird beim Weiterleiten im Navigations-Stack ersetzt (`goErsetze` in `js/03-router.js`), nicht überdeckt; „Zurück“ führt wieder aus der Seite heraus.
