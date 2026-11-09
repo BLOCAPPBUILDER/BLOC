@@ -69,7 +69,7 @@ function shareDraft(d){
   encodeShare(sharePayload(d)).then(function(code){
     var url = appUrl()+"#import/"+code, msg = t("shareMsg", { n:d.name });
     if(typeof IST_NATIV !== "undefined" && IST_NATIV){   // App: das Workout als Datei (die Gegenseite öffnet sie in BLOC über „Workout-Datei öffnen“), dazu der Link im Text
-      dateiAusgeben("bloc-workout-"+String(d.name).replace(/[^\w\-]+/g, "_").slice(0, 40)+".json", JSON.stringify({ bloc:"workout", v:1, n:d.name, code:code }), "application/json", msg+" "+url)
+      dateiAusgeben("bloc-workout-"+String(d.name).replace(/[^\w\-]+/g, "_").slice(0, 40)+BLOC_ENDUNG, JSON.stringify({ bloc:"workout", v:1, n:d.name, code:code }), BLOC_MIME, msg+" "+url)
         .catch(function(err){ if(!nativAbbruch(err)) copyText(url, t("shareLinkCopied")); });
       return;
     }
@@ -80,48 +80,95 @@ function shareDraft(d){
     } else copyText(msg+" "+url, t("shareLinkCopied"));
   });
 }
-/* Workout-Datei öffnen (bloc-workout-….json von Freunden, auch aus OneDrive/SharePoint über die Dateiauswahl) oder eine Textdatei mit dem Teilen-Link.
+/* BLOC-Dateien (Endung .bloc, Inhalt ist JSON): Dateiname und Typ beim Teilen. Alte .json-Dateien lassen sich weiter öffnen (gelesen wird nur der Inhalt). */
+var BLOC_ENDUNG = ".bloc", BLOC_MIME = "application/x-bloc";
+/* Workout-Datei öffnen (bloc-workout-….bloc oder ältere .json von Freunden, auch aus OneDrive/SharePoint über die Dateiauswahl) oder eine Textdatei mit dem Teilen-Link.
    Es wird nur der Code herausgelesen; alles Weitere läuft wie beim Link (Prüfung in draftFromShare). */
 function workoutDateiOeffnen(file){
   if(!file) return;
   if(file.size > 300000){ showToast(t("fileError")); return; }
   var reader = new FileReader();
-  reader.onload = function(){
-    var text = String(reader.result || ""), code = "";
-    try{
-      var j = JSON.parse(text);
-      if(j && j.bloc === "programm"){ programmDateiOeffnen(j); return; }
-      if(j && j.bloc === "plan"){ planDateiOeffnen(j); return; }
-      if(j && j.bloc === "uebung"){ uebungDateiOeffnen(j); return; }
-      if(j && typeof j === "object" && typeof j.code === "string") code = j.code;
-    }catch(e){}
-    if(!code){ var m = /#import\/([A-Za-z0-9_\-]+)/.exec(text); if(m) code = m[1]; }
-    if(!/^[zj][A-Za-z0-9_\-]{2,200000}$/.test(code)){ showToast(t("fileError")); return; }
-    go("#import/"+code);
-  };
+  reader.onload = function(){ workoutDateiText(String(reader.result || ""), false); };
   reader.onerror = function(){ showToast(t("fileError")); };
   reader.readAsText(file);
+}
+/* Der Inhalt einer BLOC-Datei. extern = true: die Datei kam von außen (angetippt im Chat/Dateien); BLOC fragt dann ausdrücklich, ob gespeichert werden soll. */
+function workoutDateiText(text, extern){
+  var code = "";
+  text = String(text || "").replace(/^﻿/, "");
+  if(text.length > 300000){ showToast(t("fileError")); return; }
+  try{
+    var j = JSON.parse(text);
+    if(j && j.bloc === "programm"){ programmDateiOeffnen(j, extern); return; }
+    if(j && j.bloc === "plan"){ planDateiOeffnen(j, extern); return; }
+    if(j && j.bloc === "uebung"){ uebungDateiOeffnen(j, extern); return; }
+    if(j && typeof j === "object" && typeof j.code === "string") code = j.code;
+  }catch(e){}
+  if(!code){ var m = /#import\/([A-Za-z0-9_\-]+)/.exec(text); if(m) code = m[1]; }
+  if(!/^[zj][A-Za-z0-9_\-]{2,200000}$/.test(code)){ showToast(t("fileError")); return; }
+  go("#import/"+code);
+}
+/* ---------- Datei von außen: .bloc antippen ----------
+   Android: BlocDateiPlugin (MainActivity) nimmt die Datei an (ACTION_VIEW/SEND, nur content://) und liefert den Text; Desktop-PWA: launchQueue (manifest file_handlers).
+   BLOC landet auf „Workouts und BLOCs“ (Katalog › BLOCs) und fragt dort, ob gespeichert werden soll. Nichts wird vorher angelegt. */
+function blocDateiVonAussen(r, versuch){
+  versuch = versuch || 0;
+  if(!r) return;
+  if(typeof playerState !== "undefined" && playerState && document.getElementById("playerRoot").innerHTML){ showToast(t("blocDateiPlayer")); return; }   // Training läuft: nicht stören
+  var ov = document.getElementById("overlayRoot");
+  if(ov && ov.innerHTML && versuch < 20){ setTimeout(function(){ blocDateiVonAussen(r, versuch + 1); }, 1500); return; }   // z. B. die Einführung ist offen: kurz warten
+  if(r.zuGross || r.fehler || typeof r.text !== "string"){ showToast(t("fileError")); return; }
+  var s = state.db.settings;
+  s.katTab = "blocs"; stPlanAktiv = null; stPlanBauen = false; stPlanQuery = "";
+  if(ov) ov.innerHTML = "";
+  navStack = ["#home"];
+  go("#katalog");
+  workoutDateiText(r.text, true);
+}
+function blocDateiAbholen(){
+  var bd = nativPlugin("BlocDatei");
+  if(!bd) return;
+  bd.abholen().then(function(r){ if(r && (r.text !== undefined || r.zuGross || r.fehler)) blocDateiVonAussen(r); }).catch(function(){});
+}
+if(IST_NATIV) window.addEventListener("load", function(){
+  var bd = nativPlugin("BlocDatei");
+  if(!bd) return;
+  try{ bd.addListener("blocDatei", function(){ blocDateiAbholen(); }); }catch(e){}
+  setTimeout(blocDateiAbholen, 700);   // Kaltstart: die Seite steht erst nach dem Laden
+});
+if(window.launchQueue && typeof window.launchQueue.setConsumer === "function"){   // Desktop-Chrome: installierte BLOC-Web-App als Programm für .bloc
+  window.launchQueue.setConsumer(function(p){
+    var h = p && p.files && p.files[0];
+    if(!h || typeof h.getFile !== "function") return;
+    h.getFile().then(function(f){
+      if(f.size > 300000) return { zuGross:true };
+      return f.text().then(function(text){ return { text:text }; });
+    }).then(function(r){ setTimeout(function(){ blocDateiVonAussen(r); }, 600); }).catch(function(){ showToast(t("fileError")); });
+  });
 }
 /* ---------- Teilen als Datei: Trainingsplan (TrainingsBLOC), BLOC und eigene Übung ----------
    Eine Datei ist JSON mit „bloc“ als Art: "programm" (Trainingsplan), "plan" (BLOC mit Sätzen), "uebung" (eigene Übung). Das Öffnen läuft über
    „Workout- oder Plan-Datei öffnen“ (workoutDateiOeffnen); alles wird beim Einlesen geprüft und erst nach einem Tipp auf „hinzufügen“ angelegt. */
 function dateiTeilenBloc(art, name, obj, msg){
-  var text = JSON.stringify(obj), fname = "bloc-"+art+"-"+String(name).replace(/[^\w\-]+/g, "_").slice(0, 40)+".json";
+  var text = JSON.stringify(obj), fname = "bloc-"+art+"-"+String(name).replace(/[^\w\-]+/g, "_").slice(0, 40)+BLOC_ENDUNG;
   function nurText(){ if(navigator.share) navigator.share({ title:name, text:msg }).catch(function(err){ if(!err || err.name !== "AbortError") copyText(msg, t("shareLinkCopied")); }); else copyText(msg, t("shareLinkCopied")); }
   if(typeof IST_NATIV !== "undefined" && IST_NATIV){
-    dateiAusgeben(fname, text, "application/json", msg).catch(function(err){ if(!nativAbbruch(err)) nurText(); });
+    dateiAusgeben(fname, text, BLOC_MIME, msg).catch(function(err){ if(!nativAbbruch(err)) nurText(); });
     return;
   }
   try{   // Browser: die Datei über das Teilen-Menü des Systems, sonst als Download
-    var f = new File([text], fname, { type:"application/json" });
-    if(navigator.canShare && navigator.canShare({ files:[f] })){
-      navigator.share({ files:[f], title:name, text:msg }).catch(function(err){ if(!err || err.name !== "AbortError") herunterladen(); });
-      return;
+    // erst als .bloc; nimmt das Teilen-Menü des Browsers die Endung nicht an, geht die Datei mit gleichem Inhalt als .json
+    var kand = [new File([text], fname, { type:BLOC_MIME }), new File([text], fname.replace(/\.bloc$/, ".json"), { type:"application/json" })];
+    for(var k = 0; k < kand.length; k++){
+      if(navigator.canShare && navigator.canShare({ files:[kand[k]] })){
+        navigator.share({ files:[kand[k]], title:name, text:msg }).catch(function(err){ if(!err || err.name !== "AbortError") herunterladen(); });
+        return;
+      }
     }
   }catch(e){}
   herunterladen();
   // Download ohne Teilen-Menü: sagen, wo die Datei liegt, und den Text zum Einfügen kopieren
-  function herunterladen(){ dateiAusgeben(fname, text, "application/json"); copyText(msg, t("shareDateiGespeichert")); }
+  function herunterladen(){ dateiAusgeben(fname, text, BLOC_MIME); copyText(msg, t("shareDateiGespeichert")); }
 }
 /* Eigene Übung: nur die Felder, die BLOC kennt, und gültige Werte (auch beim Einlesen aus einer fremden Datei) */
 function customSauber(c){
@@ -137,12 +184,12 @@ function uebungTeilen(id){
   if(!c) return;
   dateiTeilenBloc("uebung", c.name, { bloc:"uebung", v:1, c:customDefOf({ id:id }) }, t("shareExMsg", { n:c.name }));
 }
-function uebungDateiOeffnen(j){
+function uebungDateiOeffnen(j, extern){
   var c = customSauber(j.c);
   if(!c){ showToast(t("fileError")); return; }
   if(findCustom(c.id)){ showToast(t("exSchonDa", { n:c.name })); return; }
   if(findExercise(c.id)) c.id = "my-"+uid();   // die Kennung gehört schon einer anderen Übung: als eigene, neue Übung anlegen
-  openActionSheet(c.name, [{ ico:P_CHECK, label:t("exDateiOk"), fn:function(){
+  openActionSheet(extern ? t("blocDateiFrage", { n:c.name }) : c.name, [{ ico:P_CHECK, label:t("exDateiOk"), fn:function(){
     if(!state.db.customEx) state.db.customEx = [];
     state.db.customEx.push(c); save(); syncCustomEx();
     showToast(t("exDateiOk2", { n:c.name })); go("#library");
@@ -216,10 +263,10 @@ function planAnlegen(d){
   save();
   return p;
 }
-function planDateiOeffnen(j){
+function planDateiOeffnen(j, extern){
   var d = planAusShare(j);
   if(!d){ showToast(t("fileError")); return; }
-  openActionSheet(d.name, [{ ico:P_CHECK, label:t("planDateiOk", { n:d.ids.length }), fn:function(){
+  openActionSheet(extern ? t("blocDateiFrage", { n:d.name }) : d.name, [{ ico:P_CHECK, label:t("planDateiOk", { n:d.ids.length }), fn:function(){
     var p = planAnlegen(d);
     stPlanAktiv = p.id; stPlanBauen = false; stPlanQuery = "";
     showToast(t("planDateiOk2", { n:p.name })); go("#katalog");
@@ -241,7 +288,7 @@ function programmTeilen(p){
   dateiTeilenBloc("trainingsplan", p.name, { bloc:"programm", v:1, n:p.name, w:p.wochen || null, d:p.tage || [], i:i }, t("shareProgMsg", { n:p.name })+"\n"+programmText(p));
 }
 /* Erhaltene Plan-Datei: erst fragen, dann als neuer TrainingsBLOC anlegen (eigene Workouts und BLOCs darin kommen unter Meine bzw. Katalog › Meine) */
-function programmDateiOeffnen(j){
+function programmDateiOeffnen(j, extern){
   var liste = Array.isArray(j.i) ? j.i.slice(0, 60) : [], eintraege = [];
   liste.forEach(function(x){
     if(typeof x === "string"){
@@ -256,7 +303,7 @@ function programmDateiOeffnen(j){
   });
   if(!eintraege.length){ showToast(t("fileError")); return; }
   var name = String(j.n || t("progName", { n:programmListe().length + 1 })).slice(0, 40);
-  openActionSheet(name, [{ ico:P_CHECK, label:t("progDateiOk", { n:eintraege.length }), fn:function(){
+  openActionSheet(extern ? t("blocDateiFrage", { n:name }) : name, [{ ico:P_CHECK, label:t("progDateiOk", { n:eintraege.length }), fn:function(){
     var items = eintraege.map(function(e){
       if(typeof e === "string") return e;
       if(e.plan) return "plan:"+planAnlegen(e.plan).id;

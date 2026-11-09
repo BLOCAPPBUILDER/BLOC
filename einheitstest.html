@@ -938,6 +938,43 @@
     } finally { s.studio = alt; }
   });
 
+  test(".bloc-Datei von außen: landet auf „Workouts und BLOCs“, fragt „speichern?“, legt erst nach dem Tipp an; alte .json und Fehlerfälle", function () {
+    var s0 = W.state.db.settings, vorP = s0.stPlaene, vorE = s0.studio, vorTab = s0.katTab, D = W.document, root = D.getElementById("overlayRoot");
+    function sheet() { return root.querySelector(".act-sheet"); }
+    try {
+      s0.stPlaene = []; s0.studio = {};
+      gleich([W.BLOC_ENDUNG, W.BLOC_MIME], [".bloc", "application/x-bloc"], "Endung und Typ");
+      var bloc = { bloc: "plan", v: 1, n: "Brust Test", i: ["push-up", "squat"], b: 45, s: "saetze", m: {}, z: {} };
+      var ex = W.findExercise("push-up") ? ["push-up", "squat"] : null;
+      if (!ex) { var ids = W.EXERCISES.slice(0, 2).map(function (e) { return e.id; }); bloc.i = ids; }
+      // von außen: Seite „Workouts und BLOCs“ (Katalog › BLOCs) + Frage, noch nichts angelegt
+      W.go("#settings"); root.innerHTML = "";
+      W.blocDateiVonAussen({ text: JSON.stringify(bloc) });
+      gleich(W.navTop(), "#katalog", "Seite Workouts und BLOCs"); gleich(W.state.db.settings.katTab, "blocs", "Reiter BLOCs"); gleich(W.navStack.length, 2, "Zurück führt zu Heute");
+      wahr(sheet() && /speichern\?/.test(sheet().textContent) && /Brust Test/.test(sheet().textContent), "Frage „… speichern?“ mit dem Namen");
+      gleich(W.stPlaene().length, 0, "vor dem Tipp ist nichts angelegt");
+      sheet().querySelector("[data-act]").click();
+      gleich(W.stPlaene().length, 1, "nach dem Tipp angelegt"); gleich(W.stPlaene()[0].name, "Brust Test", "Name");
+      // Abbrechen legt nichts an; dieselbe Datei als alte .json / Datei-Auswahl (ohne Frage-Titel) läuft weiter
+      root.innerHTML = ""; W.blocDateiVonAussen({ text: JSON.stringify(bloc) });
+      sheet().querySelector("[data-actclose]").click(); gleich(W.stPlaene().length, 1, "Abbrechen legt nichts an");
+      root.innerHTML = ""; W.workoutDateiText(JSON.stringify(bloc), false);
+      wahr(sheet() && !/speichern\?/.test(sheet().textContent), "Dateiauswahl: Titel ist der Name");
+      root.innerHTML = "";
+      // Übung und Trainingsplan
+      W.blocDateiVonAussen({ text: JSON.stringify({ bloc: "uebung", v: 1, c: { id: "my-x1", name: "Testübung", cats: [], equip: ["none"], reps: 5, work: 30, rest: 10 } }) });
+      wahr(sheet() && /Testübung/.test(sheet().textContent), "Übung: Frage"); root.innerHTML = "";
+      W.blocDateiVonAussen({ text: JSON.stringify({ bloc: "programm", v: 1, n: "Plan X", w: null, d: [], i: ["run"] }) });
+      wahr(sheet() && /Plan X/.test(sheet().textContent), "Trainingsplan: Frage"); root.innerHTML = "";
+      // Fehlerfälle: zu groß, kein BLOC, kaputt -> Meldung, keine Frage
+      ["zu groß", "kein BLOC", "kaputt"].forEach(function (was, k) {
+        W.blocDateiVonAussen(k === 0 ? { zuGross: true } : { text: k === 1 ? "{\"foo\":1}" : "{nope" });
+        wahr(D.getElementById("toast") && !sheet(), "Fehlermeldung statt Frage: " + was);
+      });
+      W.stPlaene().length = 0;
+    } finally { s0.stPlaene = vorP; s0.studio = vorE; s0.katTab = vorTab; root.innerHTML = ""; }
+  });
+
   function eintrag(name) { var li = document.createElement("li"); li.textContent = name + " …"; liste.appendChild(li); return li; }
   document.getElementById("los").addEventListener("click", async function () {
     var knopf = this;

@@ -18,6 +18,31 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- BLOC-Dateien (.bloc, ein BLOC, Trainingsplan oder eine Übung): Antippen im Chat, in Mails oder Dateien öffnet BLOC.
+                 Nur content://-Adressen (so reichen Apps Dateien weiter). Die Dateien liest BLOC nur lokal, siehe BlocDateiPlugin. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" />
+                <data android:mimeType="application/x-bloc" />
+                <!-- viele Apps kennen die Endung nicht und melden die Datei als „unbekannt“ -->
+                <data android:mimeType="application/octet-stream" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" android:host="*" android:mimeType="*/*" />
+                <data android:pathPattern=".*\\.bloc" />
+                <data android:pathPattern=".*\\..*\\.bloc" />
+                <data android:pathPattern=".*\\..*\\..*\\.bloc" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.bloc" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/x-bloc" />
+            </intent-filter>
         </activity>
 
         <!-- Der Standort-Dienst des Plugins ist dort exportiert; BLOC bindet ihn nur aus dem eigenen Prozess, fremde Apps sollen ihn nicht anstoßen können -->

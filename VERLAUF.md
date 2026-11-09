@@ -3,6 +3,13 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-09 · Eigene Dateiendung .bloc: Antippen öffnet BLOC (Fassung 2026-11-09-6)
+
+- **Teilen als `.bloc`:** Workout, BLOC, TrainingsBLOC und eigene Übung gehen als `bloc-….bloc` (Inhalt wie bisher JSON, Typ `application/x-bloc`). Alte `.json`-Dateien öffnen weiter über „Workout- oder Plan-Datei öffnen“; im Browser fällt das Teilen-Menü auf `.json` zurück, wenn es `.bloc` nicht annimmt (sonst Download als `.bloc`).
+- **Antippen öffnet BLOC (Android):** Intent-Filter in `AndroidManifest.xml` (`VIEW` auf `content://`, `SEND` für `application/x-bloc`); neues `BlocDateiPlugin.java` liest die Datei beim Start und bei laufender App (`onNewIntent`), höchstens 300 KB, nur `content://`, keine neue Berechtigung. Die Seite wechselt auf Katalog › BLOCs, fragt „… speichern?“ und legt erst nach dem Tipp an (`blocDateiVonAussen`, `workoutDateiText`). Läuft ein Training, kommt nur ein Hinweis; ist die Einführung offen, wartet BLOC kurz.
+- **Desktop-PWA:** `file_handlers` im `manifest.json` + `launchQueue` (Chrome am Desktop); am Handy bleibt der Link.
+- Cache-Aufräumen und Datenschutzerklärung kennen `.bloc`. Einheitstest und Schnelltest ergänzt (Seite BLOCs, Frage, Abbrechen, Fehlerfälle, Router-Link danach).
+
 ## 2026-11-09 · Angleichen und Fehlerbehebung nach dem App-Durchgang (Fassung 2026-11-09-5)
 
 - **Zweige angeglichen:** `main` (HTML-Version) hat jetzt dieselben Web-Dateien wie `capacitor`, auch `js/00-native.js`. Damit tut das Teilen eines BLOCs im Browser wieder etwas (vorher `dateiAusgeben is not defined`). `main` behält die Content-Security-Policy in `index.html`.
