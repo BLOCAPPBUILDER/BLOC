@@ -450,21 +450,36 @@ function statModule(){
   Object.keys(tageSet).map(function(k){ var q = k.split("-"); return new Date(+q[0], +q[1], +q[2], 12).getTime(); }).sort(function(a, b){ return a - b; }).forEach(function(ms){
     laufF = vorTag && Math.round((ms - vorTag)/tag) === 1 ? laufF + 1 : 1; if(laufF > bestFolge) bestFolge = laufF; vorTag = ms;
   });
-  var punkte7 = ""; for(var pi = 6; pi >= 0; pi--){ punkte7 += '<i class="fz-punkt'+(tageSet[tagKey(jetzt - pi*tag)] ? ' an' : '')+'"></i>'; }
-  M.serie = fkZahlHTML('<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>', t("fk_serie"), String(folgeTage), t(folgeTage === 1 ? "fkTag" : "fkTage"),
-    folgeTage ? (heuteDa ? t("fkHeuteDa") : t("fkHeuteNoch")) : t("fkSerieNeu"), '<div class="fz-punkte">'+punkte7+'</div>', t("fkRekordTage", { n:Math.max(bestFolge, folgeTage) }));
+  // Zahlen auf einen Blick (oben auf Fortschritt): Tage am Stück, Trainingstage, Trainingszeit, gehobenes Gewicht, Kilometer, Höhenmeter; Antippen zeigt den Verlauf (zahlGraph)
   var kgGesamt = einheitenListe().reduce(function(a, x){ return a + (+x.vol || 0); }, 0);
-  var wVol = voll.slice(-8).map(function(w){ return einheitenListe().filter(function(x){ return x.at >= w.ab && x.at < w.ab + 7*tag; }).reduce(function(a, x){ return a + (+x.vol || 0); }, 0); });
-  var wMax = Math.max.apply(null, wVol.concat([1]));
-  M.kg = fkZahlHTML('<path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/>', t("fk_kg"), Math.round(kgGesamt).toLocaleString(lang0), "kg",
-    kgGesamt > 0 ? t("fkKgSub", { t:(Math.round(kgGesamt/100)/10).toLocaleString(lang0) }) : t("fkKgLeer"),
-    kgGesamt > 0 ? '<div class="fz-saeulen" aria-hidden="true">'+wVol.map(function(v){ return '<i style="height:'+Math.max(6, Math.round(100*v/wMax))+'%"></i>'; }).join("")+'</div>' : "");
   var zeitGesamt = voll.reduce(function(a, w){ return a + w.s; }, 0);
-  M.tage = fkZahlHTML('<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/>', t("fk_tage"), String(Object.keys(tageSet).length), t("fkTage"), t("fkTageSub", { n:gesamt }));
-  M.zeit = fkZahlHTML('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M9.5 3h5"/>', t("fk_zeit"), zeitGesamt >= 3600 ? String(Math.round(zeitGesamt/360)/10).toLocaleString(lang0) : String(Math.round(zeitGesamt/60)), zeitGesamt >= 3600 ? t("fkStunden") : "min", t("fkZeitSub"));
   var kmGesamt = runs.reduce(function(a, x){ return a + (x.dist || 0); }, 0), hmGesamt = runs.reduce(function(a, x){ return a + (+x.hm || 0); }, 0);
-  M.km = fkZahlHTML('<circle cx="14" cy="4.5" r="2"/><path d="M6 21l3-6 3 2v5M9 15l1-4 4-1 2 3 3 1M10 11L8 8"/>', t("fk_km"), runKm(kmGesamt), "km", t("fkKmSub", { n:runs.length }));
-  M.hm = fkZahlHTML('<path d="M3 19l6-10 4 6 3-4 5 8z"/>', t("fk_hm"), Math.round(hmGesamt).toLocaleString(lang0), "m", t("fkHmSub"));
+  var Z = [];
+  Z.push({ id:"serie", ico:'<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>', titel:t("fk_serie"), wert:String(folgeTage), einheit:t(folgeTage === 1 ? "fkTag" : "fkTage"),
+    sub:folgeTage ? (heuteDa ? t("fkHeuteDa") : t("fkHeuteNoch")) : t("fkSerieNeu"), sub2:t("fkRekordTage", { n:Math.max(bestFolge, folgeTage) }) });
+  Z.push({ id:"tage", ico:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/>', titel:t("fk_tage"), wert:String(Object.keys(tageSet).length), einheit:t("fkTage"), sub:t("fkTageSub", { n:gesamt }) });
+  Z.push({ id:"zeit", ico:'<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M9.5 3h5"/>', titel:t("fk_zeit"),
+    wert:zeitGesamt >= 3600 ? String(Math.round(zeitGesamt/360)/10).toLocaleString(lang0) : String(Math.round(zeitGesamt/60)), einheit:zeitGesamt >= 3600 ? t("fkStunden") : "min", sub:t("fkZeitSub") });
+  Z.push({ id:"kg", ico:'<path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/>', titel:t("fk_kg"),
+    wert:kgGesamt >= 100000 ? (Math.round(kgGesamt/100)/10).toLocaleString(lang0) : Math.round(kgGesamt).toLocaleString(lang0), einheit:kgGesamt >= 100000 ? "t" : "kg",
+    sub:kgGesamt > 0 ? t("fkKgSub", { t:(Math.round(kgGesamt/100)/10).toLocaleString(lang0) }) : t("fkKgLeer") });
+  if(aktiv.indexOf("run") > -1 && runs.length) Z.push({ id:"km", ico:'<circle cx="14" cy="4.5" r="2"/><path d="M6 21l3-6 3 2v5M9 15l1-4 4-1 2 3 3 1M10 11L8 8"/>', titel:t("fk_km"), wert:runKm(kmGesamt), einheit:"km", sub:t("fkKmSub", { n:runs.length }) });
+  if(aktiv.indexOf("run") > -1 && hmGesamt > 0) Z.push({ id:"hm", ico:'<path d="M3 19l6-10 4 6 3-4 5 8z"/>', titel:t("fk_hm"), wert:Math.round(hmGesamt).toLocaleString(lang0), einheit:"m", sub:t("fkHmSub") });
+  /* Verlauf zu einer Zahl: Balken je Woche, Monat oder Jahr (gran); nutzt die gleichen Zeiträume wie das Diagramm „Verlauf“ */
+  function zahlGraph(id, gran){
+    var b = statBuckets(gran === "woche" ? voll.slice(-104) : voll, gran, gran === "woche" ? 8 : gran === "monat" ? 6 : 3);
+    var u = t(gran === "woche" ? "statUWoche" : gran === "monat" ? "statUMonat" : "statUJahr");
+    function je(liste, feld){ return b.map(function(x){ return liste.filter(function(e){ return e.at >= x.ab && e.at < x.bis; }).reduce(function(a, e){ return a + (+e[feld] || 0); }, 0); }); }
+    var tageMs = Object.keys(tageSet).map(function(k){ var q = k.split("-"); return { at:new Date(+q[0], +q[1], +q[2], 12).getTime(), n:1 }; });
+    var vals, kurz = function(v){ return String(Math.round(v*10)/10); };
+    if(id === "serie") vals = je(tageMs, "n");
+    else if(id === "tage"){ vals = b.map(function(x){ return x.n; }); }
+    else if(id === "zeit"){ vals = b.map(function(x){ return x.s; }); kurz = statMin; }
+    else if(id === "kg"){ vals = je(einheitenListe(), "vol"); kurz = function(v){ return Math.round(v).toLocaleString(lang0); }; }
+    else if(id === "km"){ vals = je(runs.map(function(x){ return { at:x.at, d:x.dist || 0 }; }), "d"); kurz = function(v){ return runKm(v).replace(/[,.]00$/, ""); }; }
+    else { vals = je(runs, "hm"); kurz = function(v){ return String(Math.round(v)); }; }
+    return { html:statBalken(vals, b.map(function(x){ return x.label; }), kurz), hinweis:t("fkGraph_"+id, { u:u }), hatDaten:vals.some(function(v){ return v > 0; }) };
+  }
   M.logbuch = statFortschrittHTML();   // Gewichte und Verläufe je Übung bzw. Maschine
   // Willkommen / Kopf
   if(!gesamt && !(aktiv.indexOf("run") > -1 && runs.length)){
@@ -605,7 +620,7 @@ function statModule(){
     statTrainingsBinden(neu);
     statFortBinden(neu);   // Logbuch: Gewichte und Verläufe je Übung
   }
-  return { M:M, bind:bind, bereiche:folge.map(function(r){ return r.k; }) };
+  return { M:M, zahlen:Z, graph:zahlGraph, bind:bind, bereiche:folge.map(function(r){ return r.k; }) };
 }
 function recentExercises(days){
   var since = Date.now() - days*86400000, out = {};

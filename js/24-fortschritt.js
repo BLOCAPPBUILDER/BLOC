@@ -4,17 +4,16 @@
    settings.fortschrittKacheln (Liste von Schlüsseln, Standard: Tage am Stück, gehobenes Gewicht, Gewichte & Verläufe). Unten steht „Weitere Auswertungen hinzufügen“.
    Kachel lange drücken und ziehen verschiebt sie (wie auf Tools); auf die Fläche „Entfernen“ gezogen oder nach dem Halten ohne Ziehen im Menü verschwindet sie.
    Die Inhalte kommen aus statModule (js/12-uebung-statistik.js) und ddModule (js/21-koerper.js). Alles lokal, nichts wird geladen oder gesendet. */
-var FK_STANDARD = ["serie", "kg", "logbuch"];
+var FK_STANDARD = ["logbuch"];
 /* g = Gruppe im Auswahlfenster, gross = ganze Breite (sonst halbe Breite im versetzten Raster) */
 var FK_MODULE = [
-  { id:"serie", g:"zahlen" }, { id:"kg", g:"zahlen" }, { id:"tage", g:"zahlen" }, { id:"zeit", g:"zahlen" }, { id:"km", g:"zahlen" }, { id:"hm", g:"zahlen" },
   { id:"logbuch", g:"gewichte", gross:1 },
   { id:"woche", g:"training", gross:1 }, { id:"who", g:"training", gross:1 }, { id:"verlauf", g:"training", gross:1 }, { id:"rueckblick", g:"training", gross:1 },
   { id:"kalender", g:"training", gross:1 }, { id:"blocs", g:"training", gross:1 }, { id:"trainings", g:"training", gross:1 }, { id:"einblicke", g:"training", gross:1 },
   { id:"b-katalog", g:"bereiche", gross:1 }, { id:"b-warm", g:"bereiche", gross:1 }, { id:"b-intervall", g:"bereiche", gross:1 }, { id:"b-run", g:"bereiche", gross:1 },
   { id:"dd_freq", g:"muskeln", gross:1 }, { id:"dd_woche", g:"muskeln", gross:1 }, { id:"dd_balance", g:"muskeln", gross:1 }, { id:"dd_anteil", g:"muskeln", gross:1 }, { id:"dd_idee", g:"muskeln", gross:1 }
 ];
-var FK_GRUPPEN = ["zahlen", "gewichte", "training", "bereiche", "muskeln"];
+var FK_GRUPPEN = ["gewichte", "training", "bereiche", "muskeln"];
 function fkDef(id){ for(var i = 0; i < FK_MODULE.length; i++) if(FK_MODULE[i].id === id) return FK_MODULE[i]; return null; }
 function fkName(id){
   if(id.indexOf("b-") === 0){ var d = bereichDaten(id.slice(2)); return d ? d[1] : id; }
@@ -27,11 +26,44 @@ function fkWahl(){
   return l;
 }
 function fkSpeichern(ids){ state.db.settings.fortschrittKacheln = ids; save(); }
-/* Zahlen-Kachel (halbe Breite): Titel, Symbol, große Zahl mit Einheit, ein Satz darunter; extra = kleine Grafik (Punkte, Säulen), sub2 = zweite Zeile */
-function fkZahlHTML(ico, titel, wert, einheit, sub, extra, sub2){
-  return '<div class="card fk-zahl"><div class="fz-kopf"><small>'+esc(titel)+'</small><span class="fz-ico">'+svgIcon(ico)+'</span></div>'+
-    '<div class="fz-wert"><b>'+esc(wert)+'</b><span>'+esc(einheit)+'</span></div>'+(extra || "")+
-    '<div class="fz-sub">'+esc(sub)+'</div>'+(sub2 ? '<div class="fz-sub">'+esc(sub2)+'</div>' : "")+'</div>';
+/* Zahlen auf einen Blick: feste Reihe oben (nicht verschiebbar); jede Zahl ist eine Fläche, Antippen zeigt ihren Verlauf */
+function fkZahlenHTML(Z){
+  if(!Z.length) return "";
+  return '<section class="fk-blick" aria-label="'+esc(t("fkBlick"))+'"><h2 class="fk-blick-titel">'+esc(t("fkBlick"))+'</h2><div class="fk-blick-raster">'+Z.map(function(z){
+    return '<button type="button" class="card fz-mini" data-zahl="'+esc(z.id)+'" aria-label="'+esc(z.titel+": "+z.wert+" "+z.einheit)+'"><span class="fz-ico">'+svgIcon(z.ico)+'</span><span class="fz-wert"><b>'+esc(z.wert)+'</b><span>'+esc(z.einheit)+'</span></span><small>'+esc(z.titel)+'</small></button>';
+  }).join("")+'</div><p class="fk-blick-hint">'+esc(t("fkBlickHint"))+'</p></section>';
+}
+/* Verlauf zu einer Zahl: gibt es ihn schon als Kachel auf der Seite (Tage und Zeit im Verlauf, Kilometer im Run-Bereich), springt die Seite dorthin; sonst öffnet sich ein Fenster mit dem Diagramm */
+var FK_SCHON = { tage:"verlauf", zeit:"verlauf", km:"b-run" };
+function fkZahlTippen(id, st, Z){
+  var ziel = FK_SCHON[id], el = ziel && app.querySelector('[data-fk="'+ziel+'"]');
+  if(el){
+    if(id === "tage" || id === "zeit"){ statModus = id === "tage" ? "n" : "zeit"; renderFortschritt(); el = app.querySelector('[data-fk="'+ziel+'"]'); }
+    var det = el.querySelector("details"); if(det) det.open = true;
+    el.scrollIntoView({ behavior:"smooth", block:"center" });
+    el.classList.add("fk-blitz"); setTimeout(function(){ el.classList.remove("fk-blitz"); }, 1400);
+    return;
+  }
+  fkZahlSheet(id, st, Z);
+}
+function fkZahlSheet(id, st, Z){
+  var root = document.getElementById("overlayRoot"), z = Z.filter(function(x){ return x.id === id; })[0], gran = "woche";
+  if(!z) return;
+  function zeichnen(){
+    var g = st.graph(id, gran);
+    root.innerHTML = '<div class="confirm-overlay"><div class="confirm-sheet fk-sheet fk-graphsheet" role="dialog" aria-label="'+esc(z.titel)+'"><h3>'+esc(z.titel)+'</h3>'+
+      '<div class="fz-wert fk-gross-wert"><b>'+esc(z.wert)+'</b><span>'+esc(z.einheit)+'</span></div><p class="fk-gsub">'+esc(z.sub)+(z.sub2 ? " · "+esc(z.sub2) : "")+'</p>'+
+      '<div class="sk-kopf stat-gran"><span class="stat-seg">'+[["woche", "statGranWoche"], ["monat", "statGranMonat"], ["jahr", "statGranJahr"]].map(function(q){
+        return '<button type="button" data-fkg="'+q[0]+'" class="'+(gran === q[0] ? "active" : "")+'">'+esc(t(q[1]))+'</button>'; }).join("")+'</span></div>'+
+      (g.hatDaten ? g.html+'<div class="sk-unter">'+esc(g.hinweis+" – "+t("statWischen"))+'</div>' : '<div class="sk-unter">'+esc(t("fkNoData"))+'</div>')+
+      '<div class="btn-row"><button class="btn btn-primary" data-ok>'+esc(t("fkFertig"))+'</button></div></div></div>';
+    root.querySelectorAll(".bscroll").forEach(function(b){ b.scrollLeft = b.scrollWidth; });
+    root.querySelectorAll("[data-fkg]").forEach(function(b){ b.addEventListener("click", function(){ gran = b.getAttribute("data-fkg"); zeichnen(); }); });
+    root.querySelector("[data-ok]").addEventListener("click", zu);
+    root.querySelector(".confirm-overlay").addEventListener("click", function(e){ if(e.target.classList.contains("confirm-overlay")) zu(); });
+  }
+  function zu(){ root.innerHTML = ""; }
+  zeichnen();
 }
 function fkKachelHTML(id, M){
   var d = fkDef(id), inhalt = M[id];
@@ -45,6 +77,7 @@ function renderFortschritt(){
   function neu(){ var y = window.scrollY; renderFortschritt(); window.scrollTo(0, y); }
   app.innerHTML =
     topbar(t("tabFortschritt"), { back:"#home", right:kopfSymboleNeu("stats")+'<button type="button" class="iconbtn" data-koerper title="'+esc(t("koerperTitel"))+'" aria-label="'+esc(t("koerperTitel"))+'">'+svgIcon('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>')+'</button>' }) +
+    fkZahlenHTML(st.zahlen)+
     (wahl.length ? '<div class="fk-raster">'+wahl.map(function(id){ return fkKachelHTML(id, M); }).join("")+'</div>'
                  : '<div class="card fk-leerseite">'+svgIcon('<path d="M4 4v16h16"/><path d="M8 15l3.5-4.5 3 2.5L20 7"/>')+'<p>'+esc(t("fkLeer"))+'</p></div>')+
     '<button type="button" class="btn btn-secondary fk-hinzu" data-fkhinzu>'+ICON_PLUS+' '+esc(t("fkHinzu"))+'</button>'+
@@ -53,6 +86,7 @@ function renderFortschritt(){
   var zurueck = app.querySelector(".topbar .back"); if(zurueck) zurueck.classList.add("zeigen");
   bindCommon();
   st.bind(neu); dd.bind(neu);
+  app.querySelectorAll("[data-zahl]").forEach(function(b){ b.addEventListener("click", function(){ fkZahlTippen(b.getAttribute("data-zahl"), st, st.zahlen); }); });
   app.querySelector("[data-fkhinzu]").addEventListener("click", function(){ fkWaehlenSheet(); });
   var raster = app.querySelector(".fk-raster");
   if(raster) kachelZiehen(raster, {
