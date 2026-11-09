@@ -153,7 +153,7 @@ function exitPlayer(){
 
 /* ============ Service worker ============ */
 function registerSW(){
-  if("serviceWorker" in navigator){
+  if(!IST_NATIV && "serviceWorker" in navigator){   // in der App liegen die Dateien im Paket, Updates kommen über den Store
     navigator.serviceWorker.register("./sw.js").catch(function(){});
   }
 }

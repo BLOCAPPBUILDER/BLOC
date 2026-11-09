@@ -545,9 +545,9 @@ function renderKatalogWorkouts(){
   gruppen.forEach(function(g){ gueltig[g.id] = true; });
   var fGr = selArr(s.stGruppen).filter(function(id){ return gueltig[id]; });
   var fAusr = studioAusrWahl();
-  var fTrain = studioTrainWahl();
+  var fTrain = studioTrainWahl(), fSchw = studioSchwWahl();
   var zonen = kkNorm(s.stZonen);
-  var filterAn = !!(fGr.length || fTrain.length || fAusr.length || zonen.length);
+  var filterAn = !!(fGr.length || fTrain.length || fAusr.length || fSchw.length || zonen.length);
   var woSort = s.libWoSort === "az" ? "az" : "dur";
   var hw = hinweise("katwo", ["katWoHint"]);
 
@@ -556,13 +556,13 @@ function renderKatalogWorkouts(){
     if(libIstWarmDehn(lw)) return;
     var exs = lw.exercises.map(findExercise).filter(Boolean);
     rows.push({ lw:lw, exs:exs, name:tplText(lw.name), dur:workoutDuration(libWorkoutRun(lw)), hidden:libHidden("wo:"+lw.id),
-      bereich:katWoBereich(lw, exs), mains:woMains(exs) });
+      bereich:katWoBereich(lw, exs), mains:woMains(exs), schw:woSchw(lw, exs) });
   });
-  var sichtbar = rows.filter(function(r){ return !r.hidden && katWoTrainOk(r.exs, fTrain) && katWoPasst(r.exs, fGr, fAusr, zonen); });   // mindestens zwei Drittel der Übungen passen zur gewählten Trainingsart
+  var sichtbar = rows.filter(function(r){ return !r.hidden && katWoTrainOk(r.exs, fTrain) && katWoPasst(r.exs, fGr, fAusr, zonen) && (!fSchw.length || fSchw.indexOf(r.schw) > -1); });   // mindestens zwei Drittel der Übungen passen zur gewählten Trainingsart
   var versteckt = rows.filter(function(r){ return r.hidden; });
   libWoSort(sichtbar, woSort);
   var je = {};
-  sichtbar.forEach(function(r){ (je[r.bereich] = je[r.bereich] || []).push(libWoCard(r.lw, r.exs, false, r.dur, r.mains)); });
+  sichtbar.forEach(function(r){ (je[r.bereich] = je[r.bereich] || []).push(libWoCard(r.lw, r.exs, false, r.dur, r.mains, r.schw)); });
   var liste = "";
   var eig = gruppen.filter(function(g){ return g.eigene; })[0], eigIds = eig ? eig.ids.filter(function(id){ return !fGr.length || fGr.indexOf("eigene") > -1; }) : [];
   if(eigIds.length) liste += katZeileHTML("wo-eigene", katIcon("eigene"), t("stOwn"), eigIds.length,
@@ -584,7 +584,7 @@ function renderKatalogWorkouts(){
     studioFilterHTML(gruppen, fGr, fTrain, fAusr, sichtbar.length, zonen, { art:"Wo", extra:az, trainZahlen:katTrainZahlenWo() }) +
     suchFeldHTML(libQuery, "l", t("searchWoPh"), true) +
     liste +
-    hiddenBlockHTML(versteckt.length, versteckt.map(function(r){ return libWoCard(r.lw, r.exs, true, r.dur, r.mains); }).join("")) +
+    hiddenBlockHTML(versteckt.length, versteckt.map(function(r){ return libWoCard(r.lw, r.exs, true, r.dur, r.mains, r.schw); }).join("")) +
     '<div style="height:60px"></div>';
   bindCommon();
   katKopfBinden();

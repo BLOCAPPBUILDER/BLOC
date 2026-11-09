@@ -55,6 +55,13 @@ function parseHash(){
 /* System-Zurück (Android-Taste/-Geste, Browser-Zurück) */
 window.addEventListener("popstate", function(){
   if(navSkipPop > 0){ navSkipPop--; setUrl(navTop()); return; }
+  // 0. Geteilter Link bei bereits laufender App (#import/…): Der Browser meldet auch das als popstate. Das ist kein „Zurück“, sondern ein neuer Eintrag oben im Verlauf - der dient ab jetzt als Wächter.
+  var neuerHash = location.hash || "";
+  if(neuerHash.indexOf("#import/") === 0 && navTop() !== neuerHash){
+    navGuard = true;
+    go(neuerHash);
+    return;
+  }
   navGuard = false;
   // 1. offenes Einblendfenster schließen (so, als hätte man daneben getippt)
   var ov = document.getElementById("overlayRoot");
@@ -227,7 +234,7 @@ var FOTO_FOKUS = {
   "img/neu-p-liegestuetz-feld.jpg":"50% 55%",
   "img/neu-p-studio-halle.jpg":"50% 55%",
   "img/neu-p-timer-box.jpg":"50% 62%",
-  "img/neu-p-frau-latzug.jpg":"50% 38%", "img/neu-p-frau-klimmzug.jpg":"50% 40%", "img/neu-p-frau-kniebeuge.jpg":"50% 45%",
+  "img/neu-p-frau-latzug.jpg":"50% 38%", "img/neu-p-frau-klimmzug.jpg":"50% 40%", "img/neu-p-frau-kniebeuge.jpg":"50% 30%",
   "img/neu-h-halle.jpg":"50% 62%", "img/neu-h-rack.jpg":"50% 45%", "img/neu-h-dehnen.jpg":"50% 40%",
   "img/neu-h-band.jpg":"50% 62%", "img/neu-h-kettlebell.jpg":"50% 32%", "img/neu-h-kb-gelb.jpg":"50% 70%", "img/neu-d-kalender.jpg":"50% 45%", "img/neu-h-brust-1.jpg":"50% 50%", "img/neu-h-brust-2.jpg":"50% 66%", "img/neu-h-core-1.jpg":"50% 50%", "img/neu-h-core-2.jpg":"50% 62%", "img/neu-d-core.jpg":"50% 68%", "img/neu-d-katalog.jpg":"50% 42%"
 };

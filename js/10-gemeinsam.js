@@ -1,7 +1,7 @@
 "use strict";
 /* ============ Install tip (iOS / Android) ============ */
 function isStandalone(){
-  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  return IST_NATIV || window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;   // die App selbst braucht keinen Installationshinweis
 }
 function isIOS(){
   return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);

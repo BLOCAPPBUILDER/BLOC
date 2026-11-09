@@ -542,6 +542,16 @@
     gleich(W.einheitTagKey(new Date(2026, 9, 5, 23, 59).getTime()), "2026-10-05", "Datum mit führenden Nullen");
   });
 
+  test("Ruheumsatz: Protein-Seite und Lauf-Schätzung rechnen mit derselben Formel (auch ohne Angabe zum Geschlecht)", function () {
+    var kd = { kg: 80.5, cm: 180, alter: 30, sex: "" };
+    ["", "w", "m"].forEach(function (sx) {
+      kd.sex = sx;
+      gleich(Math.round(W.kcalProStunde(kd) * 24), Math.round(W.protGrundumsatz(kd)), "Geschlecht '" + sx + "': Lauf-Ruheumsatz = Grundumsatz der Protein-Seite");
+    });
+    kd.sex = "";
+    wahr(W.protGrundumsatz(kd) > W.protGrundumsatz({ kg: 80.5, cm: 180, alter: 30, sex: "w" }) && W.protGrundumsatz(kd) < W.protGrundumsatz({ kg: 80.5, cm: 180, alter: 30, sex: "m" }), "ohne Angabe liegt der Wert zwischen weiblich und männlich");
+  });
+
   test("Kalorien: Lauf und Rad nach Körperdaten (ohne gültiges Gewicht keine Schätzung)", function () {
     var s = W.state.db.settings, alt = s.koerper;
     try {

@@ -3,6 +3,15 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-09 · Angleichen und Fehlerbehebung nach dem App-Durchgang (Fassung 2026-11-09-5)
+
+- **Zweige angeglichen:** `main` (HTML-Version) hat jetzt dieselben Web-Dateien wie `capacitor`, auch `js/00-native.js`. Damit tut das Teilen eines BLOCs im Browser wieder etwas (vorher `dateiAusgeben is not defined`). `main` behält die Content-Security-Policy in `index.html`.
+- **Geteilter Link bei laufender App:** `#import/…` wird im `popstate`-Handler (`js/03-router.js`) als neuer Link erkannt und geöffnet, statt als „Zurück“ nach Heute gedeutet zu werden.
+- **Ein Ruheumsatz:** `grundumsatzMifflin` (`js/12-uebung-statistik.js`) ist die einzige Formel; Protein-Seite und Lauf-Kalorien rechnen gleich (ohne Geschlecht der Mittelwert beider Formeln). Einheitstest dazu.
+- **Ungültige Körperdaten:** Gewicht, Größe, Alter außerhalb des Bereichs zeigen eine Fehlerzeile („Bitte 30 bis 250 kg eingeben …“), der bisherige Wert bleibt; ein leeres Feld löscht den Wert (jetzt auch in der Einführung).
+- **Teilen im Browser:** Fällt das Teilen-Menü aus und die Datei wird heruntergeladen, sagt eine Meldung „Datei gespeichert – im Chat als Anhang einfügen“ und der Text wird kopiert.
+- **Aufgeräumt:** doppelte Definitionen (`BUCHSTABE_T`, `BUCHSTABE_Y`, `KUGEL_BECKEN`) in `daten.js` entfernt; beim Einbeinigen Kreuzheben (Band) endet das gestreckte Bein nicht mehr am Bildrand. Schnelltest: vier Filterschritte im Workoutkatalog, neuer Schritt für den Link bei laufender App.
+
 ## 2026-11-09 · Plan-Assistent: Körperfigur, Geräte zuerst, kein Timer (Fassung 2026-11-09-4)
 
 - **Muskeln über die Körperfigur:** Die Fokus-Frage nutzt dieselbe Auswahl wie die Filter im Katalog (Figur mit Zonen, Gruppen-Chips, Grob/Fein; `kkMuskelHTML`); gespeichert werden die Zonen (`a.zonen`), die Gruppen (`a.fokus`) leitet der Assistent daraus ab.
@@ -129,7 +138,7 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 - **Figuren:** Alle Kabelzug-Übungen (rund 60) zeigen jetzt das Seil von der Umlenkrolle zum Griff bzw. Fuß, in der Animation immer gerade gespannt (Klasse `gk`, `KABEL` in `daten.js`, Verarbeitung in `bandSplit` und `illuDraw`). Starre Seillinien, die nur in einer Pose stimmten, sind ersetzt; Pallof-Press hat einen Kabelturm. Bänder: Seitschritt (Band über den Knien) und Kreuzheben (Band unter dem Fuß) laufen mit den Gliedern mit, Außenrotation mit Band hat jetzt ein Band an der Tür.
 - Schnelltest: 1 Punkt war schon vorher rot (Filterkarte bleibt beim Mehrfachwählen offen), sonst grün.
 
-## 2026-11-03 · Baukasten-Karte hell mit Rack-Foto (Fassung 2026-11-03-10)
+## 2026-11-03 · Baukasten-Karte hell mit Rack-Foto (Fassung 2026-11-03-9)
 
 - **Heute, Hellmodus:** Die Baukasten-Karte zeigt `neu-h-rack.jpg`, eng auf die bunten Gewichte zugeschnitten (vergrößert, Scheiben rechts neben dem Text). Dunkel bleibt das bisherige Foto (`layout-new.css`).
 
@@ -186,6 +195,7 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 ## 2026-11-02 · 210 Strichfiguren nach den neuen Bildern (Fassung 2026-11-02-7)
 
 - **Figuren:** Die bewegten Figuren von 210 neuen Übungen sind nach den neuen Übungsbildern neu gezeichnet: gleiche Ansicht (von vorn oder von der Seite), Körper-, Arm- und Beinstellung wie im Bild, Geräte als orange Striche. Wo ein Bild reicht (Pose doppelt oder nur eine aussagekräftig), zeigt die Figur nur diese eine Pose. Die sieben Übungen, deren Bild neu gemacht werden muss, und die 54 Übungen ohne Bild behalten die alte Figur.
+- **Test:** Der Schnelltest läuft bis auf die schon vorher offene Prüfung der Filterkarte durch (erwartet drei statt vier Filter-Schritte).
 
 ## 2026-11-02 · Logbuch mit Verlauf über die Zeit (Fassung 2026-11-02-6)
 
@@ -196,18 +206,18 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 - **Bilder:** Auch die als „okay“ bewerteten Bilder sind jetzt in der App (88 weitere, zusammen 210 neue Übungsbilder). Wo eine Pose doppelt ist oder nur eine aussagekräftig, steht nur diese eine im Bild (zum Beispiel Curtsy Lunge, Butt Kicks, Kettlebell Figure 8, Hängen aktiv, Froschstand).
 - **Strichfiguren:** Sumo-Kreuzheben und Kreuzheben (Trap-Bar) sind neu gezeichnet, jetzt von vorn mit Stange und Scheiben als orange Striche; die Trap-Bar ist als Sechskant-Rahmen angedeutet.
 
-## 2026-11-02 · Deep Dive auch ohne Training sichtbar (Fassung 2026-11-02-4)
-
-- **Deep Dive:** „Wie oft pro Muskelgruppe“, „Balance“ und „Anteil der Muskelgruppen“ stehen jetzt auch dann da, wenn noch nichts trainiert oder geplant ist (leere Balken und Figur). So sieht man gleich, was die Seite zeigt, und bekommt Lust loszulegen.
-
-## 2026-11-02 · Logbuch im Deep Dive (Fassung 2026-11-02-4)
-
-- **Logbuch:** „Fortschritt je Übung“ heißt jetzt Logbuch und wandert aus dem Fortschritt in Path › Deep Dive (unter die Häufigkeit der Muskelgruppen), zugeklappt. Oben Rubrik-Chips (Alle, Brust, Rücken … wie im Übungskatalog, mit Anzahl), darunter die Übungen als Kacheln mit der bewegten Figur, Bestwert erste → jetzt und Steigerung. Ein Tipp auf die Kachel öffnet die Auswertung, „Schließen“ führt zurück zu den Kacheln (ein Schritt).
-- **Tests:** Der Statistik-Test prüft Kacheln statt Zeilen.
-
 ## 2026-11-02 · 122 neue Übungsbilder (Fassung 2026-11-02-3)
 
 - **Bilder:** 122 der neuen Übungen haben jetzt ein Bild (Umschalter Figur | Bild im Info-Fenster), freigestellt auf 384 × 384 mit weißer Kontur und angeglichenem Orange. Aufgenommen sind die Bilder, die der Sportwissenschaftler mit „gut“ bewertet hat, dazu das sitzende einbeinige Wadenheben (Fassung ausgewählt). Wo ein Bild reicht (Pose doppelt oder nur eine passt: Schulterheben mit Langhantel, sitzendes einbeiniges Wadenheben), steht nur eine Pose im Bild. Alle anderen neuen Übungen behalten vorerst nur die Strichfigur.
+
+## 2026-11-02 · Deep Dive auch ohne Training sichtbar (Fassung 2026-11-02-2)
+
+- **Deep Dive:** „Wie oft pro Muskelgruppe“, „Balance“ und „Anteil der Muskelgruppen“ stehen jetzt auch dann da, wenn noch nichts trainiert oder geplant ist (leere Balken und Figur). So sieht man gleich, was die Seite zeigt, und bekommt Lust loszulegen.
+
+## 2026-11-02 · Logbuch im Deep Dive (Fassung 2026-11-02-1)
+
+- **Logbuch:** „Fortschritt je Übung“ heißt jetzt Logbuch und wandert aus dem Fortschritt in Path › Deep Dive (unter die Häufigkeit der Muskelgruppen), zugeklappt. Oben Rubrik-Chips (Alle, Brust, Rücken … wie im Übungskatalog, mit Anzahl), darunter die Übungen als Kacheln mit der bewegten Figur, Bestwert erste → jetzt und Steigerung. Ein Tipp auf die Kachel öffnet die Auswertung, „Schließen“ führt zurück zu den Kacheln (ein Schritt).
+- **Tests:** Der Statistik-Test prüft Kacheln statt Zeilen.
 
 ## 2026-11-01 · Trainingspläne mit mehr neuen Übungen (Fassung 2026-11-01-4)
 
@@ -263,10 +273,29 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 ## 2026-10-31 · Übungsbilder in der Übungs-Info (Fassung 2026-10-31-1)
 
-- **Neu:** 324 Übungsbilder (`img/ex/<id>.webp`, Vorschau `img/ex/t/<id>.webp`, Liste in `fotos.js`). Nur im Info-Fenster einer Übung: kleine Kachel „Bild“ unten rechts an der Strichfigur, Tippen zeigt das Bild groß. Bibliothek, Karten und Timer zeigen weiter nur die Strichfigur.
-- Ohne Bild (aussortiert, später neu): Commando Pull-Up, Wechselndes Kabelrudern, Konzentrationscurl im Stand, Einarmiges Trizepsdrücken am Kabel, Scheibenklemme.
+- **Neu:** 324 Übungsbilder (`img/ex/<id>.webp`, Vorschau `img/ex/t/<id>.webp`, Liste in `fotos.js`). Nur im Info-Fenster einer Übung: kleine Kachel „Bild“ unten rechts an der Strichfigur, Tippen zeigt das Bild groß (Tippen oder Escape schließt). Bibliothek, Karten und Timer zeigen weiter nur die Strichfigur.
+- Ohne Bild (aussortiert, später neu): Commando Pull-Up, Wechselndes Kabelrudern, Konzentrationscurl im Stand, Einarmiges Trizepsdrücken am Kabel, Scheibenklemme. Dort bleibt es bei der Strichfigur.
+- Bilder laden erst beim Öffnen (`loading="lazy"`), kein Vorab-Cache; die App wächst um etwa 15 MB.
+- Bilder liegen sortiert und umgefärbt (Geräte und Schuhe orange) in OneDrive `Bilder-Sortiert`; Stilbeschreibung dort in `STIL-BESCHREIBUNG.md`.
 
-## 2026-10-29 · Baukasten: Trainingsart statt Ort, Core, neue Übungen; Lauf bei dunklem Display (Fassung 2026-10-29-22)
+## 2026-10-30 · Figuren nachgeschärft nach der Figuren-Prüfliste (Fassung 2026-10-30-9)
+
+- **Fachlich korrigiert** (Prüfung durch Sportwissenschaft und UX): Swimmers gegengleich, Bicycle Crunches (Ellbogen zum Knie, Hände am Kopf), Aufrechtes Rudern (Ellbogen höchstens Schulterhöhe), Copenhagen Plank (Knie auf der Bank), Tate Press (richtige Armlängen), Prone T-Raise (Arm nur wenige cm angehoben), Rotary Torso (Drehung statt Neigung, Pfeil).
+- **Proportionen**: Bear Plank Rockback, Kabel-Crunch (2. Pose), Plank Toe Touch (Pike, Hand am Schienbein), Holzhacker (lange Arme) mit echten Segmentlängen; Seilknoten größer und quer zum Seil.
+- **Zweite Ansichten**: entfernt bei Prone T/Y (von oben wirkte es wie eine stehende Person; stattdessen der Buchstabe T bzw. Y im Bild), Side Jackknives, Muschel mit Band, Kurzhantel-Bankdrücken, Around the World und Cross-Body-Hammercurl (waren Kopien oder zeigten nichts Eigenes). Neu gezeichnet: Hammercurl (Hantel als Scheibe), Face Pull, Aufrechtes Rudern und Kabelrudern weit (Stange wandert mit den Händen), Pallof Press (Kabel mit Pfeil).
+- **Plank Shoulder Taps**: die Hand tippt die Schulter; eine Kugel auf dem Kreuzbein zeigt das ruhige Becken.
+- Texte: Swimmers (kein Hohlkreuz), Plank Shoulder Taps (Becken waagerecht), Side Jackknives (Arme gestreckt über dem Kopf), Aufrechtes Rudern (Fehlerhinweis).
+- Offen: Around the World beschreibt eine Hantel, das Original nimmt zwei (fachliche Entscheidung nötig). Alle neuen Posen nur im Browser geprüft, nicht auf dem Gerät.
+
+## 2026-10-30 · Ruhigere Karten, Lauf-Auto-Pause robuster (Fassung 2026-10-30-8)
+
+- **Lauf**: Auto-Pause greift erst nach **10 s** Stillstand (vorher 5 s: langsames Gehen und schwaches GPS lösten sie fälschlich aus). Das Gerät-Tempo ab 0,6 m/s zählt jetzt schon als Bewegung. **Weiter geht es** nach drei Tempo-Meldungen ≥ 0,6 m/s hintereinander (oder einer ≥ 1 m/s), unabhängig von der Ortsgenauigkeit; vorher blieb die Pause stehen, wenn die Position gerade schlechter als 35 m war oder man so langsam ging, dass die 8 m Abstand lange dauerten. Im abgedunkelten Lauf steht bei Pause jetzt „Auto-Pause“ bzw. „Pausiert“ unter dem Tempo. **Nicht am Gerät geprüft.**
+- **Einzeiler**: Untertitel unter den Überschriften sind nur noch eine Zeile (Baukasten-Karten, Tools-Kacheln, Mobility-Baukasten; sonst mit „…“ gekürzt). Texte entsprechend gekürzt (Deutsch und Englisch).
+- **Wissensaustausch**: der lange Hinweis „keine medizinische Beratung“ ist eingeklappt (eine Zeile, antippen zeigt den Text).
+- **Tools**: das Foto steht rechts (eigene Fläche, 66 % der Kachel), links läuft es weich in die Kartenfarbe aus; Symbol und Text stehen ruhig davor. Kniebeuge-Foto zeigt jetzt auch den Kopf.
+- **App-Symbol** (Startbildschirm) etwas kleiner: Zeichen im adaptiven Symbol von 78 % auf 68 %, im runden/alten Symbol auf 76 % (`assets/icon-foreground.svg`, `assets/icon-only.svg`, neu erzeugt mit `npx capacitor-assets generate --android`; die erzeugten Android-XML-Dateien bleiben wie vorher). Web-Symbol unverändert.
+
+## 2026-10-29 · Baukasten: Trainingsart statt Ort, Core, neue Übungen; Lauf bei dunklem Display (Fassung 2026-10-30-7)
 
 - **Baukasten ohne Ort**: Fitnessstudio · Freiluft entfällt in Baukasten, Plan-Bau, Übungskatalog und Überrasch-mich-Fenster (auch der Workoutkatalog: dort zählt ein Workout, wenn mindestens zwei Drittel seiner Übungen zur gewählten Trainingsart passen). Im Filter stehen jetzt **1 Trainingsart** (Fitnessstudio, Calisthenic-Park, Körpergewicht; drei Fotokarten, Mehrfachwahl, Körpergewicht in Gelb), **2 Ausrüstung** (Smith, Kabelzug, Langhantel, Kurzhantel, Maschine, dazu Kettlebell und Widerstandsband) und **3 Muskel**. Alte Filter-Einstellungen werden übernommen (`stArten`/`stGeraete` → `stTrain`/`stAusr`, altes „Überrasch mich“ mit Ort → Trainingsart).
 - **Baukasten-Seite ohne „Wie willst du trainieren?“**: Satz für Satz oder mit Timer wird erst auf der Plan-Seite (nach „Weiter: Sätze, Gewicht & Zeiten“) gewählt; ohne Wahl laufen Pläne mit Gewichtsübungen Satz für Satz, reine Körpergewichts-Pläne mit Timer. Je Übung im Plan **Wiederholungen oder Zeit** (mit Sätzen); Übungen mit Gerät zusätzlich mit Gewicht. Satz für Satz mit Zeit trägt Sekunden ein. Die Übungskarte selbst loggt weiter Wiederholungen.
@@ -274,6 +303,7 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 - Suche steht unter dem Filter. Muskel-Chip „Bauch“ = Bauchmitte, schräge Bauchmuskeln gehören zu Core.
 - **Zweite Ansichten**: Tate Press nur von vorn; Kurzhantel-Bankdrücken, Face Pull und Upright Row zusätzlich von vorn, Prone T-/Y-Raise zusätzlich von oben (Form T bzw. Y).
 - **Kabelzug mit Seil**: Holzhacker und Cable Crunch zeigen Rolle, Zugseil und Seilknoten. Weitere Ansichten: Pallof Press von vorn, Pullover im Halbkreis von oben, Hammer Curl von vorn; Rotary Torso neu gezeichnet (Hände am Polster, keine gekreuzten Arme).
+- **Suche**: gleiche Filter wie im Workout-Bereich (Trainingsart, Ausrüstung) statt Ort und alter Art; die Wahl gilt nur für die Suche und verstellt den Workout-Filter nicht.
 - **Bicycle Crunches** testweise nach Vorschlag neu gezeichnet: Knie höher, der diagonale Arm führt zum angezogenen Knie.
 - **Geräte in den Figuren** (Bank, Stange, Hantel, Kabel, Rolle) sind jetzt in BLOC-Orange (im Timer weiter in Schriftfarbe). Copenhagen Plank nach Foto neu gezeichnet.
 - Copenhagen Plank und Side Jackknives mit dickerem Körper gezeichnet (Seitenlage erkennbar); beim Copenhagen Plank steht der Stützarm gestreckt mit Gelenkkreis.
@@ -283,13 +313,25 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 - **Muskelgruppen getrennt** (Filter, Bereiche im Katalog, Auswertung, Regler): Bauch · Core (die frühere Gruppe „Bauch & Rumpf“, jetzt für Mischübungen wie Plank mit Schultern; als Zone zusätzlich unterer Rücken und Hüfte) · Beine · Po getrennt, dazu wie bisher Brust, Rücken, Schultern, Arme.
 - **Entfernt** (auf Wunsch): Battle Ropes (10 Übungen, zwei Workouts), Bauchroller, Unterarm-Roller.
 - **Übungen**: neu Bear Plank Rockback Push-up und Plank Toe Touch (Körpergewicht); Tate Press mit zweiter Ansicht von vorn; Single-Leg-RDL gab es schon. Die Zielzeile „Ziel 3 Sätze × 12“ steht nicht mehr auf der Übungsseite. Lange Kachelnamen brechen um statt überzustehen.
-- **Lauf**: (1) Auto-Pause pausiert nur noch bei frischen Standorten; bei dunklem Display kamen seltener Punkte, der Lauf blieb dann auf „Auto-Pause“ stehen und Zeit, Strecke und Karte standen still. (2) Beim Entsperren wird die Anzeige sofort nachgezogen. (4) Karte: Bäume bleiben immer aufrecht (drehen nicht mehr mit), Leuchten der Strecke schwächer. **Nicht am Gerät geprüft.**
+- **Lauf**: (1) Auto-Pause pausiert nur noch bei frischen Standorten; bei dunklem Display kamen seltener Punkte, der Lauf blieb dann auf „Auto-Pause“ stehen und Zeit, Strecke und Karte standen still. (2) Capacitor `android.useLegacyBridge` an (laut Plugin-Doku bleiben Standort-Meldungen im Hintergrund sonst aus). (3) Beim Entsperren wird die Anzeige sofort nachgezogen. (4) Karte: Bäume bleiben immer aufrecht (drehen nicht mehr mit), Leuchten der Strecke schwächer. **Nicht am Gerät geprüft.**
 
 ## 2026-10-28 · Wissensaustausch: Mind-Muscle-Connection, Hinweis gekürzt (Fassung 2026-10-28-1)
 
 - **Trainingsmythen**: neuer Beitrag „Mind-Muscle-Connection“ (Differenziert). Gezielte Konzentration erhöht die Muskelaktivität bei leichten bis mittleren Lasten; für langfristig mehr Muskelwachstum fehlt ein belastbarer Beleg. Quellen F37 bis F39 neu, auch in quellen.html.
 - Hinweis über der Gruppe „Trainingsmythen“ auf zwei Sätze gekürzt.
 - Nicht geprüft: F37 bis F39 nur über Suchergebnisse und Zusammenfassungen abgeglichen, nicht gegen die Originale. Angaben zu Calatayud 2016 (Abstract), Schoenfeld 2018 und Grgic 2021 jeweils aus einer Suche. Am Gerät nicht gesehen.
+
+## 2026-10-27 · Run: GPS-Glättung, App an Web-Aussehen angepasst (Fassung 2026-10-27-3)
+
+- **Kalman-Filter** (Ort und Geschwindigkeit, ungenaue Fixes zählen weniger) glättet die aufgezeichnete Strecke; Karte und Streckenbild zeichnen sie als gerundete Kurve statt als Eckenlinie. Routenpunkte alle 3 m, auf 0,1 m genau gespeichert. In einer Simulation (5 m Rauschen) sinkt der mittlere Fehler um etwa 30 bis 40 %, auch in engen Kurven. **Nicht geprüft:** echter Lauf auf dem Handy.
+- App: Abstand oben und Schriftgröße wie in der Web-Version (viewport-fit nur in der Web-Fassung, WebView-Textzoom 100). Capacitor-Kern wird als capacitor.js mitgegeben (Behebung für „Standort nicht ermittelbar“).
+
+## 2026-10-26 (Android) · Capacitor-Hülle für Android (Fassung 2026-10-26-4)
+
+- Neues Projekt-Gerüst: `package.json`, `capacitor.config.json`, `android/`, `scripts/www-bauen.mjs`, `assets/` (Icon-Quellen). `npm run sync` baut `www/` und gleicht ab.
+- Neu: `js/00-native.js` (Brücke zu Gerätefunktionen, im Browser wirkungslos): GPS als Vordergrund-Dienst, Display-an-Plugin, Sicherung/GPX über das Teilen-Menü, kein Service Worker und kein Installationshinweis in der App. Texte `runBgTitel`, `runBgText`, `dateiFehler`.
+- Geprüft: Einheitstest 61/61, Schnelltest 45/45 (Web-Weg unverändert), native Wege mit simulierten Plugins im Browser. **Nicht geprüft:** Bauen und Lauf auf einem echten Android-Gerät (Hintergrund-GPS, Töne bei gesperrtem Bildschirm, Vibration, Dateiausgabe).
+- Entscheidungen: App-ID `io.github.blocappbuilder.bloc`, Android-Auto-Backup aus (Daten bleiben auf dem Gerät), Berechtigung INTERNET bleibt aus der Capacitor-Vorlage.
 
 ## 2026-10-26 · Protein-Katalog nach Rubriken, A–Z, Trainingsmythen, neue Einführung (Fassung 2026-10-26-3)
 

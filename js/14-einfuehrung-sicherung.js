@@ -15,7 +15,7 @@ function introSpracheHTML(){
 function introProfilHTML(){
   var s = state.db.settings, k = s.koerper || {};
   function feld(id, label, wert, min, max){
-    return '<label class="koerper-feld"><span>'+esc(label)+'</span><input type="number" inputmode="decimal" id="'+id+'" min="'+min+'" max="'+max+'" value="'+(wert ? esc(String(wert)) : "")+'"></label>';
+    return '<label class="koerper-feld"><span>'+esc(label)+'</span><input type="number" inputmode="decimal" id="'+id+'" min="'+min+'" max="'+max+'" value="'+(wert ? esc(String(wert)) : "")+'"></label><div class="koerper-fehler" id="'+id+'-f" role="alert" hidden></div>';
   }
   return '<div class="koerper-form intro-profil"><label class="koerper-feld"><span>'+esc(t("koerperName"))+'</span>'+
     '<input type="text" id="i-name" maxlength="30" autocomplete="given-name" value="'+esc(s.name || "")+'"></label>'+
@@ -25,11 +25,10 @@ function introProfilSpeichern(wurzel){
   var n = wurzel.querySelector("#i-name");
   if(!n) return;   // diese Seite war nicht zu sehen
   var s = state.db.settings, kk = s.koerper = s.koerper || {};
-  function zahl(id, lo, hi){ var v = parseFloat(String(wurzel.querySelector("#"+id).value).replace(",", ".")); return v >= lo && v <= hi ? v : 0; }
-  var name = String(n.value).replace(/\s+/g, " ").trim().slice(0, 30), kg = zahl("i-kg", 30, 250), cm = zahl("i-cm", 120, 230);
+  var name = String(n.value).replace(/\s+/g, " ").trim().slice(0, 30);
   if(name || n.value === "") s.name = name;
-  if(kg) kk.kg = Math.round(kg*10)/10;
-  if(cm) kk.cm = Math.round(cm);
+  koerperZahl(wurzel, "i-kg", 30, 250, "koerperEinhKg", kk, "kg");   // wie im Fenster „Körperdaten“: leer löscht, ungültig zeigt eine Fehlerzeile
+  koerperZahl(wurzel, "i-cm", 120, 230, "koerperEinhCm", kk, "cm", true);
   save();
 }
 /* Seite 3: Aufbau als kleines selbstgezeichnetes Schaubild (nur Stil nach der Vorlage von Kevin): Trainingsplan → Trainingstage (Tag A/B) → BLOCs mit Übungen.
@@ -157,8 +156,18 @@ function backupTeilDatei(){
   }catch(e){}
   return null;
 }
-function kannBackupTeilen(){ return !!(navigator.share && backupTeilDatei()); }
+/* App (Android): Sicherungsdatei über das Teilen-Menü ausgeben (Drive, Dateien, Mail …); ein Abbruch dort ist kein Fehler */
+function backupNativ(danach){
+  dateiAusgeben("bloc-sicherung-"+new Date().toISOString().slice(0,10)+".json", JSON.stringify(state.db,null,2), "application/json").then(function(){
+    state.db.settings.lastExport = Date.now();
+    save();
+    showToast(t("backupShared"));
+    if(danach) danach();
+  }).catch(function(e){ if(!nativAbbruch(e)) showToast(t("dateiFehler")); });
+}
+function kannBackupTeilen(){ return IST_NATIV || !!(navigator.share && backupTeilDatei()); }
 function shareBackup(danach){
+  if(IST_NATIV){ backupNativ(danach); return; }
   var f = backupTeilDatei();
   if(!f || !navigator.share){ exportBackup(); if(danach) danach(); return; }
   navigator.share({ files:[f], title:"BLOC" }).then(function(){
@@ -172,6 +181,7 @@ function shareBackup(danach){
   });
 }
 function exportBackup(){
+  if(IST_NATIV){ backupNativ(); return; }
   var blob = new Blob([JSON.stringify(state.db,null,2)], {type:"application/json"});
   var url = URL.createObjectURL(blob);
   var a = document.createElement("a");

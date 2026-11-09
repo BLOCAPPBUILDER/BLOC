@@ -390,10 +390,12 @@ function audioBereit(fn){
 /* ============ Wake Lock ============ */
 var wakeLock = null;
 function requestWakeLock(){
+  if(nativWach("timer", true)) return;   // App: Display-an-Dienst statt Wake Lock des Browsers
   if(!("wakeLock" in navigator)) return;
   navigator.wakeLock.request("screen").then(function(wl){ wakeLock = wl; }).catch(function(){});
 }
 function releaseWakeLock(){
+  if(nativWach("timer", false)) return;
   if(wakeLock){ wakeLock.release().catch(function(){}); wakeLock = null; }
 }
 document.addEventListener("visibilitychange", function(){

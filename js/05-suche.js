@@ -308,7 +308,7 @@ function faqHTML(){
   var F = window.BLOC_FAQ;
   if(!F) return "";
   var sp = currentLang() === "en" ? "en" : "de", h = '<section class="faq faq-bereich" aria-labelledby="faq-titel"><button type="button" class="sec-head faq-kopf" data-faqtoggle aria-expanded="false"><span class="section-title" id="faq-titel">'+esc(t("faqTitel"))+'</span></button>'+
-    '<p class="faq-hinweis" role="note">'+F.hinweis[sp]+'</p><div class="faq-inhalt" hidden>', gruppe = -1;
+    '<details class="faq-hinweis" role="note"><summary>'+esc(t("faqHinweisKurz"))+'</summary><p>'+F.hinweis[sp]+'</p></details><div class="faq-inhalt" hidden>', gruppe = -1;
   F.fragen.forEach(function(f, i){
     var x = f[sp];
     if(f.g !== gruppe){

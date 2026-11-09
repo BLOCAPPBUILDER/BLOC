@@ -115,11 +115,13 @@ function dateiTeilenBloc(art, name, obj, msg){
   try{   // Browser: die Datei über das Teilen-Menü des Systems, sonst als Download
     var f = new File([text], fname, { type:"application/json" });
     if(navigator.canShare && navigator.canShare({ files:[f] })){
-      navigator.share({ files:[f], title:name, text:msg }).catch(function(err){ if(!err || err.name !== "AbortError") dateiAusgeben(fname, text, "application/json"); });
+      navigator.share({ files:[f], title:name, text:msg }).catch(function(err){ if(!err || err.name !== "AbortError") herunterladen(); });
       return;
     }
   }catch(e){}
-  dateiAusgeben(fname, text, "application/json");
+  herunterladen();
+  // Download ohne Teilen-Menü: sagen, wo die Datei liegt, und den Text zum Einfügen kopieren
+  function herunterladen(){ dateiAusgeben(fname, text, "application/json"); copyText(msg, t("shareDateiGespeichert")); }
 }
 /* Eigene Übung: nur die Felder, die BLOC kennt, und gültige Werte (auch beim Einlesen aus einer fremden Datei) */
 function customSauber(c){

@@ -344,9 +344,14 @@ function koerperDaten(){
   if(!(kg >= 30 && kg <= 250)) return null;
   return { kg:kg, cm:+k.cm || 0, alter:+k.alter || 0, sex:k.sex || "", pal:+k.pal || 0 };
 }
+/* Die eine Ruheumsatz-Formel (Mifflin-St Jeor, kcal je Tag) für Protein-Seite und Kalorien-Schätzung: ohne Angabe zum Geschlecht der Mittelwert beider Formeln.
+   Voraussetzung (Größe 120–230 cm) prüfen die Aufrufer; sie entscheiden auch, ab welchem Alter gerechnet wird. */
+function grundumsatzMifflin(kd, alter){
+  return 10*kd.kg + 6.25*kd.cm - 5*alter + (kd.sex === "m" ? 5 : kd.sex === "w" ? -161 : -78);
+}
 function kcalProStunde(kd){
-  if(kd.cm >= 120 && kd.cm <= 230 && (kd.sex === "m" || kd.sex === "w")){
-    var bmr = 10*kd.kg + 6.25*kd.cm - 5*(kd.alter >= 10 ? kd.alter : 35) + (kd.sex === "m" ? 5 : -161);
+  if(kd.cm >= 120 && kd.cm <= 230){
+    var bmr = grundumsatzMifflin(kd, kd.alter >= 10 ? kd.alter : 35);
     if(bmr > 600) return bmr/24;
   }
   return kd.kg;
@@ -506,7 +511,7 @@ function statModule(){
       Object.keys(zaehlR).forEach(function(id){ if(findExercise(id) && (!bestR || zaehlR[id] > zaehlR[bestR])) bestR = id; });
       einheitenListe().forEach(function(x){ if(x.at >= jetzt - 28*tag) rekR += +x.rek || 0; });
       var meil = [5, 10, 25, 50, 75, 100, 150, 200, 250, 300, 400, 500, 750, 1000].filter(function(m){ return gesamt >= m && gesamt - m <= 2; }).pop();
-      var satzR = tgV && tgR > tgV ? t("statRueckPlus", { n:tgR - tgV }) : tgV && tgR === tgV ? t("statRueckGleich") : t("statRueckBasis", { n:tgR });
+      var satzR = tgV && tgR > tgV ? (tgR - tgV === 1 ? t("statRueckPlus1") : t("statRueckPlus", { n:tgR - tgV })) : tgV && tgR === tgV ? t("statRueckGleich") : (tgR === 1 ? t("statRueckBasis1") : t("statRueckBasis", { n:tgR }));
       var chipsR = [[String(tgR), t("statRueckTage")], [dauer(sumS(w4)), t("statRueckZeit")]];
       if(r28.length >= 3) chipsR.push([wtN[wtI] || "–", t("statRueckTag")]);
       var kd = koerperDaten(), kcalR = 0;

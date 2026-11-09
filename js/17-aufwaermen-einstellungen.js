@@ -199,6 +199,7 @@ var appFassung = "";
 function fassungZeigen(){
   var el = document.getElementById("app-version");
   if(!el) return;
+  if(IST_NATIV && NATIV_FASSUNG) appFassung = NATIV_FASSUNG;
   if(appFassung){ el.textContent = "Version "+appFassung; return; }
   var sw = navigator.serviceWorker && navigator.serviceWorker.controller;
   if(!sw || !window.MessageChannel) return;
@@ -248,7 +249,7 @@ function koerperFormHTML(s, opt){
   var k = s.koerper || {};
   opt = opt || {};
   function feld(id, label, wert, min, max){
-    return '<label class="koerper-feld"><span>'+esc(label)+'</span><input type="number" inputmode="decimal" id="'+id+'" min="'+min+'" max="'+max+'" value="'+(wert ? esc(String(wert)) : "")+'"></label>';
+    return '<label class="koerper-feld"><span>'+esc(label)+'</span><input type="number" inputmode="decimal" id="'+id+'" min="'+min+'" max="'+max+'" value="'+(wert ? esc(String(wert)) : "")+'"></label><div class="koerper-fehler" id="'+id+'-f" role="alert" hidden></div>';
   }
   return '<div class="koerper-form">'+(opt.ohneName ? '' : '<label class="koerper-feld"><span>'+esc(t("koerperName"))+'</span>'+
     '<input type="text" id="k-name" maxlength="30" autocomplete="given-name" value="'+esc(s.name || "")+'"></label>')+
@@ -262,12 +263,29 @@ function koerperFormHTML(s, opt){
     '<div style="font-size:12px;color:var(--text-dim);margin-top:10px">'+esc(t("koerperHint"))+'</div></div>';
 }
 /* Körperdaten binden (in der Statistik-Ansicht, siehe openKoerperSheet): Zahlen prüfen, nur sinnvolle Werte speichern (sonst leer = keine Schätzung) */
+/* Eine Körperzahl aus ihrem Feld übernehmen (Fenster „Körperdaten“ und Einführung): leer = Wert löschen, gültig = speichern,
+   sonst Fehlerzeile unter dem Feld (z. B. „Bitte 30 bis 250 kg eingeben“) und der bisherige Wert bleibt - nichts wird mehr still verworfen. */
+function koerperZahl(wurzel, id, lo, hi, einheit, ziel, schluessel, ganz){
+  var el = wurzel.querySelector("#"+id);
+  if(!el) return;
+  var roh = String(el.value).trim(), fl = wurzel.querySelector("#"+id+"-f");
+  function melden(text){
+    el.classList.toggle("ungueltig", !!text); el.setAttribute("aria-invalid", text ? "true" : "false");
+    if(fl){ fl.hidden = !text; fl.textContent = text || ""; }
+  }
+  if(roh === "" && !(el.validity && el.validity.badInput)){ ziel[schluessel] = 0; melden(""); return; }
+  var v = parseFloat(roh.replace(",", "."));
+  if(!(v >= lo && v <= hi)){ melden(t("koerperFehler", { lo:lo, hi:hi, u:t(einheit) })); return; }
+  ziel[schluessel] = ganz ? Math.round(v) : Math.round(v*10)/10;
+  melden("");
+}
 function koerperBinden(wurzel){
   var s = state.db.settings;
   function speichern(){
     var kk = s.koerper = s.koerper || {};
-    function zahl(id, lo, hi){ var v = parseFloat(String(wurzel.querySelector("#"+id).value).replace(",", ".")); return v >= lo && v <= hi ? Math.round(v*10)/10 : 0; }
-    kk.kg = zahl("k-kg", 30, 250); kk.cm = Math.round(zahl("k-cm", 120, 230)); kk.alter = Math.round(zahl("k-alter", 10, 99));
+    koerperZahl(wurzel, "k-kg", 30, 250, "koerperEinhKg", kk, "kg");
+    koerperZahl(wurzel, "k-cm", 120, 230, "koerperEinhCm", kk, "cm", true);
+    koerperZahl(wurzel, "k-alter", 10, 99, "koerperEinhJahre", kk, "alter", true);
     var nm = wurzel.querySelector("#k-name"); if(nm) s.name = String(nm.value).replace(/\s+/g, " ").trim().slice(0, 30);
     save();
   }
