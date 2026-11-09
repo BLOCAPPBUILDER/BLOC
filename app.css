@@ -430,6 +430,9 @@ body.dz-mode{ user-select:none; -webkit-user-select:none; cursor:grabbing; }
 .wb-leiste-in b{ color:var(--text); font-size:14px; }
 .wb-leiste .btn{ width:auto; margin:0; padding:12px 16px; white-space:nowrap; }
 .wb-knoepfe{ display:flex; gap:8px; flex-shrink:0; }
+/* Schmale Handys: der linke Knopf („Training speichern“) schrumpft mit Auslassung, „LOS GEHTS!“ bleibt ganz im Bild */
+.wb-leiste-in > .btn{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; }
+@media (max-width:400px){ .wb-leiste .btn{ padding:12px 12px; } .wb-leiste-in{ gap:8px; } }
 .wb-mischen{ margin-top:8px; }
 /* Studio */
 .st-kachel{ border:0; text-align:left; font:inherit; color:inherit; cursor:pointer; }
@@ -2334,3 +2337,6 @@ details[open] > summary > .pg-pfeil{ transform:rotate(180deg); }
 .info-start > summary .tpl-chev{ transition:transform .2s; }
 .info-start[open] > summary .tpl-chev{ transform:rotate(180deg); }
 .info-start .st-modus{ margin:2px 0 12px; }
+
+.cover-langhinweis{ margin-top:10px; font-size:12px; color:var(--text-dim); text-align:center; }
+.pa-warn{ margin:0 0 10px; padding:10px 12px; border-radius:10px; font-size:13px; line-height:1.4; background:color-mix(in srgb, var(--danger) 10%, transparent); border:1px solid color-mix(in srgb, var(--danger) 35%, transparent); }

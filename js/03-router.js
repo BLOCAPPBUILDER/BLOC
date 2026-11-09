@@ -35,6 +35,15 @@ function go(hash){
   render();
   if(neueSeite) window.scrollTo(0, 0);   // neue Seite beginnt immer oben
 }
+/* Weiterleitung von einer Seite ohne Inhalt (z. B. Deckblatt ohne Entwurf nach dem Neuladen): die tote Seite wird im Stack ERSETZT, nicht überdeckt -
+   sonst führt „Zurück“ wieder auf die tote Seite, die leitet erneut weiter (Endlosschleife, die Zurück-Taste tut dann nichts mehr). */
+function goErsetze(hash){
+  if(navStack.length > 1) navStack.pop();
+  if(hash === "#home") navStack = ["#home"];
+  else if(navTop() !== hash) navStack.push(hash);
+  syncGuard();
+  render();
+}
 function goBack(fallback){
   if(navStack.length > 1){
     navStack.pop();
@@ -81,7 +90,7 @@ window.addEventListener("popstate", function(){
   if(document.getElementById("playerRoot").innerHTML && playerState){
     var st = playerState.steps[playerState.idx];
     if(st && st.phase === "done") exitPlayer();
-    else { confirmSheet(t("endQ"), t("endText"), t("endBtn"), exitPlayer); syncGuard(); }
+    else { beendenFragen(); syncGuard(); }
     return;
   }
   // 3. eine Seite zurück; auf der Startseite bleibt kein Wächter übrig -> nächstes Zurück verlässt die App
@@ -402,7 +411,7 @@ function render(){
   if(!(coverDraft && coverDraft.src === "neu" && (route === "cover" || route === "playdraft"))) bauEntwurf = null;   // Baukasten verlassen (das Deckblatt eines noch nicht gespeicherten Workouts behält den Entwurf zum Zurückkehren)
   if(route==="playmy") return launchFromSource({ type:"mine", id:parts[1] });
   if(route==="cover") return parts[1]==="surprise" || parts[1]==="shared" || parts[1]==="neu"
-    ? (coverDraft && coverDraft.src===parts[1] ? renderDraftPage(coverDraft, { cover:true, back:"#library" }) : go("#library"))
+    ? (coverDraft && coverDraft.src===parts[1] ? renderDraftPage(coverDraft, { cover:true, back:"#library" }) : goErsetze("#library"))
     : renderCover(parts[1], parts[2]);
   if(route==="playdraft") return launchFromSource({ type:"draft" });
   if(route==="playlib") return launchFromSource({ type:"libworkout", id:parts[1] });

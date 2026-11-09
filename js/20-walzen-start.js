@@ -96,11 +96,20 @@ function bindPlayPause(){
   };
 }
 
+/* „Workout beenden?“: Solange die Frage offen ist, steht der Timer (lief er vorher, geht er bei „Abbrechen“ von selbst weiter) */
+function beendenFragen(){
+  var pb = document.getElementById("pl-playpause"), selbst = false;
+  if(playerState && !playerState.paused && pb){ pb.click(); selbst = true; }
+  confirmSheet(t("endQ"), t("endText"), t("endBtn"), exitPlayer, function(){
+    var b = document.getElementById("pl-playpause");
+    if(selbst && playerState && playerState.paused && b) b.click();
+  });
+}
 function bindPlayerControls(){
   var root = document.getElementById("playerRoot");
   root.addEventListener("click", function(e){
     if(e.target.closest("[data-exit]")){
-      confirmSheet(t("endQ"), t("endText"), t("endBtn"), exitPlayer);
+      beendenFragen();
     }
     if(e.target.closest("[data-skip]")){
       if(playerState.rafId) cancelAnimationFrame(playerState.rafId);

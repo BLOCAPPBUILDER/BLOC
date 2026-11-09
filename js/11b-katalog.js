@@ -564,7 +564,7 @@ function renderKatalogWorkouts(){
   var je = {};
   sichtbar.forEach(function(r){ (je[r.bereich] = je[r.bereich] || []).push(libWoCard(r.lw, r.exs, false, r.dur, r.mains, r.schw)); });
   var liste = "";
-  var eig = gruppen.filter(function(g){ return g.eigene; })[0], eigIds = eig ? eig.ids.filter(function(id){ return !fGr.length || fGr.indexOf("eigene") > -1; }) : [];
+  var eig = gruppen.filter(function(g){ return g.eigene; })[0], eigIds = eig ? eig.ids.filter(function(id){ return filterAn ? fGr.indexOf("eigene") > -1 : true; }) : [];   // mit irgendeinem Filter nur, wenn „Eigene Übungen“ selbst gewählt ist (sonst zeigte die Liste mehr, als der Zähler „n Workouts anzeigen“ nennt)
   if(eigIds.length) liste += katZeileHTML("wo-eigene", katIcon("eigene"), t("stOwn"), eigIds.length,
     '<div class="kat-inhalt"><div class="fig-grid">'+eigIds.map(function(i){ return studioKachel(i); }).join("")+
     '<button type="button" class="fig-karte st-neu" data-stnew3>'+ICON_PLUS+'<span class="fig-name">'+esc(t("stOwnNew"))+'</span></button></div></div>', katOffenStd("wo-eigene", false), "", false);
