@@ -4,7 +4,8 @@
    Die Position wird nur auf dem Gerät verarbeitet, nichts geht ins Internet. Der Bildschirm bleibt an (Wake Lock);
    im Hintergrund oder bei gesperrtem Handy zeichnet eine Web-App nicht zuverlässig auf - dafür gibt es „Abdunkeln“.
    Gespeichert: settings.runs = [{ id, at, dur (ms, ohne Pausen), dist (m), pts:[[lat,lon]…], splits:[ms bis km 1, 2, …], art:"rad" (nur bei Radfahrten) }].
-   Ein laufender Lauf wird alle 10 s als settings.runLive gesichert (falls die Seite beendet wird). */
+   Ein laufender Lauf wird alle 10 s als settings.runLive gesichert (falls die Seite beendet wird).
+   Vorbereitet für die spätere Uhr-Anbindung (noch nichts schreibt es): hr:{ avg, max, z:[Sekunden in Zone 1 bis 5] } je Lauf; die Kachel „Pulszonen“ in Fortschritt (runAuswPuls, unten) liest es schon. */
 var RUN_GENAU = 35;   // Fixes mit schlechterer Genauigkeit (m) werden ignoriert
 var RUN_MAX_MS = 12;  // schneller als 12 m/s (43 km/h) gilt als GPS-Sprung
 var RUN_MAX_RAD = 25; // auf dem Rad erst ab 25 m/s (90 km/h)
@@ -915,4 +916,135 @@ function woMenue(lw, neu, ws){
     { ico:ICON_COPY, label:t("adoptMine"), fn:function(){ adoptLibWorkout(lw, ws); } },
     { ico:ICON_EYE_OFF, label:t("hideShort"), fn:function(){ libHide("wo:"+lw.id); showToast(t("hiddenToast")); neu(); } }
   ]);
+}
+
+/* ============ Läufer-Auswertungen für Fortschritt ============
+   Vier Kacheln (lauf_best, lauf_pacing, lauf_regel, lauf_trend), eingebunden in statModule (js/12-uebung-statistik.js). Alles aus den gespeicherten Läufen:
+   dur, dist, at und splits (kumulative Zeit in ms je ganzem Kilometer). Pace nur aus Läufen ab 1 km (Radfahrten zählen nicht, außer bei der Regelmäßigkeit). */
+function runAuswLaeufe(){ return (state.db.settings.runs || []).filter(function(x){ return x && !runIstRad(x) && x.dist >= 1000 && x.dur > 0; }).sort(function(a, b){ return a.at - b.at; }); }
+function runAuswLang(){ return currentLang() === "en" ? "en-GB" : "de-DE"; }
+function runAuswDatum(ms){ return new Date(ms).toLocaleDateString(runAuswLang(), { day:"numeric", month:"short" }); }
+function runAuswKarte(titel, inhalt, hinweis){
+  return '<div class="card stat-karte" style="--c:'+bereichDaten("run")[3]+'"><div class="sk-kopf"><b>'+esc(titel)+'</b></div>'+inhalt+(hinweis ? '<div class="sk-unter">'+esc(hinweis)+'</div>' : '')+'</div>';
+}
+function runAuswZeile(a, b, c){ return '<div><span>'+a+'</span><b>'+b+'</b><small>'+(c || "")+'</small></div>'; }
+function runMittel(l){ return l.reduce(function(s, v){ return s + v; }, 0)/l.length; }
+function runMedian(l){ var s = l.slice().sort(function(a, b){ return a - b; }), m = Math.floor(s.length/2); return s.length % 2 ? s[m] : (s[m-1] + s[m])/2; }
+function runPaceSek(x){ return x.dur/1000/(x.dist/1000); }   // Sekunden je km
+
+/* 1) Bestzeiten: bestes zusammenhängendes Stück aus n ganzen Kilometern (Fenster über die Zwischenzeiten, ohne Interpolation) */
+function runBestFenster(r, n){
+  var sp = r.splits || [];
+  if(sp.length < n) return null;
+  var P = [0].concat(sp), best = null, i;
+  for(i = 0; i + n < P.length; i++){ var d = P[i+n] - P[i]; if(best === null || d < best) best = d; }
+  return best;
+}
+function runAuswBest(){
+  var l = runAuswLaeufe(), rows = [];
+  [1, 3, 5, 10, 21].forEach(function(n){
+    var b = null;
+    l.forEach(function(x){ var d = runBestFenster(x, n); if(d !== null && (!b || d < b.d)) b = { d:d, at:x.at }; });
+    if(b) rows.push(runAuswZeile(esc(t("runBestN", { n:n }))+(n > 1 ? ' <small>'+esc("Ø "+runPace(b.d/1000, n*1000)+" /km")+'</small>' : ''), esc(fmtUhr(b.d)), esc(runAuswDatum(b.at))));
+  });
+  if(!rows.length) return "";
+  return runAuswKarte(t("runBestTitel"), '<div class="rekorde">'+rows.join("")+'</div>', t("runBestHint"));
+}
+
+/* 2) Pacing: erste gegen zweite Hälfte (mindestens 4 ganze Kilometer), Schwankung als Variationskoeffizient der Kilometerzeiten */
+function runPacingVon(x){
+  var sp = x.splits || [], d = [];
+  sp.forEach(function(ms, i){ d.push(ms - (i ? sp[i-1] : 0)); });
+  if(d.length < 4) return null;
+  var h = Math.floor(d.length/2), a = runMittel(d.slice(0, h)), b = runMittel(d.slice(d.length - h)), m = runMittel(d);
+  var sd = Math.sqrt(runMittel(d.map(function(v){ return (v - m)*(v - m); })));
+  return { x:x, d:d, a:a, b:b, ratio:b/a, cv:sd/m };
+}
+function runAuswPacing(){
+  var l = runAuswLaeufe().map(runPacingVon).filter(Boolean).slice(-6).reverse();   // neueste zuerst
+  if(!l.length) return "";
+  var z = l[0], neg = l.filter(function(r){ return r.ratio < 1; }).length;
+  var urteil = z.ratio < 1 ? "runPacNeg" : z.ratio <= 1.05 ? "runPacOk" : z.ratio <= 1.10 ? "runPacEtwas" : "runPacDeutlich";
+  var chips = [[fmtUhr(z.a), t("runPacStart")], [fmtUhr(z.b), t("runPacEnde")], [Math.round(z.cv*100)+" %", t("runPacGleich")]];
+  var html = '<div class="sk-unter" style="margin-top:0">'+esc(runAuswDatum(z.x.at)+" · "+runKm(z.x.dist)+" km")+'</div>'+
+    statBalken(z.d.map(function(ms){ return ms/1000; }), z.d.map(function(v, i){ return String(i + 1); }), statPz, bereichDaten("run")[3])+
+    '<div class="chips-stat">'+chips.map(function(c){ return '<span><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></span>'; }).join("")+'</div>'+
+    '<div class="sk-unter">'+esc(t(urteil))+'</div>';
+  if(l.length > 1){
+    html += '<div class="sk-unter titel">'+esc(t("runPacFruehere"))+'</div><div class="rekorde">'+l.slice(1).map(function(r){
+      return runAuswZeile(esc(runKm(r.x.dist)+" km"), esc(fmtUhr(r.a)+" → "+fmtUhr(r.b)), esc(runAuswDatum(r.x.at)));
+    }).join("")+'</div><div class="sk-unter">'+esc(t("runPacSumme", { n:neg, m:l.length }))+'</div>';
+  }
+  return runAuswKarte(t("runPacTitel"), html, t("runPacHint"));
+}
+
+/* 3) Regelmäßigkeit: Wochen (ab Montag) mit mindestens 2 Läufen/Fahrten oder 75 Minuten, in Folge; dazu die Minuten dieser Woche gegen die WHO-Empfehlung (150) */
+function runMontag(ms){ var d = new Date(ms); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return d.getTime(); }
+function runWocheVor(ms, k){ var d = new Date(ms); d.setDate(d.getDate() + 7*k); return d.getTime(); }
+function runAuswRegel(){
+  var runs = state.db.settings.runs || [];
+  if(!runs.length) return "";
+  var wo = {};
+  runs.forEach(function(x){ var k = runMontag(x.at); if(!wo[k]) wo[k] = { n:0, min:0 }; wo[k].n++; wo[k].min += (x.dur || 0)/60000; });
+  function zaehlt(k){ var w = wo[k]; return !!w && (w.n >= 2 || w.min >= 75); }
+  var jetzt = runMontag(Date.now()), erste = Math.min.apply(null, Object.keys(wo).map(Number)), serie = 0, best = 0, lauf = 0, k;
+  for(k = erste; k <= jetzt; k = runWocheVor(k, 1)){ lauf = zaehlt(k) ? lauf + 1 : (k === jetzt ? lauf : 0); if(lauf > best) best = lauf; }   // die laufende Woche bricht die Serie nicht ab
+  k = zaehlt(jetzt) ? jetzt : runWocheVor(jetzt, -1);
+  while(zaehlt(k)){ serie++; k = runWocheVor(k, -1); }
+  var diese = wo[jetzt] || { n:0, min:0 }, min = Math.round(diese.min), p = Math.min(100, Math.round(100*min/150));
+  var vals = [], labels = [], i;
+  for(i = 11; i >= 0; i--){ var m = runWocheVor(jetzt, -i), d = new Date(m); vals.push(Math.round((wo[m] || { min:0 }).min)); labels.push(d.getDate()+"."+(d.getMonth()+1)+"."); }
+  var chips = [[String(serie), t("runRegWochen")], [String(Math.max(best, serie)), t("runRegRekord")], [String(diese.n), t("runRegDiese")]];
+  var html = '<div class="chips-stat">'+chips.map(function(c){ return '<span><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></span>'; }).join("")+'</div>'+
+    '<div class="who-zeile'+(min >= 150 ? ' ok' : '')+'"><span>'+esc(t("runRegWHO"))+'</span><b>'+min+' / 150 min'+(min >= 150 ? ' ✓' : '')+'</b><i class="who-bar"><u style="width:'+p+'%"></u></i></div>'+
+    '<div class="sk-unter titel">'+esc(t("runRegMinuten"))+'</div>'+statBalken(vals, labels, String, bereichDaten("run")[3]);
+  return runAuswKarte(t("runRegTitel"), html, t("runRegHint"));
+}
+
+/* 4) Pace nach Streckenlänge (Median der letzten 5 je Klasse, Pfeil gegen die 5 davor) und Rennzeit-Richtwert nach Riegel: T2 = T1 × (D2/D1)^1,06 */
+var RUN_KLASSEN = [[1, 3], [3, 7], [7, 15], [15, 1000]];
+function runAuswTrend(){
+  var l = runAuswLaeufe();
+  if(!l.length) return "";
+  var rows = [];
+  RUN_KLASSEN.forEach(function(kl){
+    var m = l.filter(function(x){ return x.dist >= kl[0]*1000 && x.dist < kl[1]*1000; });
+    if(!m.length) return;
+    var p = m.map(runPaceSek), neu = runMedian(p.slice(-5)), davor = p.slice(-10, -5), pfeil = "";
+    if(davor.length >= 2){ var diff = runMedian(davor) - neu; pfeil = diff > 5 ? "↑ "+statPz(diff) : diff < -5 ? "↓ "+statPz(-diff) : "→"; }
+    var name = kl[1] >= 1000 ? t("runTrAb", { a:kl[0] }) : t("runTrKlasse", { a:kl[0], b:kl[1] });
+    rows.push(runAuswZeile(esc(name)+' <small>'+esc(t(m.length === 1 ? "runTrLauf1" : "runTrLaeufe", { n:m.length }))+'</small>', esc(statPz(neu)+" /km"), esc(pfeil)));
+  });
+  var html = '<div class="rekorde">'+rows.join("")+'</div>';
+  var basis = l.filter(function(x){ return x.at >= Date.now() - 90*86400000 && x.dist >= 3000; }), prog = [];
+  [[5000, t("runTrP5")], [10000, t("runTrP10")], [21097.5, t("runHalbmarathon")]].forEach(function(z){
+    var b = null;
+    basis.forEach(function(x){ if(x.dist < z[0]/4) return; var T = x.dur/1000*Math.pow(z[0]/x.dist, 1.06); if(b === null || T < b) b = T; });
+    if(b !== null) prog.push(runAuswZeile(esc(z[1]), esc(fmtUhr(b*1000)), ""));
+  });
+  if(prog.length) html += '<div class="sk-unter titel">'+esc(t("runTrProg"))+'</div><div class="rekorde">'+prog.join("")+'</div><div class="sk-unter">'+esc(t("runTrProgHint"))+'</div>';
+  return runAuswKarte(t("runTrTitel"), html, t("runTrHint"));
+}
+
+/* 5) Pulszonen (Vorbereitung für Uhr oder Pulsgurt): Zonen aus dem geschätzten Maximalpuls (208 − 0,7 × Alter, Tanaka 2001), Orientierung mit etwa ±10 Schlägen Streuung.
+   Sobald Läufe ein Feld hr tragen – { avg, max, z:[Sekunden in Zone 1 bis 5] } –, zeigt die Kachel die Zeit je Zone der letzten 4 Wochen; bis dahin die Zonen mit Schlägen pro Minute.
+   Bisher schreibt nichts hr (BLOC hat noch keine Uhr-Anbindung); beim Einbauen der Uhr dieses Feld je Lauf füllen. */
+var RUN_ZONEN = [[50, 60, "runPuZ1"], [60, 70, "runPuZ2"], [70, 80, "runPuZ3"], [80, 90, "runPuZ4"], [90, 100, "runPuZ5"]];
+function runAuswPuls(){
+  var kd = koerperDaten(), alter = kd ? kd.alter : 0;
+  if(!(alter >= 14 && alter <= 100)) return runAuswKarte(t("runPuTitel"), '<div class="sk-unter" style="margin-top:0">'+esc(t("runPuLeer"))+'</div><button type="button" class="kh-mehr" data-koerper>'+esc(t("runPuAlter"))+' &#8250;</button>', t("runPuHint"));
+  var hfmax = Math.round(208 - 0.7*alter), von = Date.now() - 28*86400000, sek = [0, 0, 0, 0, 0];
+  (state.db.settings.runs || []).forEach(function(x){ if(x && x.hr && Array.isArray(x.hr.z) && x.at >= von) x.hr.z.forEach(function(s, i){ if(i < 5) sek[i] += +s || 0; }); });
+  var summe = sek.reduce(function(a, b){ return a + b; }, 0), html = '<div class="sk-unter" style="margin-top:0">'+esc(t("runPuMax", { n:hfmax }))+'</div>';
+  function bpm(z){ return Math.round(hfmax*z[0]/100)+"–"+Math.round(hfmax*z[1]/100); }
+  if(summe > 0){
+    html += '<div class="sk-unter titel">'+esc(t("runPuDaten"))+'</div>'+RUN_ZONEN.map(function(z, i){
+      var p = Math.round(100*sek[i]/summe);
+      return '<div class="who-zeile"><span>'+esc("Z"+(i + 1)+" "+t(z[2])+" · "+bpm(z))+'</span><b>'+p+' %</b><i class="who-bar"><u style="width:'+p+'%"></u></i></div>';
+    }).join("");
+  } else {
+    html += '<div class="rekorde">'+RUN_ZONEN.map(function(z, i){ return runAuswZeile(esc("Z"+(i + 1)+" "+t(z[2])), esc(bpm(z)+" bpm"), esc(z[0]+"–"+z[1]+" %")); }).join("")+'</div>'+
+      '<div class="sk-unter">'+esc(t("runPuLeer"))+'</div>';
+  }
+  return runAuswKarte(t("runPuTitel"), html, t("runPuHint"));
 }

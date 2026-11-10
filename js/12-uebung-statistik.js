@@ -558,6 +558,7 @@ function statModule(){
       '<div class="heat"><div class="heat-tage">'+namen.map(function(x){ return '<small>'+esc(x)+'</small>'; }).join("")+'</div><div class="heat-raster">'+zellen+'</div>'+
       '<div class="heat-legende"><small>'+esc(t("statWeniger2"))+'</small><i class="hz l0"></i><i class="hz l1"></i><i class="hz l2"></i><i class="hz l3"></i><small>'+esc(t("statMehr2"))+'</small></div></div></details>';
   }
+  if(aktiv.indexOf("run") > -1){ M.lauf_best = runAuswBest(); M.lauf_pacing = runAuswPacing(); M.lauf_regel = runAuswRegel(); M.lauf_trend = runAuswTrend(); M.lauf_puls = runAuswPuls(); }   // Läufer-Auswertungen (js/16-lauf.js); leer = Kachel zeigt „noch keine Daten“
   M.blocs = statBlocsHTML();   // die trainierten BLOCs im Verlauf (Anzahl, zuletzt, Volumen)
   M.trainings = statTrainingsHTML();   // zuletzt gespeicherte Trainings (Training speichern auf Plan-Seite, Karte und im Timer)
   M.einblicke = statEinblickeHTML(voll);   // Mehr Einblicke (zugeklappt): Volumen, Rekorde, Drücken : Ziehen
