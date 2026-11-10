@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-10 · Run: Optionskacheln in Weiß (Fassung 2026-11-10-5)
+
+- **Run:** „Eigener Lauf“, „Intervall-Lauf“ und „Ansagen“ sind ohne Orange: Symbole, Werte, Rand, Regler, Chips und Schalter in Weiß (im Hellen in der Textfarbe). Umgesetzt über lokale Variablen `--accent`/`--accent-ink` auf diesen drei Karten am Ende von `layout-new.css`. Der Start-Knopf bleibt in der Akzentfarbe.
+
 ## 2026-11-10 · Läufer-Auswertungen in Fortschritt (Fassung 2026-11-10-4)
 
 - **Neue Gruppe „Laufen“** im Auswahlfenster „Weitere Auswertungen hinzufügen“ mit fünf Kacheln (Code in `js/16-lauf.js`, eingebunden in `statModule`): **Bestzeiten** (bestes Stück aus 1/3/5/10/21 ganzen km, Fenster über die Kilometer-Zwischenzeiten), **Einteilung/Pacing** (erste gegen zweite Hälfte ab 4 km, Schwankung der km-Zeiten, Balken je km), **Regelmäßigkeit** (Wochen in Folge mit ≥ 2 Läufen/Fahrten oder 75 min, Minuten gegen WHO 150, 12-Wochen-Balken), **Pace nach Streckenlänge** (Median der letzten 5 je Klasse mit Pfeil, Rennzeit-Richtwert nach Riegel aus dem besten Lauf der letzten 90 Tage) und **Pulszonen**.
