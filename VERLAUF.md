@@ -3,9 +3,9 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
-## 2026-11-10 · Neue Tools-Fotos im Stil der anderen (Fassung 2026-11-10-9)
+## 2026-11-10 · Tools-Fotos wieder im Originalton (Fassung 2026-11-10-10)
 
-- Die drei neuen Fotos (Timer, Trainingsplan, Wissensaustausch) sind farblich an die übrigen Tools-Kacheln angepasst: warmer, dunklerer Ton mit Vignette; das sehr helle Kachel-Bild für Wissensaustausch wurde auf mittleres Grau gepegelt, die Hanteln kräftiger gemacht, die Silhouette leicht gewärmt. `FOTO_SAT` für die Hanteln auf 0,78.
+- Die farbliche Angleichung der drei neuen Fotos (Timer, Trainingsplan, Wissensaustausch) aus 2026-11-10-9 ist auf Wunsch zurückgenommen: die Bilder sind wieder nur verkleinert, ohne Farbänderung; `FOTO_SAT` für die Hanteln wieder 0,5.
 
 ## 2026-11-10 · Neue Fotos auf Tools: Timer, Trainingsplan, Wissensaustausch (Fassung 2026-11-10-8)
 
