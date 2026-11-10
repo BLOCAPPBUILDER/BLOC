@@ -306,6 +306,54 @@ function bindBuilderKarte(){
 /* Fragen & Antworten am Ende der Seite „Training“ (Inhalt: faq.js, erzeugt aus docs/FAQ-ENTWURF.md). Reine Anzeige, nichts wird gespeichert oder geladen.
    Aufklappbar mit <details>/<summary> (Tastatur und Screenreader ohne eigenes Skript); der Hinweis „keine Beratung“ steht immer sichtbar darüber.
    Die Texte in faq.js sind festes Material mit <b>/<i>/<a>, kein Nutzereingabe-Text - deshalb ohne esc(). Die Quellen heißen hier F1, F2 …, weil quellen.html eigene Nummern hat. */
+/* Kleine Schaubilder in einzelnen Antworten (Feld v in faq.js): reines HTML/CSS ohne Bilddatei, jedes mit Beschriftung (nicht nur Farbe) und Beispielhinweis.
+   Die Zahlen sind die aus dem Text der jeweiligen Antwort; Beispielwerte sind als Beispiel gekennzeichnet. */
+var FAQ_VIS = {
+  de: {
+    titel:{ zonen:"Pulszonen im Überblick", umsatz:"Woraus dein Tagesverbrauch besteht", rir:"Beispiel: zehn Wiederholungen, zwei in Reserve", doppelt:"Beispiel: doppelte Progression (8 bis 12 Wiederholungen)", eiweiss:"Beispiel: 70 kg Körpergewicht", minimal:"Beispiel: Minimalplan für die Woche" },
+    zonenZ:[["Leicht", "57–63 %", "ganze Sätze"], ["Moderat", "64–76 %", "kurze Sätze"], ["Intensiv", "77–95 %", "einzelne Worte"]], zonenFuss:"Zonen in Prozent des Maximalpulses; darunter der Sprechtest. Orientierung, keine feste Grenze.",
+    umsatzT:[["Ruheumsatz", "60–70 %"], ["Alltag + Training", "Rest"], ["Verdauung", "≈ 10 %"]], umsatzFuss:"Grobe Anteile bei vielen Menschen; bei dir können sie abweichen.",
+    rirGeschafft:"10 geschafft", rirReserve:"2 noch möglich = 2 in Reserve", rirFuss:"0 in Reserve heißt: Es ging keine saubere Wiederholung mehr.",
+    dpWoche:"Woche", dpHinweis:"Im Bereich 8 bis 12 hoch, dann Gewicht rauf und wieder bei 8 beginnen. Gewichte sind ein Beispiel.", dpKg:"kg",
+    eiwT:[["Empfehlung für Erwachsene (DGE)", "0,8 g/kg", "56 g"], ["Orientierung im Krafttraining", "ca. 1,6 g/kg", "112 g"]], eiwFuss:"Gesamtzufuhr pro Tag, Rechenbeispiel.",
+    tage:["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"], minEinheit:"Ganzkörper", minChips:["Bein", "Zug", "Druck"], minFuss:"Zwei kurze Einheiten pro Woche, je eine Bein-, Zug- und Druckübung."
+  },
+  en: {
+    titel:{ zonen:"Heart-rate zones at a glance", umsatz:"What your daily energy use is made of", rir:"Example: ten repetitions, two in reserve", doppelt:"Example: double progression (8 to 12 repetitions)", eiweiss:"Example: 70 kg body weight", minimal:"Example: minimal weekly plan" },
+    zonenZ:[["Easy", "57–63%", "full sentences"], ["Moderate", "64–76%", "short sentences"], ["Vigorous", "77–95%", "single words"]], zonenFuss:"Zones as a percentage of maximum heart rate; below it the talk test. A guide, not a hard limit.",
+    umsatzT:[["Resting", "60–70%"], ["Daily life + exercise", "rest"], ["Digestion", "≈ 10%"]], umsatzFuss:"Rough shares in many people; yours may differ.",
+    rirGeschafft:"10 done", rirReserve:"2 still possible = 2 in reserve", rirFuss:"0 in reserve means no clean repetition was left.",
+    dpWoche:"Week", dpHinweis:"Work up within 8 to 12, then add weight and start at 8 again. Weights are an example.", dpKg:"kg",
+    eiwT:[["Recommendation for adults (DGE)", "0.8 g/kg", "56 g"], ["Guide for strength training", "approx. 1.6 g/kg", "112 g"]], eiwFuss:"Total intake per day, worked example.",
+    tage:["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], minEinheit:"Full body", minChips:["Legs", "Pull", "Push"], minFuss:"Two short sessions per week, one leg, one pull and one push exercise each."
+  }
+};
+function faqVisualHTML(key){
+  var d = FAQ_VIS[currentLang() === "en" ? "en" : "de"], h = "", i;
+  function fuss(s){ return '<p class="fv-fuss">'+esc(s)+'</p>'; }
+  if(key === "zonen"){
+    h = '<div class="fv-zonen">'+d.zonenZ.map(function(z, n){ return '<div class="fv-z fv-z'+(n + 1)+'"><b>'+esc(z[0])+'</b><span>'+esc(z[1])+'</span><small>'+esc(z[2])+'</small></div>'; }).join("")+'</div>'+fuss(d.zonenFuss);
+  } else if(key === "umsatz"){
+    var br = [65, 25, 10];
+    h = '<div class="fv-stapel" role="img" aria-label="'+esc(d.umsatzT.map(function(x){ return x[0]+" "+x[1]; }).join(", "))+'">'+br.map(function(w, n){ return '<span class="fv-s fv-s'+(n + 1)+'" style="flex:'+w+'"></span>'; }).join("")+'</div>'+
+      '<ul class="fv-legende">'+d.umsatzT.map(function(x, n){ return '<li><i class="fv-s'+(n + 1)+'"></i><span>'+esc(x[0])+'</span><b>'+esc(x[1])+'</b></li>'; }).join("")+'</ul>'+fuss(d.umsatzFuss);
+  } else if(key === "rir"){
+    h = '<div class="fv-rir" role="img" aria-label="'+esc(d.rirGeschafft+", "+d.rirReserve)+'">';
+    for(i = 0; i < 12; i++) h += '<i class="'+(i < 10 ? "an" : "frei")+'"></i>';
+    h += '</div><div class="fv-rir-t"><span>'+esc(d.rirGeschafft)+'</span><span>'+esc(d.rirReserve)+'</span></div>'+fuss(d.rirFuss);
+  } else if(key === "doppelt"){
+    var reps = [8, 10, 12, 8], kg = ["40", "40", "40", "42,5"];
+    if(currentLang() === "en") kg = ["40", "40", "40", "42.5"];
+    h = '<div class="fv-dp" role="img" aria-label="'+esc(d.titel.doppelt)+'">'+reps.map(function(r, n){
+      return '<div class="fv-dps'+(n === 3 ? " neu" : "")+'"><span class="fv-bar"><i style="height:'+Math.round(100*r/12)+'%"></i></span><b>3×'+r+'</b><small>'+esc(kg[n]+" "+d.dpKg)+'</small><em>'+esc(d.dpWoche+" "+(n + 1))+'</em></div>'; }).join("")+'</div>'+fuss(d.dpHinweis);
+  } else if(key === "eiweiss"){
+    h = '<div class="fv-eiw">'+d.eiwT.map(function(x, n){ return '<div class="fv-eiwz"><div class="fv-eiwk"><span>'+esc(x[0])+'</span><b>'+esc(x[2])+'</b></div><span class="fv-eiwb"><i class="fv-s'+(n ? 3 : 1)+'" style="width:'+(n ? 100 : 50)+'%"></i></span><small>'+esc(x[1])+'</small></div>'; }).join("")+'</div>'+fuss(d.eiwFuss);
+  } else if(key === "minimal"){
+    h = '<div class="fv-woche">'+d.tage.map(function(tg, n){ var an = n === 1 || n === 4; return '<div class="fv-tag'+(an ? " an" : "")+'"><span>'+esc(tg)+'</span>'+(an ? '<b>'+esc(d.minEinheit)+'</b>' : '')+'</div>'; }).join("")+'</div>'+
+      '<div class="fv-chips">'+d.minChips.map(function(c){ return '<span>'+esc(c)+'</span>'; }).join("")+'</div>'+fuss(d.minFuss);
+  }
+  return h ? '<div class="faq-vis"><p class="fv-titel">'+esc(d.titel[key])+'</p>'+h+'</div>' : "";
+}
 function faqHTML(){
   var F = window.BLOC_FAQ;
   if(!F) return "";
@@ -322,7 +370,7 @@ function faqHTML(){
        b Begriffe [[Begriff, Erklärung], …] (optional) · q Quellen-Nummern */
     h += '<details class="faq-q"><summary><span class="faq-nr" aria-hidden="true">'+(i+1)+'</span><span class="faq-t">'+x.t+'</span></summary>'+
       '<div class="faq-a">'+
-      (x.k ? '<p><b>'+esc(t("faqKurz"))+':</b> '+x.k+'</p><ul>'+(x.p || []).map(function(p){ return '<li>'+p+'</li>'; }).join("")+'</ul>'
+      (x.k ? '<p><b>'+esc(t("faqKurz"))+':</b> '+x.k+'</p>'+(f.v ? faqVisualHTML(f.v) : "")+'<ul>'+(x.p || []).map(function(p){ return '<li>'+p+'</li>'; }).join("")+'</ul>'
            : (x.p || []).map(function(p){ return '<p>'+p+'</p>'; }).join(""))+
       (x.s ? '<p><b>'+esc(t("faqStudie"))+':</b> '+x.s+'</p>' : '')+
       (x.b && x.b.length ? '<div class="faq-begriffe"><p><b>'+esc(t("faqBegriffe"))+'</b></p><dl>'+x.b.map(function(b){ return '<dt>'+b[0]+'</dt><dd>'+b[1]+'</dd>'; }).join("")+'</dl></div>' : '')+
@@ -515,17 +563,14 @@ function renderTraining(){
   toolsKlassen(raster);
   toolsZiehenBinden(raster);
 }
-/* Wissensaustausch: Umschalter „Fragen | Selbsttest“ oben. Fragen: eigene Seite (Kachel unter Run auf Training), alles aufgeklappt wie ein kleines Nachschlagewerk;
-   Selbsttest „Wie fit bin ich?“: js/26-selbsttest.js (faqModus und selbst stehen dort) */
+/* Fragen & Antworten: eigene Seite (Kachel unter Run auf Training), alles aufgeklappt wie ein kleines Nachschlagewerk */
 function renderFaq(){
-  var test = typeof faqModus !== "undefined" && faqModus === "test";
-  app.innerHTML = topbar(t("faqTitel"), { back:"#training", right:kopfSymboleNeu("training") })+(test ? stSeiteHTML() : faqTabsHTML()+faqHTML());
+  app.innerHTML = topbar(t("faqTitel"), { back:"#training", right:kopfSymboleNeu("training") })+faqHTML();
   var bkF = app.querySelector(".topbar .back"); if(bkF) bkF.classList.add("zeigen");   // Zurück-Pfeil oben links auch auf Wissensaustausch (im Tab-Layout sonst ausgeblendet)
   bindCommon();
   var kopf = app.querySelector(".faq-kopf"), inh = app.querySelector(".faq-inhalt");
   if(kopf) kopf.style.display = "none";
   if(inh) inh.removeAttribute("hidden");
-  stBinden();
 }
 /* „Was ist was?“: fünf Zeilen Klartext zu den Bereichen (nur Lesen, nichts wird geändert) */
 function openWasIstWas(){

@@ -3,13 +3,16 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
-## 2026-11-10 · Wissensaustausch: Rubriken neu, Selbsttest „Wie fit bin ich?“ (Fassung 2026-11-10-6)
+## 2026-11-10 · Selbsttest wieder raus, Schaubilder in Fragen, neues Aufbau-Schaubild (Fassung 2026-11-10-7)
 
-- **Rubriken:** Die 36 Fragen stehen jetzt in 8 Rubriken nach Sinn statt in 6 (vorher standen zwei Fragen am Ende in falscher Rubrik, wodurch Überschriften doppelt kamen): Grundlagen · Einstieg und Planung · Ausführung, Dosis und Geräte · Steigern, Stillstand und Phasen · Ausdauer, Puls und Beweglichkeit · Ernährung und Energie · Mythen: Training und Technik · Mythen: Abnehmen und Ernährung. Die Mythen sind nach Thema aufgeteilt; Fragen-Ids und Quellen bleiben.
-- **Umschalter:** Oben auf Wissensaustausch wählst du zwischen **Fragen** und **Selbsttest** (`faqTabsHTML`, `renderFaq` in `js/05-suche.js`; Einstieg über die Kachel zeigt zuerst die Fragen).
-- **Selbsttest** (`js/26-selbsttest.js`, neu): sechs Tests nacheinander mit Pausenuhr – Standweitsprung, Klimmzüge, Liegestütze, Chair-Stand (60 s mit Countdown), einbeiniges Wadenheben (links, rechts), Unterarmstütz (Stoppuhr). Je Test die bewegte BLOC-Figur, Anleitung, Vorlauf 3-2-1 mit Signalton, Zähler zum Antippen; Ergebnis mit Stufe 1–4 (Balken plus Wort) und Vergleich zum letzten Test. Vergleichswerte für Chair-Stand und Wadenheben aus Strassmann 2013 und Bohannon 2022 (nach Alter, dazwischen grob gerechnet); Liegestütze und Plank nur als grobe, nicht validierte Bereiche; Sprung und Klimmzüge nur Startwert und Veränderung. Lokal in `settings.selbsttest` (höchstens 20), Alter und Geschlecht wie bei den Körperdaten.
-- **Quelle FITBOOK:** Der Artikel (Axel Springer Deutschland GmbH, „alle Rechte vorbehalten“) hat die Auswahl der sechs Tests angeregt und ist in `faq.js › testQuellen` nur verlinkt; Texte und Tabellen sind nicht übernommen, die Beschreibungen sind eigene Formulierungen.
-- Schnelltest ergänzt (Rubriken, Umschalter, Selbsttest vom Sprung bis zum Ergebnis).
+- **Selbsttest entfernt:** `js/26-selbsttest.js`, der Umschalter Fragen | Selbsttest, die Testquellen und die zugehörigen Stile sind weg; Wissensaustausch zeigt wieder nur die Fragen (mit den 8 Rubriken).
+- **Schaubilder in Fragen:** Sechs Antworten haben ein kleines Bild (Feld `v` in `faq.js`, `faqVisualHTML` in `js/05-suche.js`, Stile `.faq-vis` in `app.css`): Pulszonen mit Sprechtest · Zusammensetzung des Tagesverbrauchs · Wiederholungen in Reserve · doppelte Progression (Beispiel) · Eiweiß 0,8 gegen 1,6 g/kg bei 70 kg · Minimalplan für die Woche. Die Zahlen stammen aus dem Antworttext, Beispielwerte sind als Beispiel gekennzeichnet; zweisprachig.
+- **Einführung, Aufbau:** Das Schaubild zeigt TrainingsBLOC 1 aufgeklappt mit BLOC 1, BLOC 2 und RUN; TrainingsBLOC 2 und 3 stehen zugeklappt als „(…)“ (`introSchaubildHTML` in `js/14-einfuehrung-sicherung.js`). Einheitstest angepasst.
+
+## 2026-11-10 · Wissensaustausch: Rubriken neu (Fassung 2026-11-10-6)
+
+- **Rubriken:** Die 36 Fragen stehen in 8 Rubriken nach Sinn statt in 6 (vorher standen zwei Fragen am Ende in falscher Rubrik, wodurch Überschriften doppelt kamen): Grundlagen · Einstieg und Planung · Ausführung, Dosis und Geräte · Steigern, Stillstand und Phasen · Ausdauer, Puls und Beweglichkeit · Ernährung und Energie · Mythen: Training und Technik · Mythen: Abnehmen und Ernährung. Fragen-Ids und Quellen bleiben.
+- Ein Selbsttest „Wie fit bin ich?“ mit Umschalter war in dieser Fassung kurz enthalten und wurde in 2026-11-10-7 auf Wunsch wieder entfernt (Wissensaustausch bleibt bei den Fragen).
 
 ## 2026-11-10 · Run: Optionskacheln in Weiß (Fassung 2026-11-10-5)
 
