@@ -1814,15 +1814,17 @@
       await warte(300);
       pruefe(daten().settings.kalender.e.length === nNach, "Zweites Kopieren legt nichts doppelt an");
       var n0 = daten().settings.kalender.e.length;
-      var knopf = $("[data-kalloeschen]");
-      knopf.dispatchEvent(new W.PointerEvent("pointerdown", { bubbles: true, button: 0 }));
-      await warte(500);
-      knopf.dispatchEvent(new W.PointerEvent("pointerup", { bubbles: true }));
-      await warte(2200);
-      pruefe(daten().settings.kalender.e.length === n0, "Vor zwei Sekunden nichts gelöscht");
-      knopf.dispatchEvent(new W.PointerEvent("pointerdown", { bubbles: true, button: 0 }));
-      await warte(2300);
-      pruefe(daten().settings.kalender.e.length < n0, "Nach zwei Sekunden gedrückt halten: Einträge der Woche gelöscht");
+      // Alle Einträge löschen: erst Wahl (Woche / ganzer Kalender), dann Rückfrage; „Abbrechen“ löscht nichts
+      klick($("[data-kalloeschen]"));
+      klick(await bis(function () { return $("#overlayRoot [data-act]"); }, 2000, "Wahl: nur diese Woche / ganzer Kalender"));
+      await bis(function () { return $("#overlayRoot [data-cancel]"); }, 2000, "Rückfrage vor dem Löschen");
+      klick($("#overlayRoot [data-cancel]"));
+      await warte(200);
+      pruefe(daten().settings.kalender.e.length === n0, "Abbrechen löscht nichts");
+      klick($("[data-kalloeschen]"));
+      klick(await bis(function () { return $("#overlayRoot [data-act]"); }, 2000, "Wahl noch einmal"));
+      klick(await bis(function () { return $("#overlayRoot [data-ok]"); }, 2000, "Löschen bestätigen"));
+      await bis(function () { return daten().settings.kalender.e.length < n0; }, 2000, "Einträge der Woche gelöscht");
     }],
     ["Summit entfernt: alle Daten dazu werden beim Laden gelöscht", async function () {
       await heim();

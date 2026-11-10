@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-10 · Wissensaustausch: Schwitzen und Puls, Kalorien und Ruheverbrauch (Fassung 2026-11-10-3)
+
+- **FAQ:** Zwei neue Einträge in `faq.js`: „Schwitzen und Puls“ (Schwitzen ist kein Maß für die Wirkung; Maximalpuls 208 − 0,7 × Alter mit ±10 Streuung, Zonen in % des Maximalpulses, Sprechtest, Puls beim Krafttraining unbrauchbar, RPE/RIR) und „Kalorienverbrauch und Ruheverbrauch“ (Gesamtumsatz = Ruheumsatz + NEAT + Training + Verdauung, Mifflin-St-Jeor, Aktivitätsfaktoren, MET inklusive Ruhe, Uhren überschätzen). Quellen 40–50 ergänzt. Die Literaturangaben stammen aus dem Entwurf `docs/entwurf-sportwiss-faq-lauf.md` und sind vor einer Veröffentlichung noch gegenzuprüfen (DOI, Seiten).
+- **Schnelltest:** Kalender-Löschen prüft jetzt Wahl, Rückfrage und Abbrechen statt des Zwei-Sekunden-Haltens.
+
 ## 2026-11-10 · Run-Seite als Kacheln (Fassung 2026-11-10-2)
 
 - **Run:** Die Seite ist ein Raster (`#app:has(.run-eigen)` in `layout-new.css`): „Eigener Lauf“ als breite Kachel mit Symbol und **Zeit-Vorschau** („ca. 27:30“, wenn Strecke und Pace gesetzt sind), „Intervall-Lauf“ und „Ansagen“ als halbe Kacheln nebeneinander (aufgeklappt über die ganze Breite). Zugeschaltete Funktionen haben einen Akzentrand (`.rk-an`), ausgeschaltete einen gedämpften Wert.
