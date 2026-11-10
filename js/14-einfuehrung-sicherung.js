@@ -32,24 +32,23 @@ function introProfilSpeichern(wurzel){
   save();
   return !wurzel.querySelector(".koerper-feld input.ungueltig");   // false: ein Wert liegt außerhalb des Bereichs, die Fehlerzeile steht unter dem Feld
 }
-/* Seite 3: Aufbau als kleines selbstgezeichnetes Schaubild (nur Stil nach der Vorlage von Kevin): Trainingsplan → Trainingstage (Tag A/B) → BLOCs mit Übungen.
+/* Seite 3: Aufbau als kleines selbstgezeichnetes Schaubild (nur Stil nach der Vorlage von Kevin): Trainingsplan → TrainingsBLOCs.
+   TrainingsBLOC 1 ist aufgeklappt und zeigt, was in einem Tag steckt (BLOC 1, BLOC 2 und ein Run); die übrigen Tage stehen zugeklappt als „(…)“, das spart Platz.
    Die Beschriftungen kommen aus texte.js, die Zeichnung selbst ist reines SVG ohne Bilddatei. */
 function introSchaubildHTML(){
   function box(x, y, w, h, cls){ return '<rect class="'+cls+'" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="8"/>'; }
   function txt(x, y, s, cls){ return '<text class="'+cls+'" x="'+x+'" y="'+y+'" text-anchor="middle">'+esc(s)+'</text>'; }
-  function bloc(x, namen){
-    return box(x, 128, 100, 82, "sb-bloc")+txt(x+50, 148, "BLOC", "sb-bt")+namen.map(function(n, i){ return txt(x+50, 166+i*15, n, "sb-ex"); }).join("");
+  function teil(x, titel, zeilen){   // ein BLOC (oder der Run) im aufgeklappten TrainingsBLOC
+    return box(x, 80, 96, 66, "sb-bloc")+txt(x+48, 96, titel, "sb-bt")+zeilen.map(function(n, i){ return txt(x+48, 112+i*14, n, "sb-ex"); }).join("");
   }
-  function tag(x, name){   // TrainingsBLOC = ein Trainingstag: zwei Zeilen (Art und Name)
-    return box(x, 70, 100, 38, "sb-kasten sb-tag")+txt(x+50, 85, "TrainingsBLOC", "sb-tb")+txt(x+50, 100, name, "sb-t");
-  }
-  var a = [t("inExKniebeuge"), t("inExBankdruecken"), t("inExKreuzheben")], b = [t("inExKlimmzug"), t("inExRudern"), t("inExSchulterdruecken")];
-  return '<svg class="intro-schaubild" viewBox="0 0 340 218" role="img" aria-label="'+esc(t("inSchaubildAlt"))+'">'+
-    '<path class="sb-linie" d="M170 38V54M60 54H280M60 54V70M170 54V70M280 54V70M60 108V128M170 108V128"/>'+
-    box(100, 8, 140, 30, "sb-kasten")+txt(170, 28, t("inDPlan"), "sb-t")+
-    tag(10, t("inDTag")+" A")+tag(120, t("inDTag")+" B")+
-    box(230, 70, 100, 38, "sb-kasten")+txt(280, 85, "TrainingsBLOC", "sb-tb")+txt(280, 100, "Run", "sb-t")+
-    bloc(10, a)+bloc(120, b)+'</svg>'+
+  var a = [t("inExKniebeuge"), t("inExBankdruecken"), t("inExKreuzheben")], b = [t("inExKlimmzug"), t("inExRudern"), t("inExSchulterdruecken")], run = [t("inRunKm"), t("inRunLocker")];
+  return '<svg class="intro-schaubild" viewBox="0 0 340 226" role="img" aria-label="'+esc(t("inSchaubildAlt"))+'">'+
+    '<path class="sb-linie" d="M170 34V44H8V207M8 101H16M8 173H16M8 207H16"/>'+
+    box(100, 6, 140, 28, "sb-kasten")+txt(170, 25, t("inDPlan"), "sb-t")+
+    box(16, 52, 316, 98, "sb-kasten sb-tag")+txt(174, 69, "TrainingsBLOC 1", "sb-tb")+
+    teil(24, "BLOC 1", a)+teil(126, "BLOC 2", b)+teil(228, "RUN", run)+
+    box(16, 160, 316, 26, "sb-kasten sb-tag")+txt(174, 177, "TrainingsBLOC 2  (…)", "sb-tb")+
+    box(16, 194, 316, 26, "sb-kasten sb-tag")+txt(174, 211, "TrainingsBLOC 3  (…)", "sb-tb")+'</svg>'+
     '<p class="intro-kette">'+esc(t("inKette"))+'</p>'+
     '<ul class="intro-legende">'+["inLegBloc", "inLegTag", "inLegPlan"].map(function(k){ var q = t(k).split(":"); return '<li><b>'+esc(q[0])+'</b>'+esc(q.slice(1).join(":").trim())+'</li>'; }).join("")+'</ul>';
 }
