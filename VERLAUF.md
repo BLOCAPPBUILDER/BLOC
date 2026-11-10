@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-10 · Kalender: Heute-Knopf und Wochenkarte raus, zwei feste Knöpfe (Fassung 2026-11-10-1)
+
+- **Kalender:** Der „Heute“-Knopf im Kopf und die Wochenkarte („Meine Woche“) sind aus der Wochenansicht entfernt. Stattdessen stehen immer „Woche kopieren“ (Fenster mit Wochenzahl 1 bis 12) und „Alle Einträge löschen“ (Wahl: nur diese Woche oder der ganze Kalender, danach Rückfrage) unter der Wochenleiste. Bei leerer Woche sagt „Woche kopieren“ das per Hinweis. Das Löschen per Zwei-Sekunden-Halten entfällt.
+
 ## 2026-11-09 · Einheitliche Köpfe, Logo-Farbe, Aufbau-Schaubild, Woche kopieren (Fassung 2026-11-09-9)
 
 - **Köpfe:** Überall steht rechts nur Suche und Einstellungen (`kopfSymboleNeu` in `js/03-router.js`, `bereichKopfNeuHTML` in `js/05-suche.js`; auf Workout ist die Lupe die Suche der Liste). Hell/Dunkel gibt es nur noch unter Einstellungen › Darstellung, die Körperdaten als eigene Zeile in den Einstellungen. Der Hilfe-Knopf „?“ und „Heute“ im Kalender stehen unten rechts im Titelblock (`.kb-extra`).

@@ -188,19 +188,17 @@ function renderKalender(){
   }
   var sichtbar = tage.filter(function(d){ return !monat || d.getMonth() === kalBasis.getMonth(); }).map(kalTagKey);
   var sum = kalSumme(sichtbar);
-  var heuteKnopf = '<button type="button" class="kal-heutebtn" data-kalheute aria-label="'+esc(t("kalHeuteSpringen"))+'">'+svgIcon('<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/>')+'<span>'+esc(t("kalHeute"))+'</span></button>';
-  html = bereichKopfNeuHTML("kal", t("tabKalender"), t("kalKicker"), heuteKnopf, { klar:true, foto:"img/neu-d-kalender.jpg", fotoHell:"img/neu-h-kettlebell.jpg", zurueck:"#home" }) +
+  html = bereichKopfNeuHTML("kal", t("tabKalender"), t("kalKicker"), "", { klar:true, foto:"img/neu-d-kalender.jpg", fotoHell:"img/neu-h-kettlebell.jpg", zurueck:"#home" }) +
     '<div class="card lib-tabs-card"><div class="theme-pick lib-tabs seg-2">'+
       '<button type="button" data-kalansicht="woche" class="'+(!monat ? 'active' : '')+'">'+esc(t("kalWoche"))+'</button>'+
       '<button type="button" data-kalansicht="monat" class="'+(monat ? 'active' : '')+'">'+esc(t("kalMonat"))+'</button></div></div>'+
     '<div class="kal-nav"><button type="button" class="iconbtn" data-kalnav="-1" aria-label="'+esc(t("kalZurueck"))+'">&#8249;</button>'+
       '<div class="kn-mitte">'+(monat ? '<b>'+esc(kopfText)+'</b>' : '<b>'+esc(t("kalKW", { n:kalKW(tage[0]) }))+'</b><small>'+esc(kopfText)+'</small>')+'</div>'+
       '<button type="button" class="iconbtn" data-kalnav="1" aria-label="'+esc(t("kalVor"))+'">&#8250;</button></div>'+
-    // Woche: dieselbe Karte wie „Diese Woche“ auf der Startseite (Tage mit Punkt = trainiert, Ring = geplant); Monat: nur die Summe
-    (!monat ? wocheHTML({ basis:tage[0], kal:true, titel:kalTagKey(tage[0]) === kalTagKey(kalMontag(new Date())) ? t("weekTitle") : t("kalKW", { n:kalKW(tage[0]) }) })+
-      (sum.km > 0 ? '<div class="kal-summe">'+esc(runKm(sum.km*1000).replace(/[,.]00$/, "")+" km Run")+'</div>' : '')+
-      (sum.n ? '<div class="kal-aktionen"><button type="button" class="btn btn-secondary kal-kopieren" data-kalkopieren>'+svgIcon('<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>')+' '+esc(t("kalKopieren"))+'</button>'+
-        '<button type="button" class="btn btn-secondary kal-kopieren" data-kalloeschen>'+svgIcon('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12h10l1-12M9 7V4h6v3"/>')+' '+esc(t("kalAlleLoeschen"))+'</button></div>' : '') : '')+
+    // Woche: Summe und die zwei Knöpfe „Woche kopieren“ / „Alle Einträge löschen“ (immer da, bei leerer Woche melden sie es per Hinweis); Monat: nur die Summe
+    (!monat ? (sum.km > 0 ? '<div class="kal-summe">'+esc(runKm(sum.km*1000).replace(/[,.]00$/, "")+" km Run")+'</div>' : '')+
+      '<div class="kal-aktionen"><button type="button" class="btn btn-secondary kal-kopieren" data-kalkopieren>'+svgIcon('<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>')+' '+esc(t("kalKopieren"))+'</button>'+
+        '<button type="button" class="btn btn-secondary kal-kopieren" data-kalloeschen>'+svgIcon('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12h10l1-12M9 7V4h6v3"/>')+' '+esc(t("kalAlleLoeschen"))+'</button></div>' : '')+
     (monat ? '<div class="kal-summe">'+esc(sum.n ? t("kalGeplant", { n:sum.n })+(sum.ok ? " · "+t("kalErledigtN", { n:sum.ok }) : "")+(sum.km > 0 ? " · "+runKm(sum.km*1000).replace(/[,.]00$/, "")+" km Run" : "") : t("kalNichtsGeplant"))+'</div>' : '');
   if(!monat){
     html += tage.map(function(d, i){
@@ -238,17 +236,14 @@ function renderKalender(){
     el.addEventListener("click", los);
     el.addEventListener("keydown", function(ev){ if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); los(); } });
   });
-  var hb = app.querySelector("[data-kalheute]");
-  if(hb) hb.addEventListener("click", function(){   // „Heute“: zur aktuellen Woche bzw. zum aktuellen Monat, im Monat ist heute gewählt
-    kalBasis = new Date(); kalAuswahl = kalTagKey(Date.now()); renderKalender(); window.scrollTo(0, 0);
-    var z = app.querySelector(".kal-tag.heute, .kal-panel.heute");
-    if(z && z.scrollIntoView) z.scrollIntoView({ block:"center", behavior:"smooth" });
-  });
   app.querySelectorAll("[data-kaladd]").forEach(function(b){ b.addEventListener("click", function(){ kalHinzuMenue(b.getAttribute("data-kaladd")); }); });
   var kk = app.querySelector("[data-kalkopieren]");
-  if(kk) kk.addEventListener("click", function(){ kalKopierenSheet(tage.map(kalTagKey), kopfText, sum.n); });
+  if(kk) kk.addEventListener("click", function(){
+    if(!sum.n){ showToast(t("kalNichtsZuKopieren")); return; }
+    kalKopierenSheet(tage.map(kalTagKey), kopfText, sum.n);
+  });
   var kl = app.querySelector("[data-kalloeschen]");
-  if(kl) kalHaltenLoeschen(kl, tage.map(kalTagKey));
+  if(kl) kl.addEventListener("click", function(){ kalLoeschenMenue(tage.map(kalTagKey), sum.n); });
   app.querySelectorAll("[data-kaltap]").forEach(function(b){
     b.addEventListener("click", function(){   // Monat: den Tag auswählen, die Ansicht bleibt (Einträge stehen unter dem Raster)
       var key = b.getAttribute("data-kaltap"), d = kalTagDatum(key);
@@ -397,28 +392,27 @@ function kalWocheKopieren(tage, n){
   if(neu) save();
   return neu;
 }
-/* Alle Einträge der gezeigten Tage löschen: erst nach zwei Sekunden gedrückt halten (ein kurzer Tipp zeigt nur den Hinweis); liefert die Anzahl */
+/* Einträge löschen: keys = Tagesschlüssel der gezeigten Woche, ohne keys (null) der ganze Kalender; liefert die Anzahl */
 function kalAlleLoeschen(keys){
   var alt = kalListe().length;
-  state.db.settings.kalender = { e:kalListe().filter(function(e){ return keys.indexOf(e.tag) < 0; }) };
+  state.db.settings.kalender = { e:keys ? kalListe().filter(function(e){ return keys.indexOf(e.tag) < 0; }) : [] };
   save();
   return alt - kalListe().length;
 }
-function kalHaltenLoeschen(btn, keys){
-  var timer = null;
-  function stop(){ clearTimeout(timer); btn.style.opacity = ""; }
-  btn.addEventListener("pointerdown", function(e){
-    if(e.button > 0) return;
-    btn.style.opacity = ".55";
-    timer = setTimeout(function(){
-      stop();
-      var n = kalAlleLoeschen(keys);
-      showToast(n ? t("kalGeloescht", { n:n }) : t("kalNichtsZuLoeschen"));
-      kalNeu();
-    }, 2000);
-  });
-  ["pointerup", "pointerleave", "pointercancel"].forEach(function(ev){ btn.addEventListener(ev, stop); });
-  btn.addEventListener("click", function(){ showToast(t("kalHaltenHint")); });
+/* „Alle Einträge löschen“: erst wählen (diese Woche oder der ganze Kalender), dann bestätigen – nichts wird ohne Rückfrage gelöscht */
+function kalLoeschenMenue(keys, nWoche){
+  var nAlle = kalListe().length;
+  if(!nAlle){ showToast(t("kalNichtsZuLoeschen")); return; }
+  function sicher(tageKeys, n){
+    confirmSheet(t("kalLoeschenFrage", { n:n }), t("kalLoeschenText"), t("kalLoeschenOk"), function(){
+      var gone = kalAlleLoeschen(tageKeys);
+      showToast(t("kalGeloescht", { n:gone })); kalNeu();
+    });
+  }
+  var acts = [];
+  if(nWoche) acts.push({ ico:P_TRASH, label:t("kalLoeschenWoche", { n:nWoche }), danger:true, fn:function(){ sicher(keys, nWoche); } });
+  if(nAlle > nWoche) acts.push({ ico:P_TRASH, label:t("kalLoeschenAlle", { n:nAlle }), danger:true, fn:function(){ sicher(null, nAlle); } });
+  openActionSheet(t("kalAlleLoeschen"), acts);
 }
 function kalKopierenSheet(tage, kopfText, anzahl){
   var root = document.getElementById("overlayRoot");
