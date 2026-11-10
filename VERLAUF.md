@@ -3,6 +3,14 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-10 · Wissensaustausch: Rubriken neu, Selbsttest „Wie fit bin ich?“ (Fassung 2026-11-10-6)
+
+- **Rubriken:** Die 36 Fragen stehen jetzt in 8 Rubriken nach Sinn statt in 6 (vorher standen zwei Fragen am Ende in falscher Rubrik, wodurch Überschriften doppelt kamen): Grundlagen · Einstieg und Planung · Ausführung, Dosis und Geräte · Steigern, Stillstand und Phasen · Ausdauer, Puls und Beweglichkeit · Ernährung und Energie · Mythen: Training und Technik · Mythen: Abnehmen und Ernährung. Die Mythen sind nach Thema aufgeteilt; Fragen-Ids und Quellen bleiben.
+- **Umschalter:** Oben auf Wissensaustausch wählst du zwischen **Fragen** und **Selbsttest** (`faqTabsHTML`, `renderFaq` in `js/05-suche.js`; Einstieg über die Kachel zeigt zuerst die Fragen).
+- **Selbsttest** (`js/26-selbsttest.js`, neu): sechs Tests nacheinander mit Pausenuhr – Standweitsprung, Klimmzüge, Liegestütze, Chair-Stand (60 s mit Countdown), einbeiniges Wadenheben (links, rechts), Unterarmstütz (Stoppuhr). Je Test die bewegte BLOC-Figur, Anleitung, Vorlauf 3-2-1 mit Signalton, Zähler zum Antippen; Ergebnis mit Stufe 1–4 (Balken plus Wort) und Vergleich zum letzten Test. Vergleichswerte für Chair-Stand und Wadenheben aus Strassmann 2013 und Bohannon 2022 (nach Alter, dazwischen grob gerechnet); Liegestütze und Plank nur als grobe, nicht validierte Bereiche; Sprung und Klimmzüge nur Startwert und Veränderung. Lokal in `settings.selbsttest` (höchstens 20), Alter und Geschlecht wie bei den Körperdaten.
+- **Quelle FITBOOK:** Der Artikel (Axel Springer Deutschland GmbH, „alle Rechte vorbehalten“) hat die Auswahl der sechs Tests angeregt und ist in `faq.js › testQuellen` nur verlinkt; Texte und Tabellen sind nicht übernommen, die Beschreibungen sind eigene Formulierungen.
+- Schnelltest ergänzt (Rubriken, Umschalter, Selbsttest vom Sprung bis zum Ergebnis).
+
 ## 2026-11-10 · Run: Optionskacheln in Weiß (Fassung 2026-11-10-5)
 
 - **Run:** „Eigener Lauf“, „Intervall-Lauf“ und „Ansagen“ sind ohne Orange: Symbole, Werte, Rand, Regler, Chips und Schalter in Weiß (im Hellen in der Textfarbe). Umgesetzt über lokale Variablen `--accent`/`--accent-ink` auf diesen drei Karten am Ende von `layout-new.css`. Der Start-Knopf bleibt in der Akzentfarbe.
