@@ -387,7 +387,7 @@ function faqHTML(){
 /* Aussehen „New“: Seite „Tools“ - die oberste Kachel steht groß (Standard: Workout-Builder), die übrigen versetzt in zwei Spalten, die letzte bei ungerader Zahl über die ganze Breite.
    Reihenfolge in settings.toolsReihe; Kachel lange drücken (0,5 s) und ziehen verschiebt sie. */
 /* Farbstärke je Foto auf Tools: aus der Sättigung der kräftigsten Bildanteile (90. Perzentil) gemessen, damit alle Kacheln nach dem Angleichen gleich kräftig wirken (Ziel 0,36) */
-var FOTO_SAT = { "img/neu-p-frau-kniebeuge.jpg":.68, "img/neu-h-rack.jpg":.63, "img/neu-faq.jpg":.52, "img/neu-protein.jpg":.82, "img/bereich-run.jpg":.68, "img/neu-p-mobility-sitz.jpg":1, "img/neu-p-mobility-ausfall.jpg":1, "img/neu-h-brust-2.jpg":.78 };
+var FOTO_SAT = { "img/neu-h-hanteln-orange.jpg":.5, "img/neu-wissen.jpg":1, "img/neu-p-dehnung-silhouette.jpg":1, "img/neu-p-frau-kniebeuge.jpg":.68, "img/neu-h-rack.jpg":.63, "img/neu-faq.jpg":.52, "img/neu-protein.jpg":.82, "img/bereich-run.jpg":.68, "img/neu-p-mobility-sitz.jpg":1, "img/neu-p-mobility-ausfall.jpg":1, "img/neu-h-brust-2.jpg":.78 };
 var TOOLS_KEYS = ["katalog", "run", "plan", "warm", "intervall", "protein", "faq"];   // Standardreihenfolge: Protein Tracker und Wissensaustausch ganz unten
 function toolsReihe(){
   var r = [];
@@ -553,9 +553,9 @@ function renderTraining(){
   app.querySelectorAll(".tools-raster .tk").forEach(function(el){
     var k = el.getAttribute("data-tool"), ft = el.querySelector(".tk-foto");
     if(!ft) return;
-    var pfad = k === "plan" ? "img/neu-h-rack.jpg" : k === "katalog" ? "img/neu-p-frau-kniebeuge.jpg" : k === "faq" ? "img/neu-faq.jpg" : k === "protein" ? "img/neu-protein.jpg" : fotos[k];
+    var pfad = k === "plan" ? "img/neu-h-hanteln-orange.jpg" : k === "katalog" ? "img/neu-p-frau-kniebeuge.jpg" : k === "faq" ? "img/neu-wissen.jpg" : k === "protein" ? "img/neu-protein.jpg" : fotos[k];
     if(!pfad) return;
-    var pos = k === "plan" ? "50% 52%" : k === "katalog" ? (fotoFokus(pfad) || "50% 30%") : k === "faq" ? "50% 55%" : k === "protein" ? "50% 27%" : (fotoFokus(pfad) || "50% 50%");
+    var pos = k === "plan" ? "50% 74%" : k === "katalog" ? (fotoFokus(pfad) || "50% 30%") : k === "faq" ? "50% 50%" : k === "protein" ? "50% 27%" : (fotoFokus(pfad) || "50% 50%");
     ft.style.backgroundImage = "url(" + pfad + ")"; ft.style.backgroundPosition = pos;
     ft.style.setProperty("--sat", FOTO_SAT[pfad] !== undefined ? FOTO_SAT[pfad] : ".74");   // jedes Foto auf dieselbe Farbstärke
   });

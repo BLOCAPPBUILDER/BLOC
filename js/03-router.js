@@ -236,6 +236,7 @@ var FOTO_FOKUS = {
   "img/neu-p-mobility-ausfall.jpg":"50% 35%",
   "img/neu-p-mobility-sitz.jpg":"50% 60%",
   "img/neu-workout.jpg":"50% 48%",
+  "img/neu-p-dehnung-silhouette.jpg":"35% 45%",
   "img/neu-timer.jpg":"50% 66%",             // Person auf der Box im unteren Drittel
   "img/neu-kopf.jpg":"50% 60%",
   "img/neu-p-liegestuetz-strand.jpg":"50% 70%",
@@ -272,6 +273,7 @@ function bereichFotosNeu(){
   var zu = fotosZuteilen(Object.keys(ART).map(function(k){ return { key:k + ":" + tag, pool:ART[k] }; }));
   Object.keys(ART).forEach(function(k){ out[k] = zu[k + ":" + tag]; });
   out.run = "img/bereich-run.jpg";   // Run behält das klassische Läuferbild (Karte und Kopf der Run-Seite)
+  out.intervall = "img/neu-p-dehnung-silhouette.jpg";   // Timer: Ausfallschritt-Dehnung als Silhouette (Karte und Kopf der Timer-Seite, 2026-11-10)
   return out;
 }var builderAuto = null;   // "zufall" | "selber": der Workout-Builder auf Heute löst im Baukasten gleich die Wahl aus
 /* Kopfzeilen-Symbole im Aussehen „New“: fester Aufbau, überall nur Suche + Einstellungen rechts. Hell/Dunkel und Körperdaten stehen in den Einstellungen. */
