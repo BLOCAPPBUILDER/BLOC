@@ -3,6 +3,21 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-10 · Wissensaustausch: Schwitzen und Puls, Kalorien und Ruheverbrauch (Fassung 2026-11-10-3)
+
+- **FAQ:** Zwei neue Einträge in `faq.js`: „Schwitzen und Puls“ (Schwitzen ist kein Maß für die Wirkung; Maximalpuls 208 − 0,7 × Alter mit ±10 Streuung, Zonen in % des Maximalpulses, Sprechtest, Puls beim Krafttraining unbrauchbar, RPE/RIR) und „Kalorienverbrauch und Ruheverbrauch“ (Gesamtumsatz = Ruheumsatz + NEAT + Training + Verdauung, Mifflin-St-Jeor, Aktivitätsfaktoren, MET inklusive Ruhe, Uhren überschätzen). Quellen 40–50 ergänzt. Die Literaturangaben stammen aus dem Entwurf `docs/entwurf-sportwiss-faq-lauf.md` und sind vor einer Veröffentlichung noch gegenzuprüfen (DOI, Seiten).
+- **Schnelltest:** Kalender-Löschen prüft jetzt Wahl, Rückfrage und Abbrechen statt des Zwei-Sekunden-Haltens.
+
+## 2026-11-10 · Run-Seite als Kacheln (Fassung 2026-11-10-2)
+
+- **Run:** Die Seite ist ein Raster (`#app:has(.run-eigen)` in `layout-new.css`): „Eigener Lauf“ als breite Kachel mit Symbol und **Zeit-Vorschau** („ca. 27:30“, wenn Strecke und Pace gesetzt sind), „Intervall-Lauf“ und „Ansagen“ als halbe Kacheln nebeneinander (aufgeklappt über die ganze Breite). Zugeschaltete Funktionen haben einen Akzentrand (`.rk-an`), ausgeschaltete einen gedämpften Wert.
+- **Hauptkachel:** Lichtkante oben, Orange-Schimmer unten; „Lauf starten“ als getöntes Glas in der Akzentfarbe.
+- **Zuletzt:** Wischreihe der letzten sechs Läufe/Fahrten mit Strecke, Zeit, Pace und kleiner Streckenlinie (`runZuletztHTML`, `runMiniStrecke` in `js/16-lauf.js`). Der Verlauf darunter ist jetzt standardmäßig zugeklappt (steht dort vollständig, mit Löschen).
+
+## 2026-11-10 · Kalender: Heute-Knopf und Wochenkarte raus, zwei feste Knöpfe (Fassung 2026-11-10-1)
+
+- **Kalender:** Der „Heute“-Knopf im Kopf und die Wochenkarte („Meine Woche“) sind aus der Wochenansicht entfernt. Stattdessen stehen immer „Woche kopieren“ (Fenster mit Wochenzahl 1 bis 12) und „Alle Einträge löschen“ (Wahl: nur diese Woche oder der ganze Kalender, danach Rückfrage) unter der Wochenleiste. Bei leerer Woche sagt „Woche kopieren“ das per Hinweis. Das Löschen per Zwei-Sekunden-Halten entfällt.
+
 ## 2026-11-09 · Einheitliche Köpfe, Logo-Farbe, Aufbau-Schaubild, Woche kopieren (Fassung 2026-11-09-9)
 
 - **Köpfe:** Überall steht rechts nur Suche und Einstellungen (`kopfSymboleNeu` in `js/03-router.js`, `bereichKopfNeuHTML` in `js/05-suche.js`; auf Workout ist die Lupe die Suche der Liste). Hell/Dunkel gibt es nur noch unter Einstellungen › Darstellung, die Körperdaten als eigene Zeile in den Einstellungen. Der Hilfe-Knopf „?“ und „Heute“ im Kalender stehen unten rechts im Titelblock (`.kb-extra`).

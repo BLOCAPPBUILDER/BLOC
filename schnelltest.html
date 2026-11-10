@@ -1774,10 +1774,11 @@
       await bis(function () { return $(".kal-panel") && $('[data-kalansicht="monat"].active'); }, 2000, "Tipp auf einen Tag bleibt im Monat");
       pruefe(!$(".tabbar [data-nav]") || $('[data-kalansicht="woche"]:not(.active)'), "Ansicht darf nicht auf Woche springen");
       pruefe(!$(".kal-tray"), "Die Leiste „Meine“ unten ist weg");
-      klick($('[data-kalnav="-1"]'));   // „Heute“ springt aus einem anderen Monat zurück und wählt den heutigen Tag
+      klick($('[data-kalnav="-1"]'));   // zurück in den heutigen Monat blättern; „Heute“-Knopf und Wochenkarte gibt es im Kalender nicht mehr
       await bis(function () { return !$(".km-zelle.heute"); }, 2000, "anderer Monat");
-      klick($("[data-kalheute]"));
-      await bis(function () { return $(".km-zelle.heute") && $(".kal-panel.heute"); }, 2000, "Heute: aktueller Monat, heutiger Tag gewählt");
+      pruefe(!$("[data-kalheute]") && !$(".kal-heutebtn") && !$(".woche-kal"), "Kalender: kein Heute-Knopf, keine Wochenkarte");
+      klick($('[data-kalnav="1"]'));
+      await bis(function () { return $(".km-zelle.heute") && $(".kal-panel"); }, 2000, "Zurück im aktuellen Monat");
       var heuteKey = W.kalTagKey(new Date());
       W.kalHinzu(heuteKey, { art: "zufall" }).erledigt = false;   // heutige Trainings der Testläufe sollen ihn nicht automatisch abhaken
       W.save();
@@ -1813,15 +1814,17 @@
       await warte(300);
       pruefe(daten().settings.kalender.e.length === nNach, "Zweites Kopieren legt nichts doppelt an");
       var n0 = daten().settings.kalender.e.length;
-      var knopf = $("[data-kalloeschen]");
-      knopf.dispatchEvent(new W.PointerEvent("pointerdown", { bubbles: true, button: 0 }));
-      await warte(500);
-      knopf.dispatchEvent(new W.PointerEvent("pointerup", { bubbles: true }));
-      await warte(2200);
-      pruefe(daten().settings.kalender.e.length === n0, "Vor zwei Sekunden nichts gelöscht");
-      knopf.dispatchEvent(new W.PointerEvent("pointerdown", { bubbles: true, button: 0 }));
-      await warte(2300);
-      pruefe(daten().settings.kalender.e.length < n0, "Nach zwei Sekunden gedrückt halten: Einträge der Woche gelöscht");
+      // Alle Einträge löschen: erst Wahl (Woche / ganzer Kalender), dann Rückfrage; „Abbrechen“ löscht nichts
+      klick($("[data-kalloeschen]"));
+      klick(await bis(function () { return $("#overlayRoot [data-act]"); }, 2000, "Wahl: nur diese Woche / ganzer Kalender"));
+      await bis(function () { return $("#overlayRoot [data-cancel]"); }, 2000, "Rückfrage vor dem Löschen");
+      klick($("#overlayRoot [data-cancel]"));
+      await warte(200);
+      pruefe(daten().settings.kalender.e.length === n0, "Abbrechen löscht nichts");
+      klick($("[data-kalloeschen]"));
+      klick(await bis(function () { return $("#overlayRoot [data-act]"); }, 2000, "Wahl noch einmal"));
+      klick(await bis(function () { return $("#overlayRoot [data-ok]"); }, 2000, "Löschen bestätigen"));
+      await bis(function () { return daten().settings.kalender.e.length < n0; }, 2000, "Einträge der Woche gelöscht");
     }],
     ["Summit entfernt: alle Daten dazu werden beim Laden gelöscht", async function () {
       await heim();

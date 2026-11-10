@@ -1693,3 +1693,55 @@ body.prot-sheet-offen{ overflow:hidden; }
 .pg-infotext{ margin:2px 0 10px; border-radius:12px; background:color-mix(in srgb, var(--text) 6%, transparent); }
 .pg-infotext summary{ cursor:pointer; padding:10px 12px; font-size:13px; font-weight:600; color:var(--text-dim); }
 .pg-infotext .pg-info{ margin:0; padding:0 12px 12px; }
+
+/* ---------- Run-Startseite als Kacheln (2026-11-10) ----------
+   Die Seite wird zum Raster: alles läuft über die ganze Breite, nur „Intervall-Lauf“ und „Ansagen“ stehen zugeklappt als halbe Kacheln nebeneinander
+   (aufgeklappt wieder über die ganze Breite). Zugeschaltete Funktionen tragen .rk-an und einen Akzentrand. „Zuletzt“ ist eine Wischreihe mit kleinen Streckenlinien. */
+#app:has(.run-eigen){ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); column-gap:10px; }
+#app:has(.run-eigen) > *{ grid-column:1 / -1; min-width:0; }
+#app:has(.run-eigen) > .run-opt:not([open]), #app:has(.run-eigen) > .run-ansage:not([open]){ grid-column:auto; }
+#app:has(.run-eigen) > .run-eigen + .run-ansage, #app:has(.run-eigen) > .run-opt[open] + .run-ansage, #app:has(.run-eigen) > .run-opt:has(+ .run-ansage[open]){ grid-column:1 / -1; }
+.run-eigen > summary, .run-opt > summary, .run-ansage > summary{ position:relative; align-items:center; }
+.rk-ico{ flex:none; width:36px; height:36px; border-radius:12px; display:grid; place-items:center; color:var(--accent-ink, var(--accent)); background:color-mix(in srgb, var(--accent) 16%, transparent); border:1px solid color-mix(in srgb, var(--accent) 28%, transparent); }
+.rk-ico svg{ width:20px; height:20px; }
+.rk-text{ flex:1; min-width:0; font-weight:700; display:flex; flex-direction:column; gap:2px; }
+.rk-text small{ font-weight:600; font-size:12px; color:var(--text-dim); }
+.rk-text small:empty{ display:none; }
+/* halbe Kachel (zugeklappt): Symbol oben, Name, Wert darunter, Pfeil oben rechts */
+.run-opt:not([open]) > summary, .run-ansage:not([open]) > summary{ flex-direction:column; align-items:flex-start; gap:8px; min-height:104px; padding-right:18px; }
+.run-opt:not([open]) > summary .rk-text, .run-ansage:not([open]) > summary .rk-text{ flex:none; font-size:14px; color:var(--text-dim); }
+.run-opt:not([open]) > summary b, .run-ansage:not([open]) > summary b{ font-size:19px; margin-top:auto; }
+.run-opt:not([open]) > summary .tpl-chev, .run-ansage:not([open]) > summary .tpl-chev{ position:absolute; top:2px; right:0; margin:0; }
+/* zugeschaltet: Akzentrand und feiner Schein, aus: gedämpfter Wert */
+.run-klapp.rk-an{ border-color:color-mix(in srgb, var(--accent) 70%, transparent) !important; box-shadow:0 8px 26px rgba(0,0,0,.18), 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent) inset !important; }
+.run-klapp:not(.rk-an) > summary b{ opacity:.7; font-weight:600; }
+.run-klapp > summary:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:12px; }
+/* Hauptkachel: Lichtkante oben, Orange-Schimmer unten, Start-Knopf als getöntes Glas */
+:root[data-layout="new"] .run-hero .rh-km, :root[data-layout="new"] .run-hero .rh-sub{ position:relative; overflow:hidden; }
+:root[data-layout="new"] .run-hero .rh-km::before, :root[data-layout="new"] .run-hero .rh-sub::before{ content:""; position:absolute; left:14%; right:14%; top:0; height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.6), transparent); pointer-events:none; }
+:root[data-layout="new"] .run-hero .rh-km::after{ content:""; position:absolute; left:-10%; right:-10%; bottom:-70%; height:90%; background:radial-gradient(closest-side, color-mix(in srgb, var(--accent) 42%, transparent), transparent); pointer-events:none; }
+:root[data-layout="new"] .run-bg ~ .run-hero .run-startbtn{
+  background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 70%, rgba(255,255,255,.1)), rgba(255,255,255,.2)) !important;
+  border:1px solid color-mix(in srgb, var(--accent) 60%, rgba(255,255,255,.5)) !important;
+  box-shadow:0 10px 30px color-mix(in srgb, var(--accent) 34%, transparent), inset 0 1px 0 rgba(255,255,255,.35); }
+:root[data-layout="new"] .run-bg ~ .run-hero .run-startbtn svg{ color:#fff; }
+.run-startbtn:active{ transform:scale(.985); }
+/* Zuletzt: Wischreihe */
+.run-zuletzt{ margin:2px 0 6px; }
+.rz-reihe{ display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x proximity; margin:0 -16px; padding:2px 16px 14px; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+.rz-reihe::-webkit-scrollbar{ display:none; }
+.rz-kachel{ flex:0 0 148px; scroll-snap-align:start; display:flex; flex-direction:column; gap:3px; padding:13px 13px 10px; border-radius:20px; cursor:pointer; min-height:44px;
+  background:var(--glas, var(--surface)); border:1px solid var(--glas-rand, var(--border)); color:var(--glas-text, var(--text)); box-shadow:0 8px 26px rgba(0,0,0,.14); }
+.rz-kachel small{ font-size:12px; font-weight:600; color:var(--glas-dim, var(--text-dim)); }
+.rz-kachel b{ font-size:26px; line-height:1.05; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+.rz-kachel b span{ font-size:13px; font-weight:600; color:var(--glas-dim, var(--text-dim)); letter-spacing:0; }
+.rz-sub{ font-size:12px; color:var(--glas-dim, var(--text-dim)); font-variant-numeric:tabular-nums; }
+.rz-linie{ width:100%; height:44px; margin-top:6px; color:var(--accent-ink, var(--accent)); }
+.rz-kachel:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){ .rz-kachel{ -webkit-backdrop-filter:blur(18px) saturate(140%); backdrop-filter:blur(18px) saturate(140%); } }
+@media (prefers-reduced-motion: reduce){ .run-startbtn:active{ transform:none; } }
+/* allein in der Zeile (Nachbar aufgeklappt oder Rad ohne Intervall): Zeilen-Aussehen statt halber Kachel */
+.run-eigen + .run-ansage:not([open]) > summary, .run-opt[open] + .run-ansage:not([open]) > summary, .run-opt:has(+ .run-ansage[open]):not([open]) > summary{ flex-direction:row; align-items:center; gap:10px; min-height:0; padding-right:0; }
+.run-eigen + .run-ansage:not([open]) > summary .rk-text, .run-opt[open] + .run-ansage:not([open]) > summary .rk-text, .run-opt:has(+ .run-ansage[open]):not([open]) > summary .rk-text{ flex:1; font-size:inherit; color:inherit; }
+.run-eigen + .run-ansage:not([open]) > summary b, .run-opt[open] + .run-ansage:not([open]) > summary b, .run-opt:has(+ .run-ansage[open]):not([open]) > summary b{ margin-top:0; }
+.run-eigen + .run-ansage:not([open]) > summary .tpl-chev, .run-opt[open] + .run-ansage:not([open]) > summary .tpl-chev, .run-opt:has(+ .run-ansage[open]):not([open]) > summary .tpl-chev{ position:static; }
