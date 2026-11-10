@@ -515,14 +515,17 @@ function renderTraining(){
   toolsKlassen(raster);
   toolsZiehenBinden(raster);
 }
-/* Fragen & Antworten: eigene Seite (Kachel unter Run auf Training), alles aufgeklappt wie ein kleines Nachschlagewerk */
+/* Wissensaustausch: Umschalter „Fragen | Selbsttest“ oben. Fragen: eigene Seite (Kachel unter Run auf Training), alles aufgeklappt wie ein kleines Nachschlagewerk;
+   Selbsttest „Wie fit bin ich?“: js/26-selbsttest.js (faqModus und selbst stehen dort) */
 function renderFaq(){
-  app.innerHTML = topbar(t("faqTitel"), { back:"#training", right:kopfSymboleNeu("training") })+faqHTML();
+  var test = typeof faqModus !== "undefined" && faqModus === "test";
+  app.innerHTML = topbar(t("faqTitel"), { back:"#training", right:kopfSymboleNeu("training") })+(test ? stSeiteHTML() : faqTabsHTML()+faqHTML());
   var bkF = app.querySelector(".topbar .back"); if(bkF) bkF.classList.add("zeigen");   // Zurück-Pfeil oben links auch auf Wissensaustausch (im Tab-Layout sonst ausgeblendet)
   bindCommon();
   var kopf = app.querySelector(".faq-kopf"), inh = app.querySelector(".faq-inhalt");
   if(kopf) kopf.style.display = "none";
   if(inh) inh.removeAttribute("hidden");
+  stBinden();
 }
 /* „Was ist was?“: fünf Zeilen Klartext zu den Bereichen (nur Lesen, nichts wird geändert) */
 function openWasIstWas(){

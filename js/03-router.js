@@ -354,7 +354,7 @@ function render(){
   if(studioPause && route !== "studio") studioPauseStop();
   if(route==="home") return renderHome();
   if(route==="training") return renderTraining();
-  if(route==="faq") return renderFaq();
+  if(route==="faq"){ faqModus = "fragen"; stReset(); return renderFaq(); }   // Wissensaustausch: zuerst die Fragen; ein laufender Selbsttest beginnt neu
   if(route==="protein") return renderProtein();
   if(route==="satz") return renderSatzTraining(parts[1], parts[2]);
   if(route==="warmstretch") return renderWarmStretch();

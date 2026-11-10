@@ -1835,6 +1835,30 @@
       klick(await bis(function () { return $("#overlayRoot [data-ok]"); }, 2000, "Löschen bestätigen"));
       await bis(function () { return daten().settings.kalender.e.length < n0; }, 2000, "Einträge der Woche gelöscht");
     }],
+    ["Wissensaustausch: acht Rubriken, Umschalter Fragen | Selbsttest, Selbsttest vom Sprung bis zum Ergebnis", async function () {
+      await heim();
+      W.go("#faq");
+      await bis(function () { return $("[data-faqmodus]") && $$(".faq-gruppe").length === 8; }, 3000, "Wissensaustausch mit Umschalter und acht Rubriken");
+      klick($('[data-faqmodus="test"]'));
+      await bis(function () { return $$(".st-ue").length === 6 && $("[data-ststart]"); }, 2000, "Selbsttest: sechs Tests mit Figuren in der Übersicht");
+      pruefe($$(".st-ue .illu").length === 6, "Jeder Test zeigt seine Figur");
+      var altSt = W.state.db.settings.selbsttest; W.state.db.settings.selbsttest = [];
+      klick($("[data-ststart]"));
+      await bis(function () { return $("#st-wert") && /Standweitsprung/.test($(".st-titel").textContent); }, 2000, "Test 1: Standweitsprung mit Eingabe");
+      $("#st-wert").value = "190"; klick($("[data-stweiter]"));
+      await bis(function () { return $("[data-stpauseweiter]") && $("#st-gross"); }, 2000, "Pause mit Uhr nach dem ersten Test");
+      for (var k = 0; k < 8; k++) {   // übrige Tests überspringen (Pausen auslassen)
+        if ($(".st-zeile")) break;
+        if ($("[data-stpauseweiter]")) klick($("[data-stpauseweiter]"));
+        await bis(function () { return $("[data-stskip]") || $(".st-zeile"); }, 2000, "nächster Test");
+        if ($(".st-zeile")) break;
+        klick($("[data-stskip]"));
+        await bis(function () { return $("[data-stpauseweiter]") || $(".st-zeile"); }, 2000, "Pause oder Ergebnis");
+      }
+      await bis(function () { return $$(".st-zeile").length === 1 && /190/.test($(".st-zeile").textContent); }, 3000, "Ergebnis zeigt den Sprung mit 190 cm");
+      pruefe(W.state.db.settings.selbsttest.length === 1 && W.state.db.settings.selbsttest[0].w.jump === 190, "Ergebnis lokal gespeichert");
+      W.state.db.settings.selbsttest = altSt; W.save();
+    }],
     ["Summit entfernt: alle Daten dazu werden beim Laden gelöscht", async function () {
       await heim();
       W.localStorage.setItem(W.SUMMIT_ARCHIV, "{}");
