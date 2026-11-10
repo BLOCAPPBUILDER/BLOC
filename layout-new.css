@@ -1745,3 +1745,10 @@ body.prot-sheet-offen{ overflow:hidden; }
 .run-eigen + .run-ansage:not([open]) > summary .rk-text, .run-opt[open] + .run-ansage:not([open]) > summary .rk-text, .run-opt:has(+ .run-ansage[open]):not([open]) > summary .rk-text{ flex:1; font-size:inherit; color:inherit; }
 .run-eigen + .run-ansage:not([open]) > summary b, .run-opt[open] + .run-ansage:not([open]) > summary b, .run-opt:has(+ .run-ansage[open]):not([open]) > summary b{ margin-top:0; }
 .run-eigen + .run-ansage:not([open]) > summary .tpl-chev, .run-opt[open] + .run-ansage:not([open]) > summary .tpl-chev, .run-opt:has(+ .run-ansage[open]):not([open]) > summary .tpl-chev{ position:static; }
+/* Run: „Eigener Lauf“, „Intervall-Lauf“ und „Ansagen“ ganz in Weiß statt Orange (im Hellen in der Textfarbe): Symbole, Werte, Rand, Regler, Chips */
+.run-eigen, .run-opt, .run-ansage{ --accent:var(--text); --accent-ink:var(--text); }
+:root[data-layout="new"] .run-bg ~ .run-eigen .run-ziel-kopf b, :root[data-layout="new"] .run-bg ~ .run-opt .run-ziel-kopf b, :root[data-layout="new"] .run-bg ~ .run-ansage .run-ziel-kopf b,
+:root[data-layout="new"] .run-eigen .run-ziel-kopf b, :root[data-layout="new"] .run-opt .run-ziel-kopf b, :root[data-layout="new"] .run-ansage .run-ziel-kopf b{ color:var(--text) !important; }
+.run-eigen .rk-ico, .run-opt .rk-ico, .run-ansage .rk-ico{ background:color-mix(in srgb, var(--text) 12%, transparent); border-color:color-mix(in srgb, var(--text) 26%, transparent); }
+.run-klapp.rk-an.run-eigen, .run-klapp.rk-an.run-opt, .run-klapp.rk-an.run-ansage{ border-color:color-mix(in srgb, var(--text) 62%, transparent) !important; box-shadow:0 8px 26px rgba(0,0,0,.18), 0 0 0 1px color-mix(in srgb, var(--text) 26%, transparent) inset !important; }
+.run-eigen .switch input:checked + .track, .run-opt .switch input:checked + .track, .run-ansage .switch input:checked + .track{ background:color-mix(in srgb, var(--text) 55%, #3a3d44); }
