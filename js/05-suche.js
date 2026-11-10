@@ -387,7 +387,7 @@ function faqHTML(){
 /* Aussehen „New“: Seite „Tools“ - die oberste Kachel steht groß (Standard: Workout-Builder), die übrigen versetzt in zwei Spalten, die letzte bei ungerader Zahl über die ganze Breite.
    Reihenfolge in settings.toolsReihe; Kachel lange drücken (0,5 s) und ziehen verschiebt sie. */
 /* Farbstärke je Foto auf Tools: aus der Sättigung der kräftigsten Bildanteile (90. Perzentil) gemessen, damit alle Kacheln nach dem Angleichen gleich kräftig wirken (Ziel 0,36) */
-var FOTO_SAT = { "img/neu-h-hanteln-orange.jpg":.78, "img/neu-wissen.jpg":1, "img/neu-p-dehnung-silhouette.jpg":1, "img/neu-p-frau-kniebeuge.jpg":.68, "img/neu-h-rack.jpg":.63, "img/neu-faq.jpg":.52, "img/neu-protein.jpg":.82, "img/bereich-run.jpg":.68, "img/neu-p-mobility-sitz.jpg":1, "img/neu-p-mobility-ausfall.jpg":1, "img/neu-h-brust-2.jpg":.78 };
+var FOTO_SAT = { "img/neu-h-hanteln-orange.jpg":.5, "img/neu-wissen.jpg":1, "img/neu-p-dehnung-silhouette.jpg":1, "img/neu-p-frau-kniebeuge.jpg":.68, "img/neu-h-rack.jpg":.63, "img/neu-faq.jpg":.52, "img/neu-protein.jpg":.82, "img/bereich-run.jpg":.68, "img/neu-p-mobility-sitz.jpg":1, "img/neu-p-mobility-ausfall.jpg":1, "img/neu-h-brust-2.jpg":.78 };
 var TOOLS_KEYS = ["katalog", "run", "plan", "warm", "intervall", "protein", "faq"];   // Standardreihenfolge: Protein Tracker und Wissensaustausch ganz unten
 function toolsReihe(){
   var r = [];
