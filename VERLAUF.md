@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-10 · Neue Tools-Fotos im Stil der anderen (Fassung 2026-11-10-9)
+
+- Die drei neuen Fotos (Timer, Trainingsplan, Wissensaustausch) sind farblich an die übrigen Tools-Kacheln angepasst: warmer, dunklerer Ton mit Vignette; das sehr helle Kachel-Bild für Wissensaustausch wurde auf mittleres Grau gepegelt, die Hanteln kräftiger gemacht, die Silhouette leicht gewärmt. `FOTO_SAT` für die Hanteln auf 0,78.
+
 ## 2026-11-10 · Neue Fotos auf Tools: Timer, Trainingsplan, Wissensaustausch (Fassung 2026-11-10-8)
 
 - **Tools:** Timer zeigt die Ausfallschritt-Dehnung als Silhouette (`img/neu-p-dehnung-silhouette.jpg`, festgelegt in `bereichFotosNeu`, `js/03-router.js`), Trainingsplan die orangen Hanteln (`img/neu-h-hanteln-orange.jpg`), Wissensaustausch die hellen Kacheln mit Lupe (`img/neu-wissen.jpg`); Ausschnitt und Farbstärke in `js/05-suche.js` (`FOTO_SAT`). Die Bilder liegen auch in der Offline-Liste von `sw.js`. Quelle und Lizenz der drei Fotos bitte in `quellen.html › Bildnachweis` ergänzen, falls sie nicht von Pexels stammen.
