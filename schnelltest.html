@@ -1155,6 +1155,15 @@
       pruefe($$("#tabbar .tab").map(function (e) { return e.textContent.trim(); }).join() === "Heute,Tools,Fortschritt,Kalender", "Leiste: Heute, Tools, Fortschritt, Kalender: " + $$("#tabbar .tab").map(function (e) { return e.textContent.trim(); }).join());
       alleAuswertungen(); W.renderFortschritt();
       pruefe($(".stat-hero") && $$(".stat-bereichkarte").length === 4 && !$(".woche") && /Workout/.test($$(".stat-bereichkarte .sb-name").map(function (e) { return e.textContent; }).join("|")) && !/Air|Studio/.test($$(".stat-bereichkarte .sb-name").map(function (e) { return e.textContent; }).join("|")), "Statistik ohne fünf Bereiche (Air und Studio als Workout), oder mit Wochenzeile");
+      // Läufer-Auswertungen (Bestzeiten, Pacing, Regelmäßigkeit, Pace nach Länge, Pulszonen): ohne Läufe leer, mit zwei 5-km-Läufen (5:00 /km) mit Zahlen
+      var laufKacheln = function () { return $$(".fk").filter(function (e) { return /^lauf_/.test(e.getAttribute("data-fk")); }); };
+      pruefe(laufKacheln().length === 5, "Fünf Läufer-Kacheln: " + laufKacheln().length);
+      var altRuns = W.state.db.settings.runs;
+      W.state.db.settings.runs = [0, 1].map(function (i) { return { id: "t" + i, at: Date.now() - (i + 1) * 86400000, dist: 5000, dur: 1500000, splits: [300000, 600000, 900000, 1200000, 1500000] }; });
+      W.save(); W.renderFortschritt();
+      var laufText = laufKacheln().map(function (e) { return e.textContent; }).join(" | ");
+      pruefe(/25:00/.test(laufText) && /Wochen in Folge/.test(laufText) && /gleichmäßig/.test(laufText) && /5:00 \/km/.test(laufText) && /Pulszonen/.test(laufText), "Läufer-Kacheln zeigen Zahlen: " + laufText.slice(0, 200));
+      W.state.db.settings.runs = altRuns; W.save();
       W.go("#settings");
       await bis(function () { return $(".section-title") && $("#f-volume"); }, 3000, "Einstellungen");
       /* 2026-10-19: Fokus („Bereiche unter Training“), Aussehen-Auswahl und die festen Schalter gibt es nicht mehr */

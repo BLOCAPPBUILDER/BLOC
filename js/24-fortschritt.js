@@ -10,10 +10,11 @@ var FK_MODULE = [
   { id:"logbuch", g:"gewichte", gross:1 },
   { id:"woche", g:"training", gross:1 }, { id:"who", g:"training", gross:1 }, { id:"verlauf", g:"training", gross:1 }, { id:"rueckblick", g:"training", gross:1 },
   { id:"kalender", g:"training", gross:1 }, { id:"blocs", g:"training", gross:1 }, { id:"trainings", g:"training", gross:1 }, { id:"einblicke", g:"training", gross:1 },
+  { id:"lauf_best", g:"lauf", gross:1 }, { id:"lauf_pacing", g:"lauf", gross:1 }, { id:"lauf_regel", g:"lauf", gross:1 }, { id:"lauf_trend", g:"lauf", gross:1 }, { id:"lauf_puls", g:"lauf", gross:1 },
   { id:"b-katalog", g:"bereiche", gross:1 }, { id:"b-warm", g:"bereiche", gross:1 }, { id:"b-intervall", g:"bereiche", gross:1 }, { id:"b-run", g:"bereiche", gross:1 },
   { id:"dd_freq", g:"muskeln", gross:1 }, { id:"dd_woche", g:"muskeln", gross:1 }, { id:"dd_balance", g:"muskeln", gross:1 }, { id:"dd_anteil", g:"muskeln", gross:1 }, { id:"dd_idee", g:"muskeln", gross:1 }
 ];
-var FK_GRUPPEN = ["gewichte", "training", "bereiche", "muskeln"];
+var FK_GRUPPEN = ["gewichte", "training", "lauf", "bereiche", "muskeln"];
 function fkDef(id){ for(var i = 0; i < FK_MODULE.length; i++) if(FK_MODULE[i].id === id) return FK_MODULE[i]; return null; }
 function fkName(id){
   if(id.indexOf("b-") === 0){ var d = bereichDaten(id.slice(2)); return d ? d[1] : id; }
