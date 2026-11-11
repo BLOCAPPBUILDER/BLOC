@@ -135,7 +135,7 @@ function renderSearch(){
   var feld = app.querySelector("#gs-q"), res = app.querySelector("#gs-res");
   function zeigen(){
     var w = suchNorm(gesamtQuery), gewaehlt = gewaehltIst();
-    if(!w && !gewaehlt){ res.innerHTML = '<div class="seiten-intro">'+esc(t("srHint"))+'</div>'; return; }
+    if(!w && !gewaehlt){ res.innerHTML = ""; return; }
     var treffer = filtern();
     if(!treffer.length){ res.innerHTML = '<div class="empty" style="padding:30px 20px;">'+esc(t("noResult"))+'</div>'; return; }
     var html = "", gruppe = null, n = 0, reihe = [];
@@ -215,11 +215,11 @@ function renderHome(){
   app.innerHTML =
     kopfNeuHTML() +
     '<div class="woche-neu">'+wocheHTML()+'</div>'+heroNeuHTML()+installTipHTML()+backupTipHTML() +   // Kopf mit Foto, Woche darüber gelegt, heute geplant (die Bereiche stehen unter „Training“)
-    '<div class="sec-head" data-favsek><div class="section-title">'+t("favorites")+(favHTML ? '' : ' <span class="lbl-hint bs-hinweis">'+esc(t("favEmptyKurz"))+'</span>')+'</div>'+
+    '<div class="sec-head" data-favsek><div class="section-title">'+t("favorites")+'</div>'+
       (nFav > FAV_LIMIT ? '<button type="button" class="sec-link" data-favall>'+(favShowAll ? t("favLess") : t("favAllShort"))+
         '<span class="sec-link-chev'+(favShowAll?' up':'')+'">'+ICON_CHEV+'</span></button>' : '')+
     '</div>'+
-    favHTML +
+    (favHTML || '<div class="fav-platzhalter"><span class="fp-ico" aria-hidden="true">&#9734;</span><span>'+esc(t("favPlatz"))+'</span></div>') +
     builderKarteHTML();
   bindCommon();
   bindBuilderKarte();
@@ -292,7 +292,7 @@ function heroNeuHTML(){
 function builderKarteHTML(){
   if(fokusAus("katalog")) return "";
   return '<div class="sec-head"><div class="section-title">'+esc(t("builderTitel"))+'</div></div>'+
-    '<section class="builder-neu"><div class="bn-text"><span class="bn-kicker">'+esc(t("builderKicker"))+'</span><b>'+esc(t("builderText"))+'</b><small>'+esc(t("builderSub"))+'</small></div>'+
+    '<section class="builder-neu"><div class="bn-text"><span class="bn-kicker">'+esc(t("builderKicker"))+'</span><b>'+esc(t("builderText"))+'</b></div>'+
     '<div class="bn-knoepfe"><button type="button" class="btn btn-primary" data-builder="zufall">'+esc(t("builderZufall"))+'</button>'+
     '<button type="button" class="btn btn-secondary" data-builder="selber">'+esc(t("builderSelber"))+'</button></div></section>';
 }
