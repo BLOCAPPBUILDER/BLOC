@@ -1775,3 +1775,8 @@ body.prot-sheet-offen{ overflow:hidden; }
 :root[data-layout="new"] .bloc-liste .list-item .name{ font-size:17px; line-height:1.2; }
 :root:root[data-layout="new"] .bloc-liste .list-item .playbtn, :root:root[data-layout="new"] .bloc-liste .list-item .playbtn.cat{ --pb:var(--text); background:transparent; }
 :root[data-layout="new"] .bloc-liste .lib-card > .pg-figs{ border-top-color:var(--border); }
+
+/* ---------- Heute: im Dunkel dasselbe Meer-Foto wie im Hellen (2026-11-11) ----------
+   Das Bild kommt von .kn-hell; die dunklen Schleier (links oben und unten bis in den Grund) bleiben, nur die Farbe des Grundes ist dunkel. */
+:root[data-layout="new"][data-glas] .kn-hell{ display:block; object-position:50% 76%; }
+:root[data-layout="new"][data-glas] .kn-bild:not(.kn-hell){ display:none; }
