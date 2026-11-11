@@ -3,6 +3,13 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-11 · Tools: Reihenfolge, Mobility-Foto, Timer ohne Effekt; BLOCs und Mobility im weißen Kachel-Look (Fassung 2026-11-11-1)
+
+- **Tools, Standardreihenfolge** (`TOOLS_KEYS`, `js/05-suche.js`): Workout-Builder groß, links Mobility & Stretch · Timer · Protein-Tracker, rechts Trainingsplan · Run · Wissensaustausch. Bereits selbst sortierte Reihenfolgen bleiben erhalten.
+- **Mobility-Foto:** Die Kachel zeigt fest die Dehnung im Sitzen (`img/neu-p-mobility-sitz.jpg`, `bereichFotosNeu` in `js/03-router.js`); das Ausfallschritt-Bild (identisch mit der Silhouette) gehört nur dem Timer, nie doppelt.
+- **Timer ohne Effekt:** Auf der Timer-Kachel entfallen Sättigungs-/Kontrastfilter und der warme Farbstich (`layout-new.css`, Ende des Tools-Blocks); der Verlauf unten für die Schrift bleibt.
+- **BLOCs und Mobility & Stretch › BLOCs:** Abschnittskarten (Nach Zeit, Nach Sätzen) und BLOC-Karten im weißen Look der Baukasten-Wege: Rundung 20, großes graues Symbolfeld, ohne Orange-/Blau-Leiste, neutrale Zahl, weiße Start-Knöpfe. Umgesetzt über die Klasse `bloc-liste` (`js/11-bibliothek-seite.js`, `js/17-aufwaermen-einstellungen.js`) und einen Block am Ende von `layout-new.css`; gilt in Hell und Dunkel.
+
 ## 2026-11-10 · Tools-Fotos wieder im Originalton (Fassung 2026-11-10-10)
 
 - Die farbliche Angleichung der drei neuen Fotos (Timer, Trainingsplan, Wissensaustausch) aus 2026-11-10-9 ist auf Wunsch zurückgenommen: die Bilder sind wieder nur verkleinert, ohne Farbänderung; `FOTO_SAT` für die Hanteln wieder 0,5.
