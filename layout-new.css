@@ -1780,3 +1780,6 @@ body.prot-sheet-offen{ overflow:hidden; }
    Das Bild kommt von .kn-hell; die dunklen Schleier (links oben und unten bis in den Grund) bleiben, nur die Farbe des Grundes ist dunkel. */
 :root[data-layout="new"][data-glas] .kn-hell{ display:block; object-position:50% 76%; }
 :root[data-layout="new"][data-glas] .kn-bild:not(.kn-hell){ display:none; }
+
+/* Heute: Foto-Kopf und „Meine Woche“ sitzen 22 px tiefer – mehr Foto, mehr Luft über Logo und Gruß (2026-11-11) */
+:root[data-layout="new"] .kopf-neu{ padding-top:calc(env(safe-area-inset-top) + 22px); min-height:calc(clamp(150px, 25vh, 250px) + 22px); }

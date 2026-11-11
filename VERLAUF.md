@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-11 · Heute: Foto-Kopf 22 px tiefer (Fassung 2026-11-11-3)
+
+- **Kopf von Heute** (Foto, Logo, Datum, Gruß) und die Karte „Meine Woche“ sitzen 22 px tiefer: mehr Foto, mehr Luft über Logo und Gruß; Favoriten und Workout-Builder rutschen entsprechend nach unten. Block am Ende von `layout-new.css` (`padding-top` +22 px und `min-height` +22 px an `.kopf-neu`).
+
 ## 2026-11-11 · Heute: Meer-Foto auch im Dunkel (Fassung 2026-11-11-2)
 
 - **Kopf von Heute:** Im Dunkelmodus zeigt der Kopf dasselbe Meer-Foto wie im Hellen (`img/neu-kopf-hell-meer.jpg`, Klasse `kn-hell`); die dunklen Schleier links oben und unten bleiben, der Kopf läuft unten dunkel in den Grund aus (Block am Ende von `layout-new.css`). Das alte Dunkel-Foto `img/neu-kopf.jpg` wird dort nicht mehr angezeigt.
