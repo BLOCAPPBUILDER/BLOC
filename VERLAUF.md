@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 - **Heute › Favoriten:** wieder alle Kacheln im ruhigen Glas-Stil mit Symbol, Bereich und Name – auch Katalog-Workouts bekommen kein Foto mehr (`favItemsHTML` in js/10-gemeinsam.js; `favFotoPool` entfernt). Der Platzhalter für leere Favoriten bleibt.
 - **Einführung › „So ist BLOC aufgebaut“:** Schaubild neu in HTML/CSS statt SVG und waagerecht: oben der Trainingsplan, darunter drei TrainingsBLOCs (Tage) nebeneinander. Tag 1 aufgeklappt mit BLOC 1, BLOC 2 und RUN samt Übungen in kleinen Kästen, Tag 2 und 3 blass gestrichelt. Die Zeile „Übung → BLOC → …“ entfällt (steht schon im Text und im Bild), die drei Begriffs-Zeilen bleiben; die Seite passt damit auf den Bildschirm, die Knöpfe stehen nicht mehr am Rand. Stile `.intro-schaubild`, `.sb-*` in app.css. Schnelltest prüft `.intro-schaubild`.
 
+## 2026-11-11 · Workout › Baukasten ohne „Trainingsplan erstellen lassen“ (Fassung 2026-11-11-5)
+
+- Die Karte „Trainingsplan erstellen lassen“ ist aus dem Workout-Baukasten (`renderKatalogBaukasten`, `js/11b-katalog.js`) entfernt; den Plan-Assistenten gibt es nur noch unter Tools › Trainingsplan (`paOeffnen` in `js/21-koerper.js`).
+
 ## 2026-11-11 · Weniger Erklärsätze, Platzhalter für Favoriten (Fassung 2026-11-11-4)
 
 - **Entfernt:** „Mit dem Stern speicherst du Favoriten …“ (Workout), die Zeile „mit ☆ markieren …“ neben „Favoriten“ (Heute), die Beschreibung auf der Builder-Karte (Heute), „Zahl antippen für den Verlauf.“ und „Kachel lange drücken und ziehen …“ (Fortschritt) sowie der Suchhinweis in der leeren Suche. Die Textschlüssel bleiben in `texte.js` stehen (`katFavHinweis`, `builderSub`, `fkBlickHint`, `fkHinweis`, `srHint`, `favEmptyKurz`).

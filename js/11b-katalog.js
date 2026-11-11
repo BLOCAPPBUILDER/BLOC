@@ -294,7 +294,6 @@ function renderKatalogBaukasten(){
     '<button type="button" class="bau-karte bau-sp" data-surprise><span class="bk-ico">'+svgIcon(ICON_UEBERRASCH)+'</span><span class="bk-t"><b>'+esc(t("surprise"))+'</b><small>'+esc(t("bauUeberraschSub"))+'</small></span>'+
       '<span class="bk-wuerfel" aria-hidden="true"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" rx="20"/><circle cx="30" cy="30" r="7"/><circle cx="70" cy="30" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="30" cy="70" r="7"/><circle cx="70" cy="70" r="7"/></svg></span>'+
       '<span class="bk-pfeil">'+ICON_CHEV+'</span></button>'+
-    '<button type="button" class="bau-karte bau-plan" data-planassi><span class="bk-ico">'+svgIcon(HOME_ICON.plan)+'</span><span class="bk-t"><b>'+esc(pt("eintrag"))+'</b><small>'+esc(pt("eintragSub"))+'</small></span><span class="bk-pfeil">'+ICON_CHEV+'</span></button>'+
     '<button type="button" class="bau-karte" data-bauselber><span class="bk-ico">'+ICON_PLUS+'</span><span class="bk-t"><b>'+esc(t("bauSelber"))+'</b><small>'+esc(t("bauSelberSub"))+'</small></span><span class="bk-pfeil">'+ICON_CHEV+'</span></button>'+
     '<button type="button" class="bau-karte" data-baukatalog><span class="bk-ico">'+svgIcon(HOME_ICON.katalog)+'</span><span class="bk-t"><b>'+esc(t("bauKatalog"))+'</b><small>'+esc(t("bauKatalogSub"))+'</small></span><span class="bk-pfeil">'+ICON_CHEV+'</span></button>'+
     '<button type="button" class="bau-karte bau-eigen" data-baueigen><span class="bk-ico">'+ICON_PLUS+'</span><span class="bk-t"><b>'+esc(t("bauEigene"))+'</b><small>'+esc(t("bauEigeneSub"))+'</small></span><span class="bk-pfeil">'+ICON_CHEV+'</span></button>'+
@@ -304,7 +303,6 @@ function renderKatalogBaukasten(){
   app.querySelector("[data-baueigen]").addEventListener("click", function(){ exEditVorgabe = { equip:["gym"], cats:["weight"], reps:3, work:40, rest:60 }; go("#exedit/new"); });
   app.querySelector("[data-baukatalog]").addEventListener("click", function(){ katKatalogOeffnen(); });
   app.querySelector("[data-surprise]").addEventListener("click", function(){ openSurprise(); });
-  app.querySelector("[data-planassi]").addEventListener("click", function(){ paOeffnen(null, null); });
   // „Selber bauen“ fragt nichts mehr nach: die Art (Schritt 1) steht schon, es geht gleich in die Übungsauswahl (Trainingsart, Ausrüstung und Muskel im Filter) -
   // Workout mit Timer oder Plan mit Sätzen, Gewicht und Pausen
   app.querySelector("[data-bauselber]").addEventListener("click", function(){
