@@ -32,7 +32,7 @@ function fkZahlenHTML(Z){
   if(!Z.length) return "";
   return '<section class="fk-blick" aria-label="'+esc(t("fkBlick"))+'"><h2 class="fk-blick-titel">'+esc(t("fkBlick"))+'</h2><div class="fk-blick-raster">'+Z.map(function(z){
     return '<button type="button" class="card fz-mini" data-zahl="'+esc(z.id)+'" aria-label="'+esc(z.titel+": "+z.wert+" "+z.einheit)+'"><span class="fz-ico">'+svgIcon(z.ico)+'</span><span class="fz-wert"><b>'+esc(z.wert)+'</b><span>'+esc(z.einheit)+'</span></span><small>'+esc(z.titel)+'</small></button>';
-  }).join("")+'</div><p class="fk-blick-hint">'+esc(t("fkBlickHint"))+'</p></section>';
+  }).join("")+'</div></section>';
 }
 /* Verlauf zu einer Zahl: gibt es ihn schon als Kachel auf der Seite (Tage und Zeit im Verlauf, Kilometer im Run-Bereich), springt die Seite dorthin; sonst öffnet sich ein Fenster mit dem Diagramm */
 var FK_SCHON = { tage:"verlauf", zeit:"verlauf", km:"b-run" };
@@ -82,7 +82,6 @@ function renderFortschritt(){
     (wahl.length ? '<div class="fk-raster">'+wahl.map(function(id){ return fkKachelHTML(id, M); }).join("")+'</div>'
                  : '<div class="card fk-leerseite">'+svgIcon('<path d="M4 4v16h16"/><path d="M8 15l3.5-4.5 3 2.5L20 7"/>')+'<p>'+esc(t("fkLeer"))+'</p></div>')+
     '<button type="button" class="btn btn-secondary fk-hinzu" data-fkhinzu>'+ICON_PLUS+' '+esc(t("fkHinzu"))+'</button>'+
-    (wahl.length ? '<p class="tools-hinweis">'+esc(t("fkHinweis"))+'</p>' : '')+
     '<div style="height:90px"></div>';
   var zurueck = app.querySelector(".topbar .back"); if(zurueck) zurueck.classList.add("zeigen");
   bindCommon();
