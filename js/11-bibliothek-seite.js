@@ -266,7 +266,7 @@ function renderLibrary(){
     katPlaeneHTML();
   app.innerHTML =
     katKopfHTML("blocs", hw.knopf) +
-    list + '<div style="height:40px"></div>';
+    '<div class="bloc-liste">'+list+'</div><div style="height:40px"></div>';
   bindCommon();
   katKopfBinden();
   function neu(){ var y = window.scrollY; renderKatalog(); window.scrollTo(0, y); }

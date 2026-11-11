@@ -143,7 +143,7 @@ function renderWarmStretch(){
     (tab === "uebungen" ? hw.z(1, "page-hint") : '')+
     (tab !== "meine" ? wsRegionFilterHTML(regSel, anzahl, tab === "uebungen" ? "Ex" : "Wo", zonSel, art === "dehn") : '')+
     // Start-Knöpfe und Figuren in der Farbe des Bereichs (wie die Kachel auf der Startseite)
-    '<div style="--bereich:var(--ws-color)">'+(liste || '<div class="empty">'+t("libEmpty")+'</div>')+'</div>'+
+    '<div class="bloc-liste" style="--bereich:var(--ws-color)">'+(liste || '<div class="empty">'+t("libEmpty")+'</div>')+'</div>'+
     '<div class="empty" data-noresult style="display:none;padding:30px 20px;">'+t("noResult")+'</div>'+
     '<div style="height:40px"></div>';
   bindCommon();

@@ -388,7 +388,7 @@ function faqHTML(){
    Reihenfolge in settings.toolsReihe; Kachel lange drücken (0,5 s) und ziehen verschiebt sie. */
 /* Farbstärke je Foto auf Tools: aus der Sättigung der kräftigsten Bildanteile (90. Perzentil) gemessen, damit alle Kacheln nach dem Angleichen gleich kräftig wirken (Ziel 0,36) */
 var FOTO_SAT = { "img/neu-h-hanteln-orange.jpg":.5, "img/neu-wissen.jpg":1, "img/neu-p-dehnung-silhouette.jpg":1, "img/neu-p-frau-kniebeuge.jpg":.68, "img/neu-h-rack.jpg":.63, "img/neu-faq.jpg":.52, "img/neu-protein.jpg":.82, "img/bereich-run.jpg":.68, "img/neu-p-mobility-sitz.jpg":1, "img/neu-p-mobility-ausfall.jpg":1, "img/neu-h-brust-2.jpg":.78 };
-var TOOLS_KEYS = ["katalog", "run", "plan", "warm", "intervall", "protein", "faq"];   // Standardreihenfolge: Protein Tracker und Wissensaustausch ganz unten
+var TOOLS_KEYS = ["katalog", "warm", "plan", "intervall", "run", "protein", "faq"];   // Standardreihenfolge (2026-11-11): links Mobility, Timer, Protein; rechts Trainingsplan, Run, Wissensaustausch
 function toolsReihe(){
   var r = [];
   selArr(state.db.settings.toolsReihe).forEach(function(k){ if(TOOLS_KEYS.indexOf(k) > -1 && r.indexOf(k) < 0) r.push(k); });

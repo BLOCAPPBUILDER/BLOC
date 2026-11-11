@@ -273,6 +273,7 @@ function bereichFotosNeu(){
   var zu = fotosZuteilen(Object.keys(ART).map(function(k){ return { key:k + ":" + tag, pool:ART[k] }; }));
   Object.keys(ART).forEach(function(k){ out[k] = zu[k + ":" + tag]; });
   out.run = "img/bereich-run.jpg";   // Run behält das klassische Läuferbild (Karte und Kopf der Run-Seite)
+  out.warm = "img/neu-p-mobility-sitz.jpg";   // Mobility & Stretch: Dehnung im Sitzen (2026-11-11; das Ausfallschritt-Bild gehört dem Timer, nie dasselbe Bild doppelt)
   out.intervall = "img/neu-p-dehnung-silhouette.jpg";   // Timer: Ausfallschritt-Dehnung als Silhouette (Karte und Kopf der Timer-Seite, 2026-11-10)
   return out;
 }var builderAuto = null;   // "zufall" | "selber": der Workout-Builder auf Heute löst im Baukasten gleich die Wahl aus

@@ -1584,6 +1584,10 @@ body.prot-sheet-offen{ overflow:hidden; }
 :root[data-layout="new"] .tk:not(.tk-gross)::before{ background:linear-gradient(180deg, rgba(8,9,11,0) 36%, rgba(8,9,11,.56) 100%); }
 :root[data-layout="new"] .tk.tk-gross::before{ background:linear-gradient(180deg, rgba(8,9,11,.06) 0%, rgba(8,9,11,.2) 50%, rgba(8,9,11,.66) 100%); }
 
+/* 2026-11-11: Timer ohne Foto-Effekt - das Bild steht im Originalton (kein Sättigungs-/Kontrast-Filter, kein Farbstich); nur der weiche Verlauf unten für die Schrift bleibt */
+:root[data-layout="new"] .tk[data-tool="intervall"] .tk-foto{ filter:none; }
+:root[data-layout="new"] .tk[data-tool="intervall"] .tk-foto::after{ content:none; }
+
 /* Mülltonne oben beim Ziehen auf Fortschritt (zusätzlich zur Fläche unten) */
 .kachel-tonne{ position:fixed; z-index:9998; left:50%; top:calc(env(safe-area-inset-top, 0px) + 74px); width:62px; height:62px; margin-left:-31px; border-radius:50%;
   display:flex; align-items:center; justify-content:center; background:rgba(190,45,35,.9); color:#fff; border:1px solid rgba(255,255,255,.35); box-shadow:0 8px 24px rgba(0,0,0,.35); transition:transform .12s, background .12s; }
@@ -1752,3 +1756,22 @@ body.prot-sheet-offen{ overflow:hidden; }
 .run-eigen .rk-ico, .run-opt .rk-ico, .run-ansage .rk-ico{ background:color-mix(in srgb, var(--text) 12%, transparent); border-color:color-mix(in srgb, var(--text) 26%, transparent); }
 .run-klapp.rk-an.run-eigen, .run-klapp.rk-an.run-opt, .run-klapp.rk-an.run-ansage{ border-color:color-mix(in srgb, var(--text) 62%, transparent) !important; box-shadow:0 8px 26px rgba(0,0,0,.18), 0 0 0 1px color-mix(in srgb, var(--text) 26%, transparent) inset !important; }
 .run-eigen .switch input:checked + .track, .run-opt .switch input:checked + .track, .run-ansage .switch input:checked + .track{ background:color-mix(in srgb, var(--text) 55%, #3a3d44); }
+
+/* ---------- BLOCs und Mobility & Stretch im weißen Baukasten-Look (2026-11-11) ----------
+   Abschnittskarten (Nach Zeit, Nach Sätzen) und BLOC-Karten wie die Wege im Baukasten: Karte mit Rand und Rundung 20, großes Symbolfeld in Weiß/Grau,
+   weiße Titel, graue Untertitel; keine Orange-/Blau-Leisten, keine farbigen Zahlen, Start-Knöpfe in Weiß. Gilt in Hell und Dunkel. */
+:root[data-layout="new"] .kat-sek{ --sk:var(--text); margin-bottom:12px; }
+:root[data-layout="new"] .kat-sek > summary{ gap:14px; padding:14px 16px; min-height:84px; border:1px solid var(--border); border-left:1px solid var(--border);
+  border-radius:20px; background:var(--surface); box-shadow:var(--shadow); }
+:root[data-layout="new"] .kat-sek[open] > summary{ margin-bottom:10px; }
+:root[data-layout="new"] .ks-ico{ width:54px; height:54px; border-radius:16px; box-shadow:none; color:var(--text); background:color-mix(in srgb, var(--text) 8%, transparent); }
+:root[data-layout="new"][data-glas] .ks-ico{ background:rgba(255,255,255,.16); color:#fff; }
+:root[data-layout="new"] .ks-ico svg{ width:28px; height:28px; }
+:root[data-layout="new"] .ks-t b{ font-size:19px; }
+:root[data-layout="new"] .ks-t small{ font-size:13.5px; margin-top:3px; }
+:root[data-layout="new"] .ks-n{ background:color-mix(in srgb, var(--text) 12%, transparent); color:var(--text); }
+:root[data-layout="new"] .bloc-liste .list-item.entry{ margin:0 0 10px; padding:14px; border:1px solid var(--border); border-radius:20px; background:var(--surface); box-shadow:var(--shadow); }
+:root[data-layout="new"] .bloc-liste .ort-thumb{ width:54px; height:54px; border-radius:16px; margin-right:12px; }
+:root[data-layout="new"] .bloc-liste .list-item .name{ font-size:17px; line-height:1.2; }
+:root:root[data-layout="new"] .bloc-liste .list-item .playbtn, :root:root[data-layout="new"] .bloc-liste .list-item .playbtn.cat{ --pb:var(--text); background:transparent; }
+:root[data-layout="new"] .bloc-liste .lib-card > .pg-figs{ border-top-color:var(--border); }
