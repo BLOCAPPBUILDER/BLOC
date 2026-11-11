@@ -141,7 +141,7 @@
         if (i > 2) pruefe(/\d/.test($(".intro-seite p").textContent), "keine Anzahl auf Seite " + (i + 1));
         if (i === 0) pruefe($$("[data-introlang]").length === 2 && $("[data-introlang].active"), "Sprachwahl fehlt");
         if (i === 1) pruefe($("#i-name") && $("#i-kg") && $("#i-cm"), "Felder Name, Gewicht, Größe fehlen");
-        if (i === 2) pruefe($("svg.intro-schaubild"), "Schaubild fehlt");
+        if (i === 2) pruefe($(".intro-schaubild"), "Schaubild fehlt");
         klick("[data-introweiter]");
       }
       pruefe(titel.join(" | ") === "Willkommen bei BLOC | Über dich | So ist BLOC aufgebaut | Workout | Mobility & Stretch", "Seiten: " + titel.join(" | "));

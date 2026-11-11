@@ -380,14 +380,6 @@ function favEntries(){
   out.sort(function(a, b){ return (b.used - a.used) || (a.order - b.order); });
   return out;
 }
-/* Bild-Pool eines Favoriten nach Inhalt (Modern): Mobility → Dehnen, Timer → Halle, Studio → Studio, sonst nach der Muskelgruppe des Workouts (Bauch → Kettlebell/Core usw.) */
-function favFotoPool(e){
-  if(e.cls === "ws") return "mobility";
-  if(e.cls === "ti") return "timer";
-  if(e.cls === "tp" && e.ort === "studio") return "st";
-  if(e.cls === "tp" && e.thema && e.thema !== "ganz") return e.thema;
-  return e.cls;
-}
 /* Symbol der Glas-Kachel (Favorit ohne Foto): nach Art bzw. Muskelthema des Workouts */
 function favSymbol(e){
   if(e.cls === "ti") return HOME_ICON.intervall;
@@ -399,15 +391,13 @@ function favItemsHTML(){
   var list = favEntries();
   if(!list.length) return "";
   var shown = favShowAll ? list : list.slice(0, FAV_LIMIT);
-  // Fotokarten in einer Reihe zum Wischen (wie im Entwurf)
-    var fotos = fotosZuteilen(list.map(function(e){ return { key:e.key || e.name, pool:favFotoPool(e) }; }));   // Fitnessstudio-Workouts bekommen Studio-Bilder, nicht die Calisthenics-Anlage   // kein Foto doppelt, solange es freie gibt
+  // Ruhige Glas-Kacheln in einer Reihe zum Wischen: Symbol, Bereich, Name (keine Fotos)
     var BEREICH = { ti:t("tabTimer"), ws:t("warmTitle"), tp:t("katalog"), st:t("katalog") };
     return '<div class="fav-fotos">'+shown.map(function(e){
-      var mitFoto = /^lib\//.test(e.cover || "");   // Fotos nur für Workouts (BLOCs) aus dem Katalog; alles andere ist eine ruhige Glas-Kachel mit Name
-      return '<div class="fav-foto'+(mitFoto ? '' : ' ohne')+'" data-art="'+e.cls+'" data-favkey="'+esc(e.key)+'" data-favname="'+esc(e.name)+'" role="button" tabindex="0" '+(e.cover ? 'data-favgo="'+e.cover+'"' : 'data-favstart="'+e.go+'"')+
-          (e.ok ? '' : ' aria-disabled="true"')+(mitFoto ? ' style="background-image:url('+fotos[e.key || e.name]+')'+(fotoFokus(fotos[e.key || e.name]) ? ';background-position:'+fotoFokus(fotos[e.key || e.name]) : '')+'"' : '')+'>'+
+      return '<div class="fav-foto ohne" data-art="'+e.cls+'" data-favkey="'+esc(e.key)+'" data-favname="'+esc(e.name)+'" role="button" tabindex="0" '+(e.cover ? 'data-favgo="'+e.cover+'"' : 'data-favstart="'+e.go+'"')+
+          (e.ok ? '' : ' aria-disabled="true"')+'>'+
         '<span class="ff-stern" aria-hidden="true">'+svgIcon(ICON_STAR)+'</span>'+
-        (mitFoto ? '' : '<span class="ff-ico" aria-hidden="true">'+svgIcon(favSymbol(e))+'</span>')+
+        '<span class="ff-ico" aria-hidden="true">'+svgIcon(favSymbol(e))+'</span>'+
         '<span class="ff-text"><small class="ff-bereich">'+esc(BEREICH[e.cls] || "")+'</small><b class="ff-name">'+esc(e.name)+'</b><small class="ff-sub">'+e.sub+'</small></span>'+
       '</div>';
     }).join("")+'</div>';
