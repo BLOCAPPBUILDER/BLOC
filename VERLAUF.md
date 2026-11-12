@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-12 · Figuren nach Sportwissenschaftler-Durchsicht (Fassung 2026-11-12-13)
+
+Alle 602 Figuren in hoher Auflösung durchgesehen. Korrigiert: Bridge Hold (Rückenlage statt Handstand-Haltung), Butterfly Sit-up (Rückenlage), Glute-Ham-Raise (unten hängender Rumpf), Handstand-Liegestütz (Beine gestreckt, Wand). Offen: Ceiling-Look-Stretch (Kopfneigung), Prone-Rear-Raise (Arm), Hanging Knee Raise (Daten zeigen Knie über Hüfte, nicht geändert).
+
 ## 2026-11-12 · Muschel: Hüftbeugung deutlicher (Fassung 2026-11-12-12)
 
 Figuren-Durchsicht in 12er-Blöcken (Nr. 1-48 von 602, dazu Langhantel- und Band-Familien): keine weiteren Gelenkfehler gefunden. Offen: Rest der Liste, Einzelwinkel mit dem Sportwissenschaftler.
