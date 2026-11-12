@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+
+## 2026-11-12 · Figuren: Gelenk in Rücken und Hals, Kettlebell Swing neu (Fassung 2026-11-12-1)
+
+- **Zwei neue Gelenke für die Figuren:** Posen können optional `m` (Knick im Rücken, Übergang Lenden-/Brustwirbelsäule) und `s` (Schulterpunkt = Halsansatz) mitbringen – als 9. und 10. Wert von `Q()` bzw. per `qWith(…,{ m, s })`. Damit dreht sich der Oberkörper eigenständig gegen das Becken und der Hals gegen den Oberkörper; der Kopf hängt jetzt am Hals statt an der Wirbelsäule. Ohne `m`/`s` bleibt alles wie bisher (geprüft: alle Posen und Abläufe liefern dieselben Punkte wie vorher). Code: `rumpfPunkte`, `brustBis`, `rigFromPose`, `rigPoints`, `illuDraw` in js/02-bibliothek.js; `qMirror`, `qShift`, `qScale`, `qSwap` reichen `m`/`s` weiter.
+- **Kettlebell Swing** (`KB_HIKE`, `KB_MID`, `KB_TOP`, `KB_DROP`, `KB_SINK` in daten.js, Ablauf in `ILLU_SEQ`): Füße bleiben am Platz, im Hike Hüfte weit hinten, Schienbeine fast senkrecht, Rücken lang, Hals in Verlängerung, Glocke hinter den Knien; oben aufrecht ohne Zurücklehnen, Glocke auf Brusthöhe; beim Fallen erst aufrecht bleiben, dann an der Hüfte abknicken. Zwischenposen verhindern, dass die Knie beim Überblenden nach vorn wandern (sah aus wie ein „Kniebeugen-Swing“).
 ## 2026-11-11 · Favoriten ohne Fotos, Einführung: neues Aufbau-Schaubild (Fassung 2026-11-11-5)
 
 - **Heute › Favoriten:** wieder alle Kacheln im ruhigen Glas-Stil mit Symbol, Bereich und Name – auch Katalog-Workouts bekommen kein Foto mehr (`favItemsHTML` in js/10-gemeinsam.js; `favFotoPool` entfernt). Der Platzhalter für leere Favoriten bleibt.
