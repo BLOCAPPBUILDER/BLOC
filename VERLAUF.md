@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-12 · Foto Band-Außenrotation entfernt (Fassung 2026-11-12-10)
+
+Rechte Bildhälfte zeigte das Band ohne Befestigung (sinnlos). Foto gelöscht, die Strichfigur bleibt. Alle 47 Band-/Stick-Fotos in größerer Ansicht nochmals durchgesehen: sonst nichts Sinnloses.
+
 ## 2026-11-12 · Muschel (Clamshell): Knie gebeugt statt gestreckt (Fassung 2026-11-12-9)
 
 Band-Übungen und letzte Fotos durchgesehen (auch vom Sportwissenschaftler); einzig fachlicher Fehler war die Muschel mit fast gestreckten Beinen. Jetzt Knie ca. 90°, oberes Knie öffnet sich.
