@@ -676,9 +676,9 @@
       pruefe(/50 × 12/.test($(".st-heute").textContent), "Satz steht nicht unter „Heute“: " + $(".st-heute").textContent);
       pruefe($("#st-kg").value === "50", "nächster Satz nicht vorausgefüllt");
       klick("[data-stskip]");
-      // zwei frühere Einheiten mit Ziel geschafft -> Vorschlag
+      // zwei frühere Runden mit dem oberen Rand des Bereichs (Ziel 12 → 10–14) -> Vorschlag +1 Stufe
       var d = JSON.parse(W.localStorage.getItem(KEY)), n = Date.now();
-      d.settings.studio["leg-press"].log.unshift({ at:n - 5*864e5, s:[[50,12],[50,12],[50,12]] }, { at:n - 2*864e5, s:[[50,12],[50,12],[50,12]] });
+      d.settings.studio["leg-press"].log.unshift({ at:n - 5*864e5, s:[[50,14],[50,14],[50,14]] }, { at:n - 2*864e5, s:[[50,14],[50,14],[50,14]] });
       d.settings.studio["leg-press"].log = d.settings.studio["leg-press"].log.slice(0, 2);
       W.localStorage.setItem(KEY, JSON.stringify(d));
       await heim();
@@ -1635,9 +1635,13 @@
       pruefe(tr.plan === "p-prog" && tr.saetze === 1 && tr.ex.some(function (x) { return x.id === "leg-press" && x.s.length === 1; }) && tr.notiz === "Beine solide" && tr.tag === W.einheitTagKey(),
         "gespeichertes Training: " + JSON.stringify(tr));
       W.exitPlayer();
-      W.studioSatzLog("leg-press", 62.5, 10);   // ein weiterer Satz: der gespeicherte Tag zieht sich nach, es gibt keinen zweiten Eintrag
+      W.satzBasisSetzen(["leg-press"]);   // Speichern schließt die Runde (seit 2026-11-12)
+      W.studioSatzLog("leg-press", 62.5, 10);   // ein weiterer Satz: neue Runde, das gespeicherte Training bleibt, wie es war
+      pruefe(daten().settings.einheiten[0].saetze === 1, "gespeichertes Training darf sich nicht von selbst ändern");
+      W.trainingSpeichern({ plan: W.stPlanFind("p-prog"), ids: W.stPlanIds(W.stPlanFind("p-prog")) }, null);   // kurz danach wieder gespeichert: angehängt
+      W.satzBasisSetzen(["leg-press"]);
       var tr2 = daten().settings.einheiten;
-      pruefe(tr2.length === 1 && tr2[0].saetze === 2 && tr2[0].notiz === "Beine solide", "Eintrag führt sich nicht nach: " + JSON.stringify(tr2.map(function (x) { return x.saetze; })));
+      pruefe(tr2.length === 1 && tr2[0].saetze === 2 && tr2[0].notiz === "Beine solide", "kurz nach dem Speichern weitertrainiert: wird angehängt: " + JSON.stringify(tr2.map(function (x) { return x.saetze; })));
       W.go("#studioplan/p-prog");
       await bis(function () { return $(".tr-leiste [data-trsave]"); }, 3000, "Leiste Training speichern auf der Plan-Seite");
       pruefe(/Aktualisieren/.test($(".tr-leiste").textContent), "Leiste: " + $(".tr-leiste").textContent);
@@ -2006,7 +2010,7 @@
       await bis(function () { return $(".fk-raster"); }, 3000, "Fortschritt");
       pruefe($$(".fk-blick .fz-mini").length === 4, "vier Zahlen auf einen Blick (ohne Läufe kein km/hm): " + $$(".fk-blick .fz-mini").length);
       var serie = $('.fz-mini[data-zahl="serie"] .fz-wert b'), kg = $('.fz-mini[data-zahl="kg"] .fz-wert b');
-      pruefe(serie && serie.textContent === "3", "Tage am Stück: " + (serie && serie.textContent));
+      pruefe(serie && serie.textContent === "4", "Tage am Stück (Verlauf heute bis vorgestern plus gespeichertes Training vor 3 Tagen): " + (serie && serie.textContent));
       pruefe(kg && /4\.000|4,000|4000/.test(kg.textContent), "Gehobenes Gewicht insgesamt: " + (kg && kg.textContent));
       pruefe($('.fk[data-fk="logbuch"] .stat-fort'), "Gewichte & Verläufe je Übung als Kachel");
       // Antippen: kein Diagramm auf der Seite -> Fenster mit Balken; Monat/Jahr umschaltbar

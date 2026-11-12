@@ -48,7 +48,7 @@ var PAT = {
     planName:"{z} · {n}× pro Woche", tagName:"{z} · Tag {n} · {p}", blocName:"{z} {t}", aufwaermen:"Aufwärmen", dehnen:"Dehnen", mainBloc:"{z} {t}",
     einEinheit:"Mit nur einem Trainingstag pro Woche bleibt jede Muskelgruppe bei einmal pro Woche. Zwei Tage sind besser (WHO: mindestens zwei Tage Krafttraining).",
     info0:"Starte mit 5 bis 10 Minuten Aufwärmen. Dehnen kannst du in den TrainingsBLOCs von Hand ergänzen.",
-    info1:"Höre jeden Satz {r} Wiederholungen vor dem Muskelversagen auf; bis zum Versagen musst du nicht gehen. Schaffst du in allen Sätzen die obere Wiederholungszahl, nimm eine Wiederholung mehr oder eine schwerere Variante, bei Geräten 2 bis 5 % mehr Gewicht.",
+    info1:"Höre jeden Satz {r} Wiederholungen vor dem Muskelversagen auf; bis zum Versagen musst du nicht gehen. Schaffst du zweimal in allen Sätzen die obere Wiederholungszahl, schlägt BLOC die nächste Gewichtsstufe vor (meist 2 bis 10 % mehr), danach beginnst du wieder unten im Bereich. Ohne Gewicht: eine schwerere Variante oder mehr Wiederholungen.",
     info2:"Leichtwoche in Woche {n}: etwa 60 % der Sätze, Gewicht gleich oder etwas leichter und bis zu 4 Wiederholungen in Reserve, damit du dich erholst.",
     info3:"Laufen für Einsteiger: im Wechsel 1 Minute laufen und 1,5 bis 2 Minuten gehen, bis zu dreimal pro Woche mit Ruhetag dazwischen, jede Woche etwas länger laufen.",
     info3b:"Laufumfang vorsichtig steigern, etwa 10 % pro Woche, nie mehr als 30 %.",
@@ -59,6 +59,9 @@ var PAT = {
     infoTitel:"Hinweise zum Plan",
     mehrere:"Mehrere möglich", waehleMind:"Wähle mindestens eine Option.", bauen:"Plan wird zusammengestellt …", lokal:"Wird nur auf deinem Gerät erstellt.", spaeter:"Du kannst jeden Trainingstag danach wie gewohnt bearbeiten, auch durch langes Drücken auf die Karte.", uebernehmen:"Änderungen übernehmen", zurueckPfeil:"Zurück zur vorigen Frage",
     leichtwoche:"Leichtwoche", lauf_w:"Geh-Lauf: {a} Min laufen, {b} Min gehen · {n}×", who:"Etwa {m} Minuten Training pro Woche, {k} Krafttage. WHO: 150 bis 300 Minuten moderate Aktivität und mindestens zwei Krafttage pro Woche.", schwerNein:"Für dein Niveau nicht vorgesehen",
+    whoRest:"Den Rest bis 150 Minuten schaffst du nebenbei, z. B. mit zügigen Spaziergängen, Radfahren oder Treppen im Alltag.",
+    endeTitel:"Plan geschafft", endeText:"{p}: {n} von {m} Trainings erledigt. Weiter mit denselben Übungen und deinen aktuellen Gewichten?",
+    endeWeiter:"Nächsten Block starten", endeNeu:"Neuen Plan erstellen", endeAus:"Ausblenden", endeOk:"{n} Termine für die nächsten {w} Wochen im Kalender",
     tageListe:"Trainingstage"
   },
   en:{
@@ -100,7 +103,7 @@ var PAT = {
     planName:"{z} · {n}× a week", tagName:"{z} · Day {n} · {p}", blocName:"{z} {t}", aufwaermen:"Warm-up", dehnen:"Stretching", mainBloc:"{z} {t}",
     einEinheit:"With one training day a week every muscle group is trained once. Two days are better (WHO: at least two days of strength training).",
     info0:"Start with 5 to 10 minutes of warm-up. You can add stretching to the TrainingsBLOCs by hand.",
-    info1:"Stop every set {r} reps before muscle failure; you do not have to go to failure. If you reach the upper rep number in all sets, add one rep or take a harder variation, with equipment 2 to 5 % more weight.",
+    info1:"Stop every set {r} reps before muscle failure; you do not have to go to failure. If you reach the upper rep number in all sets twice, BLOC suggests the next weight step (usually 2 to 10 % more), then you start again at the bottom of the range. Without weight: a harder variation or more reps.",
     info2:"Easy week in week {n}: about 60 % of the sets, same weight or a little lighter and up to 4 reps in reserve so you recover.",
     info3:"Running for beginners: alternate 1 minute running and 1.5 to 2 minutes walking, up to three times a week with a rest day between, run a little longer each week.",
     info3b:"Increase running volume carefully, about 10 % a week, never more than 30 %.",
@@ -111,6 +114,9 @@ var PAT = {
     infoTitel:"Notes on the plan",
     mehrere:"Several possible", waehleMind:"Choose at least one option.", bauen:"Putting your plan together …", lokal:"Created on your device only.", spaeter:"You can edit every training day as usual afterwards, also by long-pressing its card.", uebernehmen:"Apply changes", zurueckPfeil:"Back to the previous question",
     leichtwoche:"Easy week", lauf_w:"Walk-run: {a} min run, {b} min walk · {n}×", who:"About {m} minutes of training per week, {k} strength days. WHO: 150 to 300 minutes of moderate activity and at least two strength days per week.", schwerNein:"Not planned for your level",
+    whoRest:"You can cover the rest up to 150 minutes on the side, e.g. with brisk walks, cycling or taking the stairs.",
+    endeTitel:"Plan completed", endeText:"{p}: {n} of {m} workouts done. Carry on with the same exercises and your current weights?",
+    endeWeiter:"Start next block", endeNeu:"Create a new plan", endeAus:"Hide", endeOk:"{n} sessions for the next {w} weeks in your calendar",
     tageListe:"Training days"
   }
 };
@@ -142,6 +148,15 @@ var PA_AUS = {
 };
 /* Hochleistungs-Fertigkeiten kommen in automatischen Plänen nie vor */
 var PA_NIE = /planche|front-lever|back-lever|human-flag|one-arm|muscle-up|skin-the-cat|dragon-flag|handstand-push|ring-muscle|iron-cross/;
+/* Fachliche Prüfung 2026-11-12: Spezialstangen (Trap-Bar u. a.) nicht in automatische Pläne - wer „Langhantel“ wählt, hat eine gerade Stange;
+   Power-/Box-Übungen wie der drehende Aufwärtshaken nicht in Muskelaufbau- und Kraftpläne; Trage- und Halteübungen laufen nach Zeit statt Wiederholungen */
+var PA_SPEZIAL = /trap-bar|hex-bar|safety-bar|swiss-bar|cambered/;
+var PA_POWER = /uppercut|punch|jab|hook-punch|boxing|shadow-box/;
+var PA_ZEIT = /carry|farmer|plate-pinch-hold|boat-hold|bridge-hold|active-hang|dead-hang/;
+var PA_ZEIT_SEK = 35;
+/* Echte Zugübung (Rudern, Latzug, Klimmzug) - nicht Tragen, aufrechtes Rudern oder Rückenstrecker */
+var PA_ZUG = /(^|-)rows?(-|$)|pull-?downs?(-|$)|chin-ups?|pull-ups?/, PA_ZUG_NICHT = /upright|stretch|scapular|pull-apart|rear-delt|biceps/;
+function paIstZug(ex){ return !!ex && PA_ZUG.test(ex.id) && !PA_ZUG_NICHT.test(ex.id) && !PA_ZEIT.test(ex.id); }
 var PA_AUSNAHME = /forearm|elbow|incline-push|wall-push|knee-push/;   // Handgelenk: Unterarm-Varianten und leichtere Stützformen bleiben erlaubt
 /* Slots je Einheit: Muskelgruppen in Reihenfolge der Wichtigkeit (große Übungen zuerst; Drücken und Ziehen wechseln sich ab) */
 var PA_SLOTS = {
@@ -211,7 +226,8 @@ function paAusgeschlossen(ex, a){
   var id = ex.id, imp = a.impact === "schonend" || a.niveau === "gar" || a.alter === "65", l = [];
   if(imp) l.push(PA_AUS.impact);
   a.einschr.forEach(function(e){ if(PA_AUS[e]) l.push(PA_AUS[e]); });
-  if(PA_NIE.test(id)) return true;
+  if(PA_NIE.test(id) || PA_SPEZIAL.test(id)) return true;
+  if(PA_POWER.test(id) && a.ziele.some(function(z){ return z === "muskel" || z === "kraft"; })) return true;
   return l.some(function(re){ return re.test(id) && !(re !== PA_AUS.impact && PA_AUSNAHME.test(id) && re === PA_AUS.handgelenk); });
 }
 /* Passt die Übung zu Geräten und Trainingsart? Nur was man ausführen kann: Geräte-Übungen brauchen ein gewähltes Gerät (Fitnessstudio-Maschinen ein Studio-Gerät),
@@ -365,9 +381,21 @@ function paErzeuge(a0){
       var benutzt = {}, gruppen = [], mainIds = [];
       var wt = warmTeil("kraft", seed); if(wt && wt.bloc) wt.bloc.ids.forEach(function(id){ benutzt[id] = 1; });
       slots.slice(0, nMain).forEach(function(g, k){
-        var ex = paWaehle(pools.kraft[g], benutzt, seed + k, planBenutzt) || paWaehle(pools.kraft[g === "po" ? "beine" : g === "bauch" ? "rumpf" : g === "rumpf" ? "bauch" : g], benutzt, seed + k, planBenutzt);
+        var zug = g === "ruecken" ? (pools.kraft.ruecken || []).filter(function(o){ return paIstZug(o.ex); }) : null;   // Rücken-Slot: zuerst eine Zugübung
+        var ex = (zug && zug.length ? paWaehle(zug, benutzt, seed + k, planBenutzt) : null) || paWaehle(pools.kraft[g], benutzt, seed + k, planBenutzt) || paWaehle(pools.kraft[g === "po" ? "beine" : g === "bauch" ? "rumpf" : g === "rumpf" ? "bauch" : g], benutzt, seed + k, planBenutzt);
         if(ex){ benutzt[ex.id] = 1; planBenutzt[ex.id] = 1; mainIds.push(ex.id); gruppen.push(g); }
       });
+      /* Jeder Ganzkörper- und Oberkörpertag bekommt mindestens eine Zugübung (fachliche Prüfung 2026-11-12): fehlt sie, ersetzt sie die letzte Arm- bzw. Schulterübung */
+      if((typ === "gk" || typ === "ok") && !mainIds.some(function(id){ return paIstZug(findExercise(id)); })){
+        var zugPool = []; Object.keys(pools.kraft).forEach(function(g2){ (pools.kraft[g2] || []).forEach(function(o){ if(paIstZug(o.ex)) zugPool.push(o); }); });
+        var zx = paWaehle(zugPool, benutzt, seed + "zug", planBenutzt);
+        if(zx){
+          var ersetz = -1; ["arme", "schulter", "rumpf", "bauch"].forEach(function(g3){ if(ersetz < 0) for(var q2 = gruppen.length - 1; q2 >= 0; q2--) if(gruppen[q2] === g3){ ersetz = q2; break; } });
+          if(ersetz < 0 && mainIds.length >= nMain) ersetz = mainIds.length - 1;
+          benutzt[zx.id] = 1; planBenutzt[zx.id] = 1;
+          if(ersetz >= 0){ delete benutzt[mainIds[ersetz]]; mainIds[ersetz] = zx.id; gruppen[ersetz] = "ruecken"; } else { mainIds.push(zx.id); gruppen.push("ruecken"); }
+        }
+      }
       var balance = a.alter === "65" && findExercise("single-leg-stand") && !benutzt["single-leg-stand"] ? ["single-leg-stand"] : [];   // ab 65: Gleichgewicht (WHO 2020, ICFSR 2021)
       var modus = {}; balance.forEach(function(id){ modus[id] = "timer"; });
       mainIds.forEach(function(id){ ziele[id] = { s:saetze, w:wdh, p:pause }; });
@@ -475,6 +503,7 @@ function paAnlegen(a0, ersetzeGid){
       b.ids.forEach(function(id){
         var e = studio[id] || (studio[id] = { log:[] }), z = sp.ziele[id], ex0 = findExercise(id);
         if(z && !e.ziel){ e.ziel = { saetze:z.s, wdh:z.w }; if(e.pause == null) e.pause = z.p; }
+        if(z && PA_ZEIT.test(id) && !e.einheit){ e.einheit = "zeit"; if(!e.timer) e.timer = { reps:z.s, work:PA_ZEIT_SEK, rest:z.p }; }   // Tragen und Halten: Sätze × Sekunden
         if(!e.timer && ex0 && ex0.main !== "stretch" && b.modus[id] === "timer"){   // Aufwärmen bzw. Cardio-Runde
           if(b.cardio){ var c = PA_CARDIO[sw]; e.timer = { reps:c[0], work:c[1], rest:c[2] }; } else e.timer = { reps:1, work:40, rest:10 };
         }
@@ -491,6 +520,42 @@ function paAnlegen(a0, ersetzeGid){
   var n = 0; neue.forEach(function(p){ pgOffen[p.id] = false; n += paKalender(p); });
   save();
   return { gid:gid, progs:neue, n:n, sp:sp };
+}
+
+/* ---------- Planende (2026-11-12): Abschlusskarte auf der Startseite ----------
+   Ein Plan aus dem Assistenten, dessen letzter Termin vorbei ist (höchstens 21 Tage), ohne Termine ab heute: „Plan geschafft“ mit
+   „Nächsten Block starten“ (dieselben TrainingsBLOCs, neue Termine ab heute - die Gewichte gelten weiter, weil sie je Übung gespeichert sind),
+   „Neuen Plan erstellen“ und „Ausblenden“ (gemerkt je Planende: p.endeGesehen = letzter Termin). */
+function paPlanEnde(){
+  var heute = kalTagKey(Date.now()), grenze = kalTagKey(Date.now() - 21*86400000), best = null, gruppen = {};
+  programmListe().forEach(function(p){ if(p.gen && p.gruppe) (gruppen[p.gruppe] = gruppen[p.gruppe] || []).push(p); });
+  Object.keys(gruppen).forEach(function(gid){
+    var ids = gruppen[gid].map(function(p){ return p.id; });
+    var ter = kalListe().filter(function(e){ return e.prog && ids.indexOf(e.prog.id) > -1 && e.art !== "sport"; });
+    if(!ter.length || ter.some(function(e){ return e.tag >= heute; })) return;
+    var letzter = ter.reduce(function(m, e){ return e.tag > m ? e.tag : m; }, "");
+    if(letzter < grenze || gruppen[gid][0].endeGesehen === letzter) return;
+    var ok = ter.filter(kalErledigt).length;
+    if(!best || letzter > best.letzter) best = { gid:gid, p:gruppen[gid][0], letzter:letzter, n:ok, m:ter.length };
+  });
+  return best;
+}
+function paPlanEndeHTML(){
+  var en = paPlanEnde();
+  if(!en) return "";
+  return '<section class="card plan-ende" data-planende="'+esc(en.gid)+'"><div class="pe-kopf"><span class="pe-haken" aria-hidden="true">✓</span><b>'+esc(pt("endeTitel"))+'</b></div>'+
+    '<p>'+esc(pt("endeText", { p:en.p.gruppeName || en.p.name, n:en.n, m:en.m }))+'</p>'+
+    '<div class="pe-knoepfe"><button type="button" class="btn btn-primary" data-peweiter>'+esc(pt("endeWeiter"))+'</button>'+
+    '<button type="button" class="btn btn-secondary" data-peneu>'+esc(pt("endeNeu"))+'</button>'+
+    '<button type="button" class="pe-aus" data-peaus>'+esc(pt("endeAus"))+'</button></div></section>';
+}
+function paPlanEndeBinden(neu){
+  var box = app.querySelector("[data-planende]"), en = box ? paPlanEnde() : null;
+  if(!en) return;
+  function gesehen(){ paGruppe(en.gid).forEach(function(p){ p.endeGesehen = en.letzter; }); save(); }
+  box.querySelector("[data-peweiter]").addEventListener("click", function(){ var n = paKalenderGruppe(en.gid); showToast(pt("endeOk", { n:n, w:en.p.wochen || 6 })); neu(); });
+  box.querySelector("[data-peneu]").addEventListener("click", function(){ gesehen(); paOeffnen(null); });
+  box.querySelector("[data-peaus]").addEventListener("click", function(){ gesehen(); neu(); });
 }
 
 /* ---------- Fenster ---------- */
@@ -600,7 +665,7 @@ function paZeichnen(){
       fehlt = a.ausr.filter(function(x){ return x !== "keine" && !benutzt[x]; });
     }
     h += (fehlt.length ? '<p class="pa-warn" role="note">'+esc(pt("geraetFehlt", { g:fehlt.map(function(x){ return t("stGer_" + x); }).join(", ") }))+'</p>' : '')+
-      (sp2 ? '<div class="pa-vorschau"><b>'+esc(sp2.name)+'</b><small>'+esc(pt("einheitenSumme", { n:sp2.nTage, m:a.wochen }))+'</small><small>'+esc(pt("who", { m:sp2.minuten, k:sp2.kraftTage }))+'</small></div>' : "")+
+      (sp2 ? '<div class="pa-vorschau"><b>'+esc(sp2.name)+'</b><small>'+esc(pt("einheitenSumme", { n:sp2.nTage, m:a.wochen }))+'</small><small>'+esc(pt("who", { m:sp2.minuten, k:sp2.kraftTage })+(sp2.minuten < 150 ? " "+pt("whoRest") : ""))+'</small></div>' : "")+
       '<div class="pa-liste">'+paZusammen(a).map(function(r){ return '<button type="button" class="pa-zeile" data-pa-sprung="'+r[0]+'"><span>'+esc(r[1])+'</span><b>'+esc(r[2])+'</b><i>'+esc(pt("aendern"))+'</i></button>'; }).join("")+'</div>'+
       '<details class="pa-mehr"'+(paEdit ? ' open' : '')+'><summary>'+esc(pt("mehr"))+'</summary><div class="pa-mehr-in"><div class="pa-label">'+esc(pt("alter"))+'</div><div class="pa-chips">'+
         [["u50", "a_u50"], ["50", "a_50"], ["65", "a_65"]].map(function(x){ return '<button type="button" class="pa-chip'+(a.alter === x[0] ? ' an' : '')+'" data-pa-alter="'+x[0]+'" aria-pressed="'+(a.alter === x[0])+'">'+esc(pt(x[1]))+'</button>'; }).join("")+

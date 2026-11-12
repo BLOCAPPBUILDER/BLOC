@@ -77,7 +77,7 @@ function renderFortschritt(){
   Object.keys(dd.M).forEach(function(k){ M[k] = dd.M[k]; });
   function neu(){ var y = window.scrollY; renderFortschritt(); window.scrollTo(0, y); }
   app.innerHTML =
-    topbar(t("tabFortschritt"), { back:"#home", right:kopfSymboleNeu() }) +
+    topbar(t("tabFortschritt"), { back:"#home", right:kopfSymboleNeu() }).replace('class="topbar', 'class="topbar fk-topbar') +   // Kopfzeile ohne Streifen: scrollt mit, damit Inhalte nicht darunter durchlaufen
     fkZahlenHTML(st.zahlen)+
     (wahl.length ? '<div class="fk-raster">'+wahl.map(function(id){ return fkKachelHTML(id, M); }).join("")+'</div>'
                  : '<div class="card fk-leerseite">'+svgIcon('<path d="M4 4v16h16"/><path d="M8 15l3.5-4.5 3 2.5L20 7"/>')+'<p>'+esc(t("fkLeer"))+'</p></div>')+

@@ -212,8 +212,10 @@ function statFortschrittHTML(){
   Object.keys(alle).forEach(function(id){
     var ex = findExercise(id), log = ((alle[id] && alle[id].log) || []).filter(function(x){ return arbeitsSaetze(x).length; });
     if(!ex || log.length < 2) return;
-    var erst = studioBestwerte(log.slice(0, 1)), jetzt = studioBestwerte(log), mitKg = jetzt.kg > 0;
-    l.push({ id:id, ex:ex, name:tplText(ex.name), gr:statFortRubrik(ex), n:log.length, mitKg:mitKg, von:mitKg ? erst.kg : erst.wdh, bis:mitKg ? jetzt.kg : jetzt.wdh, at:log[log.length-1].at });
+    /* Mit Gewicht zählt das geschätzte 1RM (nur Sätze ab 3 Wdh.): erste Runde gegen den Stand jetzt (beste der letzten zwei Runden).
+       So gilt „schwerer, aber nur noch 1 Wiederholung“ nicht als gesteigert. */
+    var erst = studioBestwerte(log.slice(0, 1)), jetzt = studioBestwerte(log.slice(-2)), mitKg = studioBestwerte(log).kg > 0;
+    l.push({ id:id, ex:ex, name:tplText(ex.name), gr:statFortRubrik(ex), n:log.length, mitKg:mitKg, von:mitKg ? Math.round(erst.rm3*10)/10 : erst.wdh, bis:mitKg ? Math.round(jetzt.rm3*10)/10 : jetzt.wdh, at:log[log.length-1].at });
   });
   var kopf = '<summary><b>'+esc(t("statFort"))+'</b><span class="sk-sub">'+esc(t("statFortSub"))+'</span><span class="sk-chev">'+ICON_CHEV+'</span></summary>';
   var tag = '<details class="card stat-karte stat-kal stat-falt stat-fort" data-statfalt="logbuch"'+(statOffen.logbuch ? ' open' : '')+'>';
@@ -229,7 +231,7 @@ function statFortschrittHTML(){
     var d = Math.round((x.bis - x.von)*100)/100, p = x.von > 0 ? Math.round(d/x.von*100) : 0, einheit = x.mitKg ? " kg" : " "+t("wdhKurz");
     var delta = d > 0 ? "+"+studioKg(d)+einheit+(p ? " (+"+p+" %)" : "") : d < 0 ? "−"+studioKg(-d)+einheit : t("statFortGleich");
     return uebKachel({ bild:x.id, name:x.name, attr:'data-sfuebung="'+esc(x.id)+'"', cat:studioFarbe(x.ex), ico:exSymbol(x.ex),
-      unter:'<span class="st-sub an">'+esc(studioKg(x.von)+" → "+studioKg(x.bis)+einheit)+'</span><span class="sf-delta'+(d > 0 ? ' auf' : d < 0 ? ' ab' : '')+'">'+esc(delta)+'</span>'+
+      unter:'<span class="st-sub an">'+esc((x.mitKg ? t("statFort1rm")+" " : "")+studioKg(x.von)+" → "+studioKg(x.bis)+einheit)+'</span><span class="sf-delta'+(d > 0 ? ' auf' : d < 0 ? ' ab' : '')+'">'+esc(delta)+'</span>'+
         '<span class="sf-einh">'+esc((statFortGr ? "" : statFortRubrikName(x.gr)+" · ")+t("statFortEinh", { n:x.n }))+'</span>' });
   }).join("");
   var rest = sicht.length - statFortAnz;
@@ -441,7 +443,10 @@ function statModule(){
   // Zahlen-Kacheln: Tage am Stück, gehobenes Gewicht, Trainingstage, Trainingszeit, Kilometer, Höhenmeter
   var lang0 = currentLang() === "en" ? "en-GB" : "de-DE";
   function tagKey(ms){ var d0 = new Date(ms); return d0.getFullYear()+"-"+d0.getMonth()+"-"+d0.getDate(); }
+  // Trainingstage: Verlauf (Kurzgedächtnis) plus die dauerhaft gespeicherten Trainings und Läufe - sonst „vergisst“ die Kachel nach ein paar Wochen
   var tageSet = {}; besA.forEach(function(b){ tageSet[tagKey(b.von)] = 1; });
+  einheitenListe().forEach(function(x){ if(x && x.at) tageSet[tagKey(x.at)] = 1; });
+  if(aktiv.indexOf("run") > -1) runs.forEach(function(x){ if(x && x.at) tageSet[tagKey(x.at)] = 1; });
   var cur = new Date(); cur.setHours(12, 0, 0, 0);
   var folgeTage = 0, heuteDa = !!tageSet[tagKey(cur.getTime())];
   if(!heuteDa) cur.setDate(cur.getDate() - 1);
@@ -456,10 +461,10 @@ function statModule(){
   var kmGesamt = runs.reduce(function(a, x){ return a + (x.dist || 0); }, 0), hmGesamt = runs.reduce(function(a, x){ return a + (+x.hm || 0); }, 0);
   var Z = [];
   Z.push({ id:"serie", ico:'<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>', titel:t("fk_serie"), wert:String(folgeTage), einheit:t(folgeTage === 1 ? "fkTag" : "fkTage"),
-    sub:folgeTage ? (heuteDa ? t("fkHeuteDa") : t("fkHeuteNoch")) : t("fkSerieNeu"), sub2:t("fkRekordTage", { n:Math.max(bestFolge, folgeTage) }) });
-  Z.push({ id:"tage", ico:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/>', titel:t("fk_tage"), wert:String(Object.keys(tageSet).length), einheit:t("fkTage"), sub:t("fkTageSub", { n:gesamt }) });
+    sub:folgeTage ? (heuteDa ? t("fkHeuteDa") : t("fkHeuteNoch")) : t("fkSerieNeu"), sub2:t(Math.max(bestFolge, folgeTage) === 1 ? "fkRekordTag1" : "fkRekordTage", { n:Math.max(bestFolge, folgeTage) }) });
+  Z.push({ id:"tage", ico:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/>', titel:t("fk_tage"), wert:String(Object.keys(tageSet).length), einheit:t(Object.keys(tageSet).length === 1 ? "fkTag" : "fkTage"), sub:t("fkTageSub", { n:gesamt }) });
   Z.push({ id:"zeit", ico:'<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M9.5 3h5"/>', titel:t("fk_zeit"),
-    wert:zeitGesamt >= 3600 ? String(Math.round(zeitGesamt/360)/10).toLocaleString(lang0) : String(Math.round(zeitGesamt/60)), einheit:zeitGesamt >= 3600 ? t("fkStunden") : "min", sub:t("fkZeitSub") });
+    wert:zeitGesamt >= 3600 ? (Math.round(zeitGesamt/360)/10).toLocaleString(lang0) : String(Math.round(zeitGesamt/60)), einheit:zeitGesamt >= 3600 ? t("fkStunden") : "min", sub:t("fkZeitSub") });
   Z.push({ id:"kg", ico:'<path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/>', titel:t("fk_kg"),
     wert:kgGesamt >= 100000 ? (Math.round(kgGesamt/100)/10).toLocaleString(lang0) : Math.round(kgGesamt).toLocaleString(lang0), einheit:kgGesamt >= 100000 ? "t" : "kg",
     sub:kgGesamt > 0 ? t("fkKgSub", { t:(Math.round(kgGesamt/100)/10).toLocaleString(lang0) }) : t("fkKgLeer") });
@@ -643,11 +648,11 @@ function einheitTagKey(ts){
   return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);
 }
 /* Wohin gehört das, was gerade trainiert wird: in den geöffneten Plan (wenn die Übung darin steht), sonst ins freie Training des Tages */
-function trainingFrei(){   // freies Training: alles, was heute eingetragen wurde
-  var heute = studioTag(Date.now()), alle = studioAlle();
+function trainingFrei(){   // freies Training: alles, was in der offenen Runde eingetragen wurde
+  var alle = studioAlle();
   return { plan:null, ids:Object.keys(alle).filter(function(k){
-    var l = alle[k] && alle[k].log || [], z = l.length ? l[l.length-1] : null;
-    return z && z.s.length && studioTag(z.at) === heute && findExercise(k);
+    var z = studioOffen(alle[k]);
+    return z && z.s.length && findExercise(k);
   }) };
 }
 function trainingKontext(id){
@@ -655,19 +660,30 @@ function trainingKontext(id){
   if(p && (!id || stPlanIds(p).indexOf(id) > -1)) return { plan:p, ids:stPlanIds(p) };
   return trainingFrei();
 }
+/* Gespeichertes Training von heute zu diesem Plan, das noch offen ist (ältere Einträge ohne zu). Seit 2026-11-12 schließt das Speichern das Training (zu):
+   ein zweites Training am selben Tag wird ein eigener Eintrag. Ausnahme: kurz nach dem Speichern (EINHEIT_NACH) weitertrainiert und wieder gespeichert -
+   das gehört noch zum selben Training und wird angehängt (einheitAnhaengen). */
+var EINHEIT_NACH = 45*60000;
 function einheitHeute(plan){
   var key = einheitTagKey(), pid = plan ? plan.id : "", gef = null;
-  einheitenListe().forEach(function(x){ if(x.tag === key && (x.plan || "") === pid) gef = x; });
+  einheitenListe().forEach(function(x){ if(x.tag === key && (x.plan || "") === pid && !x.zu) gef = x; });
   return gef;
 }
-/* Was heute zu den Übungen eingetragen wurde (Sätze aus Karte und Timer; Übungen ohne Gewicht zählen mit, wenn sie heute im Verlauf stehen) */
+function einheitAnhaengen(plan){
+  var key = einheitTagKey(), pid = plan ? plan.id : "", gef = null;
+  einheitenListe().forEach(function(x){ if(x.tag === key && (x.plan || "") === pid && x.zu && Date.now() - (x.zuAt || 0) < EINHEIT_NACH) gef = x; });
+  return gef;
+}
+/* Was in der offenen Runde zu den Übungen eingetragen wurde (Sätze aus Karte und Timer; Übungen ohne Gewicht zählen mit, wenn sie seit dem letzten Speichern im Verlauf stehen).
+   Die Dauer zählt nur die Verlaufseinträge seit dem letzten Speichern (settings.rundeZu) - die Pause zwischen zwei Trainings zählt nicht. */
 function trainingHeute(ids){
   var heute = studioTag(Date.now()), hist = state.db.history || [], inHist = {}, ex = [], saetze = 0, vol = 0, rek = 0, dauer = 0, wdh = 0;
-  hist.forEach(function(h){ if(h && studioTag(h.at) === heute) (h.ex || []).forEach(function(id){ inHist[id] = true; }); });
+  var zu = +state.db.settings.rundeZu || 0; if(studioTag(zu) !== heute) zu = 0;
+  function neu(h){ return h && studioTag(h.at) === heute && (h.studio || h.at) >= zu; }
+  hist.forEach(function(h){ if(neu(h)) (h.ex || []).forEach(function(id){ inHist[id] = true; }); });
   ids.forEach(function(id){
-    var e = studioEintrag(id), log = (e && e.log) || [], i = log.length-1;
-    var l = i >= 0 && log[i].s.length && studioTag(log[i].at) === heute ? log[i] : null;
-    if(l){
+    var e = studioEintrag(id), log = (e && e.log) || [], l = studioOffen(e), i = l ? log.indexOf(l) : -1;
+    if(l && l.s.length){
       var vor = studioBestwerte(log, i), jetzt = studioBestwerte([l]);
       var rekord = i > 0 && studioIstRekord(jetzt, vor);
       ex.push({ id:id, s:JSON.parse(JSON.stringify(l.s)), rekord:rekord });
@@ -675,7 +691,7 @@ function trainingHeute(ids){
     } else if(inHist[id]) ex.push({ id:id, s:[], rekord:false });
   });
   hist.forEach(function(h){
-    if(!h || studioTag(h.at) !== heute) return;
+    if(!neu(h)) return;
     if(h.studio || (h.ex || []).some(function(id){ return ids.indexOf(id) > -1; })) dauer += +h.dur || 0;
   });
   return { ex:ex, saetze:saetze, vol:Math.round(vol), wdh:wdh, rek:rek, dauer:Math.round(dauer) };
@@ -684,20 +700,32 @@ function trainingSpeichern(k, notiz){
   var d = trainingHeute(k.ids);
   if(!d.ex.length) return null;
   if(k.plan && k.plan.entwurf){ delete k.plan.entwurf; k.plan.updatedAt = Date.now(); }   // ein noch nicht gespeicherter Plan kommt mit dem Training unter Meine
-  var l = einheitenListe(), vorh = einheitHeute(k.plan);
+  var l = einheitenListe(), vorh = einheitHeute(k.plan), dran = vorh ? null : einheitAnhaengen(k.plan);
+  if(dran){   // kurz nach dem Speichern weitertrainiert: an dasselbe Training anhängen (Sätze je Übung dazu, Summen addieren)
+    d.ex.forEach(function(x){
+      var a = null; dran.ex.forEach(function(y){ if(y.id === x.id) a = y; });
+      if(a){ a.s = a.s.concat(x.s); a.rekord = a.rekord || x.rekord; } else dran.ex.push(x);
+    });
+    dran.saetze += d.saetze; dran.vol += d.vol; dran.wdh = (dran.wdh || 0) + d.wdh; dran.dauer = (dran.dauer || 0) + d.dauer; dran.rek = (dran.rek || 0) + d.rek;
+    dran.at = Date.now(); dran.zuAt = Date.now();
+    if(notiz != null && String(notiz).trim()) dran.notiz = String(notiz).trim();
+    save();
+    return dran;
+  }
   var e = vorh || { id:uid(), tag:einheitTagKey(), plan:k.plan ? k.plan.id : "" };
   e.at = Date.now(); e.name = k.plan ? k.plan.name : ""; e.ex = d.ex; e.saetze = d.saetze; e.vol = d.vol; e.wdh = d.wdh; e.dauer = d.dauer; e.rek = d.rek;
+  e.zu = true; e.zuAt = Date.now();   // abgeschlossen: weitere Sätze sind ein neues Training (siehe einheitHeute)
   if(notiz != null) e.notiz = String(notiz).trim();
   if(!vorh) l.push(e);
   if(l.length > 1000) l.splice(0, l.length - 1000);
   save();
   return e;
 }
-/* Nach jedem eingetragenen Satz: heute schon gespeicherte Trainings, in denen die Übung vorkommt, führen sich selbst nach */
+/* Nach jedem eingetragenen Satz: noch offene gespeicherte Trainings von heute (ältere Einträge), in denen die Übung vorkommt, führen sich selbst nach */
 function trainingNachSatz(id){
   var key = einheitTagKey();
   einheitenListe().slice().forEach(function(x){
-    if(x.tag !== key) return;
+    if(x.tag !== key || x.zu) return;
     var p = x.plan ? stPlanFind(x.plan) : null;
     if(x.plan && !p) return;   // der Plan wurde gelöscht: der Eintrag bleibt, wie er war
     var drin = p ? stPlanIds(p).indexOf(id) > -1 : x.ex.some(function(a){ return a.id === id; });
@@ -719,7 +747,7 @@ function trainingUebungenHTML(ex){
 }
 /* Fenster „Training speichern“: Zusammenfassung des heutigen Trainings, Notiz, Speichern; k = trainingKontext(…), nachher läuft nach dem Speichern */
 function openTrainingSpeichern(k, nachher){
-  var root = document.getElementById("overlayRoot"), d = trainingHeute(k.ids), vorh = einheitHeute(k.plan);
+  var root = document.getElementById("overlayRoot"), d = trainingHeute(k.ids), vorh = einheitHeute(k.plan) || einheitAnhaengen(k.plan);
   var name = k.plan ? k.plan.name : t("trFrei");
   function zu(){ root.innerHTML = ""; }
   if(!d.ex.length){
@@ -746,7 +774,7 @@ function openTrainingSpeichern(k, nachher){
 }
 /* Leiste unten (Plan-Seite, Übungskarte): zeigt, was heute drin ist, und speichert */
 function trainingLeisteHTML(k){
-  var d = trainingHeute(k.ids), vorh = einheitHeute(k.plan);
+  var d = trainingHeute(k.ids), vorh = einheitHeute(k.plan) || einheitAnhaengen(k.plan);   // kurz nach dem Speichern: „Aktualisieren“ hängt die neuen Sätze an
   return '<div class="wb-leiste tr-leiste"><div class="wb-leiste-in"><span>'+
     (d.ex.length ? '<b>'+esc(trLeisteText(d.saetze, d.ex.length))+'</b>' : esc(t("trNochNichts")))+(vorh ? ' · '+esc(t("trGespeichertKurz")) : '')+'</span>'+
     '<span class="wb-knoepfe"><button type="button" class="btn btn-primary" data-trsave>✓ '+esc(t(vorh ? "trAktual" : "trSpeichern"))+'</button></span></div></div>';
