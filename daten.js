@@ -6443,6 +6443,23 @@ Object.keys(GERAET_NEU).forEach(function(id){ STUDIO_GERAET[id] = GERAET_NEU[id]
   if(sld && sld[1] && sld[1].l && sld[1].l[1]) ILLU_POSES["band-single-leg-deadlift"] = sld.map(function(q, i){ return i === 1 ? Object.assign({}, q, { l:q.l.map(function(l, j){ return j === 1 ? [27, 51, 10, 51.6, 4, 51.6] : l; }) }) : q; });
 })();
 
+// Figuren-Nacharbeit 2026-11-12 (Sportwissenschaftler): Brücke, Butterfly-Sit-up, Glute-Ham-Raise, Handstand-Liegestütz
+(function(){
+  var P = ILLU_POSES, gb = P["glute-bridge"], su = P["sit-ups"];
+  if(gb && gb[1]) P["bridge-hold"] = [Object.assign({}, gb[1]), null];
+  if(su && su[0] && su[1]){
+    var fuss = [[56, 72, 52, 89, 58, 89]];
+    P["butterfly-sit-up"] = [Object.assign({}, su[0], { l:fuss }), Object.assign({}, su[1], { l:fuss, a:[[56, 66, 62, 76]] })];
+  }
+  var g = P["glute-ham-raise"];
+  if(g && g[1]) P["glute-ham-raise"] = [g[0], Object.assign({}, g[1], { n:[58, 82], a:[[57, 72, 58, 80], [55, 72, 56, 79]] })];
+  var h = P["handstand-push-up"];
+  if(h && h[1]){
+    var wand = "<path class=\"ip\" d=\"M55 6V89\"/>";
+    P["handstand-push-up"] = [Object.assign({}, h[0], { l:[[48.5, 38, 51.2, 21]], x:wand }), Object.assign({}, h[1], { l:[[48.5, 44, 51.2, 27]], x:wand })];
+  }
+})();
+
 window.BLOC_DATEN = {
   EX_ALIAS:EX_ALIAS,
   EX_GRIFF:EX_GRIFF,
