@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-12 · Steigerungsregel: fachliche Ergänzungen (Fassung 2026-11-12-17)
+
+Nach der ausführlichen Rückmeldung des Sportwissenschaftlers: Arbeitsgewicht bei Pyramiden = Median; nach mehr als 14 Tagen Pause Tipp „etwas leichter wieder einsteigen“; keine Rücknahme in der ersten Runde nach einer Erhöhung; Runden der Leichtwoche zählen weder für die Steigerung noch für die Volumen-Warnung; Rücknahmen sind Sicherheitshinweise und zählen nicht zur Grenze von zwei Tipps. Plan-Assistent: Zug im Wechsel (A Rudern, B Latzug/Klimmzug, ohne Dreh- und Renegade-Varianten), weitere Spezialstangen (Landmine, Meadows, Defizit, Box-Kniebeuge) und Power-Übungen (Umsetzen, Reißen, Thruster, Kettlebell-Swing, Woodchop) raus, Planks und Halteübungen nach Zeit. Test: einheitstest +1.
+
 ## 2026-11-12 · Eine Steigerungsregel, Runden, Leichtwoche, Planende (Fassung 2026-11-12-16)
 
 Umsetzung des 13-Wochen-Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen), Eckwerte fachlich vom Sportwissenschaftler bestätigt.

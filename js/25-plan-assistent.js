@@ -150,13 +150,14 @@ var PA_AUS = {
 var PA_NIE = /planche|front-lever|back-lever|human-flag|one-arm|muscle-up|skin-the-cat|dragon-flag|handstand-push|ring-muscle|iron-cross/;
 /* Fachliche Prüfung 2026-11-12: Spezialstangen (Trap-Bar u. a.) nicht in automatische Pläne - wer „Langhantel“ wählt, hat eine gerade Stange;
    Power-/Box-Übungen wie der drehende Aufwärtshaken nicht in Muskelaufbau- und Kraftpläne; Trage- und Halteübungen laufen nach Zeit statt Wiederholungen */
-var PA_SPEZIAL = /trap-bar|hex-bar|safety-bar|swiss-bar|cambered/;
-var PA_POWER = /uppercut|punch|jab|hook-punch|boxing|shadow-box/;
-var PA_ZEIT = /carry|farmer|plate-pinch-hold|boat-hold|bridge-hold|active-hang|dead-hang/;
+var PA_SPEZIAL = /trap-bar|hex-bar|safety-bar|swiss-bar|cambered|landmine|meadows-row|jammer|deficit-deadlift|box-squat/;
+var PA_POWER = /uppercut|punch|jab|hook-punch|boxing|shadow-box|judo-flip|rotational-overhead-press|woodchop|clean|snatch|jerk|thruster|(kettlebell|kb|db|dumbbell|russian|american|single-arm|one-arm)-swing/;
+var PA_ZEIT = /carry|farmer|plate-pinch-hold|boat-hold|bridge-hold|active-hang|dead-hang|^plank$|^side-plank$|copenhagen-plank|hollow-hold|superman-hold|squat-hold|wall-sit|support-hold|^l-sit$/;
 var PA_ZEIT_SEK = 35;
 /* Echte Zugübung (Rudern, Latzug, Klimmzug) - nicht Tragen, aufrechtes Rudern oder Rückenstrecker */
-var PA_ZUG = /(^|-)rows?(-|$)|pull-?downs?(-|$)|chin-ups?|pull-ups?/, PA_ZUG_NICHT = /upright|stretch|scapular|pull-apart|rear-delt|biceps/;
+var PA_ZUG = /(^|-)rows?(-|$)|pull-?downs?(-|$)|chin-ups?|pull-ups?/, PA_ZUG_NICHT = /upright|stretch|scapular|pull-apart|rear-delt|biceps|twist|renegade|weighted-pull/;
 function paIstZug(ex){ return !!ex && PA_ZUG.test(ex.id) && !PA_ZUG_NICHT.test(ex.id) && !PA_ZEIT.test(ex.id); }
+function paZugVertikal(ex){ return /pull-?downs?|pull-ups?|chin-ups?/.test(ex.id); }   // sonst horizontal (Rudern)
 var PA_AUSNAHME = /forearm|elbow|incline-push|wall-push|knee-push/;   // Handgelenk: Unterarm-Varianten und leichtere Stützformen bleiben erlaubt
 /* Slots je Einheit: Muskelgruppen in Reihenfolge der Wichtigkeit (große Übungen zuerst; Drücken und Ziehen wechseln sich ab) */
 var PA_SLOTS = {
@@ -381,7 +382,9 @@ function paErzeuge(a0){
       var benutzt = {}, gruppen = [], mainIds = [];
       var wt = warmTeil("kraft", seed); if(wt && wt.bloc) wt.bloc.ids.forEach(function(id){ benutzt[id] = 1; });
       slots.slice(0, nMain).forEach(function(g, k){
-        var zug = g === "ruecken" ? (pools.kraft.ruecken || []).filter(function(o){ return paIstZug(o.ex); }) : null;   // Rücken-Slot: zuerst eine Zugübung
+        // Rücken-Slot: zuerst eine Zugübung, Ganzkörper A/C horizontal (Rudern), B vertikal (Latzug, Klimmzug); sonst die andere Richtung
+        var vert = (zaehl[typ] - 1) % 2 === 1, zugAlle = g === "ruecken" ? (pools.kraft.ruecken || []).filter(function(o){ return paIstZug(o.ex); }) : null;
+        var zugW = zugAlle ? zugAlle.filter(function(o){ return paZugVertikal(o.ex) === vert; }) : null, zug = zugW && zugW.length ? zugW : zugAlle;
         var ex = (zug && zug.length ? paWaehle(zug, benutzt, seed + k, planBenutzt) : null) || paWaehle(pools.kraft[g], benutzt, seed + k, planBenutzt) || paWaehle(pools.kraft[g === "po" ? "beine" : g === "bauch" ? "rumpf" : g === "rumpf" ? "bauch" : g], benutzt, seed + k, planBenutzt);
         if(ex){ benutzt[ex.id] = 1; planBenutzt[ex.id] = 1; mainIds.push(ex.id); gruppen.push(g); }
       });

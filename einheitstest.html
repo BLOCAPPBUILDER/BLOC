@@ -959,8 +959,24 @@
   });
   test("Arbeitsgewicht F5: ein leichter Ausklang-Satz senkt das Gewicht fürs nächste Mal nicht", function () {
     gleich(W.rundeArbeitsKg({ s:[[65, 10], [65, 10], [65, 10], [65, 10], [45, 12]] }), 65, "4 × 65 + 1 × 45 → 65");
-    gleich(W.rundeArbeitsKg({ s:[[40, 10, "w"], [60, 10], [62.5, 8], [65, 6]] }), 65, "Pyramide: das höchste");
+    gleich(W.rundeArbeitsKg({ s:[[40, 10, "w"], [60, 10], [62.5, 8], [65, 6]] }), 62.5, "Pyramide (Aufwärmen zählt nicht): Median");
     gleich(W.rundeArbeitsKg({ s:[[60, 10], [60, 10], [40, 15, "d"]] }), 60, "Drop-Satz zählt nicht");
+  });
+  test("Fachliche Ergänzungen: Median bei Pyramide, lange Pause, keine Rücknahme direkt nach Erhöhung, Leichtwochen-Runden zählen nicht, Rücknahmen zählen nicht zur Tipp-Grenze", function () {
+    gleich(W.rundeArbeitsKg({ s:[[60, 10], [62.5, 8], [65, 6]] }), 62.5, "Pyramide ohne Mehrheit: Median");
+    var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now(), id = "chest-press-machine";
+    try {
+      s.studio = {}; s.studio[id] = { kg:40, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 30*tag, s:[[40, 10], [40, 10], [40, 10]] }, { at:n - 20*tag, s:[[40, 10], [40, 10], [40, 10]] }] };
+      var tp = W.studioProg(id); wahr(tp && tp.art === "pause" && tp.kg === 35, "20 Tage Pause: leichter einsteigen (" + JSON.stringify(tp) + ")");
+      s.studio[id] = { kg:45, schritt:2.5, erhoeht:n - 5*tag, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 8*tag, s:[[42.5, 7], [42.5, 7], [42.5, 7]] }, { at:n - 2*tag, s:[[45, 6], [45, 6], [45, 6]] }] };
+      gleich(W.studioProg(id), null, "erste Runde nach der Erhöhung: keine Rücknahme");
+      s.studio[id] = { kg:40, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 8*tag, s:[[40, 12], [40, 12], [40, 12]] }, { at:n - 4*tag, s:[[40, 12], [40, 12], [40, 12]] }, { at:n - 1*tag, s:[[40, 12], [40, 12]], leicht:true }] };
+      tp = W.studioProg(id); wahr(tp && tp.art === "kg", "Leichtwochen-Runde zählt nicht: Steigerung aus den zwei Runden davor");
+      s.studio = {}; ["leg-press", "chest-press-machine", "calf-machine"].forEach(function (x) { s.studio[x] = { kg:40, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 4*tag, s:[[40, 12], [40, 12], [40, 12]] }, { at:n - 1*tag, s:[[40, 12], [40, 12], [40, 12]] }] }; });
+      s.studio["smith-bench-press"] = { kg:50, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 4*tag, s:[[50, 5], [50, 5], [50, 5]] }, { at:n - 1*tag, s:[[50, 5], [50, 5], [50, 5]] }] };
+      var tt = W.studioTipps(["leg-press", "chest-press-machine", "calf-machine", "smith-bench-press"], false);
+      wahr(Object.keys(tt).length === 3 && tt["smith-bench-press"].art === "runter", "zwei Steigerungen plus die Rücknahme: " + JSON.stringify(Object.keys(tt)));
+    } finally { s.studio = alt; }
   });
   test("Rekorde F9: schwerer mit nur 1 Wiederholung ist kein Rekord", function () {
     var vor = W.studioBestwerte([{ s:[[4, 10], [4, 10], [4, 10]] }]), jetzt = W.studioBestwerte([{ s:[[14, 1], [14, 1], [14, 1]] }]);
