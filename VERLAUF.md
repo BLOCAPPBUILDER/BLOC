@@ -5,6 +5,14 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+
+## 2026-11-12 · Figuren nach sportwissenschaftlicher Prüfung (Fassung 2026-11-12-3)
+
+- **Kettlebell Swing:** Hike mit höherer Hüfte und nur ca. 45° Kniebeugung (vorher ~63°, wirkte wie halbe Kniebeuge), Armlänge in allen Phasen ca. 28 (oben war der Arm 12 % kürzer), beim Absenken Hände knapp hinter der Hüftlinie, Tempo ca. 1,7 s statt 1,4 s (längere Pausen oben und im Hike, Hüftstreckung bleibt schnell).
+- **Pull-ups / Negative Pull-ups / Dead Hang / Bandhilfe / Windshield Wipers:** Stange bei y = 9,5, die ganze Figur etwas tiefer – oben ist das Kinn jetzt über der Stange (vorher darunter).
+- **Chin-ups:** Untergriff schulterbreit (40/60 statt 42/58), oben Ellbogen eng vor dem Körper.
+- **Scapular Pull-ups:** Hände bleiben bei 36/64 (rutschten auf 32/68), Körper hebt sich nur ca. 2,5; Schulterblätter ziehen nach unten – erster Einsatz des Schulterpunkts `s` (Hals wird länger).
+- **Katze-Kuh:** erste Übung mit Rücken- und Halsgelenk: Katze = runder Rücken, Kopf hängt; Kuh = Rückenmitte sinkt, Brust vor, Blick leicht nach oben. Hände bleiben fest am Boden.
 ## 2026-11-12 · Einheitliche Figurfarbe, Hände bleiben an der Stange, Pull-up-Foto entfernt (Fassung 2026-11-12-2)
 
 - **Figurfarbe:** alle Figuren in der Akzentfarbe (`--figur` in app.css, `svg.illu` mit `!important`), egal ob Info-Fenster, Kachel, Studio, Timer oder Baukasten. Die Trainingsart steht weiter an der Kachel. Ausnahme: Mini-Figuren auf Glas bleiben weiß (layout-new.css).
