@@ -5859,8 +5859,8 @@ ILLU_POSES["single-leg-stand"][1] = qWith(ILLU_POSES["single-leg-stand"][0],{ l:
 ILLU_POSES["seated-trunk-rotation"] = [Q(null,[50, 32],[50, 62],[[38, 66, 36, 86, 30, 88], [62, 66, 64, 86, 70, 88]],[[60, 42, 46, 38], [40, 42, 54, 38]],"<path class=\"ip\" d=\"M32 66H68M35 66V89M65 66V89M34 44V66M66 44V66M34 47H66\"/>",true,1), Q([55, 23],[53, 32],[50, 62],[[38, 66, 36, 86, 30, 88], [62, 66, 64, 86, 70, 88]],[[58, 42, 48, 38], [52, 42, 46, 36]],"<path class=\"ip\" d=\"M32 66H68M35 66V89M65 66V89M34 44V66M66 44V66M34 47H66\"/>",true,1)];
 ILLU_POSES["pelvic-tilt"] = [Q(null,[20, 84],[50, 85],[[64, 68, 74, 87, 82, 88], [63, 70, 73, 88, 81, 88]],[[37, 88, 49, 88], [36, 87, 48, 87]],"",false,1)];
 ILLU_POSES["pelvic-tilt"][1] = qWith(ILLU_POSES["pelvic-tilt"][0],{ p:[50,81], l:[[64,66,74,87,82,88],[63,68,73,88,81,88]] });
-ILLU_POSES["side-plank-knees"] = [Q(null,[28, 71],[58, 78],[[76, 84, 86, 87.5]],[[32, 86, 21, 88], [33, 59, 33, 46]],"",false,1)];
-ILLU_POSES["side-plank-knees"][1] = qWith(ILLU_POSES["side-plank-knees"][0],{ n:[28,72], p:[58,84], l:[[76,86,86,88]] });
+ILLU_POSES["side-plank-knees"] = [Q(null,[28, 66],[56, 78],[[75, 86, 86, 88]],[[29, 86, 19, 88], [30, 56, 30, 43]],"",false,1)];
+ILLU_POSES["side-plank-knees"][1] = qWith(ILLU_POSES["side-plank-knees"][0],{ n:[28,68], p:[56,81], l:[[75,87,86,88]] });
 ILLU_POSES["single-arm-plank"] = [Q(null,[69, 58.5],[41.8, 70.4],[[24.3, 78, 6, 86, 3, 89]],[[78, 59, 91, 57], [65, 74, 65, 88]],"",false,1)];
 ILLU_POSES["single-arm-plank"][1] = qWith(ILLU_POSES["single-arm-plank"][0],{ a:ILLU_POSES["single-arm-plank"][0].a.slice().reverse() });
 ILLU_POSES["single-arm-single-leg-plank"] = [Q(null,[69, 58.5],[41.8, 70.4],[[24.3, 78, 6, 86, 3, 89], [24, 66, 5, 62]],[[79, 58, 92, 56], [65, 74, 65, 88]],"",false,1)];

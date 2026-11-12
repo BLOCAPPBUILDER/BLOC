@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-12 · Seitstütz (Knie): Becken angehoben (Fassung 2026-11-12-11)
+
+Figur lag flach wie ein Unterarmstütz; jetzt Ellbogen unter der Schulter, Schulter-Hüfte-Knie in einer Linie. Prüfung durch den Sportwissenschaftler (Clamshell, Push-ups, Single-Arm-Plank unverändert in Ordnung).
+
 ## 2026-11-12 · Foto Band-Außenrotation entfernt (Fassung 2026-11-12-10)
 
 Rechte Bildhälfte zeigte das Band ohne Befestigung (sinnlos). Foto gelöscht, die Strichfigur bleibt. Alle 47 Band-/Stick-Fotos in größerer Ansicht nochmals durchgesehen: sonst nichts Sinnloses.
