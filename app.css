@@ -645,6 +645,10 @@ body.dz-mode{ user-select:none; -webkit-user-select:none; cursor:grabbing; }
 .illu .illu-matte{ fill:currentColor; stroke:none; opacity:.1; }
 .illu .nk{ stroke-width:var(--illu-hals); }
 .illu .br{ stroke-width:var(--illu-brust); }
+/* Einheitliche Figurfarbe überall (Info, Kacheln, Studio, Timer, Baukasten): die Trainingsart erkennt man an der Kachel, nicht an der Figur.
+   Nur die Mini-Figuren auf Glas (layout-new.css) bleiben weiß, sonst wären sie auf dem Foto nicht lesbar. */
+:root{ --figur:var(--accent); }
+svg.illu{ color:var(--figur) !important; }
 .illu .ip{ stroke-width:3.4; }
 .illu .ipf{ fill:currentColor; stroke:none; }
 /* Widerstandsband: dünne Linie in der Gerätefarbe */

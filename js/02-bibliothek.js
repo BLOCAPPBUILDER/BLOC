@@ -767,14 +767,35 @@ function illuSetup(svg){
     fig.bandEls[i] = svg.querySelector('[data-band="'+i+'"]');
     fig.bandRuhe[i] = Math.min.apply(null, bands.map(function(sp, k){ return bandLaenge(bandPunkte(sp[i], P[k])); }));
   });
+  /* Hände, die in allen Phasen am selben Punkt liegen (Stange, Boden, Bank), werden festgehalten: siehe handFest */
+  fig.pins = A.arms.map(function(k, i){
+    var e0 = P[0].arms[i] && P[0].arms[i][P[0].arms[i].length-1];
+    if(!e0 || k.length !== 2) return null;
+    return P.every(function(pt){ var e = pt.arms[i][pt.arms[i].length-1]; return Math.abs(e[0]-e0[0]) < .6 && Math.abs(e[1]-e0[1]) < .6; }) ? e0 : null;
+  });
   illuDraw(fig, { i:0, j:1 % R.length, t:0 });
   illuFigs.push(fig);
   if(illuIO) illuIO.observe(svg);
   if(!illuRaf) illuRaf = requestAnimationFrame(illuFrame);
 }
+/* Hand festhalten: Die Winkel-Überblendung lässt die Hand zwischen zwei Posen vom Griffpunkt abweichen (z. B. an der Klimmzugstange).
+   Liegt die Hand in allen Phasen am selben Punkt, wird der Ellbogen per Zwei-Gelenk-Rechnung (Oberarm/Unterarm-Länge bleiben)
+   so gesetzt, dass die Hand genau dort bleibt; von den zwei möglichen Ellbogen-Lagen gewinnt die, die der Überblendung am nächsten ist. */
+function handFest(s, arm, ziel){
+  var el = arm[0], a = Math.hypot(el[0]-s[0], el[1]-s[1]), b = Math.hypot(arm[1][0]-el[0], arm[1][1]-el[1]);
+  var dx = ziel[0]-s[0], dy = ziel[1]-s[1], d = Math.hypot(dx, dy) || 1e-6;
+  d = Math.max(Math.abs(a-b) + 1e-3, Math.min(a + b - 1e-3, d));
+  var ux = dx/Math.hypot(dx, dy || 1e-6), uy = dy/Math.hypot(dx || 1e-6, dy);
+  var x = (a*a - b*b + d*d)/(2*d), h = Math.sqrt(Math.max(0, a*a - x*x));
+  var bx = s[0] + ux*x, by = s[1] + uy*x;
+  var e1 = [ bx - uy*h, by + ux*h ], e2 = [ bx + uy*h, by - ux*h ];
+  var e = Math.hypot(e1[0]-el[0], e1[1]-el[1]) <= Math.hypot(e2[0]-el[0], e2[1]-el[1]) ? e1 : e2;
+  return [ e, [ ziel[0], ziel[1] ] ];
+}
 /* b = { i: Phase, j: nächste Phase, t: 0..1 dazwischen } */
 function illuDraw(f, b){
   var t = b.t, P = rigPoints(f.R[b.i], f.R[b.j], t);
+  if(f.pins) f.pins.forEach(function(z, i){ if(z && P.arms[i]) P.arms[i] = handFest(P.s, P.arms[i], z); });
   f.spine.setAttribute("d", ptsD(P.p, [P.m, P.s]));
   f.brust.setAttribute("d", ptsD(P.s, [brustBis(P.s, P.m)]));
   f.neck.setAttribute("d", ptsD(P.s, [P.n]));

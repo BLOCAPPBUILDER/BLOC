@@ -4,6 +4,13 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
 
+
+## 2026-11-12 · Einheitliche Figurfarbe, Hände bleiben an der Stange, Pull-up-Foto entfernt (Fassung 2026-11-12-2)
+
+- **Figurfarbe:** alle Figuren in der Akzentfarbe (`--figur` in app.css, `svg.illu` mit `!important`), egal ob Info-Fenster, Kachel, Studio, Timer oder Baukasten. Die Trainingsart steht weiter an der Kachel. Ausnahme: Mini-Figuren auf Glas bleiben weiß (layout-new.css).
+- **Hände festhalten:** Liegt eine Hand in allen Phasen am selben Punkt (Stange, Boden, Bank), setzt `handFest` (js/02-bibliothek.js) den Ellbogen in jedem Bild so, dass die Hand genau dort bleibt (Ober-/Unterarmlänge bleiben gleich). Betrifft 216 Hände, geprüft: keine weicht mehr ab.
+- **Klimmzug (P_HANG/P_PULL):** gleiche Griffbreite unten und oben (vorher 34/66 bzw. 42/58, die Hände rutschten). Gilt auch für Negative Pull-ups.
+- **Pull-ups:** Übungsfoto entfernt (`img/ex/pull-ups.webp`, Eintrag in fotos.js) – es war unsymmetrisch. Die Info zeigt nur noch die Figur.
 ## 2026-11-12 · Figuren: Gelenk in Rücken und Hals, Kettlebell Swing neu (Fassung 2026-11-12-1)
 
 - **Zwei neue Gelenke für die Figuren:** Posen können optional `m` (Knick im Rücken, Übergang Lenden-/Brustwirbelsäule) und `s` (Schulterpunkt = Halsansatz) mitbringen – als 9. und 10. Wert von `Q()` bzw. per `qWith(…,{ m, s })`. Damit dreht sich der Oberkörper eigenständig gegen das Becken und der Hals gegen den Oberkörper; der Kopf hängt jetzt am Hals statt an der Wirbelsäule. Ohne `m`/`s` bleibt alles wie bisher (geprüft: alle Posen und Abläufe liefern dieselben Punkte wie vorher). Code: `rumpfPunkte`, `brustBis`, `rigFromPose`, `rigPoints`, `illuDraw` in js/02-bibliothek.js; `qMirror`, `qShift`, `qScale`, `qSwap` reichen `m`/`s` weiter.
