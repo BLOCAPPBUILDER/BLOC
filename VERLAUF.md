@@ -6,6 +6,15 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+
+## 2026-11-12 · Rücken- und Halsgelenk bei Bauch-, Streck- und Nackenübungen (Fassung 2026-11-12-4)
+
+- **Crunch-Familie** (Crunch, gestreckte Arme, Hände über Kopf, Cross-Body), **Toe Touches:** unterer Rücken bleibt am Boden, nur die Brustwirbelsäule rollt ein, Kinn leicht zur Brust.
+- **Sit-ups:** neuer Ablauf in `ILLU_SEQ` (`SU_LIEGT` → `SU_ROLL` → `SU_OBEN`): erst einrollen, oben leicht runder Rücken – kein Hochklappen wie ein Brett.
+- **Reverse Crunch:** Becken rollt ein, oberer Rücken bleibt unten. **Hollow Hold:** Banane, Lendenwirbelsäule am Boden.
+- **Kobra, Superman, Sphinx:** Becken bleibt am Boden, die Brust hebt sich, Kopf in Verlängerung.
+- **Nackendehnungen** (Kinn zur Brust, Blick zur Decke): nur der Hals neigt sich, ca. 30° – vorher hing der Kopf bis auf Brusthöhe.
+- Bewusst gerade geblieben (fachlich richtig): Planks, Liegestütze, Kniebeugen, Kreuzheben, Glute Bridge, Bird Dog.
 ## 2026-11-12 · Figuren nach sportwissenschaftlicher Prüfung (Fassung 2026-11-12-3)
 
 - **Kettlebell Swing:** Hike mit höherer Hüfte und nur ca. 45° Kniebeugung (vorher ~63°, wirkte wie halbe Kniebeuge), Armlänge in allen Phasen ca. 28 (oben war der Arm 12 % kürzer), beim Absenken Hände knapp hinter der Hüftlinie, Tempo ca. 1,7 s statt 1,4 s (längere Pausen oben und im Hike, Hüftstreckung bleibt schnell).
