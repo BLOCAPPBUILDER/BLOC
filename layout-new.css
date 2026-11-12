@@ -1149,7 +1149,7 @@ body:has(.kal-nav) #app{ touch-action:pan-y; }   /* waagerechte Wischer gehören
 :root[data-layout="new"][data-glas] .wb-kachel:not([style*="--gym-color"]):not([style*="--train-gelb"]), :root[data-layout="new"][data-glas] .wb-mini:not([style*="--gym-color"]):not([style*="--train-gelb"]){ border:2px solid #6a86f5; }
 :root[data-layout="new"][data-glas] .wb-kachel[style*="--train-gelb"], :root[data-layout="new"][data-glas] .wb-mini[style*="--train-gelb"]{ border:2px solid var(--train-gelb); }   /* Körpergewicht gelb */
 :root[data-layout="new"][data-glas] .wb-kachel[style*="--c-stretch"], :root[data-layout="new"][data-glas] .wb-mini[style*="--c-stretch"]{ border:2px solid var(--c-stretch); }
-:root[data-layout="new"][data-glas] .wb-mini-illu, :root[data-layout="new"][data-glas] .wb-mini-illu *{ color:#fff; }
+:root[data-layout="new"][data-glas] .wb-mini-illu, :root[data-layout="new"][data-glas] .wb-mini-illu *{ color:#fff !important; }
 :root[data-layout="new"] .dd-chips{ margin:0 0 10px; }
 :root[data-layout="new"] .dd-unter{ font-size:13px; font-weight:700; margin:12px 0 6px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; }
 :root[data-layout="new"] .dd-verteilung .ausw-row{ display:grid; grid-template-columns:92px 1fr 40px 34px; align-items:center; gap:8px; }
