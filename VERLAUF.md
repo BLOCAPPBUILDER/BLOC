@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-12 · Muschel: Hüftbeugung deutlicher (Fassung 2026-11-12-12)
+
+Figuren-Durchsicht in 12er-Blöcken (Nr. 1-48 von 602, dazu Langhantel- und Band-Familien): keine weiteren Gelenkfehler gefunden. Offen: Rest der Liste, Einzelwinkel mit dem Sportwissenschaftler.
+
 ## 2026-11-12 · Seitstütz (Knie): Becken angehoben (Fassung 2026-11-12-11)
 
 Figur lag flach wie ein Unterarmstütz; jetzt Ellbogen unter der Schulter, Schulter-Hüfte-Knie in einer Linie. Prüfung durch den Sportwissenschaftler (Clamshell, Push-ups, Single-Arm-Plank unverändert in Ordnung).
