@@ -467,17 +467,20 @@ var EX_SUCH_ALIAS = { "russian-twists":"russian twist twists russische drehung r
    blasser gezeichnet - außer bei frontalen Ansichten. */
 /* b = Blickrichtung für die Nase: 1 = Gesicht auf der „Vorderseite“ (bei Blick nach rechts vorn, in Rückenlage oben),
    -1 = umgekehrt (Bauchlage mit Kopf links). Spiegeln kehrt sie um. */
-function Q(h, n, p, l, a, x, f, b){ return { h:h, n:n, p:p, l:l||[], a:a||[], x:x||"", f:!!f, b:b||1 }; }
-function qSwap(q){ return Q(q.h, q.n, q.p, q.l.slice().reverse(), q.a.slice().reverse(), q.x, q.f, q.b); }
+/* m = optionaler Knick im Rücken (Übergang Lenden-/Brustwirbelsäule), s = optionaler Schulterpunkt (Halsansatz).
+   Fehlen sie, bleibt der Rumpf eine gerade Linie von p nach n wie bisher; mit ihnen kann sich der Oberkörper
+   gegen das Becken und der Hals gegen den Oberkörper eigenständig drehen (siehe rumpfPunkte in js/02-bibliothek.js). */
+function Q(h, n, p, l, a, x, f, b, m, s){ return { h:h, n:n, p:p, l:l||[], a:a||[], x:x||"", f:!!f, b:b||1, m:m||null, s:s||null }; }
+function qSwap(q){ return Q(q.h, q.n, q.p, q.l.slice().reverse(), q.a.slice().reverse(), q.x, q.f, q.b, q.m, q.s); }
 function qMirror(q){
   function mx(arr){ return arr.map(function(v, i){ return i%2===0 ? 100-v : v; }); }
-  return Q(q.h ? mx(q.h) : null, mx(q.n), mx(q.p), q.l.map(mx), q.a.map(mx), q.x, q.f, -q.b);
+  return Q(q.h ? mx(q.h) : null, mx(q.n), mx(q.p), q.l.map(mx), q.a.map(mx), q.x, q.f, -q.b, q.m ? mx(q.m) : null, q.s ? mx(q.s) : null);
 }
 function qShift(q, dx, dy){
   function sh(arr){ return arr.map(function(v, i){ return i%2===0 ? v+dx : v+dy; }); }
-  return Q(q.h ? sh(q.h) : null, sh(q.n), sh(q.p), q.l.map(sh), q.a.map(sh), q.x, q.f, q.b);
+  return Q(q.h ? sh(q.h) : null, sh(q.n), sh(q.p), q.l.map(sh), q.a.map(sh), q.x, q.f, q.b, q.m ? sh(q.m) : null, q.s ? sh(q.s) : null);
 }
-function qWith(q, o){ return Q("h" in o ? o.h : q.h, o.n||q.n, o.p||q.p, o.l||q.l, o.a||q.a, "x" in o ? o.x : q.x, "f" in o ? o.f : q.f, "b" in o ? o.b : q.b); }
+function qWith(q, o){ return Q("h" in o ? o.h : q.h, o.n||q.n, o.p||q.p, o.l||q.l, o.a||q.a, "x" in o ? o.x : q.x, "f" in o ? o.f : q.f, "b" in o ? o.b : q.b, "m" in o ? o.m : q.m, "s" in o ? o.s : q.s); }
 /* Geräte */
 /* Hantel und Kettlebell hält die Hand - markiert, damit sie in der Animation mit der Hand mitwandern */
 function gHand(x, y, inner){ return '<g class="gh" data-at="'+x+','+y+'">'+inner+'</g>'; }
@@ -525,6 +528,18 @@ var P_WALK1 = Q(null,[50,20],[50,50],[[57,69,62,89,70,89],[43,69,38,89,46,89]],[
    Hälften zu uns steht. */
 var SK_L   = Q(null,[35,52],[38,68],[[34,78,37,89,31,89],[47,78,29,83,24,84]],[[43,62,37,76],[26,57,19,65]],"",true);
 var SK_AIR = Q(null,[49,46],[51,60],[[44,70,37,78,32,79],[56,70,59,79,64,80]],[[40,54,31,61],[60,54,69,60]],"",true);   // Flug nach links; nach rechts gespiegelt
+/* Kettlebell Swing (Proportionen wie die Sprünge: Rumpf 30, Oberschenkel 21, Unterschenkel 19, Fuß 7, Arm 24). Die Füße bleiben in allen Phasen am selben Fleck.
+   Hike: Hüfte weit nach hinten, Schienbeine fast senkrecht, Knie nur weich, Rücken lang und gerade (~35° über der Waagerechten),
+         Hals in Verlängerung der Wirbelsäule (Blick schräg auf den Boden vor sich), Hände hoch zwischen den Oberschenkeln, Glocke hinter den Knien.
+   Oben: aufrecht wie ein stehendes Brett (Gesäß fest, nicht nach hinten lehnen), Arme gestreckt und locker, Glocke schwebt auf Brusthöhe.
+   Fallen: aufrecht bleiben, bis die Arme die Hüfte erreichen - erst dann in die Hüftbeuge (nicht zu früh abknicken). */
+var KB_HIKE = Q([65,33.9],[58.1,39.7],[34,57.5],[[50.5,70.3,47,89,54,89]],[[49,53.7,43.1,64.5]], gKB(41,63), false, 1, null, [54.9,42.9]);
+var KB_TOP  = Q(null,[47,19],[47,49],[[47.5,70,47,89,54,89]],[[58.9,25.2,70.8,26.8]], gKB(71,27));
+var KB_DROP = Q(null,[47,19],[47,49],[[47.5,70,47,89,54,89]],[[50,35.3,52,47]], gKB(52,47));
+/* Zwischenstufen mit fast senkrechten Schienbeinen (sonst schöbe die Winkel-Überblendung die Knie nach vorn = „Kniebeugen-Swing“):
+   Auf dem Weg nach oben schiebt die Hüfte, die Arme folgen nur; auf dem Weg nach unten sind die Arme schon an der Hüfte, bevor der Oberkörper kippt. */
+var KB_MID  = Q(null,[54.7,22.9],[42,50.1],[[48.5,70.1,47,89,54,89]],[[58.8,37.4,64.8,47.8]], gKB(65,48));
+var KB_SINK = Q(null,[54.7,22.9],[42,50.1],[[48.5,70.1,47,89,54,89]],[[50.6,38.6,47,50]], gKB(46,50));
 var ILLU_POSES = {
   /* Cardio */
   "burpees":            [P_STUP, P_PH],
@@ -548,7 +563,7 @@ var ILLU_POSES = {
 
   /* Kraft mit Gewicht */
   "goblet-squat":       [qWith(P_ST,{ a:[[57,36,58,29]], x:gKB(60,26) }), qWith(P_SQ,{ a:[[54,50,56,42]], x:gKB(58,39) })],
-  "kb-swing":           [qWith(P_HG,{ l:[[46,70,44,89,52,89]], a:[[60,56,52,70]], x:gKB(52,70) }), qWith(P_ST,{ a:[[63,25,76,25]], x:gKB(79,21) })],
+  "kb-swing":           [KB_HIKE, KB_TOP],
   "db-thruster":        [qWith(P_SQ,{ a:[[56,46,53,36]], x:gDB(53,34) }), qWith(P_STUP,{ x:gDB(65,6) })],
   "romanian-deadlift":  [qWith(P_ST,{ x:gDB(53,49) }), qWith(P_HG,{ x:gDB(61,68) })],
   "db-deadlift":        [Q(null,[60,46],[38,62],[[54,66,50,89,58,89]],[[60,62,58,76]], gDB(58,78)), qWith(P_ST,{ x:gDB(53,49) })],
@@ -774,7 +789,7 @@ Object.assign(ILLU_POSES, {
    k = Posen der Reihe nach (danach wieder von vorn), t = je Phase [halten s, Übergang s, Easing]. */
 function qScale(q, k){
   function sc(arr){ return arr.map(function(v, i){ return i%2===0 ? +(50+(v-50)*k).toFixed(1) : +(89-(89-v)*k).toFixed(1); }); }
-  return Q(q.h ? sc(q.h) : null, sc(q.n), sc(q.p), q.l.map(sc), q.a.map(sc), q.x, q.f, q.b);
+  return Q(q.h ? sc(q.h) : null, sc(q.n), sc(q.p), q.l.map(sc), q.a.map(sc), q.x, q.f, q.b, q.m ? sc(q.m) : null, q.s ? sc(q.s) : null);
 }
 var J_ST   = Q(null,[50,19],[50,49],[[50,70,50,89,57,89]],[[52,35,54,47]]);          // Stand, Arme locker
 var J_SQB  = Q(null,[57,45],[36,66],[[57,71,52,89,59,89]],[[44,54,35,61]]);          // Hocke, Arme hinten (Ausholen)
@@ -803,6 +818,8 @@ var JL_A   = Q(null,[50,33],[48,63],[[68,70,68,89,75,89],[41,83,23,85,17,89]],[[
 var JL_AIR = qShift(Q(null,[50,16],[50,46],[[56,65,53,83,60,85],[44,66,41,84,47,87]],[[56,24,62,31],[44,24,38,31]]), 0, -11);
 var JF_AIR = Q(null,[58,8],[48,34],[[44,52,34,64,36,72]],[[68,8,78,2]]);
 var ILLU_SEQ = {
+  /* Kettlebell Swing (ca. 1,4 s): Hike → Hüftstoß → oben (bremst ab, Glocke schwebt kurz) → Glocke fällt, Körper bleibt aufrecht → erst an der Hüfte abknicken → Hike */
+  "kb-swing":      { k:[KB_HIKE, KB_MID, KB_TOP, KB_DROP, KB_SINK], t:[[.08,.2,"i"],[0,.28,"o"],[.16,.3,"i"],[0,.16,"l"],[0,.24,"o"]] },
   "jumping-jacks": { k:[JJ_ZU, JJ_LUFT, JJ_AUF, JJ_LUFT], t:[[.1,.2,"o"],[.03,.2,"i"],[.1,.2,"o"],[.03,.2,"i"]] },
   "skater-jumps":  { k:[SK_L, qMirror(SK_AIR), qMirror(SK_L), SK_AIR], t:[[.16,.3],[0,.3],[.16,.3],[0,.3]] },   // Landung links → Flug nach rechts → Landung rechts → Flug nach links (Zyklus ca. 1,5 s)
   "lateral-hops":  { k:[qShift(LH_BODEN,-12,0), LH_LUFT, qShift(LH_BODEN,12,0), LH_LUFT], t:[[.03,.12,"o"],[.01,.12,"i"],[.03,.12,"o"],[.01,.12,"i"]] },

@@ -472,8 +472,6 @@ function sortedExercises(cat, sort, equip, mains, zonen){
 /* Figur zeichnen: Rumpf kräftiger als die Glieder, schmaler Hals, Hände als Punkte.
    Der vordere Arm bekommt eine Maske (schmale Lücke im Körper dahinter) - so bleibt er
    auch vor dem Rumpf erkennbar, egal auf welchem Hintergrund. "@M@" wird pro Bild durch eine eindeutige Id ersetzt. */
-/* Brustkorb: breiteres Rumpfstück von der Schulter bis knapp unter die Mitte - Oberkörper wirkt dadurch zur Taille hin schmaler */
-function brustEnde(s, p){ return [ +(s[0] + (p[0]-s[0])*.45).toFixed(1), +(s[1] + (p[1]-s[1])*.45).toFixed(1) ]; }
 /* Ferse: kurzes Stück hinter dem Knöchel, entgegen der Fußspitze */
 function fersePunkt(ankle, toe){ return [ +(ankle[0] + (ankle[0]-toe[0])*.55).toFixed(1), +(ankle[1] + (ankle[1]-toe[1])*.55).toFixed(1) ]; }
 function haloStart(s, e){ return [ +(s[0] + (e[0]-s[0])*.45).toFixed(1), +(s[1] + (e[1]-s[1])*.45).toFixed(1) ]; }
@@ -485,11 +483,25 @@ function qSVG(q){
   c.x = x;
   return qSVG0(c) + vorn;
 }
+/* Rumpfpunkte einer Pose: Becken p → Rückenknick m → Schulter s → Nacken n → Kopf h.
+   Ohne m/s liegen alle auf einer Geraden (Schulter bei 85 %, Knick in der Mitte Becken–Schulter) - alte Posen bleiben unverändert.
+   Mit m knickt der Oberkörper gegen das Becken (Rundrücken / aufgerichtete Brust), mit s neigt sich der Hals eigenständig. */
+function rumpfPunkte(q){
+  var n = q.n, p = q.p, dx = n[0]-p[0], dy = n[1]-p[1], len = Math.sqrt(dx*dx+dy*dy) || 1, s = q.s;
+  if(!s){
+    if(q.m){ var mx = q.m[0]-n[0], my = q.m[1]-n[1], ml = Math.sqrt(mx*mx+my*my) || 1, k = len*.15/ml; s = [ n[0] + mx*k, n[1] + my*k ]; }
+    else s = [ n[0] - dx*.15, n[1] - dy*.15 ];
+  }
+  var m = q.m || [ (p[0]+s[0])/2, (p[1]+s[1])/2 ];
+  var hx = n[0]-s[0], hy = n[1]-s[1], hl = Math.sqrt(hx*hx+hy*hy) || 1;
+  var h = q.h || [ n[0] + hx/hl*9, n[1] + hy/hl*9 ];
+  return { p:p, m:m, s:s, n:n, h:h };
+}
+/* Brustkorb: vom Schulterpunkt 90 % Richtung Rückenknick (ohne Knick = 45 % Richtung Becken, wie früher) */
+function brustBis(s, m){ return [ +(s[0] + (m[0]-s[0])*.9).toFixed(1), +(s[1] + (m[1]-s[1])*.9).toFixed(1) ]; }
 function qSVG0(q){
-  var n = q.n, p = q.p;
-  var dx = n[0]-p[0], dy = n[1]-p[1], len = Math.sqrt(dx*dx+dy*dy) || 1;
-  var h = q.h || [ +(n[0] + dx/len*9).toFixed(1), +(n[1] + dy/len*9).toFixed(1) ];
-  var s = [ +(n[0] - dx*.15).toFixed(1), +(n[1] - dy*.15).toFixed(1) ];   // Schulter knapp unter dem Nacken
+  function r(v){ return [ +v[0].toFixed(1), +v[1].toFixed(1) ]; }
+  var R = rumpfPunkte(q), n = q.n, p = q.p, s = r(R.s), m = r(R.m), h = q.h || r(R.h);
   function limb(start, pts, hinten){
     var d = "M"+start[0]+" "+start[1];
     for(var i=0;i<pts.length;i+=2) d += "L"+pts[i]+" "+pts[i+1];
@@ -501,8 +513,8 @@ function qSVG0(q){
     return out;
   }
   function hand(a, hinten){ return '<circle class="hd'+(hinten ? ' lb' : '')+'" cx="'+a[a.length-2]+'" cy="'+a[a.length-1]+'" r="3.3"/>'; }
-  var b = brustEnde(s, p);
-  var rumpf = '<path class="tr" d="M'+p[0]+' '+p[1]+'L'+s[0]+' '+s[1]+'"/><path class="br" d="M'+s[0]+' '+s[1]+'L'+b[0]+' '+b[1]+'"/>'+
+  var b = brustBis(s, m);
+  var rumpf = '<path class="tr" d="M'+p[0]+' '+p[1]+'L'+m[0]+' '+m[1]+'L'+s[0]+' '+s[1]+'"/><path class="br" d="M'+s[0]+' '+s[1]+'L'+b[0]+' '+b[1]+'"/>'+
     '<path class="nk" d="M'+s[0]+' '+s[1]+'L'+n[0]+' '+n[1]+'"/>';
   var koerper = q.f ? rumpf : "";
   q.l.forEach(function(l, i){ if(i>0) koerper += limb(p, l, !q.f); });
@@ -556,13 +568,13 @@ function illuHTML(exId, cls, view2){
    (auf dem kürzesten Weg) - so bleiben Gliedmaßen gleich lang und drehen natürlich um ihre
    Gelenke, statt zwischen zwei Posen überzublenden. Geräte in der Hand wandern mit der Hand. */
 function rigFromPose(q){
-  var n = q.n, p = q.p;
-  var dx = n[0]-p[0], dy = n[1]-p[1], len = Math.sqrt(dx*dx+dy*dy) || 1;
-  var h = q.h || [ n[0] + dx/len*9, n[1] + dy/len*9 ];
-  var sa = Math.atan2(dy, dx);
-  var s = [ p[0] + dx*.85, p[1] + dy*.85 ];   // Schulter knapp unter dem Nacken (wie qSVG)
-  function kette(start, pts){
-    var out = [], prev = start, pa = sa;
+  var R = rumpfPunkte(q), p = q.p, m = R.m, s = R.s, n = q.n, h = R.h;
+  function wl(a, b){ return [ Math.atan2(b[1]-a[1], b[0]-a[0]), Math.sqrt(Math.pow(b[0]-a[0],2)+Math.pow(b[1]-a[1],2)) ]; }
+  /* Gelenkkette des Rumpfs: Lendenwirbelsäule (absolut), Brustwirbelsäule, Hals, Kopf (jeweils relativ zum Vorgänger) */
+  var lo = wl(p, m), up = wl(m, s), nk = wl(s, n), hd = wl(n, h);
+  var sa = lo[0], ua = up[0];
+  function kette(start, pts, pa0){
+    var out = [], prev = start, pa = pa0;
     for(var i=0;i+1<pts.length;i+=2){
       var a = Math.atan2(pts[i+1]-prev[1], pts[i]-prev[0]);
       out.push({ rel:a-pa, len:Math.sqrt(Math.pow(pts[i]-prev[0],2)+Math.pow(pts[i+1]-prev[1],2)) });
@@ -570,9 +582,9 @@ function rigFromPose(q){
     }
     return out;
   }
-  return { p:p.slice(), sa:sa, sl:len,
-           head:{ rel:Math.atan2(h[1]-n[1], h[0]-n[0])-sa, len:Math.sqrt(Math.pow(h[0]-n[0],2)+Math.pow(h[1]-n[1],2)) },
-           legs:q.l.map(function(l){ return kette(p, l); }), arms:q.a.map(function(a){ return kette(s, a); }) };
+  return { p:p.slice(), sa:sa, sl:lo[1], up:{ rel:ua-sa, len:up[1] }, neck:{ rel:nk[0]-ua, len:nk[1] },
+           head:{ rel:hd[0]-nk[0], len:hd[1] },
+           legs:q.l.map(function(l){ return kette(p, l, sa); }), arms:q.a.map(function(a){ return kette(s, a, ua); }) };
 }
 /* Fehlt in einer Pose ein Glied (oder ein Fuß), übernimmt sie es aus der anderen - es bleibt dann einfach stehen */
 function rigAlign(A, B){
@@ -596,12 +608,13 @@ function angLerp(a, b, t){
 function rigPoints(A, B, t){
   function L(a, b){ return a + (b-a)*t; }
   var p = [ L(A.p[0], B.p[0]), L(A.p[1], B.p[1]) ];
-  var sa = angLerp(A.sa, B.sa, t), sl = L(A.sl, B.sl);
-  var c = Math.cos(sa), si = Math.sin(sa);
-  var n = [ p[0] + c*sl, p[1] + si*sl ], s = [ p[0] + c*sl*.85, p[1] + si*sl*.85 ];
-  var ha = sa + angLerp(A.head.rel, B.head.rel, t), hl = L(A.head.len, B.head.len);
-  function kette(start, ka, kb){
-    var pts = [], prev = start, pa = sa;
+  function vor(o, a, l){ return [ o[0] + Math.cos(a)*l, o[1] + Math.sin(a)*l ]; }
+  var sa = angLerp(A.sa, B.sa, t), m = vor(p, sa, L(A.sl, B.sl));
+  var ua = sa + angLerp(A.up.rel, B.up.rel, t), s = vor(m, ua, L(A.up.len, B.up.len));
+  var na = ua + angLerp(A.neck.rel, B.neck.rel, t), n = vor(s, na, L(A.neck.len, B.neck.len));
+  var ha = na + angLerp(A.head.rel, B.head.rel, t), hl = L(A.head.len, B.head.len);
+  function kette(start, ka, kb, pa0){
+    var pts = [], prev = start, pa = pa0;
     for(var i=0;i<ka.length;i++){
       var a = pa + angLerp(ka[i].rel, kb[i].rel, t), l = L(ka[i].len, kb[i].len);
       prev = [ prev[0] + Math.cos(a)*l, prev[1] + Math.sin(a)*l ];
@@ -609,9 +622,9 @@ function rigPoints(A, B, t){
     }
     return pts;
   }
-  return { p:p, n:n, s:s, h:[ n[0] + Math.cos(ha)*hl, n[1] + Math.sin(ha)*hl ],
-           legs:A.legs.map(function(k, i){ return kette(p, k, B.legs[i]); }),
-           arms:A.arms.map(function(k, i){ return kette(s, k, B.arms[i]); }) };
+  return { p:p, m:m, n:n, s:s, h:vor(n, ha, hl),
+           legs:A.legs.map(function(k, i){ return kette(p, k, B.legs[i], sa); }),
+           arms:A.arms.map(function(k, i){ return kette(s, k, B.arms[i], ua); }) };
 }
 /* Geräte, die die Hand hält (Hantel, Kettlebell), stecken in <g class="gh" data-at="x,y">,
    Polster und Platten am Fuß (Beinstrecker, Schlitten) in <g class="gf" data-at="x,y"> */
@@ -762,8 +775,8 @@ function illuSetup(svg){
 /* b = { i: Phase, j: nächste Phase, t: 0..1 dazwischen } */
 function illuDraw(f, b){
   var t = b.t, P = rigPoints(f.R[b.i], f.R[b.j], t);
-  f.spine.setAttribute("d", ptsD(P.p, [P.s]));
-  f.brust.setAttribute("d", ptsD(P.s, [brustEnde(P.s, P.p)]));
+  f.spine.setAttribute("d", ptsD(P.p, [P.m, P.s]));
+  f.brust.setAttribute("d", ptsD(P.s, [brustBis(P.s, P.m)]));
   f.neck.setAttribute("d", ptsD(P.s, [P.n]));
   f.head.setAttribute("cx", P.h[0].toFixed(1)); f.head.setAttribute("cy", P.h[1].toFixed(1));
   P.legs.forEach(function(k, i){
