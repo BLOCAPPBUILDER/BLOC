@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-12 · Sechs neue Workouts nur mit Widerstandsband (Fassung 2026-11-12-14)
+
+Neu: Rücken, Arme (Bizeps & Trizeps), Schultern pflegen, Beine & Po B, Ganzkörper B, Kraft für Läufer – jeweils 3 × 40 s / 20 s, 12–18 Min, Deckblatt-Texte DE/EN. Auswahl vom Sportwissenschaftler geprüft (höchstens 20 % Überschneidung je Gruppe). Datenfehler behoben: Beinbeugen im Stand und Fußheben (Band) sind einbeinig und laufen jetzt je Seite. Offen: Studienangaben (ACSM 2026, WHO 2020, McLeod 2024) in dieser Prüfung nicht neu verifiziert; für Läufer fehlen Band-Übungen für Quadrizeps und Wade.
+
 ## 2026-11-12 · Figuren nach Sportwissenschaftler-Durchsicht (Fassung 2026-11-12-13)
 
 Alle 602 Figuren in hoher Auflösung durchgesehen. Korrigiert: Bridge Hold (Rückenlage statt Handstand-Haltung), Butterfly Sit-up (Rückenlage), Glute-Ham-Raise (unten hängender Rumpf), Handstand-Liegestütz (Beine gestreckt, Wand). Offen: Ceiling-Look-Stretch (Kopfneigung), Prone-Rear-Raise (Arm), Hanging Knee Raise (Daten zeigen Knie über Hüfte, nicht geändert).
