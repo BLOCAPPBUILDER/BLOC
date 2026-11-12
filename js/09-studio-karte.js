@@ -103,19 +103,31 @@ function studioVorschlag(id){
      gerundet auf Vielfache des Schritts. Wäre die Stufe mehr als 10 % des Gewichts (z. B. 4 → 6,5 kg), stattdessen einmal die Wiederholungen
      anheben (Ziel + 2); beim nächsten Mal folgt der größere Sprung mit Hinweis. Ohne Gewicht: Ziel + 2 Wiederholungen.
    - Zurücknehmen: in den letzten zwei Runden im Schnitt unter der Untergrenze des Bereichs → etwa 10 % weniger Gewicht (mindestens eine Stufe).
-   - Kein Tipp, wenn danach schon angepasst wurde (übernommen oder von Hand) und in der Leichtwoche. Gezählt wird in Runden, nicht nach Uhrzeit.
+   - Kein Tipp, wenn danach schon angepasst wurde (übernommen oder von Hand) und in der Leichtwoche; Runden der Leichtwoche (l.leicht) zählen nicht.
+     Keine Rücknahme in der ersten Runde nach einer Erhöhung. Nach mehr als 14 Tagen Pause: leichter (~10 %) wieder einsteigen.
+     Gezählt wird in Runden, nicht nach Uhrzeit. (Fachliche Prüfung 2026-11-12: ACSM-Rahmen 2–10 %, „2-für-2“.)
    mitOffen: die offene Runde zählt als fertig (Auswertung direkt am Ende des Trainings). */
-var PROG_SPRUNG = 0.10;
+var PROG_SPRUNG = 0.10, PROG_PAUSE_TAGE = 14;
+function studioRunter(kg, s){   // etwa 10 % weniger, auf Vielfache des Schritts, mindestens eine Stufe
+  var r = Math.round(kg*0.9/s)*s;
+  if(r >= kg - 1e-9) r = (Math.ceil(kg/s - 1e-9) - 1)*s;
+  return Math.round(r*100)/100;
+}
 function studioProg(id, mitOffen){
   var e = studioEintrag(id), ex = findExercise(id);
   if(!e || !e.log || !ex || studioEinheit(id) === "zeit") return null;
   var z = studioZiel(id), b = studioBereich(id), o = studioOffen(e);
-  var l = e.log.filter(function(x){ return arbeitsSaetze(x).length && (mitOffen || x !== o); });
+  var l = e.log.filter(function(x){ return arbeitsSaetze(x).length && !x.leicht && (mitOffen || x !== o); });
+  if(!l.length) return null;
+  var kg = studioNurBlock(ex) ? 0 : studioArbeitsKg(id), letzte0 = l[l.length-1];
+  if(!mitOffen && kg > 0 && Date.now() - letzte0.at > PROG_PAUSE_TAGE*86400000 && !(e.erhoeht && e.erhoeht >= letzte0.at) && !(e.manuell && e.manuell >= letzte0.at)){
+    var r0 = studioRunter(kg, z.schritt);   // lange Pause: etwas leichter wieder einsteigen
+    if(r0 > 0) return { art:"pause", kg:r0, alt:kg, tage:Math.floor((Date.now() - letzte0.at)/86400000) };
+  }
   if(l.length < 2) return null;
   var zwei = l.slice(-2), letzte = zwei[1];
   if(e.erhoeht && e.erhoeht >= letzte.at) return null;
   if(e.manuell && e.manuell >= letzte.at) return null;
-  var kg = studioNurBlock(ex) ? 0 : studioArbeitsKg(id);
   function amGewicht(x){ return arbeitsSaetze(x).filter(function(s){ return satzTyp(s) !== "d" && (kg > 0 ? s[0] >= kg - 1e-9 : true); }); }
   function geschafft(x){
     var w = amGewicht(x).map(function(s){ return s[1]; }).sort(function(p, q){ return q - p; }).slice(0, z.saetze);
@@ -135,40 +147,44 @@ function studioProg(id, mitOffen){
     }
     return z.wdh + 2 <= 40 ? { art:"wdh", wdh:z.wdh + 2, alt:z.wdh, max:b.max } : null;
   }
-  if(zwei.every(verfehlt)){
+  if(zwei.every(verfehlt) && !(e.erhoeht && e.erhoeht > zwei[0].at)){   // erst nach zwei Runden mit dem neuen Gewicht zurücknehmen
     if(kg > 0){
-      var s2 = z.schritt, r = Math.round(kg*0.9/s2)*s2;   // etwa 10 % weniger, auf Vielfache des Schritts
-      if(r >= kg - 1e-9) r = (Math.ceil(kg/s2 - 1e-9) - 1)*s2;   // mindestens eine Stufe
-      r = Math.round(r*100)/100;
+      var r = studioRunter(kg, z.schritt);
       return r > 0 ? { art:"runter", kg:r, alt:kg, wdh:b.min } : null;
     }
     return z.wdh > 4 ? { art:"wdhRunter", wdh:Math.max(2, z.wdh - 2), alt:z.wdh } : null;
   }
   return null;
 }
-/* Tipps für ein Training: höchstens zwei auf einmal (in der Reihenfolge des Plans), in der Leichtwoche keine. Gibt { id: Tipp } zurück. */
+/* Tipps für ein Training: höchstens zwei Steigerungen auf einmal (in der Reihenfolge des Plans, große Übungen stehen vorn), in der Leichtwoche keine.
+   Rücknahmen (zurück, nach Pause) sind Sicherheitshinweise und zählen nicht mit. Gibt { id: Tipp } zurück. */
 var PROG_MAX_TIPPS = 2;
 function studioTipps(ids, leicht, mitOffen){
   var o = {}, n = 0;
   if(leicht) return o;
-  ids.forEach(function(id){ if(n >= PROG_MAX_TIPPS) return; var tp = studioProg(id, mitOffen); if(tp){ o[id] = tp; n++; } });
+  ids.forEach(function(id){
+    var tp = studioProg(id, mitOffen); if(!tp) return;
+    var sicher = tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause";
+    if(sicher || n < PROG_MAX_TIPPS){ o[id] = tp; if(!sicher) n++; }
+  });
   return o;
 }
 function studioSteigerTippText(v){
   if(v.art === "kg") return t("tippKg", { max:v.max, neu:studioKg(v.kg), p:v.prozent, min:v.min })+(v.gross ? " "+t("tippGross") : "");
   if(v.art === "runter") return t("tippRunter", { w:v.wdh, neu:studioKg(v.kg) });
+  if(v.art === "pause") return t("tippPause", { d:v.tage, neu:studioKg(v.kg) });
   if(v.art === "wdhRunter") return t("tippWdhRunter", { neu:v.wdh });
   return v.grund === "sprung" ? t("tippSprung", { max:v.max, kg:studioKg(v.sprung), neu:v.wdh }) : t("tippWdh", { max:v.max, neu:v.wdh });
 }
 function studioTippKurz(v){
-  return v.art === "kg" ? "↑ "+t("tippKurzKg", { kg:studioKg(v.kg), p:v.prozent }) : v.art === "runter" ? "↓ "+t("tippKurzKg2", { kg:studioKg(v.kg) })
+  return v.art === "kg" ? "↑ "+t("tippKurzKg", { kg:studioKg(v.kg), p:v.prozent }) : v.art === "runter" || v.art === "pause" ? "↓ "+t("tippKurzKg2", { kg:studioKg(v.kg) })
     : (v.art === "wdhRunter" ? "↓ " : "↑ ")+t("tippKurzWdh", { n:v.wdh });
 }
 /* Tipp übernehmen: Gewicht bzw. Wiederholungsziel setzen. Nach einer Gewichtserhöhung gilt wieder das ursprüngliche Wiederholungsziel (falls es wegen
    eines zu großen Sprungs angehoben war). Gibt das neue Gewicht zurück (oder null). */
 function studioTippUebernehmen(id, tp){
   var a = studioAlle(), en = a[id] || (a[id] = { log:[] }), z = studioZiel(id);
-  if(tp.art === "kg" || tp.art === "runter"){
+  if(tp.art === "kg" || tp.art === "runter" || tp.art === "pause"){
     en.kg = tp.kg;
     if(tp.art === "kg" && en.zielBasis){ en.ziel = { saetze:z.saetze, wdh:en.zielBasis }; delete en.zielBasis; }
   } else {
@@ -176,7 +192,7 @@ function studioTippUebernehmen(id, tp){
     en.ziel = { saetze:z.saetze, wdh:tp.wdh };
   }
   en.erhoeht = Date.now(); save();
-  return tp.art === "kg" || tp.art === "runter" ? tp.kg : null;
+  return tp.art === "kg" || tp.art === "runter" || tp.art === "pause" ? tp.kg : null;
 }
 /* Leichtwoche: steht heute im Kalender ein Termin aus dem Plan-Assistenten mit Leichtwoche, zu dem dieser BLOC gehört? */
 function planLeichtHeute(planId){
@@ -297,7 +313,7 @@ function openStudioStats(id, sicht){
   }
   var fmt = sicht === "vol" ? function(v){ return studioKg(Math.round(v)); } : function(v){ return studioKg(Math.round(v*10)/10); };
   // Rückschritt sichtbar machen: drei Runden in Folge weniger Volumen und deutlich unter dem besten - dann eher Gewicht zurücknehmen
-  var v3 = log.slice(-3).map(studioVolumen), warnung = "";
+  var v3 = log.filter(function(l){ return !l.leicht; }).slice(-3).map(studioVolumen), warnung = "";   // Leichtwoche ist kein Rückschritt
   if(v3.length === 3 && v3[0] > v3[1] && v3[1] > v3[2] && v3[2] < b.vol*0.8) warnung = t("stVolFaellt", { p:Math.round((1 - v3[2]/b.vol)*100) });
   openStatistik({
     titel:tplText(ex.name), farbe:studioFarbe(ex), hatDaten:log.length > 0, leerText:t("stStatsEmpty"), warnung:warnung,

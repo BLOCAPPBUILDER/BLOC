@@ -31,11 +31,14 @@ function studioRundeFuer(en, jetzt){   // die offene Runde der Übung, sonst ein
 }
 /* Arbeitsgewicht einer Runde: das häufigste Gewicht der normalen Sätze, bei Gleichstand das höhere. Aufwärm- und Drop-Sätze zählen nicht -
    ein leichter Ausklang-Satz am Ende senkt das Gewicht fürs nächste Mal also nicht. */
-function rundeArbeitsKg(l){
-  var n = {}, best = null;
-  ((l && l.s) || []).forEach(function(x){ var ty = satzTyp(x); if(ty === "w" || ty === "d") return; n[x[0]] = (n[x[0]] || 0) + 1; });
+function rundeArbeitsKg(l){   // mindestens die Hälfte der normalen Sätze mit diesem Gewicht, sonst der Median (Pyramide)
+  var n = {}, best = null, alle = [];
+  ((l && l.s) || []).forEach(function(x){ var ty = satzTyp(x); if(ty === "w" || ty === "d") return; n[x[0]] = (n[x[0]] || 0) + 1; alle.push(x[0]); });
+  if(!alle.length) return null;
   Object.keys(n).forEach(function(k){ if(best === null || n[k] > n[best] || (n[k] === n[best] && +k > +best)) best = k; });
-  return best === null ? null : +best;
+  if(n[best]*2 >= alle.length) return +best;
+  alle.sort(function(a, b){ return a - b; });
+  return alle[Math.floor((alle.length - 1)/2)];   // Median; bei gerader Zahl das untere der beiden mittleren (eher zu leicht als zu schwer)
 }
 /* Arbeitsgewicht: was eingestellt wurde (Plan, Karte, Tipp, sonst das Arbeitsgewicht der letzten Runde), sonst 0 */
 function studioArbeitsKg(id){

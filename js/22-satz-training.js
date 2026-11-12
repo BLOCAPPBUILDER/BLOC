@@ -85,7 +85,7 @@ function satzKarteHTML(id, i, n){
       griffHTML(id)+
       (ILLU[id] ? '<div class="satz-figur">'+illuHTML(id, "satz-illu")+'</div>' : (ex.custom ? '<div class="satz-figur"><span class="ex-symbol big">'+exSymbol(ex)+'</span></div>' : ''))+
       '<div class="satz-saetze" role="img" aria-label="'+esc((h ? h.s.length : 0)+" / "+z.saetze)+'">'+(function(){ var o = "", n = Math.min(z.saetze, 12), fertigeAnzahl = h ? h.s.length : 0; for(var q = 0; q < n; q++) o += '<i class="'+(q < fertigeAnzahl ? 'an' : q === fertigeAnzahl ? 'jetzt' : '')+'"></i>'; return o; })()+'</div>'+
-      (function(){ var tp = h ? null : satzKontext.tipps[id]; return tp ? '<div class="satz-tipp'+(tp.art === "runter" || tp.art === "wdhRunter" ? ' runter' : '')+'"><span>'+esc(studioSteigerTippText(tp))+'</span><button type="button" data-satztipp>'+esc(t("tippUebernehmen"))+'</button></div>' : ''; })()+
+      (function(){ var tp = h ? null : satzKontext.tipps[id]; return tp ? '<div class="satz-tipp'+(tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" ? ' runter' : '')+'"><span>'+esc(studioSteigerTippText(tp))+'</span><button type="button" data-satztipp>'+esc(t("tippUebernehmen"))+'</button></div>' : ''; })()+
       '<div class="satz-ziel">'+esc(t("stGoal"))+' <b>'+satzName(z.saetze)+' × '+(zeitE ? z.wdh : b.min+'–'+b.max)+'</b>'+(e.kg != null && !koerper ? ' · <b>'+studioKg(e.kg)+' kg</b>' : '')+'</div>'+
       (satzKontext.leicht ? '<div class="satz-hinweis">'+esc(t("leichtHinweis", { n:z.saetze }))+'</div>' : '')+
       (v.erstes && !koerper && !zeitE && !h ? '<div class="satz-hinweis">'+esc(t("erstesMalHinweis", { n:b.max }))+'</div>' : '')+
@@ -255,6 +255,7 @@ function renderSatzTraining(planId, start){
     k.querySelector("[data-satzset]").addEventListener("click", function(){
       var kg = koerper ? 0 : kgWert(), w = Math.max(1, Math.min(wMax, parseInt(wIn.value) || 1)), e = studioEintrag(id) || {};
       studioSatzLog(id, kg, w, zeitE);
+      if(satzKontext.leicht){ var lr = studioOffen(studioEintrag(id)); if(lr) lr.leicht = true; }   // Runde der Leichtwoche: zählt nicht für die Steigerung
       vibrate([40, 30, 70]);
       var h = (studioEintrag(id).log || []).slice(-1)[0], nSatz = h ? h.s.length : 1;
       satzFeedback(nSatz, satzText(zeitE ? [kg, w, "n", 0, 1] : [kg, w]), false);
@@ -292,6 +293,6 @@ function satzStandardHTML(tipps){
   var ids = Object.keys(tipps || {});
   if(!ids.length) return "";
   return '<div class="satz-std"><b>'+esc(t("satzNaechstesMal"))+'</b><small>'+esc(t("satzNaechstesHint"))+'</small>'+
-    ids.map(function(id){ var ex = findExercise(id), tp = tipps[id], ab = tp.art === "runter" || tp.art === "wdhRunter";
+    ids.map(function(id){ var ex = findExercise(id), tp = tipps[id], ab = tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause";
       return '<div class="satz-vgl"><span class="satz-vgl-n">'+esc(ex ? tplText(ex.name) : id)+'</span><span class="satz-vgl-b '+(ab ? 'runter' : 'hoch')+'">'+esc(studioTippKurz(tp))+'</span></div>'; }).join("")+'</div>';
 }
