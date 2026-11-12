@@ -516,10 +516,10 @@ var P_HG    = Q(null,[64,40],[40,50],[[44,70,44,89,52,89]],[[62,54,61,66]]);  //
 var P_Q4    = Q(null,[66,66],[40,66],[[40,88,22,88,18,89]],[[67,78,68,89]]);  // Vierfüßler
 var P_F     = Q(null,[50,20],[50,52],[[46,70,45,89,39,89],[54,70,55,89,61,89]],[[44,34,42,48],[56,34,58,48]],"",true);
 /* Klimmzug von vorn: Griff in beiden Phasen gleich (Hände bei x = 36 / 64, etwas breiter als die Schultern) - die Hände bleiben an der Stange,
-   nur die Ellbogen wandern nach unten außen. Ober-/Unterarm je ca. 16. Stange bei y = 9,5, damit oben das Kinn sichtbar ÜBER der Stange ist
-   (Kopfmitte 3,5 über der Stange, der Kopf bleibt gerade noch im Bild). */
-var P_HANG  = Q(null,[50,33.5],[50,61.5],[[48,75.5,48,87.5],[52,75.5,52,87.5]],[[40,25.1,36,9.5],[60,25.1,64,9.5]], gBar(9.5,24,76), true);
-var P_PULL  = Q([50,6],[50,15],[50,43],[[48,59,48,73],[52,59,52,73]],[[35.3,25.5,36,9.5],[64.7,25.5,64,9.5]], gBar(9.5,24,76), true);
+   nur die Ellbogen wandern nach unten außen. Ober-/Unterarm je ca. 16. Stange bei y = 14: Kopf r = 7, oben Kopfmitte 6 -> Kinn 13,
+   also über der Stange. Im Hang sind die Knie gebeugt (Unterschenkel nach hinten, von vorn verkürzt), sonst stünden die Füße auf dem Boden. */
+var P_HANG  = Q(null,[50,38],[50,66],[[48,79,48,86],[52,79,52,86]],[[40,29.6,36,14],[60,29.6,64,14]], gBar(14,24,76), true);
+var P_PULL  = Q([50,6],[50,15],[50,43],[[48,56,48,63],[52,56,52,63]],[[38.1,29.9,36,14],[61.9,29.9,64,14]], gBar(14,24,76), true);
 var P_L0    = P_STH;
 var P_L1    = Q(null,[48,32],[48,62],[[66,63,66,89,74,89],[36,85,20,87,18,89]],[[55,48,49,57]]);
 var P_WALK1 = Q(null,[50,20],[50,50],[[57,69,62,89,70,89],[43,69,38,89,46,89]],[[52,34,53,47]]);
@@ -543,12 +543,12 @@ var KB_DROP = Q(null,[47,19],[47,49],[[47.5,70,47,89,54,89]],[[49.8,37.3,52,51]]
 /* Zwischenstufen mit fast senkrechten Schienbeinen (sonst schöbe die Winkel-Überblendung die Knie nach vorn = „Kniebeugen-Swing“):
    Auf dem Weg nach oben schiebt die Hüfte, die Arme folgen nur; auf dem Weg nach unten sind die Arme schon an der Hüfte, bevor der Oberkörper kippt. */
 var KB_MID  = Q(null,[54.7,22.9],[42,50.1],[[48.5,70.1,47,89,54,89]],[[59.8,39.1,66.8,51.2]], gKB(67,51));
-var KB_SINK = Q(null,[54.7,22.9],[42,50.1],[[48.5,70.1,47,89,54,89]],[[48.4,40,43.3,53.3]], gKB(43,53));   // Hände knapp hinter der Hüftlinie
+var KB_SINK = Q(null,[54.7,22.9],[42,50.1],[[48.5,70.1,47,89,54,89]],[[47,40,40.5,53.3]], gKB(40,53));   // Hände knapp hinter der Hüftlinie
 /* Sit-up mit Rückengelenk: aus der Rückenlage erst Wirbel für Wirbel einrollen (unterer Rücken noch am Boden, Kinn zur Brust),
    dann oben mit leicht rundem Rücken ankommen - kein Hochklappen wie ein Brett. */
 var SU_LIEGT = qWith(P_LBK,{ a:[[30,80,36,78]] });
 var SU_ROLL  = Q([29.5,64.5],[26,71],[46,86],[[60,70,70,89,78,89]],[[36,73,44,72]], "", false, 1, [35,84.5], [27.5,76]);
-var SU_OBEN  = Q([45,49.5],[42,58],[46,86],[[60,70,70,89,78,89]],[[48,68,56,70]], "", false, 1, [41.5,72.5]);
+var SU_OBEN  = Q([54,51],[50,58.5],[46,86],[[60,70,70,89,78,89]],[[55,72,62,68]], "", false, 1, [46,72.5]);   // Schultern leicht vor der Hüfte, oberer Rücken rund
 var ILLU_POSES = {
   /* Cardio */
   "burpees":            [P_STUP, P_PH],
@@ -613,7 +613,7 @@ var ILLU_POSES = {
   "negative-pull-ups":  [P_PULL, P_HANG],
   "inverted-rows":      [Q(null,[38,76],[62,82],[[76,85,88,87,90,81]],[[40,66,44,57]], gBar(57,30,58)+'<path class="ip" d="M32 57V89"/>'),
                          Q(null,[40,63],[62,74],[[76,80,88,87,90,81]],[[34,58,44,57]], gBar(57,30,58)+'<path class="ip" d="M32 57V89"/>')],
-  "superman-hold":      [P_LF, Q(null,[26,78],[52,84],[[70,82,88,76,92,78]],[[16,72,8,66]], "", false, 1, [40,83.5])],   // Becken bleibt am Boden, Brust hebt sich, Kopf in Verlängerung (nicht in den Nacken)
+  "superman-hold":      [P_LF, Q(null,[26,78],[52,84],[[70,82,88,76,92,78]],[[16,75,6,71]], "", false, 1, [40,83.5])],   // Becken bleibt am Boden, Brust hebt sich, Kopf in Verlängerung (nicht in den Nacken)
   "reverse-snow-angels":[qWith(P_LF,{ a:[[36,80,46,80]] }), qWith(P_LF,{ a:[[16,76,6,72]] })],
   "bird-dog":           [P_Q4, Q(null,[66,66],[40,66],[[24,64,8,62],[40,88,22,88,18,89]],[[80,60,92,56],[67,78,68,89]])],
   "prone-y-raise":      [qWith(P_LF,{ a:[[14,88,4,88],[16,88.5,6,88.5]], x:BUCHSTABE_Y }), qWith(P_LF,{ a:[[15,76,5,70],[17,77.5,8,72.5]], x:BUCHSTABE_Y })],
@@ -622,7 +622,7 @@ var ILLU_POSES = {
   /* gegengleich: Arm 0 und Bein 1 (andere Körperseite) heben gemeinsam, dann Arm 1 und Bein 0 */
   "swimmers":           [Q(null,[26,80],[52,84],[[70,86,88,87,92,89],[70,82,88,77,92,78]],[[16,75,6,70],[14,88,4,88]]),
                          Q(null,[26,80],[52,84],[[70,82,88,77,92,78],[70,86,88,87,92,89]],[[14,88,4,88],[16,75,6,70]])],
-  "cobra-lift":         [qWith(P_LF,{ a:[[32,88,36,89]] }), Q(null,[24.5,67],[50,84],[[70,86,88,87,92,89]],[[27.5,79.5,28,89]], "", false, 1, [38,82], [27,70.5])],
+  "cobra-lift":         [qWith(P_LF,{ a:[[32,88,36,89]] }), Q(null,[25.5,73.5],[50,84],[[70,86,88,87,92,89]],[[32,83.5,29,89]], "", false, 1, [38,81], [28,76.5])],   // Baby-Kobra: Brust ca. 12 hoch, Arme gebeugt, Streckung verteilt statt an einem Punkt
   "scapular-push-ups":  [P_PH, qWith(P_PH,{ n:[71,65] })],   // Brust sinkt zwischen den Schulterblättern ab, Arme bleiben gestreckt
   /* Scapular Pull-ups von vorn: Arme bleiben gestreckt, Hände fest an der Stange. Unten hängen die Schultern passiv an den Ohren (kurzer Hals),
      oben ziehen die Schulterblätter nach unten: der Körper hebt sich nur ca. 2,5, der Hals wird länger (eigener Schulterpunkt s). */
@@ -654,14 +654,14 @@ var ILLU_POSES = {
   "leg-raises":         [P_LB, qWith(P_LB,{ l:[[54,66,58,48,64,46]] })],
   "jackknives":         [qWith(P_LB,{ a:[[12,84,2,84]] }), Q(null,[34,64],[44,86],[[56,66,66,48,70,46]],[[48,56,62,46]])],
   "side-jackknives":    [qWith(P_LB,{ a:[[17,81,9,79],[17,84,9,83]], f:true, x:'<path d="M26 83L48 84" style="stroke-width:15"/>' }), Q(null,[28,72],[50,84],[[66,74,84,68,88,66],[64,80,82,74,86,72]],[[21,68,12,64],[21,72,12,68]], '<path d="M30 74L48 83" style="stroke-width:15"/>', true)],   // seitlich liegend: dickerer Körper, beide Arme und Beine weiß und gestreckt (es gibt kein vorn und hinten)
-  "hollow-hold":        [Q([22,66],[26,74],[50,84],[[68,80,86,74,90,72]],[[14,68,4,64]], "", false, 1, [38,85]), null],   // Banane: Lendenwirbelsäule am Boden, Schultern abgehoben, Kinn leicht zur Brust
+  "hollow-hold":        [Q([22,70.5],[26,78.5],[50,84],[[68,80,86,74,90,72]],[[15,73,5,69]], "", false, 1, [38,85]), null],   // Banane: Lendenwirbelsäule am Boden, Schultern nur leicht abgehoben (ca. 25°), Kinn leicht zur Brust
   "russian-twists":     [Q(null,[34,60],[46,84],[[60,70,74,74,80,72]],[[42,72,34,80]]), Q(null,[34,60],[46,84],[[60,70,74,74,80,72]],[[48,70,58,76]])],
   "sit-ups":            [SU_LIEGT, SU_OBEN],
-  "toe-touches":        [qWith(P_LB,{ l:[[52,66,54,48,58,46]], a:[[22,72,22,62]] }), Q([29.5,64.5],[26.5,73],[50,84],[[52,66,54,48,58,46]],[[41,64,52,52]], "", false, 1, [38,83.8], [29,76.5])],   // Brustwirbelsäule rollt ein, unterer Rücken bleibt unten
+  "toe-touches":        [qWith(P_LB,{ l:[[52,66,54,48,58,46]], a:[[22,72,22,62]] }), Q([29.5,64.5],[26.5,73],[50,84],[[52,66,54,48,58,46]],[[38,66,48,56]], "", false, 1, [38,83.8], [29,78])],   // Brustwirbelsäule rollt ein, unterer Rücken bleibt unten
   /* eine Hand hebt ab und tippt die Schulter an; die Kugel auf dem Kreuzbein bleibt ruhig (Becken kippt nicht) */
   "plank-shoulder-taps":[qWith(P_PH,{ x:KUGEL_BECKEN }), qWith(P_PH,{ a:[[73,67,69,58],[69,75,70,89]], x:KUGEL_BECKEN })],
   "toes-to-bar":        [Q([57,24],[50,30],[50,58],[[50,72,50,86]],[[47,19,46,6]], gBar(6,30,70)),
-                         Q(null,[48,30],[56,55],[[58,41,55,27,52,23]],[[47,19,46,6]], gBar(6,30,70))]
+                         Q(null,[48,30],[56,50],[[60,31,53,13,50,8]],[[47,19,46,6]], gBar(6,30,70), false, 1, [49,40])]   // Zehen an der Stange, Becken eingerollt
 };
 var P_FLEGS = [[46,70,45,89,39,89],[54,70,55,89,61,89]];
 Object.assign(ILLU_POSES, {
@@ -687,12 +687,12 @@ Object.assign(ILLU_POSES, {
   /* Katze-Kuh mit Rücken- und Halsgelenk: Katze = Rückenmitte ca. 9 nach oben, Kopf hängt, Kinn zur Brust; Kuh = Rückenmitte ca. 5 nach unten,
      Brust nach vorn, Blick leicht nach oben (Kopf nicht in den Nacken). Hände und Knie bleiben am Platz, Arme gestreckt. */
   "cat-cow":            [Q([70.5,73.5],[67,65.5],[40,64],[[40,88,22,88,18,89]],[[64.5,75.5,66,89]], "", false, 1, [52,55], [63,62]),
-                         Q([74,56],[67,61.5],[40,65],[[40,88,22,88,18,89]],[[64.5,76.5,66,89]], "", false, 1, [52,70], [63,64])],
-  "childs-pose":        [Q([67,85],[58,80],[36,77],[[54,89,34,89,30,89]],[[72,88,86,88]]), null],
-  "sphinx-stretch":     [Q(null,[26,72],[52,84],[[70,86,88,87,92,89]],[[26,88,12,88]], "", false, 1, [40,82.5]), null],   // Streckung vor allem in der Brustwirbelsäule
+                         Q([75,53],[67,61.5],[40,65],[[40,88,22,88,18,89]],[[64.5,76.5,66,89]], "", false, 1, [52,70], [63,64])],
+  "childs-pose":        [Q([67,82],[58,80],[36,77],[[54,89,34,89,30,89]],[[72,88,86,88]], "", false, 1, [46,72]), null],   // Rücken leicht rund, Stirn liegt auf (Kopf nicht im Boden)
+  "sphinx-stretch":     [Q(null,[26,74],[52,84],[[70,86,88,87,92,89]],[[26,88,12,88]], "", false, 1, [40,82.5]), null],   // Streckung vor allem in der Brustwirbelsäule
   "downward-dog":       [Q(null,[64,66],[46,46],[[36,68,26,88,20,89]],[[68,78,72,89]]), null],
   "spinal-twist":       [Q(null,[24,84],[50,84],[[60,76,70,88,76,89]],[[24,72,24,62]]), null],
-  "forward-fold":       [Q(null,[62,70],[47,48],[[47,69,46,89,54,89]],[[64,80,64,88]]), null],
+  "forward-fold":       [Q([59,79.5],[58.5,71],[47,48],[[49,69,46,89,54,89]],[[59,80,60,88]], "", false, 1, [50.5,58]), null],   // Rumpf hängt ca. 70° (fast senkrecht wäre im Bild nicht vom Bein zu unterscheiden), Rücken leicht rund, Kopf hängt vor den Schienbeinen, Knie leicht gebeugt
   "hip-flexor-stretch": [Q(null,[47,34],[48,64],[[64,64,64,89,72,89],[36,88,20,89,18,89]],[[55,48,49,57]]), null],
   "quad-stretch":       [Q(null,[50,20],[50,50],[[50,70,50,89,58,89],[48,72,38,56,40,54]],[[45,38,39,55],[56,32,62,40]]), null],
   "hamstring-stretch":  [Q(null,[48,68],[30,86],[[56,88,80,88,82,82]],[[62,78,76,84]]), null],
@@ -745,14 +745,15 @@ var G_PT = gBar(80,40,62)+'<path class="ip" d="M44 80V89M58 80V89"/>';
 var G_PL2 = '<path class="ip" d="M52 80H62M54 80V89M60 80V89"/>';   // zwei kleine Parallettes (Seitenansicht: eine) für den L-Sit
 var G_MONKEY = gBar(6,8,92)+'<path class="ip" d="M20 3v6M40 3v6M60 3v6M80 3v6"/>';
 Object.assign(ILLU_POSES, {
-  "chin-ups":           [qWith(P_HANG,{ a:[[39.6,25.5,40,9.5],[60.4,25.5,60,9.5]] }), qWith(P_PULL,{ a:[[43,24.5,40,9.5],[57,24.5,60,9.5]] })],   // Untergriff schulterbreit; oben Ellbogen eng vor dem Körper (von vorn verkürzt)
+  "chin-ups":           [qWith(P_HANG,{ a:[[39.6,30,40,14],[60.4,30,60,14]] }), qWith(P_PULL,{ a:[[43,29,40,14],[57,29,60,14]] })],   // Untergriff schulterbreit; oben Ellbogen eng vor dem Körper (von vorn verkürzt)
   "parallel-bar-dips":  [Q(null,[52,24],[52,52],[[50,68,42,80,44,84]],[[54,37,56,50]], G_PB), Q(null,[54,38],[52,64],[[50,76,40,84,42,86]],[[44,40,56,50]], G_PB)],
   "support-hold":       [Q(null,[52,24],[52,52],[[50,68,42,80,44,84]],[[54,37,56,50]], G_PB), null],
-  "hanging-knee-raise": [P_HANGS, qWith(P_HANGS,{ l:[[66,56,66,72,72,72]] })],
-  "hanging-leg-raise":  [P_HANGS, qWith(P_HANGS,{ l:[[68,60,86,60,88,56]] })],
+  /* Becken rollt ein (Rückenknick m), Knie über Hüfthöhe bzw. gestreckte Beine leicht über der Waagerechten */
+  "hanging-knee-raise": [P_HANGS, qWith(P_HANGS,{ p:[49,56.5], m:[52,44], l:[[66,49,58,66,64,66]] })],
+  "hanging-leg-raise":  [P_HANGS, qWith(P_HANGS,{ p:[49,57], m:[51.5,44], l:[[70,55.5,88,51,90,48]] })],
   "hanging-l-sit":      [P_HANGS, qWith(P_HANGS,{ l:[[68,60,86,60,88,56]] })],
   "l-sit":              [Q(null,[46,34],[49,60],[[66,66,70,84,76,89]],[[52,55,57,79]], G_PL2), Q(null,[46,34],[49,60],[[67,60,85,60,87,56]],[[52,55,57,79]], G_PL2)],   // Stütz auf zwei kleinen Parallettes: erst Beine unten, dann waagerecht
-  "windshield-wipers":  [qWith(P_HANG,{ l:[[38,53.5,26,43.5],[40,57.5,28,47.5]] }), qWith(P_HANG,{ l:[[62,53.5,74,43.5],[60,57.5,72,47.5]] })],
+  "windshield-wipers":  [qWith(P_HANG,{ l:[[38,58,26,48],[40,62,28,52]] }), qWith(P_HANG,{ l:[[62,58,74,48],[60,62,72,52]] })],
   "muscle-ups":         [Q([56,36],[50,44],[50,70],[[50,82,50,88]],[[40,48,46,40]], gBar(40,28,72)), Q(null,[50,18],[50,46],[[50,62,50,76]],[[53,31,54,40]], gBar(40,28,72))],
   "monkey-bar-traverse":[Q([56,24],[50,30],[50,58],[[50,72,48,86]],[[42,18,38,6],[56,18,62,6]], G_MONKEY), Q([62,24],[56,30],[56,58],[[56,72,54,86]],[[62,18,68,6],[48,18,44,6]], G_MONKEY)],
   "skin-the-cat":       [P_HANGS, Q([46,34],[50,24],[58,42],[[64,24,72,12]],[[48,15,46,6]], gBar(6,30,70))],
@@ -763,7 +764,7 @@ Object.assign(ILLU_POSES, {
   "tuck-jumps":         [P_SQ, Q(null,[50,14],[50,42],[[64,40,58,54,62,56]],[[58,28,64,34]])]
 });
 Object.assign(ILLU_POSES, {
-  "reverse-crunch": [qWith(P_LB,{ l:[[52,66,68,66]] }), Q(null,[22,84],[44,80],[[42,62,56,56]],[[32,87,44,87]], "", false, 1, [33,84.5])],   // Becken rollt ein, oberer Rücken bleibt am Boden
+  "reverse-crunch": [qWith(P_LB,{ l:[[52,66,68,66]] }), Q(null,[22,84],[44,80],[[37,63,50,58]],[[32,87,44,87]], "", false, 1, [33,84.5])],   /* Knie Richtung Brust */   // Becken rollt ein, oberer Rücken bleibt am Boden
   /* Ergänzungen 2026-10-14 */
   "db-bench-press":   [Q([14,78],[24,79],[46,81],[[64,72,66,89,74,89]],[[30,83,32,71]], gDB(32,69)+gBench(6,62,84)),
                        Q([14,78],[24,79],[46,81],[[64,72,66,89,74,89]],[[28,67,29,55]], gDB(29,53)+gBench(6,62,84))],
@@ -922,10 +923,12 @@ ILLU_SEQ["commando-pull-ups"] = { k:[CP_H, CP_L, CP_H, CP_R], t:[[.35,.7],[.3,.7
 /* Seitenansicht für Klimmzug-Varianten: die Stange von der Seite als Punkt (Ring), eine Hand daran.
    Pull-up: Ellbogen beugen und nach unten ziehen, Kinn über die Stange.
    Scapular Pull-up: Arme gestreckt, nur Brust auf und Schultern weg von den Ohren - der Kopf kommt aus dem „Einsinken“ heraus. */
-var PS_BAR = '<circle class="ip" cx="50" cy="8" r="4.4"/>';
-var PS_HANG = Q([53,29],[50,37],[50,65],[[52,79,44,86]],[[50,25.5,50,14]], PS_BAR);
-var PS_TOP  = Q([56,8],[52,18],[47,46],[[50,60,42,67]],[[44,26,50,14]], PS_BAR);
-var SS_AKT  = Q([47,26],[46,35],[50,63],[[54,76,47,84]],[[48,24.5,50,14]], PS_BAR);
+/* Seitenansicht (Figur schaut nach rechts): Stange bei y = 15, Hände bei 21. Oben ist die Figur HINTER der Stange (Brust an der Stange),
+   Kopfmitte 9 -> Kinn auf Stangenhöhe, Kopf knapp hinter dem Stangenring, Ellbogen hinter der Rumpflinie. Im Hang 90° Kniebeugung, damit die Füße über dem Boden bleiben. */
+var PS_BAR = '<circle class="ip" cx="50" cy="15" r="4.4"/>';
+var PS_HANG = Q([53,36],[50,44],[50,72],[[53,85.5,42.5,87]],[[50,32.5,50,21]], PS_BAR);
+var PS_TOP  = Q([42,9],[40,18.5],[35,46],[[38,60,30,67]],[[37,32,50,21]], PS_BAR);
+var SS_AKT  = Q([47,33],[46,42],[50,70],[[53.5,83.5,43,85]],[[48,31.5,50,21]], PS_BAR);
 /* ---------- Fitnessstudio: Geräte ----------
    Schlichte Gerätelinien (Sitz, Lehne, Rahmen). Griffe, Stangen und Hantelscheiben hält die Hand (gHand),
    damit sie in der Animation mitwandern. Seitlich mit Blick nach rechts, außer Latzug und Adduktoren (von vorn). */
@@ -1918,8 +1921,8 @@ EQUIPS.splice(3, 0, { id:"band", de:"Widerstandsband", en:"Resistance band" });
   E("band-assisted-pull-up", "Klimmzug mit Bandhilfe", "Band-assisted Pull-up", "back calis", 5, 20, 0,
     "Band um die Stange, Fuß oder Knie hinein", "Loop the band over the bar, foot or knee in",
     2, 3, "stange",
-    [qWith(P_HANG, { x:gBar(9.5,24,76)+bl([42,9.5], [42,83.5], [48,89]) }),
-     qWith(P_PULL, { x:gBar(9.5,24,76)+bl([42,9.5], [42,67], [48,73]) })],
+    [qWith(P_HANG, { x:gBar(14,24,76)+bl([42,14], [42,82], [48,87.5]) }),
+     qWith(P_PULL, { x:gBar(14,24,76)+bl([42,14], [42,58], [48,63.5]) })],
     ["Ein Loop-Band fest um eine stabile Stange legen, ein Ende durchziehen, festziehen und kräftig daran ziehen, ob es hält. Dann den Fuß oder das Knie hineinsetzen (Knie = weniger Hilfe).|Die Stange etwas mehr als schulterbreit greifen und ruhig hängen. Das Band hilft unten am meisten und lässt nach oben nach.|Das Kinn über die Stange ziehen und langsam wieder ablassen – nicht vom Band hochschleudern lassen. Zum Absteigen erst sicheren Stand suchen (Boden oder Stuhl), dann den Fuß oder das Knie aus dem Band nehmen.",
      "Loop a band firmly around a sturdy bar, pull one end through, cinch it and give it a hard tug to check it holds. Then put your foot or knee in it (knee = less help).|Grip the bar a little wider than shoulder width and hang still. The band helps most at the bottom and less as you rise.|Pull your chin over the bar and lower slowly – don't let the band catapult you up. To get down, first find secure footing (floor or chair), then take your foot or knee out of the band."],
     ["Schultern vom Ohr weg, Ellbogen nach unten.|Körper ruhig, Blick nach vorn.", "Mit Schwung aus den Beinen hochkommen oder im Band federn.",
@@ -6015,7 +6018,7 @@ Object.keys(PLAENE_INFO).forEach(function(id){ LIB_WORKOUT_INFO[id] = PLAENE_INF
   var NG_R = '<circle class="ip" cx="42" cy="6" r="3.8"/><circle class="ip" cx="58" cy="6" r="3.8"/>';
   P["neutral-grip-pull-up"] = [Q(null,[50,30],[50,58],[[48,72,48,84],[52,72,52,84]],[[44,21,42,6],[56,21,58,6]], gBar(6,24,76)+NG_R, true),
                                Q([50,5],[50,14],[50,42],[[48,58,48,72],[52,58,52,72]],[[39,20,42,6],[61,20,58,6]], gBar(6,24,76)+NG_R, true)];
-  V2["neutral-grip-pull-up"] = { typ:"side", haupt:"front", p:[qWith(PS_HANG,{ x:PS_BAR+gLinie("M42 14H58") }), qWith(PS_TOP,{ x:PS_BAR+gLinie("M42 14H58") })] };
+  V2["neutral-grip-pull-up"] = { typ:"side", haupt:"front", p:[qWith(PS_HANG,{ x:PS_BAR+gLinie("M42 21H58") }), qWith(PS_TOP,{ x:PS_BAR+gLinie("M42 21H58") })] };
 
   /* Meadows Row: Stange steckt in der Landmine, die Hand fasst das freie Ende */
   P["meadows-row"] = [Q(null,[64,40],[40,50],[[44,70,44,89,52,89]],[[62,54,61,66],[54,52,48,62]], gLinie("M104 88L61 66")+gScheibe(61,67,5)),
@@ -6180,12 +6183,12 @@ Object.keys(PLAENE_INFO).forEach(function(id){ LIB_WORKOUT_INFO[id] = PLAENE_INF
 
   var KL = [[60,70,70,89,78,89]];
   var CR_A = Q([14,83],[24,84],[46,86],KL,[[23,73,14,78]]);
-  var CR_B = Q([29.5,64.5],[26,71],[46,86],KL,[[20,67,23,62]], "", false, 1, [35,84.5], [27.5,76]);   // nur die Brustwirbelsäule rollt ein, Kinn leicht zur Brust
+  var CR_B = Q([28.5,69.5],[27,75.5],[46,86],KL,[[19.5,74,25,69]], "", false, 1, [35,84.5], [28.5,80]);   // nur die Schulterblätter lösen sich (Rumpf ca. 30°), Kinn leicht zur Brust
   P["crunch"] = [CR_A, CR_B];
-  P["crunch-arms-straight"] = [qWith(CR_A,{ a:[[27,72,28,60]] }), qWith(CR_B,{ a:[[30,61,31,49]] })];
-  P["crunch-hands-overhead"] = [qWith(CR_A,{ a:[[16,79,4,76]] }), qWith(CR_B,{ a:[[21,65,13,58]] })];
+  P["crunch-arms-straight"] = [qWith(CR_A,{ a:[[27,72,28,60]] }), qWith(CR_B,{ a:[[29.5,68,30.5,56]] })];
+  P["crunch-hands-overhead"] = [qWith(CR_A,{ a:[[16,79,4,76]] }), qWith(CR_B,{ a:[[20,73,10,69]] })   /* Arme in Linie mit den Ohren */];
   P["cross-body-crunch"] = [Q([14,83],[24,84],[46,86],[[60,70,70,89,78,89],[62,72,72,89,80,89]],[[23,73,14,78]]),
-                            Q([29.5,64.5],[26,71],[46,86],[[52,68,66,74,72,72],[60,70,70,89,78,89]],[[40,68,32,63]], "", false, 1, [35,84.5], [27.5,76])];
+                            Q([28.5,69.5],[27,75.5],[46,86],[[52,68,66,74,72,72],[60,70,70,89,78,89]],[[36,72,25,70]], "", false, 1, [35,84.5], [28.5,80])];
   var WHEEL_X = function(x, y){ return gHand(x, y, '<circle class="ip" cx="'+x+'" cy="'+(y+3)+'" r="5"/>'); };
 
   var WS = gLinie("M26 67H60M43 67V89");
@@ -6209,8 +6212,8 @@ Object.keys(PLAENE_INFO).forEach(function(id){ LIB_WORKOUT_INFO[id] = PLAENE_INF
   P["plate-pinch-hold"] = [Q(null,[50,20],[50,50],STAND,[[52,34,53,47]], gHand(53,47,'<circle class="ip" cx="53" cy="54" r="6.5"/><circle class="ipf" cx="53" cy="54" r="1.8"/>')), null];
 
   /* ---------- Dehnen / Cardio ---------- */
-  /* Nackendehnungen: nur der Hals bewegt sich (ca. 30° ab der Rumpflinie), der Rumpf bleibt aufrecht */
-  P["chin-to-chest-stretch"] = [Q([55.7,12.4],[51.2,20.2],[50,50],STAND,[[52,34,53,47]], "", false, 1, null, [50,24.5]), null];
+  /* Nackendehnungen: nur der Hals bewegt sich (Kinn zur Brust ca. 40–45°, Blick zur Decke ca. 25°), der Rumpf bleibt aufrecht */
+  P["chin-to-chest-stretch"] = [Q([58.4,14.4],[52,20.8],[50,50],STAND,[[52,34,53,47]], "", false, 1, null, [50,24.5]), null];
   P["ceiling-look-stretch"] = [Q([45.4,11.9],[49.2,20.1],[50,50],STAND,[[52,34,53,47]], "", false, 1, null, [50,24.5]), null];
   var CJ_AUF = qScale(qWith(P_F, { l:[[42,70,33,89,27,89],[58,70,67,89,73,89]], a:[[40,16,33,5],[60,16,67,5]] }), .86);
   var CJ_ZU  = qScale(fr([50,20],[50,52],[[48,70,52,89,58,89],[52,70,48,89,42,89]],[[43,33,54,41],[57,33,46,41]]), .86);
