@@ -13,7 +13,9 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 - **Ellbogen/Knie**: In der Seitenansicht knicken sie nur noch zur richtigen Seite. Beim Laden werden falsch knickende Gelenke an der Linie Schulter–Hand bzw. Hüfte–Knöchel gespiegelt (123 Übungen); in der Animation klappt ein Arm nicht mehr durch die Streckung.
 - **Inverted Rows** und **Bankdrücken** (unten) neu gezeichnet: Ellbogen Richtung Füße, Unterarm senkrecht. Pike Push-ups: Zehen zeigen zu den Händen.
 - **Band befestigen**: Die Karte in Info und Studio ist entfernt (Daten bleiben im Code).
-- Offen: 90/90 Hip Switch neu darstellen, Band-Übungen und Fotos durchsehen.
+- **90/90 Hip Switch** neu in Vorderansicht (beide Knie zu einer Seite, Oberkörper aufrecht). **Band-Außen-/Innenrotation**: Band läuft hinter der Figur statt quer über den Oberkörper.
+- **Fotos** (541 Bilder) in der Übersicht durchgesehen: kein Bild eindeutig falsch, nichts gelöscht.
+- Offen: Band-Übungen einzeln durchsehen, Vorgaben des Sportwissenschaftlers (Ellbogen) in Einzelposen einarbeiten.
 
 ## 2026-11-12 · Figuren: zweite Fachprüfung umgesetzt, Figur weiß/schwarz und Geräte orange (Fassung 2026-11-12-5)
 
