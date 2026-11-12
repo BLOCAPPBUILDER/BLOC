@@ -645,10 +645,13 @@ body.dz-mode{ user-select:none; -webkit-user-select:none; cursor:grabbing; }
 .illu .illu-matte{ fill:currentColor; stroke:none; opacity:.1; }
 .illu .nk{ stroke-width:var(--illu-hals); }
 .illu .br{ stroke-width:var(--illu-brust); }
-/* Einheitliche Figurfarbe überall (Info, Kacheln, Studio, Timer, Baukasten): die Trainingsart erkennt man an der Kachel, nicht an der Figur.
-   Nur die Mini-Figuren auf Glas (layout-new.css) bleiben weiß, sonst wären sie auf dem Foto nicht lesbar. */
-:root{ --figur:var(--accent); }
+/* Einheitliche Figurfarbe überall (Info, Kacheln, Studio, Timer, Baukasten): Figur in der Textfarbe (dunkel = weiß, hell = fast schwarz),
+   alle Geräte (Hantel, Kettlebell, Stange, Bank, Band, Kabel: Klassen .ip/.ipf) in der Akzentfarbe Orange.
+   Die Trainingsart erkennt man an der Kachel, nicht an der Figur. Mini-Figuren auf Glas (layout-new.css) bleiben weiß. */
+:root{ --figur:var(--text); --figur-geraet:var(--accent); }
 svg.illu{ color:var(--figur) !important; }
+svg.illu .ip, svg.illu .gm, svg.illu .gb{ stroke:var(--figur-geraet) !important; opacity:1; }
+svg.illu .ipf, svg.illu .ipf.gm{ fill:var(--figur-geraet) !important; }
 .illu .ip{ stroke-width:3.4; }
 .illu .ipf{ fill:currentColor; stroke:none; }
 /* Widerstandsband: dünne Linie in der Gerätefarbe */

@@ -7,6 +7,16 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+
+## 2026-11-12 · Figuren: zweite Fachprüfung umgesetzt, Figur weiß/schwarz und Geräte orange (Fassung 2026-11-12-5)
+
+- **Farben:** Figur in der Textfarbe (Dunkel weiß, Hell fast schwarz), alle Geräte (`.ip`, `.ipf`, `.gm`, `.gb`) in Orange – auch im Timer (`--figur`, `--figur-geraet` in app.css).
+- **Klimmzug von vorn:** Stange bei y = 14, oben Kinn über der Stange (Kopf r = 7 eingerechnet), im Hang Knie gebeugt (Füße über dem Boden). Chin-ups, Bandhilfe, Windshield Wipers angepasst.
+- **Klimmzug Seitenansicht:** Stange bei y = 15; oben steht die Figur hinter der Stange (Brust an der Stange, Kinn auf Stangenhöhe, Ellbogen hinter dem Rumpf), im Hang 90° Kniebeugung.
+- **Crunch-Familie:** Rumpf nur ca. 30° statt 49°; Hände über Kopf in Linie mit den Ohren. **Sit-ups oben:** Schultern vor der Hüfte, oberer Rücken rund (lehnte vorher zurück).
+- **Hollow Hold** flacher (ca. 25°), **Baby-Kobra** (Brust ca. 12 hoch, Arme gebeugt, kein Knick an einem Punkt), **Superman** Arme tiefer, **Sphinx** flacher, **Toe Touches** Armlänge, **Reverse Crunch** Knie zur Brust, **Kinn zur Brust** 40–45°.
+- **Swing:** Hände beim Absenken hinter der Hüftlinie. **Kuh:** Blick deutlicher nach vorn oben.
+- **Toes-to-bar** (Zehen an der Stange), **hängendes Knie-/Beinheben** (Becken rollt ein), **Child's Pose** (Kopf nicht mehr im Boden, Rücken leicht rund), **Vorbeuge** (Rumpf ca. 70°, Kopf vor den Schienbeinen – ganz senkrecht wäre im Bild nicht vom Bein zu unterscheiden).
 ## 2026-11-12 · Rücken- und Halsgelenk bei Bauch-, Streck- und Nackenübungen (Fassung 2026-11-12-4)
 
 - **Crunch-Familie** (Crunch, gestreckte Arme, Hände über Kopf, Cross-Body), **Toe Touches:** unterer Rücken bleibt am Boden, nur die Brustwirbelsäule rollt ein, Kinn leicht zur Brust.
