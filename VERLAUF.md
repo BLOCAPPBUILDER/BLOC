@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-12 · Wadenheben und Kniestrecken mit Band (Fassung 2026-11-12-15)
+
+Zwei neue Band-Übungen mit Figur: Wadenheben (beidbeinig) und Kniestrecken im Stand (Terminal Knee Extension, je Seite, Band auf Kniehöhe). „Kraft für Läufer mit Band“ deckt jetzt auch Oberschenkel vorn und Wade ab (7 Übungen, ca. 20 Min). Fußheben: Muskeln eingetragen (vorher „–“). Fachlich vom Sportwissenschaftler geprüft.
+
 ## 2026-11-12 · Sechs neue Workouts nur mit Widerstandsband (Fassung 2026-11-12-14)
 
 Neu: Rücken, Arme (Bizeps & Trizeps), Schultern pflegen, Beine & Po B, Ganzkörper B, Kraft für Läufer – jeweils 3 × 40 s / 20 s, 12–18 Min, Deckblatt-Texte DE/EN. Auswahl vom Sportwissenschaftler geprüft (höchstens 20 % Überschneidung je Gruppe). Datenfehler behoben: Beinbeugen im Stand und Fußheben (Band) sind einbeinig und laufen jetzt je Seite. Offen: Studienangaben (ACSM 2026, WHO 2020, McLeod 2024) in dieser Prüfung nicht neu verifiziert; für Läufer fehlen Band-Übungen für Quadrizeps und Wade.
