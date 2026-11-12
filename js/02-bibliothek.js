@@ -968,7 +968,7 @@ function bandSkizze(art, h){
   function hand(x, y){ return '<circle'+B+' cx="'+x+'" cy="'+y+'" r="3.4"/>'; }
   function person(x){ return '<circle'+K+' cx="'+x+'" cy="13" r="5"/><path'+K+' d="M'+x+' 18V42M'+x+' 42l-6 16M'+x+' 42l6 16"/>'; }
   if(art === "tuer"){
-    var ay = { hoch:10, brust:26, huefte:38, tief:52 }[h] || 26, hy = { hoch:28, brust:26, huefte:36, tief:42 }[h] || 26;
+    var ay = { hoch:10, brust:26, huefte:38, knie:45, tief:52 }[h] || 26, hy = { hoch:28, brust:26, huefte:36, knie:40, tief:42 }[h] || 26;
     // Calisthenics-Park: zwei feste Pfosten mit Querstange; das Band ist in der gewünschten Höhe um den vorderen Pfosten gelegt
     s = '<path'+K+' d="M10 58V5M40 58V5M6 5H44"/>'+
         '<circle'+B+' cx="40" cy="'+ay+'" r="3.4"/><path'+B+' d="M43 '+ay+'L88 '+hy+'"/>'+hand(90, hy)+person(100)+'<path'+K+' d="M100 24L91 '+hy+'"/>';
