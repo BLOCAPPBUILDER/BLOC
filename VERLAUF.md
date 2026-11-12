@@ -8,6 +8,13 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-12 · Figuren: Gelenkrichtung korrigiert, Karte „Band befestigen“ entfernt (Fassung 2026-11-12-6)
+
+- **Ellbogen/Knie**: In der Seitenansicht knicken sie nur noch zur richtigen Seite. Beim Laden werden falsch knickende Gelenke an der Linie Schulter–Hand bzw. Hüfte–Knöchel gespiegelt (123 Übungen); in der Animation klappt ein Arm nicht mehr durch die Streckung.
+- **Inverted Rows** und **Bankdrücken** (unten) neu gezeichnet: Ellbogen Richtung Füße, Unterarm senkrecht. Pike Push-ups: Zehen zeigen zu den Händen.
+- **Band befestigen**: Die Karte in Info und Studio ist entfernt (Daten bleiben im Code).
+- Offen: 90/90 Hip Switch neu darstellen, Band-Übungen und Fotos durchsehen.
+
 ## 2026-11-12 · Figuren: zweite Fachprüfung umgesetzt, Figur weiß/schwarz und Geräte orange (Fassung 2026-11-12-5)
 
 - **Farben:** Figur in der Textfarbe (Dunkel weiß, Hell fast schwarz), alle Geräte (`.ip`, `.ipf`, `.gm`, `.gb`) in Orange – auch im Timer (`--figur`, `--figur-geraet` in app.css).

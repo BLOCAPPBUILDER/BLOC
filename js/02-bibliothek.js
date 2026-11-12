@@ -998,6 +998,7 @@ function bandSkizze(art, h){
   return '<svg class="band-skizze" viewBox="0 0 120 64" aria-hidden="true"><path'+K+' d="M3 59H117" opacity=".35"/>'+s+'</svg>';
 }
 function bandAnkerHTML(exId){
+  return "";   // Karte „Band befestigen“ ist entfernt (Wunsch Kevin); die Daten (BAND_ANKER, bandSkizze) bleiben für eine spätere Verwendung bestehen
   var a = BAND_ANKER[exId];
   if(!a) return "";
   var lang = currentLang() === "en" ? 1 : 0, art = BAND_ARTEN[a[0]], h = a[1] && BAND_HOEHE[a[1]], extra = BAND_ANKER_EXTRA[exId];
