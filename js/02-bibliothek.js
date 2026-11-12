@@ -533,6 +533,56 @@ var illuMaskSeq = 0;
 function illuIds(svg){ var id = "im"+(illuMaskSeq++); return svg.replace(/@M@/g, id); }
 
 var ILLU_MATTE = '<rect class="illu-matte" x="14" y="3" width="72" height="94" rx="8"/>';
+/* Gelenkprüfung: Ellbogen und Knie beugen nur in eine Richtung. Knickt in einer Seitenansicht ein Gelenk falsch herum
+   (Ellbogen zum Kopf statt Richtung Füße usw.), wird es an der Linie Schulter–Hand bzw. Hüfte–Knöchel gespiegelt:
+   Hand und Fuß bleiben, wo sie sind, Ober- und Unterarm behalten ihre Länge. Die Blickrichtung kommt aus blickRichtung.
+   Ausgenommen sind Übungen, bei denen die Seitenansicht ein eingedrehtes Bein zeigt (Figure Four, Thomas-Dehnung). */
+var GELENK_AUSNAHMEN = { "figure-four":1, "thomas-stretch":1 };
+function gelenkeRichten(qs){
+  if(!qs.length || qs[0].f) return qs;
+  var P = qs.map(function(q){ var r = rigFromPose(q); return rigPoints(r, r, 0); });
+  var blick = blickRichtung(P);
+  if(!blick) return qs;
+  function w(o, a, b){ var ux = a[0]-o[0], uy = a[1]-o[1], vx = b[0]-a[0], vy = b[1]-a[1]; return Math.atan2(ux*vy-uy*vx, ux*vx+uy*vy); }
+  function spiegel(o, e, h){
+    var dx = h[0]-o[0], dy = h[1]-o[1], L = dx*dx + dy*dy || 1, k = ((e[0]-o[0])*dx + (e[1]-o[1])*dy)/L;
+    return [ +(2*(o[0] + dx*k) - e[0]).toFixed(1), +(2*(o[1] + dy*k) - e[1]).toFixed(1) ];
+  }
+  var grenze = 12*Math.PI/180;
+  return qs.map(function(q){
+    var s = rumpfPunkte(q).s, neu = null;
+    function kopie(){ if(!neu) neu = qWith(q, { a:q.a.map(function(x){ return x.slice(); }), l:q.l.map(function(x){ return x.slice(); }) }); return neu; }
+    q.a.forEach(function(a, i){
+      if(a.length !== 4) return;
+      var g = w(s, [a[0], a[1]], [a[2], a[3]]);
+      if(Math.sign(g) !== blick && Math.abs(g) > grenze){ var e = spiegel(s, [a[0], a[1]], [a[2], a[3]]); var z = kopie().a[i]; z[0] = e[0]; z[1] = e[1]; }
+    });
+    q.l.forEach(function(l, i){
+      if(l.length < 4) return;
+      var g = w(q.p, [l[0], l[1]], [l[2], l[3]]);
+      if(Math.sign(g) !== -blick && Math.abs(g) > grenze){ var e = spiegel(q.p, [l[0], l[1]], [l[2], l[3]]); var z = kopie().l[i]; z[0] = e[0]; z[1] = e[1]; }
+    });
+    return neu || q;
+  });
+}
+Object.keys(ILLU_POSES).forEach(function(id){
+  if(GELENK_AUSNAHMEN[id]) return;
+  var seq = ILLU_SEQ[id], pp = ILLU_POSES[id];
+  if(seq){
+    var alt = seq.k.slice(), neu = gelenkeRichten(alt);
+    seq.k = neu;
+    ILLU_POSES[id] = pp.map(function(q){ var i = alt.indexOf(q); return i < 0 ? q : neu[i]; });
+  } else {
+    var r = gelenkeRichten(pp.filter(Boolean));
+    ILLU_POSES[id] = [ r[0], pp[1] ? r[1] : pp[1] ];
+  }
+});
+Object.keys(ILLU_VIEW2).forEach(function(id){
+  if(GELENK_AUSNAHMEN[id]) return;
+  var v = ILLU_VIEW2[id];
+  if(v.seq) v.seq.k = gelenkeRichten(v.seq.k.slice());
+  if(v.p){ var r = gelenkeRichten(v.p.filter(Boolean)); v.p = [ r[0], v.p[1] ? r[1] : v.p[1] ]; }
+});
 var ILLU = {}, ILLU2 = {};
 Object.keys(ILLU_POSES).forEach(function(id){
   var pp = ILLU_POSES[id];
@@ -605,6 +655,27 @@ function angLerp(a, b, t){
   d = ((d + Math.PI) % (2*Math.PI) + 2*Math.PI) % (2*Math.PI) - Math.PI;
   return a + d*t;
 }
+/* Ellbogen und Knie knicken nur in eine Richtung. Ist bekannt, wohin die Figur schaut (A.face, siehe blickRichtung),
+   wird der Gelenkwinkel nicht auf dem kürzesten Weg überblendet, sondern über die Beugeseite - so klappt ein Arm,
+   der in einer Pose fast ganz gebeugt ist, beim Übergang nicht über die Streckung nach hinten durch. */
+function gelenkLerp(a, b, t, sg){
+  if(!sg) return angLerp(a, b, t);
+  function v(x){ x = sg*x; while(x < -Math.PI/2) x += 2*Math.PI; while(x >= Math.PI*1.5) x -= 2*Math.PI; return x; }
+  var va = v(a), vb = v(b);
+  return sg*(va + (vb-va)*t);
+}
+/* Blickrichtung einer Seitenansicht aus den Punkten aller Phasen: +1 / -1 (Vorzeichen der Ellbogenbeugung), 0 = unbekannt.
+   Erste Wahl ist ein deutlich gebeugtes Knie (zeigt nach vorn), sonst die Fußspitze (zeigt ebenfalls nach vorn;
+   bei gestreckten Füßen im Liegen ist sie unsicher, darum nur zweite Wahl). */
+function blickRichtung(Ps){
+  function w(o, a, b){ var ux = a[0]-o[0], uy = a[1]-o[1], vx = b[0]-a[0], vy = b[1]-a[1]; return Math.atan2(ux*vy-uy*vx, ux*vx+uy*vy); }
+  var knie = 0, fuss = 0;
+  Ps.forEach(function(P){ P.legs.forEach(function(l){
+    if(l.length >= 2){ var k = w(P.p, l[0], l[1]); if(Math.abs(k) > .45) knie -= k; }
+    if(l.length >= 3){ var a = w(l[0], l[1], l[2]); if(Math.abs(a) > .6) fuss += Math.sign(a); }
+  }); });
+  return Math.sign(knie) || Math.sign(fuss);
+}
 function rigPoints(A, B, t){
   function L(a, b){ return a + (b-a)*t; }
   var p = [ L(A.p[0], B.p[0]), L(A.p[1], B.p[1]) ];
@@ -613,18 +684,18 @@ function rigPoints(A, B, t){
   var ua = sa + angLerp(A.up.rel, B.up.rel, t), s = vor(m, ua, L(A.up.len, B.up.len));
   var na = ua + angLerp(A.neck.rel, B.neck.rel, t), n = vor(s, na, L(A.neck.len, B.neck.len));
   var ha = na + angLerp(A.head.rel, B.head.rel, t), hl = L(A.head.len, B.head.len);
-  function kette(start, ka, kb, pa0){
+  function kette(start, ka, kb, pa0, sg){
     var pts = [], prev = start, pa = pa0;
     for(var i=0;i<ka.length;i++){
-      var a = pa + angLerp(ka[i].rel, kb[i].rel, t), l = L(ka[i].len, kb[i].len);
+      var a = pa + (i === 1 ? gelenkLerp(ka[i].rel, kb[i].rel, t, sg) : angLerp(ka[i].rel, kb[i].rel, t)), l = L(ka[i].len, kb[i].len);
       prev = [ prev[0] + Math.cos(a)*l, prev[1] + Math.sin(a)*l ];
       pts.push(prev); pa = a;
     }
     return pts;
   }
   return { p:p, m:m, n:n, s:s, h:vor(n, ha, hl),
-           legs:A.legs.map(function(k, i){ return kette(p, k, B.legs[i], sa); }),
-           arms:A.arms.map(function(k, i){ return kette(s, k, B.arms[i], ua); }) };
+           legs:A.legs.map(function(k, i){ return kette(p, k, B.legs[i], sa, -(A.face || 0)); }),
+           arms:A.arms.map(function(k, i){ return kette(s, k, B.arms[i], ua, A.face || 0); }) };
 }
 /* Geräte, die die Hand hält (Hantel, Kettlebell), stecken in <g class="gh" data-at="x,y">,
    Polster und Platten am Fuß (Beinstrecker, Schlitten) in <g class="gf" data-at="x,y"> */
@@ -697,6 +768,7 @@ function illuSetup(svg){
   var gs = qs.map(function(q){ return gearSplit(q.x); });
   var bands = bandSplit(gs);   // Band-Linien laufen mit den Gliedern mit (siehe bandSplit)
   var P = R.map(function(r){ return rigPoints(r, r, 0); });
+  if(!qs[0].f){ var blick = blickRichtung(P); R.forEach(function(r){ r.face = blick; }); }
   function naechsteHand(pts, at){
     var best = 0, bd = Infinity;
     pts.arms.forEach(function(k, i){
