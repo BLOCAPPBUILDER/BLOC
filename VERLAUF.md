@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-13 · Fachliche Restpunkte zu Test 2 (Fassung 2026-11-13-2)
+
+Aus der fachlichen Durchsicht des Sportwissenschaftlers: Ohne jede Rudermöglichkeit höchstens 3 Druckübungen pro Woche (überzählige werden durch Rumpf-/Beinübungen ersetzt). Ist dieselbe Gewichtsstufe zweimal zurückgenommen worden, schlägt BLOC zuerst einen Satz mehr vor (bis 5), danach geht es mit der alten Satzzahl weiter. Logbuch: mehr Wiederholungen beim gleichen Gewicht erscheinen als „Volumen +x %“. Test: einheitstest +1.
+
 ## 2026-11-13 · Zweiter 13-Wochen-Test, Zug/Druck-Bilanz, Halteübungen (Fassung 2026-11-13-1)
 
 Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERICHT-Test2-als-Prompt.md), Entscheidungen von Kevin, fachlich vom Sportwissenschaftler geprüft.

@@ -159,6 +159,7 @@ var PA_ZEIT_SEK = 35, PA_ZEIT_SEK_JE = { "superman-hold":30 };   // Startzeit; S
 /* Echte Zugübung (Rudern, Latzug, Klimmzug) - nicht Tragen, aufrechtes Rudern oder Rückenstrecker */
 var PA_ZUG = /(^|-)rows?(-|$)|pull-?downs?(-|$)|chin-ups?|pull-ups?/, PA_ZUG_NICHT = /upright|stretch|scapular|pull-apart|rear-delt|biceps|twist|renegade|weighted-pull/;
 function paIstZug(ex){ return !!ex && PA_ZUG.test(ex.id) && !PA_ZUG_NICHT.test(ex.id) && !PA_ZEIT.test(ex.id); }
+var PA_DRUCK_OHNE_ZUG = 3;   // ohne Rudermöglichkeit höchstens so viele Druckübungen je Woche
 var PA_RUECKEN_ERSATZ = ["superman-hold", "reverse-snow-angels", "prone-y-raise"];   // oberer Rücken ohne Geräte, wenn kein Rudern möglich ist
 function paZiehtEx(ex){ return !!ex && (paIstZug(ex) || (exProfile(ex).pattern === "pull" && !PA_ZEIT.test(ex.id) && !/upright/.test(ex.id))); }   // zählt als Ziehen (Wochenbilanz)
 function paDrueckt(ex){ return !!ex && exProfile(ex).pattern === "push"; }
@@ -478,6 +479,23 @@ function paErzeuge(a0){
       if(!neu) break;
       ziele[neu.id] = ziele[best.id]; best.b.ids[best.k] = neu.id; planBenutzt[neu.id] = 1;
       c = bilanz();
+    }
+    /* Ohne echte Zugübung (kein Rudern möglich): die Ersatzübungen gleichen das Drücken nicht wirklich aus - dann höchstens 3 Druckübungen
+       pro Woche (fachliche Prüfung Test 2). Überzählige werden durch Rumpf- bzw. Beinübungen ersetzt, nur an Tagen mit mindestens zwei Druckübungen. */
+    if(!zugPool.some(function(o){ return paIstZug(o.ex); })){
+      var ersatzPool = []; ["rumpf", "bauch", "po", "beine"].forEach(function(g){ (pools.kraft[g] || []).forEach(function(o){ if(!paDrueckt(o.ex)) ersatzPool.push(o); }); });
+      for(var r2 = 0; r2 < 20 && bilanz().p > PA_DRUCK_OHNE_ZUG; r2++){
+        var opfer = null;
+        mains.forEach(function(b, bi){
+          if(b.ids.filter(function(id){ return paDrueckt(findExercise(id)); }).length < 2) return;
+          b.ids.forEach(function(id, k){ if(paDrueckt(findExercise(id))) opfer = { b:b, k:k, id:id }; });
+        });
+        if(!opfer) break;
+        var bel = {}; opfer.b.ids.forEach(function(id){ bel[id] = 1; });
+        var ers = paWaehle(ersatzPool, bel, seedBase + "oz" + r2, planBenutzt);
+        if(!ers) break;
+        ziele[ers.id] = ziele[opfer.id]; opfer.b.ids[opfer.k] = ers.id; planBenutzt[ers.id] = 1;
+      }
     }
   })();
   tageSpecs.sort(function(x, y){ return x.tag - y.tag; });
