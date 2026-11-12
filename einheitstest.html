@@ -1069,6 +1069,22 @@
       wahr(W.paPlanEnde(), "nach dem letzten Training: Abschlusskarte");
     } finally { s.kalender = alt.kalender; s.programme = alt.programme; s.einheiten = alt.einheiten; }
   });
+  test("Fachliche Prüfung Test 2: nach zwei Rücknahmen derselben Stufe erst ein Satz mehr; Logbuch zeigt Volumen bei mehr Wdh.", function () {
+    var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();
+    try {
+      var id = W.EXERCISES.filter(function (ex) { return !W.studioNurBlock(ex) && W.studioWdhGrenze(ex) === 20 && !W.STUDIO_ZIEL[ex.id]; })[0].id;
+      s.studio = {}; s.studio[id] = { kg:10, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[] };
+      W.studioTippUebernehmen(id, { art:"runter", kg:10, alt:12.5 }); W.studioTippUebernehmen(id, { art:"runter", kg:10, alt:12.5 });
+      gleich(s.studio[id].ruecknahmeN, 2, "zwei Rücknahmen von 12,5 kg gezählt");
+      s.studio[id].zielBasis = 10; s.studio[id].ziel = { saetze:3, wdh:14 }; delete s.studio[id].erhoeht;
+      s.studio[id].log = [{ at:n - 4*tag, s:[[10, 16], [10, 16], [10, 16]] }, { at:n - 1*tag, s:[[10, 16], [10, 16], [10, 16]] }];
+      var tp = W.studioProg(id); wahr(tp && tp.art === "satz" && tp.saetze === 4, "erst ein Satz mehr (" + JSON.stringify(tp) + ")");
+      W.studioTippUebernehmen(id, tp); gleich(W.studioZiel(id).saetze, 4, "Ziel 4 Sätze");
+      W.studioTippUebernehmen(id, { art:"kg", kg:12.5, alt:10 }); gleich(W.studioZiel(id).saetze, 3, "nach dem Sprung wieder 3 Sätze");
+      s.studio = { "leg-press": { log:[{ at:n - 9*tag, s:[[60, 12], [60, 12], [60, 12]] }, { at:n - 2*tag, s:[[60, 15], [60, 14], [60, 14]] }] } };
+      wahr(/Volumen \+\d+ %|Volume \+\d+ %/.test(W.statFortschrittHTML()), "gleiches Gewicht, mehr Wdh.: Volumen-Plus sichtbar");
+    } finally { s.studio = alt; }
+  });
   test("Rekorde F9: schwerer mit nur 1 Wiederholung ist kein Rekord", function () {
     var vor = W.studioBestwerte([{ s:[[4, 10], [4, 10], [4, 10]] }]), jetzt = W.studioBestwerte([{ s:[[14, 1], [14, 1], [14, 1]] }]);
     wahr(!W.studioIstRekord(jetzt, vor), "14 × 1 nach 4 × 10 ist kein Rekord");

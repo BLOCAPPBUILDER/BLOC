@@ -152,6 +152,9 @@ function studioProg(id, mitOffen){
       var grenze = studioWdhGrenze(ex);   // neuer oberer Rand (Ziel + 2 + 2) höchstens 15 bzw. 20
       if(gross && !e.zielBasis && z.wdh + 4 <= grenze) return { art:"wdh", grund:"sprung", wdh:z.wdh + 2, alt:z.wdh, max:b.max, sprung:neu, seit:seit };
       /* Nach einer Rücknahme nicht sofort wieder denselben Sprung: erst die Wiederholungen festigen (bis Ziel + 4, höchstens 20) */
+      /* Zweimal an derselben Stufe gescheitert: erst ein Satz mehr (bis 5), statt denselben Sprung ein drittes Mal (fachliche Prüfung Test 2) */
+      if(e.ruecknahmeKg && e.ruecknahmeN >= 2 && neu >= e.ruecknahmeKg - 1e-9 && !e.satzPlus && z.saetze < 5)
+        return { art:"satz", saetze:z.saetze + 1, alt:z.saetze, kg:kg, sprung:neu, seit:seit };
       if(e.ruecknahmeKg && neu >= e.ruecknahmeKg - 1e-9 && z.wdh < basis + 4 && z.wdh + 4 <= grenze)
         return { art:"wdh", grund:"nachRueck", wdh:z.wdh + 2, alt:z.wdh, max:b.max, sprung:neu, seit:seit };
       return { art:"kg", kg:neu, alt:kg, prozent:Math.round((neu/kg - 1)*100), max:b.max, min:min0, max0:max0, gross:gross, seit:seit };
@@ -221,6 +224,7 @@ function studioSteigerTippText(v){
   if(v.art === "zeit") return t("tippZeit", { alt:v.alt, neu:v.sek });
   if(v.art === "zeitRunter") return v.grund === "pause" ? t("tippPauseZeit", { d:v.tage, neu:v.sek }) : t("tippZeitRunter", { alt:v.alt, neu:v.sek });
   if(v.art === "variante") return t("tippVariante", { alt:v.alt });
+  if(v.art === "satz") return t("tippSatz", { kg:studioKg(v.sprung), n:v.saetze });
   if(v.art === "varianteWdh") return t("tippVarianteWdh", { max:v.max, min:v.min, max0:v.max0 });
   if(v.art === "kg") return t("tippKg", { max:v.max, neu:studioKg(v.kg), p:v.prozent, min:v.min, max0:v.max0 })+(v.gross ? " "+t("tippGross") : "");
   if(v.art === "runter") return t("tippRunter", { w:v.wdh, neu:studioKg(v.kg) });
@@ -232,6 +236,7 @@ function studioSteigerTippText(v){
 function studioTippKurz(v){
   if(v.art === "zeit" || v.art === "zeitRunter") return (v.art === "zeit" ? "↑ " : "↓ ")+t("tippKurzZeit", { n:v.sek });
   if(v.art === "variante" || v.art === "varianteWdh") return "↑ "+t("tippKurzVariante");
+  if(v.art === "satz") return "↑ "+t("tippKurzSatz", { n:v.saetze });
   return v.art === "kg" ? "↑ "+t("tippKurzKg", { kg:studioKg(v.kg), p:v.prozent }) : v.art === "runter" || v.art === "pause" ? "↓ "+t("tippKurzKg2", { kg:studioKg(v.kg) })
     : (v.art === "wdhRunter" ? "↓ " : "↑ ")+t("tippKurzWdh", { n:v.wdh });
 }
@@ -243,14 +248,20 @@ function studioTippUebernehmen(id, tp){
     en.timer = en.timer || {}; en.timer.work = tp.sek;
   } else if(tp.art === "variante"){
     /* nur gemerkt: die schwerere Variante wählt man selbst */
+  } else if(tp.art === "satz"){
+    en.satzPlus = z.saetze; en.ziel = { saetze:tp.saetze, wdh:z.wdh };   // ein Satz mehr; die alte Satzzahl ist gemerkt
   } else if(tp.art === "varianteWdh"){
     en.ziel = { saetze:z.saetze, wdh:tp.wdhNeu };   // schwerere Variante: Ziel wieder unten
   } else if(tp.art === "kg" || tp.art === "runter" || tp.art === "pause"){
     en.kg = tp.kg;
-    if(tp.art === "runter") en.ruecknahmeKg = tp.alt; else if(tp.art === "kg") delete en.ruecknahmeKg;
+    if(tp.art === "runter"){ en.ruecknahmeN = en.ruecknahmeKg === tp.alt ? (en.ruecknahmeN || 1) + 1 : 1; en.ruecknahmeKg = tp.alt; }
+    else if(tp.art === "kg"){
+      delete en.ruecknahmeKg; delete en.ruecknahmeN;
+      if(en.satzPlus){ en.ziel = { saetze:en.satzPlus, wdh:(en.ziel && en.ziel.wdh) || z.wdh }; delete en.satzPlus; }   // nach dem Sprung wieder die alte Satzzahl
+    }
     if(tp.art === "runter" && en.zielBasis){ en.ziel = { saetze:z.saetze, wdh:en.zielBasis }; delete en.zielBasis; }   // Gewicht runter: angehobenes Wdh.-Ziel zurück   // nach einer Rücknahme denselben Sprung nicht sofort wieder
     if(tp.zeitNeu){ en.timer = en.timer || {}; en.timer.work = tp.zeitNeu; }
-    if(tp.art === "kg" && en.zielBasis){ en.ziel = { saetze:z.saetze, wdh:en.zielBasis }; delete en.zielBasis; }
+    if(tp.art === "kg" && en.zielBasis){ en.ziel = { saetze:(en.ziel && en.ziel.saetze) || z.saetze, wdh:en.zielBasis }; delete en.zielBasis; }   // Satzzahl von oben (evtl. schon zurückgesetzt) behalten
   } else {
     if((tp.grund === "sprung" || tp.grund === "nachRueck") && !en.zielBasis) en.zielBasis = z.wdh;
     en.ziel = { saetze:z.saetze, wdh:tp.wdh };
