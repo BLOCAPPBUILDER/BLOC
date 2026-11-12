@@ -1751,10 +1751,8 @@
       var bandIds = W.EXERCISES.filter(function (e) { return e.equip.indexOf("band") > -1; }).map(function (e) { return e.id; });
       pruefe(bandIds.length === 47 && bandIds.every(function (id) { return W.BAND_ANKER[id] && W.BAND_ARTEN[W.BAND_ANKER[id][0]]; }), "Nicht jede Band-Übung hat eine Befestigung");
       W.openExInfo("band-standing-row", false);
-      var k = await bis(function () { return $("#overlayRoot .info-anker"); }, 2000, "Karte Band befestigen");
-      pruefe(!k.open && /Pfosten/.test(k.textContent) && !/Tür/.test(k.textContent) && /Brusthöhe/.test(k.textContent), "Karte: Pfosten und Brusthöhe (keine Tür) erwartet: " + k.textContent.slice(0, 80));
-      klick(k.querySelector("summary"));
-      await bis(function () { return $("#overlayRoot .info-anker").open && $$("#overlayRoot .info-anker li").length >= 3 && $("#overlayRoot .info-anker svg.band-skizze"); }, 2000, "Karte aufgeklappt mit Schritten und Skizze");
+      await bis(function () { return $("#overlayRoot .info-sheet"); }, 2000, "Info Band-Übung");
+      pruefe(!$("#overlayRoot .info-anker"), "Karte „Band befestigen“ ist entfernt");
       klick($("#overlayRoot [data-close]"));
       W.openExInfo("push-ups", false);
       await bis(function () { return $("#overlayRoot .info-sheet"); }, 2000, "Info Liegestütze");
