@@ -59,6 +59,7 @@ var PAT = {
     infoTitel:"Hinweise zum Plan",
     mehrere:"Mehrere möglich", waehleMind:"Wähle mindestens eine Option.", bauen:"Plan wird zusammengestellt …", lokal:"Wird nur auf deinem Gerät erstellt.", spaeter:"Du kannst jeden Trainingstag danach wie gewohnt bearbeiten, auch durch langes Drücken auf die Karte.", uebernehmen:"Änderungen übernehmen", zurueckPfeil:"Zurück zur vorigen Frage",
     leichtwoche:"Leichtwoche", lauf_w:"Geh-Lauf: {a} Min laufen, {b} Min gehen · {n}×", who:"Etwa {m} Minuten Training pro Woche, {k} Krafttage. WHO: 150 bis 300 Minuten moderate Aktivität und mindestens zwei Krafttage pro Woche.", schwerNein:"Für dein Niveau nicht vorgesehen",
+    ohneZug:"Für echtes Rudern fehlt dir Stange, Band oder Gerät – deshalb trainieren Übungen im Liegen den oberen Rücken. Mit einem Widerstandsband (unter „Geräte“ wählen) baut BLOC Rudern ein.",
     whoRest:"Den Rest bis 150 Minuten schaffst du nebenbei, z. B. mit zügigen Spaziergängen, Radfahren oder Treppen im Alltag.",
     endeTitel:"Plan geschafft", endeText:"{p}: {n} von {m} Trainings erledigt. Weiter mit denselben Übungen und deinen aktuellen Gewichten?",
     endeWeiter:"Nächsten Block starten", endeNeu:"Neuen Plan erstellen", endeAus:"Ausblenden", endeOk:"{n} Termine für die nächsten {w} Wochen im Kalender",
@@ -114,6 +115,7 @@ var PAT = {
     infoTitel:"Notes on the plan",
     mehrere:"Several possible", waehleMind:"Choose at least one option.", bauen:"Putting your plan together …", lokal:"Created on your device only.", spaeter:"You can edit every training day as usual afterwards, also by long-pressing its card.", uebernehmen:"Apply changes", zurueckPfeil:"Back to the previous question",
     leichtwoche:"Easy week", lauf_w:"Walk-run: {a} min run, {b} min walk · {n}×", who:"About {m} minutes of training per week, {k} strength days. WHO: 150 to 300 minutes of moderate activity and at least two strength days per week.", schwerNein:"Not planned for your level",
+    ohneZug:"Real rows need a bar, band or machine – so exercises lying face down train your upper back. With a resistance band (choose it under equipment) BLOC adds rows.",
     whoRest:"You can cover the rest up to 150 minutes on the side, e.g. with brisk walks, cycling or taking the stairs.",
     endeTitel:"Plan completed", endeText:"{p}: {n} of {m} workouts done. Carry on with the same exercises and your current weights?",
     endeWeiter:"Start next block", endeNeu:"Create a new plan", endeAus:"Hide", endeOk:"{n} sessions for the next {w} weeks in your calendar",
@@ -153,10 +155,13 @@ var PA_NIE = /planche|front-lever|back-lever|human-flag|one-arm|muscle-up|skin-t
 var PA_SPEZIAL = /trap-bar|hex-bar|safety-bar|swiss-bar|cambered|landmine|meadows-row|jammer|deficit-deadlift|box-squat/;
 var PA_POWER = /uppercut|punch|jab|hook-punch|boxing|shadow-box|judo-flip|rotational-overhead-press|woodchop|clean|snatch|jerk|thruster|(kettlebell|kb|db|dumbbell|russian|american|single-arm|one-arm)-swing/;
 var PA_ZEIT = /carry|farmer|plate-pinch-hold|boat-hold|bridge-hold|active-hang|dead-hang|^plank$|^side-plank$|copenhagen-plank|hollow-hold|superman-hold|squat-hold|wall-sit|support-hold|^l-sit$/;
-var PA_ZEIT_SEK = 35;
+var PA_ZEIT_SEK = 35, PA_ZEIT_SEK_JE = { "superman-hold":30 };   // Startzeit; Superman Hold für Einsteiger kürzer
 /* Echte Zugübung (Rudern, Latzug, Klimmzug) - nicht Tragen, aufrechtes Rudern oder Rückenstrecker */
 var PA_ZUG = /(^|-)rows?(-|$)|pull-?downs?(-|$)|chin-ups?|pull-ups?/, PA_ZUG_NICHT = /upright|stretch|scapular|pull-apart|rear-delt|biceps|twist|renegade|weighted-pull/;
 function paIstZug(ex){ return !!ex && PA_ZUG.test(ex.id) && !PA_ZUG_NICHT.test(ex.id) && !PA_ZEIT.test(ex.id); }
+var PA_RUECKEN_ERSATZ = ["superman-hold", "reverse-snow-angels", "prone-y-raise"];   // oberer Rücken ohne Geräte, wenn kein Rudern möglich ist
+function paZiehtEx(ex){ return !!ex && (paIstZug(ex) || (exProfile(ex).pattern === "pull" && !PA_ZEIT.test(ex.id) && !/upright/.test(ex.id))); }   // zählt als Ziehen (Wochenbilanz)
+function paDrueckt(ex){ return !!ex && exProfile(ex).pattern === "push"; }
 function paZugVertikal(ex){ return /pull-?downs?|pull-ups?|chin-ups?/.test(ex.id); }   // sonst horizontal (Rudern)
 var PA_AUSNAHME = /forearm|elbow|incline-push|wall-push|knee-push/;   // Handgelenk: Unterarm-Varianten und leichtere Stützformen bleiben erlaubt
 /* Slots je Einheit: Muskelgruppen in Reihenfolge der Wichtigkeit (große Übungen zuerst; Drücken und Ziehen wechseln sich ab) */
@@ -370,7 +375,7 @@ function paErzeuge(a0){
     var m = {}; ids.forEach(function(id){ m[id] = "timer"; });
     return { bloc:{ name:pt("dehnen"), ids:ids, std:"timer", modus:m, dehn:true } };
   }
-  var mobIdx = 0, cardioIdx = 0;
+  var mobIdx = 0, cardioIdx = 0, ohneZug = false;
   typen.forEach(function(typ, i){
     var tag = days[i], seed = seedBase + i, teile = [], tname = "";
     if(typ === "gk" || typ === "ok" || typ === "uk"){
@@ -397,6 +402,16 @@ function paErzeuge(a0){
           if(ersetz < 0 && mainIds.length >= nMain) ersetz = mainIds.length - 1;
           benutzt[zx.id] = 1; planBenutzt[zx.id] = 1;
           if(ersetz >= 0){ delete benutzt[mainIds[ersetz]]; mainIds[ersetz] = zx.id; gruppen[ersetz] = "ruecken"; } else { mainIds.push(zx.id); gruppen.push("ruecken"); }
+        } else {
+          /* Kein Rudern möglich (z. B. nur Körpergewicht ohne Stange und Band): eine Übung für den oberen Rücken im Liegen, dazu ein Hinweis im Plan */
+          ohneZug = true;   // keine echte Zugübung möglich: Hinweis im Plan, auch wenn der Ersatz schon drin ist
+          var ers = PA_RUECKEN_ERSATZ.map(findExercise).filter(function(x){ return x && !benutzt[x.id] && !paAusgeschlossen(x, a); });
+          if(ers.length){
+            var ex2 = ers[zaehl[typ] % ers.length], ers2 = -1;
+            ["arme", "schulter", "brust", "rumpf", "bauch"].forEach(function(g3){ if(ers2 < 0) for(var q3 = gruppen.length - 1; q3 >= 0; q3--) if(gruppen[q3] === g3 && paDrueckt(findExercise(mainIds[q3]))){ ers2 = q3; break; } });
+            benutzt[ex2.id] = 1; planBenutzt[ex2.id] = 1;
+            if(ers2 >= 0){ delete benutzt[mainIds[ers2]]; mainIds[ers2] = ex2.id; gruppen[ers2] = "ruecken"; } else { mainIds.push(ex2.id); gruppen.push("ruecken"); }
+          }
         }
       }
       var balance = a.alter === "65" && findExercise("single-leg-stand") && !benutzt["single-leg-stand"] ? ["single-leg-stand"] : [];   // ab 65: Gleichgewicht (WHO 2020, ICFSR 2021)
@@ -436,12 +451,42 @@ function paErzeuge(a0){
       tageSpecs.push({ tag:wahl, typ:"mob", name:pt("mob"), teile:teile3, extra:true });
     }
   }
+  /* Wochenbilanz (fachliche Prüfung 2026-11-12, Praxisregel für gesunde Schultern): über die Woche mindestens so viele Zug- wie Druckübungen.
+     Überzählige Druckübungen werden ersetzt - zuerst Arme, dann Schulter, nur an Tagen mit mindestens zwei Druckübungen. Gilt nur für das, was der
+     Assistent selbst aussucht; der fertige Plan bleibt frei änderbar. */
+  (function(){
+    var mains = []; tageSpecs.forEach(function(t0){ t0.teile.forEach(function(tl){ if(tl.bloc && tl.bloc.main) mains.push(tl.bloc); }); });
+    var zugPool = []; Object.keys(pools.kraft).forEach(function(g){ (pools.kraft[g] || []).forEach(function(o){ if(paZiehtEx(o.ex)) zugPool.push(o); }); });
+    // echte Zugübung zählt 1, Rücken-Übungen im Liegen u. Ä. nur halb (fachliche Prüfung Test 2) - ohne Rudermöglichkeit bleiben so weniger Druckübungen
+    function bilanz(){ var c = { p:0, z:0 }; mains.forEach(function(b){ b.ids.forEach(function(id){ var ex = findExercise(id); if(paDrueckt(ex)) c.p++; else if(paIstZug(ex)) c.z++; else if(paZiehtEx(ex) || PA_RUECKEN_ERSATZ.indexOf(id) > -1) c.z += 0.5; }); }); return c; }
+    var c = bilanz(), runde = 0;
+    while(c.p > c.z && runde++ < 20){
+      var best = null;
+      mains.forEach(function(b, bi){
+        if(b.ids.filter(function(id){ return paDrueckt(findExercise(id)); }).length < 2) return;
+        b.ids.forEach(function(id, k){
+          var ex = findExercise(id); if(!paDrueckt(ex)) return;
+          var g = paTopGruppe(ex), rang = g === "arme" ? 3 : g === "schulter" ? 2 : 1;
+          if(!best || rang > best.rang || (rang === best.rang && (bi > best.bi || (bi === best.bi && k > best.k)))) best = { b:b, bi:bi, k:k, id:id, rang:rang };
+        });
+      });
+      if(!best) break;
+      var belegt = {}; best.b.ids.forEach(function(id){ belegt[id] = 1; });
+      var hatVert = best.b.ids.some(function(id){ var ex = findExercise(id); return paIstZug(ex) && paZugVertikal(ex); });
+      var lieber = zugPool.filter(function(o){ return !paIstZug(o.ex) || paZugVertikal(o.ex) !== hatVert; });   // die Zug-Richtung, die dem Tag noch fehlt
+      var neu = paWaehle(lieber, belegt, seedBase + "zd" + runde, planBenutzt) || paWaehle(zugPool, belegt, seedBase + "zd2" + runde, planBenutzt);
+      if(!neu) break;
+      ziele[neu.id] = ziele[best.id]; best.b.ids[best.k] = neu.id; planBenutzt[neu.id] = 1;
+      c = bilanz();
+    }
+  })();
   tageSpecs.sort(function(x, y){ return x.tag - y.tag; });
   var info = [pt("info0"), pt("info1", { r:PA_RIR[sw] })];
   info.push(pt("info2", { n:paLeichtWochen(a.wochen).map(function(i){ return i + 1; }).join(a.wochen >= 8 ? " und " : "") }));
   if(a.laufen === "ein" && hatRun) info.push(pt("info3")); else if(a.laufen === "reg" && hatRun) info.push(pt("info3b"));
   if(a.sport) info.push(pt("info6", { s:a.sport.name }));
   if(a.alter === "65") info.push(pt("info5"));
+  if(ohneZug) info.push(pt("ohneZug"));
   if(nTage === 1 && haupt !== "beweglich" && haupt !== "ausdauer") info.push(pt("einEinheit"));
   info.push(pt("info4")); info.push(pt("quelle"));
   var kraftTage = tageSpecs.filter(function(t0){ return t0.typ === "gk" || t0.typ === "ok" || t0.typ === "uk"; }).length;
@@ -506,7 +551,7 @@ function paAnlegen(a0, ersetzeGid){
       b.ids.forEach(function(id){
         var e = studio[id] || (studio[id] = { log:[] }), z = sp.ziele[id], ex0 = findExercise(id);
         if(z && !e.ziel){ e.ziel = { saetze:z.s, wdh:z.w }; if(e.pause == null) e.pause = z.p; }
-        if(z && PA_ZEIT.test(id) && !e.einheit){ e.einheit = "zeit"; if(!e.timer) e.timer = { reps:z.s, work:PA_ZEIT_SEK, rest:z.p }; }   // Tragen und Halten: Sätze × Sekunden
+        if(z && PA_ZEIT.test(id) && !e.einheit){ e.einheit = "zeit"; if(!e.timer) e.timer = { reps:z.s, work:PA_ZEIT_SEK_JE[id] || PA_ZEIT_SEK, rest:z.p }; }   // Tragen und Halten: Sätze × Sekunden
         if(!e.timer && ex0 && ex0.main !== "stretch" && b.modus[id] === "timer"){   // Aufwärmen bzw. Cardio-Runde
           if(b.cardio){ var c = PA_CARDIO[sw]; e.timer = { reps:c[0], work:c[1], rest:c[2] }; } else e.timer = { reps:1, work:40, rest:10 };
         }
@@ -535,13 +580,22 @@ function paPlanEnde(){
   Object.keys(gruppen).forEach(function(gid){
     var ids = gruppen[gid].map(function(p){ return p.id; });
     var ter = kalListe().filter(function(e){ return e.prog && ids.indexOf(e.prog.id) > -1 && e.art !== "sport"; });
-    if(!ter.length || ter.some(function(e){ return e.tag >= heute; })) return;
+    if(!ter.length || ter.some(function(e){ return e.tag > heute || (e.tag === heute && !kalErledigt(e)); })) return;   // auch am letzten Tag, sobald er erledigt ist
     var letzter = ter.reduce(function(m, e){ return e.tag > m ? e.tag : m; }, "");
     if(letzter < grenze || gruppen[gid][0].endeGesehen === letzter) return;
     var ok = ter.filter(kalErledigt).length;
     if(!best || letzter > best.letzter) best = { gid:gid, p:gruppen[gid][0], letzter:letzter, n:ok, m:ter.length };
   });
   return best;
+}
+/* Ist heute der letzte Termin des Plans, zu dem dieser BLOC gehört? (Auswertung: „Letztes Training des Plans geschafft“) */
+function paLetzterPlantag(planId){
+  var heute = kalTagKey(Date.now()), gid = null;
+  programmListe().forEach(function(p){ if(p.gen && p.gruppe && p.items.indexOf("plan:"+planId) > -1) gid = p.gruppe; });
+  if(!gid) return false;
+  var ids = paGruppe(gid).map(function(p){ return p.id; });
+  var ter = kalListe().filter(function(e){ return e.prog && ids.indexOf(e.prog.id) > -1 && e.art !== "sport"; });
+  return ter.some(function(e){ return e.tag === heute; }) && !ter.some(function(e){ return e.tag > heute; });
 }
 function paPlanEndeHTML(){
   var en = paPlanEnde();

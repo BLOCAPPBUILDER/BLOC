@@ -86,7 +86,8 @@
   test("Rekord: mehr Gewicht oder höheres 1RM; ohne Gewicht mehr Wiederholungen; Gleichstand ist kein Rekord", function () {
     wahr(W.studioIstRekord({ kg: 50, rm: 58.3, wdh: 5 }, { kg: 40, rm: 53.3, wdh: 10 }), "mehr Gewicht");
     wahr(!W.studioIstRekord({ kg: 40, rm: 53.3, wdh: 10 }, { kg: 40, rm: 53.3, wdh: 10 }), "Gleichstand");
-    wahr(W.studioIstRekord({ kg: 40, rm: 56, wdh: 12 }, { kg: 40, rm: 53.3, wdh: 10 }), "gleiches Gewicht, mehr Wiederholungen = höheres 1RM");
+    wahr(W.studioIstRekord({ kg: 40, rm: 56, wdh: 12, wBest: 12 }, { kg: 40, rm: 53.3, wdh: 10, wBest: 10 }), "gleiches Gewicht, mehr Wiederholungen");
+    wahr(!W.studioIstRekord({ kg: 35, rm: 60, wdh: 12, wBest: 12 }, { kg: 40, rm: 53.3, wdh: 10, wBest: 10 }), "nur höheres geschätztes 1RM bei weniger Gewicht ist kein Rekord (fachliche Prüfung Test 2)");
     wahr(W.studioIstRekord({ kg: 0, rm: 0, wdh: 12 }, { kg: 0, rm: 0, wdh: 10 }), "ohne Gewicht: mehr Wiederholungen");
     wahr(!W.studioIstRekord({ kg: 0, rm: 0, wdh: 10 }, { kg: 0, rm: 0, wdh: 10 }), "ohne Gewicht: Gleichstand");
     wahr(!W.studioIstRekord({ kg: 30, rm: 40, wdh: 10 }, { kg: 40, rm: 53, wdh: 10 }), "weniger ist kein Rekord");
@@ -978,6 +979,96 @@
       wahr(Object.keys(tt).length === 3 && tt["smith-bench-press"].art === "runter", "zwei Steigerungen plus die Rücknahme: " + JSON.stringify(Object.keys(tt)));
     } finally { s.studio = alt; }
   });
+  test("Plan-Assistent: Woche mit mindestens so viel Ziehen wie Drücken; ohne Rudermöglichkeit Rücken-Ersatz mit Hinweis", function () {
+    var n = 0;
+    [[["lh", "kh", "maschine", "kabel"], ["studio"]], [["kh"], ["studio"]], [["maschine", "kabel"], ["studio"]]].forEach(function (v, i) {
+      [[0, 3], [0, 2, 4], [0, 1, 3, 4]].forEach(function (tage) {
+        var sp = W.paErzeuge({ ziele:["muskel"], niveau:"n12", schwer:"mittel", tage:tage, dauer:[45, 60, 30][i], train:v[1], ausr:v[0], impact:"gerne", bereiche:["workout"] }), c = { p:0, z:0 };
+        sp.tage.forEach(function (t0) { t0.teile.forEach(function (tl) { if (tl.bloc && tl.bloc.main) tl.bloc.ids.forEach(function (id) { var ex = W.findExercise(id); if (W.paDrueckt(ex)) c.p++; else if (W.paZiehtEx(ex)) c.z++; }); }); });
+        wahr(c.z >= c.p, v[0].join("/") + " " + tage.length + " Tage: Ziehen " + c.z + " < Drücken " + c.p); n++;
+      });
+    });
+    var body = W.paErzeuge({ ziele:["muskel"], niveau:"n12", schwer:"mittel", tage:[0, 3], dauer:45, train:["body"], ausr:["keine"], impact:"gerne", bereiche:["workout"] });
+    var ids = []; body.tage.forEach(function (t0) { t0.teile.forEach(function (tl) { if (tl.bloc && tl.bloc.main) ids = ids.concat(tl.bloc.ids); }); });
+    wahr(ids.some(function (id) { return W.paZiehtEx(W.findExercise(id)) || W.PA_RUECKEN_ERSATZ.indexOf(id) > -1; }), "nur Körpergewicht: Zug oder Rücken-Ersatz: " + ids.join(", "));
+    gleich(body.info.indexOf(W.pt("ohneZug")) > -1, !ids.some(function (id) { return W.paIstZug(W.findExercise(id)); }), "Hinweis „Rudern fehlt“ genau dann, wenn keine echte Zugübung im Plan ist");
+  });
+  test("Hinweis Zug : Druck beim Bearbeiten eines BLOCs (nur Hinweis, ausblendbar)", function () {
+    var p = { id:"p-bal", name:"Druck", ids:["bench-press", "shoulder-press-machine", "push-ups"] };
+    wahr(W.planBalanceHTML(p, p.ids).indexOf("plan-balance") > -1, "3 : 0 zeigt den Hinweis");
+    gleich(W.planBalanceHTML(p, ["bench-press", "lat-pulldown"]), "", "ausgeglichen: kein Hinweis");
+    p.balanceAus = true; gleich(W.planBalanceHTML(p, p.ids), "", "ausgeblendet");
+  });
+  test("Halteübungen: Steigerung über die Zeit (+5 s bis 60 s, dann Gewicht bzw. Variante; zurück bei deutlich zu kurz)", function () {
+    var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now(), id = "farmer-carry";
+    try {
+      s.studio = {}; s.studio[id] = { kg:20, schritt:2.5, einheit:"zeit", ziel:{ saetze:3, wdh:10 }, timer:{ reps:3, work:35, rest:60 },
+        log:[{ at:n - 5*tag, s:[[20, 35, "n", 0, 1], [20, 35, "n", 0, 1], [20, 36, "n", 0, 1]] }, { at:n - 2*tag, s:[[20, 35, "n", 0, 1], [20, 35, "n", 0, 1], [20, 35, "n", 0, 1]] }] };
+      var tp = W.studioProg(id); wahr(tp && tp.art === "zeit" && tp.sek === 40, "35 s geschafft: Ziel 40 s (" + JSON.stringify(tp) + ")");
+      W.studioTippUebernehmen(id, tp); gleich(W.studioTimer(id).work, 40, "Zielzeit übernommen");
+      s.studio[id].timer.work = 60; delete s.studio[id].erhoeht;
+      s.studio[id].log.forEach(function (l) { l.s = [[20, 60, "n", 0, 1], [20, 60, "n", 0, 1], [20, 60, "n", 0, 1]]; });
+      tp = W.studioProg(id); wahr(tp && tp.art === "kg" && tp.kg === 22.5 && tp.zeitNeu === 30, "60 s geschafft: mehr Gewicht und wieder 30 s");
+      s.studio[id].timer.work = 40;
+      s.studio[id].log.forEach(function (l) { l.s = [[20, 20, "n", 0, 1], [20, 22, "n", 0, 1], [20, 20, "n", 0, 1]]; });
+      tp = W.studioProg(id); wahr(tp && tp.art === "zeitRunter" && tp.sek === 35, "deutlich zu kurz: 5 s weniger");
+    } finally { s.studio = alt; }
+  });
+  /* Zweiter 13-Wochen-Test (2026-11-13): N1–N7 und Kevins Entscheidungen (gerechte Tipps, Schritt je Gerät, Körpergewicht) */
+  test("Test 2 N1: bei mehr als zwei fälligen Tipps kommen die am längsten wartenden zuerst", function () {
+    var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();
+    function bereit(ab){ var l = []; for (var i = ab; i >= 1; i--) l.push({ at:n - i*tag, s:[[40, 12], [40, 12], [40, 12]] }); return { kg:40, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:l }; }
+    try {
+      s.studio = { "leg-press":bereit(2), "chest-press-machine":bereit(2), "smith-bench-press":bereit(2), "calf-machine":bereit(9) };
+      var tt = W.studioTipps(["leg-press", "chest-press-machine", "smith-bench-press", "calf-machine"], false);
+      wahr(tt["calf-machine"] && tt["leg-press"] && Object.keys(tt).length === 2, "am längsten bereit (Platz 4) kommt zuerst: " + Object.keys(tt).join(", "));
+      gleich(W.studioTippsWartend.slice().sort(), ["chest-press-machine", "smith-bench-press"], "die übrigen warten sichtbar");
+    } finally { s.studio = alt; }
+  });
+  test("Test 2 N2: Logbuch zeigt nie 0 kg, auch bei mehr als 12 Wiederholungen", function () {
+    var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();
+    try {
+      s.studio = { "cable-crunch": { log:[{ at:n - 9*tag, s:[[15, 10], [15, 10]] }, { at:n - 2*tag, s:[[15, 14], [15, 13], [15, 13]] }] } };
+      var h = W.statFortschrittHTML();
+      wahr(!/→ 0 kg/.test(h), "kein „→ 0 kg“: " + (h.match(/st-sub an">[^<]*/) || [""])[0]);
+    } finally { s.studio = alt; }
+  });
+  test("Test 2 N3: Gewichtsschritt je Gerät; nach einer Rücknahme nicht sofort wieder derselbe Sprung", function () {
+    var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();
+    try {
+      s.studio = {};
+      var kh = W.EXERCISES.filter(function (ex) { var g = W.exAusr(ex); return g.length === 1 && g[0] === "kh" && !W.studioNurBlock(ex); })[0].id;
+      s.studio[kh] = { kg:8, log:[] }; gleich(W.studioZiel(kh).schritt, 1, "Kurzhantel unter 10 kg: 1 kg");
+      s.studio[kh].kg = 12; gleich(W.studioZiel(kh).schritt, 2, "Kurzhantel ab 10 kg: 2 kg");
+      gleich(W.studioZiel("smith-bench-press").schritt, 2.5, "Multipresse: 2,5 kg");
+      var id = W.EXERCISES.filter(function (ex) { return !W.studioNurBlock(ex) && W.studioWdhGrenze(ex) === 20 && !W.STUDIO_ZIEL[ex.id]; })[0].id;   // Isolationsübung (oberer Rand bis 20)
+      gleich(W.studioWdhGrenze(W.findExercise("chest-press-machine")), 15, "Grundübung: oberer Rand höchstens 15");
+      // Ablauf: 10 kg, Ziel 10 → +2 Wdh. (Sprung zu groß) → 12,5 kg → zurück auf 10 kg; jetzt 14 Wdh. bei Ziel 12 geschafft
+      s.studio[id] = { kg:10, schritt:2.5, ruecknahmeKg:12.5, zielBasis:10, ziel:{ saetze:3, wdh:12 }, log:[{ at:n - 4*tag, s:[[10, 14], [10, 14], [10, 14]] }, { at:n - 1*tag, s:[[10, 14], [10, 14], [10, 14]] }] };
+      var tp = W.studioProg(id); wahr(tp && tp.art === "wdh" && tp.grund === "nachRueck" && tp.wdh === 14, "nach der Rücknahme erst Wdh. festigen (" + JSON.stringify(tp) + ")");
+    } finally { s.studio = alt; }
+  });
+  test("Test 2 N6 und Körpergewicht: Tipp nennt den neuen Zielbereich; ohne Gewicht bis 20 Wdh., dann schwerere Variante", function () {
+    var txt = W.studioSteigerTippText({ art:"kg", kg:57.5, alt:55, prozent:5, max:14, min:8, max0:12 });
+    wahr(/8–12/.test(txt), "Text nennt 8–12: " + txt);
+    var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now(), id = "push-ups";
+    try {
+      s.studio = {}; s.studio[id] = { einheit:"wdh", ziel:{ saetze:3, wdh:20 }, log:[{ at:n - 4*tag, s:[[0, 22], [0, 22], [0, 22]] }, { at:n - 1*tag, s:[[0, 22], [0, 22], [0, 22]] }] };
+      var tp = W.studioProg(id); wahr(tp && tp.art === "varianteWdh", "ab 20 Wdh.: schwerere Variante (" + JSON.stringify(tp) + ")");
+      W.studioTippUebernehmen(id, tp); gleich(W.studioZiel(id).wdh, 10, "Ziel wieder 10 (8–12)");
+    } finally { s.studio = alt; }
+  });
+  test("Test 2 N7: letzter Plantag wird erkannt (Auswertung) und die Abschlusskarte erscheint schon am letzten Tag", function () {
+    var s = W.state.db.settings, alt = { kalender:s.kalender, programme:s.programme, einheiten:s.einheiten }, heute = W.kalTagKey(Date.now());
+    try {
+      s.programme = [{ id:"g2", name:"Tag 1", items:["plan:p-n7"], tage:[0], wochen:6, gen:true, gruppe:"G2", gruppeName:"Test" }];
+      s.kalender = { e:[{ id:"k", tag:heute, art:"programm", ref:"g2", prog:{ id:"g2", i:0 }, at:1, erledigt:false }] };
+      wahr(W.paLetzterPlantag("p-n7"), "heute ist der letzte Termin");
+      gleich(W.paPlanEnde(), null, "vor dem Training noch keine Abschlusskarte");
+      s.kalender.e[0].erledigt = true;
+      wahr(W.paPlanEnde(), "nach dem letzten Training: Abschlusskarte");
+    } finally { s.kalender = alt.kalender; s.programme = alt.programme; s.einheiten = alt.einheiten; }
+  });
   test("Rekorde F9: schwerer mit nur 1 Wiederholung ist kein Rekord", function () {
     var vor = W.studioBestwerte([{ s:[[4, 10], [4, 10], [4, 10]] }]), jetzt = W.studioBestwerte([{ s:[[14, 1], [14, 1], [14, 1]] }]);
     wahr(!W.studioIstRekord(jetzt, vor), "14 × 1 nach 4 × 10 ist kein Rekord");
@@ -1024,7 +1115,7 @@
     var s = W.state.db.settings, alt = { kalender:s.kalender, programme:s.programme }, heute = W.kalTagKey(Date.now()), vorher = W.kalTagKey(Date.now() - 3*86400000);
     try {
       s.programme = [{ id:"g1", name:"Tag 1", items:["plan:p-l1"], tage:[0], wochen:6, gen:true, gruppe:"G", gruppeName:"Muskelaufbau" }];
-      s.kalender = { e:[{ id:"a", tag:heute, art:"programm", ref:"g1", leicht:true, prog:{ id:"g1", i:0 }, at:1 }] };
+      s.kalender = { e:[{ id:"a", tag:heute, art:"programm", ref:"g1", leicht:true, prog:{ id:"g1", i:0 }, at:1, erledigt:false }] };
       wahr(W.planLeichtHeute("p-l1"), "Leichtwoche erkannt"); gleich(W.leichtSaetze(3), 2, "3 → 2 Sätze"); gleich(W.leichtSaetze(5), 3, "5 → 3 Sätze");
       gleich(W.paPlanEnde(), null, "Termin heute: Plan läuft noch");
       s.kalender.e[0].tag = vorher; delete s.kalender.e[0].leicht;
