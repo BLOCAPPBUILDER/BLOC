@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-12 · Muschel (Clamshell): Knie gebeugt statt gestreckt (Fassung 2026-11-12-9)
+
+Band-Übungen und letzte Fotos durchgesehen (auch vom Sportwissenschaftler); einzig fachlicher Fehler war die Muschel mit fast gestreckten Beinen. Jetzt Knie ca. 90°, oberes Knie öffnet sich.
+
 ## 2026-11-12 · Figuren: Gelenkrichtung korrigiert, Karte „Band befestigen“ entfernt (Fassung 2026-11-12-6)
 
 - **Ellbogen/Knie**: In der Seitenansicht knicken sie nur noch zur richtigen Seite. Beim Laden werden falsch knickende Gelenke an der Linie Schulter–Hand bzw. Hüfte–Knöchel gespiegelt (123 Übungen); in der Animation klappt ein Arm nicht mehr durch die Streckung.
