@@ -8,6 +8,20 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-12 · Eine Steigerungsregel, Runden, Leichtwoche, Planende (Fassung 2026-11-12-16)
+
+Umsetzung des 13-Wochen-Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen), Eckwerte fachlich vom Sportwissenschaftler bestätigt.
+- **Eine Regel überall** (`studioProg`, js/09): doppelte Progression mit Bereich Ziel ± 2 (Untergrenze ≥ 5). Steigern erst, wenn zwei Runden lang alle Ziel-Sätze den oberen Rand schaffen: +1 Gewichtsstufe auf Vielfache des Schritts. Wäre das > 10 %, erst +2 Wdh., danach der Sprung mit Hinweis. Zurücknehmen (~10 %), wenn zwei Runden im Schnitt unter der Untergrenze. Gezählt in Runden statt Wochen/Uhrzeit, höchstens 2 Tipps je Training. „Neuer Standard“ (Ziel automatisch anheben) entfällt.
+- **Runden:** Speichern schließt die Runde; ein zweites Training am selben Tag ist ein eigener Eintrag (kurz danach weitertrainiert = angehängt, 45 Min). Endkarte, Auswertung und Dauer zählen nur die Runde.
+- **Arbeitsgewicht** = häufigstes Gewicht der normalen Sätze; Back-off/Drop/Aufwärmen senken es nicht.
+- **Leichtwoche:** ca. 60 % der Sätze, keine Tipps, Hinweis auf der Satzkarte.
+- **Rekorde/Logbuch:** nur Sätze ab 5 Wdh. (1RM aus 5–12); Logbuch vergleicht das geschätzte Max.; Warnhinweis bei dreimal fallendem Volumen.
+- **Kalender/Fortschritt:** erledigt und Trainingstage auch aus gespeicherten Trainings (nicht nur 4-Wochen-Verlauf); Trainings ohne Termin erscheinen im Kalender.
+- **Planende:** Karte „Plan geschafft“ mit „Nächsten Block starten“ / „Neuen Plan erstellen“.
+- **Plan-Assistent:** je Ganzkörper-/Oberkörpertag eine echte Zugübung; keine Spezialstangen (Trap-Bar), keine Box-Übungen bei Muskelaufbau/Kraft; Tragen/Halten nach Zeit (35 s).
+- Kleinkram: erstes Training mit Startgewicht-Hinweis, „Pause beenden“ statt „Weiter“, „Teil geschafft!“ im Trainingsplan, 2,5 Stunden mit Komma, „1 Tag“, Kalenderkopf ohne Punkt, Fortschritt-Kopfzeile scrollt mit.
+- Tests: einheitstest +6 (je Befund), angepasste Prüfungen in schnelltest/einheitstest.
+
 ## 2026-11-12 · Wadenheben und Kniestrecken mit Band (Fassung 2026-11-12-15)
 
 Zwei neue Band-Übungen mit Figur: Wadenheben (beidbeinig) und Kniestrecken im Stand (Terminal Knee Extension, je Seite, Band auf Kniehöhe). „Kraft für Läufer mit Band“ deckt jetzt auch Oberschenkel vorn und Wade ab (7 Übungen, ca. 20 Min). Fußheben: Muskeln eingetragen (vorher „–“). Fachlich vom Sportwissenschaftler geprüft.

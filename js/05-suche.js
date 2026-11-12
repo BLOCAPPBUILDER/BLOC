@@ -239,6 +239,7 @@ function renderHome(){
     katTabSetzen("baukasten"); go("#katalog");
   });
   bindFavItems(renderHome);
+  if(typeof paPlanEndeBinden === "function") paPlanEndeBinden(renderHome);
   bindBackupTip();
   var wl = app.querySelector(".woche-link");
   if(wl){   // Meine Woche klappt nicht mehr auf, sondern führt direkt in den Kalender
@@ -282,7 +283,7 @@ function heroNeuHTML(){
   if(fokusAus("katalog")) return "";
   var heute = heroHeutige(), modus = "baukasten", label = t("heroTitel"), titel = t("heroLos"), sub = "";
   if(heute.length){ var info = kalHeroInfo(heute); modus = "plan"; label = t("heroGeplantNeu"); titel = info.titel; sub = info.sub; }
-  else return "";   // nichts geplant: kein „Aus deinen Favoriten wählen“, die Seite bleibt hier leer (der Baukasten steht weiter unten)
+  else return typeof paPlanEndeHTML === "function" ? paPlanEndeHTML() : "";   // nichts geplant: höchstens die Karte „Plan geschafft“ (Planende): kein „Aus deinen Favoriten wählen“, die Seite bleibt hier leer (der Baukasten steht weiter unten)
   return '<section class="geplant-neu"><button type="button" class="gn-main" data-herostart="'+modus+'">'+
     '<span class="gn-play" aria-hidden="true">'+ICON_PLAY+'</span>'+
     '<span class="gn-text"><small>'+esc(label)+'</small><b>'+esc(titel)+'</b>'+(sub ? '<span>'+esc(sub)+'</span>' : '')+'</span>'+

@@ -310,7 +310,9 @@ function enterStep(idx, opt){
     if(playerState.progWeiter === undefined) playerState.progWeiter = programmWeiter(programmRefAusQuelle(playerState.source));
     var pw = playerState.progWeiter, pwBtn = null;
     if(pw){
-      doneBody.querySelector(".btn-row").insertAdjacentHTML("afterbegin", '<button class="btn btn-primary" data-progweiter style="width:100%">'+esc(t("progWeiter", { n:pw.name }))+' ›</button>');
+      var reihe = doneBody.querySelector(".btn-row"); reihe.style.flexWrap = "wrap";   // drei Knöpfe: „Weiter mit …“ oben über die ganze Breite, nichts angeschnitten
+      reihe.insertAdjacentHTML("afterbegin", '<button class="btn btn-primary" data-progweiter style="width:100%;flex:1 1 100%">'+esc(t("progWeiter", { n:pw.name }))+' ›</button>');
+      var h2 = doneBody.querySelector(".done-screen h2"); if(h2) h2.textContent = t("doneTeil");   // im Trainingsplan ist das nur ein Teil (z. B. Aufwärmen), nicht das ganze Workout
       pwBtn = doneBody.querySelector("[data-progweiter]");
       pwBtn.addEventListener("click", function(){ exitPlayer(); pw.start(true); });
     }

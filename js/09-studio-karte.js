@@ -85,54 +85,110 @@ function genPlanErstellen(g, f){
   return true;
 }
 
-/* Vorschlag für den nächsten Satz: heute der letzte Satz, sonst Arbeitsgewicht bzw. letztes Mal */
+/* Vorschlag für den nächsten Satz: in der offenen Runde der letzte Satz, sonst Arbeitsgewicht und die Wiederholungen vom letzten Mal.
+   Nach einem übernommenen Steigerungs-Tipp beginnt man wieder unten im Wiederholungsbereich. erstes: noch nie trainiert und kein Gewicht eingestellt. */
 function studioVorschlag(id){
   if(studioPR && studioPR.id !== id) studioPR = null;
-  var e = studioEintrag(id) || {}, z = studioZiel(id), log = e.log || [], heute = studioTag(Date.now());
-  var h = log.length && studioTag(log[log.length-1].at) === heute ? log[log.length-1] : null;
+  var e = studioEintrag(id) || {}, z = studioZiel(id), h = studioOffen(e);
   if(h && h.s.length) return { kg:h.s[h.s.length-1][0], wdh:h.s[h.s.length-1][1] };
-  var vor = log.length ? log[log.length-1] : null, va = vor ? arbeitsSaetze(vor) : [];
-  return { kg: e.kg != null ? e.kg : (va.length ? va[0][0] : 0), wdh: va.length ? va[0][1] : z.wdh };
+  var vor = studioLetzte(id, false), va = vor ? arbeitsSaetze(vor) : [];
+  var kg = e.kg != null ? e.kg : (vor ? (rundeArbeitsKg(vor) || 0) : 0);
+  var amKg = va.filter(function(x){ return x[0] === kg; }), wdh = amKg.length ? amKg[0][1] : va.length ? va[0][1] : z.wdh;
+  if(e.erhoeht && (!vor || e.erhoeht >= vor.at)) wdh = studioBereich(id).min;
+  return { kg:kg, wdh:wdh, erstes:!vor && e.kg == null };
 }
-/* Doppelte Progression: in den letzten zwei Einheiten mit dem Arbeitsgewicht alle Ziel-Sätze mit Ziel-Wdh. (Aufwärmsätze zählen nicht) */
-function studioSteigern(id){
-  var e = studioEintrag(id), z = studioZiel(id);
-  if(!e || !e.log || e.log.length < 2) return null;
-  var lz = arbeitsSaetze(e.log[e.log.length-1]);
-  var kg = e.kg != null ? e.kg : (lz.length ? lz[0][0] : 0);
-  if(!(kg > 0)) return null;
-  var zwei = e.log.slice(-2);
-  var ok = zwei.every(function(l){
-    var gute = arbeitsSaetze(l).filter(function(x){ return x[0] >= kg && x[1] >= z.wdh; });
-    return gute.length >= z.saetze;
-  });
-  if(!ok || (e.erhoeht && e.erhoeht >= zwei[1].at)) return null;
-  return { kg:Math.round((kg + z.schritt)*100)/100, ziel:z.saetze+" × "+z.wdh };
-}
-/* Vorschlag zum Steigern: gleiche Arbeitslast seit mindestens zwei Wochen (mindestens zwei Einheiten) → 5 % mehr, auf den Schritt der Übung gerundet (mindestens ein Schritt);
-   ohne Gewicht: zwei Wiederholungen mehr. Nimmt den strengeren Vorschlag der doppelten Progression (studioSteigern) vorweg, wenn der schon da ist. Nur ein Hinweis, die Technik entscheidet. */
-function studioSteigerTipp(id){
-  var e = studioEintrag(id), z = studioZiel(id);
-  if(!e || !e.log || e.log.length < 2) return null;
-  var tag = 86400000, heute = studioTag(Date.now());
-  var l = e.log.filter(function(x){ return arbeitsSaetze(x).length && studioTag(x.at) !== heute; });   // frühere Einheiten (heute zählt nicht)
+/* ---------- Die eine Steigerungsregel (doppelte Progression, 2026-11-12) ----------
+   Gilt überall gleich: Satz-Training, Übungskarte, Plan-Ansicht und die Auswertung am Ende.
+   - Steigern: in den letzten zwei Runden mit dem Arbeitsgewicht alle Ziel-Sätze mit dem oberen Rand des Bereichs (Ziel + 2) → +1 Gewichtsstufe,
+     gerundet auf Vielfache des Schritts. Wäre die Stufe mehr als 10 % des Gewichts (z. B. 4 → 6,5 kg), stattdessen einmal die Wiederholungen
+     anheben (Ziel + 2); beim nächsten Mal folgt der größere Sprung mit Hinweis. Ohne Gewicht: Ziel + 2 Wiederholungen.
+   - Zurücknehmen: in den letzten zwei Runden im Schnitt unter der Untergrenze des Bereichs → etwa 10 % weniger Gewicht (mindestens eine Stufe).
+   - Kein Tipp, wenn danach schon angepasst wurde (übernommen oder von Hand) und in der Leichtwoche. Gezählt wird in Runden, nicht nach Uhrzeit.
+   mitOffen: die offene Runde zählt als fertig (Auswertung direkt am Ende des Trainings). */
+var PROG_SPRUNG = 0.10;
+function studioProg(id, mitOffen){
+  var e = studioEintrag(id), ex = findExercise(id);
+  if(!e || !e.log || !ex || studioEinheit(id) === "zeit") return null;
+  var z = studioZiel(id), b = studioBereich(id), o = studioOffen(e);
+  var l = e.log.filter(function(x){ return arbeitsSaetze(x).length && (mitOffen || x !== o); });
   if(l.length < 2) return null;
-  function top(x){ var b = null; arbeitsSaetze(x).forEach(function(s){ if(!b || s[0] > b[0] || (s[0] === b[0] && s[1] > b[1])) b = s; }); return b; }
-  var letzte = l[l.length-1], tl = top(letzte), n = 1, ab = letzte.at;
-  for(var i = l.length - 2; i >= 0; i--){ var ti = top(l[i]); if(ti[0] === tl[0] && (tl[0] > 0 || ti[1] === tl[1])){ n++; ab = l[i].at; } else break; }
-  if(n < 2) return null;
-  var wochen = Math.floor((Date.now() - ab)/(7*tag));
-  if(wochen < 2) return null;
+  var zwei = l.slice(-2), letzte = zwei[1];
   if(e.erhoeht && e.erhoeht >= letzte.at) return null;
-  if(tl[0] > 0){
-    var neu = Math.max(tl[0] + z.schritt, Math.round(tl[0]*1.05/z.schritt)*z.schritt);
-    return { art:"kg", kg:Math.round(neu*100)/100, alt:tl[0], wochen:wochen, prozent:Math.round((neu/tl[0] - 1)*100) };
+  if(e.manuell && e.manuell >= letzte.at) return null;
+  var kg = studioNurBlock(ex) ? 0 : studioArbeitsKg(id);
+  function amGewicht(x){ return arbeitsSaetze(x).filter(function(s){ return satzTyp(s) !== "d" && (kg > 0 ? s[0] >= kg - 1e-9 : true); }); }
+  function geschafft(x){
+    var w = amGewicht(x).map(function(s){ return s[1]; }).sort(function(p, q){ return q - p; }).slice(0, z.saetze);
+    return w.length >= z.saetze && w.every(function(n){ return n >= b.max; });
   }
-  return { art:"wdh", wdh:tl[1] + 2, alt:tl[1], wochen:wochen };
+  function verfehlt(x){
+    var a = amGewicht(x);
+    return a.length > 0 && a.reduce(function(s, q){ return s + q[1]; }, 0)/a.length < b.min;
+  }
+  if(zwei.every(geschafft)){
+    if(kg > 0){
+      var s = z.schritt, neu = Math.round((Math.floor(kg/s + 1e-9) + 1)*s*100)/100;
+      var gross = (neu - kg)/kg > PROG_SPRUNG + 1e-9;
+      if(gross && !e.zielBasis && z.wdh + 2 <= 20) return { art:"wdh", grund:"sprung", wdh:z.wdh + 2, alt:z.wdh, max:b.max, sprung:neu };
+      var min0 = e.zielBasis ? Math.max(Math.min(5, e.zielBasis), e.zielBasis - 2) : b.min;   // nach dem Sprung gilt wieder das ursprüngliche Ziel
+      return { art:"kg", kg:neu, alt:kg, prozent:Math.round((neu/kg - 1)*100), max:b.max, min:min0, gross:gross };
+    }
+    return z.wdh + 2 <= 40 ? { art:"wdh", wdh:z.wdh + 2, alt:z.wdh, max:b.max } : null;
+  }
+  if(zwei.every(verfehlt)){
+    if(kg > 0){
+      var s2 = z.schritt, r = Math.round(kg*0.9/s2)*s2;   // etwa 10 % weniger, auf Vielfache des Schritts
+      if(r >= kg - 1e-9) r = (Math.ceil(kg/s2 - 1e-9) - 1)*s2;   // mindestens eine Stufe
+      r = Math.round(r*100)/100;
+      return r > 0 ? { art:"runter", kg:r, alt:kg, wdh:b.min } : null;
+    }
+    return z.wdh > 4 ? { art:"wdhRunter", wdh:Math.max(2, z.wdh - 2), alt:z.wdh } : null;
+  }
+  return null;
+}
+/* Tipps für ein Training: höchstens zwei auf einmal (in der Reihenfolge des Plans), in der Leichtwoche keine. Gibt { id: Tipp } zurück. */
+var PROG_MAX_TIPPS = 2;
+function studioTipps(ids, leicht, mitOffen){
+  var o = {}, n = 0;
+  if(leicht) return o;
+  ids.forEach(function(id){ if(n >= PROG_MAX_TIPPS) return; var tp = studioProg(id, mitOffen); if(tp){ o[id] = tp; n++; } });
+  return o;
 }
 function studioSteigerTippText(v){
-  return v.art === "kg" ? t("tippKg", { w:v.wochen, kg:studioKg(v.alt), neu:studioKg(v.kg), p:v.prozent }) : t("tippWdh", { w:v.wochen, n:2, neu:v.wdh });
+  if(v.art === "kg") return t("tippKg", { max:v.max, neu:studioKg(v.kg), p:v.prozent, min:v.min })+(v.gross ? " "+t("tippGross") : "");
+  if(v.art === "runter") return t("tippRunter", { w:v.wdh, neu:studioKg(v.kg) });
+  if(v.art === "wdhRunter") return t("tippWdhRunter", { neu:v.wdh });
+  return v.grund === "sprung" ? t("tippSprung", { max:v.max, kg:studioKg(v.sprung), neu:v.wdh }) : t("tippWdh", { max:v.max, neu:v.wdh });
 }
+function studioTippKurz(v){
+  return v.art === "kg" ? "↑ "+t("tippKurzKg", { kg:studioKg(v.kg), p:v.prozent }) : v.art === "runter" ? "↓ "+t("tippKurzKg2", { kg:studioKg(v.kg) })
+    : (v.art === "wdhRunter" ? "↓ " : "↑ ")+t("tippKurzWdh", { n:v.wdh });
+}
+/* Tipp übernehmen: Gewicht bzw. Wiederholungsziel setzen. Nach einer Gewichtserhöhung gilt wieder das ursprüngliche Wiederholungsziel (falls es wegen
+   eines zu großen Sprungs angehoben war). Gibt das neue Gewicht zurück (oder null). */
+function studioTippUebernehmen(id, tp){
+  var a = studioAlle(), en = a[id] || (a[id] = { log:[] }), z = studioZiel(id);
+  if(tp.art === "kg" || tp.art === "runter"){
+    en.kg = tp.kg;
+    if(tp.art === "kg" && en.zielBasis){ en.ziel = { saetze:z.saetze, wdh:en.zielBasis }; delete en.zielBasis; }
+  } else {
+    if(tp.grund === "sprung" && !en.zielBasis) en.zielBasis = z.wdh;
+    en.ziel = { saetze:z.saetze, wdh:tp.wdh };
+  }
+  en.erhoeht = Date.now(); save();
+  return tp.art === "kg" || tp.art === "runter" ? tp.kg : null;
+}
+/* Leichtwoche: steht heute im Kalender ein Termin aus dem Plan-Assistenten mit Leichtwoche, zu dem dieser BLOC gehört? */
+function planLeichtHeute(planId){
+  if(!planId || typeof kalAn !== "function") return false;
+  return kalAn(kalTagKey(Date.now())).some(function(e){
+    if(!e.leicht) return false;
+    if(e.art === "plan") return e.ref === planId;
+    var pg = e.art === "programm" && typeof programmFinde === "function" ? programmFinde(e.ref) : null;
+    return !!pg && pg.items.indexOf("plan:"+planId) > -1;
+  });
+}
+function leichtSaetze(n){ return Math.max(1, Math.round(n*0.6)); }   // Leichtwoche: etwa 60 % der Sätze (3 → 2, 4 → 2, 5 → 3)
 function studioPauseStop(){
   if(!studioPause) return;
   clearInterval(studioPause.uhr);
@@ -194,6 +250,7 @@ function openStatistik(o){
       (wo.length > 1 ? '<b>'+fmt(wo[0].v)+' → '+fmt(wo[wo.length-1].v)+(o.suffix || '')+'</b>' : '')+'</div>'+
     wochenDiagramm(wo, o.einheit, fmt, o.schritt)+
     (hinweis ? '<p class="st-stats-hinweis">'+esc(hinweis)+'</p>' : '')+
+    (o.warnung ? '<p class="st-stats-hinweis st-warnung">'+esc(o.warnung)+'</p>' : '')+
     (o.letzte && o.letzte.length ? '<div class="info-title">'+esc(o.letzteTitel)+'</div>'+o.letzte.map(function(z){
       return '<div class="st-v-zeile"><span>'+esc(z[0])+'</span><b>'+esc(z[1])+(z[2] ? '<i class="st-rekord" title="'+esc(t("stRekord"))+'">★</i>' : '')+'</b></div>'; }).join("") : '');
   root.innerHTML = '<div class="confirm-overlay"><div class="confirm-sheet st-stats" role="dialog" aria-label="'+esc(t("stStats"))+'" style="--cat:'+o.farbe+'">'+
@@ -239,8 +296,11 @@ function openStudioStats(id, sicht){
     });
   }
   var fmt = sicht === "vol" ? function(v){ return studioKg(Math.round(v)); } : function(v){ return studioKg(Math.round(v*10)/10); };
+  // Rückschritt sichtbar machen: drei Runden in Folge weniger Volumen und deutlich unter dem besten - dann eher Gewicht zurücknehmen
+  var v3 = log.slice(-3).map(studioVolumen), warnung = "";
+  if(v3.length === 3 && v3[0] > v3[1] && v3[1] > v3[2] && v3[2] < b.vol*0.8) warnung = t("stVolFaellt", { p:Math.round((1 - v3[2]/b.vol)*100) });
   openStatistik({
-    titel:tplText(ex.name), farbe:studioFarbe(ex), hatDaten:log.length > 0, leerText:t("stStatsEmpty"),
+    titel:tplText(ex.name), farbe:studioFarbe(ex), hatDaten:log.length > 0, leerText:t("stStatsEmpty"), warnung:warnung,
     zahlen:[[studioKg(b.kg)+" kg", t("stBestKg")], [kgT(b.rm), t("stSchaetzung")], [kgT(b.vol), t("stBestVol")],
             [String(log.length), t("stSessions")], [String(saetze), t("stSetsAll")], [studioKg(Math.round(gesamt))+" kg", t("stVolGesamt")]],
     sichten:[["kg", t("stSichtKg")], ["rm", t("stSichtRm")], ["vol", t("stSichtVol")]], sicht:sicht,
@@ -339,14 +399,14 @@ function openScheibenSheet(kgWert){
   draw();
 }
 function renderStudioKarte(id){
-  studioStandardPruefen(id, false);   // frühere Einheit mit mehr geschafft: neues Ziel übernehmen
   var ex = findExercise(id);
   if(!ex){ go("#timers"); return; }
   var koerper = studioNurBlock(ex);   // Übung ohne Gewicht (Air): Sätze × Wiederholungen oder Timer, kein Gewichtsfeld
   if(studioPause && studioPause.id !== id) studioPauseStop();
-  var e = studioEintrag(id) || {}, z = studioZiel(id), log = e.log || [], heute = studioTag(Date.now());
-  var h = log.length && studioTag(log[log.length-1].at) === heute ? log[log.length-1] : null;
-  var v = studioVorschlag(id), stg = studioSteigern(id), pause = e.pause || (koerper ? 60 : 90);
+  var e = studioEintrag(id) || {}, z = studioZiel(id), bereich = studioBereich(id);
+  var h = studioOffen(e);   // die offene Runde von heute (nach „Training speichern“ beginnt eine neue)
+  var leicht = planLeichtHeute(stPlanAktiv);
+  var v = studioVorschlag(id), stg = h && h.s.length ? null : studioTipps([id], leicht)[id], pause = e.pause || (koerper ? 60 : 90);
   if(e.kg != null && !h) v.kg = e.kg;
   var letzte = studioLetzte(id, false);   // die Einheit davor: so sieht man vor Ort, was beim letzten Mal ging
   var timerModus = studioModus(id) === "timer";   // vor Ort umschaltbar: Satz für Satz eintragen oder den Timer durchlaufen lassen (Übungen ohne Gewicht starten mit dem Timer)
@@ -378,8 +438,10 @@ function renderStudioKarte(id){
           return timerModus ? '<span class="st-satz">'+txt+'</span>' :
             '<button type="button" class="st-satz st-uebernehmen" data-ukg="'+x[0]+'" data-uw="'+x[1]+'" aria-label="'+esc(t("stUebernehmen")+" "+studioKg(x[0])+" × "+x[1])+'">'+txt+'</button>';
         }).join("")+'</div>' : '')+
-      (stg ? '<div class="st-steigern"><span>'+esc(t("stSuggest", { z:stg.ziel, kg:studioKg(stg.kg) }))+'</span>'+
-        '<button type="button" class="btn btn-primary" data-stup>'+esc(t("stSuggestYes"))+'</button></div>' : '')+
+      (leicht ? '<div class="st-leicht">'+esc(t("leichtHinweis", { n:leichtSaetze(z.saetze) }))+'</div>' : '')+
+      (v.erstes && !koerper && !(h && h.s.length) ? '<div class="st-leicht">'+esc(t("erstesMalHinweis", { n:bereich.max }))+'</div>' : '')+
+      (stg ? '<div class="st-steigern"><span>'+esc(studioSteigerTippText(stg))+'</span>'+
+        '<button type="button" class="btn btn-primary" data-stup>'+esc(t("tippUebernehmen"))+'</button></div>' : '')+
       '<div class="st-heute"><b>'+esc(t("stToday"))+':</b> '+(h && h.s.length ? h.s.map(function(x, i){
         return '<span class="st-satz">'+(i+1)+'. '+esc(satzText(x).replace("×", " × "))+'</span>'; }).join("") : '<span class="st-leer">–</span>')+'</div>'+
       (blKontext ? '<div class="st-block"><span><b>'+esc(t(blKontext.art === "zirkel" ? "blkZirkel" : "blkSuper"))+'</b> · '+(blKontext.i+1)+'/'+blKontext.n+
@@ -486,22 +548,22 @@ function renderStudioKarte(id){
   }
   an("[data-stset]", function(){
     var en = eintrag(), jetzt = Date.now(), kg = kgWert(), w = Math.max(1, Math.min(100, parseInt(wIn.value) || 1)), typ = studioSatzTypWahl;
-    var l = en.log.length && studioTag(en.log[en.log.length-1].at) === studioTag(jetzt) ? en.log[en.log.length-1] : null;
     var davor = studioBestwerte(en.log);   // Bestwerte vor diesem Satz
-    if(!l){ l = { at:jetzt, s:[] }; en.log.push(l); if(en.log.length > 200) en.log = en.log.slice(-200); }
+    var l = studioRundeFuer(en, jetzt);
     var satz = [kg, w], rpe = anstrengungModus() ? studioRpeWahl : 0;   // typ "n" steht als Platzhalter, wenn nur die Anstrengung angegeben ist
     if(typ !== "n" || rpe) satz.push(typ);
     if(rpe) satz.push(rpe);
     l.s.push(satz);
-    // Rekord: neues Bestgewicht, sonst neues geschätztes 1RM (Aufwärmsätze zählen nicht)
-    var rm = satzSchaetzung1RM([kg, w]);
+    // Rekord: neues Bestgewicht, sonst neues geschätztes 1RM (Aufwärmsätze zählen nicht; mit Gewicht nur ab 3 Wiederholungen)
+    var rm = satzSchaetzung1RM([kg, w]), zaehlt = w >= REKORD_MIN_WDH;
     studioPR = typ === "w" ? null :
       kg === 0 && davor.kg === 0 ? (davor.wdh > 0 && w > davor.wdh ? { id:id, art:"wdh", w:w, vorher:davor.wdh } : null) :   // ohne Gewicht: mehr Wiederholungen
-      davor.kg > 0 && kg > davor.kg ? { id:id, art:"kg", kg:kg, w:w, vorher:davor.kg } :
-      davor.rm > 0 && rm > davor.rm + .05 ? { id:id, art:"rm", kg:kg, w:w, rm:rm, vorherRm:davor.rm } :
-      davor.kg > 0 && kg === davor.kg && w > davor.wBest ? { id:id, art:"wdh", w:w, vorher:davor.wBest } : null;   // gleiches Gewicht, mehr Wiederholungen
+      !zaehlt ? null :
+      davor.kg3 > 0 && kg > davor.kg3 ? { id:id, art:"kg", kg:kg, w:w, vorher:davor.kg3 } :
+      davor.rm3 > 0 && rm > davor.rm3 + .05 ? { id:id, art:"rm", kg:kg, w:w, rm:rm, vorherRm:davor.rm3 } :
+      davor.kg3 > 0 && kg === davor.kg3 && w > davor.wBest3 ? { id:id, art:"wdh", w:w, vorher:davor.wBest3 } : null;   // gleiches Gewicht, mehr Wiederholungen
     studioSatzTypWahl = "n"; studioRpeWahl = 0;
-    if(!koerper) en.kg = kg;
+    if(!koerper){ var ak = rundeArbeitsKg(l); en.kg = ak != null ? ak : kg; }   // Arbeitsgewicht der Runde, nicht der letzte (evtl. leichte) Satz
     en.zuletzt = jetzt;
     studioVerlauf(id, jetzt);
     trainingNachSatz(id);
@@ -512,12 +574,12 @@ function renderStudioKarte(id){
     neu();
   });
   an("[data-stundo]", function(){
-    var en = eintrag(), l = en.log[en.log.length-1];
-    if(l && studioTag(l.at) === heute){ l.s.pop(); if(!l.s.length) en.log.pop(); }
+    var en = eintrag(), l = studioOffen(en);
+    if(l){ l.s.pop(); if(!l.s.length) en.log.pop(); else if(!koerper){ var ak2 = rundeArbeitsKg(l); if(ak2 != null) en.kg = ak2; } }
     studioPR = null;
     studioPauseStop(); save(); trainingNachSatz(id); neu();
   });
-  an("[data-stup]", function(){ var en = eintrag(); en.kg = stg.kg; en.erhoeht = Date.now(); save(); showToast(t("stRaised", { kg:studioKg(stg.kg) })); neu(); });
+  an("[data-stup]", function(){ var neuKg = studioTippUebernehmen(id, stg); showToast(neuKg != null ? t("stRaised", { kg:studioKg(neuKg) }) : studioTippKurz(stg)); neu(); });
   an("[data-stskip]", function(){ studioPauseStop(); neu(); });
   an("[data-stblock]", function(){ studioPauseStop(); go("#studio/"+app.querySelector("[data-stblock]").getAttribute("data-stblock")); });
   an("[data-stinfo]", function(){ openExInfo(id, false); });
@@ -563,11 +625,14 @@ function studioPauseZeigen(){
   if(box){ box.hidden = false; box.classList.remove("vorbei"); }
   if(zeit) zeit.textContent = fmtTime(Math.ceil(rest/1000));
 }
-/* Studio zählt für die Wochenzeile: ein Eintrag je Tag, die Dauer vom ersten bis zum letzten Satz */
+/* Studio zählt für die Wochenzeile: ein Eintrag je Training, die Dauer vom ersten bis zum letzten Satz. Ein neuer Eintrag beginnt nach
+   „Training speichern“ (settings.rundeZu) oder nach mehr als 45 Minuten ohne Satz - so zählt die Zeit zwischen zwei Trainings nicht mit. */
+var STUDIO_LUECKE = 45*60000;
 function studioVerlauf(id, jetzt){
   pruneHistory(state.db);
-  var hs = state.db.history, tag = studioTag(jetzt), e = null;
+  var hs = state.db.history, tag = studioTag(jetzt), e = null, zu = +state.db.settings.rundeZu || 0;
   for(var i=hs.length-1; i>=0; i--) if(hs[i].studio && studioTag(hs[i].studio) === tag){ e = hs[i]; break; }
+  if(e && (e.studio < zu || jetzt - (e.studio + Math.max(0, (e.dur || 60) - 60)*1000) > STUDIO_LUECKE)) e = null;
   if(!e){ e = { at:jetzt, ex:[], dur:0, studio:jetzt, b:"timer" }; hs.push(e); }
   if(e.ex.indexOf(id) < 0) e.ex.push(id);
   e.dur = Math.round((jetzt - e.studio)/1000) + 60;
@@ -622,11 +687,9 @@ function bindFavItems(refresh){
 /* Satz eintragen aus dem Timer: kleines Fenster mit Gewicht und Wiederholungen (vorausgefüllt), schreibt in dasselbe Protokoll wie die Übungs-Karte */
 function studioSatzLog(id, kg, w, zeit){   // zeit: w sind Sekunden (Satz mit Zeit statt Wiederholungen)
   var alle = studioAlle(), en = alle[id] || (alle[id] = { log:[] }), jetzt = Date.now();
-  if(!en.log) en.log = [];
-  var l = en.log.length && studioTag(en.log[en.log.length-1].at) === studioTag(jetzt) ? en.log[en.log.length-1] : null;
-  if(!l){ l = { at:jetzt, s:[] }; en.log.push(l); if(en.log.length > 200) en.log = en.log.slice(-200); }
+  var l = studioRundeFuer(en, jetzt);   // nach „Training speichern“ beginnt eine neue Runde
   l.s.push(zeit ? [kg, w, "n", 0, 1] : [kg, w]);
-  en.kg = kg; en.zuletzt = jetzt;
+  var ak = rundeArbeitsKg(l); en.kg = ak != null ? ak : kg; en.zuletzt = jetzt;   // Arbeitsgewicht der Runde, nicht der letzte Satz
   studioVerlauf(id, jetzt);
   trainingNachSatz(id);
   save();
@@ -669,46 +732,4 @@ function openGewichtSheet(id, nachher){
   });
 }
 
-/* Neuer Standard: Wer mehr geschafft hat als das Ziel, hat damit ein neues Ziel. Ausgewertet wird die jüngste Einheit (Arbeitssätze):
-   - mehr Sätze als das Ziel (z. B. 4 statt 3) → das Ziel hat jetzt diese Satzzahl
-   - alle Ziel-Sätze (die besten, so viele wie das Ziel verlangt) mit mindestens 10 % mehr Wiederholungen → das Ziel hat diese Wiederholungen
-   - alle Ziel-Sätze mit mindestens 10 % mehr Gewicht als bisher → das ist das neue Arbeitsgewicht (ein einzelner Satz zählt nicht)
-   Es wird nur angehoben, nie gesenkt; jede Einheit wird einmal ausgewertet (e.stdBis/e.stdN). mitHeute: auch die heutige Einheit auswerten (beim Abschluss).
-   Gibt die Änderung zurück ({ id, alt, neu, kgAlt, kgNeu }) oder null. */
-function studioStandardPruefen(id, mitHeute){
-  var e = studioEintrag(id);
-  if(!e || !e.log || !e.log.length) return null;
-  var heute = studioTag(Date.now()), idx = -1, i;
-  for(i = e.log.length - 1; i >= 0; i--){
-    if(!arbeitsSaetze(e.log[i]).length) continue;
-    if(!mitHeute && studioTag(e.log[i].at) === heute) continue;
-    idx = i; break;
-  }
-  if(idx < 0) return null;
-  var l = e.log[idx], a = arbeitsSaetze(l), n = a.length;
-  if(e.stdBis === l.at && e.stdN === n) return null;   // diese Einheit ist schon ausgewertet
-  if(e.manuell && l.at <= e.manuell){ e.stdBis = l.at; e.stdN = n; save(); return null; }   // danach von Hand angepasst: die Handeinstellung gilt, diese Einheit ändert nichts mehr
-  var z = studioZiel(id), neu = { saetze:z.saetze, wdh:z.wdh }, kgNeu = null, kgAlt = e.kg;
-  if(n > z.saetze) neu.saetze = Math.min(n, 12);
-  /* „generell“, nicht ein einzelner Satz: es zählen die besten Ziel-Sätze (so viele, wie das Ziel verlangt) - alle müssen die Marke schaffen */
-  if(n >= z.saetze){
-    var beste = a.slice().sort(function(x, y){ return y[0] - x[0] || y[1] - x[1]; }).slice(0, z.saetze);
-    var kgMin = Math.min.apply(null, beste.map(function(x){ return x[0]; })), minW = Math.min.apply(null, beste.map(function(x){ return x[1]; }));
-    if(minW >= Math.ceil(z.wdh*1.1)) neu.wdh = Math.min(minW, 100);
-    var basis = studioBestwerte(e.log.slice(0, idx)).kg;
-    if(kgMin > 0 && basis > 0 && kgMin >= basis*1.1 - 1e-9) kgNeu = kgMin;
-  }
-  e.stdBis = l.at; e.stdN = n;
-  var geaendert = neu.saetze !== z.saetze || neu.wdh !== z.wdh || (kgNeu != null && kgNeu !== e.kg);
-  if(neu.saetze !== z.saetze || neu.wdh !== z.wdh) e.ziel = { saetze:neu.saetze, wdh:neu.wdh };
-  if(kgNeu != null) e.kg = kgNeu;
-  save();
-  return geaendert ? { id:id, alt:z, neu:neu, kgAlt:kgAlt, kgNeu:kgNeu } : null;
-}
-function studioStandardText(c){
-  var teile = [];
-  if(c.neu.saetze !== c.alt.saetze) teile.push(t("satzStdSaetze", { n:c.neu.saetze }));
-  if(c.neu.wdh !== c.alt.wdh) teile.push(t("satzStdWdh", { n:c.neu.wdh }));
-  if(c.kgNeu != null && c.kgNeu !== c.kgAlt) teile.push(studioKg(c.kgNeu)+" kg");
-  return teile.join(" · ");
-}
+/* „Neuer Standard“ (Ziel automatisch anheben) gibt es seit 2026-11-12 nicht mehr: es gilt nur noch die eine Steigerungsregel (studioProg). */

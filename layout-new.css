@@ -1791,3 +1791,19 @@ body.prot-sheet-offen{ overflow:hidden; }
 .fav-platzhalter .fp-ico{ flex:none; width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--text); background:color-mix(in srgb, var(--text) 8%, transparent); }
 :root[data-layout="new"][data-glas] .fav-platzhalter{ color:rgba(255,255,255,.82); border-color:rgba(255,255,255,.34); background:rgba(18,20,24,.38); -webkit-backdrop-filter:blur(24px) saturate(130%); backdrop-filter:blur(24px) saturate(130%); }
 :root[data-layout="new"][data-glas] .fav-platzhalter .fp-ico{ color:#fff; background:rgba(255,255,255,.16); }
+/* 2026-11-12: Steigerungsregel - Hinweise (Leichtwoche, erstes Mal), Tipp „zurücknehmen“, Abschlusskarte Planende, Training ohne Termin im Kalender */
+.satz-hinweis{ text-align:center; font-size:13px; line-height:1.35; opacity:.85; margin:-4px 0 10px; }
+.satz-tipp.runter{ background:color-mix(in srgb, #e5a03f 20%, transparent); border-color:color-mix(in srgb, #e5a03f 55%, transparent); }
+.satz-tipp.runter button{ background:#c9822a; }
+.st-leicht{ font-size:13px; line-height:1.35; color:var(--text-dim); margin:0 0 10px; }
+.st-warnung{ color:var(--text); border-left:3px solid #e5a03f; padding-left:10px; }
+.plan-ende{ margin:0 0 12px; }
+.plan-ende .pe-kopf{ display:flex; align-items:center; gap:10px; font-size:16px; }
+.plan-ende .pe-haken{ display:inline-grid; place-items:center; width:28px; height:28px; border-radius:50%; background:#2fb36b; color:#fff; font-weight:700; flex:none; }
+.plan-ende p{ margin:8px 0 12px; font-size:14px; line-height:1.4; color:var(--text-dim); }
+.plan-ende .pe-knoepfe{ display:flex; flex-direction:column; gap:8px; }
+.plan-ende .pe-knoepfe .btn{ margin:0; }
+.plan-ende .pe-aus{ background:none; border:0; color:var(--text-dim); font:inherit; font-size:13px; padding:6px; cursor:pointer; }
+.kal-frei{ cursor:default; opacity:.8; margin-bottom:8px; }
+/* Fortschritt: die Kopfzeile hat keinen Streifen - sie scrollt mit, sonst läuft z. B. die Leiste „Verlauf / Gewicht / Wdh.“ unter dem Titel durch (Test 2026-11-12) */
+:root[data-layout="new"] .fk-topbar{ position:relative; }
