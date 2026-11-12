@@ -215,6 +215,8 @@ function statFortschrittHTML(){
     /* Mit Gewicht zählt das geschätzte 1RM (nur Sätze ab 3 Wdh.): erste Runde gegen den Stand jetzt (beste der letzten zwei Runden).
        So gilt „schwerer, aber nur noch 1 Wiederholung“ nicht als gesteigert. */
     var erst = studioBestwerte(log.slice(0, 1)), jetzt = studioBestwerte(log.slice(-2)), mitKg = studioBestwerte(log).kg > 0;
+    for(var j = log.length - 1; mitKg && j >= 0 && !(erst.rm3 > 0); j--) erst = studioBestwerte(log.slice(0, log.length - j));   // nie 0 als Messwert (Test 2, N2): erste Runde mit gültigem Wert
+    for(var j2 = log.length - 3; mitKg && j2 >= 0 && !(jetzt.rm3 > 0); j2--) jetzt = studioBestwerte(log.slice(j2, j2 + 1));   // „jetzt“: letzte Runde mit gültigem Wert
     l.push({ id:id, ex:ex, name:tplText(ex.name), gr:statFortRubrik(ex), n:log.length, mitKg:mitKg, von:mitKg ? Math.round(erst.rm3*10)/10 : erst.wdh, bis:mitKg ? Math.round(jetzt.rm3*10)/10 : jetzt.wdh, at:log[log.length-1].at });
   });
   var kopf = '<summary><b>'+esc(t("statFort"))+'</b><span class="sk-sub">'+esc(t("statFortSub"))+'</span><span class="sk-chev">'+ICON_CHEV+'</span></summary>';
@@ -226,12 +228,13 @@ function statFortschrittHTML(){
   var chips = filterChip("data-sfgr", "", !statFortGr, "", t("statFortAlle")+" · "+l.length)+rub.map(function(id){
     return filterChip("data-sfgr", id, statFortGr === id, "", statFortRubrikName(id)+" · "+l.filter(function(x){ return x.gr === id; }).length); }).join("");
   var sicht = (statFortGr ? l.filter(function(x){ return x.gr === statFortGr; }) : l).sort(function(a, b){ return b.at - a.at; });
-  var besser = sicht.filter(function(x){ return x.bis > x.von; }).length;
+  var besser = sicht.filter(function(x){ return x.bis > x.von && (!x.mitKg || x.von > 0); }).length;
   var kacheln = sicht.slice(0, statFortAnz).map(function(x){
-    var d = Math.round((x.bis - x.von)*100)/100, p = x.von > 0 ? Math.round(d/x.von*100) : 0, einheit = x.mitKg ? " kg" : " "+t("wdhKurz");
-    var delta = d > 0 ? "+"+studioKg(d)+einheit+(p ? " (+"+p+" %)" : "") : d < 0 ? "−"+studioKg(-d)+einheit : t("statFortGleich");
+    var fehlt = x.mitKg && (!(x.von > 0) || !(x.bis > 0));   // kein gültiger Messwert: „–“, nie 0 (fachliche Prüfung Test 2)
+    var d = fehlt ? 0 : Math.round((x.bis - x.von)*100)/100, p = x.von > 0 ? Math.round(d/x.von*100) : 0, einheit = x.mitKg ? " kg" : " "+t("wdhKurz");
+    var delta = fehlt ? "–" : d > 0 ? "+"+studioKg(d)+einheit+(p ? " (+"+p+" %)" : "") : d < 0 ? "−"+studioKg(-d)+einheit : t("statFortGleich");
     return uebKachel({ bild:x.id, name:x.name, attr:'data-sfuebung="'+esc(x.id)+'"', cat:studioFarbe(x.ex), ico:exSymbol(x.ex),
-      unter:'<span class="st-sub an">'+esc((x.mitKg ? t("statFort1rm")+" " : "")+studioKg(x.von)+" → "+studioKg(x.bis)+einheit)+'</span><span class="sf-delta'+(d > 0 ? ' auf' : d < 0 ? ' ab' : '')+'">'+esc(delta)+'</span>'+
+      unter:'<span class="st-sub an">'+esc((x.mitKg ? t("statFort1rm")+" " : "")+(x.von > 0 || !x.mitKg ? studioKg(x.von) : "–")+" → "+(x.bis > 0 || !x.mitKg ? studioKg(x.bis) : "–")+einheit)+'</span><span class="sf-delta'+(d > 0 ? ' auf' : d < 0 ? ' ab' : '')+'">'+esc(delta)+'</span>'+
         '<span class="sf-einh">'+esc((statFortGr ? "" : statFortRubrikName(x.gr)+" · ")+t("statFortEinh", { n:x.n }))+'</span>' });
   }).join("");
   var rest = sicht.length - statFortAnz;

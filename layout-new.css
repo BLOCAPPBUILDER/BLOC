@@ -1807,3 +1807,11 @@ body.prot-sheet-offen{ overflow:hidden; }
 .kal-frei{ cursor:default; opacity:.8; margin-bottom:8px; }
 /* Fortschritt: die Kopfzeile hat keinen Streifen - sie scrollt mit, sonst läuft z. B. die Leiste „Verlauf / Gewicht / Wdh.“ unter dem Titel durch (Test 2026-11-12) */
 :root[data-layout="new"] .fk-topbar{ position:relative; }
+/* Plan: Hinweis Zug : Druck (2026-11-12), mit × ausblendbar */
+.plan-balance{ display:flex; align-items:flex-start; gap:10px; }
+.plan-balance span{ flex:1; }
+.plan-balance .pb-aus{ flex:none; border:0; background:none; color:var(--text-dim); font-size:20px; line-height:1; padding:0 4px; cursor:pointer; }
+/* Satz-Training: Gewichte mit Komma (12,5) passen ins Feld (Test 2, N5) - Schrift wird bei schmalen Feldern kleiner */
+.satz-zaehler .satz-kg, .satz-zaehler .satz-w{ font-size:clamp(16px, 5.2vw, 26px); letter-spacing:-.02em; }
+.satz-zaehler button{ width:44px; }
+.satz-leicht-aus{ border:1px solid rgba(255,255,255,.35); background:transparent; color:inherit; border-radius:10px; padding:3px 8px; margin-left:4px; font:inherit; font-size:12px; cursor:pointer; }

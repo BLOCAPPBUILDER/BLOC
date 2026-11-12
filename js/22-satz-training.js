@@ -42,6 +42,7 @@ function satzStatHTML(p, ids, d){
 }
 /* Zusammenfassung: je Übung der beste Satz heute und der Vergleich mit der Einheit davor (Gewicht, sonst Wiederholungen) */
 function satzVergleichHTML(ids){
+  if(satzKontext.leicht) return '<div class="satz-vgls"><div class="satz-vgl"><span class="satz-vgl-n">'+esc(t("leichtAuswertung"))+'</span><span class="satz-vgl-b gleich">✓</span></div></div>';   // Leichtwoche: kein Vergleich, das ist geplante Erholung (Test 2, N4)
   var zeilen = [];
   function top(l){ var b = null; arbeitsSaetze(l).forEach(function(s){ if(!b || s[0] > b[0] || (s[0] === b[0] && s[1] > b[1])) b = s; }); return b; }
   function wdhSumme(l){ return arbeitsSaetze(l).reduce(function(a, s){ return a + s[1]; }, 0); }
@@ -67,7 +68,7 @@ function satzListe(p){
   return l;
 }
 /* Zustand des geöffneten Satz-Trainings: Leichtwoche (weniger Sätze, keine Tipps) und die Tipps dieses Trainings (höchstens zwei, beim Öffnen festgelegt) */
-var satzKontext = { leicht:false, tipps:{} };
+var satzKontext = { leicht:false, tipps:{}, wartend:[] };
 function satzZielSaetze(id){ var n = studioZiel(id).saetze; return satzKontext.leicht ? leichtSaetze(n) : n; }
 function satzKarteHTML(id, i, n){
   var ex = findExercise(id);
@@ -85,9 +86,10 @@ function satzKarteHTML(id, i, n){
       griffHTML(id)+
       (ILLU[id] ? '<div class="satz-figur">'+illuHTML(id, "satz-illu")+'</div>' : (ex.custom ? '<div class="satz-figur"><span class="ex-symbol big">'+exSymbol(ex)+'</span></div>' : ''))+
       '<div class="satz-saetze" role="img" aria-label="'+esc((h ? h.s.length : 0)+" / "+z.saetze)+'">'+(function(){ var o = "", n = Math.min(z.saetze, 12), fertigeAnzahl = h ? h.s.length : 0; for(var q = 0; q < n; q++) o += '<i class="'+(q < fertigeAnzahl ? 'an' : q === fertigeAnzahl ? 'jetzt' : '')+'"></i>'; return o; })()+'</div>'+
-      (function(){ var tp = h ? null : satzKontext.tipps[id]; return tp ? '<div class="satz-tipp'+(tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" ? ' runter' : '')+'"><span>'+esc(studioSteigerTippText(tp))+'</span><button type="button" data-satztipp>'+esc(t("tippUebernehmen"))+'</button></div>' : ''; })()+
-      '<div class="satz-ziel">'+esc(t("stGoal"))+' <b>'+satzName(z.saetze)+' × '+(zeitE ? z.wdh : b.min+'–'+b.max)+'</b>'+(e.kg != null && !koerper ? ' · <b>'+studioKg(e.kg)+' kg</b>' : '')+'</div>'+
-      (satzKontext.leicht ? '<div class="satz-hinweis">'+esc(t("leichtHinweis", { n:z.saetze }))+'</div>' : '')+
+      (function(){ var tp = h ? null : satzKontext.tipps[id]; return tp ? '<div class="satz-tipp'+(tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter" ? ' runter' : '')+'"><span>'+esc(studioSteigerTippText(tp))+'</span><button type="button" data-satztipp>'+esc(t("tippUebernehmen"))+'</button></div>' : ''; })()+
+      '<div class="satz-ziel">'+esc(t("stGoal"))+' <b>'+satzName(z.saetze)+' × '+(zeitE ? studioTimer(id).work+' s'+(ex.perSide ? ' '+t("perSide") : '') : b.min+'–'+b.max)+'</b>'+(e.kg != null && !koerper ? ' · <b>'+studioKg(e.kg)+' kg</b>' : '')+'</div>'+
+      (!h && satzKontext.wartend.indexOf(id) > -1 ? '<div class="satz-hinweis">'+esc(t("tippWartet"))+'</div>' : '')+
+      (satzKontext.leicht ? '<div class="satz-hinweis">'+esc(t("leichtHinweis", { n:z.saetze }))+' <button type="button" class="satz-leicht-aus" data-leichtaus>'+esc(t("leichtAus"))+'</button></div>' : '')+
       (v.erstes && !koerper && !zeitE && !h ? '<div class="satz-hinweis">'+esc(t("erstesMalHinweis", { n:b.max }))+'</div>' : '')+
       (letzte ? '<div class="satz-zeile"><span>'+esc(t("stLetztes"))+'</span>'+letzte.s.map(function(x){
         return '<button type="button" class="satz-chip" data-ukg="'+x[0]+'" data-uw="'+x[1]+'" aria-label="'+esc(t("stUebernehmen")+" "+studioKg(x[0])+" × "+x[1])+'">'+esc(satzText(x).replace("×", " × "))+'</button>'; }).join("")+'</div>' : '')+
@@ -111,7 +113,7 @@ function renderSatzTraining(planId, start){
   if(!p || !ids.length){ go("#katalog"); return; }
   start = clamp(parseInt(start) || 0, 0, ids.length - 1);
   satzKontext = { leicht:planLeichtHeute(p.id), tipps:{} };
-  satzKontext.tipps = studioTipps(ids, satzKontext.leicht, false);   // eine Regel für alle Ansichten; höchstens zwei Tipps, in der Leichtwoche keine
+  satzKontext.tipps = studioTipps(ids, satzKontext.leicht, false); satzKontext.wartend = studioTippsWartend.slice();   // eine Regel für alle Ansichten; höchstens zwei Tipps, in der Leichtwoche keine
   /* Ist heute schon ein Training dieses Plans gespeichert und hat eine Übung noch keinen Rundenstart (früher gespeichert, vor dem Neustart-Verhalten),
      beginnt das Satz-Training für sie von vorn - sonst stünde man wieder vor dem fertigen Stand. */
   var ohneBasis = ids.filter(function(id){ var b = (state.db.settings.satzBasis || {})[id]; return !(b && b.tag === studioTag(Date.now())); });
@@ -157,7 +159,8 @@ function renderSatzTraining(planId, start){
      - sonst (Workout): „Speichern & fertig“, danach die Auswertung */
   function berichtEintrag(){
     var d = trainingHeute(ids), tp = studioTipps(ids.filter(function(sid){ return !!satzHeute(sid); }), satzKontext.leicht, true);   // nur Übungen dieser Runde   // mit dieser Runde: was nächstes Mal ansteht (dieselbe Regel wie die Tipps)
-    return { name:p.name, html:satzStatHTML(p, ids, d)+satzVergleichHTML(ids)+satzStandardHTML(tp) };
+    var ende = typeof paLetzterPlantag === "function" && paLetzterPlantag(p.id) ? '<div class="satz-std"><b>'+esc(t("planLetzterTag"))+'</b><small>'+esc(t("planLetzterTagHint"))+'</small></div>' : '';   // Test 2, N7
+    return { name:p.name, html:satzStatHTML(p, ids, d)+satzVergleichHTML(ids)+satzStandardHTML(tp)+ende };
   }
   function stilleSpeicherung(){
     var e = berichtEintrag();
@@ -278,6 +281,10 @@ function renderSatzTraining(planId, start){
       vibrate([20, 30, 40]); karteNeu(i);   // Feld neu vorbelegt: neues Gewicht, Wiederholungen unten im Bereich
       if(neuKg == null) showToast(studioTippKurz(tp));
     });
+    if((a = k.querySelector("[data-leichtaus]"))) a.addEventListener("click", function(){   // Leichtwoche ist ein Angebot: heute normal trainieren
+      var s0 = state.db.settings; s0.leichtAus = s0.leichtAus || {}; s0.leichtAus[kalTagKey(Date.now())+"|"+p.id] = true; save();
+      studioPauseStop(); renderSatzTraining(p.id, i);
+    });
     if((a = k.querySelector("[data-satzinfo]"))) a.addEventListener("click", function(){ openExInfo(id, false); });
   }
   Array.prototype.forEach.call(wisch.children, bindKarte);
@@ -293,6 +300,6 @@ function satzStandardHTML(tipps){
   var ids = Object.keys(tipps || {});
   if(!ids.length) return "";
   return '<div class="satz-std"><b>'+esc(t("satzNaechstesMal"))+'</b><small>'+esc(t("satzNaechstesHint"))+'</small>'+
-    ids.map(function(id){ var ex = findExercise(id), tp = tipps[id], ab = tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause";
+    ids.map(function(id){ var ex = findExercise(id), tp = tipps[id], ab = tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter";
       return '<div class="satz-vgl"><span class="satz-vgl-n">'+esc(ex ? tplText(ex.name) : id)+'</span><span class="satz-vgl-b '+(ab ? 'runter' : 'hoch')+'">'+esc(studioTippKurz(tp))+'</span></div>'; }).join("")+'</div>';
 }

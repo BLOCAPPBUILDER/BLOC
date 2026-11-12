@@ -2003,7 +2003,8 @@
     ["Fortschritt: Zahlen auf einen Blick mit Verlauf, Kacheln wählen, Gewichte & Verläufe, Entfernen", async function () {
       await heim();
       var jetzt = Date.now(), D = 86400000;
-      W.state.db.history = [0, 1, 2].map(function (i) { return { at:jetzt - i * D - 3600000, dur:1200, ex:["push-ups"], b:"lib" }; });
+      var basis = Math.max(jetzt - 3600000, new Date().setHours(0, 1, 0, 0));   // kurz nach Mitternacht nicht in den Vortag rutschen
+      W.state.db.history = [0, 1, 2].map(function (i) { return { at:basis - i * D, dur:1200, ex:["push-ups"], b:"lib" }; });
       W.state.db.settings.einheiten = [{ at:jetzt - D, vol:1500, ex:[] }, { at:jetzt - 3 * D, vol:2500, ex:[] }];
       delete W.state.db.settings.fortschrittKacheln; W.save();
       W.go("#stats");

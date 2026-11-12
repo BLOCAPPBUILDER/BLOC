@@ -8,6 +8,19 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-13 · Zweiter 13-Wochen-Test, Zug/Druck-Bilanz, Halteübungen (Fassung 2026-11-13-1)
+
+Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERICHT-Test2-als-Prompt.md), Entscheidungen von Kevin, fachlich vom Sportwissenschaftler geprüft.
+- **Tipps gerecht verteilt (N1):** weiter höchstens 2 Steigerungen je Training, aber die am längsten wartenden Übungen zuerst; die übrigen zeigen „Bereit für mehr“. Rücknahmen zählen nicht mit.
+- **Logbuch (N2):** Sätze über 12 Wdh. auf 12 gedeckelt statt weggelassen; nie „0 kg“, fehlt ein Wert, steht „–“. Rekord nur bei mehr Gewicht oder mehr Wdh. beim gleichen Gewicht.
+- **Gewichtsschritt je Gerät (N3):** Kurzhantel 1 kg (unter 10 kg) bzw. 2 kg, Kettlebell 4 kg, sonst 2,5 kg; auf der Karte weiter änderbar. Nach einer Rücknahme erst Wdh. festigen statt sofort derselbe Sprung; oberer Rand höchstens 15 (Grundübungen) bzw. 20. Rücknahme setzt ein angehobenes Wdh.-Ziel zurück.
+- **Körpergewicht:** Ziel steigt bis zum oberen Rand 20, dann Tipp „schwerere Variante“ und Ziel wieder 8–12.
+- **Leichtwoche (N4):** Auswertung ohne „weniger“-Vergleich („Erholung eingeplant“); als Angebot mit „Heute normal trainieren“.
+- **kg-Feld (N5):** Kommazahlen (12,5 / 112,5) passen ins Feld. **Tipp-Text (N6)** nennt den neuen Zielbereich. **Planende (N7):** Hinweis schon in der Auswertung des letzten Plantags, Abschlusskarte am selben Tag.
+- **Plan-Assistent:** über die Woche mindestens so viel Ziehen wie Drücken (überzählige Druckübungen werden ersetzt, Rücken-Übungen im Liegen zählen halb); ohne Rudermöglichkeit Superman Hold / Reverse Snow Angels / Prone Y-Raise und Hinweis; Superman Hold startet mit 30 s. Beim Bearbeiten eines BLOCs ein ausblendbarer Hinweis, wenn deutlich mehr gedrückt als gezogen wird.
+- **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
+- Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
+
 ## 2026-11-12 · Steigerungsregel: fachliche Ergänzungen (Fassung 2026-11-12-17)
 
 Nach der ausführlichen Rückmeldung des Sportwissenschaftlers: Arbeitsgewicht bei Pyramiden = Median; nach mehr als 14 Tagen Pause Tipp „etwas leichter wieder einsteigen“; keine Rücknahme in der ersten Runde nach einer Erhöhung; Runden der Leichtwoche zählen weder für die Steigerung noch für die Volumen-Warnung; Rücknahmen sind Sicherheitshinweise und zählen nicht zur Grenze von zwei Tipps. Plan-Assistent: Zug im Wechsel (A Rudern, B Latzug/Klimmzug, ohne Dreh- und Renegade-Varianten), weitere Spezialstangen (Landmine, Meadows, Defizit, Box-Kniebeuge) und Power-Übungen (Umsetzen, Reißen, Thruster, Kettlebell-Swing, Woodchop) raus, Planks und Halteübungen nach Zeit. Test: einheitstest +1.

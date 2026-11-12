@@ -13,7 +13,7 @@ function studioEintrag(id){ return (state.db.settings.studio || {})[id] || null;
 function studioZiel(id){
   var ex = findExercise(id), e = studioEintrag(id), g = e && e.ziel;
   // Übungen ohne Gewicht (nur Block) bringen ihre Satzzahl aus Air mit; Wiederholungen sind dort frei wählbar (Voreinstellung 12)
-  var z = STUDIO_ZIEL[id] || [studioNurBlock(ex) ? ((e && e.timer && e.timer.reps) || ex.setReps || 3) : 3, 12, 2.5];
+  var z = STUDIO_ZIEL[id] || [studioNurBlock(ex) ? ((e && e.timer && e.timer.reps) || ex.setReps || 3) : 3, 12, studioGeraetSchritt(ex, e)];
   // schritt: Gewichtsschritt der +/−-Knöpfe, je Übung einstellbar (Karte), sonst die Voreinstellung
   return { saetze:g && g.saetze > 0 ? g.saetze : z[0], wdh:g && g.wdh > 0 ? g.wdh : z[1], schritt:e && e.schritt > 0 ? e.schritt : z[2] };
 }
@@ -39,6 +39,14 @@ function rundeArbeitsKg(l){   // mindestens die Hälfte der normalen Sätze mit 
   if(n[best]*2 >= alle.length) return +best;
   alle.sort(function(a, b){ return a - b; });
   return alle[Math.floor((alle.length - 1)/2)];   // Median; bei gerader Zahl das untere der beiden mittleren (eher zu leicht als zu schwer)
+}
+/* Gewichtsschritt je Gerät (Test 2, N3): Kurzhanteln gibt es meist in 1-kg- (bis 10 kg) bzw. 2-kg-Stufen, Kettlebells in 4-kg-Stufen,
+   Langhantel, Multipresse, Kabel und Maschinen in 2,5 kg. Auf der Übungskarte bleibt der Schritt einstellbar (e.schritt). */
+function studioGeraetSchritt(ex, e){
+  var g = ex ? exAusr(ex) : [], kg = e && e.kg > 0 ? e.kg : 0;
+  if(g.indexOf("kh") > -1 && !g.some(function(x){ return x === "lh" || x === "smith" || x === "kabel" || x === "maschine"; })) return kg && kg < 10 ? 1 : 2;
+  if(g.indexOf("kb") > -1 && g.length === 1) return 4;
+  return 2.5;
 }
 /* Arbeitsgewicht: was eingestellt wurde (Plan, Karte, Tipp, sonst das Arbeitsgewicht der letzten Runde), sonst 0 */
 function studioArbeitsKg(id){
@@ -125,7 +133,7 @@ function studioBestwerte(log, bis){
       rm = Math.max(rm, satzSchaetzung1RM(x)); wdh = Math.max(wdh, x[1]);
       if(x[1] >= REKORD_MIN_WDH && x[4] !== 1){
         if(x[0] > kg3){ kg3 = x[0]; wBest3 = x[1]; } else if(x[0] === kg3){ wBest3 = Math.max(wBest3, x[1]); }
-        if(x[1] <= REKORD_MAX_RM) rm3 = Math.max(rm3, satzSchaetzung1RM(x));
+        rm3 = Math.max(rm3, satzSchaetzung1RM([x[0], Math.min(x[1], REKORD_MAX_RM)]));   // über 12 Wdh. gedeckelt, nie weggelassen (Test 2, N2)
       }
     });
     vol = Math.max(vol, studioVolumen(l)); wsum = Math.max(wsum, studioWdhSumme(l));
@@ -138,7 +146,8 @@ function studioIstRekord(jetzt, vor){
   if(jetzt.kg > 0 || vor.kg > 0)
   {
     var f = function(o, k){ return o[k+"3"] != null ? o[k+"3"] : (o[k] || 0); };   // Werte aus studioBestwerte (mit kg3 …) oder einfache { kg, rm, wBest }
-    return f(jetzt, "kg") > f(vor, "kg") || f(jetzt, "rm") > f(vor, "rm") + .001 || (f(vor, "kg") > 0 && f(jetzt, "kg") === f(vor, "kg") && f(jetzt, "wBest") > f(vor, "wBest"));
+    // nur mehr Last oder mehr Wiederholungen beim gleichen Gewicht (fachliche Prüfung Test 2) - das geschätzte 1RM allein ist kein Rekord
+    return f(jetzt, "kg") > f(vor, "kg") || (f(vor, "kg") > 0 && f(jetzt, "kg") === f(vor, "kg") && f(jetzt, "wBest") > f(vor, "wBest"));
   }
   return jetzt.wdh > vor.wdh;
 }
@@ -597,6 +606,19 @@ function planFeldHTML(feld, label, wert, min, max, schritt){
     '<input type="text" inputmode="decimal" value="'+esc(studioKg(wert))+'" aria-label="'+esc(label)+'">'+
     '<button type="button" data-inc aria-label="&plus;">&plus;</button></div></div>';
 }
+/* Zug : Druck eines BLOCs - ein freundlicher Hinweis, wenn deutlich mehr gedrückt als gezogen wird (ab 2 mehr). Nur ein Hinweis, nichts wird erzwungen;
+   × blendet ihn für diesen BLOC aus (p.balanceAus). Ein reiner Drück-Tag ist erlaubt, der Text verweist auf die Woche. */
+function planZugDruck(ids){
+  var c = { p:0, z:0 };
+  ids.forEach(function(id){ var ex = findExercise(id); if(!ex) return; var pr = exProfile(ex).pattern; if(pr === "push") c.p++; else if(pr === "pull" && !/carry|farmer|upright|hang/.test(id)) c.z++; });
+  return c;
+}
+function planBalanceHTML(p, ids){
+  if(!p || p.balanceAus) return "";
+  var c = planZugDruck(ids);
+  if(c.p < c.z + 2) return "";
+  return '<div class="tm-hint plan-balance"><span>'+esc(t("planBalance", { p:c.p, z:c.z }))+'</span><button type="button" class="pb-aus" data-pbaus aria-label="'+esc(t("close"))+'">&times;</button></div>';
+}
 /* Tipps der Plan-Ansicht: dieselbe Regel und dieselbe Grenze (höchstens zwei) wie im Satz-Training, in der Leichtwoche keine */
 function planTipps(p){ return studioTipps(stPlanIds(p), planLeichtHeute(p.id), false); }
 function planZeileHTML(id, nr, bl, p){   // bl: { art, k, n, bid } - die Übung steht in einem Supersatz oder Zirkel
@@ -853,7 +875,8 @@ function renderStudioPlan(){
           ['saetze', 'timer'].map(function(m){ var an = planStartArt(p) === m; return '<button type="button" data-planart="'+m+'" class="'+(an ? 'active' : '')+'" aria-pressed="'+an+'">'+(m === 'timer' ? ICON_PLAY+' ' : '')+esc(t(m === 'timer' ? 'stModusTimer' : 'planArtWdh'))+'</button>'; }).join("")+'</div>'+
         '' : '')+
       (ids.length ? planKopfKarteHTML(p, ids) : '')+
-      (ids.length ? auswertungHTML(ids) : '')+   // erst die Übersicht über die Übungen im Ganzen, dann die Zeilen
+      (ids.length ? auswertungHTML(ids) : '')+
+      (ids.length ? planBalanceHTML(p, ids) : '')+   // erst die Übersicht über die Übungen im Ganzen, dann die Zeilen
       (ids.length ? '<div class="pz-liste">'+planListeHTML(p)+'</div>' : '<div class="fav-empty">'+esc(t("planEmpty"))+'</div>')+
       // dynamische Leiste: links „Plan speichern“ (beim gespeicherten BLOC „Training speichern“), rechts immer „LOS GEHTS!“
       (ids.length ? '<div class="wb-leiste tr-leiste"><div class="wb-leiste-in">'+
@@ -874,6 +897,8 @@ function renderStudioPlan(){
   an("[data-planedit]", function(){ stPlanBauen = true; stPlanSel = -1; stPlanQuery = ""; renderKatalog(); window.scrollTo(0, 0); });
   if(!stPlanBauen && ids.length && !p.entwurf) trainingLeisteBinden({ plan:p, ids:ids }, neu);
   if(!stPlanBauen && ids.length) planKopfKarteBinden(p, ids, neu);
+  var pba = app.querySelector("[data-pbaus]");
+  if(pba) pba.addEventListener("click", function(){ p.balanceAus = true; p.updatedAt = Date.now(); save(); neu(); });
   if(!stPlanBauen) planZeilenBinden(app, function(){   // Summe der Sätze oben nachführen
     var su = app.querySelector("#plan-summe");
     if(su) su.textContent = planSummeText(stPlanIds(p));
