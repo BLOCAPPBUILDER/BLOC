@@ -164,6 +164,7 @@ var PA_DRUCK_OHNE_ZUG = 3;
    mit eigenen Wiederholungen; die Satzzahl ist an die Trainingsdauer gekoppelt. Bei „Knie“ bevorzugte, knieschonende Bein-/Hüftübungen. */
 var PA_SAETZE_MAX = { 20:8, 30:12, 45:16, 60:20 };
 var PA_KNIE_GUT = { "glute-bridge":1, "hip-thrust":1, "romanian-deadlift":1, "leg-press":1, "lying-leg-curl":1, "bird-dog":1 };
+var PA_RUMPF_GUT = { "dead-bug":1, "bird-dog":1, "plank":1, "side-plank":1, "pallof-press":1 };   // Rumpf für Einsteiger
 var PA_KNIE_WARM = ["glute-bridge", "bird-dog", "cat-cow"];
 function paMehrgelenk(ex){ var v = mgVerteilung(ex); return Object.keys(v).filter(function(k){ return v[k] >= 0.25; }).length >= 2; }   // ohne Rudermöglichkeit höchstens so viele Druckübungen je Woche
 var PA_RUECKEN_ERSATZ = ["superman-hold", "reverse-snow-angels", "prone-y-raise"];   // oberer Rücken ohne Geräte, wenn kein Rudern möglich ist
@@ -267,7 +268,10 @@ function paPools(a){
     var sc = (sw === "anfaenger" ? (lv === 1 ? 3 : lv === 2 ? -1 : -5) : sw === "leicht" ? (lv === 1 ? 3 : lv === 2 ? 1 : -4) : sw === "mittel" ? (lv === 2 ? 3 : lv === 1 ? 2 : 0) : (lv === 3 ? 3 : lv === 2 ? 2 : 0));
     sc += paGrundUebung(ex) + paArtBonus(ex, art, a);
     if(a.niveau === "gar" && lv === 1) sc += 1.5;
-    if(a.einschr.indexOf("knie") > -1 && PA_KNIE_GUT[ex.id]) sc += 3;   // knieschonende Bein-/Hüft-Grundübungen bevorzugen
+    if(a.einschr.indexOf("knie") > -1 && PA_KNIE_GUT[ex.id]) sc += 3;
+    var anf = nurLeicht || a.ziele.indexOf("allgemein") > -1;
+    if(anf && /side-bend|kickback/.test(ex.id)) return;   // Seitbeugen und Kickback nicht für Einsteiger / „Allgemein fit“ (fachliche Prüfung Test 5)
+    if(anf && PA_RUMPF_GUT[ex.id]) sc += 3;   // knieschonende Bein-/Hüft-Grundübungen bevorzugen
     if(ex.main !== "ausdauer" && (a.ziele.indexOf("muskel") > -1 || a.ziele.indexOf("kraft") > -1) && (PA_AUS.impact.test(ex.id) || /overhead-squat/.test(ex.id))) return;
     var o = { ex:ex, sc:sc };
     if(ex.main === "ausdauer") cardio.push(o); else { var g = paTopGruppe(ex); if(g) (kraft[g] = kraft[g] || []).push(o); }
@@ -426,6 +430,23 @@ function paErzeuge(a0){
             if(ers2 >= 0){ delete benutzt[mainIds[ers2]]; mainIds[ers2] = ex2.id; gruppen[ers2] = "ruecken"; } else { mainIds.push(ex2.id); gruppen.push("ruecken"); }
           }
         }
+      }
+      /* „Allgemein fit“ und Einsteiger (Test 5, R7): je Ganzkörpertag eine Druck-, Zug-, Bein-/Hüft- und Rumpfübung; fehlt eine, ersetzt sie die letzte Isolationsübung */
+      if(typ === "gk" && (haupt === "allgemein" || a.niveau === "gar" || sw === "anfaenger")){
+        var rollen7 = [
+          { ok:function(x){ return paDrueckt(x) && paMehrgelenk(x); }, g:["brust", "schulter"] },
+          { ok:function(x){ return paIstZug(x) || (paZiehtEx(x) && paMehrgelenk(x)); }, g:["ruecken"] },
+          { ok:function(x){ return paMehrgelenk(x) && /beine|po/.test(paTopGruppe(x)); }, g:["beine", "po"] },
+          { ok:function(x){ return !!PA_RUMPF_GUT[x.id]; }, g:["rumpf", "bauch"] }
+        ];
+        rollen7.forEach(function(r7, ri){
+          if(mainIds.some(function(id){ return r7.ok(findExercise(id)); })) return;
+          var kand = []; r7.g.forEach(function(g5){ (pools.kraft[g5] || []).forEach(function(o){ if(r7.ok(o.ex)) kand.push(o); }); });
+          var nx = paWaehle(kand, benutzt, seed + "r7" + ri, planBenutzt); if(!nx) return;
+          var ziel7 = -1; for(var q7 = mainIds.length - 1; q7 >= 0; q7--){ var e7 = findExercise(mainIds[q7]); if(!paMehrgelenk(e7) && !PA_RUMPF_GUT[mainIds[q7]] && !PA_KNIE_GUT[mainIds[q7]] && !rollen7.some(function(rr, rj){ return rj !== ri && rr.ok(e7) && mainIds.filter(function(id){ return rr.ok(findExercise(id)); }).length === 1; })){ ziel7 = q7; break; } }
+          benutzt[nx.id] = 1; planBenutzt[nx.id] = 1;
+          if(ziel7 >= 0){ delete benutzt[mainIds[ziel7]]; mainIds[ziel7] = nx.id; gruppen[ziel7] = r7.g[0]; } else if(mainIds.length < nMain + 1){ mainIds.push(nx.id); gruppen.push(r7.g[0]); }
+        });
       }
       /* Knie-Einschränkung: jeder Kraft-Tag mit Beinen bekommt eine knieschonende Bein-/Hüft-Grundübung (Glute Bridge, Hip Thrust, Rumänisches Kreuzheben, Beinpresse);
          sie ersetzt die erste Bein- bzw. Po-Isolationsübung (fachliche Prüfung Test 4) */

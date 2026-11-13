@@ -474,9 +474,12 @@ function studioModusSetzen(id, m){
 }
 /* Einheit einer Übung im Plan: "wdh" (Sätze × Wiederholungen) oder "zeit" (Sätze × Sekunden); Übungen mit Gerät kommen mit Gewicht dazu (Gewicht tracken).
    Ohne eigene Wahl (settings.studio[id].einheit): Übungen ohne Gewicht und Pläne mit Timer rechnen in Zeit, sonst in Wiederholungen. */
+/* Halteübungen (Plank, Seitstütz, Hollow Hold, Tragen …) laufen standardmäßig nach Zeit - auch im eigenen BLOC (Test 5, R2) */
+var HALTE_UEBUNG = /carry|farmer|plate-pinch-hold|boat-hold|bridge-hold|active-hang|dead-hang|(^|-)plank$|hollow-hold|superman-hold|squat-hold|wall-sit|support-hold|^l-sit$/;
 function studioEinheit(id){
   var e = studioEintrag(id);
   if(e && (e.einheit === "wdh" || e.einheit === "zeit")) return e.einheit;
+  if(HALTE_UEBUNG.test(String(id))) return "zeit";
   var p = studioModusPlan(id);
   if(p) return planStartArt(p) === "timer" ? "zeit" : "wdh";   // im Plan: Satz für Satz = Wiederholungen, Mit Timer = Zeit
   return studioNurBlock(findExercise(id)) ? "zeit" : "wdh";
@@ -927,11 +930,8 @@ function renderStudioPlan(){
     else go("#satz/"+p.id+"/0");   // nach Sätzen: Glas-Bereich zum Wischen, je Satz Gewicht × Wiederholungen eintragen
   }
   an("[data-planlos]", function(){
-    if(!p.entwurf) return planLos();
-    openActionSheet(t("planLosFrage"), [   // noch nicht gespeichert: nachfragen
-      { ico:P_CHECK, label:t("planLosSpeichern"), fn:function(){ planSpeichernStill(p); vibrate(30); planLos(); } },
-      { ico:P_PLAY, label:t("planLosOhne"), fn:planLos }
-    ]);
+    if(p.entwurf){ planSpeichernStill(p); vibrate(30); showToast(t("blocGespeichert")); }   // neuer BLOC: beim Start gleich speichern (Test 5, R3)
+    planLos();
   });
   an(".plan-kopf [data-fav]", function(){ toggleFav("plan:"+p.id); neu(); });   // sichtbar nur der Stern; Kopieren, Teilen, Löschen per langem Drücken auf die Zeile
   var pk = app.querySelector(".plan-kopf");

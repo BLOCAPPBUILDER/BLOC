@@ -936,7 +936,10 @@
     try {
       // F1: gleiches Gewicht, Wiederholungen verfehlt (5/4/4 bei Ziel 10) → kein Steigerungs-Tipp, sondern zurücknehmen
       s.studio = {}; s.studio[id] = { kg:9.5, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 15*tag, s:[[9.5, 5], [9.5, 4], [9.5, 4]] }, { at:n - 1*tag, s:[[9.5, 5], [9.5, 4], [9.5, 4]] }] };
-      var tp = W.studioProg(id); wahr(tp && tp.art === "runter", "verfehlt: Rücknahme statt Steigerung (" + JSON.stringify(tp) + ")"); gleich(tp.kg, 7.5, "etwa 10 % weniger, mindestens eine Stufe");
+      var tp = W.studioProg(id); wahr(tp && tp.art === "wdhRunter" && tp.wdh === 8, "kleines Gewicht (Stufe −26 %): Gewicht halten, Ziel 8 Wdh. (" + JSON.stringify(tp) + ")");
+      s.studio[id].kg = 20; s.studio[id].log.forEach(function (l) { l.s = [[20, 5], [20, 4], [20, 4]]; });
+      tp = W.studioProg(id); wahr(tp && tp.art === "runter" && tp.kg === 17.5, "verfehlt: Rücknahme statt Steigerung, 20 → 17,5 kg (" + JSON.stringify(tp) + ")");
+      s.studio[id].kg = 9.5; s.studio[id].log.forEach(function (l) { l.s = [[9.5, 5], [9.5, 4], [9.5, 4]]; });
       // knapp verfehlt (9/9/8, Untergrenze 8): weder steigern noch zurücknehmen
       s.studio[id].log = [{ at:n - 8*tag, s:[[9.5, 9], [9.5, 9], [9.5, 8]] }, { at:n - 1*tag, s:[[9.5, 9], [9.5, 9], [9.5, 8]] }];
       gleich(W.studioProg(id), null, "im Bereich, aber nicht oben: kein Tipp");
@@ -1206,6 +1209,40 @@
       s.kalender = { e:[1, 2, 3, 4, 5].map(function (i) { return { id:"q" + i, tag:W.kalTagKey(Date.now() - (i + 1)*86400000), art:"programm", ref:"q6", prog:{ id:"q6", i:0 }, at:i, erledigt:i <= 2 }; }) };
       wahr(/Plan beendet|Plan ended/.test(W.paPlanEndeHTML()), "2 von 5: „Plan beendet“ statt „geschafft“");
     } finally { s.kalender = alt.kalender; s.programme = alt.programme; }
+  });
+  /* Fünfter Test (2026-11-14): R1–R7 */
+  test("Test 5 R1/R2/R5: Plantag erst beim Speichern erledigt, Plank nach Zeit, Rücknahme höchstens ~15 %", function () {
+    var s = W.state.db.settings, alt = { kalender:s.kalender, einheiten:s.einheiten, studio:s.studio }, histAlt = W.state.db.history, heute = W.kalTagKey(Date.now()), tag = 86400000, n = Date.now();
+    try {
+      s.kalender = { e:[{ id:"r1", tag:heute, art:"plan", ref:"p-r1", at:1 }] }; s.einheiten = [];
+      W.state.db.history = [{ at:Date.now() - 60000, ex:["leg-press"], dur:60, studio:Date.now() - 60000, b:"timer" }];
+      wahr(!W.kalStatus(heute).r1, "ein Satz ohne Speichern: Termin noch offen");
+      s.einheiten = [{ id:"e-r1", tag:heute, at:Date.now(), plan:"p-r1", ex:[{ id:"leg-press", s:[[60, 10]] }], saetze:1 }];
+      wahr(W.kalStatus(heute).r1, "gespeichert: erledigt");
+      s.studio = {}; gleich(W.studioEinheit("plank"), "zeit", "Plank ohne Einstellung: Zeit");
+      s.studio = { "leg-press": { kg:15, schritt:5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 30*tag, s:[[15, 10], [15, 10], [15, 10]] }, { at:n - 22*tag, s:[[15, 10], [15, 10], [15, 10]] }] } };
+      var tp = W.studioProg("leg-press"); wahr(tp && tp.art === "wdhRunter" && tp.kg === 15 && tp.wdh === 8, "15 kg, 5-kg-Stufe, Pause: Gewicht halten, Ziel 8 (" + JSON.stringify(tp) + ")");
+    } finally { s.kalender = alt.kalender; s.einheiten = alt.einheiten; s.studio = alt.studio; W.state.db.history = histAlt; }
+  });
+  test("Test 5 R4/R7: Plateau-Hinweis nach Runden ohne Fortschritt; Allgemein-fit-Plan mit Druck, Zug, Bein/Hüfte, Rumpf", function () {
+    var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now(), log = [];
+    for (var i = 30; i >= 1; i--) log.push({ at:n - i*2*tag, s:[[85, 8], [85, 7], [85, 7]], zu:true });
+    try {
+      s.studio = { "bench-press": { kg:85, schritt:2.5, ziel:{ saetze:3, wdh:8 }, log:log } };
+      var tt = W.studioTipps(["bench-press"], false); var tp = tt["bench-press"];
+      wahr(tp && tp.art === "plateau" && tp.saetze === 4, "Plateau mit Vorschlag 4 Sätze: " + JSON.stringify(tp));
+      wahr(/Schlaf/.test(W.studioSteigerTippText(tp)) || /sleep/.test(W.studioSteigerTippText(tp)), "Hinweis nennt zuerst Schlaf/Stress/Technik");
+      log.push({ at:n - 1000, s:[[85, 9], [85, 8], [85, 8]], zu:true });
+      gleich(W.studioPlateau("bench-press"), null, "wieder Fortschritt: kein Plateau");
+    } finally { s.studio = alt; }
+    var lena = W.paErzeuge({ ziele:["allgemein"], niveau:"gar", schwer:"anfaenger", tage:[0, 3], dauer:30, train:["studio"], ausr:["kh", "maschine", "kabel"], impact:"schonend", einschr:["knie"], bereiche:["workout"] });
+    lena.tage.forEach(function (t0) { t0.teile.forEach(function (tl) {
+      if (!tl.bloc || !tl.bloc.main) return; var ex = tl.bloc.ids.map(W.findExercise);
+      wahr(ex.some(function (x) { return W.paDrueckt(x) && W.paMehrgelenk(x); }), t0.name + ": Druckübung fehlt: " + tl.bloc.ids.join(", "));
+      wahr(ex.some(function (x) { return W.paIstZug(x) || W.paZiehtEx(x); }), t0.name + ": Zugübung fehlt");
+      wahr(ex.some(function (x) { return W.PA_RUMPF_GUT[x.id]; }), t0.name + ": Rumpfübung fehlt: " + tl.bloc.ids.join(", "));
+      wahr(!tl.bloc.ids.some(function (id) { return /side-bend|kickback/.test(id); }), t0.name + ": Seitbeugen/Kickback bei Einsteigern");
+    }); });
   });
   test("Rekorde F9: schwerer mit nur 1 Wiederholung ist kein Rekord", function () {
     var vor = W.studioBestwerte([{ s:[[4, 10], [4, 10], [4, 10]] }]), jetzt = W.studioBestwerte([{ s:[[14, 1], [14, 1], [14, 1]] }]);

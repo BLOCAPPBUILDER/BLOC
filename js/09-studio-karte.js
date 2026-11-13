@@ -126,10 +126,14 @@ function studioWdhGrenze(ex){
   var v = typeof mgVerteilung === "function" && ex ? mgVerteilung(ex) : {};
   return Object.keys(v).filter(function(k){ return v[k] >= 0.25; }).length >= 2 ? 15 : 20;
 }
-function studioRunter(kg, s){   // etwa 10 % weniger, auf Vielfache des Schritts, mindestens eine Stufe
+/* Rücknahme: etwa 10 % weniger, auf Vielfache des Schritts, mindestens eine Stufe - aber höchstens ~15 % (Test 5, R5). Geht das mit der Stufe nicht
+   (z. B. 15 kg und 5-kg-Stufe = −33 %), liefert sie 0: dann bleibt das Gewicht und das Wiederholungsziel sinkt. */
+var RUNTER_MAX = 0.15;
+function studioRunter(kg, s){
   var r = Math.round(kg*0.9/s)*s;
   if(r >= kg - 1e-9) r = (Math.ceil(kg/s - 1e-9) - 1)*s;
-  return Math.round(r*100)/100;
+  r = Math.round(r*100)/100;
+  return r > 0 && (kg - r)/kg <= RUNTER_MAX + 1e-9 ? r : 0;
 }
 /* Assistierte Geräte (Dip/Klimmzug assistiert): das Gewicht ist Unterstützung - Fortschritt heißt weniger kg (Test 4, Q4) */
 function studioAssistiert(id){ return /^assisted-/.test(String(id)); }
@@ -146,6 +150,7 @@ function studioProg(id, mitOffen){
     if(assist) return { art:"assistRunter", kg:Math.round((kg + z.schritt)*100)/100, alt:kg, tage:pTage, pause:true };   // nach Pause: etwas mehr Unterstützung
     var r0 = studioRunter(kg, z.schritt);   // lange Pause: etwas leichter wieder einsteigen
     if(r0 > 0) return { art:"pause", kg:r0, alt:kg, tage:pTage };
+    if(z.wdh > 6) return { art:"wdhRunter", grund:"pause", wdh:Math.max(Math.min(5, z.wdh), z.wdh - 2), alt:z.wdh, kg:kg, tage:pTage };   // Stufe zu groß: Gewicht halten, Wdh. senken
   }
   if(l.length < 2) return null;
   var zwei = l.slice(-2), letzte = zwei[1];
@@ -199,7 +204,8 @@ function studioProg(id, mitOffen){
   if(zwei.every(verfehlt) && !(e.erhoeht && e.erhoeht > zwei[0].at)){   // erst nach zwei Runden mit dem neuen Gewicht zurücknehmen
     if(kg > 0){
       var r = studioRunter(kg, z.schritt);
-      return r > 0 ? { art:"runter", kg:r, alt:kg, wdh:b.min } : null;
+      if(r > 0) return { art:"runter", kg:r, alt:kg, wdh:b.min };
+      return z.wdh > 6 ? { art:"wdhRunter", wdh:Math.max(Math.min(5, z.wdh), z.wdh - 2), alt:z.wdh, kg:kg } : null;   // Stufe zu groß: Gewicht halten, Wdh. senken
     }
     if(e.vorStufe && findExercise(e.vorStufe)) return { art:"stufeZurueck", naechste:e.vorStufe };   // neue Stufe zweimal klar verfehlt: zurück zur alten anbieten
     return z.wdh > 4 ? { art:"wdhRunter", wdh:Math.max(2, z.wdh - 2), alt:z.wdh } : null;
@@ -250,13 +256,34 @@ function studioTippRuht(id){
   return n < TIPP_RUHE_RUNDEN;
 }
 function studioTippAblehnen(id){ var a = studioAlle(), en = a[id] || (a[id] = { log:[] }); en.tippRuhe = Date.now(); save(); }
+/* Plateau (Test 5, R4, fachlich geprüft): mehrere Runden ohne Fortschritt (weder geschätztes Maximum noch Gewicht noch Wiederholungen besser) →
+   Hinweis mit Optionen: zuerst Schlaf, Stress, Essen und Technik prüfen, dann ein Satz mehr (per „Übernehmen“), dann Variante, Tempo, Leichtwoche.
+   Fortgeschrittene (lange Historie): nach 4 Runden, sonst nach 3 - aber frühestens nach etwa 6 Wochen Training (12 Runden).
+   Leichtwochen-Runden zählen nicht, nach einer Pause von mehr als 14 Tagen kein Hinweis; danach angepasst (erhoeht/manuell) = neuer Anfang. */
+var PLATEAU_MIN_RUNDEN = 12;
+function studioPlateau(id){
+  var e = studioEintrag(id), ex = findExercise(id);
+  if(!e || !e.log || !ex || studioNachZeit(id) || studioAssistiert(id)) return null;
+  var o = studioOffen(e), l = e.log.filter(function(x){ return arbeitsSaetze(x).length && !x.leicht && x !== o; });
+  if(l.length < PLATEAU_MIN_RUNDEN || studioPauseTage(e, false) > PROG_PAUSE_TAGE) return null;
+  var n = l.length >= 24 ? 4 : 3, letzte = l.slice(-n), davor = l.slice(0, l.length - n);
+  var seitAenderung = Math.max(e.erhoeht || 0, e.manuell || 0, e.tippRuhe || 0);
+  if(seitAenderung && seitAenderung >= letzte[0].at) return null;
+  var koerper = studioNurBlock(ex);
+  function wert(x){ var b0 = studioBestwerte([x]); return koerper ? studioWdhSumme(x) : (b0.rm3 || b0.kg); }
+  var bisher = Math.max.apply(null, davor.map(wert)), jetzt = Math.max.apply(null, letzte.map(wert));
+  if(!(bisher > 0) || jetzt > bisher*1.005) return null;
+  var z = studioZiel(id), kg = koerper ? 0 : studioArbeitsKg(id);
+  return { art:"plateau", runden:n, saetze:z.saetze < 5 ? z.saetze + 1 : 0, alt:z.saetze, hatVariante:koerper && !!studioNaechsteStufe(id),
+           kleineScheiben:!koerper && kg >= 40 && z.schritt >= 2.5, seit:letzte[0].at };
+}
 function studioTippSicher(tp){ return tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter" || tp.art === "stufeZurueck" || tp.art === "assistRunter"; }
 function studioTipps(ids, leicht, mitOffen){
   var o = {}, steig = [];
   studioTippsWartend = [];
   if(leicht) return o;
   ids.forEach(function(id, k){
-    var tp = studioProg(id, mitOffen); if(!tp) return;
+    var tp = studioProg(id, mitOffen) || (mitOffen ? null : studioPlateau(id)); if(!tp) return;   // ohne Steigerungs-Tipp: Plateau-Hinweis
     if(studioTippSicher(tp)) o[id] = tp;
     else if(!studioTippRuht(id)){ var ex = findExercise(id); steig.push({ id:id, tp:tp, k:k, grund:ex && studioWdhGrenze(ex) === 15 ? 0 : 1 }); }   // „Nicht jetzt“: ruht
   });
@@ -333,13 +360,15 @@ function studioSteigerTippText(v){
   if(v.art === "assistRunter") return v.pause ? t("tippAssistPause", { d:v.tage, neu:studioKg(v.kg) }) : t("tippAssistRunter", { w:v.wdh, neu:studioKg(v.kg) });
   if(v.art === "stufeZurueck") return t("tippStufeZurueck", { n:tplText(findExercise(v.naechste).name) });
   if(v.art === "variante") return v.naechste ? t("tippVarianteNeuZeit", { alt:v.alt, n:tplText(findExercise(v.naechste).name), s:ketteStartSek(v.naechste) }) : t("tippVariante", { alt:v.alt });
+  if(v.art === "plateau") return t("tippPlateau", { n:v.runden })+" "+(v.saetze ? t("tippPlateauSatz", { s:v.saetze }) : t("tippPlateauOhneSatz"))+
+    (v.kleineScheiben ? " "+t("tippPlateauScheiben") : "")+" "+t(v.hatVariante ? "tippPlateauVariante" : "tippPlateauWeiter");
   if(v.art === "satz") return t("tippSatz", { kg:studioKg(v.sprung), n:v.saetze });
   if(v.art === "varianteWdh") return v.naechste ? t("tippVarianteNeu", { max:v.max, n:tplText(findExercise(v.naechste).name), min:v.min, max0:v.max0 })+(KETTE_BEWEGLICH[v.naechste] ? " "+t("tippBeweglich") : "")+(KETTE_STANGE.test(v.naechste) ? " "+t("tippStange") : "") : t("tippVarianteWdh", { max:v.max, min:v.min, max0:v.max0 });
   if(v.tempo) return studioSteigerTippText(Object.assign({}, v, { tempo:false }))+" "+t("tippTempo");
   if(v.art === "kg") return t("tippKg", { max:v.max, neu:studioKg(v.kg), p:v.prozent, min:v.min, max0:v.max0 })+(v.rpeLeicht ? " "+t("tippRpeLeicht") : "")+(v.gross ? " "+t("tippGross") : "");
   if(v.art === "runter") return t("tippRunter", { w:v.wdh, neu:studioKg(v.kg) });
   if(v.art === "pause") return t("tippPause", { d:v.tage, neu:studioKg(v.kg) });
-  if(v.art === "wdhRunter") return t("tippWdhRunter", { neu:v.wdh });
+  if(v.art === "wdhRunter") return v.grund === "pause" ? t("tippPauseWdh", { d:v.tage, kg:studioKg(v.kg), neu:v.wdh }) : t("tippWdhRunter", { neu:v.wdh });
   if(v.grund === "nachRueck") return t("tippNachRueck", { kg:studioKg(v.sprung), neu:v.wdh });
   return v.grund === "sprung" ? t("tippSprung", { max:v.max, kg:studioKg(v.sprung), neu:v.wdh }) : t("tippWdh", { max:v.max, neu:v.wdh });
 }
@@ -350,6 +379,7 @@ function studioTippKurz(v){
   if((v.art === "variante" || v.art === "varianteWdh") && v.naechste) return "↑ "+tplText(findExercise(v.naechste).name);
   if(v.art === "variante" || v.art === "varianteWdh") return "↑ "+t("tippKurzVariante");
   if(v.art === "satz") return "↑ "+t("tippKurzSatz", { n:v.saetze });
+  if(v.art === "plateau") return "≈ "+(v.saetze ? t("tippKurzSatz", { n:v.saetze }) : t("tippKurzPlateau"));
   return v.art === "kg" ? "↑ "+t("tippKurzKg", { kg:studioKg(v.kg), p:v.prozent }) : v.art === "runter" || v.art === "pause" ? "↓ "+t("tippKurzKg2", { kg:studioKg(v.kg) })
     : (v.art === "wdhRunter" ? "↓ " : "↑ ")+t("tippKurzWdh", { n:v.wdh });
 }
@@ -361,6 +391,8 @@ function studioTippUebernehmen(id, tp){
     en.timer = en.timer || {}; en.timer.work = tp.sek;
   } else if(tp.art === "variante" || tp.art === "stufeZurueck"){
     /* nur gemerkt: Tausch der Übung passiert im BLOC (planVarianteTauschen) bzw. die Variante wählt man selbst */
+  } else if(tp.art === "plateau"){
+    if(tp.saetze){ if(!en.satzPlus) en.satzPlus = z.saetze; en.ziel = { saetze:tp.saetze, wdh:z.wdh }; }   // ein Satz mehr; sonst nur gemerkt
   } else if(tp.art === "satz"){
     en.satzPlus = z.saetze; en.ziel = { saetze:tp.saetze, wdh:z.wdh };   // ein Satz mehr; die alte Satzzahl ist gemerkt
   } else if(tp.art === "varianteWdh"){
