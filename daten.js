@@ -694,15 +694,15 @@ Object.assign(ILLU_POSES, {
   "childs-pose":        [Q([67,82],[58,80],[36,77],[[54,89,34,89,30,89]],[[72,88,86,88]], "", false, 1, [46,72]), null],   // Rücken leicht rund, Stirn liegt auf (Kopf nicht im Boden)
   "sphinx-stretch":     [Q(null,[26,74],[52,84],[[70,86,88,87,92,89]],[[26,88,12,88]], "", false, 1, [40,82.5]), null],   // Streckung vor allem in der Brustwirbelsäule
   "downward-dog":       [Q(null,[64,66],[46,46],[[36,68,26,88,20,89]],[[68,78,72,89]]), null],
-  "spinal-twist":       [Q(null,[24,84],[50,84],[[60,76,70,88,76,89]],[[24,72,24,62]]), null],
+  "spinal-twist":       [Q(null,[24,84],[50,84],[[60,76,70,88,76,89]],[[28,89,36,89]]), null],   // 2026-11-13: Arme liegen seitlich am Boden (nicht nach oben)
   "forward-fold":       [Q([59,79.5],[58.5,71],[47,48],[[49,69,46,89,54,89]],[[59,80,60,88]], "", false, 1, [50.5,58]), null],   // Rumpf hängt ca. 70° (fast senkrecht wäre im Bild nicht vom Bein zu unterscheiden), Rücken leicht rund, Kopf hängt vor den Schienbeinen, Knie leicht gebeugt
   "hip-flexor-stretch": [Q(null,[47,34],[48,64],[[64,64,64,89,72,89],[36,88,20,89,18,89]],[[55,48,49,57]]), null],
   "quad-stretch":       [Q(null,[50,20],[50,50],[[50,70,50,89,58,89],[48,72,38,56,40,54]],[[45,38,39,55],[56,32,62,40]]), null],
   "hamstring-stretch":  [Q(null,[48,68],[30,86],[[56,88,80,88,82,82]],[[62,78,76,84]]), null],
   "calf-stretch":       [Q(null,[62,28],[46,54],[[60,72,62,89,70,89],[36,72,26,89,34,89]],[[72,28,80,26]], gWall(81)), null],
-  "figure-four":        [Q(null,[22,84],[48,84],[[56,66,70,68],[64,78,58,66]],[[34,74,52,68]]), null],
+  "figure-four":        [Q(null,[22,84],[48,84],[[60,68,70,88,78,89],[58,76,61,67]],[[34,77,54,73]]), null],   // 2026-11-13: Standbein angewinkelt, Fuß am Boden; Knöchel auf dem Knie
   "pigeon-stretch":     [Q(null,[50,54],[46,80],[[62,84,52,89],[28,86,8,88,4,89]],[[52,68,58,88]]), null],
-  "butterfly-stretch":  [Q(null,[50,56],[50,82],[[34,80,48,88],[66,80,52,88]],[[44,70,48,86],[56,70,52,86]],"",true), null],
+  "butterfly-stretch":  [Q(null,[50,46],[50,80],[[27,78,47,87],[73,78,53,87]],[[35,62,46,85],[65,62,54,85]],"",true), null],   // 2026-11-13: symmetrisch von vorn, Ellbogen seitlich am Rumpf vorbei
   "worlds-greatest":    [Q(null,[60,48],[44,64],[[62,66,64,89,72,89],[30,84,16,88,14,89]],[[60,68,62,88]]),
                          Q(null,[60,48],[44,64],[[62,66,64,89,72,89],[30,84,16,88,14,89]],[[58,34,56,20],[60,68,62,88]])]
 });
@@ -731,7 +731,7 @@ Object.assign(ILLU_POSES, {
   mit("sphinx-stretch",     P_LF);
   mit("spinal-twist",       P_LBK);
   mit("figure-four",        P_LBK);
-  mit("butterfly-stretch",  Q(null,[50,38],[50,82],[[34,80,48,88],[66,80,52,88]],[[44,70,48,86],[56,70,52,86]],"",true));   // aufrecht, dann nach vorn
+  mit("butterfly-stretch",  Q(null,[50,42],[50,80],[[27,78,47,87],[73,78,53,87]],[[34,58,45,84],[66,58,55,84]],"",true));   // aufrecht, dann leicht nach vorn
   /* Halteübungen (Wall Sit, Kniebeuge halten, Hängen, Plank, Hollow Hold) sind statisch und zeigen nur die Haltung - kein Hin und Her (2026-10-14) */
   /* Dehnungen, die man hält, zeigen nur die Endstellung (ein Standbild statt Hin-und-her); in Bewegung bleiben nur Katze-Kuh,
      Kobra und World's Greatest Stretch (2026-10-10) */
@@ -5788,7 +5788,10 @@ ILLU_POSES["step-up"] = [Q(null,[40, 22],[40, 52],[[56, 58, 60, 75, 68, 77], [40
 ILLU_POSES["chair-squat"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<path class=\"ip\" d=\"M12 66H36M16 66V89M32 66V89M12 38V66\"/>",false,1), Q(null,[34, 40],[30, 64],[[50, 64, 52, 89, 60, 89]],[[44, 52, 56, 50]],"<path class=\"ip\" d=\"M12 66H36M16 66V89M32 66V89M12 38V66\"/>",false,1)];
 ILLU_POSES["hindu-push-up"] = [Q(null,[56, 58],[34, 44],[[32, 66, 36, 87, 44, 88]],[[60, 74, 62, 89]],"",false,1), Q(null,[62, 52],[38, 84],[[24, 87, 12, 89]],[[64, 70, 64, 89]],"",false,1)];
 ILLU_POSES["elevated-pike-push-up"] = [Q(null,[58, 60],[38, 42],[[30, 54, 24, 66, 18, 66]],[[62, 74, 64, 89]],"<path class=\"ip\" d=\"M10 89V66H28V89\"/>",false,1), Q(null,[60, 74],[40, 50],[[32, 60, 26, 66, 20, 66]],[[70, 82, 62, 89]],"<path class=\"ip\" d=\"M10 89V66H28V89\"/>",false,1)];
-ILLU_POSES["wall-angel"] = [Q(null,[46, 22],[44, 52],[[50, 70, 50, 89, 58, 89]],[[44, 36, 40, 28]],"<path class=\"ip\" d=\"M36 6V89\"/>",false,1), Q(null,[46, 22],[44, 52],[[50, 70, 50, 89, 58, 89]],[[44, 14, 40, 2]],"<path class=\"ip\" d=\"M36 6V89\"/>",false,1)];
+/* 2026-11-13: Wandengel - Seite: Arm liegt an der Wand und gleitet vom „W“ (Ellbogen auf Schulterhöhe, Unterarm hoch) nach oben; zweite Ansicht von vorn: W → Y */
+ILLU_POSES["wall-angel"] = [Q(null,[46, 22],[44, 52],[[50, 70, 50, 89, 58, 89]],[[38, 28, 38, 15]],"<path class=\"ip\" d=\"M36 6V89\"/>",false,1), Q(null,[46, 22],[44, 52],[[50, 70, 50, 89, 58, 89]],[[40, 12, 39, 2]],"<path class=\"ip\" d=\"M36 6V89\"/>",false,1)];
+ILLU_VIEW2["wall-angel"] = { typ:"front", p:[Q(null,[50,26],[50,56],[[47,73,47,89,42,89],[53,73,53,89,58,89]],[[36,30,36,17],[64,30,64,17]],"",true),
+                                             Q(null,[50,26],[50,56],[[47,73,47,89,42,89],[53,73,53,89,58,89]],[[42,13,38,2],[58,13,62,2]],"",true)] };
 ILLU_POSES["boat-hold"] = [Q(null,[36, 56],[48, 84],[[62, 70, 78, 58]],[[48, 66, 62, 66]],"",false,1)];
 ILLU_POSES["lunge-with-rotation"] = [Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[56, 34, 62, 32]],"",false,1), Q(null,[48, 32],[48, 62],[[66, 63, 66, 89, 74, 89], [36, 85, 20, 87, 18, 89]],[[58, 42, 68, 38]],"",false,1)];
 ILLU_POSES["shadow-boxing"] = [Q(null,[50, 22],[50, 52],[[46, 70, 40, 89, 32, 89], [56, 70, 64, 89, 72, 89]],[[58, 34, 62, 26], [48, 36, 52, 28]],"",false,1), Q(null,[50, 22],[50, 52],[[46, 70, 40, 89, 32, 89], [56, 70, 64, 89, 72, 89]],[[66, 30, 80, 30], [48, 36, 52, 28]],"",false,1)];
