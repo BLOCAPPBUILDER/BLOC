@@ -291,8 +291,9 @@ function studioKalibrieren(id, leicht){
    Nur Kraftketten - Sprung- und Cardio-Ketten werden nicht per Tipp gesteigert (KETTE_OHNE_TIPP). */
 var KETTE_OHNE_TIPP = { "jump-squats":1, "jump-forward-squats":1, "tuck-jumps":1, "plank-burpees":1, "burpees":1, "burpee-squat-jumps":1, "jump-forward-burpees":1, "burpee-pull-ups":1,
   "jumping-jacks":1, "high-knees":1, "sprint-in-place":1, "lateral-hops":1, "skater-jumps":1,
-  "clap-push-ups":1, "dragon-flags":1, "jump-lunges":1 };   // Power-/Sprungübungen: nur über „Passt es nicht?“, nicht per Tipp (fachliche Prüfung)
-var KETTE_BEWEGLICH = { "pistol-assist":1, "pistol-squats":1 };   // nächste Stufe braucht viel Beweglichkeit: Hinweis im Tipp
+  "clap-push-ups":1, "dragon-flags":1, "jump-lunges":1, "pistol-squats":1 };   // Fortgeschritten: nie automatisch   // Power-/Sprungübungen: nur über „Passt es nicht?“, nicht per Tipp (fachliche Prüfung)
+var KETTE_BEWEGLICH = { "pistol-assist":1, "pistol-squats":1 };
+var KETTE_STANGE = /^hanging-|toes-to-bar|pull-ups?$|chin-ups|scapular-pull-ups|negative-pull-ups/;   // nächste Stufe braucht eine Stange: Hinweis   // nächste Stufe braucht viel Beweglichkeit: Hinweis im Tipp
 var KETTE_START_KURZ = { "copenhagen-plank":15, "hollow-hold":15, "l-sit":15 };   // anspruchsvolle Halteübungen starten kürzer
 function studioNaechsteStufe(id){
   if(KETTE_OHNE_TIPP[id] || typeof leichterSchwerer !== "function") return null;
@@ -333,7 +334,7 @@ function studioSteigerTippText(v){
   if(v.art === "stufeZurueck") return t("tippStufeZurueck", { n:tplText(findExercise(v.naechste).name) });
   if(v.art === "variante") return v.naechste ? t("tippVarianteNeuZeit", { alt:v.alt, n:tplText(findExercise(v.naechste).name), s:ketteStartSek(v.naechste) }) : t("tippVariante", { alt:v.alt });
   if(v.art === "satz") return t("tippSatz", { kg:studioKg(v.sprung), n:v.saetze });
-  if(v.art === "varianteWdh") return v.naechste ? t("tippVarianteNeu", { max:v.max, n:tplText(findExercise(v.naechste).name), min:v.min, max0:v.max0 })+(KETTE_BEWEGLICH[v.naechste] ? " "+t("tippBeweglich") : "") : t("tippVarianteWdh", { max:v.max, min:v.min, max0:v.max0 });
+  if(v.art === "varianteWdh") return v.naechste ? t("tippVarianteNeu", { max:v.max, n:tplText(findExercise(v.naechste).name), min:v.min, max0:v.max0 })+(KETTE_BEWEGLICH[v.naechste] ? " "+t("tippBeweglich") : "")+(KETTE_STANGE.test(v.naechste) ? " "+t("tippStange") : "") : t("tippVarianteWdh", { max:v.max, min:v.min, max0:v.max0 });
   if(v.tempo) return studioSteigerTippText(Object.assign({}, v, { tempo:false }))+" "+t("tippTempo");
   if(v.art === "kg") return t("tippKg", { max:v.max, neu:studioKg(v.kg), p:v.prozent, min:v.min, max0:v.max0 })+(v.rpeLeicht ? " "+t("tippRpeLeicht") : "")+(v.gross ? " "+t("tippGross") : "");
   if(v.art === "runter") return t("tippRunter", { w:v.wdh, neu:studioKg(v.kg) });
