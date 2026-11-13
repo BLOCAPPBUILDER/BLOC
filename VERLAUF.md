@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-13 · Figuren: Drehdehnung, Figur 4, Schmetterling, Wandengel (Fassung 2026-11-13-7)
+
+Nach Kevins Hinweisen: Drehdehnung liegend – Arme liegen seitlich am Boden (stand ein Arm senkrecht hoch). Figur 4 – Standbein angewinkelt mit dem Fuß am Boden, Knöchel des anderen Beins auf dem Knie. Schmetterling – symmetrisch von vorn, Ellbogen seitlich am Rumpf vorbei (wirkte verdreht). Wandengel – Seitenansicht mit dem Arm an der Wand (W → nach oben) und neue Vorderansicht W → Y. Die vier Übungen stehen auf der Ausnahmeliste der automatischen Gelenk-Korrektur.
+
 ## 2026-11-13 · Wissensaustausch: RPE/RIR, Leichtwoche, Supersatz (Fassung 2026-11-13-6)
 
 Drei neue Beiträge im Wissensaustausch (Texte vom Sportwissenschaftler, Quellen geprüft und Aussagen an die Studien angepasst): RPE und RIR, Leichtwoche (Deload), Supersatz. Neue Quellen F51 Halperin 2022, F52 Helms 2016, F53 Coleman 2024, F54 Weakley 2017. Variantenketten: Pistol Squat nie automatisch, Hinweis „braucht eine Stange“ bei hängenden Übungen, Tipp sagt vor dem Wechsel, dass die Wiederholungen erst sinken; Tempo-Tipp neu formuliert.

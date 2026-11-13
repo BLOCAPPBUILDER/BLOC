@@ -553,7 +553,7 @@ function exTippZeigen(ex, lang){
   var gedeckt = hw.filter(function(x){ return ctx.indexOf(stamm(x)) > -1; }).length/hw.length;
   return gedeckt < 0.75;
 }
-var GELENK_AUSNAHMEN = { "figure-four":1, "thomas-stretch":1, "chest-stretch":1 };   // chest-stretch: die Korrektur klappte den Ellbogen nach oben an den Kopf (2026-11-13)
+var GELENK_AUSNAHMEN = { "figure-four":1, "thomas-stretch":1, "chest-stretch":1, "spinal-twist":1, "butterfly-stretch":1, "wall-angel":1 };   // chest-stretch: die Korrektur klappte den Ellbogen nach oben an den Kopf (2026-11-13)
 function gelenkeRichten(qs){
   if(!qs.length || qs[0].f) return qs;
   var P = qs.map(function(q){ var r = rigFromPose(q); return rigPoints(r, r, 0); });
