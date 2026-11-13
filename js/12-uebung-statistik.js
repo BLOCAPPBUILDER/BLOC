@@ -220,7 +220,14 @@ function statFortschrittHTML(){
     // Volumen der letzten Runde gegen die davor mit demselben Arbeitsgewicht: mehr Wdh. bei gleichem Gewicht soll sichtbar sein (das 1RM ist bei 12 gedeckelt)
     var lz = log[log.length-1], lv = log[log.length-2], volP = 0;
     if(mitKg && lz && lv && rundeArbeitsKg(lz) === rundeArbeitsKg(lv) && studioVolumen(lv) > 0) volP = Math.round((studioVolumen(lz)/studioVolumen(lv) - 1)*100);
-    var zeit = !mitKg && log.some(function(r){ return r.s.some(function(x){ return x[4] === 1; }); });   // Halteübung: Sekunden statt Wdh. (Test 3, P5)
+    var zeit = !mitKg && log.some(function(r){ return r.s.some(function(x){ return x[4] === 1; }); });
+    if(studioAssistiert(id)){   // assistiert: Unterstützung erste Runde → jetzt; weniger ist besser (Test 4, Q4)
+      var u0 = rundeArbeitsKg(log[0]) || 0, u1 = rundeArbeitsKg(log[log.length-1]) || 0, kdA = koerperDaten();
+      // mit Körpergewicht: effektive Last (Körpergewicht minus Unterstützung), sonst die Unterstützung selbst (fachliche Prüfung Test 4)
+      l.push({ id:id, ex:ex, name:tplText(ex.name), gr:statFortRubrik(ex), n:log.length, mitKg:true, assist:true, von:u1, bis:u0,
+        anzVon:kdA ? Math.max(0, kdA.kg - u0) : u0, anzBis:kdA ? Math.max(0, kdA.kg - u1) : u1, effektiv:!!kdA, at:log[log.length-1].at });
+      return;
+    }   // Halteübung: Sekunden statt Wdh. (Test 3, P5)
     l.push({ id:id, ex:ex, name:tplText(ex.name), gr:statFortRubrik(ex), n:log.length, mitKg:mitKg, volP:volP, zeit:zeit, von:mitKg ? Math.round(erst.rm3*10)/10 : erst.wdh, bis:mitKg ? Math.round(jetzt.rm3*10)/10 : jetzt.wdh, at:log[log.length-1].at });
   });
   var kopf = '<summary><b>'+esc(t("statFort"))+'</b><span class="sk-sub">'+esc(t("statFortSub"))+'</span><span class="sk-chev">'+ICON_CHEV+'</span></summary>';
@@ -238,9 +245,9 @@ function statFortschrittHTML(){
     var d = fehlt ? 0 : Math.round((x.bis - x.von)*100)/100, p = x.von > 0 ? Math.round(d/x.von*100) : 0, einheit = x.mitKg ? " kg" : x.zeit ? " s" : " "+t("wdhKurz");
     var volAuf = !fehlt && d <= 0 && x.volP > 0;   // 1RM gleich, aber mehr geschafft: Volumen zeigen
     if(volAuf) d = 0.0001;
-    var delta = fehlt ? "–" : volAuf ? t("statFortVol", { p:x.volP }) : d > 0 ? "+"+studioKg(d)+einheit+(p ? " (+"+p+" %)" : "") : d < 0 ? "−"+studioKg(-d)+einheit : t("statFortGleich");
+    var delta = x.assist ? (d > 0 ? (x.effektiv ? "+" : "−")+studioKg(d)+" kg" : d < 0 ? (x.effektiv ? "−" : "+")+studioKg(-d)+" kg" : t("statFortGleich")) : fehlt ? "–" : volAuf ? t("statFortVol", { p:x.volP }) : d > 0 ? "+"+studioKg(d)+einheit+(p ? " (+"+p+" %)" : "") : d < 0 ? "−"+studioKg(-d)+einheit : t("statFortGleich");
     return uebKachel({ bild:x.id, name:x.name, attr:'data-sfuebung="'+esc(x.id)+'"', cat:studioFarbe(x.ex), ico:exSymbol(x.ex),
-      unter:'<span class="st-sub an">'+esc((x.mitKg ? t("statFort1rm")+" " : "")+(x.von > 0 || !x.mitKg ? studioKg(x.von) : "–")+" → "+(x.bis > 0 || !x.mitKg ? studioKg(x.bis) : "–")+einheit)+'</span><span class="sf-delta'+(d > 0 ? ' auf' : d < 0 ? ' ab' : '')+'">'+esc(delta)+'</span>'+
+      unter:'<span class="st-sub an">'+esc(x.assist ? t(x.effektiv ? "statFortEffektiv" : "statFortAssist")+" "+studioKg(x.anzVon)+" → "+studioKg(x.anzBis)+" kg" : (x.mitKg ? t("statFort1rm")+" " : "")+(x.von > 0 || !x.mitKg ? studioKg(x.von) : "–")+" → "+(x.bis > 0 || !x.mitKg ? studioKg(x.bis) : "–")+einheit)+'</span><span class="sf-delta'+(d > 0 ? ' auf' : d < 0 ? ' ab' : '')+'">'+esc(delta)+'</span>'+
         '<span class="sf-einh">'+esc((statFortGr ? "" : statFortRubrikName(x.gr)+" · ")+t("statFortEinh", { n:x.n }))+'</span>' });
   }).join("");
   var rest = sicht.length - statFortAnz;
@@ -475,8 +482,8 @@ function statModule(){
   Z.push({ id:"zeit", ico:'<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M9.5 3h5"/>', titel:t("fk_zeit"),
     wert:zeitGesamt >= 3600 ? (Math.round(zeitGesamt/360)/10).toLocaleString(lang0) : String(Math.round(zeitGesamt/60)), einheit:zeitGesamt >= 3600 ? t("fkStunden") : "min", sub:t("fkZeitSub") });
   Z.push({ id:"kg", ico:'<path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/>', titel:t("fk_kg"),
-    wert:kgGesamt >= 100000 ? (Math.round(kgGesamt/100)/10).toLocaleString(lang0) : Math.round(kgGesamt).toLocaleString(lang0), einheit:kgGesamt >= 100000 ? "t" : "kg",
-    sub:kgGesamt > 0 ? t("fkKgSub", { t:(Math.round(kgGesamt/100)/10).toLocaleString(lang0) }) : t("fkKgLeer") });
+    wert:kgGesamt >= 10000 ? (Math.round(kgGesamt/100)/10).toLocaleString(lang0) : Math.round(kgGesamt).toLocaleString(lang0), einheit:kgGesamt >= 10000 ? "t" : "kg",
+    sub:kgGesamt > 0 ? (kgGesamt >= 10000 ? t("fkKgSubKg", { kg:Math.round(kgGesamt).toLocaleString(lang0) }) : t("fkKgSub", { t:(Math.round(kgGesamt/100)/10).toLocaleString(lang0) })) : t("fkKgLeer") });
   if(aktiv.indexOf("run") > -1 && runs.length) Z.push({ id:"km", ico:'<circle cx="14" cy="4.5" r="2"/><path d="M6 21l3-6 3 2v5M9 15l1-4 4-1 2 3 3 1M10 11L8 8"/>', titel:t("fk_km"), wert:runKm(kmGesamt), einheit:"km", sub:t("fkKmSub", { n:runs.length }) });
   if(aktiv.indexOf("run") > -1 && hmGesamt > 0) Z.push({ id:"hm", ico:'<path d="M3 19l6-10 4 6 3-4 5 8z"/>', titel:t("fk_hm"), wert:Math.round(hmGesamt).toLocaleString(lang0), einheit:"m", sub:t("fkHmSub") });
   /* Verlauf zu einer Zahl: Balken je Woche, Monat oder Jahr (gran); nutzt die gleichen Zeiträume wie das Diagramm „Verlauf“ */
@@ -703,7 +710,7 @@ function trainingHeute(ids){
     var e = studioEintrag(id), log = (e && e.log) || [], l = studioOffen(e), i = l ? log.indexOf(l) : -1;
     if(l && l.s.length){
       var vor = studioBestwerte(log, i), jetzt = studioBestwerte([l]);
-      var rekord = i > 0 && studioIstRekord(jetzt, vor);
+      var rekord = i > 0 && !studioAssistiert(id) && studioIstRekord(jetzt, vor);
       ex.push({ id:id, s:JSON.parse(JSON.stringify(l.s)), rekord:rekord });
       saetze += arbeitsSaetze(l).length; vol += studioVolumen(l); wdh += studioWdhSumme(l); if(rekord) rek++;
     } else if(inHist[id]) ex.push({ id:id, s:[], rekord:false });

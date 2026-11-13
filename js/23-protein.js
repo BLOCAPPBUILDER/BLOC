@@ -18,7 +18,7 @@ var PROT_T = {
     kcalMinder:"Unter 18: keine Kalorienschätzung. Bitte mit Ärztin oder Arzt besprechen.",
     zielTitel:"Ziel", zielAb:"Abnehmen", zielHalten:"Halten", zielAuf:"Aufbauen",
     sonder:"Schwangerschaft, Stillzeit, Nierenerkrankung oder Essstörung: Ziele bitte mit Ärztin oder Arzt klären.",
-    kcalOffen:"Für den Kalorienbedarf fehlen Größe und Alter.",
+    kcalOffen:"Für den Kalorienbedarf fehlen Größe und Alter.", kcalOffenAlter:"Für den Kalorienbedarf fehlt noch dein Alter (Körperdaten).", kcalOffenGroesse:"Für den Kalorienbedarf fehlt noch deine Größe (Körperdaten).",
     bedarf:"Mein Bedarf", bedarfHint:"", stufeTitel:"Proteinziel pro kg Körpergewicht",
     manuell:"Gramm eintippen", manuellHint:"", manuellName:"Manuell",
     name:"Name (optional)", hinzu:"Hinzufügen", eigenDetails:"Eigenes hinzufügen", eigen:"Eigener Button",
@@ -78,7 +78,7 @@ var PROT_T = {
     kcalMinder:"Under 18: no calorie estimate. Please talk to a doctor.",
     zielTitel:"Goal", zielAb:"Lose weight", zielHalten:"Maintain", zielAuf:"Build",
     sonder:"Pregnancy, breastfeeding, kidney disease or an eating disorder: please clarify goals with a doctor.",
-    kcalOffen:"Height and age are missing for the calorie need.",
+    kcalOffen:"Height and age are missing for the calorie need.", kcalOffenAlter:"Your age is still missing for the calorie need (body data).", kcalOffenGroesse:"Your height is still missing for the calorie need (body data).",
     bedarf:"My needs", bedarfHint:"", stufeTitel:"Protein goal per kg body weight",
     manuell:"Type in grams", manuellHint:"", manuellName:"Manual",
     name:"Name (optional)", hinzu:"Add", eigenDetails:"Add your own", eigen:"Own button",
@@ -243,7 +243,7 @@ function protKopfHTML(summe){
     '<div class="prot-zeile">'+esc(ziel ? (rest > 0 ? protT("noch", { g:rest }) : protT("erreicht")) : protT("onbOffen"))+'</div>'+
     (kcal ? '<div class="prot-kcal"><b>'+esc(protT(protZielArt() === "halten" ? "kcalWert" : "kcalZiel", { k:zahl(kcal) }))+'</b>'+
               '<small>'+esc(protZielArt() === "halten" ? protT("kcalHint") : protT("kcalErhalt", { k:zahl(erh) }))+'</small></div>'
-          : kd ? '<div class="prot-kcal"><small>'+esc(protT(kd.alter > 0 && kd.alter < 18 ? "kcalMinder" : "kcalOffen"))+'</small></div>' : '');
+          : kd ? '<div class="prot-kcal"><small>'+esc(protT(kd.alter > 0 && kd.alter < 18 ? "kcalMinder" : !(kd.cm >= 120) && !(kd.alter >= 18) ? "kcalOffen" : !(kd.alter >= 18) ? "kcalOffenAlter" : "kcalOffenGroesse"))+'</small></div>' : '');
 }
 /* Favoriten: Namen aus dem Katalog (settings.protein.favs), per Stern im Katalog gesetzt */
 function protIstFav(name){ return protDaten().favs.indexOf(name) > -1; }
