@@ -1130,7 +1130,8 @@
     var s = W.state.db.settings, alt = s.einheiten, heute = W.einheitTagKey(), jetzt = Date.now();
     try {
       s.einheiten = [{ id:"a", tag:heute, at:jetzt, prog:"tb1", ex:[{ id:"leg-press", s:[[60, 10]] }] }, { id:"b", tag:heute, at:jetzt, prog:"tb1", ex:[{ id:"plank", s:[[0, 30]] }] }];
-      gleich(W.trainingsGesamt(2, [{ von:jetzt - 3600000, bis:jetzt }, { von:jetzt - 600000, bis:jetzt }]), 1, "zwei BLOCs, ein TrainingsBLOC: 1 Training");
+      var v0 = Math.max(jetzt - 60000, new Date().setHours(0, 0, 1, 0));   // kurz nach Mitternacht nicht in den Vortag
+      gleich(W.trainingsGesamt(2, [{ von:v0, bis:jetzt }, { von:v0 + 1, bis:jetzt }]), 1, "zwei BLOCs, ein TrainingsBLOC: 1 Training");
     } finally { s.einheiten = alt; }
   });
   test("Infofenster: Tipp nur, wenn er etwas Neues sagt; Brustdehnung mit Ellbogen auf Schulterhöhe", function () {
@@ -1231,7 +1232,7 @@
       s.studio = { "bench-press": { kg:85, schritt:2.5, ziel:{ saetze:3, wdh:8 }, log:log } };
       var tt = W.studioTipps(["bench-press"], false); var tp = tt["bench-press"];
       wahr(tp && tp.art === "plateau" && tp.saetze === 4, "Plateau mit Vorschlag 4 Sätze: " + JSON.stringify(tp));
-      wahr(/Schlaf/.test(W.studioSteigerTippText(tp)) || /sleep/.test(W.studioSteigerTippText(tp)), "Hinweis nennt zuerst Schlaf/Stress/Technik");
+      wahr(/geschlafen|Schlaf|slept/.test(W.studioSteigerTippText(tp)), "Hinweis fragt zuerst nach Schlaf/Stress/Essen");
       log.push({ at:n - 1000, s:[[85, 9], [85, 8], [85, 8]], zu:true });
       gleich(W.studioPlateau("bench-press"), null, "wieder Fortschritt: kein Plateau");
     } finally { s.studio = alt; }
