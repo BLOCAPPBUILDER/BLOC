@@ -635,7 +635,9 @@ function openProgrammWahl(p, neu){
     var nb = root.querySelector("[data-pgneubau]");
     if(nb) nb.addEventListener("click", function(){ pgNachBau = p.id; zu(); go("#katalog"); if(typeof katPlanNeu === "function") katPlanNeu(); });
     root.querySelectorAll("[data-pgpick]").forEach(function(b){ b.addEventListener("click", function(){
-      p.items.push(b.getAttribute("data-pgpick")); p.updatedAt = Date.now(); pgOffen[p.id] = true; save(); zu(); neu();
+      var ref = b.getAttribute("data-pgpick");
+      if(p.items.indexOf(ref) > -1 && ref !== "run"){ showToast(t("pgSchonDrin")); return; }   // schon enthalten (Test 5, R6)
+      p.items.push(ref); p.updatedAt = Date.now(); pgOffen[p.id] = true; save(); zu(); neu();
     }); });
   }
   draw();

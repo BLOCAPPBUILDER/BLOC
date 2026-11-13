@@ -8,6 +8,19 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-14 · Fünfter Test (Fassung 2026-11-14-1)
+
+Umsetzung von BERICHT-Test5-als-Prompt.md (Bewertung 7,8/10); fachlich vom Sportwissenschaftler geprüft. Offene Fragen mit dem vorsichtigeren Standard umgesetzt: erledigt erst beim Speichern, Plateau aktiv als Hinweis.
+- **R1:** Ein Plantag gilt erst als erledigt, wenn das Training gespeichert ist – ein einzelner Satz ohne Speichern lässt „Heute geplant“ stehen.
+- **R2:** Halteübungen (Plank, Seitstütz, Hollow Hold …) laufen auch im eigenen BLOC nach Zeit.
+- **R3:** „LOS GEHTS“ bei einem neuen BLOC speichert ihn und startet sofort.
+- **R4:** Plateau-Hinweis: mehrere Runden ohne Fortschritt (Anfänger 3, Fortgeschrittene 4; frühestens nach ~6 Wochen, ohne Leichtwochen und nach Pausen) → erst Schlaf, Stress, Essen, Technik prüfen, dann „ein Satz mehr“ (Übernehmen), danach Variante, Tempo, Leichtwoche; bei schweren Gewichten Tipp zu kleinen Scheiben.
+- **R5:** Rücknahme höchstens eine Stufe und ~15 %; ist die Stufe zu groß (z. B. 15 kg, 5-kg-Stufe), bleibt das Gewicht und das Ziel sinkt um 2 Wdh.
+- **R6:** Derselbe BLOC lässt sich nicht zweimal in einen TrainingsBLOC legen („schon enthalten“).
+- **R7:** „Allgemein fit“ und Einsteiger: je Ganzkörpertag Druck, Zug, Bein/Hüfte und Rumpf (Dead Bug, Bird Dog, Plank, Seitstütz, Pallof Press); keine Seitbeugen und kein Kickback.
+- Feinschliff: Tipp-Text über die volle Breite, Knöpfe darunter; „Fertig“ deutlich als Knopf; „Woche kopieren“ ohne „1 Einträge“.
+- Tests: einheitstest +2.
+
 ## 2026-11-13 · Figuren: Drehdehnung, Figur 4, Schmetterling, Wandengel (Fassung 2026-11-13-7)
 
 Nach Kevins Hinweisen: Drehdehnung liegend – Arme liegen seitlich am Boden (stand ein Arm senkrecht hoch). Figur 4 – Standbein angewinkelt mit dem Fuß am Boden, Knöchel des anderen Beins auf dem Knie. Schmetterling – symmetrisch von vorn, Ellbogen seitlich am Rumpf vorbei (wirkte verdreht). Wandengel – Seitenansicht mit dem Arm an der Wand (W → nach oben) und neue Vorderansicht W → Y. Die vier Übungen stehen auf der Ausnahmeliste der automatischen Gelenk-Korrektur.

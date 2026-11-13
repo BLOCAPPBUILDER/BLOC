@@ -1827,3 +1827,10 @@ body.prot-sheet-offen{ overflow:hidden; }
 .satz-kal{ display:flex; align-items:center; gap:8px; justify-content:center; margin:6px 0 10px; font-size:13px; }
 .satz-kal button{ border-radius:10px; border:1px solid rgba(255,255,255,.35); background:transparent; color:inherit; padding:6px 12px; font:inherit; font-weight:700; cursor:pointer; }
 .satz-block b{ font-weight:800; }
+/* Test 5: Tipp-Text über die ganze Breite, Knöpfe darunter; „Fertig“ deutlich als Knopf, hervorgehoben sobald alles drin ist */
+.satz-tipp{ flex-wrap:wrap; }
+.satz-tipp > span{ flex:1 1 100%; }
+.satz-tipp > button{ flex:1 1 auto; }
+.satz-fertig{ color:#fff; border-color:rgba(255,255,255,.45); background:rgba(255,255,255,.12); }
+.st-steigern{ flex-wrap:wrap; }
+.st-steigern > span{ flex:1 1 100%; }

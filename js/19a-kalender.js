@@ -53,7 +53,8 @@ function kalAktivitaet(tag){
   var laeufe = (state.db.settings.runs || []).filter(function(x){ return x && kalTagKey(x.at) === tag; }).length;
   return {
     run:Math.max(h.filter(function(x){ return bereichVonEintrag(x) === "run"; }).length, laeufe),
-    train:Math.max(besuche(h.filter(function(x){ return bereichVonEintrag(x) !== "run"; })).length, ein.length),
+    // Satz-Trainings (Verlaufseintrag mit studio) zählen erst als erledigt, wenn sie gespeichert sind (Test 5, R1, Entscheidung: beim Speichern)
+    train:Math.max(besuche(h.filter(function(x){ return bereichVonEintrag(x) !== "run" && !x.studio; })).length, ein.length),
     ein:ein
   };
 }
