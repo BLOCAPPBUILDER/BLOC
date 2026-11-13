@@ -8,6 +8,18 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-13 · Dritter Test: eigene Pläne, Pause nach Leichtwoche (Fassung 2026-11-13-3)
+
+Umsetzung von Testberichte/BLOC-Fortschritt-13-Wochen/BERICHT-Test3-als-Prompt.md. Entscheidungen Kevin: Tipp-Grenze bleibt je BLOC, keine Leichtwoche für eigene Pläne, ein TrainingsBLOC = ein Training.
+- P1: „Woche kopieren“ übernimmt den TrainingsBLOC-Bezug (Termine starten wieder das Training); ältere Kopien werden beim Laden ergänzt. P9: Zähler startet bei 1 Woche.
+- P2: Die Pause-Regel zählt jede Runde (auch die Leichtwoche) und rechnet in Kalendertagen – keine falsche „14 Tage Pause“-Rücknahme mehr nach der Leichtwoche.
+- P3: Karte „Plan geschafft“ und Hinweis am letzten Tag auch für eigene TrainingsBLOCs mit Wochenplan („Nächsten Block starten“ legt den Wochenplan neu an).
+- P4/P5: Ob eine Übung nach Zeit läuft, entscheiden die eingetragenen Sätze (Liegestütz mit Wdh. bekommt Tipps); Halteübungen in Auswertung und Logbuch in Sekunden.
+- P6: „Trainings insgesamt“: ein TrainingsBLOC mit mehreren BLOCs zählt als ein Training (gespeicherte Trainings tragen prog).
+- P7: Im TrainingsBLOC „Hinzufügen“ › „Neuen BLOC bauen“ – der gebaute BLOC kommt direkt in den TrainingsBLOC; eigene BLOCs stehen aufgeklappt. P8: „Wochenzahl wählen“ statt Platzhalter.
+- Feinschliff: „steig mit … s wieder ein“; Halteübungen starten mit 3 Sätzen (Plank stand auf 6).
+- Tests: einheitstest +5.
+
 ## 2026-11-13 · Fachliche Restpunkte zu Test 2 (Fassung 2026-11-13-2)
 
 Aus der fachlichen Durchsicht des Sportwissenschaftlers: Ohne jede Rudermöglichkeit höchstens 3 Druckübungen pro Woche (überzählige werden durch Rumpf-/Beinübungen ersetzt). Ist dieselbe Gewichtsstufe zweimal zurückgenommen worden, schlägt BLOC zuerst einen Satz mehr vor (bis 5), danach geht es mit der alten Satzzahl weiter. Logbuch: mehr Wiederholungen beim gleichen Gewicht erscheinen als „Volumen +x %“. Test: einheitstest +1.

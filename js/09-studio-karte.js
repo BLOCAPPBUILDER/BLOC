@@ -108,6 +108,19 @@ function studioVorschlag(id){
      Gezählt wird in Runden, nicht nach Uhrzeit. (Fachliche Prüfung 2026-11-12: ACSM-Rahmen 2–10 %, „2-für-2“.)
    mitOffen: die offene Runde zählt als fertig (Auswertung direkt am Ende des Trainings). */
 var PROG_SPRUNG = 0.10, PROG_PAUSE_TAGE = 14, KOERPER_MAX = 20, KOERPER_NEU = 10;
+/* Tage seit der letzten Runde (jede Runde, auch Leichtwoche), in Kalendertagen - nicht in Millisekunden, sonst hängt es an der Uhrzeit (Test 3, P2) */
+function studioPauseTage(e, mitOffen){
+  var o = studioOffen(e), l = ((e && e.log) || []).filter(function(x){ return x.s && x.s.length && (mitOffen || x !== o); });
+  if(!l.length) return 0;
+  var a = new Date(l[l.length-1].at), b = new Date(); a.setHours(12, 0, 0, 0); b.setHours(12, 0, 0, 0);
+  return Math.round((b - a)/86400000);
+}
+/* Läuft die Übung nach Zeit? Entscheidend sind die eingetragenen Sätze (Satz [kg, s, "n", 0, 1]) - so stimmen Anzeige und Steigerung überein (Test 3, P4) */
+function studioNachZeit(id){
+  var e = studioEintrag(id), log = (e && e.log) || [];
+  for(var i = log.length - 1; i >= 0; i--) if(log[i].s && log[i].s.length) return log[i].s.some(function(x){ return x[4] === 1; });
+  return studioEinheit(id) === "zeit";
+}
 /* Höchster oberer Rand des Wiederholungsbereichs, wenn das Ziel statt des Gewichts steigt (fachliche Prüfung Test 2): Grundübungen 15, sonst 20 */
 function studioWdhGrenze(ex){
   var v = typeof mgVerteilung === "function" && ex ? mgVerteilung(ex) : {};
@@ -121,14 +134,14 @@ function studioRunter(kg, s){   // etwa 10 % weniger, auf Vielfache des Schritts
 function studioProg(id, mitOffen){
   var e = studioEintrag(id), ex = findExercise(id);
   if(!e || !e.log || !ex) return null;
-  if(studioEinheit(id) === "zeit") return studioProgZeit(id, mitOffen);
+  if(studioNachZeit(id)) return studioProgZeit(id, mitOffen);
   var z = studioZiel(id), b = studioBereich(id), o = studioOffen(e);
   var l = e.log.filter(function(x){ return arbeitsSaetze(x).length && !x.leicht && (mitOffen || x !== o); });
   if(!l.length) return null;
-  var kg = studioNurBlock(ex) ? 0 : studioArbeitsKg(id), letzte0 = l[l.length-1];
-  if(!mitOffen && kg > 0 && Date.now() - letzte0.at > PROG_PAUSE_TAGE*86400000 && !(e.erhoeht && e.erhoeht >= letzte0.at) && !(e.manuell && e.manuell >= letzte0.at)){
+  var kg = studioNurBlock(ex) ? 0 : studioArbeitsKg(id), letzte0 = l[l.length-1], pTage = studioPauseTage(e, false);
+  if(!mitOffen && kg > 0 && pTage > PROG_PAUSE_TAGE && !(e.erhoeht && e.erhoeht >= letzte0.at) && !(e.manuell && e.manuell >= letzte0.at)){
     var r0 = studioRunter(kg, z.schritt);   // lange Pause: etwas leichter wieder einsteigen
-    if(r0 > 0) return { art:"pause", kg:r0, alt:kg, tage:Math.floor((Date.now() - letzte0.at)/86400000) };
+    if(r0 > 0) return { art:"pause", kg:r0, alt:kg, tage:pTage };
   }
   if(l.length < 2) return null;
   var zwei = l.slice(-2), letzte = zwei[1];
@@ -182,8 +195,9 @@ function studioProgZeit(id, mitOffen){
   var l = e.log.filter(function(x){ return sek(x).length && !x.leicht && (mitOffen || x !== o); });
   if(!l.length || !(ziel > 0)) return null;
   var l0 = l[l.length-1];
-  if(!mitOffen && Date.now() - l0.at > PROG_PAUSE_TAGE*86400000 && !(e.erhoeht && e.erhoeht >= l0.at) && !(e.manuell && e.manuell >= l0.at) && ziel - ZEIT_SCHRITT >= ZEIT_MIN)
-    return { art:"zeitRunter", grund:"pause", sek:ziel - ZEIT_SCHRITT, alt:ziel, tage:Math.floor((Date.now() - l0.at)/86400000) };   // lange Pause: etwas kürzer wieder einsteigen
+  var pT = studioPauseTage(e, false);
+  if(!mitOffen && pT > PROG_PAUSE_TAGE && !(e.erhoeht && e.erhoeht >= l0.at) && !(e.manuell && e.manuell >= l0.at) && ziel - ZEIT_SCHRITT >= ZEIT_MIN)
+    return { art:"zeitRunter", grund:"pause", sek:ziel - ZEIT_SCHRITT, alt:ziel, tage:pT };   // lange Pause: etwas kürzer wieder einsteigen
   if(l.length < 2) return null;
   var zwei = l.slice(-2), letzte = zwei[1];
   if(e.erhoeht && e.erhoeht >= letzte.at) return null;

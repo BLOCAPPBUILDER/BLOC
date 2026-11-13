@@ -220,7 +220,8 @@ function statFortschrittHTML(){
     // Volumen der letzten Runde gegen die davor mit demselben Arbeitsgewicht: mehr Wdh. bei gleichem Gewicht soll sichtbar sein (das 1RM ist bei 12 gedeckelt)
     var lz = log[log.length-1], lv = log[log.length-2], volP = 0;
     if(mitKg && lz && lv && rundeArbeitsKg(lz) === rundeArbeitsKg(lv) && studioVolumen(lv) > 0) volP = Math.round((studioVolumen(lz)/studioVolumen(lv) - 1)*100);
-    l.push({ id:id, ex:ex, name:tplText(ex.name), gr:statFortRubrik(ex), n:log.length, mitKg:mitKg, volP:volP, von:mitKg ? Math.round(erst.rm3*10)/10 : erst.wdh, bis:mitKg ? Math.round(jetzt.rm3*10)/10 : jetzt.wdh, at:log[log.length-1].at });
+    var zeit = !mitKg && log.some(function(r){ return r.s.some(function(x){ return x[4] === 1; }); });   // Halteübung: Sekunden statt Wdh. (Test 3, P5)
+    l.push({ id:id, ex:ex, name:tplText(ex.name), gr:statFortRubrik(ex), n:log.length, mitKg:mitKg, volP:volP, zeit:zeit, von:mitKg ? Math.round(erst.rm3*10)/10 : erst.wdh, bis:mitKg ? Math.round(jetzt.rm3*10)/10 : jetzt.wdh, at:log[log.length-1].at });
   });
   var kopf = '<summary><b>'+esc(t("statFort"))+'</b><span class="sk-sub">'+esc(t("statFortSub"))+'</span><span class="sk-chev">'+ICON_CHEV+'</span></summary>';
   var tag = '<details class="card stat-karte stat-kal stat-falt stat-fort" data-statfalt="logbuch"'+(statOffen.logbuch ? ' open' : '')+'>';
@@ -234,7 +235,7 @@ function statFortschrittHTML(){
   var besser = sicht.filter(function(x){ return x.bis > x.von && (!x.mitKg || x.von > 0); }).length;
   var kacheln = sicht.slice(0, statFortAnz).map(function(x){
     var fehlt = x.mitKg && (!(x.von > 0) || !(x.bis > 0));   // kein gültiger Messwert: „–“, nie 0 (fachliche Prüfung Test 2)
-    var d = fehlt ? 0 : Math.round((x.bis - x.von)*100)/100, p = x.von > 0 ? Math.round(d/x.von*100) : 0, einheit = x.mitKg ? " kg" : " "+t("wdhKurz");
+    var d = fehlt ? 0 : Math.round((x.bis - x.von)*100)/100, p = x.von > 0 ? Math.round(d/x.von*100) : 0, einheit = x.mitKg ? " kg" : x.zeit ? " s" : " "+t("wdhKurz");
     var volAuf = !fehlt && d <= 0 && x.volP > 0;   // 1RM gleich, aber mehr geschafft: Volumen zeigen
     if(volAuf) d = 0.0001;
     var delta = fehlt ? "–" : volAuf ? t("statFortVol", { p:x.volP }) : d > 0 ? "+"+studioKg(d)+einheit+(p ? " (+"+p+" %)" : "") : d < 0 ? "−"+studioKg(-d)+einheit : t("statFortGleich");
@@ -470,7 +471,7 @@ function statModule(){
   var Z = [];
   Z.push({ id:"serie", ico:'<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>', titel:t("fk_serie"), wert:String(folgeTage), einheit:t(folgeTage === 1 ? "fkTag" : "fkTage"),
     sub:folgeTage ? (heuteDa ? t("fkHeuteDa") : t("fkHeuteNoch")) : t("fkSerieNeu"), sub2:t(Math.max(bestFolge, folgeTage) === 1 ? "fkRekordTag1" : "fkRekordTage", { n:Math.max(bestFolge, folgeTage) }) });
-  Z.push({ id:"tage", ico:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/>', titel:t("fk_tage"), wert:String(Object.keys(tageSet).length), einheit:t(Object.keys(tageSet).length === 1 ? "fkTag" : "fkTage"), sub:t("fkTageSub", { n:gesamt }) });
+  Z.push({ id:"tage", ico:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/>', titel:t("fk_tage"), wert:String(Object.keys(tageSet).length), einheit:t(Object.keys(tageSet).length === 1 ? "fkTag" : "fkTage"), sub:t("fkTageSub", { n:trainingsGesamt(gesamt, besA) }) });
   Z.push({ id:"zeit", ico:'<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M9.5 3h5"/>', titel:t("fk_zeit"),
     wert:zeitGesamt >= 3600 ? (Math.round(zeitGesamt/360)/10).toLocaleString(lang0) : String(Math.round(zeitGesamt/60)), einheit:zeitGesamt >= 3600 ? t("fkStunden") : "min", sub:t("fkZeitSub") });
   Z.push({ id:"kg", ico:'<path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/>', titel:t("fk_kg"),
@@ -650,6 +651,15 @@ function recentExercises(days){
    Speichern aktualisiert ihn. Ohne Plan zählt alles, was heute eingetragen wurde („Freies Training“).
    Daten: settings.einheiten = [{ id, at, tag:"JJJJ-MM-TT", plan:Plan-ID oder "", name, ex:[{ id, s:[[kg, wdh, typ?]], rekord }], saetze, vol, dauer, rek, notiz }] -
    nur auf dem Gerät, höchstens 1000 Einträge. */
+/* „Trainings insgesamt“ (Test 3, P6, Entscheidung Kevin): ein TrainingsBLOC ist ein Training, auch wenn er aus mehreren BLOCs besteht.
+   Für die Tage im Verlauf zählen die gespeicherten Trainings (je TrainingsBLOC einmal, x.prog) statt der Besuche; ältere Wochen bleiben, wie sie archiviert sind. */
+function trainingsGesamt(gesamt, besA){
+  if(!besA || !besA.length) return gesamt;
+  var ab = Math.min.apply(null, besA.map(function(b){ return b.von; })), abTag = einheitTagKey(ab), keys = {}, tage = {};
+  einheitenListe().forEach(function(x){ if(x && x.tag && x.tag >= abTag && (x.ex || []).length){ keys[x.tag+"|"+(x.prog || x.id)] = 1; tage[x.tag] = 1; } });
+  var besMit = besA.filter(function(b){ return tage[einheitTagKey(b.von)]; }).length;
+  return Math.max(Object.keys(keys).length, gesamt - besMit + Object.keys(keys).length);
+}
 function einheitenListe(){ var s = state.db.settings; return Array.isArray(s.einheiten) ? s.einheiten : (s.einheiten = []); }
 function einheitTagKey(ts){
   var d = new Date(ts || Date.now());
@@ -722,6 +732,8 @@ function trainingSpeichern(k, notiz){
   }
   var e = vorh || { id:uid(), tag:einheitTagKey(), plan:k.plan ? k.plan.id : "" };
   e.at = Date.now(); e.name = k.plan ? k.plan.name : ""; e.ex = d.ex; e.saetze = d.saetze; e.vol = d.vol; e.wdh = d.wdh; e.dauer = d.dauer; e.rek = d.rek;
+  var pk = k.plan && typeof programmKontextFuer === "function" ? programmKontextFuer("plan:"+k.plan.id) : null;
+  if(pk && pk.p) e.prog = pk.p.id;   // gehört zu einem TrainingsBLOC: zählt mit dessen anderen BLOCs als ein Training
   e.zu = true; e.zuAt = Date.now();   // abgeschlossen: weitere Sätze sind ein neues Training (siehe einheitHeute)
   if(notiz != null) e.notiz = String(notiz).trim();
   if(!vorh) l.push(e);

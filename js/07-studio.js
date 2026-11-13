@@ -13,7 +13,7 @@ function studioEintrag(id){ return (state.db.settings.studio || {})[id] || null;
 function studioZiel(id){
   var ex = findExercise(id), e = studioEintrag(id), g = e && e.ziel;
   // Übungen ohne Gewicht (nur Block) bringen ihre Satzzahl aus Air mit; Wiederholungen sind dort frei wählbar (Voreinstellung 12)
-  var z = STUDIO_ZIEL[id] || [studioNurBlock(ex) ? ((e && e.timer && e.timer.reps) || ex.setReps || 3) : 3, 12, studioGeraetSchritt(ex, e)];
+  var z = STUDIO_ZIEL[id] || [studioNurBlock(ex) ? ((e && e.timer && e.timer.reps) || 3) : 3, 12, studioGeraetSchritt(ex, e)];   // Satz-Ziel 3 wie überall (Test 3: Plank stand auf 6)
   // schritt: Gewichtsschritt der +/−-Knöpfe, je Übung einstellbar (Karte), sonst die Voreinstellung
   return { saetze:g && g.saetze > 0 ? g.saetze : z[0], wdh:g && g.wdh > 0 ? g.wdh : z[1], schritt:e && e.schritt > 0 ? e.schritt : z[2] };
 }
@@ -908,7 +908,11 @@ function renderStudioPlan(){
   });
   an("[data-plansave]", function(){   // erst jetzt steht der neue BLOC unter BLOCs; nur kurzes Rütteln und ein Hinweis, man bleibt auf der Seite
     planSpeichernStill(p);
-    vibrate(30); showToast(t("blocGespeichert"));
+    vibrate(30);
+    var pg = pgNachBau && typeof programmFinde === "function" ? programmFinde(pgNachBau) : null;   // aus einem TrainingsBLOC heraus gebaut: gleich dort hinein
+    pgNachBau = null;
+    if(pg){ pg.items.push("plan:"+p.id); pg.updatedAt = Date.now(); pgOffen[pg.id] = true; save(); showToast(t("pgNeuBauOk", { n:pg.name })); go("#koerper"); return; }
+    showToast(t("blocGespeichert"));
     neu();
   });
   /* Plan als Workout mit Timer: Air- und Studio-Übungen laufen hintereinander (Studio-Übungen mit ihren Satz- und Pausenwerten);
