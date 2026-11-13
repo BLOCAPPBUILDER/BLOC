@@ -128,12 +128,13 @@ function studioWdhGrenze(ex){
 }
 /* Rücknahme: etwa 10 % weniger, auf Vielfache des Schritts, mindestens eine Stufe - aber höchstens ~15 % (Test 5, R5). Geht das mit der Stufe nicht
    (z. B. 15 kg und 5-kg-Stufe = −33 %), liefert sie 0: dann bleibt das Gewicht und das Wiederholungsziel sinkt. */
-var RUNTER_MAX = 0.15;
-function studioRunter(kg, s){
+var RUNTER_MAX = 0.15, RUNTER_MAX_LANG = 0.20, PAUSE_LANG_TAGE = 56;
+function studioRunter(kg, s, max){
+  max = max || RUNTER_MAX;
   var r = Math.round(kg*0.9/s)*s;
   if(r >= kg - 1e-9) r = (Math.ceil(kg/s - 1e-9) - 1)*s;
   r = Math.round(r*100)/100;
-  return r > 0 && (kg - r)/kg <= RUNTER_MAX + 1e-9 ? r : 0;
+  return r > 0 && (kg - r)/kg <= max + 1e-9 ? r : 0;
 }
 /* Assistierte Geräte (Dip/Klimmzug assistiert): das Gewicht ist Unterstützung - Fortschritt heißt weniger kg (Test 4, Q4) */
 function studioAssistiert(id){ return /^assisted-/.test(String(id)); }
@@ -148,7 +149,7 @@ function studioProg(id, mitOffen){
   var assist = studioAssistiert(id);
   if(!mitOffen && kg > 0 && pTage > PROG_PAUSE_TAGE && !(e.erhoeht && e.erhoeht >= letzte0.at) && !(e.manuell && e.manuell >= letzte0.at)){
     if(assist) return { art:"assistRunter", kg:Math.round((kg + z.schritt)*100)/100, alt:kg, tage:pTage, pause:true };   // nach Pause: etwas mehr Unterstützung
-    var r0 = studioRunter(kg, z.schritt);   // lange Pause: etwas leichter wieder einsteigen
+    var r0 = studioRunter(kg, z.schritt, pTage > PAUSE_LANG_TAGE ? RUNTER_MAX_LANG : RUNTER_MAX);   // lange Pause: etwas leichter wieder einsteigen (nach > 8 Wochen bis 20 %)
     if(r0 > 0) return { art:"pause", kg:r0, alt:kg, tage:pTage };
     if(z.wdh > 6) return { art:"wdhRunter", grund:"pause", wdh:Math.max(Math.min(5, z.wdh), z.wdh - 2), alt:z.wdh, kg:kg, tage:pTage };   // Stufe zu groß: Gewicht halten, Wdh. senken
   }
@@ -264,7 +265,7 @@ var PLATEAU_MIN_RUNDEN = 12;
 function studioPlateau(id){
   var e = studioEintrag(id), ex = findExercise(id);
   if(!e || !e.log || !ex || studioNachZeit(id) || studioAssistiert(id)) return null;
-  var o = studioOffen(e), l = e.log.filter(function(x){ return arbeitsSaetze(x).length && !x.leicht && x !== o; });
+  var zP = studioZiel(id), o = studioOffen(e), l = e.log.filter(function(x){ return arbeitsSaetze(x).length >= zP.saetze && !x.leicht && x !== o; });   // Runden mit weniger Sätzen zählen nicht
   if(l.length < PLATEAU_MIN_RUNDEN || studioPauseTage(e, false) > PROG_PAUSE_TAGE) return null;
   var n = l.length >= 24 ? 4 : 3, letzte = l.slice(-n), davor = l.slice(0, l.length - n);
   var seitAenderung = Math.max(e.erhoeht || 0, e.manuell || 0, e.tippRuhe || 0);

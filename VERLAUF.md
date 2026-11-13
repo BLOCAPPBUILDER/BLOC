@@ -8,6 +8,14 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-14 · Plateau und Pause nachgeschärft (Fassung 2026-11-14-2)
+
+Feinschliff nach der fachlichen Prüfung des Sportwissenschaftlers zu Test 5.
+- Plateau-Hinweis fragt zuerst nach Schlaf, Stress und Essen, dann Technik und 2–3 Minuten Pause bei Grundübungen; „ein Satz mehr“ lässt sich übernehmen.
+- Runden mit weniger Sätzen als geplant zählen nicht für das Plateau.
+- Nach mehr als 8 Wochen Pause darf die Rücknahme bis ~20 % gehen (sonst ~15 %).
+- Tests: zwei Prüfungen robuster (kurz nach Mitternacht, neuer Text).
+
 ## 2026-11-14 · Fünfter Test (Fassung 2026-11-14-1)
 
 Umsetzung von BERICHT-Test5-als-Prompt.md (Bewertung 7,8/10); fachlich vom Sportwissenschaftler geprüft. Offene Fragen mit dem vorsichtigeren Standard umgesetzt: erledigt erst beim Speichern, Plateau aktiv als Hinweis.
