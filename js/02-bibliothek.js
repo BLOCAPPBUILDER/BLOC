@@ -537,7 +537,23 @@ var ILLU_MATTE = '<rect class="illu-matte" x="14" y="3" width="72" height="94" r
    (Ellbogen zum Kopf statt Richtung Füße usw.), wird es an der Linie Schulter–Hand bzw. Hüfte–Knöchel gespiegelt:
    Hand und Fuß bleiben, wo sie sind, Ober- und Unterarm behalten ihre Länge. Die Blickrichtung kommt aus blickRichtung.
    Ausgenommen sind Übungen, bei denen die Seitenansicht ein eingedrehtes Bein zeigt (Figure Four, Thomas-Dehnung). */
-var GELENK_AUSNAHMEN = { "figure-four":1, "thomas-stretch":1 };
+/* Tipp im Infofenster nur, wenn er etwas Neues sagt (2026-11-13, Kevin): ausgeblendet, wenn mindestens drei Viertel seiner Wörter schon in Anleitung,
+   Haltung oder „Vermeiden“ stehen, oder wenn er nichtssagend ist (TIPP_LEER). Im Timer bleibt der Tipp als kurzes Stichwort. */
+var TIPP_LEER = /^(alternierend|alternate legs|seitliche belastung|lateral loading|mobilität und kraft|mobility and strength|seitliche bauchmuskeln|side abs|obliques|klimmzug im untergriff|chin-up with underhand grip|gleichmäßiger rhythmus|steady rhythm|kontrolliertes tempo|controlled pace|controlled tempo|am boden, kontrolliert|on the floor, controlled|kontrollierte schritte|controlled steps|spannung halten|hold the tension|keep tension|aufrechte haltung|upright posture|stand tall|ganzkörper, kontrolliertes tempo|full body, controlled pace|rumpf stabil|keep your core stable|stabiler stand|stable stance)\.?$/i;
+var TIPP_STOP = { und:1, oder:1, nicht:1, kein:1, keine:1, mit:1, ohne:1, der:1, die:1, das:1, den:1, dem:1, ein:1, eine:1, einen:1, auf:1, zum:1, zur:1, bei:1, vom:1, von:1, bis:1, nur:1, dann:1, sehr:1, auch:1, wie:1, bleibt:1, bleiben:1,
+  and:1, the:1, your:1, with:1, without:1, not:1, don:1, for:1, from:1, only:1, then:1, very:1, also:1, stays:1, stay:1, keep:1, into:1, onto:1 };
+function exTippZeigen(ex, lang){
+  var h = ex.hint && typeof ex.hint === "object" ? (lang ? ex.hint.en : ex.hint.de) || tplText(ex.hint) : tplText(ex.hint); if(!h) return false;
+  if(TIPP_LEER.test(String(h).trim())) return false;
+  function woerter(s){ return String(s || "").toLowerCase().replace(/[^a-zäöüß ]/g, " ").split(/\s+/).filter(function(x){ return x.length >= 3 && !TIPP_STOP[x]; }); }
+  function stamm(x){ return x.slice(0, Math.max(4, x.length - 2)); }
+  var info = EX_INFO[ex.id], post = EX_POSTURE[ex.id];
+  var ctx = woerter((info ? info[lang] : "")+" "+(post ? post[lang*2]+" "+post[lang*2+1] : "")).map(stamm);
+  var hw = woerter(h); if(!hw.length) return false;
+  var gedeckt = hw.filter(function(x){ return ctx.indexOf(stamm(x)) > -1; }).length/hw.length;
+  return gedeckt < 0.75;
+}
+var GELENK_AUSNAHMEN = { "figure-four":1, "thomas-stretch":1, "chest-stretch":1 };   // chest-stretch: die Korrektur klappte den Ellbogen nach oben an den Kopf (2026-11-13)
 function gelenkeRichten(qs){
   if(!qs.length || qs[0].f) return qs;
   var P = qs.map(function(q){ var r = rigFromPose(q); return rigPoints(r, r, 0); });
@@ -1124,7 +1140,7 @@ function openExInfo(exId, live, lib){
       return '<div class="info-title">'+t("posture")+'</div><ul class="info-posture">'+cues+'</ul>'+
         '<div class="info-avoid"><b>'+t("avoid")+':</b> '+esc(p[lang*2+1])+'</div>';
     })()+
-    '<div class="info-tip"><b>'+t("tip")+':</b> '+esc(tplText(ex.hint))+'</div>'+
+    (exTippZeigen(ex, lang) ? '<div class="info-tip"><b>'+t("tip")+':</b> '+esc(tplText(ex.hint))+'</div>' : '')+
     (ex.equip.indexOf("band") > -1 ? '<div class="info-title">'+t("bandTitel")+'</div><ul class="info-posture info-band">'+["bandS1", "bandS2", "bandS3", "bandS4", "bandS5", "bandS6"].map(function(k){ return '<li>'+esc(t(k))+'</li>'; }).join("")+'</ul><button type="button" class="tpl-adopt" data-bandalle="'+exId+'">'+esc(lang ? "All ways to attach the band, with pictures" : "Alle Befestigungsarten mit Bildern")+'</button>' : '')+
     gymHinweisHTML(ex)+
     (function(){   // Passt es nicht? Eine Zeile mit der leichteren und der schwereren Variante

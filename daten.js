@@ -682,7 +682,7 @@ Object.assign(ILLU_POSES, {
   "shoulder-stretch":   [Q(null,[50,20],[50,52],P_FLEGS,[[40,27,30,27],[44,36,40,28]],"",true), null],
   "triceps-stretch":    [Q(null,[50,20],[50,50],[[50,70,50,89,58,89]],[[53,6,45,16],[59,14,54,7]]), null],
   "biceps-stretch":     [Q(null,[52,20],[52,50],[[52,70,52,89,60,89]],[[40,25,26,26]], gWall(22)), null],
-  "chest-stretch":      [Q(null,[52,20],[52,50],[[52,70,52,89,60,89]],[[38,25,36,12]], gWall(33)), null],
+  "chest-stretch":      [Q(null,[53,21],[53,50],[[53,70,53,89,61,89]],[[39,27,38.5,13],[56,35,57,47]], gWall(36.3)), null],   // 2026-11-13: Oberarm waagerecht auf Schulterhöhe nach hinten, Unterarm senkrecht an der Wand
   "wrist-stretch":      [Q(null,[50,20],[50,50],[[50,70,50,89,58,89]],[[63,25,76,25],[60,32,76,20]]), null],
   "side-bend":          [Q(null,[45,22],[50,52],P_FLEGS,[[48,10,40,3],[42,38,42,48]],"",true), null],
   /* Katze-Kuh mit Rücken- und Halsgelenk: Katze = Rückenmitte ca. 9 nach oben, Kopf hängt, Kinn zur Brust; Kuh = Rückenmitte ca. 5 nach unten,
@@ -716,7 +716,7 @@ Object.assign(ILLU_POSES, {
   P["triceps-stretch"]    = [ruhe, Q(null,[50,20],[50,52],S,[[62,10,50,16,44,22],[44,22,58,10]],"",true)];
   P["side-bend"]          = [ruhe, Q(null,[39,22],[50,52],S,[[46,6,28,8],[40,40,44,50]],"",true)];
   mit("biceps-stretch",     qWith(P["biceps-stretch"][0], { a:[[52,34,53,47]] }));
-  mit("chest-stretch",      qWith(P["chest-stretch"][0], { a:[[52,34,53,47]] }));
+  mit("chest-stretch",      qWith(P["chest-stretch"][0], { a:[[52,34,53,47],[56,35,57,47]] }));
   mit("wrist-stretch",      P_ST);
   mit("calf-stretch",       qWith(P_ST, { x:gWall(81) }));
   mit("quad-stretch",       P_ST);

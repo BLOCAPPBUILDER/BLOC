@@ -1130,6 +1130,12 @@
       gleich(W.trainingsGesamt(2, [{ von:jetzt - 3600000, bis:jetzt }, { von:jetzt - 600000, bis:jetzt }]), 1, "zwei BLOCs, ein TrainingsBLOC: 1 Training");
     } finally { s.einheiten = alt; }
   });
+  test("Infofenster: Tipp nur, wenn er etwas Neues sagt; Brustdehnung mit Ellbogen auf Schulterhöhe", function () {
+    wahr(!W.exTippZeigen(W.findExercise("weighted-reverse-lunge"), 0) && !W.exTippZeigen(W.findExercise("weighted-reverse-lunge"), 1), "„Alternierend“ wird nicht gezeigt");
+    wahr(W.exTippZeigen(W.findExercise("pull-ups"), 0), "„Nur saubere Wiederholungen“ bleibt");
+    var a = W.ILLU_POSES["chest-stretch"][0].a[0];
+    wahr(a[1] >= 24 && a[3] < a[1] - 8, "Ellbogen auf Schulterhöhe, Unterarm senkrecht nach oben: " + JSON.stringify(a));
+  });
   test("Rekorde F9: schwerer mit nur 1 Wiederholung ist kein Rekord", function () {
     var vor = W.studioBestwerte([{ s:[[4, 10], [4, 10], [4, 10]] }]), jetzt = W.studioBestwerte([{ s:[[14, 1], [14, 1], [14, 1]] }]);
     wahr(!W.studioIstRekord(jetzt, vor), "14 × 1 nach 4 × 10 ist kein Rekord");

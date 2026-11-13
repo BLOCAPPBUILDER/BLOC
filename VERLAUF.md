@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-13 · Figur Brustdehnung, Tipps im Infofenster (Fassung 2026-11-13-4)
+
+Brust dehnen (Wand): Oberarm waagerecht auf Schulterhöhe nach hinten, Unterarm senkrecht an der Wand (die automatische Gelenk-Korrektur hatte den Ellbogen an den Kopf geklappt; Übung steht jetzt auf der Ausnahmeliste). Tipps im Infofenster nur noch, wenn sie etwas Neues sagen: ausgeblendet, wenn sie Anleitung/Haltung wiederholen oder nichtssagend sind (z. B. „Alternierend“) – es bleiben rund 125 von 604. Im Timer bleibt der Tipp als Stichwort.
+
 ## 2026-11-13 · Dritter Test: eigene Pläne, Pause nach Leichtwoche (Fassung 2026-11-13-3)
 
 Umsetzung von Testberichte/BLOC-Fortschritt-13-Wochen/BERICHT-Test3-als-Prompt.md. Entscheidungen Kevin: Tipp-Grenze bleibt je BLOC, keine Leichtwoche für eigene Pläne, ein TrainingsBLOC = ein Training.
