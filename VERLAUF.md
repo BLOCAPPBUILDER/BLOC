@@ -8,6 +8,21 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-13 · Variantenketten, vierter Test (Fassung 2026-11-13-5)
+
+Variantenketten und Tempo-Tipp sowie Testbericht 4 (BERICHT-Test4-als-Prompt.md); fachlich vom Sportwissenschaftler geprüft, Entscheidungen von Kevin.
+- **Variantenketten:** Bei Übungen ohne Gewicht nennt der Tipp nach 20 Wdh. die nächste Stufe (z. B. Liegestütz → Enger Liegestütz); „Übernehmen“ tauscht die Übung im BLOC (Ziel 8–12, Halteübungen 25 s bzw. 15 s). Wer die neue Stufe zweimal klar verfehlt, kann zurück. Ketten fachlich korrigiert (Archer vor Diamant, kein Muscle-up, Rumpf statisch/dynamisch getrennt; Sprung-/Power-Übungen nicht per Tipp; Hinweis zur Beweglichkeit bei Pistol).
+- **Tempo-Tipp:** wenn statt mehr Gewicht wieder nur Wdh. kommen: „Senke langsamer ab (etwa 3 Sekunden)“.
+- **Q1/Q9:** „Nicht jetzt“ am Tipp – er ruht vier Trainings; bei gleicher Wartezeit Grundübungen zuerst.
+- **Q2:** Supersatz/Zirkel im Satz-Training: nach dem Satz automatisch zur Partnerübung, Pause nach der Runde.
+- **Q3:** RPE/RIR im Satz-Training (wenn eingeschaltet); zweimal RPE ≤ 7 → zwei Stufen (max. +20 %), RPE 10 → noch nicht steigern.
+- **Q4:** Assistierte Geräte: Fortschritt = weniger Unterstützung (Tipps, Logbuch mit effektiver Last, keine Rekordsterne).
+- **Q5:** Kalibrieren: in den ersten zwei Trainings „Wie schwer war das?“ – bei „leicht“ zwei Stufen (max. +20 %, Kniebeuge/Kreuzheben +10 %).
+- **Q6:** „Plan geschafft“ erst ab 80 %, sonst „Plan beendet“ mit „Block wiederholen“. **Q8:** „Fertig“ immer antippbar, mit Rückfrage bei offenen Sätzen.
+- **Q7 / Plan-Assistent:** Rollen je Übung (Haupt 3–6 bzw. 6–10, Neben 6–10, Isolation/Rumpf 10–15 Wdh.), Sätze nach Dauer (30 min 12, 45 min 16, 60 min 20); keine Sprung-/Klatschübungen und kein Overhead Squat in Kraft-/Muskelaufbauplänen; bei „Knie“ knieschonende Bein-/Hüft-Grundübung je Tag, Aufwärmen ohne Kniebeuge; keine Druckübungen an Unterkörpertagen; alle „…-plank“ nach Zeit.
+- Feinschliff: Protein-Hinweis nennt genau, was fehlt; Gewicht ab 10 t in Tonnen; Leichtwoche nicht am Mobility-Tag und innerhalb einer Kalenderwoche.
+- Tests: einheitstest +3.
+
 ## 2026-11-13 · Figur Brustdehnung, Tipps im Infofenster (Fassung 2026-11-13-4)
 
 Brust dehnen (Wand): Oberarm waagerecht auf Schulterhöhe nach hinten, Unterarm senkrecht an der Wand (die automatische Gelenk-Korrektur hatte den Ellbogen an den Kopf geklappt; Übung steht jetzt auf der Ausnahmeliste). Tipps im Infofenster nur noch, wenn sie etwas Neues sagen: ausgeblendet, wenn sie Anleitung/Haltung wiederholen oder nichtssagend sind (z. B. „Alternierend“) – es bleiben rund 125 von 604. Im Timer bleibt der Tipp als Stichwort.

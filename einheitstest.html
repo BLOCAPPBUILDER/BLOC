@@ -1136,6 +1136,77 @@
     var a = W.ILLU_POSES["chest-stretch"][0].a[0];
     wahr(a[1] >= 24 && a[3] < a[1] - 8, "Ellbogen auf Schulterhöhe, Unterarm senkrecht nach oben: " + JSON.stringify(a));
   });
+  test("Variantenketten: Tipp nennt die nächste Stufe, „Übernehmen“ tauscht die Übung im BLOC; Sprungketten ohne Tipp; Tempo-Hinweis", function () {
+    var s = W.state.db.settings, alt = { studio:s.studio, stPlaene:s.stPlaene }, tag = 86400000, n = Date.now();
+    try {
+      s.studio = { "push-ups": { einheit:"wdh", pause:75, ziel:{ saetze:3, wdh:18 }, log:[{ at:n - 4*tag, s:[[0, 20], [0, 20], [0, 20]] }, { at:n - 1*tag, s:[[0, 20], [0, 20], [0, 20]] }] } };
+      var tp = W.studioProg("push-ups");
+      wahr(tp && tp.art === "varianteWdh" && tp.naechste === "close-grip-push-ups", "nächste Stufe aus der Kette: " + JSON.stringify(tp));
+      wahr(/Liegest/.test(W.studioSteigerTippText(tp)) || /push/i.test(W.studioSteigerTippText(tp)), "Text nennt die Übung: " + W.studioSteigerTippText(tp));
+      var p = { id:"p-k", name:"K", ids:["air-squats", "push-ups"], blk:{ "push-ups":"b1", "air-squats":"b1" } }; s.stPlaene = [p];
+      wahr(W.planVarianteTauschen(p, "push-ups", tp.naechste, false), "getauscht");
+      gleich(p.ids, ["air-squats", "close-grip-push-ups"], "neue Übung an derselben Stelle"); gleich(p.blk["close-grip-push-ups"], "b1", "Block wandert mit");
+      gleich(W.studioZiel("close-grip-push-ups").wdh, 10, "neue Stufe startet mit Ziel 10 (8–12)"); gleich(s.studio["close-grip-push-ups"].pause, 75, "Pause übernommen");
+      gleich(W.studioNaechsteStufe("jumping-jacks"), null, "Cardio-Kette: kein Tipp");
+      gleich(W.studioNaechsteStufe("diamond-push-ups"), null, "Klatsch-Liegestütz kommt nicht per Tipp");
+      gleich(W.studioNaechsteStufe("close-grip-push-ups"), "archer-push-ups", "Archer vor Diamant");
+      gleich(W.studioNaechsteStufe("pull-ups"), "commando-pull-ups", "Kette endet ohne Muscle-up"); gleich(W.studioNaechsteStufe("commando-pull-ups"), null, "kein Muscle-up per Tipp");
+      gleich(W.studioNaechsteStufe("plank"), "hollow-hold", "Plank → Hollow Hold (nicht Seitstütz)");
+      // neue Stufe zweimal klar verfehlt: zurück zur alten
+      s.studio["close-grip-push-ups"].log = [{ at:n + 1000, s:[[0, 5], [0, 4], [0, 4]], zu:true }, { at:n + 2000, s:[[0, 5], [0, 4], [0, 4]], zu:true }];
+      var zr = W.studioProg("close-grip-push-ups");
+      wahr(zr && zr.art === "stufeZurueck" && zr.naechste === "push-ups", "zurück zur alten Stufe: " + JSON.stringify(zr));
+      wahr(W.planVarianteTauschen(p, "close-grip-push-ups", "push-ups", false, true), "zurückgetauscht"); gleich(p.ids[1], "push-ups", "alte Übung wieder im BLOC");
+      wahr(/langsamer|slowly/.test(W.studioSteigerTippText({ art:"wdh", grund:"nachRueck", wdh:14, alt:12, max:14, sprung:12.5, tempo:true })), "Tempo-Hinweis angehängt");
+    } finally { s.studio = alt.studio; s.stPlaene = alt.stPlaene; }
+  });
+  /* Vierter Test (2026-11-13): Q1–Q8 und fachliche Punkte */
+  test("Test 4 Q1/Q3/Q4/Q5: Tipp ruht vier Runden, RPE beeinflusst den Schritt, assistierte Geräte umgekehrt, Kalibrieren", function () {
+    var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();
+    function r(kg, w, rpe){ return { at:0, s:[[kg, w, "n", rpe], [kg, w, "n", rpe], [kg, w, "n", rpe]] }; }
+    try {
+      s.studio = { "chest-press-machine": { kg:40, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 4*tag, s:[[40, 12], [40, 12], [40, 12]] }, { at:n - 1*tag, s:[[40, 12], [40, 12], [40, 12]] }] } };
+      W.studioTippAblehnen("chest-press-machine");
+      gleich(Object.keys(W.studioTipps(["chest-press-machine"], false)).length, 0, "abgelehnt: ruht");
+      var e = s.studio["chest-press-machine"]; for (var i = 0; i < 4; i++) e.log.push({ at:Date.now() + 1000*(i+1), s:[[40, 12], [40, 12], [40, 12]], zu:true });
+      wahr(W.studioTipps(["chest-press-machine"], false)["chest-press-machine"], "nach vier Runden wieder da");
+      // RPE: zweimal leicht → zwei Stufen; RPE 10 → kein Steigern
+      var a1 = r(40, 12, 7), a2 = r(40, 12, 7); a1.at = n - 4*tag; a2.at = n - 1*tag;
+      s.studio = { "chest-press-machine": { kg:40, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[a1, a2] } };
+      var tp = W.studioProg("chest-press-machine"); gleich([tp.art, tp.kg], ["kg", 45], "RPE ≤ 7: zwei Stufen (40 → 45 kg)");
+      a2.s[2][3] = 10; gleich(W.studioProg("chest-press-machine"), null, "RPE 10 am oberen Rand: noch nicht steigern");
+      // assistiert: geschafft → weniger Unterstützung
+      s.studio = { "assisted-dip": { kg:30, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 4*tag, s:[[30, 12], [30, 12], [30, 12]] }, { at:n - 1*tag, s:[[30, 12], [30, 12], [30, 12]] }] } };
+      tp = W.studioProg("assisted-dip"); gleich([tp.art, tp.kg], ["assist", 27.5], "assistiert: 30 → 27,5 kg Unterstützung");
+      // Kalibrieren: erste Runde, alles am oberen Rand → Frage; „leicht“ = zwei Stufen, höchstens +20 %
+      s.studio = { "chest-press-machine": { kg:15, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n, s:[[15, 12], [15, 12], [15, 12]] }] } };
+      wahr(W.studioKalibrierFrage("chest-press-machine", s.studio["chest-press-machine"].log[0]), "Frage erscheint");
+      gleich(W.studioKalibrieren("chest-press-machine", true), 17.5, "leicht: 15 → 17,5 kg (zwei Stufen wären 20 kg = +33 %, gedeckelt)");
+      wahr(!W.studioKalibrierFrage("chest-press-machine", s.studio["chest-press-machine"].log[0]), "danach nicht mehr");
+    } finally { s.studio = alt; }
+  });
+  test("Test 4 Q6/Q7 und fachlich: Planende ab 80 %, Knie-Plan mit Bein-Grundübung und ohne Kniebeuge im Aufwärmen, Sätze nach Dauer", function () {
+    var lena = W.paErzeuge({ ziele:["allgemein"], niveau:"gar", schwer:"anfaenger", tage:[0, 3], dauer:30, train:["studio"], ausr:["kh", "maschine", "kabel"], impact:"schonend", einschr:["knie"], bereiche:["workout"] });
+    lena.tage.forEach(function (t0) { t0.teile.forEach(function (tl) {
+      if (!tl.bloc) return;
+      if (tl.bloc.main) wahr(tl.bloc.ids.some(function (id) { return W.PA_KNIE_GUT[id]; }), t0.name + ": knieschonende Bein-/Hüftübung fehlt: " + tl.bloc.ids.join(", "));
+      else wahr(!tl.bloc.ids.some(function (id) { return /squat/.test(id); }), t0.name + ": Kniebeuge im Aufwärmen trotz Knie");
+    }); });
+    var max = W.paErzeuge({ ziele:["kraft", "muskel"], niveau:"n3", schwer:"schwer", tage:[0, 1, 3, 4], dauer:60, train:["studio"], ausr:["lh", "kh", "maschine", "kabel"], impact:"gerne", bereiche:["workout"] });
+    max.tage.forEach(function (t0) { t0.teile.forEach(function (tl) {
+      if (!tl.bloc || !tl.bloc.main) return;
+      var sum = tl.bloc.ids.reduce(function (x, id) { return x + (max.ziele[id] ? max.ziele[id].s : 0); }, 0);
+      wahr(sum <= 20, t0.name + ": höchstens 20 Sätze in 60 min (" + sum + ")");
+      wahr(!tl.bloc.ids.some(function (id) { return /clap|jump|overhead-squat/.test(id); }), t0.name + ": keine Sprung-/Klatschübung im Kraftplan");
+      wahr(tl.bloc.ids.some(function (id) { return max.ziele[id] && max.ziele[id].w <= 6; }), t0.name + ": Hauptübung mit wenig Wdh.");
+    }); });
+    var s = W.state.db.settings, alt = { kalender:s.kalender, programme:s.programme }, vorher = W.kalTagKey(Date.now() - 2*86400000);
+    try {
+      s.programme = [{ id:"q6", name:"Q6", items:["plan:p-q6"], tage:[0], wochen:6 }];
+      s.kalender = { e:[1, 2, 3, 4, 5].map(function (i) { return { id:"q" + i, tag:W.kalTagKey(Date.now() - (i + 1)*86400000), art:"programm", ref:"q6", prog:{ id:"q6", i:0 }, at:i, erledigt:i <= 2 }; }) };
+      wahr(/Plan beendet|Plan ended/.test(W.paPlanEndeHTML()), "2 von 5: „Plan beendet“ statt „geschafft“");
+    } finally { s.kalender = alt.kalender; s.programme = alt.programme; }
+  });
   test("Rekorde F9: schwerer mit nur 1 Wiederholung ist kein Rekord", function () {
     var vor = W.studioBestwerte([{ s:[[4, 10], [4, 10], [4, 10]] }]), jetzt = W.studioBestwerte([{ s:[[14, 1], [14, 1], [14, 1]] }]);
     wahr(!W.studioIstRekord(jetzt, vor), "14 × 1 nach 4 × 10 ist kein Rekord");

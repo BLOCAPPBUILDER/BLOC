@@ -366,19 +366,21 @@ var EX_INT = {
 /* Leichter / Schwerer: Ketten von leicht nach schwer (nur Übungen, die es in BLOC gibt). Jede Übung bekommt Nachbarn aus der ersten Kette, in der sie vorkommt.
    Bewusst nur ein Hinweis zum Ausprobieren, keine Trainingsplanung - Fachprüfung offen (siehe quellen.html). */
 var LZ_KETTEN = [
-  ["knee-push-ups", "push-ups", "close-grip-push-ups", "diamond-push-ups", "archer-push-ups", "clap-push-ups"],
-  ["inverted-rows", "negative-pull-ups", "chin-ups", "pull-ups", "commando-pull-ups", "muscle-ups"],
+  /* 2026-11-13 fachlich geprüft: Archer vor Diamant; Muscle-up nicht mehr in den Ketten; Rumpf statisch und dynamisch getrennt; Seitstütz ist keine Stufe von Plank */
+  ["knee-push-ups", "push-ups", "close-grip-push-ups", "archer-push-ups", "diamond-push-ups", "clap-push-ups"],
+  ["inverted-rows", "negative-pull-ups", "chin-ups", "pull-ups", "commando-pull-ups"],
   ["air-squats", "split-squats", "bulgarian-split-squats", "pistol-assist", "pistol-squats"],
   ["reverse-lunges", "forward-lunges", "walking-lunges", "jump-lunges"],
   ["plank-burpees", "burpees", "burpee-squat-jumps", "jump-forward-burpees", "burpee-pull-ups"],
-  ["dead-bug", "plank", "plank-shoulder-taps", "hollow-hold", "dragon-flags"],
+  ["plank", "hollow-hold"],
+  ["dead-bug", "plank-shoulder-taps", "dragon-flags"],
   ["leg-raises", "hanging-knee-raise", "hanging-leg-raise", "toes-to-bar"],
   ["glute-bridge", "single-leg-glute-bridge"],
   ["jump-squats", "jump-forward-squats", "tuck-jumps"],
-  ["triceps-dips", "negative-dips", "parallel-bar-dips", "muscle-ups"],
+  ["triceps-dips", "negative-dips", "parallel-bar-dips"],
   ["calf-raises", "single-leg-calf-raise"],
   ["good-mornings", "single-leg-rdl"],
-  ["plank", "side-plank", "copenhagen-plank"],
+  ["side-plank", "copenhagen-plank"],
   /* 2026-10-14: weitere Ketten (die erste Kette, in der eine Übung steht, gilt) */
   ["dead-hang", "scapular-pull-ups", "negative-pull-ups"],
   ["support-hold", "negative-dips"],

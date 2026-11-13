@@ -1815,3 +1815,15 @@ body.prot-sheet-offen{ overflow:hidden; }
 .satz-zaehler .satz-kg, .satz-zaehler .satz-w{ font-size:clamp(16px, 5.2vw, 26px); letter-spacing:-.02em; }
 .satz-zaehler button{ width:44px; }
 .satz-leicht-aus{ border:1px solid rgba(255,255,255,.35); background:transparent; color:inherit; border-radius:10px; padding:3px 8px; margin-left:4px; font:inherit; font-size:12px; cursor:pointer; }
+/* „Nicht jetzt“ am Steigerungs-Tipp (Test 4, Q1) */
+.satz-tipp .satz-tipp-nein{ background:transparent; border:1px solid rgba(255,255,255,.4); color:inherit; font-weight:600; }
+.st-steigern .st-tipp-nein{ background:transparent; }
+.pz-tipp .pz-nein{ background:transparent; border:1px solid var(--border); color:var(--text-dim); }
+/* Satz-Training: RPE-Auswahl, Kalibrier-Frage, Supersatz-Zeile (Test 4) */
+.satz-rpe{ display:flex; align-items:center; justify-content:center; gap:6px; margin:-2px 0 10px; font-size:12px; }
+.satz-rpe span{ opacity:.75; margin-right:4px; }
+.satz-rpe button{ min-width:34px; height:30px; border-radius:10px; border:1px solid rgba(255,255,255,.3); background:transparent; color:inherit; font:inherit; font-weight:700; cursor:pointer; }
+.satz-rpe button.an{ background:var(--accent); border-color:var(--accent); color:#fff; }
+.satz-kal{ display:flex; align-items:center; gap:8px; justify-content:center; margin:6px 0 10px; font-size:13px; }
+.satz-kal button{ border-radius:10px; border:1px solid rgba(255,255,255,.35); background:transparent; color:inherit; padding:6px 12px; font:inherit; font-weight:700; cursor:pointer; }
+.satz-block b{ font-weight:800; }

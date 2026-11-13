@@ -54,6 +54,7 @@ function satzVergleichHTML(ids){
     var b = top(h), sek = b[4] === 1, text = b[0] > 0 ? studioKg(b[0])+" kg × "+b[1]+(sek ? " s" : "") : b[1]+" "+(sek ? "s" : t("stReps")), badge = t("satzErstes"), kl = "neu";
     if(vor){
       var bv = top(vor), dKg = Math.round((b[0] - bv[0])*100)/100, dW = wdhSumme(h) - wdhSumme(vor);
+      if(studioAssistiert(id)) dKg = -dKg;   // assistiert: weniger Unterstützung ist der Fortschritt
       if(b[0] > 0 && dKg !== 0){ badge = (dKg > 0 ? "▲ +" : "▼ −")+studioKg(Math.abs(dKg))+" kg"; kl = dKg > 0 ? "hoch" : "runter"; }
       else if(dW !== 0){ badge = (dW > 0 ? "▲ " : "▼ ")+t(sek ? (dW > 0 ? "satzMehrS" : "satzWenigerS") : (dW > 0 ? "satzMehrW" : "satzWenigerW"), { n:Math.abs(dW) }); kl = dW > 0 ? "hoch" : "runter"; }
       else { badge = "= "+t("satzGleich"); kl = "gleich"; }
@@ -68,7 +69,13 @@ function satzListe(p){
   return l;
 }
 /* Zustand des geöffneten Satz-Trainings: Leichtwoche (weniger Sätze, keine Tipps) und die Tipps dieses Trainings (höchstens zwei, beim Öffnen festgelegt) */
-var satzKontext = { leicht:false, tipps:{}, wartend:[] };
+var satzKontext = { leicht:false, tipps:{}, wartend:[], plan:null, rpe:{} };
+/* Supersatz/Zirkel im Satz-Training (Test 4, Q2, Entscheidung Kevin): der Block der Übung in ihrem BLOC (auch in folgenden BLOCs) */
+function satzBlockVon(id){
+  var p = satzKontext.plan; if(!p) return null;
+  var q = stPlanIds(p).indexOf(id) > -1 ? p : planFolge(p).filter(function(x){ return stPlanIds(x).indexOf(id) > -1; })[0];
+  return q ? planBlockVon(q, id) : null;
+}
 function satzZielSaetze(id){ var n = studioZiel(id).saetze; return satzKontext.leicht ? leichtSaetze(n) : n; }
 function satzKarteHTML(id, i, n){
   var ex = findExercise(id);
@@ -86,7 +93,7 @@ function satzKarteHTML(id, i, n){
       griffHTML(id)+
       (ILLU[id] ? '<div class="satz-figur">'+illuHTML(id, "satz-illu")+'</div>' : (ex.custom ? '<div class="satz-figur"><span class="ex-symbol big">'+exSymbol(ex)+'</span></div>' : ''))+
       '<div class="satz-saetze" role="img" aria-label="'+esc((h ? h.s.length : 0)+" / "+z.saetze)+'">'+(function(){ var o = "", n = Math.min(z.saetze, 12), fertigeAnzahl = h ? h.s.length : 0; for(var q = 0; q < n; q++) o += '<i class="'+(q < fertigeAnzahl ? 'an' : q === fertigeAnzahl ? 'jetzt' : '')+'"></i>'; return o; })()+'</div>'+
-      (function(){ var tp = h ? null : satzKontext.tipps[id]; return tp ? '<div class="satz-tipp'+(tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter" ? ' runter' : '')+'"><span>'+esc(studioSteigerTippText(tp))+'</span><button type="button" data-satztipp>'+esc(t("tippUebernehmen"))+'</button></div>' : ''; })()+
+      (function(){ var tp = h ? null : satzKontext.tipps[id]; return tp ? '<div class="satz-tipp'+(tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter" || tp.art === "stufeZurueck" ? ' runter' : '')+'"><span>'+esc(studioSteigerTippText(tp))+'</span><button type="button" data-satztipp>'+esc(t("tippUebernehmen"))+'</button>'+(studioTippSicher(tp) ? '' : '<button type="button" class="satz-tipp-nein" data-satznein>'+esc(t("tippNichtJetzt"))+'</button>')+'</div>' : ''; })()+
       '<div class="satz-ziel">'+esc(t("stGoal"))+' <b>'+satzName(z.saetze)+' × '+(zeitE ? studioTimer(id).work+' s'+(ex.perSide ? ' '+t("perSide") : '') : b.min+'–'+b.max)+'</b>'+(e.kg != null && !koerper ? ' · <b>'+studioKg(e.kg)+' kg</b>' : '')+'</div>'+
       (!h && satzKontext.wartend.indexOf(id) > -1 ? '<div class="satz-hinweis">'+esc(t("tippWartet"))+'</div>' : '')+
       (satzKontext.leicht ? '<div class="satz-hinweis">'+esc(t("leichtHinweis", { n:z.saetze }))+' <button type="button" class="satz-leicht-aus" data-leichtaus>'+esc(t("leichtAus"))+'</button></div>' : '')+
@@ -94,14 +101,19 @@ function satzKarteHTML(id, i, n){
       (letzte ? '<div class="satz-zeile"><span>'+esc(t("stLetztes"))+'</span>'+letzte.s.map(function(x){
         return '<button type="button" class="satz-chip" data-ukg="'+x[0]+'" data-uw="'+x[1]+'" aria-label="'+esc(t("stUebernehmen")+" "+studioKg(x[0])+" × "+x[1])+'">'+esc(satzText(x).replace("×", " × "))+'</button>'; }).join("")+'</div>' : '')+
       '<div class="satz-zeile"><span>'+esc(t("stToday"))+'</span>'+(h && h.s.length ? h.s.map(function(x, k){ return '<span class="satz-chip an">'+(k+1)+'. '+esc(satzText(x).replace("×", " × "))+'</span>'; }).join("") : '<span class="satz-leer">–</span>')+'</div>'+
+      (function(){ var bl = satzBlockVon(id); if(!bl) return ''; var k2 = bl.ids.indexOf(id), letzte = k2 === bl.ids.length - 1, nx = findExercise(bl.ids[(k2 + 1) % bl.ids.length]);
+        return '<div class="satz-hinweis satz-block"><b>'+esc(t(blockArt(bl.ids.length) === "zirkel" ? "blkZirkel" : "blkSuper"))+'</b> · '+(k2 + 1)+'/'+bl.ids.length+' · '+esc(t(letzte ? "blkDannPause" : "blkDanach", { n:nx ? tplText(nx.name) : "" }))+'</div>'; })()+
       '<div class="satz-eingabe'+(koerper ? ' eins' : '')+'">'+
         (koerper ? '' : '<div class="satz-feld"><label>'+esc(t("stKg"))+'</label><div class="satz-zaehler"><button type="button" data-kgminus aria-label="&minus;">&minus;</button>'+
           '<input type="text" inputmode="decimal" class="satz-kg" value="'+studioKg(v.kg)+'" aria-label="'+esc(t("stKg"))+'"><button type="button" data-kgplus aria-label="&plus;">&plus;</button></div></div>')+
         '<div class="satz-feld"><label>'+esc(t(zeitE ? "planArbeit" : "stReps"))+'</label><div class="satz-zaehler"><button type="button" data-wminus aria-label="&minus;">&minus;</button>'+
           '<input type="number" inputmode="numeric" class="satz-w" value="'+(zeitE ? zeitStart : v.wdh)+'" aria-label="'+esc(t(zeitE ? "planArbeit" : "stReps"))+'"><button type="button" data-wplus aria-label="&plus;">&plus;</button></div></div>'+
       '</div>'+
+      (anstrengungModus() ? '<div class="satz-rpe" role="group" aria-label="'+esc(t("rpeTitel"))+'"><span>'+(anstrengungModus() === "rir" ? "RIR" : "RPE")+'</span>'+[6, 7, 8, 9, 10].map(function(r){
+        var an = satzKontext.rpe[id] === r; return '<button type="button" class="'+(an ? 'an' : '')+'" data-satzrpe="'+r+'" aria-pressed="'+an+'">'+(anstrengungModus() === "rir" ? 10 - r : r)+'</button>'; }).join("")+'</div>' : '')+
       '<button type="button" class="satz-los" data-satzset>✓ '+esc(t("stSetDone"))+' '+((h ? h.s.length : 0)+1)+'</button>'+
       '<div class="satz-pause" hidden><span>'+esc(t("stPause"))+'</span><b></b><button type="button" data-satzskip>'+esc(t("stSkip"))+'</button></div>'+
+      (fertig && studioKalibrierFrage(id, h) ? '<div class="satz-kal"><span>'+esc(t("kalFrage"))+'</span><button type="button" data-kalib="leicht">'+esc(t("kalLeicht"))+'</button><button type="button" data-kalib="passt">'+esc(t("kalPasst"))+'</button></div>' : '')+
       (fertig ? '<button type="button" class="satz-weiter" data-satzweiter>'+esc(i < n-1 ? t("satzNaechste") : t("satzFertig"))+' ›</button>' : '')+
       (info ? '<details class="satz-info"><summary>'+esc(t("stInfo"))+'<span class="tpl-chev" aria-hidden="true">&#9662;</span></summary>'+
         '<ol>'+info[lang].split("|").map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ol>'+
@@ -112,7 +124,7 @@ function renderSatzTraining(planId, start){
   var p = stPlanFind(planId), ids = p ? satzListe(p) : [];
   if(!p || !ids.length){ go("#katalog"); return; }
   start = clamp(parseInt(start) || 0, 0, ids.length - 1);
-  satzKontext = { leicht:planLeichtHeute(p.id), tipps:{} };
+  satzKontext = { leicht:planLeichtHeute(p.id), tipps:{}, plan:p, rpe:{} };
   satzKontext.tipps = studioTipps(ids, satzKontext.leicht, false); satzKontext.wartend = studioTippsWartend.slice();   // eine Regel für alle Ansichten; höchstens zwei Tipps, in der Leichtwoche keine
   /* Ist heute schon ein Training dieses Plans gespeichert und hat eine Übung noch keinen Rundenstart (früher gespeichert, vor dem Neustart-Verhalten),
      beginnt das Satz-Training für sie von vorn - sonst stünde man wieder vor dem fertigen Stand. */
@@ -138,7 +150,7 @@ function renderSatzTraining(planId, start){
   }
   function fertigKnopf(neuBereit){
     var b = root.querySelector("[data-satzfertig]"); if(!b) return;
-    var ok = alleFertig() || letzteFertig(); b.disabled = !ok; b.classList.toggle("bereit", ok);
+    var ok = alleFertig() || letzteFertig(); b.disabled = false; b.classList.toggle("bereit", ok);   // immer antippbar (Test 4, Q8); hell, sobald alles drin ist
     if(ok && neuBereit){ b.classList.add("leuchtet"); vibrate([50, 40, 50, 40, 120]); setTimeout(function(){ b.classList.remove("leuchtet"); }, 1400); }
   }
   function punkteFertig(){
@@ -257,14 +269,20 @@ function renderSatzTraining(planId, start){
     k.querySelectorAll("[data-ukg]").forEach(function(b){ b.addEventListener("click", function(){ tipp(); if(kgIn) kgIn.value = studioKg(+b.getAttribute("data-ukg")); wIn.value = b.getAttribute("data-uw"); }); });
     k.querySelector("[data-satzset]").addEventListener("click", function(){
       var kg = koerper ? 0 : kgWert(), w = Math.max(1, Math.min(wMax, parseInt(wIn.value) || 1)), e = studioEintrag(id) || {};
-      studioSatzLog(id, kg, w, zeitE);
+      var rpe = anstrengungModus() ? (satzKontext.rpe[id] || 0) : 0; delete satzKontext.rpe[id];
+      studioSatzLog(id, kg, w, zeitE, rpe);
       if(satzKontext.leicht){ var lr = studioOffen(studioEintrag(id)); if(lr) lr.leicht = true; }   // Runde der Leichtwoche: zählt nicht für die Steigerung
       vibrate([40, 30, 70]);
       var h = (studioEintrag(id).log || []).slice(-1)[0], nSatz = h ? h.s.length : 1;
       satzFeedback(nSatz, satzText(zeitE ? [kg, w, "n", 0, 1] : [kg, w]), false);
-      var pause = e.pause || (koerper ? 60 : 90);
-      studioPauseStart(id, pause);
+      var pause = e.pause || (koerper ? 60 : 90), bl = satzBlockVon(id), naechsteI = -1;
+      if(bl){   // Supersatz/Zirkel: weiter zur nächsten Übung des Blocks ohne Pause; nach der letzten die Pause, dann zurück an den Anfang
+        var kb = bl.ids.indexOf(id), letzteB = kb === bl.ids.length - 1;
+        if(!letzteB){ studioPauseStop(); naechsteI = ids.indexOf(bl.ids[kb + 1]); }
+        else { var erste = bl.ids[0]; naechsteI = !fertig1(erste) ? ids.indexOf(erste) : -1; studioPauseStart(naechsteI > -1 ? erste : id, pause); }
+      } else studioPauseStart(id, pause);
       karteNeu(i); pauseZeigen(); punkteFertig();
+      if(naechsteI > -1 && naechsteI !== i) setTimeout(function(){ geheZu(naechsteI, true); pauseZeigen(); }, 650);
       var neuBtn = wisch.children[i].querySelector("[data-satzset]");
       if(neuBtn){ var alt = neuBtn.textContent; neuBtn.classList.add("ok"); neuBtn.textContent = "✓ "+t("satzGespeichert", { n:nSatz }); setTimeout(function(){ neuBtn.classList.remove("ok"); neuBtn.textContent = alt; }, 900); }
       var punkte = wisch.children[i].querySelectorAll(".satz-saetze i.an"); if(punkte.length) punkte[punkte.length - 1].classList.add("pop");
@@ -275,8 +293,20 @@ function renderSatzTraining(planId, start){
     if((a = k.querySelector("[data-satzweiter]"))) a.addEventListener("click", function(){
       if(i < ids.length - 1) geheZu(i + 1, true); else if(!root.querySelector(".satz-ende")) abschluss();
     });
+    k.querySelectorAll("[data-satzrpe]").forEach(function(b){ b.addEventListener("click", function(){
+      var r = +b.getAttribute("data-satzrpe"); satzKontext.rpe[id] = satzKontext.rpe[id] === r ? 0 : r; tipp();
+      k.querySelectorAll("[data-satzrpe]").forEach(function(c){ var an = +c.getAttribute("data-satzrpe") === satzKontext.rpe[id]; c.classList.toggle("an", an); c.setAttribute("aria-pressed", an); });
+    }); });
+    k.querySelectorAll("[data-kalib]").forEach(function(b){ b.addEventListener("click", function(){
+      var neuKg = studioKalibrieren(id, b.getAttribute("data-kalib") === "leicht");
+      showToast(neuKg != null ? t("kalNeu", { kg:studioKg(neuKg) }) : t("kalGemerkt")); karteNeu(i);
+    }); });
+    if((a = k.querySelector("[data-satznein]"))) a.addEventListener("click", function(){ studioTippAblehnen(id); delete satzKontext.tipps[id]; showToast(t("tippRuhtOk")); karteNeu(i); });
     if((a = k.querySelector("[data-satztipp]"))) a.addEventListener("click", function(){
       var tp = satzKontext.tipps[id]; if(!tp) return;
+      if(tp.naechste && planVarianteTauschen(p, id, tp.naechste, tp.art === "variante", tp.art === "stufeZurueck")){   // nächste Stufe der Kette: Übung im BLOC tauschen und neu aufbauen
+        studioTippUebernehmen(id, tp); showToast(studioTippKurz(tp)); studioPauseStop(); renderSatzTraining(p.id, i); return;
+      }
       var neuKg = studioTippUebernehmen(id, tp); delete satzKontext.tipps[id];
       vibrate([20, 30, 40]); karteNeu(i);   // Feld neu vorbelegt: neues Gewicht, Wiederholungen unten im Bereich
       if(neuKg == null) showToast(studioTippKurz(tp));
@@ -290,7 +320,13 @@ function renderSatzTraining(planId, start){
   Array.prototype.forEach.call(wisch.children, bindKarte);
   if(satzUhr) clearInterval(satzUhr);
   satzUhr = setInterval(function(){ if(!document.getElementById("satzRoot")){ clearInterval(satzUhr); satzUhr = 0; return; } pauseZeigen(); }, 300);
-  root.querySelector("[data-satzfertig]").addEventListener("click", function(){ if(!root.querySelector(".satz-ende")) abschluss(); });
+  root.querySelector("[data-satzfertig]").addEventListener("click", function(){
+    if(root.querySelector(".satz-ende")) return;
+    if(alleFertig() || letzteFertig()) return abschluss();
+    var soll = 0, ist = 0; ids.forEach(function(sid){ soll += satzZielSaetze(sid); var h = satzHeute(sid); ist += h ? Math.min(h.s.length, satzZielSaetze(sid)) : 0; });
+    if(!ist){ showToast(t("satzNochNichts")); return; }
+    confirmSheet(t("satzFruehTitel"), t("satzFruehText", { x:ist, y:soll }), t("satzFruehOk"), abschluss);   // früher aufhören: mit Rückfrage speichern
+  });
   punkteFertig();
   geheZu(start, false);
   requestAnimationFrame(function(){ geheZu(start, false); });   // nach dem ersten Layout nochmals, falls die Breite erst jetzt feststeht
@@ -300,6 +336,6 @@ function satzStandardHTML(tipps){
   var ids = Object.keys(tipps || {});
   if(!ids.length) return "";
   return '<div class="satz-std"><b>'+esc(t("satzNaechstesMal"))+'</b><small>'+esc(t("satzNaechstesHint"))+'</small>'+
-    ids.map(function(id){ var ex = findExercise(id), tp = tipps[id], ab = tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter";
+    ids.map(function(id){ var ex = findExercise(id), tp = tipps[id], ab = tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter" || tp.art === "stufeZurueck";
       return '<div class="satz-vgl"><span class="satz-vgl-n">'+esc(ex ? tplText(ex.name) : id)+'</span><span class="satz-vgl-b '+(ab ? 'runter' : 'hoch')+'">'+esc(studioTippKurz(tp))+'</span></div>'; }).join("")+'</div>';
 }

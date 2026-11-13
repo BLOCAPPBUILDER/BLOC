@@ -62,7 +62,7 @@ var PAT = {
     ohneZug:"Für echtes Rudern fehlt dir Stange, Band oder Gerät – deshalb trainieren Übungen im Liegen den oberen Rücken. Mit einem Widerstandsband (unter „Geräte“ wählen) baut BLOC Rudern ein.",
     whoRest:"Den Rest bis 150 Minuten schaffst du nebenbei, z. B. mit zügigen Spaziergängen, Radfahren oder Treppen im Alltag.",
     endeTitel:"Plan geschafft", endeText:"{p}: {n} von {m} Trainings erledigt. Weiter mit denselben Übungen und deinen aktuellen Gewichten?",
-    endeWeiter:"Nächsten Block starten", endeNeu:"Neuen Plan erstellen", endeAus:"Ausblenden", endeOk:"{n} Termine für die nächsten {w} Wochen im Kalender",
+    endeWeiter:"Nächsten Block starten", endeWiederholen:"Block wiederholen", endeTitelBeendet:"Plan beendet", endeTextBeendet:"{p}: {n} von {m} Trainings erledigt. Den Block noch einmal machen?", endeNeu:"Neuen Plan erstellen", endeAus:"Ausblenden", endeOk:"{n} Termine für die nächsten {w} Wochen im Kalender",
     tageListe:"Trainingstage"
   },
   en:{
@@ -118,7 +118,7 @@ var PAT = {
     ohneZug:"Real rows need a bar, band or machine – so exercises lying face down train your upper back. With a resistance band (choose it under equipment) BLOC adds rows.",
     whoRest:"You can cover the rest up to 150 minutes on the side, e.g. with brisk walks, cycling or taking the stairs.",
     endeTitel:"Plan completed", endeText:"{p}: {n} of {m} workouts done. Carry on with the same exercises and your current weights?",
-    endeWeiter:"Start next block", endeNeu:"Create a new plan", endeAus:"Hide", endeOk:"{n} sessions for the next {w} weeks in your calendar",
+    endeWeiter:"Start next block", endeWiederholen:"Repeat block", endeTitelBeendet:"Plan ended", endeTextBeendet:"{p}: {n} of {m} workouts done. Do the block again?", endeNeu:"Create a new plan", endeAus:"Hide", endeOk:"{n} sessions for the next {w} weeks in your calendar",
     tageListe:"Training days"
   }
 };
@@ -154,12 +154,18 @@ var PA_NIE = /planche|front-lever|back-lever|human-flag|one-arm|muscle-up|skin-t
    Power-/Box-Übungen wie der drehende Aufwärtshaken nicht in Muskelaufbau- und Kraftpläne; Trage- und Halteübungen laufen nach Zeit statt Wiederholungen */
 var PA_SPEZIAL = /trap-bar|hex-bar|safety-bar|swiss-bar|cambered|landmine|meadows-row|jammer|deficit-deadlift|box-squat/;
 var PA_POWER = /uppercut|punch|jab|hook-punch|boxing|shadow-box|judo-flip|rotational-overhead-press|woodchop|clean|snatch|jerk|thruster|(kettlebell|kb|db|dumbbell|russian|american|single-arm|one-arm)-swing/;
-var PA_ZEIT = /carry|farmer|plate-pinch-hold|boat-hold|bridge-hold|active-hang|dead-hang|^plank$|^side-plank$|copenhagen-plank|hollow-hold|superman-hold|squat-hold|wall-sit|support-hold|^l-sit$/;
+var PA_ZEIT = /carry|farmer|plate-pinch-hold|boat-hold|bridge-hold|active-hang|dead-hang|(^|-)plank$|hollow-hold|superman-hold|squat-hold|wall-sit|support-hold|^l-sit$/;
 var PA_ZEIT_SEK = 35, PA_ZEIT_SEK_JE = { "superman-hold":30 };   // Startzeit; Superman Hold für Einsteiger kürzer
 /* Echte Zugübung (Rudern, Latzug, Klimmzug) - nicht Tragen, aufrechtes Rudern oder Rückenstrecker */
 var PA_ZUG = /(^|-)rows?(-|$)|pull-?downs?(-|$)|chin-ups?|pull-ups?/, PA_ZUG_NICHT = /upright|stretch|scapular|pull-apart|rear-delt|biceps|twist|renegade|weighted-pull/;
 function paIstZug(ex){ return !!ex && PA_ZUG.test(ex.id) && !PA_ZUG_NICHT.test(ex.id) && !PA_ZEIT.test(ex.id); }
-var PA_DRUCK_OHNE_ZUG = 3;   // ohne Rudermöglichkeit höchstens so viele Druckübungen je Woche
+var PA_DRUCK_OHNE_ZUG = 3;
+/* Fachliche Prüfung Test 4: Rollen je Übung (Haupt = die ersten zwei Mehrgelenkübungen des Tages, Neben = weitere Mehrgelenkübungen, Isolation/Rumpf = der Rest)
+   mit eigenen Wiederholungen; die Satzzahl ist an die Trainingsdauer gekoppelt. Bei „Knie“ bevorzugte, knieschonende Bein-/Hüftübungen. */
+var PA_SAETZE_MAX = { 20:8, 30:12, 45:16, 60:20 };
+var PA_KNIE_GUT = { "glute-bridge":1, "hip-thrust":1, "romanian-deadlift":1, "leg-press":1, "lying-leg-curl":1, "bird-dog":1 };
+var PA_KNIE_WARM = ["glute-bridge", "bird-dog", "cat-cow"];
+function paMehrgelenk(ex){ var v = mgVerteilung(ex); return Object.keys(v).filter(function(k){ return v[k] >= 0.25; }).length >= 2; }   // ohne Rudermöglichkeit höchstens so viele Druckübungen je Woche
 var PA_RUECKEN_ERSATZ = ["superman-hold", "reverse-snow-angels", "prone-y-raise"];   // oberer Rücken ohne Geräte, wenn kein Rudern möglich ist
 function paZiehtEx(ex){ return !!ex && (paIstZug(ex) || (exProfile(ex).pattern === "pull" && !PA_ZEIT.test(ex.id) && !/upright/.test(ex.id))); }   // zählt als Ziehen (Wochenbilanz)
 function paDrueckt(ex){ return !!ex && exProfile(ex).pattern === "push"; }
@@ -261,6 +267,8 @@ function paPools(a){
     var sc = (sw === "anfaenger" ? (lv === 1 ? 3 : lv === 2 ? -1 : -5) : sw === "leicht" ? (lv === 1 ? 3 : lv === 2 ? 1 : -4) : sw === "mittel" ? (lv === 2 ? 3 : lv === 1 ? 2 : 0) : (lv === 3 ? 3 : lv === 2 ? 2 : 0));
     sc += paGrundUebung(ex) + paArtBonus(ex, art, a);
     if(a.niveau === "gar" && lv === 1) sc += 1.5;
+    if(a.einschr.indexOf("knie") > -1 && PA_KNIE_GUT[ex.id]) sc += 3;   // knieschonende Bein-/Hüft-Grundübungen bevorzugen
+    if(ex.main !== "ausdauer" && (a.ziele.indexOf("muskel") > -1 || a.ziele.indexOf("kraft") > -1) && (PA_AUS.impact.test(ex.id) || /overhead-squat/.test(ex.id))) return;
     var o = { ex:ex, sc:sc };
     if(ex.main === "ausdauer") cardio.push(o); else { var g = paTopGruppe(ex); if(g) (kraft[g] = kraft[g] || []).push(o); }
   });
@@ -295,7 +303,9 @@ function paWaehle(liste, benutzt, seed, plan){
 /* Aufwärmen aus dem passenden Aufwärm-Workout, ohne Ausgeschlossenes (z. B. Sprünge bei gelenkschonend) */
 function paAufwaermen(a, n, typ){
   var wid = typ === "cardio" ? PA_LIB_WARM.cardio : (a.ziel === "muskel" || a.ziel === "kraft" ? PA_LIB_WARM.kraft : PA_LIB_WARM.ganz), lw = findLibWorkout(wid);
-  var l = (lw ? lw.exercises : AUFWAERM_UEBUNGEN).map(function(id){ return findExercise(id); }).filter(function(ex){ return ex && ex.main !== "stretch" && !paAusgeschlossen(ex, a); });
+  var knie = a.einschr.indexOf("knie") > -1;
+  var l = (lw ? lw.exercises : AUFWAERM_UEBUNGEN).map(function(id){ return findExercise(id); }).filter(function(ex){ return ex && ex.main !== "stretch" && !paAusgeschlossen(ex, a) && !(knie && /squat/.test(ex.id)); });
+  if(knie) PA_KNIE_WARM.forEach(function(id){ var ex = findExercise(id); if(ex && l.indexOf(ex) < 0 && !paAusgeschlossen(ex, a)) l.push(ex); });   // Knie: Kniebeuge im Aufwärmen ersetzt
   return l.slice(0, n).map(function(ex){ return ex.id; });
 }
 function paDehnen(pools, gruppen, n, seed, benutzt){
@@ -391,7 +401,9 @@ function paErzeuge(a0){
         // Rücken-Slot: zuerst eine Zugübung, Ganzkörper A/C horizontal (Rudern), B vertikal (Latzug, Klimmzug); sonst die andere Richtung
         var vert = (zaehl[typ] - 1) % 2 === 1, zugAlle = g === "ruecken" ? (pools.kraft.ruecken || []).filter(function(o){ return paIstZug(o.ex); }) : null;
         var zugW = zugAlle ? zugAlle.filter(function(o){ return paZugVertikal(o.ex) === vert; }) : null, zug = zugW && zugW.length ? zugW : zugAlle;
-        var ex = (zug && zug.length ? paWaehle(zug, benutzt, seed + k, planBenutzt) : null) || paWaehle(pools.kraft[g], benutzt, seed + k, planBenutzt) || paWaehle(pools.kraft[g === "po" ? "beine" : g === "bauch" ? "rumpf" : g === "rumpf" ? "bauch" : g], benutzt, seed + k, planBenutzt);
+        // Unterkörpertag: keine Druckübungen im Rumpf-/Bauch-Platz (Liegestütz zählt in den Daten zum Rumpf; Test 4)
+        function pl(gr){ var l0 = pools.kraft[gr] || []; return typ === "uk" ? l0.filter(function(o){ return !paDrueckt(o.ex); }) : l0; }
+        var ex = (zug && zug.length ? paWaehle(zug, benutzt, seed + k, planBenutzt) : null) || paWaehle(pl(g), benutzt, seed + k, planBenutzt) || paWaehle(pl(g === "po" ? "beine" : g === "bauch" ? "rumpf" : g === "rumpf" ? "bauch" : g), benutzt, seed + k, planBenutzt);
         if(ex){ benutzt[ex.id] = 1; planBenutzt[ex.id] = 1; mainIds.push(ex.id); gruppen.push(g); }
       });
       /* Jeder Ganzkörper- und Oberkörpertag bekommt mindestens eine Zugübung (fachliche Prüfung 2026-11-12): fehlt sie, ersetzt sie die letzte Arm- bzw. Schulterübung */
@@ -415,9 +427,38 @@ function paErzeuge(a0){
           }
         }
       }
+      /* Knie-Einschränkung: jeder Kraft-Tag mit Beinen bekommt eine knieschonende Bein-/Hüft-Grundübung (Glute Bridge, Hip Thrust, Rumänisches Kreuzheben, Beinpresse);
+         sie ersetzt die erste Bein- bzw. Po-Isolationsübung (fachliche Prüfung Test 4) */
+      if(a.einschr.indexOf("knie") > -1 && typ !== "ok" && !mainIds.some(function(id){ return PA_KNIE_GUT[id] && paMehrgelenk(findExercise(id)); })){
+        var kniePool = []; ["beine", "po"].forEach(function(g4){ (pools.kraft[g4] || []).forEach(function(o){ if(PA_KNIE_GUT[o.ex.id] && paMehrgelenk(o.ex)) kniePool.push(o); }); });
+        var kx = paWaehle(kniePool, benutzt, seed + "knie", planBenutzt);
+        if(kx){
+          var ki = -1; for(var q4 = 0; q4 < gruppen.length; q4++) if((gruppen[q4] === "beine" || gruppen[q4] === "po") && !paMehrgelenk(findExercise(mainIds[q4]))){ ki = q4; break; }
+          benutzt[kx.id] = 1; planBenutzt[kx.id] = 1;
+          if(ki >= 0){ delete benutzt[mainIds[ki]]; mainIds[ki] = kx.id; } else { mainIds.unshift(kx.id); gruppen.unshift("beine"); }
+        }
+      }
       var balance = a.alter === "65" && findExercise("single-leg-stand") && !benutzt["single-leg-stand"] ? ["single-leg-stand"] : [];   // ab 65: Gleichgewicht (WHO 2020, ICFSR 2021)
       var modus = {}; balance.forEach(function(id){ modus[id] = "timer"; });
-      mainIds.forEach(function(id){ ziele[id] = { s:saetze, w:wdh, p:pause }; });
+      (function(){   // Rollen: Haupt / Neben / Isolation-Rumpf, Sätze höchstens nach Dauer
+        var kraft = haupt === "kraft", muskel = haupt === "muskel" || a.ziele.indexOf("muskel") > -1, jung = a.alter === "u50", nH = 0;
+        var rollen = mainIds.map(function(id, k){
+          var ex = findExercise(id), rumpf = gruppen[k] === "bauch" || gruppen[k] === "rumpf";
+          if(!rumpf && paMehrgelenk(ex)){ nH++; return nH <= 2 ? "haupt" : "neben"; }
+          return "iso";
+        });
+        var z0 = mainIds.map(function(id, k){
+          var r = rollen[k], w = wdh, sz = saetze, ps = pause;
+          if(r === "haupt" && jung) w = kraft ? 5 : muskel ? 8 : wdh;
+          else if(r === "neben" && jung) w = kraft || muskel ? 8 : wdh;
+          else if(r === "iso"){ w = Math.max(wdh, 12); sz = Math.max(2, saetze - 1); ps = Math.min(pause, 75); }
+          return { s:sz, w:w, p:ps };
+        });
+        var max = PA_SAETZE_MAX[a.dauer] || 20, summe = function(){ return z0.reduce(function(x, q){ return x + q.s; }, 0) + balance.length*2; };
+        ["iso", "neben", "haupt"].forEach(function(r){ for(var k = z0.length - 1; k >= 0 && summe() > max; k--) if(rollen[k] === r && z0[k].s > 2) z0[k].s--; });
+        for(var k2 = z0.length - 1; k2 >= 0 && summe() > max; k2--) if(rollen[k2] === "iso"){ mainIds.splice(k2, 1); gruppen.splice(k2, 1); rollen.splice(k2, 1); z0.splice(k2, 1); }
+        mainIds.forEach(function(id, k){ ziele[id] = z0[k]; });
+      })();
       var bname = pt("mainBloc", { z:pt(typ), t:String.fromCharCode(65 + (zaehl[typ] - 1)) });
       tname = bname;
       if(wt) teile.push(wt);
@@ -524,7 +565,7 @@ function paKalender(p){
   var start = new Date(); start.setHours(12, 0, 0, 0);
   var wochen = p.wochen || 6, n = 0, nurLauf = p.items.length === 1 && p.items[0] === "run";
   for(var d = 0; d < wochen*7; d++){
-    var tag = kalPlus(start, d), wd = (tag.getDay() + 6) % 7, wk = Math.floor(d/7);
+    var tag = kalPlus(start, d), wd = (tag.getDay() + 6) % 7, wk = Math.floor((d + (start.getDay() + 6) % 7)/7);   // Kalenderwochen (Mo–So): die Leichtwoche liegt nicht über zwei Wochen
     if(p.tage.indexOf(wd) > -1){
       var e;
       if(nurLauf){
@@ -532,7 +573,7 @@ function paKalender(p){
         e = kalHinzu(kalTagKey(tag), { art:"run", name:nm, km:0 });
       } else {
         e = kalHinzu(kalTagKey(tag), { art:"programm", ref:p.id });
-        if(paLeichtWochen(wochen).indexOf(wk) > -1) e.leicht = true;   // Leichtwoche: weniger Sätze
+        if(paLeichtWochen(wochen).indexOf(wk) > -1 && p.items.some(function(it){ return /^plan:/.test(it); })) e.leicht = true;   // Leichtwoche: weniger Sätze (nicht am reinen Mobility-Tag)
       }
       e.prog = { id:p.id, i:0 }; n++;
     }
@@ -602,6 +643,7 @@ function paEndeGruppen(){
   return g;
 }
 function paEndeProgs(gid){ return gid.indexOf("p:") === 0 ? [programmFinde(gid.slice(2))].filter(Boolean) : paGruppe(gid); }
+var PA_ENDE_QUOTE = 0.8;
 function paPlanEnde(){
   var heute = kalTagKey(Date.now()), grenze = kalTagKey(Date.now() - 21*86400000), best = null, gruppen = paEndeGruppen();
   Object.keys(gruppen).forEach(function(gid){
@@ -627,9 +669,10 @@ function paLetzterPlantag(planId){
 function paPlanEndeHTML(){
   var en = paPlanEnde();
   if(!en) return "";
-  return '<section class="card plan-ende" data-planende="'+esc(en.gid)+'"><div class="pe-kopf"><span class="pe-haken" aria-hidden="true">✓</span><b>'+esc(pt("endeTitel"))+'</b></div>'+
-    '<p>'+esc(pt("endeText", { p:en.p.gruppeName || en.p.name, n:en.n, m:en.m }))+'</p>'+
-    '<div class="pe-knoepfe"><button type="button" class="btn btn-primary" data-peweiter>'+esc(pt("endeWeiter"))+'</button>'+
+  var geschafft = en.m > 0 && en.n/en.m >= PA_ENDE_QUOTE;   // „geschafft“ erst ab 80 % (Test 4, Q6, Entscheidung Kevin)
+  return '<section class="card plan-ende" data-planende="'+esc(en.gid)+'"><div class="pe-kopf">'+(geschafft ? '<span class="pe-haken" aria-hidden="true">✓</span>' : '')+'<b>'+esc(pt(geschafft ? "endeTitel" : "endeTitelBeendet"))+'</b></div>'+
+    '<p>'+esc(pt(geschafft ? "endeText" : "endeTextBeendet", { p:en.p.gruppeName || en.p.name, n:en.n, m:en.m }))+'</p>'+
+    '<div class="pe-knoepfe"><button type="button" class="btn btn-primary" data-peweiter>'+esc(pt(geschafft ? "endeWeiter" : "endeWiederholen"))+'</button>'+
     '<button type="button" class="btn btn-secondary" data-peneu>'+esc(pt("endeNeu"))+'</button>'+
     '<button type="button" class="pe-aus" data-peaus>'+esc(pt("endeAus"))+'</button></div></section>';
 }

@@ -637,7 +637,8 @@ function planZeileHTML(id, nr, bl, p){   // bl: { art, k, n, bid } - die Übung 
       '<span class="pz-text"><span class="pz-name"><i>'+nr+'</i> '+esc(tplText(ex.name))+'</span>'+kachelMuskel(ex)+
         (bl ? '<span class="pz-bm">'+esc(t(bl.art === "zirkel" ? "blkZirkel" : "blkSuper"))+' · '+bl.k+'/'+bl.n+'</span>' : '')+
         '<span class="pz-letzte'+(l ? ' an' : '')+'">'+(l ? esc(t("planZuletzt", { d:studioTagText(l.at), s:studioLetzteText(l) })) : esc(t("planNochNie")))+'</span>'+
-        (function(){ var tp = p ? planTipps(p)[id] : null; return tp ? '<span class="pz-tipp"><span>'+esc(studioTippKurz(tp))+'</span><button type="button" data-pzup="'+id+'">'+esc(t("tippUebernehmen"))+'</button></span>' : ''; })()+
+        (function(){ var tp = p ? planTipps(p)[id] : null; return tp ? '<span class="pz-tipp"><span>'+esc(studioTippKurz(tp))+'</span><button type="button" data-pzup="'+id+'">'+esc(t("tippUebernehmen"))+'</button>'+
+          (studioTippSicher(tp) ? '' : '<button type="button" class="pz-nein" data-pznein="'+id+'">'+esc(t("tippNichtJetzt"))+'</button>')+'</span>' : ''; })()+
         (e.notiz && e.notiz.trim() ? '<span class="pz-notiz">'+esc(e.notiz.trim())+'</span>' : '')+'</span>'+   // die Notiz der Übung erscheint beim nächsten Mal wieder
       '<span class="pz-pfeil" aria-hidden="true">'+ICON_CHEV+'</span></div>'+
     '<div class="seg-row pz-einheit" role="group" aria-label="'+esc(t("planEinheit"))+'">'+
@@ -720,10 +721,13 @@ function planZeilenBinden(root, fn, neuZeichnen, p){
   });
   root.querySelectorAll(".pz-zeile").forEach(function(zeile){
     var id = zeile.getAttribute("data-pz");
+    var nein = zeile.querySelector("[data-pznein]");
+    if(nein) nein.addEventListener("click", function(ev){ ev.stopPropagation(); studioTippAblehnen(id); if(neuZeichnen) neuZeichnen(); });
     var up = zeile.querySelector("[data-pzup]");   // Vorschlag „5 % mehr“ übernehmen: Arbeitsgewicht (bzw. Wiederholungsziel) wird gesetzt
     if(up) up.addEventListener("click", function(ev){
       ev.stopPropagation();
       var tp = p ? planTipps(p)[id] : null; if(!tp) return;
+      if(tp.naechste) planVarianteTauschen(p, id, tp.naechste, tp.art === "variante", tp.art === "stufeZurueck");   // nächste Stufe: Übung im BLOC tauschen
       studioTippUebernehmen(id, tp); if(neuZeichnen) neuZeichnen();
     });
     function eintrag(){ var a = studioAlle(); return a[id] || (a[id] = { log:[] }); }
