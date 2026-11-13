@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-13 · Wissensaustausch: RPE/RIR, Leichtwoche, Supersatz (Fassung 2026-11-13-6)
+
+Drei neue Beiträge im Wissensaustausch (Texte vom Sportwissenschaftler, Quellen geprüft und Aussagen an die Studien angepasst): RPE und RIR, Leichtwoche (Deload), Supersatz. Neue Quellen F51 Halperin 2022, F52 Helms 2016, F53 Coleman 2024, F54 Weakley 2017. Variantenketten: Pistol Squat nie automatisch, Hinweis „braucht eine Stange“ bei hängenden Übungen, Tipp sagt vor dem Wechsel, dass die Wiederholungen erst sinken; Tempo-Tipp neu formuliert.
+
 ## 2026-11-13 · Variantenketten, vierter Test (Fassung 2026-11-13-5)
 
 Variantenketten und Tempo-Tipp sowie Testbericht 4 (BERICHT-Test4-als-Prompt.md); fachlich vom Sportwissenschaftler geprüft, Entscheidungen von Kevin.
