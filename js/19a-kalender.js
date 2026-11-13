@@ -16,6 +16,7 @@ var KAL_FARBE = { workout:"var(--tp-color)", plan:"var(--gym-color, var(--bl-col
 function kalListe(){
   var s = state.db.settings;
   if(!s.kalender || !Array.isArray(s.kalender.e)) s.kalender = { e:[] };
+  s.kalender.e.forEach(function(e){ if(e && e.art === "programm" && !e.prog && e.ref) e.prog = { id:e.ref, i:0 }; });   // ältere Kopien ohne prog: wieder als Training startbar (Test 3, P1)
   return s.kalender.e;
 }
 function kalTagKey(d){
@@ -414,6 +415,8 @@ function kalWocheKopieren(tage, n){
         if(gleich) return;
         var k = { id:uid(), tag:ziel, art:e.art, ref:e.ref || "", name:e.name || "", km:+e.km || 0, at:Date.now() + neu };
         if(e.rad) k.rad = true;
+        if(e.prog) k.prog = { id:e.prog.id, i:e.prog.i };   // Termin eines TrainingsBLOCs: startet das Training, nicht die Bearbeiten-Ansicht (Test 3, P1)
+        if(e.leicht) k.leicht = true;
         liste.push(k); neu++;
       });
     });
@@ -448,7 +451,7 @@ function kalKopierenSheet(tage, kopfText, anzahl){
   root.innerHTML = '<div class="confirm-overlay"><div class="confirm-sheet" role="dialog" aria-label="'+esc(t("kalKopierenTitel"))+'">'+
     '<h3>'+esc(t("kalKopierenTitel"))+'</h3>'+
     '<p>'+esc(t("kalKopierenText", { n:anzahl, w:kopfText }))+'</p>'+
-    '<label for="kk-n">'+esc(t("kalKopierenWochen"))+'</label>'+stepperHTML("kk-n", 4, 1, 12, 1)+
+    '<label for="kk-n">'+esc(t("kalKopierenWochen"))+'</label>'+stepperHTML("kk-n", 1, 1, 12, 1)+
     '<div class="tm-hint">'+esc(t("kalKopierenHint"))+'</div>'+
     '<div class="btn-row"><button class="btn btn-secondary" data-cancel>'+esc(t("cancel"))+'</button><button class="btn btn-primary" data-ok>'+esc(t("kalKopierenOk"))+'</button></div></div></div>';
   function zu(){ root.innerHTML = ""; }

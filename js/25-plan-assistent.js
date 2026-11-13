@@ -592,9 +592,18 @@ function paAnlegen(a0, ersetzeGid){
    Ein Plan aus dem Assistenten, dessen letzter Termin vorbei ist (höchstens 21 Tage), ohne Termine ab heute: „Plan geschafft“ mit
    „Nächsten Block starten“ (dieselben TrainingsBLOCs, neue Termine ab heute - die Gewichte gelten weiter, weil sie je Übung gespeichert sind),
    „Neuen Plan erstellen“ und „Ausblenden“ (gemerkt je Planende: p.endeGesehen = letzter Termin). */
+/* Gruppen für das Planende: Pläne aus dem Assistenten je Gruppe, eigene TrainingsBLOCs mit Wochenplan einzeln („p:“ + ID) (Test 3, P3) */
+function paEndeGruppen(){
+  var g = {};
+  programmListe().forEach(function(p){
+    if(p.gen && p.gruppe) (g[p.gruppe] = g[p.gruppe] || []).push(p);
+    else if(!p.gen && p.items.length && p.tage && p.tage.length) g["p:"+p.id] = [p];
+  });
+  return g;
+}
+function paEndeProgs(gid){ return gid.indexOf("p:") === 0 ? [programmFinde(gid.slice(2))].filter(Boolean) : paGruppe(gid); }
 function paPlanEnde(){
-  var heute = kalTagKey(Date.now()), grenze = kalTagKey(Date.now() - 21*86400000), best = null, gruppen = {};
-  programmListe().forEach(function(p){ if(p.gen && p.gruppe) (gruppen[p.gruppe] = gruppen[p.gruppe] || []).push(p); });
+  var heute = kalTagKey(Date.now()), grenze = kalTagKey(Date.now() - 21*86400000), best = null, gruppen = paEndeGruppen();
   Object.keys(gruppen).forEach(function(gid){
     var ids = gruppen[gid].map(function(p){ return p.id; });
     var ter = kalListe().filter(function(e){ return e.prog && ids.indexOf(e.prog.id) > -1 && e.art !== "sport"; });
@@ -608,10 +617,10 @@ function paPlanEnde(){
 }
 /* Ist heute der letzte Termin des Plans, zu dem dieser BLOC gehört? (Auswertung: „Letztes Training des Plans geschafft“) */
 function paLetzterPlantag(planId){
-  var heute = kalTagKey(Date.now()), gid = null;
-  programmListe().forEach(function(p){ if(p.gen && p.gruppe && p.items.indexOf("plan:"+planId) > -1) gid = p.gruppe; });
+  var heute = kalTagKey(Date.now()), gid = null, gr = paEndeGruppen();
+  Object.keys(gr).forEach(function(k){ if(gr[k].some(function(p){ return p.items.indexOf("plan:"+planId) > -1; })) gid = k; });
   if(!gid) return false;
-  var ids = paGruppe(gid).map(function(p){ return p.id; });
+  var ids = gr[gid].map(function(p){ return p.id; });
   var ter = kalListe().filter(function(e){ return e.prog && ids.indexOf(e.prog.id) > -1 && e.art !== "sport"; });
   return ter.some(function(e){ return e.tag === heute; }) && !ter.some(function(e){ return e.tag > heute; });
 }
@@ -627,8 +636,11 @@ function paPlanEndeHTML(){
 function paPlanEndeBinden(neu){
   var box = app.querySelector("[data-planende]"), en = box ? paPlanEnde() : null;
   if(!en) return;
-  function gesehen(){ paGruppe(en.gid).forEach(function(p){ p.endeGesehen = en.letzter; }); save(); }
-  box.querySelector("[data-peweiter]").addEventListener("click", function(){ var n = paKalenderGruppe(en.gid); showToast(pt("endeOk", { n:n, w:en.p.wochen || 6 })); neu(); });
+  function gesehen(){ paEndeProgs(en.gid).forEach(function(p){ p.endeGesehen = en.letzter; }); save(); }
+  box.querySelector("[data-peweiter]").addEventListener("click", function(){
+    var n = 0; paEndeProgs(en.gid).forEach(function(p){ n += programmUebernehmen(p); });   // Assistent: mit Leichtwoche (paKalender), eigener Plan: Wochenplan
+    showToast(pt("endeOk", { n:n, w:en.p.wochen || 6 })); neu();
+  });
   box.querySelector("[data-peneu]").addEventListener("click", function(){ gesehen(); paOeffnen(null); });
   box.querySelector("[data-peaus]").addEventListener("click", function(){ gesehen(); neu(); });
 }

@@ -8,6 +8,7 @@
    Alles bleibt auf dem Gerät. */
 var KP_WOCHEN = [4, 6, 8, 12];
 var PG_RUBRIKEN = ["mobility", "workout", "run", "stretch"];
+var pgNachBau = null;   // TrainingsBLOC, in den ein gerade gebauter BLOC gleich hinein soll (Test 3, P7)
 var pgOffen = {};   // aufgeklappte Karten und Wochenpläne (nur für diesen Besuch)
 
 /* Deep Dive: die Muskelgruppen auf der Körperfigur, pro Woche (alle Übungen der Woche) und pro Workout (jedes Training der Woche mit Übungen).
@@ -412,7 +413,7 @@ function progKarteHTML(p){
       (p.items.length ? '<ol class="pg-liste">'+p.items.map(function(r, i){ return progZeileHTML(p, r, i); }).join("")+'</ol>' : '')+
       '<button type="button" class="pg-plus" data-pgplus="'+esc(p.id)+'">'+ICON_PLUS+'<span>'+esc(t("progPlus"))+'</span></button>'+
       '<details class="pg-woche" data-pgwoche="'+esc(p.id)+'"'+(pgOffen["w"+p.id] ? ' open' : '')+'><summary><span>'+esc(t("progWochenplan"))+'</span><small>'+
-        esc(t("progWochenN", { n:p.wochen }))+'</small><span class="pg-pfeil" aria-hidden="true">'+svgIcon(PG_ICON_PFEIL)+'</span></summary>'+
+        esc(p.wochen ? t("progWochenN", { n:p.wochen }) : t("progWochenWahl"))+'</small><span class="pg-pfeil" aria-hidden="true">'+svgIcon(PG_ICON_PFEIL)+'</span></summary>'+
         '<div class="kp-chips" role="group" aria-label="'+esc(t("progTage"))+'">'+[0, 1, 2, 3, 4, 5, 6].map(function(d){
           var an = p.tage.indexOf(d) > -1;
           return '<button type="button" class="kp-chip'+(an ? ' an' : '')+'" data-pgtag="'+esc(p.id)+':'+d+'" aria-pressed="'+an+'">'+esc(progTagName(d))+'</button>'; }).join("")+'</div>'+
@@ -592,7 +593,7 @@ document.addEventListener("toggle", function(e){ var d = e.target; if(d && d.tag
 function openProgrammWahl(p, neu){
   var root = document.getElementById("overlayRoot"), rub = "workout";
   function zu(){ root.innerHTML = ""; }
-  var offenSek = {};   // Favoriten · BLOCs · Katalog stehen zunächst zugeklappt
+  var offenSek = { bloc:true };   // eigene BLOCs aufgeklappt, Favoriten und Katalog zunächst zu (Test 3, P7)
   function ortFarbe(ref){   // Fitnessstudio rot, Freiluft blau (wie im Katalog), Mobility & Stretch grün
     if(rub === "mobility" || rub === "stretch") return "var(--ws-color)";
     var ids = pgUebungen(ref);
@@ -617,6 +618,7 @@ function openProgrammWahl(p, neu){
         var gym = g.refs.length > 0 && g.refs.every(function(r){ return ortFarbe(r) === "var(--gym-color)"; });   // nur Fitnessstudio: farbiges Symbol wie im Katalog
         return katZeileHTML("pgk-"+rub+"-"+g.name, g.ico, g.name, g.refs.length, '<div class="kat-inhalt">'+g.refs.map(opt).join("")+'</div>', false, "", gym); }).join(""));
       if(rub === "workout") html += opt("zufall");
+      if(rub === "workout") html = '<button type="button" class="bloc-opt pg-neubau" data-pgneubau><span><b>'+esc(t("pgNeuBau"))+'</b><small>'+esc(t("pgNeuBauSub"))+'</small></span></button>'+html;
       if(!l.favs.length && !l.blocs.length && !l.katalog.length) html = '<div class="pg-leer">'+esc(t("pgNichts"))+'</div>';
     }
     root.innerHTML = '<div class="confirm-overlay"><div class="confirm-sheet bloc-sheet" role="dialog" aria-label="'+esc(t("progPlus"))+'"><h3>'+esc(t("progPlus"))+'</h3>'+
@@ -630,6 +632,8 @@ function openProgrammWahl(p, neu){
     fuellen(root);
     root.querySelectorAll("details").forEach(function(dt){ dt.addEventListener("toggle", function(){ if(dt.hasAttribute("data-pgsek")) offenSek[dt.getAttribute("data-pgsek")] = dt.open; if(dt.open) fuellen(dt); }); });
     root.querySelectorAll("[data-pgrub]").forEach(function(b){ b.addEventListener("click", function(){ rub = b.getAttribute("data-pgrub"); draw(); }); });
+    var nb = root.querySelector("[data-pgneubau]");
+    if(nb) nb.addEventListener("click", function(){ pgNachBau = p.id; zu(); go("#katalog"); if(typeof katPlanNeu === "function") katPlanNeu(); });
     root.querySelectorAll("[data-pgpick]").forEach(function(b){ b.addEventListener("click", function(){
       p.items.push(b.getAttribute("data-pgpick")); p.updatedAt = Date.now(); pgOffen[p.id] = true; save(); zu(); neu();
     }); });

@@ -51,11 +51,11 @@ function satzVergleichHTML(ids){
     var h = studioOffen(e);   // nur diese Runde, nicht die Summe des Tages
     if(!ex || !h || !arbeitsSaetze(h).length) return;
     var vor = null; for(var i = log.indexOf(h) - 1; i >= 0; i--){ if(arbeitsSaetze(log[i]).length){ vor = log[i]; break; } }
-    var b = top(h), text = b[0] > 0 ? studioKg(b[0])+" kg × "+b[1] : b[1]+" "+t("stReps"), badge = t("satzErstes"), kl = "neu";
+    var b = top(h), sek = b[4] === 1, text = b[0] > 0 ? studioKg(b[0])+" kg × "+b[1]+(sek ? " s" : "") : b[1]+" "+(sek ? "s" : t("stReps")), badge = t("satzErstes"), kl = "neu";
     if(vor){
       var bv = top(vor), dKg = Math.round((b[0] - bv[0])*100)/100, dW = wdhSumme(h) - wdhSumme(vor);
       if(b[0] > 0 && dKg !== 0){ badge = (dKg > 0 ? "▲ +" : "▼ −")+studioKg(Math.abs(dKg))+" kg"; kl = dKg > 0 ? "hoch" : "runter"; }
-      else if(dW !== 0){ badge = (dW > 0 ? "▲ " : "▼ ")+t(dW > 0 ? "satzMehrW" : "satzWenigerW", { n:Math.abs(dW) }); kl = dW > 0 ? "hoch" : "runter"; }
+      else if(dW !== 0){ badge = (dW > 0 ? "▲ " : "▼ ")+t(sek ? (dW > 0 ? "satzMehrS" : "satzWenigerS") : (dW > 0 ? "satzMehrW" : "satzWenigerW"), { n:Math.abs(dW) }); kl = dW > 0 ? "hoch" : "runter"; }
       else { badge = "= "+t("satzGleich"); kl = "gleich"; }
     }
     zeilen.push('<div class="satz-vgl"><span class="satz-vgl-n">'+esc(tplText(ex.name))+'</span><span class="satz-vgl-w">'+esc(text)+'</span><span class="satz-vgl-b '+kl+'">'+esc(badge)+'</span></div>');
@@ -74,7 +74,7 @@ function satzKarteHTML(id, i, n){
   var ex = findExercise(id);
   if(!ex) return "";
   var koerper = studioNurBlock(ex), z0 = studioZiel(id), z = { saetze:satzZielSaetze(id), wdh:z0.wdh, schritt:z0.schritt }, e = studioEintrag(id) || {}, b = studioBereich(id);
-  var h = satzHeute(id), zeitE = studioEinheit(id) === "zeit";
+  var h = satzHeute(id), zeitE = studioNachZeit(id);   // dieselbe Regel wie die Steigerung (Test 3, P4)
   var v = studioVorschlag(id), letzte = studioLetzte(id, false), fertig = h && h.s.length >= z.saetze, lang = currentLang() === "en" ? 1 : 0;
   if(e.kg != null && !h) v.kg = e.kg;
   var zeitStart = h && h.s.length && h.s[h.s.length-1][4] === 1 ? v.wdh : studioTimer(id).work;   // Zeit: Sekunden des letzten Satzes heute, sonst die Arbeitszeit der Übung
@@ -250,7 +250,7 @@ function renderSatzTraining(planId, start){
     var a;
     if((a = k.querySelector("[data-kgminus]"))) a.addEventListener("click", function(){ tipp(); kgIn.value = studioKg(Math.max(0, kgWert() - z.schritt)); });
     if((a = k.querySelector("[data-kgplus]"))) a.addEventListener("click", function(){ tipp(); kgIn.value = studioKg(kgWert() + z.schritt); });
-    var zeitE = studioEinheit(id) === "zeit", wSchritt = zeitE ? 5 : 1, wMax = zeitE ? 600 : 100;   // Zeit: Sekunden in Fünferschritten
+    var zeitE = studioNachZeit(id), wSchritt = zeitE ? 5 : 1, wMax = zeitE ? 600 : 100;   // Zeit: Sekunden in Fünferschritten
     k.querySelector("[data-wminus]").addEventListener("click", function(){ tipp(); wIn.value = Math.max(1, (parseInt(wIn.value) || 0) - wSchritt); });
     k.querySelector("[data-wplus]").addEventListener("click", function(){ tipp(); wIn.value = Math.min(wMax, (parseInt(wIn.value) || 0) + wSchritt); });
     [kgIn, wIn].forEach(function(f){ if(f) f.addEventListener("focus", function(){ f.select(); }); });
