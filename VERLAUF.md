@@ -8,6 +8,11 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-14 · Ignorierter Pausen-Tipp kommt nicht wieder (Fassung 2026-11-14-4)
+
+- Wer nach der Pause einfach trainiert (auch nur ein Satz, Runde noch offen), sieht den Pausen-Tipp erst bei der nächsten Pause von mehr als 2 Wochen wieder.
+- Tests: Pausen-Test erweitert.
+
 ## 2026-11-14 · Pausen-Tipp mit „Behalten“ (Fassung 2026-11-14-3)
 
 - Der Pausen-Tipp („14 Tage Pause – steig mit … etwas leichter wieder ein“) hat jetzt einen Knopf „Behalten“: Gewicht/Ziel bleiben wie zuletzt, der Tipp verschwindet bis zum nächsten Training. Andere Sicherheits-Tipps (z. B. nach nicht geschafften Sätzen) bleiben ohne Ablehnen.
