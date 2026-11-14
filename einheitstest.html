@@ -1220,6 +1220,8 @@
       gleich(W.studioTippAblehnen("bench-press"), "tippBehaltenOk", "abgelehnt");
       gleich(W.studioProg("bench-press"), null, "danach kein Pausen-Tipp mehr");
       gleich(W.studioArbeitsKg("bench-press"), 60, "Gewicht bleibt");
+      s.studio = { "bench-press": { kg:60, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 30*tag, s:[[60, 10], [60, 10], [60, 10]], zu:true }, { at:n - 3*tag, s:[[60, 10]] }] } };
+      gleich(W.studioProg("bench-press"), null, "Tipp ignoriert und trainiert (Runde noch offen): kommt nicht wieder");
     } finally { s.studio = alt; }
   });
   /* Fünfter Test (2026-11-14): R1–R7 */

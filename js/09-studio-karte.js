@@ -145,7 +145,7 @@ function studioProg(id, mitOffen){
   var z = studioZiel(id), b = studioBereich(id), o = studioOffen(e);
   var l = e.log.filter(function(x){ return arbeitsSaetze(x).length && !x.leicht && (mitOffen || x !== o); });
   if(!l.length) return null;
-  var kg = studioNurBlock(ex) ? 0 : studioArbeitsKg(id), letzte0 = l[l.length-1], pTage = studioPauseTage(e, false);
+  var kg = studioNurBlock(ex) ? 0 : studioArbeitsKg(id), letzte0 = l[l.length-1], pTage = studioPauseTage(e, true);   // ein angefangenes Training zählt: wer nach der Pause schon trainiert hat (Tipp ignoriert), sieht ihn erst bei der nächsten Pause wieder
   var assist = studioAssistiert(id);
   if(!mitOffen && kg > 0 && pTage > PROG_PAUSE_TAGE && !(e.erhoeht && e.erhoeht >= letzte0.at) && !(e.manuell && e.manuell >= letzte0.at)){
     if(assist) return { art:"assistRunter", kg:Math.round((kg + z.schritt)*100)/100, alt:kg, tage:pTage, pause:true };   // nach Pause: etwas mehr Unterstützung
@@ -223,7 +223,7 @@ function studioProgZeit(id, mitOffen){
   var l = e.log.filter(function(x){ return sek(x).length && !x.leicht && (mitOffen || x !== o); });
   if(!l.length || !(ziel > 0)) return null;
   var l0 = l[l.length-1];
-  var pT = studioPauseTage(e, false);
+  var pT = studioPauseTage(e, true);
   if(!mitOffen && pT > PROG_PAUSE_TAGE && !(e.erhoeht && e.erhoeht >= l0.at) && !(e.manuell && e.manuell >= l0.at) && ziel - ZEIT_SCHRITT >= ZEIT_MIN)
     return { art:"zeitRunter", grund:"pause", sek:ziel - ZEIT_SCHRITT, alt:ziel, tage:pT };   // lange Pause: etwas kürzer wieder einsteigen
   if(l.length < 2) return null;
