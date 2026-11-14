@@ -256,7 +256,14 @@ function studioTippRuht(id){
   var n = (e.log || []).filter(function(l){ return l.at > e.tippRuhe && arbeitsSaetze(l).length; }).length;
   return n < TIPP_RUHE_RUNDEN;
 }
-function studioTippAblehnen(id){ var a = studioAlle(), en = a[id] || (a[id] = { log:[] }); en.tippRuhe = Date.now(); save(); }
+/* Pausen-Tipp „Behalten“: wer sich fit fühlt, bleibt beim letzten Stand (gilt wie von Hand bestätigt, bis zum nächsten Training) */
+function studioPauseTipp(tp){ return !!tp && (tp.art === "pause" || tp.grund === "pause" || !!tp.pause); }
+function studioTippNein(tp){ return studioPauseTipp(tp) ? "tippBehalten" : studioTippSicher(tp) ? "" : "tippNichtJetzt"; }
+function studioTippAblehnen(id){
+  var a = studioAlle(), en = a[id] || (a[id] = { log:[] }), tp = en.log && en.log.length ? (studioNachZeit(id) ? studioProgZeit(id) : studioProg(id)) : null;
+  if(studioPauseTipp(tp)){ en.manuell = Date.now(); save(); return "tippBehaltenOk"; }
+  en.tippRuhe = Date.now(); save(); return "tippRuhtOk";
+}
 /* Plateau (Test 5, R4, fachlich geprüft): mehrere Runden ohne Fortschritt (weder geschätztes Maximum noch Gewicht noch Wiederholungen besser) →
    Hinweis mit Optionen: zuerst Schlaf, Stress, Essen und Technik prüfen, dann ein Satz mehr (per „Übernehmen“), dann Variante, Tempo, Leichtwoche.
    Fortgeschrittene (lange Historie): nach 4 Runden, sonst nach 3 - aber frühestens nach etwa 6 Wochen Training (12 Runden).
@@ -682,7 +689,7 @@ function renderStudioKarte(id){
       (v.erstes && !koerper && !(h && h.s.length) ? '<div class="st-leicht">'+esc(t("erstesMalHinweis", { n:bereich.max }))+'</div>' : '')+
       (stg ? '<div class="st-steigern"><span>'+esc(studioSteigerTippText(stg))+'</span>'+
         '<button type="button" class="btn btn-primary" data-stup>'+esc(t("tippUebernehmen"))+'</button>'+
-        (studioTippSicher(stg) ? '' : '<button type="button" class="btn btn-secondary st-tipp-nein" data-stnein>'+esc(t("tippNichtJetzt"))+'</button>')+'</div>' : '')+
+        (!studioTippNein(stg) ? '' : '<button type="button" class="btn btn-secondary st-tipp-nein" data-stnein>'+esc(t(studioTippNein(stg)))+'</button>')+'</div>' : '')+
       '<div class="st-heute"><b>'+esc(t("stToday"))+':</b> '+(h && h.s.length ? h.s.map(function(x, i){
         return '<span class="st-satz">'+(i+1)+'. '+esc(satzText(x).replace("×", " × "))+'</span>'; }).join("") : '<span class="st-leer">–</span>')+'</div>'+
       (blKontext ? '<div class="st-block"><span><b>'+esc(t(blKontext.art === "zirkel" ? "blkZirkel" : "blkSuper"))+'</b> · '+(blKontext.i+1)+'/'+blKontext.n+
@@ -819,7 +826,7 @@ function renderStudioKarte(id){
     studioPR = null;
     studioPauseStop(); save(); trainingNachSatz(id); neu();
   });
-  an("[data-stnein]", function(){ studioTippAblehnen(id); showToast(t("tippRuhtOk")); neu(); });
+  an("[data-stnein]", function(){ showToast(t(studioTippAblehnen(id))); neu(); });
   an("[data-stup]", function(){
     var plk = stPlanAktiv ? stPlanFind(stPlanAktiv) : null;
     if(stg.naechste && plk && planVarianteTauschen(plk, id, stg.naechste, stg.art === "variante", stg.art === "stufeZurueck")){ studioTippUebernehmen(id, stg); showToast(studioTippKurz(stg)); go("#studio/"+stg.naechste); return; }
