@@ -93,7 +93,7 @@ function satzKarteHTML(id, i, n){
       griffHTML(id)+
       (ILLU[id] ? '<div class="satz-figur">'+illuHTML(id, "satz-illu")+'</div>' : (ex.custom ? '<div class="satz-figur"><span class="ex-symbol big">'+exSymbol(ex)+'</span></div>' : ''))+
       '<div class="satz-saetze" role="img" aria-label="'+esc((h ? h.s.length : 0)+" / "+z.saetze)+'">'+(function(){ var o = "", n = Math.min(z.saetze, 12), fertigeAnzahl = h ? h.s.length : 0; for(var q = 0; q < n; q++) o += '<i class="'+(q < fertigeAnzahl ? 'an' : q === fertigeAnzahl ? 'jetzt' : '')+'"></i>'; return o; })()+'</div>'+
-      (function(){ var tp = h ? null : satzKontext.tipps[id]; return tp ? '<div class="satz-tipp'+(tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter" || tp.art === "stufeZurueck" ? ' runter' : '')+'"><span>'+esc(studioSteigerTippText(tp))+'</span><button type="button" data-satztipp>'+esc(t("tippUebernehmen"))+'</button>'+(studioTippSicher(tp) ? '' : '<button type="button" class="satz-tipp-nein" data-satznein>'+esc(t("tippNichtJetzt"))+'</button>')+'</div>' : ''; })()+
+      (function(){ var tp = h ? null : satzKontext.tipps[id]; return tp ? '<div class="satz-tipp'+(tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter" || tp.art === "stufeZurueck" ? ' runter' : '')+'"><span>'+esc(studioSteigerTippText(tp))+'</span><button type="button" data-satztipp>'+esc(t("tippUebernehmen"))+'</button>'+(!studioTippNein(tp) ? '' : '<button type="button" class="satz-tipp-nein" data-satznein>'+esc(t(studioTippNein(tp)))+'</button>')+'</div>' : ''; })()+
       '<div class="satz-ziel">'+esc(t("stGoal"))+' <b>'+satzName(z.saetze)+' × '+(zeitE ? studioTimer(id).work+' s'+(ex.perSide ? ' '+t("perSide") : '') : b.min+'–'+b.max)+'</b>'+(e.kg != null && !koerper ? ' · <b>'+studioKg(e.kg)+' kg</b>' : '')+'</div>'+
       (!h && satzKontext.wartend.indexOf(id) > -1 ? '<div class="satz-hinweis">'+esc(t("tippWartet"))+'</div>' : '')+
       (satzKontext.leicht ? '<div class="satz-hinweis">'+esc(t("leichtHinweis", { n:z.saetze }))+' <button type="button" class="satz-leicht-aus" data-leichtaus>'+esc(t("leichtAus"))+'</button></div>' : '')+
@@ -301,7 +301,7 @@ function renderSatzTraining(planId, start){
       var neuKg = studioKalibrieren(id, b.getAttribute("data-kalib") === "leicht");
       showToast(neuKg != null ? t("kalNeu", { kg:studioKg(neuKg) }) : t("kalGemerkt")); karteNeu(i);
     }); });
-    if((a = k.querySelector("[data-satznein]"))) a.addEventListener("click", function(){ studioTippAblehnen(id); delete satzKontext.tipps[id]; showToast(t("tippRuhtOk")); karteNeu(i); });
+    if((a = k.querySelector("[data-satznein]"))) a.addEventListener("click", function(){ var m = studioTippAblehnen(id); delete satzKontext.tipps[id]; showToast(t(m)); karteNeu(i); });
     if((a = k.querySelector("[data-satztipp]"))) a.addEventListener("click", function(){
       var tp = satzKontext.tipps[id]; if(!tp) return;
       if(tp.naechste && planVarianteTauschen(p, id, tp.naechste, tp.art === "variante", tp.art === "stufeZurueck")){   // nächste Stufe der Kette: Übung im BLOC tauschen und neu aufbauen

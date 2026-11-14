@@ -1211,6 +1211,17 @@
       wahr(/Plan beendet|Plan ended/.test(W.paPlanEndeHTML()), "2 von 5: „Plan beendet“ statt „geschafft“");
     } finally { s.kalender = alt.kalender; s.programme = alt.programme; }
   });
+  test("Pausen-Tipp lässt sich mit „Behalten“ ablehnen", function () {
+    var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();
+    try {
+      s.studio = { "bench-press": { kg:60, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 30*tag, s:[[60, 10], [60, 10], [60, 10]], zu:true }] } };
+      var tp = W.studioProg("bench-press"); gleich(tp && tp.art, "pause", "nach 30 Tagen Pausen-Tipp");
+      gleich(W.studioTippNein(tp), "tippBehalten", "Knopf „Behalten“");
+      gleich(W.studioTippAblehnen("bench-press"), "tippBehaltenOk", "abgelehnt");
+      gleich(W.studioProg("bench-press"), null, "danach kein Pausen-Tipp mehr");
+      gleich(W.studioArbeitsKg("bench-press"), 60, "Gewicht bleibt");
+    } finally { s.studio = alt; }
+  });
   /* Fünfter Test (2026-11-14): R1–R7 */
   test("Test 5 R1/R2/R5: Plantag erst beim Speichern erledigt, Plank nach Zeit, Rücknahme höchstens ~15 %", function () {
     var s = W.state.db.settings, alt = { kalender:s.kalender, einheiten:s.einheiten, studio:s.studio }, histAlt = W.state.db.history, heute = W.kalTagKey(Date.now()), tag = 86400000, n = Date.now();
