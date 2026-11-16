@@ -251,7 +251,7 @@ function koerperFormHTML(s, opt){
   function feld(id, label, wert, min, max){
     return '<label class="koerper-feld"><span>'+esc(label)+'</span><input type="number" inputmode="decimal" id="'+id+'" min="'+min+'" max="'+max+'" value="'+(wert ? esc(String(wert)) : "")+'"></label><div class="koerper-fehler" id="'+id+'-f" role="alert" hidden></div>';
   }
-  return '<div class="koerper-form">'+(opt.ohneName ? '' : '<label class="koerper-feld"><span>'+esc(t("koerperName"))+'</span>'+
+  return '<div class="koerper-form">'+koerperInfoKnopfHTML()+(opt.ohneName ? '' : '<label class="koerper-feld"><span>'+esc(t("koerperName"))+'</span>'+
     '<input type="text" id="k-name" maxlength="30" autocomplete="given-name" value="'+esc(s.name || "")+'"></label>')+
     feld("k-kg", t("koerperKg"), k.kg, 30, 250)+feld("k-cm", t("koerperCm"), k.cm, 120, 230)+feld("k-alter", t("koerperAlter"), k.alter, 10, 99)+feld("k-geh", t("koerperGeh"), k.gehPace, 5, 20)+
     '<div class="label" style="margin:10px 0 6px">'+esc(t("koerperSex"))+'</div><div class="seg-row" role="group">'+
@@ -260,6 +260,8 @@ function koerperFormHTML(s, opt){
     '<div class="label" style="margin:10px 0 6px">'+esc(t("koerperAktiv"))+'</div><div class="seg-row seg-pal" role="group">'+
     KOERPER_PAL.map(function(x){
       return '<button type="button" data-kpal="'+x[0]+'" class="'+(+k.pal === x[0] ? "active" : "")+'">'+esc(t(x[1]))+'</button>'; }).join("")+'</div>'+
+    '<div class="label" style="margin:10px 0 6px">'+esc(t("niveauTitel"))+'</div>'+niveauWahlHTML()+
+    '<div class="label" style="margin:10px 0 6px">'+esc(t("zielTitel"))+'</div>'+zielWahlHTML()+
     '<div style="font-size:12px;color:var(--text-dim);margin-top:10px">'+esc(t("koerperHint"))+'</div></div>';
 }
 /* Körperdaten binden (in der Statistik-Ansicht, siehe openKoerperSheet): Zahlen prüfen, nur sinnvolle Werte speichern (sonst leer = keine Schätzung) */
@@ -305,6 +307,7 @@ function koerperBinden(wurzel){
     });
   });
   wurzel.querySelectorAll("input[type=number]").forEach(function(el){ el.addEventListener("blur", speichern); });
+  niveauBinden(wurzel); zielBinden(wurzel); koerperInfoBinden(wurzel);
 }
 /* Fenster „Körperdaten“ (Person-Symbol oben rechts in der Statistik); danach zeichnet die Statistik neu */
 function openKoerperSheet(nachher){
@@ -330,7 +333,7 @@ function renderSettings(){
   app.innerHTML =
     topbar(t("settings"), { back:"#home" }) +
     '<div class="section-title">'+t("optWichtig")+'</div>'+
-    '<div class="card">'+toggleRow("f-tipps", t("tippsSetting"), t("tippsSettingDesc"), tippsAn())+(tippsAn() ? '<div class="label" style="margin:12px 0 6px">'+t("niveauTitel")+'</div>'+niveauWahlHTML() : "")+'</div>'+
+    '<div class="card">'+toggleRow("f-tipps", t("tippsSetting"), t("tippsSettingDesc"), tippsAn())+(tippsAn() ? '<div class="label" style="margin:12px 0 6px">'+t("niveauTitel")+'</div>'+niveauWahlHTML()+koerperInfoKnopfHTML() : "")+'</div>'+
     '<div class="card">'+einstKopf(EINST_ICON.darstellung, t("appearance"))+
     '<div class="theme-pick vier">'+
       themeBtn("system",t("thSystem"))+themeBtn("light",t("thLight"))+themeBtn("dark",t("thDark"))+
