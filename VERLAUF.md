@@ -95,6 +95,10 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-16 · Wanderung-Kalorien, ein Seil bei Schrägbank-Kabelübungen (Fassung 2026-11-16-1)
+
+Kalorien: Wanderungen wurden wie Läufe gerechnet (10,6 km, 3 h, 294 hm: ≈ 1.143 kcal). Jetzt Gehformel (ACSM, mit Höhenmetern) ab einer Pace, die in den Körperdaten einstellbar ist (Standard 8:30 min/km): ≈ 920 kcal. Schrägbank-Fliegende und -Drücken (Kabel) zeigen nur noch ein Seil, ebenso die liegende Fliegende. Hinweis: Eigene Gewichte/Wiederholungen werden schon heute als neue Grundlage für den nächsten Vorschlag genommen (studioVorschlag nutzt den letzten Arbeitssatz).
+
 ## 2026-11-12 · Steigerungsregel: fachliche Ergänzungen (Fassung 2026-11-12-17)
 
 Nach der ausführlichen Rückmeldung des Sportwissenschaftlers: Arbeitsgewicht bei Pyramiden = Median; nach mehr als 14 Tagen Pause Tipp „etwas leichter wieder einsteigen“; keine Rücknahme in der ersten Runde nach einer Erhöhung; Runden der Leichtwoche zählen weder für die Steigerung noch für die Volumen-Warnung; Rücknahmen sind Sicherheitshinweise und zählen nicht zur Grenze von zwei Tipps. Plan-Assistent: Zug im Wechsel (A Rudern, B Latzug/Klimmzug, ohne Dreh- und Renegade-Varianten), weitere Spezialstangen (Landmine, Meadows, Defizit, Box-Kniebeuge) und Power-Übungen (Umsetzen, Reißen, Thruster, Kettlebell-Swing, Woodchop) raus, Planks und Halteübungen nach Zeit. Test: einheitstest +1.
