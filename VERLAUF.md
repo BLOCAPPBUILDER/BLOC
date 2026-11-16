@@ -95,6 +95,10 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-16 · Kalorien „zusätzlich verbrannt“ (Fassung 2026-11-16-3)
+
+Gehen, Laufen und Rad zeigen jetzt netto (ohne Ruheumsatz) und sind so beschriftet („kcal zusätzlich“); die Wanderung vom Wochenende ≈ 660 statt ≈ 1.143. Das Tempo bestimmt weiter Gehen/Laufen (Pace-Grenze einstellbar).
+
 ## 2026-11-16 · Kalorien: weicher Übergang Gehen–Laufen (Fassung 2026-11-16-2)
 
 Nach fachlicher Prüfung: Gehformel (ACSM) und Laufformel werden um die einstellbare Pace-Grenze (±1 km/h) gemischt, kein Sprung mehr; Werte auf 10 kcal gerundet; Hinweistext mit Genauigkeit (±20 %), Rucksack/Gelände/Pausen. Weiter brutto (inkl. Grundumsatz) für Gehen, Laufen und Rad. Offen: Anzeige „zusätzlich“ (netto) und Auswahl Gehen/Wandern/Laufen von Hand.
