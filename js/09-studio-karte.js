@@ -129,6 +129,13 @@ function studioWdhGrenze(ex){
 /* Rücknahme: etwa 10 % weniger, auf Vielfache des Schritts, mindestens eine Stufe - aber höchstens ~15 % (Test 5, R5). Geht das mit der Stufe nicht
    (z. B. 15 kg und 5-kg-Stufe = −33 %), liefert sie 0: dann bleibt das Gewicht und das Wiederholungsziel sinkt. */
 var RUNTER_MAX = 0.15, RUNTER_MAX_LANG = 0.20, PAUSE_LANG_TAGE = 56;
+/* Rücknahme um etwa pct (z. B. 0,05), auf Vielfache des Schritts, mindestens eine Stufe; 0, wenn die Stufe zu groß wäre */
+function studioRunterPct(kg, s, pct, max){
+  var r = Math.round(kg*(1 - pct)/s)*s;
+  if(r >= kg - 1e-9) r = (Math.ceil(kg/s - 1e-9) - 1)*s;
+  r = Math.round(r*100)/100;
+  return r > 0 && (kg - r)/kg <= (max || RUNTER_MAX) + 1e-9 ? r : 0;
+}
 function studioRunter(kg, s, max){
   max = max || RUNTER_MAX;
   var r = Math.round(kg*0.9/s)*s;
@@ -147,9 +154,9 @@ function studioProg(id, mitOffen){
   if(!l.length) return null;
   var kg = studioNurBlock(ex) ? 0 : studioArbeitsKg(id), letzte0 = l[l.length-1], pTage = studioPauseTage(e, true);   // ein angefangenes Training zählt: wer nach der Pause schon trainiert hat (Tipp ignoriert), sieht ihn erst bei der nächsten Pause wieder
   var assist = studioAssistiert(id);
-  if(!mitOffen && kg > 0 && pTage > PROG_PAUSE_TAGE && !(e.erhoeht && e.erhoeht >= letzte0.at) && !(e.manuell && e.manuell >= letzte0.at)){
+  if(!mitOffen && kg > 0 && pTage > trainerStufe().pause && !(e.erhoeht && e.erhoeht >= letzte0.at) && !(e.manuell && e.manuell >= letzte0.at)){
     if(assist) return { art:"assistRunter", kg:Math.round((kg + z.schritt)*100)/100, alt:kg, tage:pTage, pause:true };   // nach Pause: etwas mehr Unterstützung
-    var r0 = studioRunter(kg, z.schritt, pTage > PAUSE_LANG_TAGE ? RUNTER_MAX_LANG : RUNTER_MAX);   // lange Pause: etwas leichter wieder einsteigen (nach > 8 Wochen bis 20 %)
+    var r0 = studioRunterPct(kg, z.schritt, pTage > PAUSE_LANG_TAGE ? 0.15 : pTage > 21 ? 0.10 : 0.05, pTage > PAUSE_LANG_TAGE ? RUNTER_MAX_LANG : RUNTER_MAX);   // 15–21 Tage ≈ 5 %, 3–8 Wochen ≈ 10 %, darüber ≈ 15 % (Praxiswerte)   // lange Pause: etwas leichter wieder einsteigen (nach > 8 Wochen bis 20 %)
     if(r0 > 0) return { art:"pause", kg:r0, alt:kg, tage:pTage };
     if(z.wdh > 6) return { art:"wdhRunter", grund:"pause", wdh:Math.max(Math.min(5, z.wdh), z.wdh - 2), alt:z.wdh, kg:kg, tage:pTage };   // Stufe zu groß: Gewicht halten, Wdh. senken
   }
@@ -161,6 +168,7 @@ function studioProg(id, mitOffen){
   function amGewicht(x){ return arbeitsSaetze(x).filter(function(s){ return satzTyp(s) !== "d" && (kg > 0 ? s[0] >= kg - 1e-9 : true); }); }
   function geschafft(x){
     var w = amGewicht(x).map(function(s){ return s[1]; }).sort(function(p, q){ return q - p; }).slice(0, z.saetze);
+    if(trainerStufe().locker && kg > 0 && z.wdh <= 8) return w.length >= z.saetze && w[0] >= b.max && w.every(function(n){ return n >= b.max - 1; });   // Erfahren, Hauptübung: lockeres Kriterium (sonst steigert man nie)
     return w.length >= z.saetze && w.every(function(n){ return n >= b.max; });
   }
   function verfehlt(x){
@@ -288,17 +296,18 @@ function studioPlateau(id){
 }
 function studioTippSicher(tp){ return tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter" || tp.art === "stufeZurueck" || tp.art === "assistRunter"; }
 /* Tipps beim Training (Einstellungen, ganz oben): aus = keine Steigerungs-/Rücknahme-Vorschläge, keine Leichtwoche, kein Zug-Druck-Hinweis. Eigene Werte bleiben immer die Grundlage, die Auswertung am Ende gibt es immer. */
-/* Trainer-Niveau (Einführung/Einstellungen): bestimmt, wie schnell der Trainer steigern lässt. Ohne Angabe = Fortgeschritten (bisheriges Verhalten).
-   Einsteiger: größere Sprünge (bis 15 %) sind ok, 2 Runden · Fortgeschritten: bis 10 %, 2 Runden · Erfahren: kleinere Sprünge (bis 5 %), 3 Runden (Fachprüfung offen). */
+/* Trainer-Niveau (Einführung/Einstellungen): bestimmt, wie der Trainer steigern lässt. Ohne Angabe = Fortgeschritten (bisheriges Verhalten). Werte: Fachprüfung 2026-11-16 (ACSM 2–10 %, „2-für-2“).
+   Einsteiger: bis 10 % je Sprung, bis 3 Tipps je Training, Pause ab 14 Tagen · Fortgeschritten: bis 10 %, 2 Tipps · Erfahren: bis 5 %, Hauptübungen (Ziel ≤ 8) „locker“
+   (alle Sätze mindestens oberer Rand − 1, bester Satz am Rand), Pause ab 21 Tagen. */
 function trainerNiveau(){ var n = state.db.settings.niveau; return n === "einsteiger" || n === "erfahren" ? n : "fortgeschritten"; }
-function trainerStufe(){ var n = trainerNiveau(); return n === "einsteiger" ? { runden:2, sprung:0.15 } : n === "erfahren" ? { runden:3, sprung:0.05 } : { runden:2, sprung:PROG_SPRUNG }; }
+function trainerStufe(){ var n = trainerNiveau(); return n === "einsteiger" ? { runden:2, sprung:0.10, tipps:3, pause:14, locker:false } : n === "erfahren" ? { runden:2, sprung:0.05, tipps:2, pause:21, locker:true } : { runden:2, sprung:PROG_SPRUNG, tipps:2, pause:PROG_PAUSE_TAGE, locker:false }; }
 /* Auswahl „Dein Niveau“ (Einführung + Einstellungen) und ihr Klick */
 var TRAINER_NIVEAUS = [["einsteiger", "niveauEin"], ["fortgeschritten", "niveauFort"], ["erfahren", "niveauErf"]];
 function niveauWahlHTML(){
   var n = trainerNiveau();
   return '<div class="seg-row niveau-wahl" role="group" aria-label="'+esc(t("niveauTitel"))+'">'+TRAINER_NIVEAUS.map(function(x){
     return '<button type="button" data-niveau="'+x[0]+'" aria-pressed="'+(n === x[0])+'" class="'+(n === x[0] ? "active" : "")+'">'+esc(t(x[1]))+'</button>';
-  }).join("")+'</div><div class="niveau-sub" style="font-size:12px;color:var(--text-dim);margin-top:6px">'+esc(t("niveauSub"))+'</div>';
+  }).join("")+'</div>';
 }
 function niveauBinden(wurzel, nachher){
   wurzel.querySelectorAll("[data-niveau]").forEach(function(b){
@@ -309,6 +318,36 @@ function niveauBinden(wurzel, nachher){
     });
   });
 }
+/* Trainingsziel im Profil (Einführung/Körperdaten): fit = Fitter werden, muskel = Muskelaufbau, abnehmen = Gewicht verlieren. Vorbelegung für „Überrasch mich“ und den Plan-Assistenten. */
+var PROFIL_ZIELE = [["fit", "zielFit"], ["muskel", "zielMuskel"], ["abnehmen", "zielAbnehmen"]];
+function profilZiel(){ var z = state.db.settings.ziel; return z === "fit" || z === "muskel" || z === "abnehmen" ? z : ""; }
+function zielWahlHTML(){
+  var z = profilZiel();
+  return '<div class="seg-row ziel-wahl" role="group" aria-label="'+esc(t("zielTitel"))+'">'+PROFIL_ZIELE.map(function(x){
+    return '<button type="button" data-kziel="'+x[0]+'" aria-pressed="'+(z === x[0])+'" class="'+(z === x[0] ? "active" : "")+'">'+esc(t(x[1]))+'</button>';
+  }).join("")+'</div>';
+}
+function zielBinden(wurzel){
+  wurzel.querySelectorAll("[data-kziel]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var s = state.db.settings, neu = b.getAttribute("data-kziel"); s.ziel = s.ziel === neu ? "" : neu; save();   // nochmal tippen = abwählen
+      wurzel.querySelectorAll("[data-kziel]").forEach(function(x){ var an = x.getAttribute("data-kziel") === s.ziel; x.classList.toggle("active", an); x.setAttribute("aria-pressed", an ? "true" : "false"); });
+    });
+  });
+}
+/* „Warum fragen wir das?“ (Fragezeichen bei den Körperdaten): wofür Gewicht, Größe, Niveau und Ziel gebraucht werden, mit Quellen */
+function koerperInfoKnopfHTML(){ return '<div class="koerper-info-zeile" style="display:flex;align-items:center;justify-content:space-between;margin:0 0 8px"><span style="font-size:13px;color:var(--text-dim)">'+esc(t("koerperInfoFrage"))+'</span><button type="button" class="info-btn" data-kinfo aria-label="'+esc(t("koerperInfoTitel"))+'" title="'+esc(t("koerperInfoTitel"))+'">?</button></div>'; }
+function koerperInfoBinden(wurzel){
+  wurzel.querySelectorAll("[data-kinfo]").forEach(function(b){ b.addEventListener("click", function(){
+    var ov = document.createElement("div"); ov.className = "confirm-overlay"; ov.style.zIndex = 99999;
+    ov.innerHTML = '<div class="confirm-sheet" role="dialog" aria-label="'+esc(t("koerperInfoTitel"))+'" style="max-height:85vh;overflow:auto"><h3>'+esc(t("koerperInfoTitel"))+'</h3>'+
+      '<p style="line-height:1.5;white-space:pre-line;font-size:14px">'+esc(t("koerperInfoText"))+'</p><div class="btn-row"><button class="btn btn-primary" data-ok>OK</button></div></div>';
+    document.body.appendChild(ov);
+    function zu(){ ov.remove(); }
+    ov.querySelector("[data-ok]").addEventListener("click", zu);
+    ov.addEventListener("click", function(e){ if(e.target === ov) zu(); });
+  }); });
+}
 function tippsAn(){ return state.db.settings.tippsAus !== true; }
 function studioTipps(ids, leicht, mitOffen){
   var o = {}, steig = [];
@@ -316,27 +355,29 @@ function studioTipps(ids, leicht, mitOffen){
   if(leicht || !tippsAn()) return o;
   ids.forEach(function(id, k){
     var tp = studioProg(id, mitOffen) || (mitOffen ? null : studioPlateau(id)); if(!tp) return;   // ohne Steigerungs-Tipp: Plateau-Hinweis
-    if(studioTippSicher(tp)) o[id] = tp;
+    if(studioTippSicher(tp) || tp.art === "plateau") o[id] = tp;   // Plateau-Hinweise zählen nicht gegen das Limit (Test 6, P3)
     else if(!studioTippRuht(id)){ var ex = findExercise(id); steig.push({ id:id, tp:tp, k:k, grund:ex && studioWdhGrenze(ex) === 15 ? 0 : 1 }); }   // „Nicht jetzt“: ruht
   });
   // längste Wartezeit zuerst, bei Gleichstand Grundübungen, dann die Reihenfolge des Plans; ohne Wartezeit hinten
   steig.sort(function(a, b){ return ((a.tp.seit || Infinity) - (b.tp.seit || Infinity)) || a.grund - b.grund || a.k - b.k; });
-  steig.forEach(function(x, i){ if(i < PROG_MAX_TIPPS) o[x.id] = x.tp; else studioTippsWartend.push(x.id); });
+  steig.forEach(function(x, i){ if(i < trainerStufe().tipps) o[x.id] = x.tp; else studioTippsWartend.push(x.id); });
   return o;
 }
 /* Kalibrieren (Test 4, Q5): in den ersten zwei Runden einer Übung mit Gewicht, wenn alle Ziel-Sätze heute am oberen Rand lagen, fragt die Satzkarte
    „Wie schwer war das?“. „Leicht“ → zwei Stufen mehr (höchstens +20 %, mindestens eine Stufe), danach nicht mehr fragen. */
 function studioKalibrierFrage(id, h){
   var e = studioEintrag(id), ex = findExercise(id);
-  if(!e || !h || e.kalibriert || !ex || studioNurBlock(ex) || studioAssistiert(id) || studioNachZeit(id)) return false;
+  if(!e || !h || !ex || !tippsAn() || studioNurBlock(ex) || studioAssistiert(id) || studioNachZeit(id)) return false;
   var runden = (e.log || []).filter(function(l){ return arbeitsSaetze(l).length; }).length;
-  if(runden > 2) return false;
+  var einst = trainerNiveau() === "einsteiger";   // Einsteiger: die Frage „Wie schwer war das?“ kehrt wieder (alle 3 Runden, Test 6 P2), sonst nur in den ersten zwei Runden
+  if(e.kalibriert && !(einst && runden - (e.kalibriertRunde || 0) >= 3 && runden <= 30)) return false;
+  if(!einst && runden > 2) return false;
   var z = studioZiel(id), b = studioBereich(id), a = arbeitsSaetze(h);
   return a.length >= z.saetze && a.every(function(x){ return x[0] > 0 && x[1] >= b.max; });
 }
 function studioKalibrieren(id, leicht){
   var a = studioAlle(), en = a[id] || (a[id] = { log:[] }), z = studioZiel(id), kg = studioArbeitsKg(id), neu = null;
-  en.kalibriert = true;
+  en.kalibriert = true; en.kalibriertRunde = (en.log || []).filter(function(l){ return arbeitsSaetze(l).length; }).length;
   if(leicht && kg > 0){
     var s = z.schritt, grenze = /squat|deadlift/.test(id) ? 0.10 : PROG_DOPPEL_MAX;   // Kniebeuge und Kreuzheben höchstens +10 %
     var zwei = Math.round((Math.floor(kg/s + 1e-9) + 2)*s*100)/100, max = Math.floor(kg*(1 + grenze)/s + 1e-9)*s;

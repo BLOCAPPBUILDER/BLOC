@@ -110,13 +110,13 @@
   test("Kalorien: Radfahrten rechnen mit Rad-Werten nach Tempo (Compendium), nicht wie Läufe", function () {
     var alt = W.state.db.settings.koerper; W.state.db.settings.koerper = { kg: 80 };
     try {
-      gleich(W.runKcal(10000, 3600, true), 320, "10 km/h Freizeit: MET 4,0");
-      gleich(W.runKcal(17000, 3600, true), 544, "17 km/h: MET 6,8");
-      gleich(W.runKcal(20000, 3600, true), 640, "20 km/h: MET 8,0");
-      gleich(W.runKcal(24000, 3600, true), 800, "24 km/h: MET 10,0");
-      gleich(W.runKcal(30000, 3600, true), 960, "30 km/h: MET 12,0");
+      gleich(W.runKcal(10000, 3600, true), 240, "10 km/h Freizeit: MET 4,0, netto (MET − 1)");
+      gleich(W.runKcal(17000, 3600, true), 460, "17 km/h: MET 6,8, netto, auf 10 gerundet");
+      gleich(W.runKcal(20000, 3600, true), 560, "20 km/h: MET 8,0, netto");
+      gleich(W.runKcal(24000, 3600, true), 720, "24 km/h: MET 10,0, netto");
+      gleich(W.runKcal(30000, 3600, true), 880, "30 km/h: MET 12,0, netto");
       wahr(W.runKcal(20000, 3600, false) !== W.runKcal(20000, 3600, true), "Fahrt und Lauf werden verschieden gerechnet");
-      gleich(W.runKcal(20000, 3600, true), 640, "dieselbe Fahrt gibt immer dasselbe");
+      gleich(W.runKcal(20000, 3600, true), 560, "dieselbe Fahrt gibt immer dasselbe");
     } finally { W.state.db.settings.koerper = alt; }
   });
   test("Wochenwerte: je Kalenderwoche (Montag) der beste Wert, der niedrigste bei Zeiten, die Summe beim Volumen", function () {
@@ -568,14 +568,16 @@
     var s = W.state.db.settings, alt = s.koerper;
     try {
       s.koerper = { kg: 80 };
-      gleich(W.runKcal(10000, 3600, false), 909, "Lauf 10 km in 1 h: 1,036 kcal je kg und km + Ruheumsatz (80 kcal je Stunde)");
-      gleich(W.runKcal(20000, 3600, true), 640, "Rad 20 km/h: 8 MET");
+      gleich(W.runKcal(10000, 3600, false), 830, "Lauf 10 km in 1 h: 1,036 kcal je kg und km (netto, auf 10 gerundet)");
+      gleich(W.runKcal(20000, 3600, true), 560, "Rad 20 km/h: 8 MET, netto");
       gleich(W.runKcal(30, 3600, false), 0, "zu kurze Strecke: keine Schätzung");
       s.koerper = { kg: 80, cm: 180, alter: 30, sex: "m" };
       var m = W.runKcal(10000, 3600, false);
       s.koerper = { kg: 80, cm: 180, alter: 30, sex: "w" };
       var f = W.runKcal(10000, 3600, false);
-      wahr(m > f && m > 800 && m < 1000, "gleiche Daten: Mann höher als Frau (Ruheumsatz), plausibel: " + m + " / " + f);
+      gleich(m, f, "netto: unabhängig vom Ruheumsatz (Geschlecht), " + m + " / " + f); gleich(m, 830, "plausibel netto");
+      s.koerper = { kg: 80, gehPace: 8.5 };
+      wahr(W.runKcal(10620, 10642, false, 294) > 500 && W.runKcal(10620, 10642, false, 294) < 800, "Wanderung (Pace 16:42, 294 hm) wird als Gehen gerechnet, nicht als Lauf: " + W.runKcal(10620, 10642, false, 294));
       s.koerper = { kg: 20, cm: 180 };
       gleich(W.koerperDaten(), null, "Gewicht außerhalb 30-250 kg: keine Schätzung");
       gleich(W.runKcal(10000, 3600, false), 0, "ohne Körperdaten 0");
@@ -811,11 +813,11 @@
     var seiten = W.introSeiten();
     gleich(seiten.slice(0, 3).map(function (x) { return x.art; }), ["sprache", "profil", "aufbau"], "Reihenfolge");
     var d = document.createElement("div"); d.innerHTML = seiten[2].extra;
-    wahr(d.querySelector("svg[role=img][aria-label]"), "Schaubild mit Beschriftung für Screenreader");
-    var sv = d.querySelector("svg").textContent;
+    wahr(d.querySelector("[role=img][aria-label]"), "Schaubild mit Beschriftung für Screenreader");
+    var sv = d.querySelector(".intro-schaubild").textContent;
     wahr(/BLOC 1/.test(sv) && /BLOC 2/.test(sv) && /RUN/.test(sv) && /Trainingsplan/.test(sv) && /TrainingsBLOC 1/.test(sv) && !/Workout/.test(sv), "Schaubild nennt Trainingsplan, TrainingsBLOC 1 mit BLOC 1, BLOC 2 und RUN, ohne Workout");
-    wahr(/TrainingsBLOC 2\s+\(…\)/.test(sv) && /TrainingsBLOC 3\s+\(…\)/.test(sv), "Weitere TrainingsBLOCs stehen zugeklappt als (…)");
-    wahr(/TrainingsBLOC/.test(d.querySelector(".intro-kette").textContent), "Kette nennt TrainingsBLOC");
+    wahr(d.querySelectorAll(".sb-zu").length === 2, "Weitere TrainingsBLOCs stehen zugeklappt (Tag 2 und 3)");
+    wahr(/TrainingsBLOC/.test(d.textContent), "Schaubild und Legende nennen TrainingsBLOC");
   });
   test("Sicherungs-Erinnerung: selten (60 Tage ohne Datei, Schnappschuss vorhanden, × ruht 30 Tage)", function () {
     var s = W.state.db.settings, tag = 86400000, alt = { z: W.snapZeit, ex: s.lastExport, bis: s.backupTipBis, bl: W.state.db.blocks, it: W.installTipHTML };
@@ -971,7 +973,7 @@
     var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now(), id = "chest-press-machine";
     try {
       s.studio = {}; s.studio[id] = { kg:40, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 30*tag, s:[[40, 10], [40, 10], [40, 10]] }, { at:n - 20*tag, s:[[40, 10], [40, 10], [40, 10]] }] };
-      var tp = W.studioProg(id); wahr(tp && tp.art === "pause" && tp.kg === 35, "20 Tage Pause: leichter einsteigen (" + JSON.stringify(tp) + ")");
+      var tp = W.studioProg(id); wahr(tp && tp.art === "pause" && tp.kg === 37.5, "20 Tage Pause (≈ 5 %): leichter einsteigen (" + JSON.stringify(tp) + ")");
       s.studio[id] = { kg:45, schritt:2.5, erhoeht:n - 5*tag, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 8*tag, s:[[42.5, 7], [42.5, 7], [42.5, 7]] }, { at:n - 2*tag, s:[[45, 6], [45, 6], [45, 6]] }] };
       gleich(W.studioProg(id), null, "erste Runde nach der Erhöhung: keine Rücknahme");
       s.studio[id] = { kg:40, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 8*tag, s:[[40, 12], [40, 12], [40, 12]] }, { at:n - 4*tag, s:[[40, 12], [40, 12], [40, 12]] }, { at:n - 1*tag, s:[[40, 12], [40, 12]], leicht:true }] };
@@ -1210,6 +1212,17 @@
       s.kalender = { e:[1, 2, 3, 4, 5].map(function (i) { return { id:"q" + i, tag:W.kalTagKey(Date.now() - (i + 1)*86400000), art:"programm", ref:"q6", prog:{ id:"q6", i:0 }, at:i, erledigt:i <= 2 }; }) };
       wahr(/Plan beendet|Plan ended/.test(W.paPlanEndeHTML()), "2 von 5: „Plan beendet“ statt „geschafft“");
     } finally { s.kalender = alt.kalender; s.programme = alt.programme; }
+  });
+  test("Trainer: Niveau bestimmt Sprung, Pause und Tipp-Limit; ohne Angabe Fortgeschritten; Trainer aus = keine Tipps", function () {
+    var s = W.state.db.settings, altN = s.niveau, altA = s.tippsAus;
+    try {
+      delete s.niveau; gleich(W.trainerNiveau(), "fortgeschritten", "ohne Angabe");
+      gleich(W.trainerStufe().sprung, 0.10, "Fortgeschritten: bis 10 %"); gleich(W.trainerStufe().pause, 14, "Pause ab 14 Tagen");
+      s.niveau = "einsteiger"; gleich(W.trainerStufe().tipps, 3, "Einsteiger: bis 3 Tipps");
+      s.niveau = "erfahren"; gleich(W.trainerStufe().sprung, 0.05, "Erfahren: 5 %"); gleich(W.trainerStufe().pause, 21, "Pause ab 21 Tagen"); wahr(W.trainerStufe().locker, "Erfahren: lockeres Kriterium");
+      s.tippsAus = true; gleich(JSON.stringify(W.studioTipps(["bench-press"], false, true)), "{}", "Trainer aus: keine Tipps");
+      wahr(!W.studioKalibrierFrage("bench-press", { s:[[40, 12], [40, 12], [40, 12]] }), "Trainer aus: keine Kalibrierfrage");
+    } finally { if(altN === undefined) delete s.niveau; else s.niveau = altN; if(altA === undefined) delete s.tippsAus; else s.tippsAus = altA; }
   });
   test("Pausen-Tipp lässt sich mit „Behalten“ ablehnen", function () {
     var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();

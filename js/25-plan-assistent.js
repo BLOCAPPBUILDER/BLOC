@@ -195,8 +195,14 @@ var PA_LIB_DEHN = { gk:"stretch-full", ok:"stretch-post-upper", uk:"stretch-post
 
 /* ---------- Antworten ---------- */
 var PA_ZIELE = ["muskel", "kraft", "abnehmen", "ausdauer", "allgemein", "beweglich"], PA_BEREICHE = ["workout", "run", "mobility"];
+/* Vorbelegung aus dem Profil (Körperdaten): Ziel fit → allgemein, Niveau → Intensität (Einsteiger anfaenger, Fortgeschritten mittel, Erfahren schwer; „schwer“ nur, wenn die Aktivität es erlaubt, siehe paSauber) */
+function paProfilVorgabe(){
+  var s = state.db.settings, z = typeof profilZiel === "function" ? profilZiel() : "", n = s.niveau;
+  return { ziele:z ? [z === "fit" ? "allgemein" : z] : [], schwer:n === "einsteiger" ? "anfaenger" : n === "fortgeschritten" ? "mittel" : n === "erfahren" ? "schwer" : "" };
+}
 function paStandard(){
-  return { ziele:[], ziel:"", fokus:[], niveau:"", schwer:"", tage:[], dauer:0, train:[], ausr:[], zonen:[], bereiche:["workout"], laufen:"", mobility:"", einschr:[], impact:"", sport:null, alter:"u50", wochen:6 };
+  var pv = paProfilVorgabe();
+  return { ziele:pv.ziele.slice(), ziel:pv.ziele[0] || "", fokus:[], niveau:"", schwer:pv.schwer, tage:[], dauer:0, train:[], ausr:[], zonen:[], bereiche:["workout"], laufen:"", mobility:"", einschr:[], impact:"", sport:null, alter:"u50", wochen:6 };
 }
 function paSchwerErlaubt(a){ return a.niveau !== "gar" && a.niveau !== "unreg" && a.alter !== "65"; }   // „Schwer“ nur ab 1–2× pro Woche aktiv und nicht ab 65
 function paSchwerStandard(a){ return a.niveau === "gar" ? "anfaenger" : a.niveau === "unreg" ? "leicht" : "mittel"; }   // Vorgabe aus dem Aktivitätsniveau

@@ -274,7 +274,7 @@ function kopfNeuHTML(){
   var gruss = grussWort(h), name = state.db.settings.name;
   if(name) gruss += ", " + name;   // Name aus der Einführung bzw. den Körperdaten (freiwillig, nur lokal)
   var datum = new Date().toLocaleDateString(lang, { weekday:"long", day:"numeric", month:"long" });
-  return '<section class="kopf-neu"><img class="kn-bild" src="img/neu-kopf.jpg" alt="" draggable="false"><img class="kn-bild kn-hell" src="img/neu-kopf-hell-meer.jpg" alt="" draggable="false"><div class="kn-tint"></div>'+
+  return '<section class="kopf-neu"><img class="kn-bild" src="img/neu-kopf-meer.webp" alt="" draggable="false"><img class="kn-bild kn-hell" src="img/neu-kopf-meer.webp" alt="" draggable="false"><div class="kn-tint"></div>'+
     '<div class="kn-zeile"><div class="marke-neu"><b>BLOC</b><small>Modular Training Builder</small></div><div class="kn-sym">'+kopfSymboleNeu("home")+'</div></div>'+
     '<div class="kn-gruss"><span>'+esc(datum)+'</span><b>'+esc(gruss)+'</b></div></section>';
 }

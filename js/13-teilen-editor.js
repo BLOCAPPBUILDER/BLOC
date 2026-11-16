@@ -1072,7 +1072,8 @@ var spFeinOffen = false;   // Feinauswahl in „Überrasch mich“ aufgeklappt (
    modusStart: "zufall" | "gewicht". */
 function openSurprise(twId, modusStart){
   var s = state.db.settings, tw = twId ? findWorkout(twId) : null;
-  var p = spNormalize(JSON.parse(JSON.stringify(s.surprise || { dur:20, mains:["kraft","rumpf"], cats:[], level:2, equips:["none"] })));
+  var pz = typeof profilZiel === "function" ? profilZiel() : "", pn = s.niveau;   // Vorbelegung aus dem Profil, solange noch nichts eigenes gespeichert ist: Niveau → Intensität, Ziel „Gewicht verlieren“ → mit Cardio
+  var p = spNormalize(JSON.parse(JSON.stringify(s.surprise || { dur:20, mains:["kraft","rumpf"], cats:pz === "abnehmen" ? ["cardio"] : [], level:pn === "einsteiger" ? 1 : pn === "erfahren" ? 3 : 2, equips:["none"] })));
   if(tw) p.anzahl = s.surpriseAnzahl || 8; else delete p.anzahl;
   var modus = !tw && modusStart === "gewicht" ? "gewicht" : "zufall";
   var g = { w:{ brust:15, ruecken:15, schulter:10, arme:10, bauch:8, rumpf:8, beine:24, po:12 }, n:8 };   // Regler von „Nach Gewichtung“
