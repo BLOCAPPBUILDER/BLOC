@@ -95,6 +95,10 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-16 · Schalter „Tipps beim Training“ (Fassung 2026-11-16-4)
+
+Neu ganz oben in den Einstellungen: Tipps an/aus. Aus = keine Steigerungs-/Rücknahme-Vorschläge, keine Leichtwoche, kein Zug-Druck-Hinweis; eigene Werte bleiben Grundlage, die Auswertung am Ende gibt es immer (Satz-Training, Statistik, Balance in der Körperansicht).
+
 ## 2026-11-16 · Kalorien „zusätzlich verbrannt“ (Fassung 2026-11-16-3)
 
 Gehen, Laufen und Rad zeigen jetzt netto (ohne Ruheumsatz) und sind so beschriftet („kcal zusätzlich“); die Wanderung vom Wochenende ≈ 660 statt ≈ 1.143. Das Tempo bestimmt weiter Gehen/Laufen (Pace-Grenze einstellbar).

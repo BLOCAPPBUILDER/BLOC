@@ -617,7 +617,7 @@ function planZugDruck(ids){
   return c;
 }
 function planBalanceHTML(p, ids){
-  if(!p || p.balanceAus) return "";
+  if(!p || p.balanceAus || !tippsAn()) return "";
   var c = planZugDruck(ids);
   if(c.p < c.z + 2) return "";
   return '<div class="tm-hint plan-balance"><span>'+esc(t("planBalance", { p:c.p, z:c.z }))+'</span><button type="button" class="pb-aus" data-pbaus aria-label="'+esc(t("close"))+'">&times;</button></div>';
