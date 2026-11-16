@@ -1256,6 +1256,19 @@
       gleich(W.studioVolumen(l, "assisted-pullup"), 0, "ohne Körpergewicht: Unterstützung zählt nicht als Volumen");
     } finally { s.koerper = altK; }
   });
+  test("Test 7 S1: Fortgeschrittene steigern bei 9/8/8 im Bereich 6–10, Einsteiger nicht; Plateau nach Wochen", function () {
+    var s = W.state.db.settings, alt = s.studio, altN = s.niveau, tag = 86400000, n = Date.now(), id = "bench-press";
+    try {
+      s.studio = {}; s.studio[id] = { kg:85, schritt:2.5, ziel:{ saetze:3, wdh:8 }, log:[{ at:n - 14*tag, s:[[85, 9], [85, 8], [85, 8]], zu:true }, { at:n - 7*tag, s:[[85, 9], [85, 8], [85, 8]], zu:true }] };
+      s.niveau = "fortgeschritten"; var tp = W.studioProg(id); wahr(tp && tp.art === "kg" && tp.kg === 87.5, "Fortgeschritten 9/8/8 zweimal: +1 Stufe (" + JSON.stringify(tp) + ")");
+      s.niveau = "einsteiger"; gleich(W.studioProg(id), null, "Einsteiger: strenge Regel, noch kein Tipp");
+      s.niveau = "fortgeschritten"; s.studio[id].log[1].s = [[85, 9], [85, 8], [85, 8, "n", 10]];
+      gleich(W.studioProg(id), null, "RPE 10 am Rand: kein Tipp");
+      var log = []; for (var k = 12; k >= 1; k--) log.push({ at:n - k*7*tag, s:[[85, 8], [85, 8], [85, 7]], zu:true });
+      s.studio[id] = { kg:85, schritt:2.5, ziel:{ saetze:3, wdh:8 }, log:log }; s.niveau = "fortgeschritten";
+      var pl = W.studioPlateau(id); wahr(pl && pl.art === "plateau", "12 Wochen ohne Fortschritt: Plateau-Hinweis (" + JSON.stringify(pl) + ")");
+    } finally { s.studio = alt; if(altN === undefined) delete s.niveau; else s.niveau = altN; }
+  });
   test("Pausen-Tipp lässt sich mit „Behalten“ ablehnen", function () {
     var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();
     try {

@@ -95,6 +95,10 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-16 · Test 7 S1: Fortgeschrittene steigern, Plateau nach Wochen (Fassung 2026-11-16-11)
+
+Fortgeschritten und Erfahren (Hauptübung, Bereich bis 10): alle Sätze ≥ oberer Rand − 2, bester ≥ Rand − 1, RPE ≤ 8 (falls eingetragen), zwei Runden hintereinander; Erfahren zusätzlich „alle ≥ Rand − 1, bester am Rand“. Einsteiger weiter streng. Plateau-Hinweis nach Zeitfenster (Einsteiger 24, Fortgeschritten 35, Erfahren 49 Tage) statt nach 12 Runden. Test dazu (101 grün). Offen: eine Isolation je Muskel und Tag, Hüftstreckung mit Langhantel bevorzugen.
+
 ## 2026-11-16 · Test 7: Plan-Reihenfolge, Druck für Anfänger, Profil (Fassung 2026-11-16-10)
 
 S2: Grundübung vor ihrer Variante (Bankdrücken vor enges Bankdrücken). S3: „Druck-Hauptübung“ zählt nur Brust/Schulter-Mehrgelenk (nicht Butterfly, Beinpresse, Pallof); die Wochenbilanz ersetzt zuerst Isolation, nie die letzte Druck-Hauptübung. S4: Ziel in den Einstellungen unter Trainer änderbar. S5: Niveau ohne Wahl: nichts markiert. S6: abgebrochener Versuch zählt in „Meine Woche“ nicht. Offen: S1 (Plateau/Steigerung bei Fortgeschrittenen, wartet auf Fachprüfung).

@@ -168,7 +168,12 @@ function studioProg(id, mitOffen){
   function amGewicht(x){ return arbeitsSaetze(x).filter(function(s){ return satzTyp(s) !== "d" && (kg > 0 ? s[0] >= kg - 1e-9 : true); }); }
   function geschafft(x){
     var w = amGewicht(x).map(function(s){ return s[1]; }).sort(function(p, q){ return q - p; }).slice(0, z.saetze);
-    if(trainerStufe().locker && kg > 0 && z.wdh <= 8) return w.length >= z.saetze && w[0] >= b.max && w.every(function(n){ return n >= b.max - 1; });   // Erfahren, Hauptübung: lockeres Kriterium (sonst steigert man nie)
+    var st0 = trainerStufe();
+    if(st0.mittel && kg > 0 && z.wdh <= 8 && w.length >= z.saetze){   // Hauptübung bis Bereich 10 (Test 7 S1, Fachprüfung 2026-11-16)
+      var rpe0 = arbeitsSaetze(x).map(function(q){ return q[3] > 0 ? q[3] : 0; }).filter(Boolean), rpeOk = !rpe0.length || Math.max.apply(null, rpe0) <= 8;
+      if(st0.locker && w[0] >= b.max && w.every(function(n){ return n >= b.max - 1; })) return true;   // Erfahren: alle ≥ Rand − 1, bester am Rand
+      return w.every(function(n){ return n >= b.max - 2; }) && w[0] >= b.max - 1 && rpeOk;   // Fortgeschritten (und Erfahren): alle ≥ Rand − 2, bester ≥ Rand − 1, RPE ≤ 8
+    }
     return w.length >= z.saetze && w.every(function(n){ return n >= b.max; });
   }
   function verfehlt(x){
@@ -277,13 +282,15 @@ function studioTippAblehnen(id){
    Hinweis mit Optionen: zuerst Schlaf, Stress, Essen und Technik prüfen, dann ein Satz mehr (per „Übernehmen“), dann Variante, Tempo, Leichtwoche.
    Fortgeschrittene (lange Historie): nach 4 Runden, sonst nach 3 - aber frühestens nach etwa 6 Wochen Training (12 Runden).
    Leichtwochen-Runden zählen nicht, nach einer Pause von mehr als 14 Tagen kein Hinweis; danach angepasst (erhoeht/manuell) = neuer Anfang. */
-var PLATEAU_MIN_RUNDEN = 12;
+var PLATEAU_MIN_RUNDEN = 6;   // Test 7 S1: bisher 12 (≈ 3 Monate bei einmal pro Woche), jetzt ab 6 Runden und mindestens 3 im Zeitfenster
 function studioPlateau(id){
   var e = studioEintrag(id), ex = findExercise(id);
   if(!e || !e.log || !ex || studioNachZeit(id) || studioAssistiert(id)) return null;
   var zP = studioZiel(id), o = studioOffen(e), l = e.log.filter(function(x){ return arbeitsSaetze(x).length >= zP.saetze && !x.leicht && x !== o; });   // Runden mit weniger Sätzen zählen nicht
   if(l.length < PLATEAU_MIN_RUNDEN || studioPauseTage(e, false) > PROG_PAUSE_TAGE) return null;
-  var n = l.length >= 24 ? 4 : 3, letzte = l.slice(-n), davor = l.slice(0, l.length - n);
+  /* Test 7 S1: das Zeitfenster zählt in Wochen (Einsteiger ~3,5, Fortgeschritten 5, Erfahren 7), nicht in Runden: Ganzkörperpläne sind sonst zu schnell, Splits zu langsam */
+  var grenzeAt = Date.now() - trainerStufe().plateauTage*86400000, letzte = l.filter(function(x){ return x.at >= grenzeAt; }), davor = l.filter(function(x){ return x.at < grenzeAt; }), n = letzte.length;
+  if(letzte.length < 3 || davor.length < 3) return null;
   var seitAenderung = Math.max(e.erhoeht || 0, e.manuell || 0, e.tippRuhe || 0);
   if(seitAenderung && seitAenderung >= letzte[0].at) return null;
   var koerper = studioNurBlock(ex);
@@ -300,7 +307,7 @@ function studioTippSicher(tp){ return tp.art === "runter" || tp.art === "wdhRunt
    Einsteiger: bis 10 % je Sprung, bis 3 Tipps je Training, Pause ab 14 Tagen · Fortgeschritten: bis 10 %, 2 Tipps · Erfahren: bis 5 %, Hauptübungen (Ziel ≤ 8) „locker“
    (alle Sätze mindestens oberer Rand − 1, bester Satz am Rand), Pause ab 21 Tagen. */
 function trainerNiveau(){ var n = state.db.settings.niveau; return n === "einsteiger" || n === "erfahren" ? n : "fortgeschritten"; }
-function trainerStufe(){ var n = trainerNiveau(); return n === "einsteiger" ? { runden:2, sprung:0.10, tipps:3, pause:14, locker:false } : n === "erfahren" ? { runden:2, sprung:0.05, tipps:2, pause:21, locker:true } : { runden:2, sprung:PROG_SPRUNG, tipps:2, pause:PROG_PAUSE_TAGE, locker:false }; }
+function trainerStufe(){ var n = trainerNiveau(); return n === "einsteiger" ? { runden:2, sprung:0.10, tipps:3, pause:14, locker:false, mittel:false, plateauTage:24 } : n === "erfahren" ? { runden:2, sprung:0.05, tipps:2, pause:21, locker:true, mittel:true, plateauTage:49 } : { runden:2, sprung:PROG_SPRUNG, tipps:2, pause:PROG_PAUSE_TAGE, locker:false, mittel:true, plateauTage:35 }; }
 /* Auswahl „Dein Niveau“ (Einführung + Einstellungen) und ihr Klick */
 var TRAINER_NIVEAUS = [["einsteiger", "niveauEin"], ["fortgeschritten", "niveauFort"], ["erfahren", "niveauErf"]];
 function niveauWahlHTML(){
