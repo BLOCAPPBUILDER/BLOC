@@ -95,6 +95,10 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-16 · Kalorien: weicher Übergang Gehen–Laufen (Fassung 2026-11-16-2)
+
+Nach fachlicher Prüfung: Gehformel (ACSM) und Laufformel werden um die einstellbare Pace-Grenze (±1 km/h) gemischt, kein Sprung mehr; Werte auf 10 kcal gerundet; Hinweistext mit Genauigkeit (±20 %), Rucksack/Gelände/Pausen. Weiter brutto (inkl. Grundumsatz) für Gehen, Laufen und Rad. Offen: Anzeige „zusätzlich“ (netto) und Auswahl Gehen/Wandern/Laufen von Hand.
+
 ## 2026-11-16 · Wanderung-Kalorien, ein Seil bei Schrägbank-Kabelübungen (Fassung 2026-11-16-1)
 
 Kalorien: Wanderungen wurden wie Läufe gerechnet (10,6 km, 3 h, 294 hm: ≈ 1.143 kcal). Jetzt Gehformel (ACSM, mit Höhenmetern) ab einer Pace, die in den Körperdaten einstellbar ist (Standard 8:30 min/km): ≈ 920 kcal. Schrägbank-Fliegende und -Drücken (Kabel) zeigen nur noch ein Seil, ebenso die liegende Fliegende. Hinweis: Eigene Gewichte/Wiederholungen werden schon heute als neue Grundlage für den nächsten Vorschlag genommen (studioVorschlag nutzt den letzten Arbeitssatz).

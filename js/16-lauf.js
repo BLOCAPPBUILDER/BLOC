@@ -505,10 +505,13 @@ function runKcal(dist, sek, rad, hm){
   if(!kd || !(dist > 50) || !(sek > 10)) return 0;
   var km = dist/1000, h = sek/3600, v = km/h;
   if(rad){ var met = v < 16.1 ? 4 : v < 19.3 ? 6.8 : v < 22.5 ? 8 : v < 25.7 ? 10 : 12; return Math.round(met*kd.kg*h); }
-  /* Gehen/Wandern: ist die Pace (min/km, einschließlich Pausen) langsamer als die einstellbare Grenze (Körperdaten, Standard 8:30), gelten die Laufkosten nicht.
-     Stattdessen ACSM-Gehformel: VO2 = 0,1·v + 1,8·v·Steigung + 3,5 (ml/kg/min, v in m/min), 1 l O2 ≈ 5 kcal; Steigung = Höhenmeter / Strecke (max 30 %, ohne Höhendaten 0). */
-  if(sek/60/km > kd.geh){ var vm = km*1000/(sek/60), gr = hm > 0 ? Math.min(0.3, hm/(km*1000)) : 0; return Math.round((0.1*vm + 1.8*vm*gr + 3.5)*kd.kg/1000*5*(sek/60)); }
-  return Math.round(1.036*kd.kg*km + kcalProStunde(kd)*h);
+  /* Gehen/Wandern ↔ Laufen: Mitte des Übergangs ist die einstellbare Pace-Grenze (Körperdaten, Standard 8:30 min/km ≈ 7,1 km/h), ±1 km/h wird weich gemischt (kein Sprung; Fachliche Prüfung 2026-11-16).
+     Gehen = ACSM-Gehformel: VO2 = 0,1·v + 1,8·v·Steigung + 3,5 (ml/kg/min, v in m/min), 1 l O2 ≈ 5 kcal; Steigung = Höhenmeter / Strecke (max 30 %, ohne Höhendaten 0). Alles brutto (inkl. Ruheumsatz), grob auf 10 kcal gerundet. */
+  var vg = 60/kd.geh, w = Math.max(0, Math.min(1, (v - (vg - 1))/2));
+  var lauf = 1.036*kd.kg*km + kcalProStunde(kd)*h;
+  if(w >= 1) return Math.round(lauf/10)*10;
+  var vm = km*1000/(sek/60), gr = hm > 0 ? Math.min(0.3, hm/(km*1000)) : 0, geh = (0.1*vm + 1.8*vm*gr + 3.5)*kd.kg/1000*5*(sek/60);
+  return Math.round((geh*(1-w) + lauf*w)/10)*10;
 }
 function runKcalText(dist, sek, rad, hm){ var k = runKcal(dist, sek, rad, hm); return k > 0 ? "≈ "+k.toLocaleString(currentLang() === "en" ? "en-GB" : "de-DE") : "–"; }
 function runTempoJetzt(r){
