@@ -56,6 +56,11 @@ function satzVergleichHTML(ids){
       var bv = top(vor), dKg = Math.round((b[0] - bv[0])*100)/100, dW = wdhSumme(h) - wdhSumme(vor);
       if(studioAssistiert(id)) dKg = -dKg;   // assistiert: weniger Unterstützung ist der Fortschritt
       if(b[0] > 0 && dKg !== 0){ badge = (dKg > 0 ? "▲ +" : "▼ −")+studioKg(Math.abs(dKg))+" kg"; kl = dKg > 0 ? "hoch" : "runter"; }
+      else if(arbeitsSaetze(h).length !== arbeitsSaetze(vor).length){   // Test 6 P8: andere Satzzahl → je Satz vergleichen, weniger Sätze ist kein Rückschritt
+        var nH = arbeitsSaetze(h).length, nV = arbeitsSaetze(vor).length, dA = Math.round(wdhSumme(h)/nH - wdhSumme(vor)/nV);
+        if(dA > 0){ badge = "▲ "+t(sek ? "satzMehrS" : "satzMehrW", { n:dA })+" / "+t("satzProSatz"); kl = "hoch"; }
+        else { badge = nH < nV ? t("satzWenigerSaetze") : "= "+t("satzGleich"); kl = "gleich"; }
+      }
       else if(dW !== 0){ badge = (dW > 0 ? "▲ " : "▼ ")+t(sek ? (dW > 0 ? "satzMehrS" : "satzWenigerS") : (dW > 0 ? "satzMehrW" : "satzWenigerW"), { n:Math.abs(dW) }); kl = dW > 0 ? "hoch" : "runter"; }
       else { badge = "= "+t("satzGleich"); kl = "gleich"; }
     }

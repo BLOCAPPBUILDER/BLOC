@@ -1224,6 +1224,27 @@
       wahr(!W.studioKalibrierFrage("bench-press", { s:[[40, 12], [40, 12], [40, 12]] }), "Trainer aus: keine Kalibrierfrage");
     } finally { if(altN === undefined) delete s.niveau; else s.niveau = altN; if(altA === undefined) delete s.tippsAus; else s.tippsAus = altA; }
   });
+  test("Test 6 P9: Rekord nur mit mehr Last oder mehr Wdh. bis 12, nicht in der Leichtwoche", function () {
+    var f = function (kg, w) { return { kg:kg, wBest:w, rm:kg*(1 + w/30), wdh:w }; };
+    wahr(W.studioIstRekord(f(60, 9), f(60, 8)), "gleiche Last, mehr Wdh. (≤ 12): Rekord");
+    wahr(!W.studioIstRekord(f(60, 13), f(60, 12)), "über 12 Wdh. bei gleicher Last: kein Rekord mehr");
+    wahr(W.studioIstRekord(f(62.5, 5), f(60, 12)), "mehr Last: Rekord");
+    var s = W.state.db.settings, alt = s.studio, n = Date.now(), tag = 86400000;
+    try {
+      s.studio = { "bench-press": { kg:60, schritt:2.5, ziel:{ saetze:3, wdh:8 }, log:[{ at:n - 3*tag, s:[[60, 8], [60, 8], [60, 8]], zu:true }, { at:n - 1*tag, s:[[62.5, 8], [62.5, 8], [62.5, 8]], zu:true, leicht:true }] } };
+      var lg = s.studio["bench-press"].log, jetzt = W.studioBestwerte([lg[1]]), vor = W.studioBestwerte(lg, 1);
+      wahr(W.studioIstRekord(jetzt, vor), "Regel allein: mehr Last ist ein Rekord (die Leichtwoche wird in der Anzeige ausgenommen)");
+    } finally { s.studio = alt; }
+  });
+  test("Test 6 P10/P11: Pläne mit Druck an jedem Ganzkörper-/Oberkörpertag, Mehrgelenk zuerst", function () {
+    var p = W.paErzeuge({ ziele:["muskel"], niveau:"reg", schwer:"mittel", tage:[0, 2, 4], dauer:45, train:["studio"], ausr:["lh", "kh", "maschine"], impact:"", einschr:[], bereiche:["workout"] });
+    p.tage.forEach(function (t0) { t0.teile.forEach(function (tl) {
+      if (!tl.bloc || !tl.bloc.main) return; var ex = tl.bloc.ids.map(W.findExercise).filter(Boolean);
+      if (/gk|ok/.test(t0.typ || "gk")) wahr(ex.some(function (x) { return W.paDrueckt(x) && W.paMehrgelenk(x); }), t0.name + ": Druckübung fehlt: " + tl.bloc.ids.join(", "));
+      var ersteIso = ex.findIndex(function (x) { return !W.paMehrgelenk(x); }), letzteMg = -1; ex.forEach(function (x, k) { if (W.paMehrgelenk(x) && !W.PA_RUMPF_GUT[x.id]) letzteMg = k; });
+      wahr(ersteIso < 0 || letzteMg < ersteIso || ex.slice(ersteIso).every(function (x) { return !W.paMehrgelenk(x) || W.PA_RUMPF_GUT[x.id]; }), t0.name + ": Mehrgelenkübungen stehen vor den Isolationsübungen: " + tl.bloc.ids.join(", "));
+    }); });
+  });
   test("Pausen-Tipp lässt sich mit „Behalten“ ablehnen", function () {
     var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();
     try {

@@ -198,7 +198,7 @@ var PA_ZIELE = ["muskel", "kraft", "abnehmen", "ausdauer", "allgemein", "bewegli
 /* Vorbelegung aus dem Profil (Körperdaten): Ziel fit → allgemein, Niveau → Intensität (Einsteiger anfaenger, Fortgeschritten mittel, Erfahren schwer; „schwer“ nur, wenn die Aktivität es erlaubt, siehe paSauber) */
 function paProfilVorgabe(){
   var s = state.db.settings, z = typeof profilZiel === "function" ? profilZiel() : "", n = s.niveau;
-  return { ziele:z ? [z === "fit" ? "allgemein" : z] : [], schwer:n === "einsteiger" ? "anfaenger" : n === "fortgeschritten" ? "mittel" : n === "erfahren" ? "schwer" : "" };
+  return { ziele:z ? [z === "fit" ? "allgemein" : z] : [], schwer:n === "einsteiger" ? "anfaenger" : n === "fortgeschritten" ? "mittel" : n === "erfahren" ? (z === "muskel" ? "schwer" : "mittel") : "" };   // Erfahren: schwer nur bei Muskelaufbau, sonst mittel (Fachprüfung 2026-11-16)
 }
 function paStandard(){
   var pv = paProfilVorgabe();
@@ -437,6 +437,22 @@ function paErzeuge(a0){
           }
         }
       }
+      /* Test 6 P11: jeder Ganzkörper- und Oberkörpertag hat eine Mehrgelenk-Druckübung (Brustpresse, Liegestütz geneigt, Schulterdrücken); fehlt sie, ersetzt sie die letzte Arm-/Rumpf-/Bauchübung */
+      if((typ === "gk" || typ === "ok") && !mainIds.some(function(id){ var e0 = findExercise(id); return paDrueckt(e0) && paMehrgelenk(e0); })){
+        var dPool = []; ["brust", "schulter"].forEach(function(g2){ (pools.kraft[g2] || []).forEach(function(o){ if(paDrueckt(o.ex) && paMehrgelenk(o.ex) && !PA_ZEIT.test(o.ex.id)) dPool.push(o); }); });
+        var dx = paWaehle(dPool, benutzt, seed + "druck", planBenutzt);
+        if(dx){
+          var dEr = -1; ["arme", "rumpf", "bauch"].forEach(function(g3){ if(dEr < 0) for(var q4 = gruppen.length - 1; q4 >= 0; q4--) if(gruppen[q4] === g3 && !paIstZug(findExercise(mainIds[q4]))){ dEr = q4; break; } });
+          benutzt[dx.id] = 1; planBenutzt[dx.id] = 1;
+          if(dEr >= 0){ delete benutzt[mainIds[dEr]]; mainIds[dEr] = dx.id; gruppen[dEr] = "brust"; } else { mainIds.push(dx.id); gruppen.push("brust"); }
+        }
+      }
+      /* Test 6 P10: Reihenfolge Mehrgelenk (schwer) zuerst, dann Isolation und Rumpf; innerhalb davon bleibt die Reihenfolge der Slots (stabil) */
+      (function(){
+        var paare = mainIds.map(function(id, k){ var e1 = findExercise(id); return { id:id, g:gruppen[k], k:k, w:e1 && paMehrgelenk(e1) && !PA_RUMPF_GUT[id] ? 0 : 1 }; });
+        paare.sort(function(x, y){ return (x.w - y.w) || (x.k - y.k); });
+        mainIds = paare.map(function(p0){ return p0.id; }); gruppen = paare.map(function(p0){ return p0.g; });
+      })();
       /* „Allgemein fit“ und Einsteiger (Test 5, R7): je Ganzkörpertag eine Druck-, Zug-, Bein-/Hüft- und Rumpfübung; fehlt eine, ersetzt sie die letzte Isolationsübung */
       if(typ === "gk" && (haupt === "allgemein" || a.niveau === "gar" || sw === "anfaenger")){
         var rollen7 = [
