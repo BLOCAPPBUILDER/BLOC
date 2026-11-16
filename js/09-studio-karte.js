@@ -580,7 +580,7 @@ function openStudioStats(id, sicht){
   var ex = findExercise(id), e = studioEintrag(id) || {}, log = (e.log || []).filter(function(l){ return arbeitsSaetze(l).length; });
   var saetze = 0;
   log.forEach(function(l){ saetze += arbeitsSaetze(l).length; });
-  var b = studioBestwerte(log), gesamt = log.reduce(function(a, l){ return a + studioVolumen(l); }, 0);
+  var b = studioBestwerte(log), gesamt = log.reduce(function(a, l){ return a + studioVolumen(l, id); }, 0);
   var koerper = studioNurBlock(ex);   // ohne Gewicht zählen die Wiederholungen
   function kgT(v){ return studioKg(Math.round(v*10)/10)+" kg"; }
   // Rekorde automatisch erkennen: eine Einheit mit neuem Bestgewicht oder neuem geschätzten 1RM (ohne Gewicht: mehr Wiederholungen in einem Satz)

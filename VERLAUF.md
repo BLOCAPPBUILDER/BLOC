@@ -95,6 +95,10 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-16 · Test 6: Kalender, Planende, assistierte Geräte (Fassung 2026-11-16-9)
+
+P13: Termine mit Plan haken nur ihr eigenes Training ab, andere Einheiten stehen „Ohne Termin“. P14: „Plan geschafft“ zählt nur den aktuellen Block (letzte Planwochen). P7: assistierte Geräte rechnen Volumen mit Körpergewicht minus Unterstützung (ohne Körpergewicht nur Wdh.). Tests: 100 grün. Offen: P12 (Mobility-Überrasch-mich), P4, P5, P16, höchstens eine Kniebeugen-Variante je Tag, Feinschliff.
+
 ## 2026-11-16 · Test 6: Rekord, Auswertung, Plan-Reihenfolge (Fassung 2026-11-16-8)
 
 P9 Rekord: nicht in der Leichtwoche, mehr Wdh. bei gleicher Last nur bis 12. P8 Auswertung: bei anderer Satzzahl je Satz vergleichen, „weniger Sätze“ ohne Rückschritt. P10/P11 Plan-Assistent: Mehrgelenkübungen zuerst, Ganzkörper-/Oberkörpertage immer mit Druckübung. Erfahren bei Fit/Abnehmen: Intensität „mittel“, bei Muskelaufbau „schwer“. Tests: 99 grün. Offen: P4, P5, P7, P12–P16, höchstens eine Kniebeugen-Variante je Tag, Feinschliff.
