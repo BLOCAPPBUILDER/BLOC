@@ -95,6 +95,10 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-16 · Erklärtext Körperdaten fachlich geprüft (Fassung 2026-11-16-7)
+
+Fragezeichen-Text nach Prüfung durch den Sportwissenschaftler: Compendium 2024 (Herrmann), Niveau mit ACSM 2009 und 2026, Muskelaufbau getrennt nach Satzzahl und Last, Gewichtsverlust nach Donnelly 2009, Eiweiß über DGE. Seine Vorgaben für Ziel × Niveau (Sätze, Wdh., Cardio-Anteil, Leichtwoche) und für Test 6 P7, P9–P11 liegen vor, noch nicht eingebaut.
+
 ## 2026-11-16 · Ziel + Niveau im Profil, Fragezeichen mit Quellen, neues Header-Foto, Trainer nach Test 6 (Fassung 2026-11-16-6)
 
 Körperdaten (Einstellungen, Einführung): Niveau und Ziel (Fitter werden / Muskelaufbau / Gewicht verlieren), Fragezeichen „Warum fragen wir das?“ mit Quellen; Vorbelegung von „Überrasch mich“ und Plan-Assistent. Kurze Texte in der App, Details hinter dem Fragezeichen. Header: neues Foto (img/neu-kopf-meer.webp), gleicher Ausschnitt. Trainer: Einsteiger 3 Tipps und wiederkehrende „Wie schwer war das?“-Frage, Erfahren lockeres Kriterium und Pause ab 21 Tagen, Pausen-Abzug 5/10/15 %, Plateau zählt nicht gegen das Tipp-Limit. Tests: Kalorien (netto), Einführung angepasst, neuer Trainer-Test (97 grün). Test 6 offen: P4, P5, P7–P16 und Feinschliff.
