@@ -286,10 +286,12 @@ function studioPlateau(id){
            kleineScheiben:!koerper && kg >= 40 && z.schritt >= 2.5, seit:letzte[0].at };
 }
 function studioTippSicher(tp){ return tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter" || tp.art === "stufeZurueck" || tp.art === "assistRunter"; }
+/* Tipps beim Training (Einstellungen, ganz oben): aus = keine Steigerungs-/Rücknahme-Vorschläge, keine Leichtwoche, kein Zug-Druck-Hinweis. Eigene Werte bleiben immer die Grundlage, die Auswertung am Ende gibt es immer. */
+function tippsAn(){ return state.db.settings.tippsAus !== true; }
 function studioTipps(ids, leicht, mitOffen){
   var o = {}, steig = [];
   studioTippsWartend = [];
-  if(leicht) return o;
+  if(leicht || !tippsAn()) return o;
   ids.forEach(function(id, k){
     var tp = studioProg(id, mitOffen) || (mitOffen ? null : studioPlateau(id)); if(!tp) return;   // ohne Steigerungs-Tipp: Plateau-Hinweis
     if(studioTippSicher(tp)) o[id] = tp;
@@ -426,7 +428,7 @@ function studioTippUebernehmen(id, tp){
 }
 /* Leichtwoche: steht heute im Kalender ein Termin aus dem Plan-Assistenten mit Leichtwoche, zu dem dieser BLOC gehört? */
 function planLeichtHeute(planId){
-  if(!planId || typeof kalAn !== "function") return false;
+  if(!planId || typeof kalAn !== "function" || !tippsAn()) return false;
   if((state.db.settings.leichtAus || {})[kalTagKey(Date.now())+"|"+planId]) return false;   // heute bewusst normal trainiert
   return kalAn(kalTagKey(Date.now())).some(function(e){
     if(!e.leicht) return false;
