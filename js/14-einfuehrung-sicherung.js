@@ -19,7 +19,8 @@ function introProfilHTML(){
   }
   return '<div class="koerper-form intro-profil"><label class="koerper-feld"><span>'+esc(t("koerperName"))+'</span>'+
     '<input type="text" id="i-name" maxlength="30" autocomplete="given-name" value="'+esc(s.name || "")+'"></label>'+
-    feld("i-kg", t("koerperKg"), k.kg, 30, 250)+feld("i-cm", t("koerperCm"), k.cm, 120, 230)+'</div>';
+    feld("i-kg", t("koerperKg"), k.kg, 30, 250)+feld("i-cm", t("koerperCm"), k.cm, 120, 230)+
+    '<div class="label" style="margin:12px 0 6px">'+esc(t("niveauTitel"))+'</div>'+niveauWahlHTML()+'</div>';
 }
 function introProfilSpeichern(wurzel){
   var n = wurzel.querySelector("#i-name");
@@ -88,6 +89,7 @@ function openIntro(){
     root.querySelector("[data-introweiter]").addEventListener("click", function(){ if(letzte) schliessen(); else blaettern(1); });
     var z = root.querySelector("[data-introzurueck]"); if(z) z.addEventListener("click", function(){ blaettern(-1); });
     var w = root.querySelector("[data-introweg]"); if(w) w.addEventListener("click", schliessen);
+    niveauBinden(root);   // Trainer-Niveau (Seite „Über dich“)
     root.querySelectorAll("[data-introlang]").forEach(function(b){   // Sprache wählen: gilt sofort für die ganze App, die Einführung zeichnet sich neu
       b.addEventListener("click", function(){
         state.db.settings.lang = b.getAttribute("data-introlang"); save(); applyLang();

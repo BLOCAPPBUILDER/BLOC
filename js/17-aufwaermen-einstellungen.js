@@ -330,7 +330,7 @@ function renderSettings(){
   app.innerHTML =
     topbar(t("settings"), { back:"#home" }) +
     '<div class="section-title">'+t("optWichtig")+'</div>'+
-    '<div class="card">'+toggleRow("f-tipps", t("tippsSetting"), t("tippsSettingDesc"), tippsAn())+'</div>'+
+    '<div class="card">'+toggleRow("f-tipps", t("tippsSetting"), t("tippsSettingDesc"), tippsAn())+(tippsAn() ? '<div class="label" style="margin:12px 0 6px">'+t("niveauTitel")+'</div>'+niveauWahlHTML() : "")+'</div>'+
     '<div class="card">'+einstKopf(EINST_ICON.darstellung, t("appearance"))+
     '<div class="theme-pick vier">'+
       themeBtn("system",t("thSystem"))+themeBtn("light",t("thLight"))+themeBtn("dark",t("thDark"))+
@@ -416,7 +416,8 @@ function renderSettings(){
   bindToggle("f-space", function(v){ s.space=v; save(); applySpace(); phaseBeep("work"); });
   bindToggle("f-voice", function(v){ s.voice=v; save(); });
   function settingsNeu(){ var y = window.scrollY; renderSettings(); window.scrollTo(0, y); }
-  bindToggle("f-tipps", function(v){ s.tippsAus = !v; save(); });
+  bindToggle("f-tipps", function(v){ s.tippsAus = !v; save(); settingsNeu(); });
+  niveauBinden(app);
   bindToggle("f-rpe", function(v){ s.anstrengung = v ? (anstrengungModus() || "rpe") : ""; save(); settingsNeu(); });
   app.querySelectorAll("[data-rpemodus]").forEach(function(b){ b.addEventListener("click", function(){ s.anstrengung = b.getAttribute("data-rpemodus"); save(); settingsNeu(); }); });
 
