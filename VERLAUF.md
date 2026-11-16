@@ -95,6 +95,10 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-16 · Test 7: Plan-Reihenfolge, Druck für Anfänger, Profil (Fassung 2026-11-16-10)
+
+S2: Grundübung vor ihrer Variante (Bankdrücken vor enges Bankdrücken). S3: „Druck-Hauptübung“ zählt nur Brust/Schulter-Mehrgelenk (nicht Butterfly, Beinpresse, Pallof); die Wochenbilanz ersetzt zuerst Isolation, nie die letzte Druck-Hauptübung. S4: Ziel in den Einstellungen unter Trainer änderbar. S5: Niveau ohne Wahl: nichts markiert. S6: abgebrochener Versuch zählt in „Meine Woche“ nicht. Offen: S1 (Plateau/Steigerung bei Fortgeschrittenen, wartet auf Fachprüfung).
+
 ## 2026-11-16 · Test 6: Kalender, Planende, assistierte Geräte (Fassung 2026-11-16-9)
 
 P13: Termine mit Plan haken nur ihr eigenes Training ab, andere Einheiten stehen „Ohne Termin“. P14: „Plan geschafft“ zählt nur den aktuellen Block (letzte Planwochen). P7: assistierte Geräte rechnen Volumen mit Körpergewicht minus Unterstützung (ohne Körpergewicht nur Wdh.). Tests: 100 grün. Offen: P12 (Mobility-Überrasch-mich), P4, P5, P16, höchstens eine Kniebeugen-Variante je Tag, Feinschliff.

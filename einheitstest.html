@@ -1240,7 +1240,7 @@
     var p = W.paErzeuge({ ziele:["muskel"], niveau:"reg", schwer:"mittel", tage:[0, 2, 4], dauer:45, train:["studio"], ausr:["lh", "kh", "maschine"], impact:"", einschr:[], bereiche:["workout"] });
     p.tage.forEach(function (t0) { t0.teile.forEach(function (tl) {
       if (!tl.bloc || !tl.bloc.main) return; var ex = tl.bloc.ids.map(W.findExercise).filter(Boolean);
-      if (/gk|ok/.test(t0.typ || "gk")) wahr(ex.some(function (x) { return W.paDrueckt(x) && W.paMehrgelenk(x); }), t0.name + ": Druckübung fehlt: " + tl.bloc.ids.join(", "));
+      if (/gk|ok/.test(t0.typ || "gk")) wahr(ex.some(function (x) { return W.paDruckHaupt(x); }), t0.name + ": Druckübung fehlt: " + tl.bloc.ids.join(", "));
       var ersteIso = ex.findIndex(function (x) { return !W.paMehrgelenk(x); }), letzteMg = -1; ex.forEach(function (x, k) { if (W.paMehrgelenk(x) && !W.PA_RUMPF_GUT[x.id]) letzteMg = k; });
       wahr(ersteIso < 0 || letzteMg < ersteIso || ex.slice(ersteIso).every(function (x) { return !W.paMehrgelenk(x) || W.PA_RUMPF_GUT[x.id]; }), t0.name + ": Mehrgelenkübungen stehen vor den Isolationsübungen: " + tl.bloc.ids.join(", "));
     }); });
@@ -1297,7 +1297,7 @@
     var lena = W.paErzeuge({ ziele:["allgemein"], niveau:"gar", schwer:"anfaenger", tage:[0, 3], dauer:30, train:["studio"], ausr:["kh", "maschine", "kabel"], impact:"schonend", einschr:["knie"], bereiche:["workout"] });
     lena.tage.forEach(function (t0) { t0.teile.forEach(function (tl) {
       if (!tl.bloc || !tl.bloc.main) return; var ex = tl.bloc.ids.map(W.findExercise);
-      wahr(ex.some(function (x) { return W.paDrueckt(x) && W.paMehrgelenk(x); }), t0.name + ": Druckübung fehlt: " + tl.bloc.ids.join(", "));
+      wahr(ex.some(function (x) { return W.paDruckHaupt(x); }), t0.name + ": Druckübung fehlt: " + tl.bloc.ids.join(", "));
       wahr(ex.some(function (x) { return W.paIstZug(x) || W.paZiehtEx(x); }), t0.name + ": Zugübung fehlt");
       wahr(ex.some(function (x) { return W.PA_RUMPF_GUT[x.id]; }), t0.name + ": Rumpfübung fehlt: " + tl.bloc.ids.join(", "));
       wahr(!tl.bloc.ids.some(function (id) { return /side-bend|kickback/.test(id); }), t0.name + ": Seitbeugen/Kickback bei Einsteigern");

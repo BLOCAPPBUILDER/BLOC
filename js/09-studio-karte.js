@@ -304,7 +304,7 @@ function trainerStufe(){ var n = trainerNiveau(); return n === "einsteiger" ? { 
 /* Auswahl „Dein Niveau“ (Einführung + Einstellungen) und ihr Klick */
 var TRAINER_NIVEAUS = [["einsteiger", "niveauEin"], ["fortgeschritten", "niveauFort"], ["erfahren", "niveauErf"]];
 function niveauWahlHTML(){
-  var n = trainerNiveau();
+  var n = ["einsteiger", "fortgeschritten", "erfahren"].indexOf(state.db.settings.niveau) > -1 ? state.db.settings.niveau : "";   // Test 7 S5: ohne Wahl ist nichts markiert
   return '<div class="seg-row niveau-wahl" role="group" aria-label="'+esc(t("niveauTitel"))+'">'+TRAINER_NIVEAUS.map(function(x){
     return '<button type="button" data-niveau="'+x[0]+'" aria-pressed="'+(n === x[0])+'" class="'+(n === x[0] ? "active" : "")+'">'+esc(t(x[1]))+'</button>';
   }).join("")+'</div>';

@@ -117,7 +117,9 @@ function wocheDaten(basis){   // basis: ein Tag der gewünschten Woche (Voreinst
   var d = basis ? new Date(basis) : new Date(); d.setHours(0, 0, 0, 0);
   var start = d.getTime() - ((d.getDay() + 6) % 7)*86400000;   // Montag 0:00
   var tage = [0,0,0,0,0,0,0], n = 0, sek = 0;
-  besucheAlle((state.db.history || []).filter(function(e){ return e; })).forEach(function(b){   // ein Besuch = ein Training (Timer bis 60 Minuten Abstand)
+  /* Test 7 S6: ein abgebrochenes Satz-Training (Verlaufseintrag mit studio, aber nichts gespeichert) zählt wie im Kalender nicht als Training */
+  var gespeichert = {}; (typeof einheitenListe === "function" ? einheitenListe() : []).forEach(function(x){ if(x && x.tag) gespeichert[x.tag] = 1; });
+  besucheAlle((state.db.history || []).filter(function(e){ return e && !(e.studio && !gespeichert[kalTagKey(e.at)]); })).forEach(function(b){   // ein Besuch = ein Training (Timer bis 60 Minuten Abstand)
     if(b.von < start) return;
     var tag = Math.floor((b.von - start)/86400000);
     if(tag > 6) return;
