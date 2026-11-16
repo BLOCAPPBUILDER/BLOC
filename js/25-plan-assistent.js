@@ -170,6 +170,10 @@ function paMehrgelenk(ex){ var v = mgVerteilung(ex); return Object.keys(v).filte
 var PA_RUECKEN_ERSATZ = ["superman-hold", "reverse-snow-angels", "prone-y-raise"];   // oberer Rücken ohne Geräte, wenn kein Rudern möglich ist
 function paZiehtEx(ex){ return !!ex && (paIstZug(ex) || (exProfile(ex).pattern === "pull" && !PA_ZEIT.test(ex.id) && !/upright/.test(ex.id))); }   // zählt als Ziehen (Wochenbilanz)
 function paDrueckt(ex){ return !!ex && exProfile(ex).pattern === "push"; }
+/* Echte Druck-Hauptübung (Test 7 S3): Mehrgelenk und keine Fliegende/Isolation - Butterfly, Seitheben, Trizeps-Übungen zählen nicht */
+var PA_DRUCK_ISO = /fly|butterfly|raise|pec-deck|crossover|pullover|kickback|extension|pushdown|skull|curl|shrug|pallof|rotation|stretch|walk|hold|carry|get-up|crawl|plank|lift$/;
+var PA_VARIANTE = /close-grip|narrow|diamond|single-leg|one-leg|one-arm|bulgarian|goblet|sissy|pistol/;   // Varianten stehen hinter der Grundübung
+function paDruckHaupt(ex){ return paDrueckt(ex) && paMehrgelenk(ex) && !PA_DRUCK_ISO.test(ex.id) && /brust|schulter/.test(paTopGruppe(ex)); }   // Beinpresse ist „Drücken“, aber nicht für den Oberkörper
 function paZugVertikal(ex){ return /pull-?downs?|pull-ups?|chin-ups?/.test(ex.id); }   // sonst horizontal (Rudern)
 var PA_AUSNAHME = /forearm|elbow|incline-push|wall-push|knee-push/;   // Handgelenk: Unterarm-Varianten und leichtere Stützformen bleiben erlaubt
 /* Slots je Einheit: Muskelgruppen in Reihenfolge der Wichtigkeit (große Übungen zuerst; Drücken und Ziehen wechseln sich ab) */
@@ -438,8 +442,8 @@ function paErzeuge(a0){
         }
       }
       /* Test 6 P11: jeder Ganzkörper- und Oberkörpertag hat eine Mehrgelenk-Druckübung (Brustpresse, Liegestütz geneigt, Schulterdrücken); fehlt sie, ersetzt sie die letzte Arm-/Rumpf-/Bauchübung */
-      if((typ === "gk" || typ === "ok") && !mainIds.some(function(id){ var e0 = findExercise(id); return paDrueckt(e0) && paMehrgelenk(e0); })){
-        var dPool = []; ["brust", "schulter"].forEach(function(g2){ (pools.kraft[g2] || []).forEach(function(o){ if(paDrueckt(o.ex) && paMehrgelenk(o.ex) && !PA_ZEIT.test(o.ex.id)) dPool.push(o); }); });
+      if((typ === "gk" || typ === "ok") && !mainIds.some(function(id){ return paDruckHaupt(findExercise(id)); })){
+        var dPool = []; ["brust", "schulter"].forEach(function(g2){ (pools.kraft[g2] || []).forEach(function(o){ if(paDruckHaupt(o.ex) && !PA_ZEIT.test(o.ex.id)) dPool.push(o); }); });
         var dx = paWaehle(dPool, benutzt, seed + "druck", planBenutzt);
         if(dx){
           var dEr = -1; ["arme", "rumpf", "bauch"].forEach(function(g3){ if(dEr < 0) for(var q4 = gruppen.length - 1; q4 >= 0; q4--) if(gruppen[q4] === g3 && !paIstZug(findExercise(mainIds[q4]))){ dEr = q4; break; } });
@@ -449,14 +453,14 @@ function paErzeuge(a0){
       }
       /* Test 6 P10: Reihenfolge Mehrgelenk (schwer) zuerst, dann Isolation und Rumpf; innerhalb davon bleibt die Reihenfolge der Slots (stabil) */
       (function(){
-        var paare = mainIds.map(function(id, k){ var e1 = findExercise(id); return { id:id, g:gruppen[k], k:k, w:e1 && paMehrgelenk(e1) && !PA_RUMPF_GUT[id] ? 0 : 1 }; });
+        var paare = mainIds.map(function(id, k){ var e1 = findExercise(id); return { id:id, g:gruppen[k], k:k, w:e1 && paMehrgelenk(e1) && !PA_RUMPF_GUT[id] ? (PA_VARIANTE.test(id) ? 1 : 0) : 2 }; });   // Test 7 S2: Grundübung vor ihrer Variante (Bankdrücken vor enges Bankdrücken), dann Isolation
         paare.sort(function(x, y){ return (x.w - y.w) || (x.k - y.k); });
         mainIds = paare.map(function(p0){ return p0.id; }); gruppen = paare.map(function(p0){ return p0.g; });
       })();
       /* „Allgemein fit“ und Einsteiger (Test 5, R7): je Ganzkörpertag eine Druck-, Zug-, Bein-/Hüft- und Rumpfübung; fehlt eine, ersetzt sie die letzte Isolationsübung */
       if(typ === "gk" && (haupt === "allgemein" || a.niveau === "gar" || sw === "anfaenger")){
         var rollen7 = [
-          { ok:function(x){ return paDrueckt(x) && paMehrgelenk(x); }, g:["brust", "schulter"] },
+          { ok:function(x){ return paDruckHaupt(x); }, g:["brust", "schulter"] },
           { ok:function(x){ return paIstZug(x) || (paZiehtEx(x) && paMehrgelenk(x)); }, g:["ruecken"] },
           { ok:function(x){ return paMehrgelenk(x) && /beine|po/.test(paTopGruppe(x)); }, g:["beine", "po"] },
           { ok:function(x){ return !!PA_RUMPF_GUT[x.id]; }, g:["rumpf", "bauch"] }
@@ -551,7 +555,7 @@ function paErzeuge(a0){
         if(b.ids.filter(function(id){ return paDrueckt(findExercise(id)); }).length < 2) return;
         b.ids.forEach(function(id, k){
           var ex = findExercise(id); if(!paDrueckt(ex)) return;
-          var g = paTopGruppe(ex), rang = g === "arme" ? 3 : g === "schulter" ? 2 : 1;
+          var g = paTopGruppe(ex), rang = (paDruckHaupt(ex) ? 0 : 10) + (g === "arme" ? 3 : g === "schulter" ? 2 : 1);   // Test 7 S3: zuerst Isolation (Butterfly) ersetzen, die Druck-Hauptübung bleibt
           if(!best || rang > best.rang || (rang === best.rang && (bi > best.bi || (bi === best.bi && k > best.k)))) best = { b:b, bi:bi, k:k, id:id, rang:rang };
         });
       });
@@ -572,7 +576,7 @@ function paErzeuge(a0){
         var opfer = null;
         mains.forEach(function(b, bi){
           if(b.ids.filter(function(id){ return paDrueckt(findExercise(id)); }).length < 2) return;
-          b.ids.forEach(function(id, k){ if(paDrueckt(findExercise(id))) opfer = { b:b, k:k, id:id }; });
+          b.ids.forEach(function(id, k){ var e8 = findExercise(id); if(paDrueckt(e8) && (!paDruckHaupt(e8) || !opfer || paDruckHaupt(findExercise(opfer.id)))) opfer = { b:b, k:k, id:id }; });
         });
         if(!opfer) break;
         var bel = {}; opfer.b.ids.forEach(function(id){ bel[id] = 1; });
