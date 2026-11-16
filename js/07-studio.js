@@ -147,7 +147,8 @@ function studioIstRekord(jetzt, vor){
   {
     var f = function(o, k){ return o[k+"3"] != null ? o[k+"3"] : (o[k] || 0); };   // Werte aus studioBestwerte (mit kg3 …) oder einfache { kg, rm, wBest }
     // nur mehr Last oder mehr Wiederholungen beim gleichen Gewicht (fachliche Prüfung Test 2) - das geschätzte 1RM allein ist kein Rekord
-    return f(jetzt, "kg") > f(vor, "kg") || (f(vor, "kg") > 0 && f(jetzt, "kg") === f(vor, "kg") && f(jetzt, "wBest") > f(vor, "wBest"));
+    // Test 6 P9: mehr Wiederholungen beim gleichen Gewicht zählen nur bis 12 (darüber wäre mehr Last der Fortschritt)
+    return f(jetzt, "kg") > f(vor, "kg") || (f(vor, "kg") > 0 && f(jetzt, "kg") === f(vor, "kg") && f(jetzt, "wBest") > f(vor, "wBest") && f(vor, "wBest") < 12);
   }
   return jetzt.wdh > vor.wdh;
 }

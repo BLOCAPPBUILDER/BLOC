@@ -710,7 +710,7 @@ function trainingHeute(ids){
     var e = studioEintrag(id), log = (e && e.log) || [], l = studioOffen(e), i = l ? log.indexOf(l) : -1;
     if(l && l.s.length){
       var vor = studioBestwerte(log, i), jetzt = studioBestwerte([l]);
-      var rekord = i > 0 && !studioAssistiert(id) && studioIstRekord(jetzt, vor);
+      var rekord = i > 0 && !studioAssistiert(id) && !l.leicht && studioIstRekord(jetzt, vor);
       ex.push({ id:id, s:JSON.parse(JSON.stringify(l.s)), rekord:rekord });
       saetze += arbeitsSaetze(l).length; vol += studioVolumen(l); wdh += studioWdhSumme(l); if(rekord) rek++;
     } else if(inHist[id]) ex.push({ id:id, s:[], rekord:false });

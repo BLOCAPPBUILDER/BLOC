@@ -95,6 +95,10 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-16 · Test 6: Rekord, Auswertung, Plan-Reihenfolge (Fassung 2026-11-16-8)
+
+P9 Rekord: nicht in der Leichtwoche, mehr Wdh. bei gleicher Last nur bis 12. P8 Auswertung: bei anderer Satzzahl je Satz vergleichen, „weniger Sätze“ ohne Rückschritt. P10/P11 Plan-Assistent: Mehrgelenkübungen zuerst, Ganzkörper-/Oberkörpertage immer mit Druckübung. Erfahren bei Fit/Abnehmen: Intensität „mittel“, bei Muskelaufbau „schwer“. Tests: 99 grün. Offen: P4, P5, P7, P12–P16, höchstens eine Kniebeugen-Variante je Tag, Feinschliff.
+
 ## 2026-11-16 · Erklärtext Körperdaten fachlich geprüft (Fassung 2026-11-16-7)
 
 Fragezeichen-Text nach Prüfung durch den Sportwissenschaftler: Compendium 2024 (Herrmann), Niveau mit ACSM 2009 und 2026, Muskelaufbau getrennt nach Satzzahl und Last, Gewichtsverlust nach Donnelly 2009, Eiweiß über DGE. Seine Vorgaben für Ziel × Niveau (Sätze, Wdh., Cardio-Anteil, Leichtwoche) und für Test 6 P7, P9–P11 liegen vor, noch nicht eingebaut.

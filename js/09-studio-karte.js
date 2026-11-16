@@ -586,7 +586,7 @@ function openStudioStats(id, sicht){
   // Rekorde automatisch erkennen: eine Einheit mit neuem Bestgewicht oder neuem geschätzten 1RM (ohne Gewicht: mehr Wiederholungen in einem Satz)
   // gegenüber allen davor trägt einen Stern
   var rekorde = log.map(function(l, i){
-    if(!i || studioAssistiert(id)) return false;
+    if(!i || studioAssistiert(id) || l.leicht) return false;   // Leichtwoche: kein Rekord (Test 6 P9)
     return studioIstRekord(studioBestwerte([l]), studioBestwerte(log, i));
   });
   if(koerper){
