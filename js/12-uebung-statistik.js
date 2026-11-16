@@ -360,7 +360,7 @@ function statPaceSvg(runs){
 function koerperDaten(){
   var k = state.db.settings.koerper || {}, kg = +k.kg;
   if(!(kg >= 30 && kg <= 250)) return null;
-  return { kg:kg, cm:+k.cm || 0, alter:+k.alter || 0, sex:k.sex || "", pal:+k.pal || 0 };
+  return { kg:kg, cm:+k.cm || 0, alter:+k.alter || 0, sex:k.sex || "", pal:+k.pal || 0, geh:(+k.gehPace >= 5 && +k.gehPace <= 20) ? +k.gehPace : 8.5 };
 }
 /* Die eine Ruheumsatz-Formel (Mifflin-St Jeor, kcal je Tag) für Protein-Seite und Kalorien-Schätzung: ohne Angabe zum Geschlecht der Mittelwert beider Formeln.
    Voraussetzung (Größe 120–230 cm) prüfen die Aufrufer; sie entscheiden auch, ab welchem Alter gerechnet wird. */
@@ -554,7 +554,7 @@ function statModule(){
       if(kd){
         var a4 = {}; w4.forEach(function(w){ Object.keys(w.a).forEach(function(g){ a4[g] = (a4[g] || 0) + (w.a[g].s || 0); }); });
         // Krafttraining & Co. werden nicht mehr geschätzt (zu ungenau); nur Läufe und Radfahrten, jede Einheit für sich (Rad mit der Rad-Rechnung, siehe runKcal)
-        kcalR = runs.filter(function(x){ return x.at >= jetzt - 28*tag; }).reduce(function(a, x){ return a + runKcal(x.dist, x.dur/1000, runIstRad(x)); }, 0);
+        kcalR = runs.filter(function(x){ return x.at >= jetzt - 28*tag; }).reduce(function(a, x){ return a + runKcal(x.dist, x.dur/1000, runIstRad(x), x.hm); }, 0);
         if(kcalR > 0) chipsR.push(["≈ "+kcalR.toLocaleString(currentLang() === "en" ? "en-GB" : "de-DE"), t("statRueckKcal")]);
       }
       if(rekR) chipsR.push([rekR+" ★", t("statRueckRek")]);

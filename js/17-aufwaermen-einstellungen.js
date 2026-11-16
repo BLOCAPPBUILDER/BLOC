@@ -253,7 +253,7 @@ function koerperFormHTML(s, opt){
   }
   return '<div class="koerper-form">'+(opt.ohneName ? '' : '<label class="koerper-feld"><span>'+esc(t("koerperName"))+'</span>'+
     '<input type="text" id="k-name" maxlength="30" autocomplete="given-name" value="'+esc(s.name || "")+'"></label>')+
-    feld("k-kg", t("koerperKg"), k.kg, 30, 250)+feld("k-cm", t("koerperCm"), k.cm, 120, 230)+feld("k-alter", t("koerperAlter"), k.alter, 10, 99)+
+    feld("k-kg", t("koerperKg"), k.kg, 30, 250)+feld("k-cm", t("koerperCm"), k.cm, 120, 230)+feld("k-alter", t("koerperAlter"), k.alter, 10, 99)+feld("k-geh", t("koerperGeh"), k.gehPace, 5, 20)+
     '<div class="label" style="margin:10px 0 6px">'+esc(t("koerperSex"))+'</div><div class="seg-row" role="group">'+
     [["w", t("koerperW")], ["m", t("koerperM")], ["", t("koerperKeine")]].map(function(x){
       return '<button type="button" data-ksex="'+x[0]+'" class="'+((k.sex || "") === x[0] ? "active" : "")+'">'+esc(x[1])+'</button>'; }).join("")+'</div>'+
@@ -286,10 +286,11 @@ function koerperBinden(wurzel){
     koerperZahl(wurzel, "k-kg", 30, 250, "koerperEinhKg", kk, "kg");
     koerperZahl(wurzel, "k-cm", 120, 230, "koerperEinhCm", kk, "cm", true);
     koerperZahl(wurzel, "k-alter", 10, 99, "koerperEinhJahre", kk, "alter", true);
+    koerperZahl(wurzel, "k-geh", 5, 20, "koerperEinhPace", kk, "gehPace");
     var nm = wurzel.querySelector("#k-name"); if(nm) s.name = String(nm.value).replace(/\s+/g, " ").trim().slice(0, 30);
     save();
   }
-  ["k-name", "k-kg", "k-cm", "k-alter"].forEach(function(id){ var el = wurzel.querySelector("#"+id); if(el) el.addEventListener("change", speichern); });
+  ["k-name", "k-kg", "k-cm", "k-alter", "k-geh"].forEach(function(id){ var el = wurzel.querySelector("#"+id); if(el) el.addEventListener("change", speichern); });
   var nameFeld = wurzel.querySelector("#k-name"); if(nameFeld) nameFeld.addEventListener("blur", speichern);
   wurzel.querySelectorAll("[data-ksex]").forEach(function(b){
     b.addEventListener("click", function(){

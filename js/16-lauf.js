@@ -454,7 +454,7 @@ function runEigenerLaufHTML(){
 function runHeroRechtsHTML(runs, rad){
   if(!koerperDaten()) return '<div class="rh-sub"><button type="button" class="kh-mehr" data-koerper>'+esc(t("statKcalLink"))+' &#8250;</button></div>';
   if(!runs.length) return '<div class="rh-sub">'+esc(t("runTeaser"))+'</div>';
-  var sum = runs.reduce(function(a, x){ return a + runKcal(x.dist, x.dur/1000, runIstRad(x)); }, 0);
+  var sum = runs.reduce(function(a, x){ return a + runKcal(x.dist, x.dur/1000, runIstRad(x), x.hm); }, 0);
   return '<div class="rh-sub rh-kcal"><b>≈ '+esc(sum.toLocaleString(currentLang() === "en" ? "en-GB" : "de-DE"))+'</b><small>'+esc(t("runKcalGesamt"))+SEP+esc(t(rad ? "runFahrtenKurz" : "runLaeufeKurz", { n:runs.length }))+'</small></div>';
 }
 var runKlapp = { eigen:false, iv:false, ans:false, verlauf:false };   // welche Karten auf der Run-Seite aufgeklappt sind
@@ -500,14 +500,17 @@ function runGpxText(r){
 /* Kalorien-Schätzung für einen Lauf oder eine Radfahrt (nur mit Körperdaten, alles lokal): Laufen = Ruheumsatz in der Zeit + 1,036 kcal je kg und km (Laufkosten nach Margaria),
    Rad = MET nach Tempo (Compendium of Physical Activities 2011: unter 10 mph / 16 km/h Freizeit 4,0 · 10–12 mph 6,8 · 12–14 mph 8,0 · 14–16 mph 10,0 · ab 16 mph / 25,7 km/h 12,0)
    × Gewicht × Stunden (Fahrten werden also nicht wie Läufe gerechnet). Eine grobe Schätzung; 0 ohne Körperdaten oder ohne Strecke. */
-function runKcal(dist, sek, rad){
+function runKcal(dist, sek, rad, hm){
   var kd = koerperDaten();
   if(!kd || !(dist > 50) || !(sek > 10)) return 0;
   var km = dist/1000, h = sek/3600, v = km/h;
   if(rad){ var met = v < 16.1 ? 4 : v < 19.3 ? 6.8 : v < 22.5 ? 8 : v < 25.7 ? 10 : 12; return Math.round(met*kd.kg*h); }
+  /* Gehen/Wandern: ist die Pace (min/km, einschließlich Pausen) langsamer als die einstellbare Grenze (Körperdaten, Standard 8:30), gelten die Laufkosten nicht.
+     Stattdessen ACSM-Gehformel: VO2 = 0,1·v + 1,8·v·Steigung + 3,5 (ml/kg/min, v in m/min), 1 l O2 ≈ 5 kcal; Steigung = Höhenmeter / Strecke (max 30 %, ohne Höhendaten 0). */
+  if(sek/60/km > kd.geh){ var vm = km*1000/(sek/60), gr = hm > 0 ? Math.min(0.3, hm/(km*1000)) : 0; return Math.round((0.1*vm + 1.8*vm*gr + 3.5)*kd.kg/1000*5*(sek/60)); }
   return Math.round(1.036*kd.kg*km + kcalProStunde(kd)*h);
 }
-function runKcalText(dist, sek, rad){ var k = runKcal(dist, sek, rad); return k > 0 ? "≈ "+k.toLocaleString(currentLang() === "en" ? "en-GB" : "de-DE") : "–"; }
+function runKcalText(dist, sek, rad, hm){ var k = runKcal(dist, sek, rad, hm); return k > 0 ? "≈ "+k.toLocaleString(currentLang() === "en" ? "en-GB" : "de-DE") : "–"; }
 function runTempoJetzt(r){
   var v = r.verlauf;
   if(v.length < 2) return "–:––";
@@ -578,7 +581,7 @@ function runAnzeige(){
   var sek = runZeit(r)/1000;
   function setze(id, txt){ var el = document.getElementById(id); if(el && el.textContent !== txt) el.textContent = txt; }
   var zeit = fmtUhr(runZeit(r)), tempo = runTempo(r, sek, r.dist);
-  setze("run-kcal", runKcalText(r.dist, runZeit(r)/1000, runIstRad(r)));
+  setze("run-kcal", runKcalText(r.dist, runZeit(r)/1000, runIstRad(r), r.hasAlt ? r.hm : 0));
   setze("run-hm", r.hasAlt ? String(Math.round(r.hm || 0)) : "–");
   setze("run-zeit", zeit); setze("run-km", runKm(r.dist)); setze("run-pace", tempo); setze("run-jetzt", runTempoJetzt(r));
   setze("run-dz", zeit); setze("run-dk", runKm(r.dist)+" km"); setze("run-dp", tempo+" "+runTempoEinheit(r));   // abgedunkelt: Zeit, Kilometer und Tempo bleiben zu sehen
@@ -878,7 +881,7 @@ function renderRunDetail(id){
     topbar(t("runDetail"), { back:"#run" }) +
     // Abschlusskarte direkt nach dem Lauf: was geschafft wurde (der Lauf ist schon gespeichert)
     (neu ? '<div class="card run-fertig"><div class="rf-titel">'+esc(t("runGeschafft"))+'</div><div class="rf-km">'+esc(runKm(x.dist))+' <small>km</small></div>'+
-      '<div class="rf-zeile">'+esc(fmtUhr(x.dur))+SEP+esc(runTempo(x, x.dur/1000, x.dist))+' '+runTempoEinheit(x)+(runKcal(x.dist, x.dur/1000, runIstRad(x)) ? SEP+esc(runKcalText(x.dist, x.dur/1000, runIstRad(x)))+' kcal' : '')+(x.hm != null ? SEP+'↑ '+esc(String(x.hm))+' m' : '')+'</div>'+
+      '<div class="rf-zeile">'+esc(fmtUhr(x.dur))+SEP+esc(runTempo(x, x.dur/1000, x.dist))+' '+runTempoEinheit(x)+(runKcal(x.dist, x.dur/1000, runIstRad(x), x.hm) ? SEP+esc(runKcalText(x.dist, x.dur/1000, runIstRad(x), x.hm))+' kcal' : '')+(x.hm != null ? SEP+'↑ '+esc(String(x.hm))+' m' : '')+'</div>'+
       (hl.length ? '<ul class="rf-liste">'+hl.map(function(h){ return '<li>'+svgIcon(ICON_STAR)+'<span>'+esc(h)+'</span></li>'; }).join("")+'</ul>' : '')+
       '<div class="rf-gespeichert">'+esc(t("runGespeichert"))+'</div></div>' : '')+
     '<div class="meta-zeile">'+esc(d.toLocaleDateString(currentLang() === "en" ? "en-GB" : "de-DE", { weekday:"long", day:"numeric", month:"long", year:"numeric" }))+
@@ -886,7 +889,7 @@ function renderRunDetail(id){
     '<div class="card run-notiz"><input type="text" id="run-name" maxlength="40" value="'+esc(x.name || "")+'" placeholder="'+esc(t("runNamePh"))+'" aria-label="'+esc(t("runNamePh"))+'">'+
       '<textarea id="run-note" rows="2" maxlength="400" placeholder="'+esc(t("runNotePh"))+'" aria-label="'+esc(t("runNotePh"))+'">'+esc(x.note || "")+'</textarea></div>'+
     '<div class="run-raster"><div><b>'+esc(runKm(x.dist))+'</b><small>'+esc(t("runDist"))+' (km)</small></div><div><b>'+esc(fmtUhr(x.dur))+'</b><small>'+esc(t("runTime"))+'</small></div>'+
-      '<div><b>'+esc(runTempo(x, x.dur/1000, x.dist))+'</b><small>'+esc(t(runIstRad(x) ? "runSpeedAvg" : "runPaceAvg"))+' '+runTempoEinheit(x)+'</small></div>'+(koerperDaten() ? '<div><b>'+esc(runKcalText(x.dist, x.dur/1000, runIstRad(x)))+'</b><small>kcal</small></div>' : '')+(x.hm != null ? '<div><b>'+esc(String(x.hm))+'</b><small>'+esc(t("runElev"))+' (m)</small></div>' : '')+'</div>'+
+      '<div><b>'+esc(runTempo(x, x.dur/1000, x.dist))+'</b><small>'+esc(t(runIstRad(x) ? "runSpeedAvg" : "runPaceAvg"))+' '+runTempoEinheit(x)+'</small></div>'+(koerperDaten() ? '<div><b>'+esc(runKcalText(x.dist, x.dur/1000, runIstRad(x), x.hm))+'</b><small>kcal</small></div>' : '')+(x.hm != null ? '<div><b>'+esc(String(x.hm))+'</b><small>'+esc(t("runElev"))+' (m)</small></div>' : '')+'</div>'+
     (koerperDaten() ? '<div class="sk-unter run-kcal-hinweis">'+esc(t("runKcalHint"))+'</div>' : '<button type="button" class="kh-mehr" data-koerper>'+esc(t("statKcalLink"))+' &#8250;</button>')+
     '<div class="section-title">'+esc(t("runRoute"))+'</div>'+runStreckeNeu(x)+
     (sp.length ? '<div class="section-title">'+esc(t("runSplits"))+'</div><div class="card run-kms">'+runKmZeilen(x)+'</div>' : '')+
