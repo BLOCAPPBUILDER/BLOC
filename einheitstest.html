@@ -1245,6 +1245,17 @@
       wahr(ersteIso < 0 || letzteMg < ersteIso || ex.slice(ersteIso).every(function (x) { return !W.paMehrgelenk(x) || W.PA_RUMPF_GUT[x.id]; }), t0.name + ": Mehrgelenkübungen stehen vor den Isolationsübungen: " + tl.bloc.ids.join(", "));
     }); });
   });
+  test("Test 6 P7: assistierte Geräte zählen Körpergewicht minus Unterstützung, ohne Körpergewicht nur Wiederholungen", function () {
+    var s = W.state.db.settings, altK = s.koerper, l = { s:[[40, 8], [40, 8]] };
+    try {
+      s.koerper = { kg:70 };
+      gleich(W.studioVolumen(l, "assisted-pullup"), (70 - 40)*16, "70 kg − 40 kg Unterstützung, 16 Wdh.");
+      gleich(W.studioVolumen(l, "bench-press"), 40*16, "normale Übung: Gewicht × Wdh. wie bisher");
+      gleich(W.studioVolumen(l), 40*16, "ohne Übung wie bisher");
+      s.koerper = {};
+      gleich(W.studioVolumen(l, "assisted-pullup"), 0, "ohne Körpergewicht: Unterstützung zählt nicht als Volumen");
+    } finally { s.koerper = altK; }
+  });
   test("Pausen-Tipp lässt sich mit „Behalten“ ablehnen", function () {
     var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();
     try {

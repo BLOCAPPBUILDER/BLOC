@@ -78,7 +78,7 @@ function kalAbgleich(tag){
     if(e.art === "sport"){ res[e.id] = e.erledigt === true; return; }   // fester Termin: nur von Hand abgehakt
     if(e.art === "run"){ if(rn > 0){ rn--; auto = true; } }
     else if(passt[e.id]) auto = true;
-    else if(tr > 0){ tr--; auto = true; if(offen.length) offen.shift(); }
+    else if(tr > 0 && planIds(e).length === 0){ tr--; auto = true; if(offen.length) offen.shift(); }   // Test 6 P13: Termine mit Plan haken nur ihr eigenes Training ab, andere Einheiten erscheinen „Ohne Termin“
     res[e.id] = e.erledigt === true ? true : e.erledigt === false ? false : auto;
   });
   return { status:res, frei:offen };

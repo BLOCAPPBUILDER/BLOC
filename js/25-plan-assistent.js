@@ -695,8 +695,10 @@ function paPlanEnde(){
     if(!ter.length || ter.some(function(e){ return e.tag > heute || (e.tag === heute && !kalErledigt(e)); })) return;   // auch am letzten Tag, sobald er erledigt ist
     var letzter = ter.reduce(function(m, e){ return e.tag > m ? e.tag : m; }, "");
     if(letzter < grenze || gruppen[gid][0].endeGesehen === letzter) return;
-    var ok = ter.filter(kalErledigt).length;
-    if(!best || letzter > best.letzter) best = { gid:gid, p:gruppen[gid][0], letzter:letzter, n:ok, m:ter.length };
+    /* Test 6 P14: nur der aktuelle Block zählt (die letzten p.wochen Wochen), nicht alle Blöcke des Plans zusammen */
+    var wo = gruppen[gid][0].wochen || 6, ab = kalTagKey(new Date(letzter).getTime() - wo*7*86400000), ter2 = ter.filter(function(e){ return e.tag > ab; });
+    var ok = ter2.filter(kalErledigt).length;
+    if(!best || letzter > best.letzter) best = { gid:gid, p:gruppen[gid][0], letzter:letzter, n:ok, m:ter2.length };
   });
   return best;
 }

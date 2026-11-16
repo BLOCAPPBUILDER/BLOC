@@ -27,7 +27,7 @@ function satzStatHTML(p, ids, d){
   var runde = { ex:0, saetze:0, vol:0, wdh:0 }, neuStart = false;
   ids.forEach(function(id){
     var h = satzHeute(id); if(satzBasisN(id) > 0) neuStart = true;
-    if(!h) return; runde.ex++; runde.saetze += arbeitsSaetze(h).length; runde.vol += studioVolumen(h); runde.wdh += studioWdhSumme(h);
+    if(!h) return; runde.ex++; runde.saetze += arbeitsSaetze(h).length; runde.vol += studioVolumen(h, id); runde.wdh += studioWdhSumme(h);
   });
   runde.vol = Math.round(runde.vol);
   var key = einheitTagKey(), mitKg = d.vol > 0, wert = function(x){ return mitKg ? (x.vol || 0) : (x.wdh || 0); };
