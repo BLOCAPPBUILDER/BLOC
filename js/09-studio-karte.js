@@ -153,8 +153,9 @@ function studioProg(id, mitOffen){
     if(r0 > 0) return { art:"pause", kg:r0, alt:kg, tage:pTage };
     if(z.wdh > 6) return { art:"wdhRunter", grund:"pause", wdh:Math.max(Math.min(5, z.wdh), z.wdh - 2), alt:z.wdh, kg:kg, tage:pTage };   // Stufe zu groß: Gewicht halten, Wdh. senken
   }
-  if(l.length < 2) return null;
-  var zwei = l.slice(-2), letzte = zwei[1];
+  var NR = trainerStufe().runden;   // Runden, die geschafft sein müssen (Einsteiger/Fortgeschritten 2, Erfahren 3)
+  if(l.length < NR) return null;
+  var zwei = l.slice(-NR), letzte = zwei[NR-1];
   if(e.erhoeht && e.erhoeht >= letzte.at) return null;
   if(e.manuell && e.manuell >= letzte.at) return null;
   function amGewicht(x){ return arbeitsSaetze(x).filter(function(s){ return satzTyp(s) !== "d" && (kg > 0 ? s[0] >= kg - 1e-9 : true); }); }
@@ -168,7 +169,7 @@ function studioProg(id, mitOffen){
   }
   if(assist && kg > 0){   // umgekehrte Richtung: geschafft → eine Stufe weniger Unterstützung, verfehlt → eine Stufe mehr
     if(zwei.every(geschafft)){
-      var sA = zwei[0].at; for(var iA = l.length - 3; iA >= 0 && geschafft(l[iA]); iA--) sA = l[iA].at;
+      var sA = zwei[0].at; for(var iA = l.length - NR - 1; iA >= 0 && geschafft(l[iA]); iA--) sA = l[iA].at;
       var wen = Math.round(Math.max(0, kg - z.schritt)*100)/100;
       return { art:"assist", kg:wen, alt:kg, max:b.max, min:b.min, seit:sA };
     }
@@ -176,7 +177,7 @@ function studioProg(id, mitOffen){
     return null;
   }
   if(zwei.every(geschafft)){
-    var seit = zwei[0].at; for(var i = l.length - 3; i >= 0 && geschafft(l[i]); i--) seit = l[i].at;   // wie lange die Übung schon „bereit“ ist (gerechte Verteilung der Tipps)
+    var seit = zwei[0].at; for(var i = l.length - NR - 1; i >= 0 && geschafft(l[i]); i--) seit = l[i].at;   // wie lange die Übung schon „bereit“ ist (gerechte Verteilung der Tipps)
     var basis = e.zielBasis || z.wdh, min0 = Math.max(Math.min(5, basis), basis - 2), max0 = basis + 2;   // nach der Erhöhung gilt das ursprüngliche Ziel
     if(kg > 0){
       var s = z.schritt, neu = Math.round((Math.floor(kg/s + 1e-9) + 1)*s*100)/100;
@@ -187,7 +188,7 @@ function studioProg(id, mitOffen){
       if(rpeL.length && Math.max.apply(null, rpeL) >= 10) return null;
       var rpeLeicht = rpeAlle.length && rpeAlle.every(function(r){ return r > 0 && r <= RPE_LEICHT; });
       if(rpeLeicht){ var neu2 = Math.round((neu + s)*100)/100; if((neu2 - kg)/kg <= PROG_DOPPEL_MAX + 1e-9) neu = neu2; else rpeLeicht = false; }
-      var gross = (neu - kg)/kg > PROG_SPRUNG + 1e-9 && !rpeLeicht;
+      var gross = (neu - kg)/kg > trainerStufe().sprung + 1e-9 && !rpeLeicht;
       var grenze = studioWdhGrenze(ex);   // neuer oberer Rand (Ziel + 2 + 2) höchstens 15 bzw. 20
       if(gross && !e.zielBasis && z.wdh > 6 && z.wdh + 4 <= grenze) return { art:"wdh", grund:"sprung", wdh:z.wdh + 2, alt:z.wdh, max:b.max, sprung:neu, seit:seit };
       /* Nach einer Rücknahme nicht sofort wieder denselben Sprung: erst die Wiederholungen festigen (bis Ziel + 4, höchstens 20) */
@@ -287,6 +288,27 @@ function studioPlateau(id){
 }
 function studioTippSicher(tp){ return tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter" || tp.art === "stufeZurueck" || tp.art === "assistRunter"; }
 /* Tipps beim Training (Einstellungen, ganz oben): aus = keine Steigerungs-/Rücknahme-Vorschläge, keine Leichtwoche, kein Zug-Druck-Hinweis. Eigene Werte bleiben immer die Grundlage, die Auswertung am Ende gibt es immer. */
+/* Trainer-Niveau (Einführung/Einstellungen): bestimmt, wie schnell der Trainer steigern lässt. Ohne Angabe = Fortgeschritten (bisheriges Verhalten).
+   Einsteiger: größere Sprünge (bis 15 %) sind ok, 2 Runden · Fortgeschritten: bis 10 %, 2 Runden · Erfahren: kleinere Sprünge (bis 5 %), 3 Runden (Fachprüfung offen). */
+function trainerNiveau(){ var n = state.db.settings.niveau; return n === "einsteiger" || n === "erfahren" ? n : "fortgeschritten"; }
+function trainerStufe(){ var n = trainerNiveau(); return n === "einsteiger" ? { runden:2, sprung:0.15 } : n === "erfahren" ? { runden:3, sprung:0.05 } : { runden:2, sprung:PROG_SPRUNG }; }
+/* Auswahl „Dein Niveau“ (Einführung + Einstellungen) und ihr Klick */
+var TRAINER_NIVEAUS = [["einsteiger", "niveauEin"], ["fortgeschritten", "niveauFort"], ["erfahren", "niveauErf"]];
+function niveauWahlHTML(){
+  var n = trainerNiveau();
+  return '<div class="seg-row niveau-wahl" role="group" aria-label="'+esc(t("niveauTitel"))+'">'+TRAINER_NIVEAUS.map(function(x){
+    return '<button type="button" data-niveau="'+x[0]+'" aria-pressed="'+(n === x[0])+'" class="'+(n === x[0] ? "active" : "")+'">'+esc(t(x[1]))+'</button>';
+  }).join("")+'</div><div class="niveau-sub" style="font-size:12px;color:var(--text-dim);margin-top:6px">'+esc(t("niveauSub"))+'</div>';
+}
+function niveauBinden(wurzel, nachher){
+  wurzel.querySelectorAll("[data-niveau]").forEach(function(b){
+    b.addEventListener("click", function(){
+      state.db.settings.niveau = b.getAttribute("data-niveau"); save();
+      wurzel.querySelectorAll("[data-niveau]").forEach(function(x){ var an = x === b; x.classList.toggle("active", an); x.setAttribute("aria-pressed", an ? "true" : "false"); });
+      if(nachher) nachher();
+    });
+  });
+}
 function tippsAn(){ return state.db.settings.tippsAus !== true; }
 function studioTipps(ids, leicht, mitOffen){
   var o = {}, steig = [];
