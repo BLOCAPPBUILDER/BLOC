@@ -839,7 +839,7 @@ window.BLOC_TEXTE = {
     tabHeute:"Heute",
     tabTraining:"Tools",
    
-    toolsSubRun:"GPS · Pace", toolsSubWarm:"Vorher & nachher", toolsSubProtein:"Tagesziel", toolsSubTimer:"Intervalle", toolsSubPlan:"TrainingsBLOCs bauen",
+    toolsSubRun:"GPS · Pace", toolsSubWarm:"Vorher & nachher", toolsSubProtein:"Tagesziel", toolsSubTimer:"Freie Intervalle", toolsSubPlan:"BLOC für BLOC",
     fkKorb:"Hierher ziehen zum Entfernen", fkEntfernen:"Entfernen", fkLeer:"Hier ist noch nichts. Wähle aus, was du sehen möchtest.",
     fkHinzu:"Weitere Auswertungen hinzufügen", fkHinweis:"Kachel lange drücken und ziehen, um sie zu verschieben. Zum Entfernen auf die Fläche unten ziehen.", fkWaehlen:"Auswertungen wählen",
     fkWaehlenText:"Tippe an, was auf der Seite stehen soll.", fkFertig:"Fertig", fkNoData:"Noch keine Daten.",
@@ -1165,7 +1165,6 @@ window.BLOC_TEXTE = {
     again:"Nochmal",
     finish:"Fertig",
     endQ:"Workout beenden?",
-    endText:"Ab einer Minute Arbeit wird das Training bis hierhin gespeichert, kürzer zählt nicht.",
     endBtn:"Beenden",
     skip:"Überspringen",
     pause:"Pause",
@@ -2054,7 +2053,7 @@ window.BLOC_TEXTE = {
     tabHeute:"Today",
     tabTraining:"Tools",
    
-    toolsSubRun:"GPS · pace", toolsSubWarm:"Before & after", toolsSubProtein:"Daily goal", toolsSubTimer:"Intervals", toolsSubPlan:"Build training BLOCs",
+    toolsSubRun:"GPS · pace", toolsSubWarm:"Before & after", toolsSubProtein:"Daily goal", toolsSubTimer:"Free intervals", toolsSubPlan:"BLOC by BLOC",
     fkKorb:"Drag here to remove", fkEntfernen:"Remove", fkLeer:"Nothing here yet. Choose what you want to see.",
     fkHinzu:"Add more insights", fkHinweis:"Press and hold a tile, then drag it to move it. Drag it onto the area below to remove it.", fkWaehlen:"Choose insights",
     fkWaehlenText:"Tap what should appear on the page.", fkFertig:"Done", fkNoData:"No data yet.",
@@ -2380,7 +2379,6 @@ window.BLOC_TEXTE = {
     again:"Again",
     finish:"Done",
     endQ:"End workout?",
-    endText:"From one minute of work on, the session so far is saved; shorter ones don't count.",
     endBtn:"End",
     skip:"Skip",
     pause:"Pause",

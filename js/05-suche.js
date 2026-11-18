@@ -23,7 +23,7 @@ function gesamtEintraege(){
   var s = state.db.settings, neu = t("create");
   // Aktionen (auch Erstellen von Blöcken, Timer-Workouts, Workouts, Übungen, Challenges)
   add(neu, t("newBlock"), t("mineBlocks"), "block timer intervall erstellen anlegen neu create new", function(){ go("#block/"+createBlock().id); });
-  add(neu, t("fabTimerWo"), t("mineTimer"), "timer workout intervall bloecke blöcke erstellen anlegen neu create new", function(){ go("#workout/"+createTimerWorkout().id); });
+  add(neu, t("fabTimerWo"), t("mineTimer"), "timer workout intervall bloecke blöcke erstellen anlegen neu create new", function(){ go("#intervall"); openTimerPlus(); });
   add(neu, t("katFabPlan"), t("katalog"), "workout planen plan gewicht wiederholungen erstellen anlegen neu create plan weight reps", function(){ go("#katalog"); katPlanNeu(); });
   add(neu, t("genNew"), t("katalog"), "plan gewichtung nach erstellen anlegen neu create weighting", function(){ go("#katalog"); katPlanGenNeu(); });
   add(neu, t("myNew"), t("katalog"), "workout timer bauen baukasten erstellen anlegen neu create build timer workout", function(){ go("#mybuild/new"); });
@@ -59,7 +59,7 @@ function gesamtEintraege(){
     l[l.length-1].cat = ex.cats[0];
   });
   // Timer-Workouts und Blöcke
-  state.db.workouts.forEach(function(w){ add(t("mineTimer"), w.name || t("untitled"), "", "", function(){ go("#workout/"+w.id); }); });
+  state.db.workouts.forEach(function(w){ add(t("mineTimer"), w.name || t("untitled"), "", "", function(){ go("#intervall"); timerBearbeiten(w.id); }); });
   state.db.blocks.forEach(function(b){ add(t("mineBlocks"), b.name, blockSpec(b), "", function(){ go("#block/"+b.id); }); });
   return l;
 }
@@ -403,8 +403,11 @@ function toolDaten(k){
   if(k === "faq") return ["#faq", t("faqTitel"), t("faqKachelSub", { n:(window.BLOC_FAQ ? window.BLOC_FAQ.fragen.length : 0) })];
   var d = bereichDaten(k).slice();   // auf den Kacheln stehen kurze Untertitel (die ausführlichen bleiben auf den Seiten selbst)
   if(k === "run" && !run) d[2] = t("toolsSubRun");
-  else if(k === "warm") d[2] = t("toolsSubWarm");
-  else if(k === "intervall" && !(state.db.workouts.length || state.db.blocks.length)) d[2] = t("toolsSubTimer");
+  else if(k === "warm"){   // wie beim Workout-Builder: Zahl der Workouts und Übungen (Aufwärmen und Dehnen zusammen, jede Übung einmal)
+    var ids = {}; wsUebungen("warm").concat(wsUebungen("dehn")).forEach(function(ex){ ids[ex.id] = 1; });
+    d[2] = t("htKatalog", { w:LIB_WORKOUTS.filter(libIstWarmDehn).length, e:Object.keys(ids).length });
+  }
+  else if(k === "intervall") d[2] = t("toolsSubTimer");
   return d;
 }
 function toolKachelHTML(k){

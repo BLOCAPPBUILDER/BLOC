@@ -105,3 +105,23 @@ function gpsClear(h){
   h.weg = true;
   if(h.id != null){ var bg = nativPlugin("BackgroundGeolocation"); if(bg) bg.removeWatcher({ id:h.id }).catch(function(){}); }
 }
+
+/* Timer im Hintergrund (nur App): ein eigener Vordergrund-Dienst zeigt den laufenden Timer in der Benachrichtigungsleiste
+   (Phase, Übung, Restzeit) und hält die App wach, damit die vorgeplanten Signaltöne auch in einer anderen App oder bei
+   gesperrtem Bildschirm klingen. Musik anderer Apps läuft weiter. schritte: [{ name, ende (Wanduhr ms) }]; ohne Angaben: Anzeige weg. */
+var nativTimerAn = false;
+function nativTimerAnzeige(d){
+  var bt = nativPlugin("BlocTimer");
+  if(!bt) return false;
+  try{
+    if(!d){ if(nativTimerAn){ nativTimerAn = false; bt.stoppen().catch(function(){}); } return true; }
+    var los = function(){ bt.zeigen(d).catch(function(e){ console.error("BLOC: Timer-Anzeige", e); }); };
+    if(!nativTimerAn && !nativBenachrichtigung){   // Android 13+: einmal um Erlaubnis für Hinweise fragen
+      var ln = nativPlugin("LocalNotifications");
+      nativBenachrichtigung = true;
+      if(ln){ nativTimerAn = true; ln.requestPermissions().then(los, los); return true; }
+    }
+    nativTimerAn = true; los();
+  }catch(e){}
+  return true;
+}
