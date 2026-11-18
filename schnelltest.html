@@ -169,7 +169,7 @@
       klick('#tabbar [data-nav="#training"]');
       await bis(function () { return $(".training-seite .tools-raster .tk"); }, 3000, "Seite Training");
       var bereiche = $$(".tools-raster .tk").map(function (e) { return e.getAttribute("data-tool"); }).join(",");
-      pruefe(bereiche === "katalog,run,plan,warm,intervall,protein,faq", "Workout (groß oben), Run, Trainingsplan, Mobility & Stretch, Timer, dann ganz unten Protein Tracker und Wissensaustausch: " + bereiche);
+      pruefe(bereiche === "katalog,warm,plan,intervall,run,protein,faq", "Workout (groß oben), dann links Mobility, Timer, Protein, rechts Trainingsplan, Run, Wissensaustausch (Standard seit 2026-11-11): " + bereiche);
       pruefe($(".tools-raster .tk")  && $(".tools-raster .tk").classList.contains("tk-gross"), "Die oberste Kachel auf Tools steht groß");
       pruefe($('.tk[data-tool="intervall"][data-nav="#intervall"]') && $('.tk[data-tool="katalog"][data-nav="#katalog"]'), "Timer und Workout fehlen als Kachel auf Tools");
       pruefe($("#tabbar .tab.active") && /Tools/.test($("#tabbar .tab.active").textContent), "In der Leiste soll „Tools“ markiert sein");
@@ -332,9 +332,9 @@
       await heim();   // zurück in den Katalog, wie der nächste Test ihn erwartet
       zuWorkout();
     }],
-    ["Widerstandsband: 47 Übungen vollständig (zwei Posen, Anleitung, Haltung, Muskeln, Gerät)", async function () {
+    ["Widerstandsband: 49 Übungen vollständig (zwei Posen, Anleitung, Haltung, Muskeln, Gerät)", async function () {
       var d = W.BLOC_DATEN, ids = d.EXERCISE_ROWS.map(function (x) { return x[0]; }).filter(function (id) { return id.indexOf("band-") === 0; });
-      pruefe(ids.length === 47, "erwartet 47 Band-Übungen, gefunden " + ids.length);
+      pruefe(ids.length === 49, "erwartet 49 Band-Übungen, gefunden " + ids.length);
       ids.forEach(function (id) {
         var p = d.ILLU_POSES[id], i = d.EX_INFO[id], h = d.EX_POSTURE[id], m = d.EX_MUSCLES[id];
         pruefe(p && p[0] && p[1], "Figur fehlt: " + id);
@@ -599,13 +599,13 @@
       klick('[data-wsart="dehn"]');
       await bis(function () { return $('[data-wsreg]'); }, 2000, "zurück auf Dehnen");
     }],
-    ["Erklärtexte: erste Besuche mit Text, danach „?“ in der Kopfzeile; leere Favoriten nur eine Zeile", async function () {
+    ["Erklärtexte: erste Besuche mit Text, danach „?“ in der Kopfzeile; leere Favoriten als kleiner Platzhalter", async function () {
       function daten() { return JSON.parse(W.localStorage.getItem(KEY)); }
       var d0 = daten(); d0.settings.hinweise = {}; W.localStorage.setItem(KEY, JSON.stringify(d0));   // frisch zählen, egal was frühere Tests besucht haben
       await heim();
       pruefe(!$(".fav-empty"), "Startseite: leere Favoriten zeigen noch einen ganzen Kasten");
-      var fav = $$(".section-title").filter(function (e) { return /Favoriten/.test(e.textContent); })[0];
-      pruefe(fav && /☆/.test(fav.textContent), "Startseite: Favoriten-Zeile ohne Hinweis");
+      var fav = $(".fav-platzhalter");   // seit 2026-11-11: kleiner Platzhalter mit ☆ statt Hinweis in der Überschrift
+      pruefe(fav && /☆/.test(fav.textContent), "Startseite: Favoriten-Platzhalter mit ☆ fehlt");
       zuWorkout();
       await zuUebungskatalog();
       await bis(function () { return $$("[data-studio]:not([data-ortfremd])").length > 100; }, 3000, "Katalog › Übungen");
@@ -1753,7 +1753,7 @@
       pruefe(W.ILLU["tuck-jumps"][1] && W.BLOC_DEV && W.BLOC_DEV.SEQ["tuck-jumps"].k.length === 4, "Tuck Jumps: vier Phasen erwartet");
       // jede Band-Übung hat eine Befestigung mit bekannter Art
       var bandIds = W.EXERCISES.filter(function (e) { return e.equip.indexOf("band") > -1; }).map(function (e) { return e.id; });
-      pruefe(bandIds.length === 47 && bandIds.every(function (id) { return W.BAND_ANKER[id] && W.BAND_ARTEN[W.BAND_ANKER[id][0]]; }), "Nicht jede Band-Übung hat eine Befestigung");
+      pruefe(bandIds.length === 49 && bandIds.every(function (id) { return W.BAND_ANKER[id] && W.BAND_ARTEN[W.BAND_ANKER[id][0]]; }), "Nicht jede Band-Übung hat eine Befestigung");
       W.openExInfo("band-standing-row", false);
       await bis(function () { return $("#overlayRoot .info-sheet"); }, 2000, "Info Band-Übung");
       pruefe(!$("#overlayRoot .info-anker"), "Karte „Band befestigen“ ist entfernt");
@@ -2040,16 +2040,16 @@
       pruefe(W.state.db.settings.fortschrittKacheln.join() === "logbuch,verlauf", "Auswahl gespeichert");
       W.state.db.history = []; W.state.db.settings.einheiten = []; delete W.state.db.settings.fortschrittKacheln; W.save();
     }],
-    ["Plan-Assistent: Karte im Baukasten, Fragen, Übersicht, Plan erstellen, TrainingsBLOCs je Tag, Kalender, Menü, Abbrechen", async function () {
+    ["Plan-Assistent: Knopf auf „Trainingsplan“, Fragen, Übersicht, Plan erstellen, TrainingsBLOCs je Tag, Kalender, Menü, Abbrechen", async function () {
       await heim();
       W.state.db.settings.programme = []; W.state.db.settings.stPlaene = []; W.state.db.settings.kalender = { e:[] }; W.save();
-      zuWorkout();
-      klick(await bis(function () { return $("[data-planassi]"); }, 3000, "Karte Trainingsplan erstellen lassen"));
+      W.go("#koerper");   // seit 2026-11-11 startet der Assistent auf der Seite Trainingsplan (die Karte im Baukasten gibt es nicht mehr)
+      klick(await bis(function () { return $("[data-pgassi]"); }, 3000, "Knopf Trainingsplan erstellen lassen"));
       await bis(function () { return $(".pa-sheet .pa-titel"); }, 2000, "Erste Frage");
       pruefe(/Ziele/.test($(".pa-titel").textContent) && $$("[data-pa-opt]").length === 6, "Frage 1: sechs Ziele, mehrere möglich");
       klick($("[data-pa-x]"));
       await bis(function () { return !$(".pa-sheet"); }, 2000, "Abbrechen schließt");
-      klick($("[data-planassi]"));
+      klick($("[data-pgassi]"));
       await bis(function () { return $(".pa-sheet"); }, 2000, "Assistent wieder offen");
       async function antwort(sel) { klick(await bis(function () { return $(sel); }, 2000, sel)); await new Promise(function (r) { setTimeout(r, 450); }); }
       await antwort('[data-pa-opt="muskel"]'); await antwort('[data-pa-opt="ausdauer"]'); await antwort('[data-pa-weiter]');   // zwei Ziele
