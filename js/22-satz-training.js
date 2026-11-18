@@ -118,12 +118,36 @@ function satzKarteHTML(id, i, n){
         var an = satzKontext.rpe[id] === r; return '<button type="button" class="'+(an ? 'an' : '')+'" data-satzrpe="'+r+'" aria-pressed="'+an+'">'+(anstrengungModus() === "rir" ? 10 - r : r)+'</button>'; }).join("")+'</div>' : '')+
       '<button type="button" class="satz-los" data-satzset>✓ '+esc(t("stSetDone"))+' '+((h ? h.s.length : 0)+1)+'</button>'+
       '<div class="satz-pause" hidden><span>'+esc(t("stPause"))+'</span><b></b><button type="button" data-satzskip>'+esc(t("stSkip"))+'</button></div>'+
-      (fertig && studioKalibrierFrage(id, h) ? '<div class="satz-kal"><span>'+esc(t("kalFrage"))+'</span><button type="button" data-kalib="leicht">'+esc(t("kalLeicht"))+'</button><button type="button" data-kalib="passt">'+esc(t("kalPasst"))+'</button></div>' : '')+
+      /* „Wie schwer war das?“ steht seit Test 8 auf der Abschlusskarte (satzKalibrierHTML), nicht mehr auf jeder Übung */
       (fertig ? '<button type="button" class="satz-weiter" data-satzweiter>'+esc(i < n-1 ? t("satzNaechste") : t("satzFertig"))+' ›</button>' : '')+
       (info ? '<details class="satz-info"><summary>'+esc(t("stInfo"))+'<span class="tpl-chev" aria-hidden="true">&#9662;</span></summary>'+
         '<ol>'+info[lang].split("|").map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ol>'+
         (post ? '<ul>'+post[lang*2].split("|").map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul><p><b>'+esc(t("avoid"))+':</b> '+esc(post[lang*2+1])+'</p>' : '')+'</details>' : '')+
     '</div></section>';
+}
+/* Kalibrieren am Ende (Test 8, Sportwissenschaftler): Lagen alle Übungen mit Gewicht heute am oberen Rand (mindestens zwei), gibt es eine gemeinsame Frage
+   „Wie schwer war das insgesamt?“; sonst je Übung eine kurze Zeile. ids: die Übungen des Trainings. */
+function satzKalibrierIds(ids){
+  var kal = [], gew = [];
+  ids.forEach(function(id){
+    var ex = findExercise(id), h = satzHeute(id);
+    if(!ex || !h || studioNurBlock(ex) || studioNachZeit(id) || studioAssistiert(id)) return;
+    if(!h.s.some(function(x){ return x[0] > 0; })) return;
+    gew.push(id);
+    if(h.s.length >= satzZielSaetze(id) && studioKalibrierFrage(id, h)) kal.push(id);
+  });
+  return { ids:kal, alle:kal.length >= 2 && kal.length === gew.length };
+}
+function satzKalibrierHTML(k){
+  if(!k.ids.length) return "";
+  function knoepfe(wert){ return '<button type="button" data-kalib="'+esc(wert)+':leicht">'+esc(t("kalLeicht"))+'</button><button type="button" data-kalib="'+esc(wert)+':passt">'+esc(t("kalPasst"))+'</button>'; }
+  if(k.alle) return '<div class="satz-kal-ende"><div class="satz-kal"><span>'+esc(t("kalFrageAlle"))+'</span>'+knoepfe("*")+'</div></div>';
+  return '<div class="satz-kal-ende"><p class="satz-kal-hinweis">'+esc(t("kalFrage"))+'</p>'+k.ids.map(function(id){ var ex = findExercise(id);
+    return '<div class="satz-kal" data-kalzeile="'+esc(id)+'"><span>'+esc(tplText(ex.name))+'</span>'+knoepfe(id)+'</div>'; }).join("")+'</div>';
+}
+function satzKalibrierText(id, r){
+  var n = tplText(findExercise(id).name);
+  return n+": "+(r && r.wdh ? t("kalWdh", { w:r.wdh }) : r != null ? t("kalNeu", { kg:studioKg(r) }) : t("kalGemerkt"));
 }
 function renderSatzTraining(planId, start){
   var p = stPlanFind(planId), ids = p ? satzListe(p) : [];
@@ -203,15 +227,23 @@ function renderSatzTraining(planId, start){
   }
   function abschluss(){
     abschlussGezeigt = true;
+    var kal = satzKalibrierIds(ids);
     var imPlan = !!programmKontextFuer("plan:"+p.id), pw = imPlan ? programmWeiter("plan:"+p.id) : null, d = trainingHeute(ids), box = document.createElement("div");
     var haupt = pw ? t("satzSpeichernWeiter", { n:pw.name }) : imPlan ? t("satzSpeichernAuswertung") : t("satzSpeichernFertig");
     box.className = "satz-ende";
     box.innerHTML = '<div class="satz-ende-glas satz-fertigkarte" role="dialog" aria-label="'+esc(t("satzGeschafft"))+'"><div class="satz-ende-logo" aria-hidden="true">BLOC</div><div class="satz-haken" aria-hidden="true">✓</div>'+
       '<h2>'+esc(p.name)+'</h2><p class="satz-kurz">'+esc(planAnzahl(d.ex.length)+" · "+t("planSaetzeGesamt", { n:d.saetze }))+'</p>'+
+      satzKalibrierHTML(kal)+
       '<button type="button" class="satz-los" data-endhaupt>'+esc(haupt)+(pw ? ' ›' : '')+'</button>'+
       '</div>';
     root.appendChild(box);
     vibrate([60, 50, 60, 50, 140]); if(state.db.settings.sound) phaseBeep("done");
+    box.querySelectorAll("[data-kalib]").forEach(function(b){ b.addEventListener("click", function(){
+      var v = b.getAttribute("data-kalib").split(":"), leicht = v[1] === "leicht", ziel = v[0] === "*" ? kal.ids : [v[0]], texte = [];
+      ziel.forEach(function(id){ texte.push(satzKalibrierText(id, studioKalibrieren(id, leicht))); });
+      var zeile = v[0] === "*" ? b.closest(".satz-kal-ende") : b.closest(".satz-kal");
+      zeile.innerHTML = '<p class="satz-kal-ok">'+texte.map(esc).join("<br>")+'</p>';
+    }); });
     box.querySelector("[data-endhaupt]").addEventListener("click", function(){
       var e = null;
       try{ e = stilleSpeicherung(); }catch(err){ e = null; }   // auch wenn das Speichern hakt: nicht auf der Karte hängen bleiben
@@ -301,10 +333,6 @@ function renderSatzTraining(planId, start){
     k.querySelectorAll("[data-satzrpe]").forEach(function(b){ b.addEventListener("click", function(){
       var r = +b.getAttribute("data-satzrpe"); satzKontext.rpe[id] = satzKontext.rpe[id] === r ? 0 : r; tipp();
       k.querySelectorAll("[data-satzrpe]").forEach(function(c){ var an = +c.getAttribute("data-satzrpe") === satzKontext.rpe[id]; c.classList.toggle("an", an); c.setAttribute("aria-pressed", an); });
-    }); });
-    k.querySelectorAll("[data-kalib]").forEach(function(b){ b.addEventListener("click", function(){
-      var neuKg = studioKalibrieren(id, b.getAttribute("data-kalib") === "leicht");
-      showToast(neuKg && neuKg.wdh ? t("kalWdh", { w:neuKg.wdh }) : neuKg != null ? t("kalNeu", { kg:studioKg(neuKg) }) : t("kalGemerkt")); karteNeu(i);
     }); });
     if((a = k.querySelector("[data-satznein]"))) a.addEventListener("click", function(){ var m = studioTippAblehnen(id); delete satzKontext.tipps[id]; showToast(t(m)); karteNeu(i); });
     if((a = k.querySelector("[data-satztipp]"))) a.addEventListener("click", function(){
