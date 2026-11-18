@@ -95,6 +95,15 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-18 · Test 7 Rest: Kalibrieren, Isolation, Langhantel-Hüfte, Zielbegriffe (Fassung 2026-11-18-2)
+
+Fachlich mit dem Sportwissenschaftler abgestimmt (Quellen als Anker: ACSM 2009 Progression Models, Schoenfeld 2017, NSCA-Praxis).
+- **Kalibrieren „Leicht“:** keine erzwungene Mindeststufe mehr. Bis zu zwei Stufen, höchstens +20 % (Einsteiger, Kniebeuge, Kreuzheben +10 %). Wäre schon eine Stufe zu viel (Beinpresse 15 → 20 kg = +33 %), bleibt das Gewicht und das Wdh.-Ziel steigt um 2 („Gleiches Gewicht, nächstes Mal 12 Wdh. als Ziel“).
+- **Plan-Assistent, Isolation:** höchstens eine Isolationsübung je Muskel und Tag (seitliche/hintere/vordere Schulter, Bizeps/Trizeps getrennt; Rumpf ausgenommen), auch beim Wochenausgleich Zug/Druck.
+- **Plan-Assistent, Unterkörper:** Kraft/Muskelaufbau ab „mittel“, mit Langhantel, ohne Rücken-/Knie-Einschränkung: je Unterkörpertag eine Hüftstreckung mit Langhantel (RDL, Hip Thrust, Kreuzheben höchstens einmal pro Woche) als zweite Übung; einbeinige Varianten danach. Einsteiger nicht.
+- **Zielbegriffe:** Plan-Assistent heißt wie Einführung und Einstellungen „Fitter werden“ und „Gewicht verlieren“.
+- Tests: einheitstest +1 (102 grün). Schnelltest: 3 alte Erwartungen veraltet (Tools-Reihenfolge, Zahl der Band-Übungen, Favoriten-Hinweis), nicht von dieser Änderung.
+
 ## 2026-11-18 · Tools-Texte, schlanker Timer, Timer im Hintergrund (Fassung 2026-11-18-1)
 
 - **Tools-Kacheln:** Mobility & Stretch zeigt wie der Workout-Builder die Zahl der Workouts und Übungen; Trainingsplan „BLOC für BLOC“; Timer „Freie Intervalle“.

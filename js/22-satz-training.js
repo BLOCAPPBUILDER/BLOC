@@ -304,7 +304,7 @@ function renderSatzTraining(planId, start){
     }); });
     k.querySelectorAll("[data-kalib]").forEach(function(b){ b.addEventListener("click", function(){
       var neuKg = studioKalibrieren(id, b.getAttribute("data-kalib") === "leicht");
-      showToast(neuKg != null ? t("kalNeu", { kg:studioKg(neuKg) }) : t("kalGemerkt")); karteNeu(i);
+      showToast(neuKg && neuKg.wdh ? t("kalWdh", { w:neuKg.wdh }) : neuKg != null ? t("kalNeu", { kg:studioKg(neuKg) }) : t("kalGemerkt")); karteNeu(i);
     }); });
     if((a = k.querySelector("[data-satznein]"))) a.addEventListener("click", function(){ var m = studioTippAblehnen(id); delete satzKontext.tipps[id]; showToast(t(m)); karteNeu(i); });
     if((a = k.querySelector("[data-satztipp]"))) a.addEventListener("click", function(){
