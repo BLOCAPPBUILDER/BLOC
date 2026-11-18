@@ -95,6 +95,10 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-18 · Kalibrierfrage am Trainingsende (Fassung 2026-11-18-5)
+
+- „Wie schwer war das?“ steht nicht mehr auf jeder Übungskarte, sondern auf der Abschlusskarte: lagen alle Übungen mit Gewicht am oberen Rand (mindestens zwei), eine gemeinsame Frage „Wie schwer war das insgesamt?“, sonst je Übung eine Zeile (Sportwissenschaftler). Danach steht dort, was sich ändert („Beinpresse: Nächstes Mal 20 kg“).
+
 ## 2026-11-18 · Test 8: Rollen im Plan, Plateau, Kalibrieren, Timer-Zählweise, Plannamen je Sprache (Fassung 2026-11-18-4)
 
 Fachlich mit dem Sportwissenschaftler abgestimmt; Entscheidungen von Kevin: Kalibrieren „Leicht“ eine Stufe bis +35 %, bei „Kraft“ Bankdrücken immer Hauptübung.

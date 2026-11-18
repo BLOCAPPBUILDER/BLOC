@@ -1825,6 +1825,11 @@ body.prot-sheet-offen{ overflow:hidden; }
 .satz-rpe button{ min-width:34px; height:30px; border-radius:10px; border:1px solid rgba(255,255,255,.3); background:transparent; color:inherit; font:inherit; font-weight:700; cursor:pointer; }
 .satz-rpe button.an{ background:var(--accent); border-color:var(--accent); color:#fff; }
 .satz-kal{ display:flex; align-items:center; gap:8px; justify-content:center; margin:6px 0 10px; font-size:13px; }
+.satz-kal-ende{ margin:-8px 0 18px; display:flex; flex-direction:column; gap:2px; }
+.satz-kal-ende .satz-kal{ justify-content:space-between; margin:2px 0; }
+.satz-kal-ende .satz-kal span{ flex:1; text-align:left; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.satz-kal-hinweis{ margin:2px 0 0; font-size:12px; opacity:.7; }
+.satz-kal-ok{ margin:4px 0; font-size:13px; opacity:.9; line-height:1.4; }
 .satz-kal button{ border-radius:10px; border:1px solid rgba(255,255,255,.35); background:transparent; color:inherit; padding:6px 12px; font:inherit; font-weight:700; cursor:pointer; }
 .satz-block b{ font-weight:800; }
 /* Test 5: Tipp-Text über die ganze Breite, Knöpfe darunter; „Fertig“ deutlich als Knopf, hervorgehoben sobald alles drin ist */
