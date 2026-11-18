@@ -29,8 +29,8 @@ var PAT = {
     q_impact:"Wie sieht es mit Sprüngen aus?", h_impact:"Sprünge und harte Landungen belasten Gelenke.",
     q_sport:"Machst du schon einen anderen Sport?", h_sport:"Optional. Er kommt als fester Termin in den Kalender und zählt als Belastung: Rund um den Sport wird nicht an den Beinen trainiert.",
     q_fertig:"Alles bereit?", h_fertig:"Prüfe die Übersicht. Antippen ändert eine Antwort.",
-    z_muskel:"Muskelaufbau", z_muskel_s:"Kräftiger und definierter", z_kraft:"Kraft", z_kraft_s:"Stärker werden", z_abnehmen:"Abnehmen", z_abnehmen_s:"Aktiver, mehr Energieumsatz",
-    z_ausdauer:"Ausdauer", z_ausdauer_s:"Länger durchhalten", z_allgemein:"Allgemein fit", z_allgemein_s:"Von allem etwas", z_beweglich:"Beweglichkeit", z_beweglich_s:"Locker und beweglich",
+    z_muskel:"Muskelaufbau", z_muskel_s:"Kräftiger und definierter", z_kraft:"Kraft", z_kraft_s:"Stärker werden", z_abnehmen:"Gewicht verlieren", z_abnehmen_s:"Aktiver, mehr Energieumsatz",
+    z_ausdauer:"Ausdauer", z_ausdauer_s:"Länger durchhalten", z_allgemein:"Fitter werden", z_allgemein_s:"Von allem etwas", z_beweglich:"Beweglichkeit", z_beweglich_s:"Locker und beweglich",
     f_ausgew:"Ausgewogen",
     n_gar:"Gerade gar nicht", n_gar_s:"Ich fange neu an", n_unreg:"Unregelmäßig", n_unreg_s:"Mal ja, mal nein", n_n12:"1–2× pro Woche", n_n12_s:"Regelmäßig, aber wenig", n_n3:"3× oder öfter", n_n3_s:"Ich trainiere regelmäßig",
     d_20:"20 min", d_30:"30 min", d_45:"45 min", d_60:"60 min oder mehr",
@@ -86,7 +86,7 @@ var PAT = {
     q_sport:"Do you already do another sport?", h_sport:"Optional. It goes into the calendar as a fixed date and counts as load: no leg training around it.",
     q_fertig:"All set?", h_fertig:"Check the overview. Tap an answer to change it.",
     z_muskel:"Build muscle", z_muskel_s:"Stronger and more defined", z_kraft:"Strength", z_kraft_s:"Get stronger", z_abnehmen:"Lose weight", z_abnehmen_s:"More active, more energy use",
-    z_ausdauer:"Endurance", z_ausdauer_s:"Last longer", z_allgemein:"General fitness", z_allgemein_s:"A bit of everything", z_beweglich:"Mobility", z_beweglich_s:"Loose and flexible",
+    z_ausdauer:"Endurance", z_ausdauer_s:"Last longer", z_allgemein:"Get fitter", z_allgemein_s:"A bit of everything", z_beweglich:"Mobility", z_beweglich_s:"Loose and flexible",
     f_ausgew:"Balanced",
     n_gar:"Not at all right now", n_gar_s:"I am starting fresh", n_unreg:"Irregularly", n_unreg_s:"Sometimes yes, sometimes no", n_n12:"1–2× a week", n_n12_s:"Regular, but little", n_n3:"3× or more", n_n3_s:"I train regularly",
     d_20:"20 min", d_30:"30 min", d_45:"45 min", d_60:"60 min or more",
@@ -174,6 +174,25 @@ function paDrueckt(ex){ return !!ex && exProfile(ex).pattern === "push"; }
 var PA_DRUCK_ISO = /fly|butterfly|raise|pec-deck|crossover|pullover|kickback|extension|pushdown|skull|curl|shrug|pallof|rotation|stretch|walk|hold|carry|get-up|crawl|plank|lift$/;
 var PA_VARIANTE = /close-grip|narrow|diamond|single-leg|one-leg|one-arm|bulgarian|goblet|sissy|pistol/;   // Varianten stehen hinter der Grundübung
 function paDruckHaupt(ex){ return paDrueckt(ex) && paMehrgelenk(ex) && !PA_DRUCK_ISO.test(ex.id) && /brust|schulter/.test(paTopGruppe(ex)); }   // Beinpresse ist „Drücken“, aber nicht für den Oberkörper
+/* Test 7 (Sportwissenschaftler): höchstens eine Isolationsübung je Muskel und Tag. Gezählt wird der erste Hauptmuskel (EX_MUSCLES); seitliche, hintere und vordere Schulter
+   sowie Bizeps und Trizeps zählen getrennt. Rumpf und Bauch sind ausgenommen. Mehr Volumen kommt über Sätze oder Mehrgelenkübungen, nicht über eine zweite Isolation. */
+var PA_ISO_NAME = /fly|raise|curl|kickback|pushdown|skull|pullover|crossover|pec-deck|shrug|abductor|adductor|calf|leg-extension|triceps-extension|overhead-cable-triceps|triceps-machine/;   // eingelenkig, auch wenn die Daten zwei Gruppen nennen (Reverse Fly: Schulter + Rücken)
+function paIsoMuskel(ex){
+  if(!ex || (paMehrgelenk(ex) && !PA_ISO_NAME.test(ex.id))) return "";
+  var m = String(((EX_MUSCLES[ex.id] || [])[0] || "").split(",")[0]).toLowerCase();
+  var l = [[/hintere schulter/, "s-hinten"], [/seitliche schulter/, "s-seite"], [/vordere schulter|^schultern/, "s-vorn"], [/brust/, "brust"], [/bizeps|oberarmmuskel/, "bizeps"], [/trizeps/, "trizeps"],
+    [/oberschenkel vorn/, "quad"], [/oberschenkel hinten/, "hams"], [/seitliche[sr]? gesäß|abduktor/, "abd"], [/gesäß/, "po"], [/wade/, "waden"], [/adduktor/, "add"], [/unterarm/, "unterarm"], [/oberer trapez|nacken/, "nacken"],
+    [/rücken|latissimus|trapez|rauten/, "ruecken"]];
+  for(var i = 0; i < l.length; i++) if(l[i][0].test(m)) return l[i][1];
+  return "";
+}
+/* Test 7 S2 (Sportwissenschaftler): Kraft/Muskelaufbau ab „mittel“ mit Langhantel und ohne Rücken-/Knie-Einschränkung: je Unterkörpertag eine Hüftstreckung mit
+   Langhantel als Hauptübung (RDL vor Hip Thrust vor Kreuzheben, Kreuzheben höchstens einmal pro Woche); einbeinige Varianten danach. Einsteiger nicht. */
+var PA_LH_HUEFTE = ["barbell-rdl", "hip-thrust", "barbell-deadlift"];
+function paLhHuefteRegel(a, sw, haupt){
+  var ziel = haupt === "kraft" || haupt === "muskel" || a.ziele.indexOf("kraft") > -1 || a.ziele.indexOf("muskel") > -1;
+  return ziel && (sw === "mittel" || sw === "schwer") && a.ausr.indexOf("lh") > -1 && a.niveau !== "gar" && a.einschr.indexOf("ruecken") < 0 && a.einschr.indexOf("knie") < 0;
+}
 function paZugVertikal(ex){ return /pull-?downs?|pull-ups?|chin-ups?/.test(ex.id); }   // sonst horizontal (Rudern)
 var PA_AUSNAHME = /forearm|elbow|incline-push|wall-push|knee-push/;   // Handgelenk: Unterarm-Varianten und leichtere Stützformen bleiben erlaubt
 /* Slots je Einheit: Muskelgruppen in Reihenfolge der Wichtigkeit (große Übungen zuerst; Drücken und Ziehen wechseln sich ab) */
@@ -306,9 +325,10 @@ function paGrundUebung(ex){
   return Math.min(3, Math.max(0, n - 1)*1.2 + sek);
 }
 function paWaehle(liste, benutzt, seed, plan){
-  var best = null;
+  var best = null, iso = benutzt.__iso;   // __iso: am Tag schon belegte Isolations-Muskeln
   (liste || []).forEach(function(o){
     if(benutzt[o.ex.id]) return;
+    if(iso){ var mu = paIsoMuskel(o.ex); if(mu && iso[mu]) return; }
     var sc = o.sc + paHash(o.ex.id + seed)*0.9 - (plan[o.ex.id] ? 2 : 0);
     if(!best || sc > best.sc) best = { ex:o.ex, sc:sc };
   });
@@ -400,7 +420,7 @@ function paErzeuge(a0){
     var m = {}; ids.forEach(function(id){ m[id] = "timer"; });
     return { bloc:{ name:pt("dehnen"), ids:ids, std:"timer", modus:m, dehn:true } };
   }
-  var mobIdx = 0, cardioIdx = 0, ohneZug = false;
+  var mobIdx = 0, cardioIdx = 0, ohneZug = false, lhKreuzheben = false;
   typen.forEach(function(typ, i){
     var tag = days[i], seed = seedBase + i, teile = [], tname = "";
     if(typ === "gk" || typ === "ok" || typ === "uk"){
@@ -410,6 +430,7 @@ function paErzeuge(a0){
         if(passt && slots.filter(function(x){ return x === g; }).length < 2) slots.splice(2, 0, g);
       });
       var benutzt = {}, gruppen = [], mainIds = [];
+      Object.defineProperty(benutzt, "__iso", { value:{}, enumerable:false });   // Isolation je Muskel und Tag (Test 7)
       var wt = warmTeil("kraft", seed); if(wt && wt.bloc) wt.bloc.ids.forEach(function(id){ benutzt[id] = 1; });
       slots.slice(0, nMain).forEach(function(g, k){
         // Rücken-Slot: zuerst eine Zugübung, Ganzkörper A/C horizontal (Rudern), B vertikal (Latzug, Klimmzug); sonst die andere Richtung
@@ -418,7 +439,7 @@ function paErzeuge(a0){
         // Unterkörpertag: keine Druckübungen im Rumpf-/Bauch-Platz (Liegestütz zählt in den Daten zum Rumpf; Test 4)
         function pl(gr){ var l0 = pools.kraft[gr] || []; return typ === "uk" ? l0.filter(function(o){ return !paDrueckt(o.ex); }) : l0; }
         var ex = (zug && zug.length ? paWaehle(zug, benutzt, seed + k, planBenutzt) : null) || paWaehle(pl(g), benutzt, seed + k, planBenutzt) || paWaehle(pl(g === "po" ? "beine" : g === "bauch" ? "rumpf" : g === "rumpf" ? "bauch" : g), benutzt, seed + k, planBenutzt);
-        if(ex){ benutzt[ex.id] = 1; planBenutzt[ex.id] = 1; mainIds.push(ex.id); gruppen.push(g); }
+        if(ex){ benutzt[ex.id] = 1; planBenutzt[ex.id] = 1; mainIds.push(ex.id); gruppen.push(g); var mu0 = paIsoMuskel(ex); if(mu0) benutzt.__iso[mu0] = 1; }
       });
       /* Jeder Ganzkörper- und Oberkörpertag bekommt mindestens eine Zugübung (fachliche Prüfung 2026-11-12): fehlt sie, ersetzt sie die letzte Arm- bzw. Schulterübung */
       if((typ === "gk" || typ === "ok") && !mainIds.some(function(id){ return paIstZug(findExercise(id)); })){
@@ -457,6 +478,26 @@ function paErzeuge(a0){
         paare.sort(function(x, y){ return (x.w - y.w) || (x.k - y.k); });
         mainIds = paare.map(function(p0){ return p0.id; }); gruppen = paare.map(function(p0){ return p0.g; });
       })();
+      var lhDa = typ === "uk" && paLhHuefteRegel(a, sw, haupt) ? mainIds.findIndex(function(id){ return PA_LH_HUEFTE.indexOf(id) > -1; }) : -1;
+      if(lhDa > 1){   // schon im Plan, aber weiter hinten: als zweite Hauptübung nach vorn
+        var lhId0 = mainIds.splice(lhDa, 1)[0], lhG0 = gruppen.splice(lhDa, 1)[0], st0 = mainIds.length && paMehrgelenk(findExercise(mainIds[0])) ? 1 : 0;
+        mainIds.splice(st0, 0, lhId0); gruppen.splice(st0, 0, lhG0);
+      }
+      if(typ === "uk" && paLhHuefteRegel(a, sw, haupt) && lhDa < 0){
+        var lhK = PA_LH_HUEFTE.filter(function(id){ var e0 = findExercise(id); return e0 && !benutzt[id] && !(id === "barbell-deadlift" && lhKreuzheben) && !paAusgeschlossen(e0, a) && paGeraetOk(e0, a); });
+        var lhId = lhK.filter(function(id){ return !planBenutzt[id]; })[0] || lhK[0];
+        if(lhId){
+          if(lhId === "barbell-deadlift") lhKreuzheben = true;
+          /* ersetzt: zuerst eine einbeinige Hüftübung, sonst die letzte Po-/Bein-Übung, die keine Kniebeuge/Beinpresse als einzige ist */
+          var weg = -1;
+          for(var q8 = mainIds.length - 1; q8 >= 0 && weg < 0; q8--) if(/po|beine/.test(gruppen[q8]) && PA_VARIANTE.test(mainIds[q8]) && /rdl|deadlift|hip|bridge|thrust/.test(mainIds[q8])) weg = q8;
+          for(var q9 = mainIds.length - 1; q9 >= 0 && weg < 0; q9--) if(gruppen[q9] === "po") weg = q9;
+          if(weg < 0 && mainIds.length >= nMain) weg = mainIds.length - 1;
+          if(weg >= 0){ delete benutzt[mainIds[weg]]; mainIds.splice(weg, 1); gruppen.splice(weg, 1); }
+          var stelle = mainIds.length && paMehrgelenk(findExercise(mainIds[0])) ? 1 : 0;   // als zweite Hauptübung nach der Kniebeuge/Beinpresse
+          mainIds.splice(stelle, 0, lhId); gruppen.splice(stelle, 0, "po"); benutzt[lhId] = 1; planBenutzt[lhId] = 1;
+        }
+      }
       /* „Allgemein fit“ und Einsteiger (Test 5, R7): je Ganzkörpertag eine Druck-, Zug-, Bein-/Hüft- und Rumpfübung; fehlt eine, ersetzt sie die letzte Isolationsübung */
       if(typ === "gk" && (haupt === "allgemein" || a.niveau === "gar" || sw === "anfaenger")){
         var rollen7 = [
@@ -560,7 +601,8 @@ function paErzeuge(a0){
         });
       });
       if(!best) break;
-      var belegt = {}; best.b.ids.forEach(function(id){ belegt[id] = 1; });
+      var belegt = {}, isoB = {}; best.b.ids.forEach(function(id, k){ belegt[id] = 1; var mu = k !== best.k && paIsoMuskel(findExercise(id)); if(mu) isoB[mu] = 1; });
+      Object.defineProperty(belegt, "__iso", { value:isoB, enumerable:false });   // auch hier höchstens eine Isolation je Muskel (Test 7)
       var hatVert = best.b.ids.some(function(id){ var ex = findExercise(id); return paIstZug(ex) && paZugVertikal(ex); });
       var lieber = zugPool.filter(function(o){ return !paIstZug(o.ex) || paZugVertikal(o.ex) !== hatVert; });   // die Zug-Richtung, die dem Tag noch fehlt
       var neu = paWaehle(lieber, belegt, seedBase + "zd" + runde, planBenutzt) || paWaehle(zugPool, belegt, seedBase + "zd2" + runde, planBenutzt);

@@ -1269,6 +1269,47 @@
       var pl = W.studioPlateau(id); wahr(pl && pl.art === "plateau", "12 Wochen ohne Fortschritt: Plateau-Hinweis (" + JSON.stringify(pl) + ")");
     } finally { s.studio = alt; if(altN === undefined) delete s.niveau; else s.niveau = altN; }
   });
+  test("Test 7 Rest: Kalibrieren ohne Mindeststufe, eine Isolation je Muskel und Tag, Langhantel-Hüftstreckung am Unterkörpertag", function () {
+    var s = W.state.db.settings, alt = s.studio, altN = s.niveau, n = Date.now();
+    try {
+      // Einsteiger, Beinpresse 15 kg mit 5-kg-Stufe: +33 % wäre zu viel → gleiches Gewicht, Ziel +2 Wdh.
+      s.niveau = "einsteiger";
+      s.studio = { "leg-press": { kg:15, schritt:5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n, s:[[15, 12], [15, 12], [15, 12]] }] } };
+      var r1 = W.studioKalibrieren("leg-press", true);
+      gleich(r1, { wdh:12 }, "Einsteiger 15 kg / Stufe 5: Gewicht bleibt, Ziel 12 Wdh.");
+      gleich(s.studio["leg-press"].kg, 15, "Gewicht unverändert");
+      // Einsteiger, Kabel 15 kg / 2,5: +17 % > 10 % → ebenfalls Wdh.
+      s.studio = { "cable-row": { kg:15, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n, s:[[15, 12], [15, 12], [15, 12]] }] } };
+      gleich(W.studioKalibrieren("cable-row", true), { wdh:12 }, "Einsteiger 15 → 17,5 kg (+17 %) zu viel: Wdh. statt Gewicht");
+      // Einsteiger mit 40 kg / 2,5: +6 % ok → 42,5
+      s.studio = { "cable-row": { kg:40, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n, s:[[40, 12], [40, 12], [40, 12]] }] } };
+      gleich(W.studioKalibrieren("cable-row", true), 42.5, "Einsteiger 40 kg: eine Stufe (+6 %)");
+      // Fortgeschritten 15 kg / 5: auch +33 % ist über 20 % → Wdh.
+      s.niveau = "fortgeschritten";
+      s.studio = { "leg-press": { kg:15, schritt:5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n, s:[[15, 12], [15, 12], [15, 12]] }] } };
+      gleich(W.studioKalibrieren("leg-press", true), { wdh:12 }, "Fortgeschritten 15 kg / Stufe 5: keine erzwungene Stufe");
+    } finally { s.studio = alt; if (altN === undefined) delete s.niveau; else s.niveau = altN; }
+    // Plan-Assistent: viele Varianten, keine zweite Isolation für denselben Muskel; Unterkörpertage mit Langhantel-Hüftstreckung
+    var doppelt = [], lhFehlt = [], kh = 0;
+    [["muskel"], ["kraft"], ["kraft", "muskel"], ["allgemein"]].forEach(function (z) { ["anfaenger", "leicht", "mittel", "schwer"].forEach(function (sw) { [[0, 3], [0, 2, 4], [0, 1, 3, 4]].forEach(function (tg) { [45, 60].forEach(function (d) {
+      var a = { ziele:z, niveau:"reg", schwer:sw, tage:tg, dauer:d, train:["studio"], ausr:["lh", "kh", "maschine", "kabel", "band"], impact:"gerne", einschr:[], bereiche:["workout"] }, p = W.paErzeuge(a), dl = 0;
+      p.tage.forEach(function (t0) { t0.teile.forEach(function (tl) {
+        if (!tl.bloc || !tl.bloc.main) return; var m = {};
+        tl.bloc.ids.forEach(function (id) { var k = W.paIsoMuskel(W.findExercise(id)); if (k) { if (m[k]) doppelt.push(t0.name + ": " + m[k] + " + " + id); m[k] = id; } if (id === "barbell-deadlift") dl++; });
+        if (t0.typ === "uk" && W.paLhHuefteRegel(W.paSauber(a), sw, z[0])) {
+          var pos = tl.bloc.ids.findIndex(function (id) { return W.PA_LH_HUEFTE.indexOf(id) > -1; });
+          if (pos < 0 || pos > 1) lhFehlt.push(t0.name + " " + z + "/" + sw + ": " + tl.bloc.ids.join(", "));
+        }
+        if (t0.typ === "uk" && sw === "anfaenger" && tl.bloc.ids.indexOf("barbell-deadlift") > -1) kh++;
+      }); });
+      if (dl > 1) doppelt.push("Kreuzheben " + dl + "× pro Woche (" + z + "/" + sw + ")");
+    }); }); }); });
+    gleich(doppelt, [], "höchstens eine Isolation je Muskel und Tag, Kreuzheben höchstens einmal pro Woche");
+    gleich(lhFehlt, [], "Unterkörpertag (Kraft/Muskel ab mittel, Langhantel): Hüftstreckung mit Langhantel als 1. oder 2. Übung");
+    gleich(kh, 0, "Einsteiger bekommen kein Langhantel-Kreuzheben vorgeschrieben");
+    var mitKnie = W.paErzeuge({ ziele:["muskel"], niveau:"reg", schwer:"schwer", tage:[0, 1, 3, 4], dauer:60, train:["studio"], ausr:["lh", "kh", "maschine"], impact:"gerne", einschr:["ruecken"], bereiche:["workout"] });
+    wahr(!W.paLhHuefteRegel(W.paSauber({ ziele:["muskel"], niveau:"reg", schwer:"schwer", tage:[0, 1, 3, 4], dauer:60, train:["studio"], ausr:["lh"], impact:"gerne", einschr:["ruecken"], bereiche:["workout"] }), "schwer", "muskel") && mitKnie.tage.length === 4, "Rücken-Einschränkung: keine Pflicht zur Langhantel-Hüftstreckung");
+  });
   test("Pausen-Tipp lässt sich mit „Behalten“ ablehnen", function () {
     var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();
     try {

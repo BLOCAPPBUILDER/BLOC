@@ -371,7 +371,10 @@ function studioTipps(ids, leicht, mitOffen){
   return o;
 }
 /* Kalibrieren (Test 4, Q5): in den ersten zwei Runden einer Übung mit Gewicht, wenn alle Ziel-Sätze heute am oberen Rand lagen, fragt die Satzkarte
-   „Wie schwer war das?“. „Leicht“ → zwei Stufen mehr (höchstens +20 %, mindestens eine Stufe), danach nicht mehr fragen. */
+   „Wie schwer war das?“. „Leicht“ → bis zu zwei Stufen mehr, höchstens +20 % (Einsteiger, Kniebeuge und Kreuzheben +10 %), danach nicht mehr fragen.
+   Test 7 (Sportwissenschaftler): keine erzwungene Mindeststufe mehr. Wäre schon eine Stufe zu viel (Beinpresse 15 → 20 kg = +33 %), bleibt das Gewicht
+   und das Wiederholungsziel steigt um 2 (Doppelprogression bis zum oberen Rand 15 bzw. 20); geht das nicht, bleibt alles, wie es ist.
+   Rückgabe: neues Gewicht (Zahl), { wdh } beim höheren Wdh.-Ziel oder null. */
 function studioKalibrierFrage(id, h){
   var e = studioEintrag(id), ex = findExercise(id);
   if(!e || !h || !ex || !tippsAn() || studioNurBlock(ex) || studioAssistiert(id) || studioNachZeit(id)) return false;
@@ -386,10 +389,17 @@ function studioKalibrieren(id, leicht){
   var a = studioAlle(), en = a[id] || (a[id] = { log:[] }), z = studioZiel(id), kg = studioArbeitsKg(id), neu = null;
   en.kalibriert = true; en.kalibriertRunde = (en.log || []).filter(function(l){ return arbeitsSaetze(l).length; }).length;
   if(leicht && kg > 0){
-    var s = z.schritt, grenze = /squat|deadlift/.test(id) ? 0.10 : PROG_DOPPEL_MAX;   // Kniebeuge und Kreuzheben höchstens +10 %
-    var zwei = Math.round((Math.floor(kg/s + 1e-9) + 2)*s*100)/100, max = Math.floor(kg*(1 + grenze)/s + 1e-9)*s;
-    neu = Math.round(Math.max(Math.round((Math.floor(kg/s + 1e-9) + 1)*s*100)/100, Math.min(zwei, max))*100)/100;
-    en.kg = neu; en.erhoeht = Date.now();
+    var s = z.schritt, grenze = /squat|deadlift/.test(id) || trainerNiveau() === "einsteiger" ? 0.10 : PROG_DOPPEL_MAX;
+    var stufen = Math.floor(kg/s + 1e-9), zwei = Math.round((stufen + 2)*s*100)/100, max = Math.round(kg*(1 + grenze)*100)/100;
+    var kgNeu = zwei <= max + 1e-9 ? zwei : Math.round((stufen + 1)*s*100)/100;
+    if(kgNeu <= max + 1e-9 && kgNeu > kg){ neu = kgNeu; en.kg = neu; en.erhoeht = Date.now(); }
+    else {
+      var ex = findExercise(id);
+      if(z.wdh + 4 <= studioWdhGrenze(ex)){
+        if(!en.zielBasis) en.zielBasis = z.wdh;
+        en.ziel = { saetze:z.saetze, wdh:z.wdh + 2 }; en.erhoeht = Date.now(); neu = { wdh:z.wdh + 2 };
+      }
+    }
   }
   save();
   return neu;
