@@ -9,7 +9,7 @@ var MUSKEL_GRP = [
   { id:"arme",     key:"mgArme",    re:/bizeps|trizeps|unterarm|griff/ },
   { id:"bauch",    key:"mgBauch",   re:/bauch|schräg/ },
   { id:"rumpf",    key:"mgRumpf",   re:/rumpf|core/ },   // „Core“: die Mischübungen für die Körpermitte (Bauch, Rücken unten, Hüfte)
-  { id:"beine",    key:"mgBeine",   re:/oberschenkel|waden|adduktor|abduktor|hüft|schienbein|fuß|bein/ },
+  { id:"beine",    key:"mgBeine",   re:/oberschenkel|waden|adduktor|abduktor|hüft|schienbein|fuß|zehen|bein/ },
   { id:"po",       key:"mgPo",      re:/gesäß/ }
 ];
 var MUSKEL_KAT = { chest:"brust", back:"ruecken", arms:"arme", core:"bauch", legs:"beine" };
@@ -120,7 +120,7 @@ var KK_REGELN = [
   [/oberschenkel vorn/, ["quad"]],
   [/oberschenkel hinten/, ["hamstring"]],
   [/oberschenkel/, ["quad", "hamstring"]],
-  [/waden|achilles|fuß|schollen|schienbein/, ["waden"]],
+  [/waden|achilles|fuß|schollen|schienbein|zehen/, ["waden"]],   // Zehenstrecker liegen vorn am Unterschenkel
   [/^beine$/, ["quad", "hamstring", "gesaess", "waden"]],
   [/wirbelsäule|rückenstrecker|unterer rücken/, ["ruecken_u"]],
   [/breiter rückenmuskel|latissimus/, ["lat"]],
