@@ -95,6 +95,13 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-18 · Tools-Texte, schlanker Timer, Timer im Hintergrund (Fassung 2026-11-18-1)
+
+- **Tools-Kacheln:** Mobility & Stretch zeigt wie der Workout-Builder die Zahl der Workouts und Übungen; Trainingsplan „BLOC für BLOC“; Timer „Freie Intervalle“.
+- **Workout beenden?** ohne Erklärtext (nur Frage und Knöpfe).
+- **Timer schlank:** Tipp auf einen Timer (Zeile, Stift, Suche) öffnet immer das Intervall-Fenster (Sätze, Runden, Pausen), nie mehr den Editor mit Übungen. Ältere Timer aus mehreren Blöcken übernehmen dort die Werte des ersten Blocks.
+- **App im Hintergrund (Android):** eigener Vordergrund-Dienst `BlocTimerService` mit Anzeige in der Benachrichtigungsleiste (Phase, Übung, Restzeit als Countdown, Tipp öffnet BLOC); hält die App wach, damit die Signaltöne weiterklingen. Musik anderer Apps läuft weiter. Braucht einen neuen App-Build.
+
 ## 2026-11-16 · Test 7 S1: Fortgeschrittene steigern, Plateau nach Wochen (Fassung 2026-11-16-11)
 
 Fortgeschritten und Erfahren (Hauptübung, Bereich bis 10): alle Sätze ≥ oberer Rand − 2, bester ≥ Rand − 1, RPE ≤ 8 (falls eingetragen), zwei Runden hintereinander; Erfahren zusätzlich „alle ≥ Rand − 1, bester am Rand“. Einsteiger weiter streng. Plateau-Hinweis nach Zeitfenster (Einsteiger 24, Fortgeschritten 35, Erfahren 49 Tage) statt nach 12 Runden. Test dazu (101 grün). Offen: eine Isolation je Muskel und Tag, Hüftstreckung mit Langhantel bevorzugen.

@@ -86,12 +86,14 @@ function bindPlayPause(){
       requestWakeLock();
       planAudio(true);
       tickLoop();
+      timerAnzeigeMelden();
     } else {
       playerState.remainingMs = Math.max(0, playerState.endAt - Date.now());
       playerState.paused = true;
       schedCancel();
       btn.querySelector("span").innerHTML = ICON_PLAY;
       if(playerState.rafId) cancelAnimationFrame(playerState.rafId);
+      timerAnzeigeMelden();
     }
   };
 }
@@ -100,7 +102,7 @@ function bindPlayPause(){
 function beendenFragen(){
   var pb = document.getElementById("pl-playpause"), selbst = false;
   if(playerState && !playerState.paused && pb){ pb.click(); selbst = true; }
-  confirmSheet(t("endQ"), t("endText"), t("endBtn"), exitPlayer, function(){
+  confirmSheet(t("endQ"), "", t("endBtn"), exitPlayer, function(){
     var b = document.getElementById("pl-playpause");
     if(selbst && playerState && playerState.paused && b) b.click();
   });
@@ -125,6 +127,7 @@ function bindPlayerControls(){
       if(playerState.rafId) cancelAnimationFrame(playerState.rafId);
       planAudio(true);
       tickLoop();
+      timerAnzeigeMelden();
     }
     if(e.target.closest("[data-plsave]")){   // Training speichern mitten im Workout (Pause und Anzeige laufen weiter)
       openTrainingSpeichern(playerTrainingKontext());
@@ -154,6 +157,7 @@ function exitPlayer(){
   if(playerState && playerState.steps[playerState.idx].phase!=="done") logHistory(true);
   if(playerState && playerState.rafId) cancelAnimationFrame(playerState.rafId);
   playerState = null;
+  timerAnzeigeMelden();   // Anzeige in der Benachrichtigungsleiste weg
   releaseWakeLock();
   document.getElementById("playerRoot").innerHTML = "";
   leistenFarbeAbgleichen();   // Statusleiste wieder passend zum gewählten Design

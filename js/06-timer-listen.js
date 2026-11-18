@@ -114,7 +114,7 @@ function bindTrash(refresh){
 }
 function timerWorkoutRow(w){
   var count = w.items.length;
-  return '<div class="list-item entry" data-nav="#workout/'+w.id+'">'+
+  return '<div class="list-item entry" data-twedit="'+w.id+'" role="button" tabindex="0">'+
     '<button class="playbtn bl" data-play="'+w.id+'" '+(count?'':'disabled style="opacity:.3"')+' title="'+t("start")+'" aria-label="'+t("start")+'">'+ICON_PLAY+'</button>'+
     '<div class="meta"><div class="name">'+esc(w.name||t("untitled"))+'</div>'+
     '<div class="sub">'+count+' '+(count===1?t("blockOne"):t("blockMany"))+SEP+fmtDauerKurz(workoutDuration(w))+'</div></div>'+

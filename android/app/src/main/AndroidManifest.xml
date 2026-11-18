@@ -52,6 +52,12 @@
             tools:node="merge"
             tools:replace="android:exported" />
 
+        <!-- Timer im Hintergrund: laufende Anzeige in der Benachrichtigungsleiste, hält die Signaltöne am Laufen (nur aus der App gestartet) -->
+        <service
+            android:name=".BlocTimerService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -66,6 +72,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Vibration bei Timer, Sätzen und Lauf (navigator.vibrate im WebView) -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Timer-Dienst: Vordergrund-Dienst (Signaltöne im Hintergrund) und seine Anzeige in der Benachrichtigungsleiste -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- Das Benachrichtigungs-Plugin bringt Alarm- und Neustart-Berechtigungen mit, die BLOC nicht nutzt (es fragt nur die Erlaubnis für Hinweise ab) -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" tools:node="remove" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" tools:node="remove" />

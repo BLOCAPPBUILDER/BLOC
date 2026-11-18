@@ -371,11 +371,16 @@ function timerPlusAus(w){
   }
   return { rn:its.length, rp:its.length > 1 ? (its[0].restAfterSec || 0) : timerPlusWerte().rp, en:b.reps, ew:b.workSec, ep:b.restSec };
 }
-/* Timer nachträglich ändern: Sätze und Runden im selben Fenster wie beim Anlegen; komplexere Timer (mehrere Blöcke) öffnen den Editor */
+/* Timer nachträglich ändern: immer im selben schlanken Fenster wie beim Anlegen (keine Übungen, nur Intervalle).
+   Ältere Timer aus mehreren Blöcken nehmen die Werte des ersten Blocks; erst Speichern macht daraus einen einfachen Timer. */
 function timerBearbeiten(id){
-  var w = findWorkout(id), p = w && timerPlusAus(w);
-  if(!w) return;
-  if(!p){ go("#workout/"+id); return; }
+  var w = findWorkout(id); if(!w) return;
+  var p = timerPlusAus(w);
+  if(!p){
+    var its = w.items || [], b = its.length ? findBlock(its[0].blockId) : null;
+    if(!b){ go("#play/"+id); return; }
+    p = { rn:its.length, rp:its.length > 1 ? (its[0].restAfterSec || 0) : timerPlusWerte().rp, en:b.reps, ew:b.workSec, ep:b.restSec };
+  }
   openTimerPlus(w, p);
 }
 function timerPlusAendern(w, p, name){

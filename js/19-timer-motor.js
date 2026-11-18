@@ -43,6 +43,33 @@ function buildSteps(w){
 
 var playerState = null;
 
+/* Anzeige des laufenden Timers in der Benachrichtigungsleiste (nur in der App, siehe nativTimerAnzeige):
+   die kommenden Schritte mit ihrem Ende, der Dienst schaltet selbst weiter. Bei Pause steht die Restzeit fest. */
+function timerAnzeigeText(st){
+  var lb = phaseVars(st.phase).label, n = st.blockName ? blockNameAnzeige(st.blockName) : "";
+  var z = st.phase === "work" && playerState.steps.units > 1 ? st.unit+"/"+playerState.steps.units : "";
+  return [lb, n, z].filter(Boolean).join(" · ");
+}
+function timerAnzeigeMelden(){
+  if(typeof nativTimerAnzeige !== "function" || !IST_NATIV) return;
+  var ps = playerState, st = ps && ps.steps[ps.idx];
+  if(!st || st.phase === "done"){ nativTimerAnzeige(null); return; }
+  var titel = "BLOC · "+(ps.workout.name || t("tabTimer")), schritte = [];
+  if(ps.paused){
+    var s = Math.ceil(Math.max(0, ps.remainingMs)/1000);
+    schritte.push({ name:timerAnzeigeText(st)+" · "+t("infoPaused")+" · "+Math.floor(s/60)+":"+String(s%60).padStart(2, "0"), ende:0 });
+  } else {
+    var ende = ps.endAt;
+    for(var i = ps.idx; i < ps.steps.length && schritte.length < 400; i++){
+      var x = ps.steps[i];
+      if(x.phase === "done") break;
+      if(i > ps.idx) ende += x.duration*1000;
+      if(x.duration > 0) schritte.push({ name:timerAnzeigeText(x), ende:ende });
+    }
+  }
+  nativTimerAnzeige({ titel:titel, pause:!!ps.paused, fertig:t("doneTitle"), schritte:schritte });
+}
+
 function workoutForSource(source){
   if(!source) return null;
   if(source.type==="draft"){
@@ -299,9 +326,11 @@ function enterStep(idx, opt){
     }
     bindPlayPause();
     tickLoop();
+    timerAnzeigeMelden();
   } else {
     releaseWakeLock();
     stopBgTicker();
+    timerAnzeigeMelden();
     if(opt.manual) phaseBeep("done");
     logHistory(false);
     announceStep(idx);

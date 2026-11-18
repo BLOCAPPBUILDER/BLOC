@@ -25,7 +25,7 @@ function renderInstallGuide(){
 function confirmSheet(title, desc, actionLabel, onConfirm, onCancel){   // onCancel (optional): bei „Abbrechen“ und Tippen daneben
   var root = document.getElementById("overlayRoot");
   root.innerHTML = '<div class="confirm-overlay"><div class="confirm-sheet">'+
-    '<h3>'+esc(title)+'</h3><p>'+esc(desc)+'</p>'+
+    '<h3>'+esc(title)+'</h3>'+(desc ? '<p>'+esc(desc)+'</p>' : '')+
     '<div class="btn-row"><button class="btn btn-secondary" data-cancel>'+t("cancel")+'</button>'+
     '<button class="btn btn-danger" style="background:var(--danger);color:#fff" data-ok>'+esc(actionLabel)+'</button></div>'+
     '</div></div>';
