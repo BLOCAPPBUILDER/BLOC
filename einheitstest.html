@@ -1241,8 +1241,9 @@
     p.tage.forEach(function (t0) { t0.teile.forEach(function (tl) {
       if (!tl.bloc || !tl.bloc.main) return; var ex = tl.bloc.ids.map(W.findExercise).filter(Boolean);
       if (/gk|ok/.test(t0.typ || "gk")) wahr(ex.some(function (x) { return W.paDruckHaupt(x); }), t0.name + ": Druckübung fehlt: " + tl.bloc.ids.join(", "));
-      var ersteIso = ex.findIndex(function (x) { return !W.paMehrgelenk(x); }), letzteMg = -1; ex.forEach(function (x, k) { if (W.paMehrgelenk(x) && !W.PA_RUMPF_GUT[x.id]) letzteMg = k; });
-      wahr(ersteIso < 0 || letzteMg < ersteIso || ex.slice(ersteIso).every(function (x) { return !W.paMehrgelenk(x) || W.PA_RUMPF_GUT[x.id]; }), t0.name + ": Mehrgelenkübungen stehen vor den Isolationsübungen: " + tl.bloc.ids.join(", "));
+      // seit Test 8 T1: Mehrgelenk/Isolation nach der Rolle der Übung (paRang), nicht nach der Muskelverteilung der Daten
+      var ersteIso = ex.findIndex(function (x) { return W.paRang(x) === 0; });
+      wahr(ersteIso < 0 || ex.slice(ersteIso).every(function (x) { return W.paRang(x) === 0; }), t0.name + ": Mehrgelenkübungen stehen vor den Isolationsübungen: " + tl.bloc.ids.join(", "));
     }); });
   });
   test("Test 6 P7: assistierte Geräte zählen Körpergewicht minus Unterstützung, ohne Körpergewicht nur Wiederholungen", function () {
@@ -1269,25 +1270,24 @@
       var pl = W.studioPlateau(id); wahr(pl && pl.art === "plateau", "12 Wochen ohne Fortschritt: Plateau-Hinweis (" + JSON.stringify(pl) + ")");
     } finally { s.studio = alt; if(altN === undefined) delete s.niveau; else s.niveau = altN; }
   });
-  test("Test 7 Rest: Kalibrieren ohne Mindeststufe, eine Isolation je Muskel und Tag, Langhantel-Hüftstreckung am Unterkörpertag", function () {
+  test("Test 7 Rest / Test 8 T3: Kalibrieren eine Stufe bis +35 %, eine Isolation je Muskel und Tag, Langhantel-Hüftstreckung am Unterkörpertag", function () {
     var s = W.state.db.settings, alt = s.studio, altN = s.niveau, n = Date.now();
     try {
-      // Einsteiger, Beinpresse 15 kg mit 5-kg-Stufe: +33 % wäre zu viel → gleiches Gewicht, Ziel +2 Wdh.
+      // Test 8 T3 (Entscheidung Kevin): „Leicht“ bringt mindestens eine Stufe, solange sie höchstens +35 % ist
       s.niveau = "einsteiger";
       s.studio = { "leg-press": { kg:15, schritt:5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n, s:[[15, 12], [15, 12], [15, 12]] }] } };
-      var r1 = W.studioKalibrieren("leg-press", true);
-      gleich(r1, { wdh:12 }, "Einsteiger 15 kg / Stufe 5: Gewicht bleibt, Ziel 12 Wdh.");
-      gleich(s.studio["leg-press"].kg, 15, "Gewicht unverändert");
-      // Einsteiger, Kabel 15 kg / 2,5: +17 % > 10 % → ebenfalls Wdh.
+      gleich(W.studioKalibrieren("leg-press", true), 20, "Einsteiger Beinpresse 15 kg / Stufe 5: 20 kg (+33 %)");
       s.studio = { "cable-row": { kg:15, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n, s:[[15, 12], [15, 12], [15, 12]] }] } };
-      gleich(W.studioKalibrieren("cable-row", true), { wdh:12 }, "Einsteiger 15 → 17,5 kg (+17 %) zu viel: Wdh. statt Gewicht");
-      // Einsteiger mit 40 kg / 2,5: +6 % ok → 42,5
+      gleich(W.studioKalibrieren("cable-row", true), 17.5, "Einsteiger Kabel 15 kg: eine Stufe (+17 %)");
       s.studio = { "cable-row": { kg:40, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n, s:[[40, 12], [40, 12], [40, 12]] }] } };
-      gleich(W.studioKalibrieren("cable-row", true), 42.5, "Einsteiger 40 kg: eine Stufe (+6 %)");
-      // Fortgeschritten 15 kg / 5: auch +33 % ist über 20 % → Wdh.
+      gleich(W.studioKalibrieren("cable-row", true), 42.5, "Einsteiger 40 kg: eine Stufe (zwei wären über 10 %)");
+      // eine Stufe über +35 % (5 kg → 7,5 kg = +50 %): Gewicht bleibt, Ziel +2 Wdh.
+      s.studio = { "lateral-raise": { kg:5, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n, s:[[5, 12], [5, 12], [5, 12]] }] } };
+      gleich(W.studioKalibrieren("lateral-raise", true), { wdh:12 }, "5 kg / Stufe 2,5: +50 % zu viel, Ziel 12 Wdh.");
+      gleich(s.studio["lateral-raise"].kg, 5, "Gewicht unverändert");
       s.niveau = "fortgeschritten";
-      s.studio = { "leg-press": { kg:15, schritt:5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n, s:[[15, 12], [15, 12], [15, 12]] }] } };
-      gleich(W.studioKalibrieren("leg-press", true), { wdh:12 }, "Fortgeschritten 15 kg / Stufe 5: keine erzwungene Stufe");
+      s.studio = { "leg-press": { kg:60, schritt:5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n, s:[[60, 12], [60, 12], [60, 12]] }] } };
+      gleich(W.studioKalibrieren("leg-press", true), 70, "Fortgeschritten 60 kg: zwei Stufen (+17 %)");
     } finally { s.studio = alt; if (altN === undefined) delete s.niveau; else s.niveau = altN; }
     // Plan-Assistent: viele Varianten, keine zweite Isolation für denselben Muskel; Unterkörpertage mit Langhantel-Hüftstreckung
     var doppelt = [], lhFehlt = [], kh = 0;
@@ -1309,6 +1309,54 @@
     gleich(kh, 0, "Einsteiger bekommen kein Langhantel-Kreuzheben vorgeschrieben");
     var mitKnie = W.paErzeuge({ ziele:["muskel"], niveau:"reg", schwer:"schwer", tage:[0, 1, 3, 4], dauer:60, train:["studio"], ausr:["lh", "kh", "maschine"], impact:"gerne", einschr:["ruecken"], bereiche:["workout"] });
     wahr(!W.paLhHuefteRegel(W.paSauber({ ziele:["muskel"], niveau:"reg", schwer:"schwer", tage:[0, 1, 3, 4], dauer:60, train:["studio"], ausr:["lh"], impact:"gerne", einschr:["ruecken"], bereiche:["workout"] }), "schwer", "muskel") && mitKnie.tage.length === 4, "Rücken-Einschränkung: keine Pflicht zur Langhantel-Hüftstreckung");
+  });
+  test("Test 8 T1/T2/T4/T5: Rollen aus der Übung, Plateau ohne 1-Wdh.-Rauschen und höchstens 2 je Training, Timer-Zählweise, Plannamen je Sprache", function () {
+    // T1: Erfahrener, Kraft + Muskelaufbau, Langhantel
+    var p = W.paErzeuge({ ziele:["kraft", "muskel"], niveau:"reg", schwer:"schwer", tage:[0, 1, 3, 4], dauer:60, train:["studio"], ausr:["lh", "kh", "maschine", "kabel", "kb", "band", "smith"], impact:"gerne", einschr:[], bereiche:["workout"] });
+    p.tage.forEach(function (t0) { t0.teile.forEach(function (tl) {
+      if (!tl.bloc || !tl.bloc.main) return; var ids = tl.bloc.ids, r = ids.map(function (id) { return W.paRang(W.findExercise(id)); }), mz = {};
+      if (t0.typ === "ok") gleich(ids[0], "bench-press", t0.name + ": Bankdrücken als erste Hauptübung (Kraft, Langhantel)");
+      var i0 = r.indexOf(0); wahr(i0 < 0 || r.slice(i0).every(function (x) { return x === 0; }), t0.name + ": Isolation/Rumpf zuletzt: " + ids.join(", "));
+      ids.forEach(function (id) { var m = W.paMuster(id); if (m) mz[m] = (mz[m] || 0) + 1; });
+      wahr(Object.keys(mz).every(function (m) { return mz[m] <= 2; }), t0.name + ": höchstens zwei je Bewegungsmuster: " + JSON.stringify(mz));
+      ids.forEach(function (id) { var z = p.ziele[id]; if (r[ids.indexOf(id)] === 0 && z && !W.PA_ZEIT.test(id)) wahr(z.w >= 10, t0.name + ": Isolation " + id + " mit " + z.s + "×" + z.w); });
+    }); });
+    gleich(W.paRang(W.findExercise("seated-rear-delt-fly")), 0, "Reverse Fly ist Isolation");
+    if (W.findExercise("pendlay-row")) wahr(W.paRang(W.findExercise("pendlay-row")) === 3, "Pendlay-Rudern ist Hauptübung");
+    wahr(W.paRang(W.findExercise("cable-single-arm-shoulder-press")) < 2, "einarmiges Kabel-Schulterdrücken nie Haupt");
+    // T2: Plateau am Gewicht, eine Wdh. mehr ist kein Fortschritt; altes „Nicht jetzt“ blockt nicht; höchstens 2 je Training
+    var s = W.state.db.settings, alt = s.studio, altN = s.niveau, tag = 86400000, n = Date.now();
+    function log(fn) { var l = []; for (var w = 13; w >= 1; w--) l.push({ at:n - w*7*tag, s:fn(14 - w).map(function (x) { return [85, x, "n", 9]; }), zu:true }); return l; }
+    try {
+      s.niveau = "erfahren";
+      s.studio = { "bench-press": { kg:85, schritt:2.5, ziel:{ saetze:3, wdh:8 }, tippRuhe:n - 60*tag, log:log(function (wk) { return wk <= 6 ? [9, 8, 8] : [9, 8, 9]; }) } };
+      var pl = W.studioPlateau("bench-press"); wahr(pl && pl.art === "plateau", "9/8/8 → 9/8/9 (eine Wdh.) ist ein Plateau (" + JSON.stringify(pl) + ")");
+      s.studio["bench-press"].log = log(function (wk) { return wk <= 6 ? [8, 7, 7] : [9, 8, 9]; });
+      gleich(W.studioPlateau("bench-press"), null, "8/7/7 → 9/8/9 (+4 Wdh.) ist Fortschritt");
+      var ids4 = ["bench-press", "barbell-row", "lat-pulldown", "lateral-raise"];
+      s.studio = {}; ids4.forEach(function (id) { s.studio[id] = { kg:85, schritt:2.5, ziel:{ saetze:3, wdh:8 }, log:log(function () { return [9, 8, 8]; }) }; });
+      var tps = W.studioTipps(ids4), pls = Object.keys(tps).filter(function (id) { return tps[id].art === "plateau"; });
+      gleich(pls.length, 2, "höchstens 2 Plateau-Hinweise je Training");
+      wahr(pls.indexOf("lateral-raise") < 0, "Grundübungen vor Isolation: " + pls.join(", "));
+    } finally { s.studio = alt; if (altN === undefined) delete s.niveau; else s.niveau = altN; }
+    // T4: Timer-Liste zählt wie das Anlegen
+    var db = W.state.db, altW = db.workouts.slice(), altB = db.blocks.slice();
+    try {
+      var tw = W.timerPlusBauen({ rn:3, rp:60, en:6, ew:30, ep:15 }, "T8");
+      gleich(W.timerListeText(tw), "18 Sätze · 3 Runden", "Liste: Sätze und Runden wie beim Anlegen");
+    } finally { db.workouts = altW; db.blocks = altB; }
+    // T5: erzeugte Namen wechseln mit der Sprache, eigene bleiben
+    var sik = JSON.stringify({ pr:s.programme, st:s.stPlaene, ka:s.kalender, stu:s.studio, lang:s.lang });
+    try {
+      s.lang = "de"; s.programme = []; s.stPlaene = [];
+      var res = W.paAnlegen({ ziele:["allgemein"], niveau:"reg", schwer:"leicht", tage:[0, 3], dauer:30, train:["studio"], ausr:["kh", "maschine"], impact:"gerne", einschr:[], bereiche:["workout"], wochen:6 });
+      var p0 = res.progs[0], p1 = res.progs[1]; wahr(/Ganzkörper/.test(p0.name), "deutsch: " + p0.name);
+      p1.name = "Mein Tag";
+      s.lang = "en"; W.applyLang();
+      wahr(/Full body/.test(p0.name) && /Get fitter/.test(p0.name), "englisch neu beschriftet: " + p0.name);
+      gleich(p1.name, "Mein Tag", "eigener Name bleibt");
+      var bl = s.stPlaene.filter(function (b) { return b.gen === res.gid && b.nameRez; }); wahr(bl.length && bl.every(function (b) { return !/Ganzkörper|Aufwärmen/.test(b.name); }), "BLOC-Namen englisch: " + bl.map(function (b) { return b.name; }).join(", "));
+    } finally { var o = JSON.parse(sik); s.programme = o.pr; s.stPlaene = o.st; s.kalender = o.ka; s.studio = o.stu; if (o.lang === undefined) delete s.lang; else s.lang = o.lang; W.applyLang(); }
   });
   test("Pausen-Tipp lässt sich mit „Behalten“ ablehnen", function () {
     var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();

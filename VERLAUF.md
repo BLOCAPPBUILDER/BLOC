@@ -95,6 +95,17 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-18 · Test 8: Rollen im Plan, Plateau, Kalibrieren, Timer-Zählweise, Plannamen je Sprache (Fassung 2026-11-18-4)
+
+Fachlich mit dem Sportwissenschaftler abgestimmt; Entscheidungen von Kevin: Kalibrieren „Leicht“ eine Stufe bis +35 %, bei „Kraft“ Bankdrücken immer Hauptübung.
+- **T1 Plan-Assistent:** Rolle aus der Übung statt aus der Stelle im Tag (Langhantel-Mehrgelenk/Klimmzug mit Gewicht > Kurzhantel/Maschine > Kabel, einarmig, einbeinig nur Neben; Fly/Raise/Curl immer Isolation; Rudern zählt als Mehrgelenk, auch Pendlay). Reihenfolge Haupt, Neben, Isolation, auch nach dem Wochenausgleich; ausgetauschte Übungen bekommen Ziele ihrer Rolle. Höchstens 2 Übungen je Bewegungsmuster und Tag. Kraft + Langhantel: Bankdrücken als erste Hauptübung (höchstens 2× pro Woche, nicht bei Schulter-Einschränkung). Knie-Einschränkung: Hinweis auf Sitzen-Aufstehen an hoher Bank als Option.
+- **T2 Plateau:** Fortschritt = eine Gewichtsstufe mehr oder am gleichen Gewicht mindestens 2 Wdh. (10 %) mehr; eine Wdh. mehr startet die Frist nicht neu. Mindestens 4 Trainings im Fenster. „Nicht jetzt“ hält den Hinweis nur zurück, solange der Tipp ruht (vorher das ganze Fenster). Höchstens 2 Plateau-Hinweise je Training, Grundübungen zuerst.
+- **T3 Kalibrieren:** „Leicht“ bringt mindestens eine Stufe bis +35 % (Beinpresse 15 → 20 kg), zwei Stufen nur innerhalb der Grenze; darüber Wdh.-Ziel +2.
+- **T4 Timer:** Liste zählt wie das Anlegen („18 Sätze · 3 Runden · 12:30“, mehrere Blöcke: „… · 2 Blöcke“).
+- **T5 Plannamen:** vom Assistenten erzeugte Namen (Plan, Trainingstage, BLOCs) wechseln mit der Sprache; selbst vergebene bleiben. Gilt für neu erstellte Pläne.
+- Offen: gemeinsame Kalibrierfrage am Ende (Sportwissenschaftler: nur sinnvoll, wenn alle Übungen am oberen Rand lagen).
+- Tests: einheitstest +1 und Test-6-Prüfung auf die neue Rollen-Logik umgestellt (103 grün); 720 Plan-Varianten im Browser ohne Verstoß.
+
 ## 2026-11-18 · Schnelltest auf aktuellem Stand, Zehenstrecker in der Körperkarte (Fassung 2026-11-18-3)
 
 - Schnelltest: veraltete Erwartungen angepasst (Tools-Reihenfolge seit 2026-11-11, 49 statt 47 Band-Übungen, Favoriten-Platzhalter mit ☆, Plan-Assistent startet auf der Seite Trainingsplan).

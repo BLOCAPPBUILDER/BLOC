@@ -112,12 +112,21 @@ function bindTrash(refresh){
     });
   });
 }
+/* Test 8 T4: dieselbe Zählweise wie beim Anlegen („18 Sätze · 3 Runden“); Timer aus mehreren Blöcken: „… · 2 Blöcke“ */
+function timerListeText(w){
+  var its = workoutItems(w), n = 0;
+  its.forEach(function(it){ var b = findBlock(it.blockId); if(b) n += b.reps || 0; });
+  var p = typeof timerPlusAus === "function" ? timerPlusAus(w) : null;
+  if(p) return t("timerListeRunden", { n:n, r:p.rn });
+  var bl = {}; its.forEach(function(it){ bl[it.blockId] = 1; });
+  return t("timerListeBloecke", { n:n, b:Object.keys(bl).length });
+}
 function timerWorkoutRow(w){
   var count = w.items.length;
   return '<div class="list-item entry" data-twedit="'+w.id+'" role="button" tabindex="0">'+
     '<button class="playbtn bl" data-play="'+w.id+'" '+(count?'':'disabled style="opacity:.3"')+' title="'+t("start")+'" aria-label="'+t("start")+'">'+ICON_PLAY+'</button>'+
     '<div class="meta"><div class="name">'+esc(w.name||t("untitled"))+'</div>'+
-    '<div class="sub">'+count+' '+(count===1?t("blockOne"):t("blockMany"))+SEP+fmtDauerKurz(workoutDuration(w))+'</div></div>'+
+    '<div class="sub">'+esc(timerListeText(w))+SEP+fmtDauerKurz(workoutDuration(w))+'</div></div>'+
     '<button type="button" class="plus-btn bearb-btn" data-twedit="'+w.id+'" title="'+esc(t("timerBearbeiten"))+'" aria-label="'+esc(t("timerBearbeiten")+": "+(w.name || t("untitled")))+'">'+svgIcon(ICON_EDIT)+'</button>'+
     favBtn("tw:"+w.id)+trashBtn("tw", w.id, w.name)+'</div>';
 }
