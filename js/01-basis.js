@@ -289,7 +289,10 @@ function soundLabel(key){
   var st = SOUND_STYLES[key] || SOUND_STYLES.klangschale;
   return (currentLang() === "en" && SOUND_LABELS_EN[key]) || st.label;
 }
-function applyLang(){ document.documentElement.lang = currentLang(); }
+function applyLang(){
+  document.documentElement.lang = currentLang();
+  try{ if(typeof paNamenSprache === "function") paNamenSprache(); }catch(e){}   // Test 8 T5: erzeugte Plannamen in der neuen Sprache
+}
 
 /* ============ Helpers ============ */
 /* Millisekunden als Uhrzeit: „1:05“, ab einer Stunde „1:02:05“ (Lauf, Statistik) */

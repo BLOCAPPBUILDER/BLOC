@@ -410,7 +410,7 @@ function openTimerPlus(bearb, vorgabe){
     }
     state.db.settings.timerPlus = q; p = timerPlusWerte(); return p;
   }
-  function summe(){ var q = lesen(); root.querySelector("#tp-summe").textContent = t("timerGesamt", { d:fmtDuration(timerPlusSekunden(q)), n:q.rn*q.en }); }
+  function summe(){ var q = lesen(); root.querySelector("#tp-summe").textContent = t("timerGesamt", { d:fmtDuration(timerPlusSekunden(q)), n:q.rn*q.en, r:q.rn }); }
   bindSteppers(root, summe); root.querySelectorAll(".stepper input").forEach(function(i){ i.addEventListener("input", summe); });
   summe();
   function zu(){ root.innerHTML = ""; }

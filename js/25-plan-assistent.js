@@ -55,6 +55,7 @@ var PAT = {
     info4:"Bei Schmerzen (nicht bei Muskelbrennen), Schwindel oder Druck auf der Brust sofort abbrechen. Bei Vorerkrankungen vorher ärztlich abklären. Orientierung, keine medizinische Beratung.",
     info5:"Ab 65: dazu eine Gleichgewichts-Übung (sicher an Wand oder Stuhl), langsam und kontrolliert, feste Standfläche.",
     info6:"Nach dem Sport „{s}“ bleibt der Unterkörper zwei Tage ohne schwere Belastung.",
+    info7:"Knie: Wenn es schmerzfrei geht, kannst du zusätzlich Sitzen-Aufstehen auf einer hohen Bank üben (kontrolliert hinsetzen und wieder aufstehen). Erst eine hohe Sitzfläche, später niedriger, dann mit Gewicht. Bei Schmerz oder Schwellung aufhören und ärztlich abklären lassen.",
     quelle:"Grundlage: WHO-Leitlinien 2020, ACSM Position Stand 2026 und weitere offene Studien (quellen.html). Zahlen für Sätze, Pausen und Steigerung sind Empfehlungen von BLOC.",
     infoTitel:"Hinweise zum Plan",
     mehrere:"Mehrere möglich", waehleMind:"Wähle mindestens eine Option.", bauen:"Plan wird zusammengestellt …", lokal:"Wird nur auf deinem Gerät erstellt.", spaeter:"Du kannst jeden Trainingstag danach wie gewohnt bearbeiten, auch durch langes Drücken auf die Karte.", uebernehmen:"Änderungen übernehmen", zurueckPfeil:"Zurück zur vorigen Frage",
@@ -111,6 +112,7 @@ var PAT = {
     info4:"Stop at once if you feel pain (not muscle burn), dizziness or chest pressure. Check with a doctor first if you have a medical condition. Guidance, not medical advice.",
     info5:"From 65: add a balance exercise (safe at a wall or chair), slow and controlled, stable stance.",
     info6:"After your sport “{s}” the lower body stays free of heavy loads for two days.",
+    info7:"Knees: if it is pain-free, you can also practise sitting down onto a high bench and standing up again, under control. Start with a high seat, go lower later, then add weight. Stop if there is pain or swelling and get it checked by a doctor.",
     quelle:"Basis: WHO guidelines 2020, ACSM position stand 2026 and further open studies (quellen.html). Numbers for sets, rest and progression are BLOC recommendations.",
     infoTitel:"Notes on the plan",
     mehrere:"Several possible", waehleMind:"Choose at least one option.", bauen:"Putting your plan together …", lokal:"Created on your device only.", spaeter:"You can edit every training day as usual afterwards, also by long-pressing its card.", uebernehmen:"Apply changes", zurueckPfeil:"Back to the previous question",
@@ -122,10 +124,29 @@ var PAT = {
     tageListe:"Training days"
   }
 };
-function pt(k, v){
-  var l = PAT[currentLang() === "en" ? "en" : "de"], s = l[k] !== undefined ? l[k] : (PAT.de[k] !== undefined ? PAT.de[k] : k);
+function pt(k, v, lang){
+  var l = PAT[(lang || currentLang()) === "en" ? "en" : "de"], s = l[k] !== undefined ? l[k] : (PAT.de[k] !== undefined ? PAT.de[k] : k);
   if(v) Object.keys(v).forEach(function(x){ s = s.split("{"+x+"}").join(v[x]); });
   return s;
+}
+/* Test 8 T5: vom Assistenten erzeugte Namen merken sich ihr „Rezept“ ({ k:Textschlüssel, v:{ Teil: Rezept oder fester Wert } }) und werden beim Sprachwechsel
+   neu beschriftet - aber nur, solange der Name noch genau dem erzeugten entspricht (selbst vergebene Namen bleiben). */
+function paRezText(r, lang){
+  if(r == null || typeof r !== "object") return r == null ? "" : String(r);
+  var v = null; if(r.v){ v = {}; Object.keys(r.v).forEach(function(x){ v[x] = paRezText(r.v[x], lang); }); }
+  return pt(r.k, v, lang);
+}
+function paNameNeu(obj, feld, rezFeld){
+  var r = obj && obj[rezFeld]; if(!r) return false;
+  var jetzt = paRezText(r), alt = obj[feld];
+  if(alt === jetzt || (alt !== paRezText(r, "de") && alt !== paRezText(r, "en"))) return false;
+  obj[feld] = jetzt; return true;
+}
+function paNamenSprache(){
+  var s0 = state && state.db && state.db.settings, n = 0; if(!s0) return;
+  (s0.programme || []).forEach(function(p){ if(paNameNeu(p, "name", "nameRez")) n++; if(paNameNeu(p, "gruppeName", "gruppeNameRez")) n++; });
+  (s0.stPlaene || []).forEach(function(b){ if(paNameNeu(b, "name", "nameRez")) n++; });
+  if(n) save();
 }
 
 /* ---------- Regeln (Zahlen): Sätze, Wiederholungen, Pause (s) je Ziel und Intensität ---------- */
@@ -192,6 +213,25 @@ var PA_LH_HUEFTE = ["barbell-rdl", "hip-thrust", "barbell-deadlift"];
 function paLhHuefteRegel(a, sw, haupt){
   var ziel = haupt === "kraft" || haupt === "muskel" || a.ziele.indexOf("kraft") > -1 || a.ziele.indexOf("muskel") > -1;
   return ziel && (sw === "mittel" || sw === "schwer") && a.ausr.indexOf("lh") > -1 && a.niveau !== "gar" && a.einschr.indexOf("ruecken") < 0 && a.einschr.indexOf("knie") < 0;
+}
+/* Test 8 T1 (Sportwissenschaftler): die Rolle kommt aus der Übung, nicht aus der Stelle im Tag.
+   3 = Langhantel-Mehrgelenk, Klimmzug/Dip mit Gewicht · 2 = Kurzhantel-/Maschinen-Mehrgelenk (beidseitig) · 1 = Kabel, einarmig, einbeinig, Varianten (nur Neben) · 0 = Isolation/Rumpf */
+var PA_NIE_HAUPT = /single-arm|one-arm|single-leg|one-leg|cable|band|landmine|windmill|renegade|high-pull|figure-8|lunge|step-up|split-squat|bulgarian|sissy|pistol|goblet|kettlebell|(^|-)kb-|plank|carry|walk/;
+function paRang(ex){
+  if(!ex || PA_ISO_NAME.test(ex.id) || !(paMehrgelenk(ex) || paMuster(ex.id)) || PA_RUMPF_GUT[ex.id] || /rumpf|bauch/.test(paTopGruppe(ex))) return 0;   // Rudern & Co. zählen als Mehrgelenk, auch wenn die Daten nur eine Gruppe nennen (Pendlay-Rudern)
+  if(PA_NIE_HAUPT.test(ex.id) || PA_VARIANTE.test(ex.id)) return 1;
+  if(exAusr(ex).indexOf("lh") > -1 || /^barbell-|^bench-press$|^deadlift$|pendlay|yates|^weighted-(pull|chin|dip)/.test(ex.id)) return 3;
+  return 2;
+}
+/* Bewegungsmuster: höchstens zwei Übungen je Muster und Tag (Test 8 T1) */
+function paMuster(id){
+  if(/squat|lunge|split|step-up|leg-press|hack/.test(id)) return "knie";
+  if(/deadlift|rdl|good-morning|hip-thrust|bridge|pull-through|swing|back-extension|hyperextension/.test(id)) return "huefte";
+  if(/shoulder-press|overhead-press|military|arnold|push-press|pike/.test(id)) return "vDruck";
+  if(/bench|chest-press|push-up|floor-press|(^|-)dips?(-|$)/.test(id)) return "hDruck";
+  if(/pull-?down|pull-ups?|chin-ups?/.test(id)) return "vZug";
+  if(/(^|-)rows?(-|$)/.test(id)) return "hZug";
+  return "";
 }
 function paZugVertikal(ex){ return /pull-?downs?|pull-ups?|chin-ups?/.test(ex.id); }   // sonst horizontal (Rudern)
 var PA_AUSNAHME = /forearm|elbow|incline-push|wall-push|knee-push/;   // Handgelenk: Unterarm-Varianten und leichtere Stützformen bleiben erlaubt
@@ -409,7 +449,7 @@ function paErzeuge(a0){
     if(ref) return { lib:ref };
     var ids = paAufwaermen(a, warmN, typ === "cardio" ? "cardio" : "kraft"); if(!ids.length) return null;
     var m = {}; ids.forEach(function(id){ m[id] = "timer"; });
-    return { bloc:{ name:pt("aufwaermen"), ids:ids, std:"timer", modus:m, warm:true } };
+    return { bloc:{ name:pt("aufwaermen"), nameRez:{ k:"aufwaermen" }, ids:ids, std:"timer", modus:m, warm:true } };
   }
   function dehnTeil(typ, gruppen, seed, idx){
     var lib = PA_LIB_DEHN[a.dauer <= 20 && (typ === "gk" || typ === "ok" || typ === "uk") ? "kurz" : typ];
@@ -418,11 +458,19 @@ function paErzeuge(a0){
     if(ref) return { lib:ref };
     var ids = paDehnen(pools, gruppen.length ? gruppen : ["brust", "ruecken", "beine", "po"], typ === "mob" ? 8 : dehnN, seed, {}); if(!ids.length) return null;
     var m = {}; ids.forEach(function(id){ m[id] = "timer"; });
-    return { bloc:{ name:pt("dehnen"), ids:ids, std:"timer", modus:m, dehn:true } };
+    return { bloc:{ name:pt("dehnen"), nameRez:{ k:"dehnen" }, ids:ids, std:"timer", modus:m, dehn:true } };
   }
-  var mobIdx = 0, cardioIdx = 0, ohneZug = false, lhKreuzheben = false;
+  var mobIdx = 0, cardioIdx = 0, ohneZug = false, lhKreuzheben = false, nBank = 0, kraftZiel = haupt === "kraft" || a.ziele.indexOf("kraft") > -1;
+  /* Sätze, Wiederholungen, Pause je Rolle (auch für Übungen, die der Wochenausgleich später austauscht) */
+  function paZielFuer(r){
+    var kraft = haupt === "kraft", muskel = haupt === "muskel" || a.ziele.indexOf("muskel") > -1, jung = a.alter === "u50", w = wdh, sz = saetze, ps = pause;
+    if(r === "haupt" && jung) w = kraft ? 5 : muskel ? 8 : wdh;
+    else if(r === "neben" && jung) w = kraft || muskel ? 8 : wdh;
+    else if(r === "iso"){ w = Math.max(wdh, 12); sz = Math.max(2, saetze - 1); ps = Math.min(pause, 75); }
+    return { s:sz, w:w, p:ps };
+  }
   typen.forEach(function(typ, i){
-    var tag = days[i], seed = seedBase + i, teile = [], tname = "";
+    var tag = days[i], seed = seedBase + i, teile = [], tname = "", trez = null;
     if(typ === "gk" || typ === "ok" || typ === "uk"){
       var slots = PA_SLOTS[typ][zaehl[typ] % PA_SLOTS[typ].length].slice(); zaehl[typ]++;
       fokusGr.forEach(function(g){
@@ -528,31 +576,52 @@ function paErzeuge(a0){
       }
       var balance = a.alter === "65" && findExercise("single-leg-stand") && !benutzt["single-leg-stand"] ? ["single-leg-stand"] : [];   // ab 65: Gleichgewicht (WHO 2020, ICFSR 2021)
       var modus = {}; balance.forEach(function(id){ modus[id] = "timer"; });
-      (function(){   // Rollen: Haupt / Neben / Isolation-Rumpf, Sätze höchstens nach Dauer
-        var kraft = haupt === "kraft", muskel = haupt === "muskel" || a.ziele.indexOf("muskel") > -1, jung = a.alter === "u50", nH = 0;
-        var rollen = mainIds.map(function(id, k){
-          var ex = findExercise(id), rumpf = gruppen[k] === "bauch" || gruppen[k] === "rumpf";
-          if(!rumpf && paMehrgelenk(ex)){ nH++; return nH <= 2 ? "haupt" : "neben"; }
-          return "iso";
-        });
-        var z0 = mainIds.map(function(id, k){
-          var r = rollen[k], w = wdh, sz = saetze, ps = pause;
-          if(r === "haupt" && jung) w = kraft ? 5 : muskel ? 8 : wdh;
-          else if(r === "neben" && jung) w = kraft || muskel ? 8 : wdh;
-          else if(r === "iso"){ w = Math.max(wdh, 12); sz = Math.max(2, saetze - 1); ps = Math.min(pause, 75); }
-          return { s:sz, w:w, p:ps };
-        });
+      /* Test 8 T1 (Entscheidung Kevin): bei „Kraft“ mit Langhantel ist Bankdrücken die Hauptübung des Drucktags (Oberkörper-/Ganzkörpertag), höchstens zweimal pro Woche */
+      if((typ === "ok" || typ === "gk") && kraftZiel && a.ausr.indexOf("lh") > -1 && a.einschr.indexOf("schulter") < 0 && nBank < 2 && mainIds.indexOf("bench-press") < 0){
+        var bank = findExercise("bench-press");
+        if(bank && !paAusgeschlossen(bank, a) && paGeraetOk(bank, a)){
+          var bq = -1; mainIds.forEach(function(id, q){ if(bq < 0 && paMuster(id) === "hDruck") bq = q; });
+          if(bq < 0) mainIds.forEach(function(id, q){ if(bq < 0 && paDruckHaupt(findExercise(id))) bq = q; });
+          if(bq >= 0){ delete benutzt[mainIds[bq]]; mainIds[bq] = "bench-press"; gruppen[bq] = "brust"; benutzt["bench-press"] = 1; planBenutzt["bench-press"] = 1; }
+        }
+      }
+      if(mainIds.indexOf("bench-press") > -1) nBank++;
+      /* höchstens zwei Übungen je Bewegungsmuster und Tag: die dritte wird durch eine Übung derselben Gruppe mit anderem Muster ersetzt (sonst gestrichen) */
+      (function(){
+        var zahl = {};
+        for(var q = 0; q < mainIds.length; q++){
+          var m0 = paMuster(mainIds[q]); if(!m0) continue;
+          zahl[m0] = (zahl[m0] || 0) + 1; if(zahl[m0] <= 2) continue;
+          var g0 = gruppen[q], pool0 = (pools.kraft[g0] || []).filter(function(o){ var m1 = paMuster(o.ex.id); return !m1 || (zahl[m1] || 0) < 2; });
+          if(typ === "uk") pool0 = pool0.filter(function(o){ return !paDrueckt(o.ex) || /beine|po/.test(paTopGruppe(o.ex)); });
+          var alt0 = mainIds[q]; delete benutzt[alt0];
+          var ers0 = paWaehle(pool0, benutzt, seed + "muster" + q, planBenutzt);
+          zahl[m0]--;
+          if(ers0){ mainIds[q] = ers0.id; benutzt[ers0.id] = 1; planBenutzt[ers0.id] = 1; var m2 = paMuster(ers0.id); if(m2) zahl[m2] = (zahl[m2] || 0) + 1; }
+          else { mainIds.splice(q, 1); gruppen.splice(q, 1); q--; }
+        }
+      })();
+      (function(){   // Rollen: Haupt / Neben / Isolation-Rumpf aus der Übung (Test 8 T1), Sätze höchstens nach Dauer
+        var nHmax = haupt === "kraft" ? 3 : 2;
+        var info = mainIds.map(function(id, k){ var ex = findExercise(id), rumpf = gruppen[k] === "bauch" || gruppen[k] === "rumpf"; return { id:id, g:gruppen[k], k:k, r:rumpf ? 0 : paRang(ex) }; });
+        var hauptK = info.filter(function(x){ return x.r >= 2; }).sort(function(x, y){ return (y.id === "bench-press") - (x.id === "bench-press") || (y.r - x.r) || (x.k - y.k); }).slice(0, nHmax).map(function(x){ return x.k; });
+        info.forEach(function(x){ x.rolle = hauptK.indexOf(x.k) > -1 ? "haupt" : x.r >= 1 ? "neben" : "iso"; });
+        var ordnung = { haupt:0, neben:1, iso:2 };
+        info.sort(function(x, y){ return ordnung[x.rolle] - ordnung[y.rolle] || (x.rolle === "haupt" ? hauptK.indexOf(x.k) - hauptK.indexOf(y.k) : x.k - y.k); });
+        mainIds = info.map(function(x){ return x.id; }); gruppen = info.map(function(x){ return x.g; });
+        var rollen = info.map(function(x){ return x.rolle; });
+        var z0 = mainIds.map(function(id, k){ return paZielFuer(rollen[k]); });
         var max = PA_SAETZE_MAX[a.dauer] || 20, summe = function(){ return z0.reduce(function(x, q){ return x + q.s; }, 0) + balance.length*2; };
         ["iso", "neben", "haupt"].forEach(function(r){ for(var k = z0.length - 1; k >= 0 && summe() > max; k--) if(rollen[k] === r && z0[k].s > 2) z0[k].s--; });
         for(var k2 = z0.length - 1; k2 >= 0 && summe() > max; k2--) if(rollen[k2] === "iso"){ mainIds.splice(k2, 1); gruppen.splice(k2, 1); rollen.splice(k2, 1); z0.splice(k2, 1); }
         mainIds.forEach(function(id, k){ ziele[id] = z0[k]; });
       })();
       var bname = pt("mainBloc", { z:pt(typ), t:String.fromCharCode(65 + (zaehl[typ] - 1)) });
-      tname = bname;
+      tname = bname; trez = { k:"mainBloc", v:{ z:{ k:typ }, t:String.fromCharCode(65 + (zaehl[typ] - 1)) } };
       if(wt) teile.push(wt);
-      teile.push({ bloc:{ name:bname, ids:balance.concat(mainIds), std:"saetze", modus:modus, main:true } });
+      teile.push({ bloc:{ name:bname, nameRez:trez, ids:balance.concat(mainIds), std:"saetze", modus:modus, main:true } });
     } else if(typ === "run"){
-      tname = a.laufen === "ein" ? pt("lauf_ein") : pt("lauf");
+      tname = a.laufen === "ein" ? pt("lauf_ein") : pt("lauf"); trez = { k:a.laufen === "ein" ? "lauf_ein" : "lauf" };
       teile.push({ run:true });
     } else if(typ === "cardio"){
       var nCd = a.dauer <= 20 ? 4 : a.dauer <= 30 ? 5 : a.dauer <= 45 ? 7 : 8, cb = {}, cids = [];
@@ -561,15 +630,15 @@ function paErzeuge(a0){
         ["beine", "rumpf", "po", "bauch"].forEach(function(g){ if(cids.length >= nCd) return; var ex2 = paWaehle(pools.kraft[g], cb, seed + g, planBenutzt); if(ex2){ cb[ex2.id] = 1; cids.push(ex2.id); } });
       }
       var m2 = {}; cids.forEach(function(id){ m2[id] = "timer"; });
-      tname = pt("cardio") + " " + String.fromCharCode(65 + cardioIdx++);
+      trez = { k:"mainBloc", v:{ z:{ k:"cardio" }, t:String.fromCharCode(65 + cardioIdx++) } }; tname = paRezText(trez);
       var wt2 = warmTeil("cardio", seed); if(wt2) teile.push(wt2);
-      teile.push({ bloc:{ name:tname, ids:cids, std:"timer", modus:m2, cardio:true } });
+      teile.push({ bloc:{ name:tname, nameRez:trez, ids:cids, std:"timer", modus:m2, cardio:true } });
     } else {   // mob, erh
-      tname = typ === "erh" ? pt("erh") : pt("mob");
+      tname = typ === "erh" ? pt("erh") : pt("mob"); trez = { k:typ === "erh" ? "erh" : "mob" };
       var d1 = dehnTeil(typ, ["brust", "ruecken", "schulter", "arme", "bauch", "beine", "po", "rumpf"], seed, mobIdx++); if(d1) teile.push(d1);
       if(typ === "mob" && a.dauer >= 45){ var d2 = dehnTeil(typ, ["ruecken", "beine", "po"], seed + "b", mobIdx++); if(d2 && (!d1 || d2.lib !== d1.lib)) teile.push(d2); }
     }
-    tageSpecs.push({ tag:tag, typ:typ, name:tname, teile:teile });
+    tageSpecs.push({ tag:tag, typ:typ, name:tname, nameRez:trez, teile:teile });
   });
   /* Mobility als eigener Tag: ein freier Wochentag, nicht am Sporttag */
   if(hatMob && tageSpecs.filter(function(t0){ return t0.typ === "mob"; }).length === 0 && tageSpecs.length < 7){
@@ -578,7 +647,7 @@ function paErzeuge(a0){
     if(wahl === undefined) wahl = frei2[0];
     if(wahl !== undefined){
       var teile3 = [], dm = dehnTeil("mob", ["brust", "ruecken", "schulter", "arme", "bauch", "beine", "po", "rumpf"], seedBase + "m", mobIdx++); if(dm) teile3.push(dm);
-      tageSpecs.push({ tag:wahl, typ:"mob", name:pt("mob"), teile:teile3, extra:true });
+      tageSpecs.push({ tag:wahl, typ:"mob", name:pt("mob"), nameRez:{ k:"mob" }, teile:teile3, extra:true });
     }
   }
   /* Wochenbilanz (fachliche Prüfung 2026-11-12, Praxisregel für gesunde Schultern): über die Woche mindestens so viele Zug- wie Druckübungen.
@@ -605,9 +674,13 @@ function paErzeuge(a0){
       Object.defineProperty(belegt, "__iso", { value:isoB, enumerable:false });   // auch hier höchstens eine Isolation je Muskel (Test 7)
       var hatVert = best.b.ids.some(function(id){ var ex = findExercise(id); return paIstZug(ex) && paZugVertikal(ex); });
       var lieber = zugPool.filter(function(o){ return !paIstZug(o.ex) || paZugVertikal(o.ex) !== hatVert; });   // die Zug-Richtung, die dem Tag noch fehlt
-      var neu = paWaehle(lieber, belegt, seedBase + "zd" + runde, planBenutzt) || paWaehle(zugPool, belegt, seedBase + "zd2" + runde, planBenutzt);
+      var mz0 = {}; best.b.ids.forEach(function(id, k){ var m = k !== best.k && paMuster(id); if(m) mz0[m] = (mz0[m] || 0) + 1; });
+      function musterFrei(o){ var m = paMuster(o.ex.id); return !m || (mz0[m] || 0) < 2; }   // auch hier höchstens zwei je Bewegungsmuster (Test 8 T1)
+      var neu = paWaehle(lieber.filter(musterFrei), belegt, seedBase + "zd" + runde, planBenutzt) || paWaehle(zugPool.filter(musterFrei), belegt, seedBase + "zd2" + runde, planBenutzt);
       if(!neu) break;
-      ziele[neu.id] = ziele[best.id]; best.b.ids[best.k] = neu.id; planBenutzt[neu.id] = 1;
+      var zAlt = ziele[best.id]; ziele[neu.id] = paZielFuer(paRang(neu) >= 3 ? "haupt" : paRang(neu) >= 1 ? "neben" : "iso");   // Test 8 T1: Rudern als Ersatz bekommt Neben-Ziele, nicht die der ersetzten Isolation
+      if(zAlt && ziele[neu.id] !== zAlt) ziele[neu.id] = { s:Math.min(ziele[neu.id].s, Math.max(zAlt.s, 2)), w:ziele[neu.id].w, p:ziele[neu.id].p };   // Satzsumme bleibt im Rahmen
+      best.b.ids[best.k] = neu.id; planBenutzt[neu.id] = 1;
       c = bilanz();
     }
     /* Ohne echte Zugübung (kein Rudern möglich): die Ersatzübungen gleichen das Drücken nicht wirklich aus - dann höchstens 3 Druckübungen
@@ -627,6 +700,11 @@ function paErzeuge(a0){
         ziele[ers.id] = ziele[opfer.id]; opfer.b.ids[opfer.k] = ers.id; planBenutzt[ers.id] = 1;
       }
     }
+    /* Test 8 T1: nach dem Ausgleich wieder Mehrgelenk vor Isolation/Rumpf (stabil, die Reihenfolge innerhalb bleibt) */
+    mains.forEach(function(b){
+      var r = b.ids.map(function(id, k){ return { id:id, k:k, iso:paRang(findExercise(id)) === 0 && b.ids.indexOf("single-leg-stand") !== k ? 1 : 0 }; });
+      r.sort(function(x, y){ return x.iso - y.iso || x.k - y.k; }); b.ids = r.map(function(x){ return x.id; });
+    });
   })();
   tageSpecs.sort(function(x, y){ return x.tag - y.tag; });
   var info = [pt("info0"), pt("info1", { r:PA_RIR[sw] })];
@@ -634,11 +712,12 @@ function paErzeuge(a0){
   if(a.laufen === "ein" && hatRun) info.push(pt("info3")); else if(a.laufen === "reg" && hatRun) info.push(pt("info3b"));
   if(a.sport) info.push(pt("info6", { s:a.sport.name }));
   if(a.alter === "65") info.push(pt("info5"));
+  if(a.einschr.indexOf("knie") > -1 && hatW) info.push(pt("info7"));   // Test 8 (Sportwissenschaftler): Kniebeugen-Muster als Option mit Hinweis, nicht automatisch eingeplant
   if(ohneZug) info.push(pt("ohneZug"));
   if(nTage === 1 && haupt !== "beweglich" && haupt !== "ausdauer") info.push(pt("einEinheit"));
   info.push(pt("info4")); info.push(pt("quelle"));
   var kraftTage = tageSpecs.filter(function(t0){ return t0.typ === "gk" || t0.typ === "ok" || t0.typ === "uk"; }).length;
-  return { name:pt("planName", { z:pt("z_" + haupt), n:nTage }), tage:tageSpecs, ziele:ziele, sport:a.sport, info:info.join(" "), wochen:a.wochen, saetze:saetze, wdh:wdh, pause:pause, cardio:PA_CARDIO[sw], nTage:tageSpecs.length,
+  return { name:pt("planName", { z:pt("z_" + haupt), n:nTage }), nameRez:{ k:"planName", v:{ z:{ k:"z_" + haupt }, n:nTage } }, tage:tageSpecs, ziele:ziele, sport:a.sport, info:info.join(" "), wochen:a.wochen, saetze:saetze, wdh:wdh, pause:pause, cardio:PA_CARDIO[sw], nTage:tageSpecs.length,
     kraftTage:kraftTage, minuten:tageSpecs.length*a.dauer };
 }
 
@@ -693,7 +772,7 @@ function paAnlegen(a0, ersetzeGid){
     t0.teile.forEach(function(tl){
       if(tl.lib){ items.push(tl.lib); return; }
       if(tl.run){ items.push("run"); return; }
-      var b = tl.bloc, bl = { id:uid(), name:b.name, ids:b.ids.slice(), blockRest:b.cardio ? 60 : 0, updatedAt:Date.now(), gen:gid };
+      var b = tl.bloc, bl = { id:uid(), name:b.name, nameRez:b.nameRez || null, ids:b.ids.slice(), blockRest:b.cardio ? 60 : 0, updatedAt:Date.now(), gen:gid };
       bl.standard = b.std; if(Object.keys(b.modus).length) bl.modus = b.modus;
       stPlaene().push(bl);
       b.ids.forEach(function(id){
@@ -706,9 +785,9 @@ function paAnlegen(a0, ersetzeGid){
       });
       items.push("plan:" + bl.id);
     });
-    var p = { id:uid(), name:pt("tagName", { p:sp.name, n:k + 1, z:t0.name }), items:items, tage:[t0.tag], wochen:a.wochen, am:"alle", pos:0, gruppe:gid, gen:true, updatedAt:Date.now() };
+    var p = { id:uid(), name:pt("tagName", { p:sp.name, n:k + 1, z:t0.name }), nameRez:sp.nameRez && t0.nameRez ? { k:"tagName", v:{ p:sp.nameRez, n:k + 1, z:t0.nameRez } } : null, items:items, tage:[t0.tag], wochen:a.wochen, am:"alle", pos:0, gruppe:gid, gen:true, updatedAt:Date.now() };
     if(t0.typ === "run" && a.laufen === "ein") p.laufStufe = true;
-    if(k === 0){ p.assi = a; p.info = sp.info; p.sport = sp.sport; p.gruppeName = sp.name; }
+    if(k === 0){ p.assi = a; p.info = sp.info; p.sport = sp.sport; p.gruppeName = sp.name; p.gruppeNameRez = sp.nameRez; }
     neue.push(p);
   });
   neue.forEach(function(p, k){ liste.splice(pos + k, 0, p); });

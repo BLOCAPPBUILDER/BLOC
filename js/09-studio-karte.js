@@ -282,7 +282,7 @@ function studioTippAblehnen(id){
    Hinweis mit Optionen: zuerst Schlaf, Stress, Essen und Technik prüfen, dann ein Satz mehr (per „Übernehmen“), dann Variante, Tempo, Leichtwoche.
    Fortgeschrittene (lange Historie): nach 4 Runden, sonst nach 3 - aber frühestens nach etwa 6 Wochen Training (12 Runden).
    Leichtwochen-Runden zählen nicht, nach einer Pause von mehr als 14 Tagen kein Hinweis; danach angepasst (erhoeht/manuell) = neuer Anfang. */
-var PLATEAU_MIN_RUNDEN = 6;   // Test 7 S1: bisher 12 (≈ 3 Monate bei einmal pro Woche), jetzt ab 6 Runden und mindestens 3 im Zeitfenster
+var PLATEAU_MIN_RUNDEN = 6, PLATEAU_IM_FENSTER = 4, PLATEAU_JE_TRAINING = 2;   // Test 8 T2: mindestens 4 Trainings im Zeitfenster, höchstens 2 Plateau-Hinweise je Training   // Test 7 S1: bisher 12 (≈ 3 Monate bei einmal pro Woche), jetzt ab 6 Runden und mindestens 3 im Zeitfenster
 function studioPlateau(id){
   var e = studioEintrag(id), ex = findExercise(id);
   if(!e || !e.log || !ex || studioNachZeit(id) || studioAssistiert(id)) return null;
@@ -290,14 +290,25 @@ function studioPlateau(id){
   if(l.length < PLATEAU_MIN_RUNDEN || studioPauseTage(e, false) > PROG_PAUSE_TAGE) return null;
   /* Test 7 S1: das Zeitfenster zählt in Wochen (Einsteiger ~3,5, Fortgeschritten 5, Erfahren 7), nicht in Runden: Ganzkörperpläne sind sonst zu schnell, Splits zu langsam */
   var grenzeAt = Date.now() - trainerStufe().plateauTage*86400000, letzte = l.filter(function(x){ return x.at >= grenzeAt; }), davor = l.filter(function(x){ return x.at < grenzeAt; }), n = letzte.length;
-  if(letzte.length < 3 || davor.length < 3) return null;
-  var seitAenderung = Math.max(e.erhoeht || 0, e.manuell || 0, e.tippRuhe || 0);
+  if(letzte.length < PLATEAU_IM_FENSTER || davor.length < 3) return null;
+  /* Gewicht von Hand geändert oder Tipp übernommen = neuer Anfang; „Nicht jetzt“ hält den Hinweis nur so lange zurück, wie der Tipp ruht (Test 8 T2) */
+  var seitAenderung = Math.max(e.erhoeht || 0, e.manuell || 0);
   if(seitAenderung && seitAenderung >= letzte[0].at) return null;
-  var koerper = studioNurBlock(ex);
-  function wert(x){ var b0 = studioBestwerte([x]); return koerper ? studioWdhSumme(x) : (b0.rm3 || b0.kg); }
-  var bisher = Math.max.apply(null, davor.map(wert)), jetzt = Math.max.apply(null, letzte.map(wert));
-  if(!(bisher > 0) || jetzt > bisher*1.005) return null;
-  var z = studioZiel(id), kg = koerper ? 0 : studioArbeitsKg(id);
+  if(studioTippRuht(id)) return null;
+  var koerper = studioNurBlock(ex), z = studioZiel(id), kg = koerper ? 0 : studioArbeitsKg(id);
+  /* Test 8 T2 (Sportwissenschaftler): Fortschritt = mindestens eine Gewichtsstufe mehr ODER am gleichen Gewicht zusammen mindestens 2 Wdh. (bzw. 10 %) mehr.
+     Eine einzelne Wiederholung mehr ist Rauschen und startet die Frist nicht neu. */
+  function stand(x){
+    var a = arbeitsSaetze(x).filter(function(q){ return satzTyp(q) !== "d"; }), top = koerper ? 0 : Math.max.apply(null, a.map(function(q){ return q[0] || 0; }));
+    var w = a.filter(function(q){ return koerper || (q[0] || 0) >= top - 1e-9; }).map(function(q){ return q[1] || 0; }).sort(function(p, q){ return q - p; }).slice(0, z.saetze);
+    return { kg:top, wdh:w.reduce(function(m, q){ return m + q; }, 0) };
+  }
+  function bester(l0){ return l0.map(stand).reduce(function(m, q){ return !m || q.kg > m.kg + 1e-9 || (Math.abs(q.kg - m.kg) < 1e-9 && q.wdh > m.wdh) ? q : m; }, null); }
+  var bisher = bester(davor), jetzt = bester(letzte);
+  if(!bisher || !(bisher.kg > 0 || bisher.wdh > 0)) return null;
+  if(!koerper && jetzt.kg >= bisher.kg + Math.max(z.schritt || 0, 0.5) - 1e-9) return null;
+  if((koerper || Math.abs(jetzt.kg - bisher.kg) < 1e-9) && jetzt.wdh >= bisher.wdh + Math.max(2, Math.ceil(bisher.wdh*0.10))) return null;
+  if(!koerper && jetzt.kg > bisher.kg + 1e-9 && jetzt.wdh >= bisher.wdh) return null;   // schwerer bei gleich vielen Wdh. (kleinere Scheiben als die Stufe)
   return { art:"plateau", runden:n, saetze:z.saetze < 5 ? z.saetze + 1 : 0, alt:z.saetze, hatVariante:koerper && !!studioNaechsteStufe(id),
            kleineScheiben:!koerper && kg >= 40 && z.schritt >= 2.5, seit:letzte[0].at };
 }
@@ -360,20 +371,26 @@ function studioTipps(ids, leicht, mitOffen){
   var o = {}, steig = [];
   studioTippsWartend = [];
   if(leicht || !tippsAn()) return o;
+  var plat = [];
   ids.forEach(function(id, k){
     var tp = studioProg(id, mitOffen) || (mitOffen ? null : studioPlateau(id)); if(!tp) return;   // ohne Steigerungs-Tipp: Plateau-Hinweis
-    if(studioTippSicher(tp) || tp.art === "plateau") o[id] = tp;   // Plateau-Hinweise zählen nicht gegen das Limit (Test 6, P3)
+    if(tp.art === "plateau"){ var exP = findExercise(id); plat.push({ id:id, tp:tp, k:k, grund:exP && studioWdhGrenze(exP) === 15 ? 0 : 1 }); return; }
+    if(studioTippSicher(tp)) o[id] = tp;
     else if(!studioTippRuht(id)){ var ex = findExercise(id); steig.push({ id:id, tp:tp, k:k, grund:ex && studioWdhGrenze(ex) === 15 ? 0 : 1 }); }   // „Nicht jetzt“: ruht
   });
   // längste Wartezeit zuerst, bei Gleichstand Grundübungen, dann die Reihenfolge des Plans; ohne Wartezeit hinten
   steig.sort(function(a, b){ return ((a.tp.seit || Infinity) - (b.tp.seit || Infinity)) || a.grund - b.grund || a.k - b.k; });
   steig.forEach(function(x, i){ if(i < trainerStufe().tipps) o[x.id] = x.tp; else studioTippsWartend.push(x.id); });
+  /* Plateau-Hinweise zählen nicht gegen das Tipp-Limit (Test 6, P3), sind aber auf 2 je Training begrenzt: Grundübungen zuerst, dann die Reihenfolge des Plans
+     (Hauptübungen stehen vorn), dann die am längsten stagnierende (Test 8 T2) */
+  plat.sort(function(a, b){ return a.grund - b.grund || a.k - b.k || (a.tp.seit || 0) - (b.tp.seit || 0); });
+  plat.slice(0, PLATEAU_JE_TRAINING).forEach(function(x){ o[x.id] = x.tp; });
   return o;
 }
 /* Kalibrieren (Test 4, Q5): in den ersten zwei Runden einer Übung mit Gewicht, wenn alle Ziel-Sätze heute am oberen Rand lagen, fragt die Satzkarte
    „Wie schwer war das?“. „Leicht“ → bis zu zwei Stufen mehr, höchstens +20 % (Einsteiger, Kniebeuge und Kreuzheben +10 %), danach nicht mehr fragen.
-   Test 7 (Sportwissenschaftler): keine erzwungene Mindeststufe mehr. Wäre schon eine Stufe zu viel (Beinpresse 15 → 20 kg = +33 %), bleibt das Gewicht
-   und das Wiederholungsziel steigt um 2 (Doppelprogression bis zum oberen Rand 15 bzw. 20); geht das nicht, bleibt alles, wie es ist.
+   Test 8 T3 (Entscheidung Kevin, Sportwissenschaftler): eine Stufe gibt es immer, solange sie höchstens +35 % ist (Beinpresse 15 → 20 kg); zwei Stufen nur innerhalb der Grenze.
+   Wäre schon eine Stufe mehr als +35 % (z. B. 5 → 7,5 kg), bleibt das Gewicht und das Wiederholungsziel steigt um 2 (bis zum oberen Rand 15 bzw. 20).
    Rückgabe: neues Gewicht (Zahl), { wdh } beim höheren Wdh.-Ziel oder null. */
 function studioKalibrierFrage(id, h){
   var e = studioEintrag(id), ex = findExercise(id);
@@ -385,6 +402,7 @@ function studioKalibrierFrage(id, h){
   var z = studioZiel(id), b = studioBereich(id), a = arbeitsSaetze(h);
   return a.length >= z.saetze && a.every(function(x){ return x[0] > 0 && x[1] >= b.max; });
 }
+var KALIB_EINE_STUFE_MAX = 0.35;   // Kalibrieren korrigiert das Startgewicht (keine Progression): mindestens eine Stufe, wenn sie höchstens +35 % ist
 function studioKalibrieren(id, leicht){
   var a = studioAlle(), en = a[id] || (a[id] = { log:[] }), z = studioZiel(id), kg = studioArbeitsKg(id), neu = null;
   en.kalibriert = true; en.kalibriertRunde = (en.log || []).filter(function(l){ return arbeitsSaetze(l).length; }).length;
@@ -392,7 +410,7 @@ function studioKalibrieren(id, leicht){
     var s = z.schritt, grenze = /squat|deadlift/.test(id) || trainerNiveau() === "einsteiger" ? 0.10 : PROG_DOPPEL_MAX;
     var stufen = Math.floor(kg/s + 1e-9), zwei = Math.round((stufen + 2)*s*100)/100, max = Math.round(kg*(1 + grenze)*100)/100;
     var kgNeu = zwei <= max + 1e-9 ? zwei : Math.round((stufen + 1)*s*100)/100;
-    if(kgNeu <= max + 1e-9 && kgNeu > kg){ neu = kgNeu; en.kg = neu; en.erhoeht = Date.now(); }
+    if(kgNeu <= Math.max(max, kg*(1 + KALIB_EINE_STUFE_MAX)) + 1e-9 && kgNeu > kg){ neu = kgNeu; en.kg = neu; en.erhoeht = Date.now(); }   // Test 8 T3: eine Stufe immer, bis +35 %
     else {
       var ex = findExercise(id);
       if(z.wdh + 4 <= studioWdhGrenze(ex)){
