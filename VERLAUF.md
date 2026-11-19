@@ -95,6 +95,16 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-19 · Timer-Layout zurück, Test 9 Feinschliff (Fassung 2026-11-19-4)
+
+Kevin: Timer wieder wie vorher (oben Kreise, unten Quadrate); bei Workouts mit Übungen nach Zeit nur oben die Übungsleiste, unten die Quadrate. Test 9 (U1–U5) umgesetzt, fachlich mit dem Sportwissenschaftler.
+- **Timer:** reine Timer (ohne Übungen) wieder mit Übungs-Kreisen in der Kopfzeile; Workouts mit Übungen behalten die Übungsleiste. Unten überall wieder die kleinen Quadrate (keine Satz-Kästchen im Timer).
+- **U1:** höchstens 3 Tipp-Kästen je Training (Rücknahme Grundübung, Steigerung Grundübung, dann Nebenübungen; Pausen-Tipps nach einer Trainingspause ausgenommen). „Grundübung“ jetzt nach der Rolle der Übung (paRang) statt nach der Muskelverteilung.
+- **U2:** „1 Eintrag kopiert“. **U3:** Timer-Name mit genauer Dauer („Timer · 12:30 Min“).
+- **U4:** bei Kraft/Muskelaufbau kein springender Rumpf (Plank Jacks, Mountain Climber); Hauptübungen mindestens 3 Sätze, gekürzt wird bei Isolation und Neben (auch nach dem Wochenausgleich).
+- **U5:** Kalibrierfrage für Einsteiger in den ersten 4 Runden jedes Mal, dann etwa alle 6 Runden, ab Runde 30 alle 10.
+- Tests: einheitstest +1 (105 grün).
+
 ## 2026-11-19 · Übungsleiste auch im Timer, mehr Sätze als geplant (Fassung 2026-11-19-3)
 
 Kevin: „auch bei den anderen Übungen so, dann ist das einheitlich“; „4 / 3 Sätze soll möglich sein“.

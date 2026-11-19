@@ -169,6 +169,8 @@ var PA_AUS = {
   handgelenk:/push-up|plank|bear|crawl|handstand|burpee|dip|pike|mountain|climber|ring|walkout|inchworm|downward|archer|clap|planche|support-hold/,
   sprung:/jump|hop|skater|sprint|fast-feet|high-knees|burpee|box|rope|calf-raise|lateral|bound|plyo|tuck-jump|star-jump|jack|mountain|boxer|stair/
 };
+/* Test 9 U4a (Sportwissenschaftler): bei Kraft/Muskelaufbau kein springender Rumpf (Plank Jacks, Mountain Climber) auf Krafttagen, sondern ruhige Rumpfübungen */
+var PA_KRAFT_RUHIG = /(^|-)jacks?($|-)|mountain-climb|climbers?($|-)|plank-jump|plank-hop/;
 /* Hochleistungs-Fertigkeiten kommen in automatischen Plänen nie vor */
 var PA_NIE = /planche|front-lever|back-lever|human-flag|one-arm|muscle-up|skin-the-cat|dragon-flag|handstand-push|ring-muscle|iron-cross/;
 /* Fachliche Prüfung 2026-11-12: Spezialstangen (Trap-Bar u. a.) nicht in automatische Pläne - wer „Langhantel“ wählt, hat eine gerade Stange;
@@ -341,7 +343,7 @@ function paPools(a){
     var anf = nurLeicht || a.ziele.indexOf("allgemein") > -1;
     if(anf && /side-bend|kickback/.test(ex.id)) return;   // Seitbeugen und Kickback nicht für Einsteiger / „Allgemein fit“ (fachliche Prüfung Test 5)
     if(anf && PA_RUMPF_GUT[ex.id]) sc += 3;   // knieschonende Bein-/Hüft-Grundübungen bevorzugen
-    if(ex.main !== "ausdauer" && (a.ziele.indexOf("muskel") > -1 || a.ziele.indexOf("kraft") > -1) && (PA_AUS.impact.test(ex.id) || /overhead-squat/.test(ex.id))) return;
+    if(ex.main !== "ausdauer" && (a.ziele.indexOf("muskel") > -1 || a.ziele.indexOf("kraft") > -1) && (PA_AUS.impact.test(ex.id) || PA_KRAFT_RUHIG.test(ex.id) || /overhead-squat/.test(ex.id))) return;
     var o = { ex:ex, sc:sc };
     if(ex.main === "ausdauer") cardio.push(o); else { var g = paTopGruppe(ex); if(g) (kraft[g] = kraft[g] || []).push(o); }
   });
@@ -612,7 +614,9 @@ function paErzeuge(a0){
         var rollen = info.map(function(x){ return x.rolle; });
         var z0 = mainIds.map(function(id, k){ return paZielFuer(rollen[k]); });
         var max = PA_SAETZE_MAX[a.dauer] || 20, summe = function(){ return z0.reduce(function(x, q){ return x + q.s; }, 0) + balance.length*2; };
-        ["iso", "neben", "haupt"].forEach(function(r){ for(var k = z0.length - 1; k >= 0 && summe() > max; k--) if(rollen[k] === r && z0[k].s > 2) z0[k].s--; });
+        /* Test 9 U4b (Sportwissenschaftler): Hauptübungen behalten mindestens 3 Sätze; gekürzt wird zuerst bei Isolation und Neben, dann wird Isolation gestrichen */
+        ["iso", "neben"].forEach(function(r){ for(var k = z0.length - 1; k >= 0 && summe() > max; k--) if(rollen[k] === r && z0[k].s > 2) z0[k].s--; });
+        for(var kh = z0.length - 1; kh >= 0 && summe() > max; kh--) if(rollen[kh] === "haupt" && z0[kh].s > 3) z0[kh].s--;
         for(var k2 = z0.length - 1; k2 >= 0 && summe() > max; k2--) if(rollen[k2] === "iso"){ mainIds.splice(k2, 1); gruppen.splice(k2, 1); rollen.splice(k2, 1); z0.splice(k2, 1); }
         mainIds.forEach(function(id, k){ ziele[id] = z0[k]; });
       })();
@@ -679,8 +683,14 @@ function paErzeuge(a0){
       var neu = paWaehle(lieber.filter(musterFrei), belegt, seedBase + "zd" + runde, planBenutzt) || paWaehle(zugPool.filter(musterFrei), belegt, seedBase + "zd2" + runde, planBenutzt);
       if(!neu) break;
       var zAlt = ziele[best.id]; ziele[neu.id] = paZielFuer(paRang(neu) >= 3 ? "haupt" : paRang(neu) >= 1 ? "neben" : "iso");   // Test 8 T1: Rudern als Ersatz bekommt Neben-Ziele, nicht die der ersetzten Isolation
-      if(zAlt && ziele[neu.id] !== zAlt) ziele[neu.id] = { s:Math.min(ziele[neu.id].s, Math.max(zAlt.s, 2)), w:ziele[neu.id].w, p:ziele[neu.id].p };   // Satzsumme bleibt im Rahmen
+      if(zAlt && paRang(neu) < 3) ziele[neu.id] = { s:Math.min(ziele[neu.id].s, Math.max(zAlt.s, 2)), w:ziele[neu.id].w, p:ziele[neu.id].p };   // Satzsumme bleibt im Rahmen; Hauptübungen behalten ihre Sätze (Test 9 U4b)
       best.b.ids[best.k] = neu.id; planBenutzt[neu.id] = 1;
+      /* Test 9 U4b: bekommt eine Hauptübung ihre vollen Sätze, werden an diesem Tag Isolation und Neben gekürzt (sonst gestrichen), damit die Satzzahl zur Dauer passt */
+      (function(b){
+        var maxS = PA_SAETZE_MAX[a.dauer] || 20, summe0 = function(){ return b.ids.reduce(function(x, id){ return x + ((ziele[id] && ziele[id].s) || 2); }, 0); };
+        [0, 1].forEach(function(rg){ for(var q = b.ids.length - 1; q >= 0 && summe0() > maxS; q--){ var id = b.ids[q], z = ziele[id]; if(id !== neu.id && z && z.s > 2 && Math.min(paRang(findExercise(id)), 1) === rg){ ziele[id] = { s:z.s - 1, w:z.w, p:z.p }; } } });
+        for(var q2 = b.ids.length - 1; q2 >= 0 && summe0() > maxS; q2--) if(b.ids[q2] !== neu.id && b.ids[q2] !== "single-leg-stand" && paRang(findExercise(b.ids[q2])) === 0) b.ids.splice(q2, 1);
+      })(best.b);
       c = bilanz();
     }
     /* Ohne echte Zugübung (kein Rudern möglich): die Ersatzübungen gleichen das Drücken nicht wirklich aus - dann höchstens 3 Druckübungen
