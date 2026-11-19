@@ -95,6 +95,12 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-19 · Alle Übungsbilder nachgeschärft (Fassung 2026-11-19-7)
+
+Kevin: „Kann man die Figuren nachschärfen? Teilweise sind sie unscharf.“ Größere Originale gibt es nicht (alle 384 px, einige aus WhatsApp-Bögen nur 250–300 px und hochskaliert).
+- Alle 539 Bilder in `img/ex` auf 768 px verdoppelt, Kanten gehärtet (Alpha-Übergang steiler, leicht geglättet), Farben nachgeschärft (Unscharf-Maske); Vorschaubilder `img/ex/t` (160 px) neu aus den geschärften Bildern.
+- Größe der Bilder 15,4 → 39 MB (Web lädt sie erst beim Öffnen, die APK wird entsprechend größer). Die alten Fassungen liegen in Git.
+
 ## 2026-11-19 · Foto „Planche (Tuck) halten“ entfernt (Fassung 2026-11-19-6)
 
 - Das Foto zeigte eine Hocke auf einer Kiste statt der Planche-Haltung (Kevin: „falsch, bitte löschen“). Eintrag in `fotos.js` und die Dateien `img/ex/(t/)tuck-planche-hold.webp` entfernt; die Übung zeigt jetzt nur die Strichfigur.
