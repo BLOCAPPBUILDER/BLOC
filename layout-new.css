@@ -1859,3 +1859,10 @@ body.prot-sheet-offen{ overflow:hidden; }
 .satz-satzleiste i b{ display:block; font-size:11px; font-weight:700; opacity:.8; }
 .satz-satzleiste i.an{ background:rgba(70,160,110,.28); border-color:rgba(110,200,150,.6); }
 .satz-satzleiste i.jetzt{ border:1.5px solid var(--accent); box-shadow:none; }
+/* Timer: dieselbe Übungsleiste und Satzleiste (2026-11-19) */
+.pl-leiste-wrap{ margin:8px 0 0; color:#fff; }
+.pl-leiste-wrap .satz-leiste-kopf{ padding:0 18px; }
+.rep-dots.pl-satzleiste{ max-width:360px; width:calc(100% - 32px); margin-left:auto; margin-right:auto; }
+.satz-satzleiste i{ min-width:56px; }
+.satz-satzleiste i.extra{ flex:0 0 54px; min-width:54px; border-style:dashed; opacity:.6; font-size:10px; }
+.satz-satzleiste i.extra b{ font-size:15px; opacity:1; }

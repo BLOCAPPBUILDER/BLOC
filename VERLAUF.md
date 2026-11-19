@@ -95,6 +95,13 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-19 · Übungsleiste auch im Timer, mehr Sätze als geplant (Fassung 2026-11-19-3)
+
+Kevin: „auch bei den anderen Übungen so, dann ist das einheitlich“; „4 / 3 Sätze soll möglich sein“.
+- **Timer-Workouts:** dieselbe Übungsleiste statt der Übungs-Kreise (Name, „x / y Sätze“, Balken). Ein Tipp springt zur Übung, mit ihrer Vorbereitung/Blockpause davor. Als erledigt zählen nur durchlaufene oder per „Weiter“ beendete Sätze, übersprungene nicht. Bis 8 Sätze je Übung Satz-Kästchen statt Quadrate („Satz 1 ✓“, „jetzt“/„gleich“, „–“).
+- **Satz-Training, mehr Sätze:** nach dem geplanten letzten Satz ein schmales Kästchen „+ Satz 4“; die Leiste zählt weiter („4 / 3 Sätze ✓“).
+- Schnelltest: Timer-Prüfung auf Übungsleiste und Satz-Kästchen umgestellt.
+
 ## 2026-11-19 · Satz-Training: Übungsleiste und Satzleiste (Fassung 2026-11-19-2)
 
 Nach Mockup, Entscheidung Kevin („passt, so umsetzen“; „Besetzt · später“ und „Tauschen“ ausdrücklich nicht im Training, Tauschen gehört ins Bearbeiten des BLOCs).

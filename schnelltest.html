@@ -378,27 +378,27 @@
       W.state.db.settings.favs = (W.state.db.settings.favs || []).filter(function (k) { return !/^my:/.test(k); });
       W.save();
     }],
-    ["Timer: Übungs-Kreise, Satz blinkt in der Pause, Figur in der Blockpause", async function () {
+    ["Timer: Übungsleiste, Satzleiste in der Pause, Figur in der Blockpause", async function () {
       await heim();
       zuWorkout();
       await zuWorkoutKatalog();
       klick(await bis(function () { return $("[data-cover]"); }, 3000, "Workout"));
       klick(await bis(function () { return $("[data-go]"); }, 3000, "Los geht's"));
       await bis(function () { return $("#playerEl"); }, 3000, "Timer");
-      pruefe($$("#pl-exdots span").length >= 2, "Übungs-Kreise fehlen");
+      pruefe($$("#pl-exdots [data-plgo]").length >= 2, "Übungsleiste fehlt");   // seit 2026-11-19 Übungsleiste statt Kreise
       pruefe(!$("#pl-counter"), "alter Zähler „1 / 27“ ist wieder da");
       function phase() { return $("#playerEl").getAttribute("data-phase"); }
       var n = 0;
       while (phase() !== "work" && n++ < 5) klick("[data-skip]");
       klick("[data-skip]");
       pruefe(phase() === "rest", "nach dem ersten Satz keine Pause, sondern " + phase());
-      var cls = $$("#pl-dots span").map(function (s) { return s.className; });
-      pruefe(cls[0] === "done" && cls[1] === "now", "in der Pause sollte Satz 2 blinken: " + cls.join(","));
+      var dots = $$("#pl-dots span"), cls = dots.length ? dots.map(function (s) { return s.className; }) : $$("#pl-dots i").map(function (s) { return s.className === "an" ? "done" : s.className === "jetzt" ? "now" : s.className; });
+      pruefe(cls[0] === "done" && cls[1] === "now", "in der Pause sollte Satz 2 als nächster markiert sein: " + cls.join(","));
       n = 0;
       while (phase() !== "blockrest" && phase() !== "done" && n++ < 60) klick("[data-skip]");
       pruefe(phase() === "blockrest", "keine Blockpause gefunden");
       pruefe($(".ring-wrap.mit-figur .pl-vorschau"), "in der Blockpause fehlt die Figur im Ring");
-      pruefe($('#pl-exdots span.now.bald'), "kommende Übung pulsiert nicht");
+      pruefe($('#pl-exdots [data-plgo].an'), "kommende Übung ist in der Übungsleiste nicht markiert");
       klick("[data-exit]");
       klick(await bis(function () { return $("#overlayRoot [data-ok]"); }, 2000, "Beenden bestätigen"));
       await bis(function () { return !$("#playerEl"); }, 3000, "Timer schließt");
