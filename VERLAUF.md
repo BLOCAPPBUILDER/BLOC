@@ -95,6 +95,10 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-19 · Foto „Planche (Tuck) halten“ entfernt (Fassung 2026-11-19-6)
+
+- Das Foto zeigte eine Hocke auf einer Kiste statt der Planche-Haltung (Kevin: „falsch, bitte löschen“). Eintrag in `fotos.js` und die Dateien `img/ex/(t/)tuck-planche-hold.webp` entfernt; die Übung zeigt jetzt nur die Strichfigur.
+
 ## 2026-11-19 · Zwei Übungsbilder bereinigt (Fassung 2026-11-19-5)
 
 Nach Kevins Durchsicht der 19 Bilder, die die Prüfung vom 30.10. als fachlich falsch eingestuft hatte („keine großen Probleme“):
