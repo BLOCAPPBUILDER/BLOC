@@ -100,6 +100,7 @@ function satzKarteHTML(id, i, n){
       /* Satzleiste (2026-11-19, Kevin): statt Kreisen je Satz ein Kästchen mit kg × Wdh. (erledigt), „jetzt“ oder leer; Zusatzsätze hängen hinten an */
       '<div class="satz-saetze satz-satzleiste" role="img" aria-label="'+esc((h ? h.s.length : 0)+" / "+z.saetze)+'">'+(function(){ var o = "", fertigeAnzahl = h ? h.s.length : 0, n = Math.min(Math.max(z.saetze, fertigeAnzahl), 12);
         for(var q = 0; q < n; q++){ var s = h && h.s[q]; o += '<i class="'+(s ? 'an' : q === fertigeAnzahl ? 'jetzt' : '')+'"><b>'+esc(t("satzNr", { n:q + 1 }))+'</b>'+(s ? esc(satzText(s).replace("×", " × "))+' ✓' : q === fertigeAnzahl ? esc(t("satzJetzt")) : '–')+'</i>'; }
+        if(fertigeAnzahl >= z.saetze && fertigeAnzahl < 12) o += '<i class="extra" title="'+esc(t("satzOptional"))+'"><b>+</b>'+esc(t("satzNr", { n:fertigeAnzahl + 1 }))+'</i>';   // Zusatzsatz möglich (Kevin: „4 / 3 Sätze soll möglich sein“)
         return o; })()+'</div>'+
       (function(){ var tp = h ? null : satzKontext.tipps[id]; return tp ? '<div class="satz-tipp'+(tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter" || tp.art === "stufeZurueck" ? ' runter' : '')+'"><span>'+esc(studioSteigerTippText(tp))+'</span><button type="button" data-satztipp>'+esc(t("tippUebernehmen"))+'</button>'+(!studioTippNein(tp) ? '' : '<button type="button" class="satz-tipp-nein" data-satznein>'+esc(t(studioTippNein(tp)))+'</button>')+'</div>' : ''; })()+
       '<div class="satz-ziel">'+esc(t("stGoal"))+' <b>'+satzName(z.saetze)+' × '+(zeitE ? studioTimer(id).work+' s'+(ex.perSide ? ' '+t("perSide") : '') : b.min+'–'+b.max)+'</b>'+(e.kg != null && !koerper ? ' · <b>'+studioKg(e.kg)+' kg</b>' : '')+'</div>'+
@@ -195,7 +196,7 @@ function renderSatzTraining(planId, start){
       var h = satzHeute(ids[k]), n = h ? h.s.length : 0, soll = satzZielSaetze(ids[k]), f = fertig1(ids[k]);
       d.classList.toggle("fertig", f);
       var sm = d.querySelector("small"), bar = d.querySelector("em");
-      if(sm) sm.textContent = f ? t("satzPillFertig") : t("satzPillSaetze", { n:n, m:soll });
+      if(sm) sm.textContent = f ? t("satzPillSaetzeOk", { n:n, m:soll }) : t("satzPillSaetze", { n:n, m:soll });   // mehr Sätze als geplant sind erlaubt: „4 / 3 Sätze ✓“
       if(bar) bar.style.width = Math.min(100, Math.round(n/Math.max(1, soll)*100)) + "%";
     });
     var nf = document.getElementById("satz-nr"); if(nf) nf.textContent = t("satzLeisteStand", { n:ids.filter(fertig1).length, m:ids.length });

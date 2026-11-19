@@ -198,7 +198,7 @@ function playerTemplate(){
     '<div id="pl-bgs" aria-hidden="true"></div>'+
     '<div class="player-top">'+
       '<button class="exit" data-exit title="'+t("endBtn")+'">&times;</button>'+
-      '<div class="pl-mitte"><div class="ex-dots" id="pl-exdots" role="img"></div></div>'+
+      '<div class="pl-mitte"></div>'+
       (playerTrackt() ? '<button class="exit" data-plsave title="'+esc(t("trSpeichern"))+'" aria-label="'+esc(t("trSpeichern"))+'">'+ICON_SAVE+'</button>' : '')+
       '<button class="exit" data-vol-toggle title="'+t("volume")+'">'+ICON_VOLUME+'</button>'+
     '</div>'+
@@ -207,6 +207,7 @@ function playerTemplate(){
       '<span id="pl-vol-val">'+vol+'%</span>'+
     '</div>'+
     '<div class="progressbar"><div class="progressbar-fill" id="pl-progress" style="width:0%"></div></div>'+
+    '<div id="pl-exdots" class="pl-leiste-wrap"></div>'+   /* Übungsleiste wie im Satz-Training (2026-11-19) */
     '<div class="pl-logo" aria-hidden="true">BLOC</div>'+progChipHTML(programmRefAusQuelle(playerState && playerState.source))+
     '<div id="pl-body" class="player-mid"></div>'+
     '</div>';
@@ -313,6 +314,9 @@ function enterStep(idx, opt){
   opt = opt || {};
   var steps = playerState.steps;
   if(idx >= steps.length) idx = steps.length-1;
+  /* Erledigte Sätze für die Übungsleiste: was durchlaufen oder per „Weiter“ beendet wurde; beim Springen über die Leiste (opt.sprung) zählt nichts */
+  var erl = playerState.erledigt || (playerState.erledigt = {});
+  if(!opt.sprung && playerState.idx != null) for(var q0 = playerState.idx; q0 < idx; q0++) if(steps[q0] && steps[q0].phase === "work") erl[q0] = true;
   playerState.idx = idx;
   var step = steps[idx];
   var el = document.getElementById("playerEl");
@@ -400,6 +404,12 @@ function updateDots(step){
   wrap.style.gap = gap+"px";
   var html = "";
   var cur = step.phase === "rest" ? step.rep+1 : step.rep;   // Pause: der kommende Satz blinkt, der gerade geschaffte ist erledigt
+  if(n <= 8){   // wenige Sätze: Kästchen wie die Satzleiste im Satz-Training (2026-11-19, einheitlich)
+    wrap.className = "rep-dots satz-saetze satz-satzleiste pl-satzleiste"; wrap.style.gap = "";
+    for(var j = 1; j <= n; j++) html += '<i class="'+(j < cur ? "an" : j === cur ? "jetzt" : "")+'"><b>'+esc(t("satzNr", { n:j }))+'</b>'+(j < cur ? "✓" : j === cur ? esc(t(step.phase === "rest" ? "satzGleich" : "satzJetzt")) : "–")+'</i>';
+    wrap.innerHTML = html; return;
+  }
+  wrap.className = "rep-dots";
   for(var i=1;i<=n;i++){
     var cls = i<cur ? "done" : (i===cur ? "now":"");
     html += '<span class="'+cls+'" style="width:'+size+'px;height:'+size+'px;border-radius:'+Math.max(3, Math.round(size*.15))+'px"></span>';
@@ -407,25 +417,45 @@ function updateDots(step){
   wrap.innerHTML = html;
 }
 
-/* Oben: ein Kreis je Übung - erledigte kräftig, die aktuelle größer, kommende blass.
-   In der Pause vor einer neuen Übung pulsiert deren Kreis. Nur bei Workouts mit mehreren Übungen. */
+/* Oben: Übungsleiste wie im Satz-Training (2026-11-19, Kevin: einheitlich) - je Übung Name, „x / y Sätze“ bzw. „fertig ✓“ und Fortschrittsbalken.
+   Ein Tipp springt zu der Übung (mit ihrer Vorbereitung bzw. Blockpause davor). Nur bei Workouts mit mehreren Übungen. */
+function playerUebungen(){
+  var steps = playerState.steps;
+  if(steps._uebungen) return steps._uebungen;
+  var l = [];
+  steps.forEach(function(st, i){
+    if(st.phase !== "work" || !st.exNr) return;
+    var u = l[st.exNr - 1];
+    if(!u){
+      var ex = st.ex && findExercise(st.ex), nm = ex ? tplText(ex.name).replace(/\s*\([^)]*\)\s*$/, "") : blockNameAnzeige(st.label || "");
+      u = l[st.exNr - 1] = { nr:st.exNr, name:nm || t("rundeNr", { n:st.exNr }), erste:i, works:[] };
+    }
+    u.works.push(i);
+  });
+  l = l.filter(Boolean);
+  l.forEach(function(u){ var s0 = steps[u.erste - 1]; if(s0 && (s0.phase === "blockrest" || s0.phase === "prep") && s0.exNr === u.nr) u.start = u.erste - 1; else u.start = u.erste; });
+  steps._uebungen = l;
+  return l;
+}
 function updateExDots(step){
   var wrap = document.getElementById("pl-exdots");
   if(!wrap) return;
-  var n = playerState.steps.exCount || 0;
-  if(n < 2 || n > 30){ wrap.innerHTML = ""; wrap.style.display = "none"; return; }
+  var l = playerUebungen(), n = l.length;
+  if(n < 2 || n > 40){ wrap.innerHTML = ""; wrap.style.display = "none"; return; }
   wrap.style.display = "";
-  var cur = step.exNr || 1, bald = step.phase === "blockrest" || step.phase === "prep";
-  var avail = Math.max(60, (wrap.parentNode.clientWidth || 220) - 4), gap = n > 12 ? 5 : 8;
-  var size = Math.max(6, Math.min(14, Math.floor((avail - (n-1)*gap)/n)));
-  wrap.setAttribute("aria-label", t("exOf", { i:Math.min(cur, n), n:n }));
-  wrap.style.gap = gap+"px";
-  var html = "";
-  for(var i=1;i<=n;i++){
-    var cls = i < cur ? "done" : i === cur ? "now"+(bald ? " bald" : "") : "";
-    html += '<span class="'+cls+'" style="width:'+size+'px;height:'+size+'px"></span>';
-  }
-  wrap.innerHTML = html;
+  var fertig = 0, cur = step.exNr || 1;
+  var pills = l.map(function(u){
+    var erl = playerState.erledigt || {}, done = u.works.filter(function(w){ return erl[w]; }).length, alle = done >= u.works.length;
+    if(alle) fertig++;
+    var cls = "satz-punkt satz-pill" + (alle ? " fertig" : "") + (u.nr === cur ? " an" : "");
+    return '<button type="button" class="'+cls+'" data-plgo="'+u.start+'" aria-label="'+esc(u.nr+". "+u.name)+'"><b>'+esc(u.name)+'</b><small>'+esc(alle ? t("satzPillFertig") : t("satzPillSaetze", { n:done, m:u.works.length }))+'</small>'+
+      '<i class="satz-pill-bar"><em style="width:'+Math.round(done/Math.max(1, u.works.length)*100)+'%"></em></i></button>';
+  }).join("");
+  var alt = wrap.querySelector(".satz-leiste"), x = alt ? alt.scrollLeft : 0;
+  wrap.innerHTML = '<div class="satz-leiste-kopf"><span>'+esc(t("satzLeiste"))+'</span><span>'+esc(t("satzLeisteStand", { n:fertig, m:n }))+'</span></div><div class="satz-punkte satz-leiste">'+pills+'</div>';
+  var leiste = wrap.querySelector(".satz-leiste"), an = leiste.querySelector(".an");
+  leiste.scrollLeft = x;
+  if(an) leiste.scrollTo({ left:Math.max(0, an.offsetLeft - (leiste.clientWidth - an.offsetWidth)/2), behavior:"smooth" });
 }
 
 function updateProgress(){

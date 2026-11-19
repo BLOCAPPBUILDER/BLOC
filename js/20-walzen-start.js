@@ -113,6 +113,12 @@ function bindPlayerControls(){
     if(e.target.closest("[data-exit]")){
       beendenFragen();
     }
+    var plGo = e.target.closest("[data-plgo]");
+    if(plGo && playerState){   // Übungsleiste: zu dieser Übung springen (Reihenfolge frei)
+      var ziel = +plGo.getAttribute("data-plgo");
+      if(ziel >= 0 && ziel < playerState.steps.length && ziel !== playerState.idx){ if(playerState.rafId) cancelAnimationFrame(playerState.rafId); enterStep(ziel, { manual:true, sprung:true }); }
+      return;
+    }
     if(e.target.closest("[data-skip]")){
       if(playerState.rafId) cancelAnimationFrame(playerState.rafId);
       enterStep(playerState.idx+1, { manual:true });
