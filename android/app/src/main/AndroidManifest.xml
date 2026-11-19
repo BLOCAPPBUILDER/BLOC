@@ -76,6 +76,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Timer: CPU wach halten, damit die Signaltöne bei ausgeschaltetem Bildschirm pünktlich kommen (nur solange ein Timer läuft) -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- Das Benachrichtigungs-Plugin bringt Alarm- und Neustart-Berechtigungen mit, die BLOC nicht nutzt (es fragt nur die Erlaubnis für Hinweise ab) -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" tools:node="remove" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" tools:node="remove" />

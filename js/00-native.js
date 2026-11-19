@@ -125,3 +125,29 @@ function nativTimerAnzeige(d){
   }catch(e){}
   return true;
 }
+/* Klänge für den Timer-Dienst: einmal je Klangstil/Lautstärke/Raum gerendert und abgelegt (klaengeRendern in js/18-audio.js). Liefert ein Promise mit dem Schlüssel. */
+var nativKlangFertig = "", nativKlangLaeuft = null;
+function nativTimerKlaenge(){
+  var bt = nativPlugin("BlocTimer");
+  if(!bt || typeof klaengeRendern !== "function") return Promise.resolve("");
+  var k = klangSchluessel();
+  if(k === nativKlangFertig) return Promise.resolve(k);
+  if(nativKlangLaeuft && nativKlangLaeuft.k === k) return nativKlangLaeuft.p;
+  var p = klaengeRendern().then(function(d){ return bt.klaenge({ klang:k, dateien:d }); }).then(function(){ nativKlangFertig = k; return k; })
+    .catch(function(e){ console.error("BLOC: Klänge für den Timer-Dienst", e); return ""; });
+  nativKlangLaeuft = { k:k, p:p };
+  return p;
+}
+/* Pause/Weiter aus der Benachrichtigung oder am Kopfhörer: der Timer-Knopf wird gedrückt, als hätte man ihn selbst angetippt */
+(function(){
+  var bt = nativPlugin("BlocTimer");
+  if(!bt || typeof bt.addListener !== "function") return;
+  try{
+    bt.addListener("aktion", function(d){
+      if(typeof playerState === "undefined" || !playerState) return;
+      var pb = document.getElementById("pl-playpause");
+      if(!pb) return;
+      if((d && d.a === "pause") === !playerState.paused) pb.click();
+    });
+  }catch(e){}
+})();
