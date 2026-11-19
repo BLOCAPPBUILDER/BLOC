@@ -463,7 +463,7 @@ function kalKopierenSheet(tage, kopfText, anzahl){
     var n = clamp(parseInt(root.querySelector("#kk-n").value) || 1, 1, 12);
     zu();
     var neu = kalWocheKopieren(tage, n);
-    showToast(neu ? t("kalKopiert", { n:neu }) : t("kalKopiertNichts"));
+    showToast(neu ? t(neu === 1 ? "kalKopiert1" : "kalKopiert", { n:neu }) : t("kalKopiertNichts"));   // Test 9 U2: Einzahl
     if(neu) kalNeu();
   });
 }

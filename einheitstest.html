@@ -1375,6 +1375,43 @@
       gleich(W.satzKalibrierHTML(W.satzKalibrierIds([])), "", "ohne passende Übung keine Frage");
     } finally { var o = JSON.parse(sik); s.studio = o.stu; if (o.n === undefined) delete s.niveau; else s.niveau = o.n; s.satzBasis = o.sb; }
   });
+  test("Test 9: höchstens 3 Tipp-Kästen, Einzahl beim Kopieren, Timer-Name mit genauer Dauer, ruhiger Rumpf und 3 Sätze je Hauptübung, Kalibrierfrage seltener", function () {
+    // U4: Kraft + Muskelaufbau, schwer: kein springender Rumpf, Hauptübungen mindestens 3 Sätze
+    var p = W.paErzeuge({ ziele:["kraft", "muskel"], niveau:"reg", schwer:"schwer", tage:[0, 1, 3, 4], dauer:60, train:["studio"], ausr:["lh", "kh", "maschine", "kabel", "kb", "band", "smith"], impact:"gerne", einschr:[], bereiche:["workout"] });
+    p.tage.forEach(function (t0) { t0.teile.forEach(function (tl) {
+      if (!tl.bloc || !tl.bloc.main) return;
+      tl.bloc.ids.forEach(function (id) {
+        wahr(!W.PA_KRAFT_RUHIG.test(id), t0.name + ": springender Rumpf " + id);
+        var z = p.ziele[id]; if (W.paRang(W.findExercise(id)) === 3 && z && z.w <= 8) wahr(z.s >= 3, t0.name + ": Hauptübung " + id + " mit " + z.s + " Sätzen");
+      });
+      var summe = tl.bloc.ids.reduce(function (x, id) { return x + ((p.ziele[id] && p.ziele[id].s) || 2); }, 0);
+      wahr(summe <= 20, t0.name + ": höchstens 20 Sätze in 60 min (" + summe + ")");
+    }); });
+    // U3: Timer-Name
+    gleich(W.timerNameDauer(750), "12:30", "12:30 bleibt 12:30");
+    gleich(W.timerNameDauer(720), "12", "volle Minuten ohne Sekunden");
+    // U2: Einzahl
+    gleich(W.t("kalKopiert1"), "1 Eintrag kopiert", "Einzahl");
+    var s = W.state.db.settings, alt = s.studio, altN = s.niveau, tag = 86400000, n = Date.now();
+    try {
+      // U1: 2 Steigerungen + 5 Rücknahmen → höchstens 3 Kästen
+      s.niveau = "fortgeschritten"; s.studio = {};
+      var ids = ["bench-press", "barbell-row", "lat-pulldown", "lateral-raise", "cable-crossover", "barbell-curl", "triceps-machine"];
+      ids.forEach(function (id, k) {
+        var hoch = k < 2, sz = hoch ? [[40, 12], [40, 12], [40, 12]] : [[40, 4], [40, 4], [40, 4]];
+        s.studio[id] = { kg:40, schritt:2.5, ziel:{ saetze:3, wdh:10 }, erhoeht:n - 30*tag, log:[{ at:n - 8*tag, s:sz, zu:true }, { at:n - 4*tag, s:sz, zu:true }] };
+      });
+      var tp = W.studioTipps(ids); gleich(Object.keys(tp).length, 3, "höchstens 3 Kästen: " + Object.keys(tp).join(", "));
+      wahr(tp["bench-press"] || tp["barbell-row"], "Grundübung zuerst");
+      // U5: Einsteiger-Kalibrierfrage nach Runde 4 erst wieder nach 6 Runden
+      s.niveau = "einsteiger";
+      var log = []; for (var k = 6; k >= 1; k--) log.push({ at:n - k*3*tag, s:[[15, 12], [15, 12], [15, 12]], zu:true });
+      s.studio = { "leg-press": { kg:15, schritt:5, ziel:{ saetze:3, wdh:10 }, kalibriert:true, kalibriertRunde:4, log:log } };
+      wahr(!W.studioKalibrierFrage("leg-press", log[5]), "Runde 6, zuletzt in Runde 4: noch nicht wieder fragen");
+      s.studio["leg-press"].kalibriertRunde = 0;
+      wahr(W.studioKalibrierFrage("leg-press", log[5]), "6 Runden später: wieder fragen");
+    } finally { s.studio = alt; if (altN === undefined) delete s.niveau; else s.niveau = altN; }
+  });
   test("Pausen-Tipp lässt sich mit „Behalten“ ablehnen", function () {
     var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();
     try {

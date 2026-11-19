@@ -352,12 +352,14 @@ function timerPlusSekunden(p){
   var runde = p.en*p.ew + (p.en - 1)*p.ep;   // ein Durchgang aller Sätze
   return p.rn*runde + (p.rn - 1)*p.rp;
 }
+/* Test 9 U3: der automatische Name nennt die genaue Dauer („Timer · 12:30 Min“), ganze Minuten ohne Sekunden („Timer · 12 Min“) */
+function timerNameDauer(sek){ sek = Math.max(0, Math.round(sek)); var m = Math.floor(sek/60), s = sek%60; return s ? m+":"+String(s).padStart(2, "0") : String(Math.max(1, m)); }
 function timerPlusBauen(p, name){
   var now = Date.now(), items = [], r;
   var b = { id:uid(), name:t("timerSatzBlock", { s:p.ew }), reps:p.en, workSec:p.ew, restSec:p.ep, updatedAt:now };   // die Sätze: oben im Timer die Runden (Kreise), unten die Sätze (Kästchen)
   state.db.blocks.push(b);
   for(r = 1; r <= p.rn; r++) items.push({ blockId:b.id, restAfterSec:r < p.rn ? p.rp : 0 });
-  var w = { id:uid(), name:(name || "").trim() || t("timerAuto", { m:Math.max(1, Math.round(timerPlusSekunden(p)/60)) }), items:items, updatedAt:now };   // eigener Name, sonst „Timer · 12 Min“
+  var w = { id:uid(), name:(name || "").trim() || t("timerAuto", { m:timerNameDauer(timerPlusSekunden(p)) }), items:items, updatedAt:now };   // eigener Name, sonst „Timer · 12 Min“
   state.db.workouts.push(w); save();
   return w;
 }
@@ -389,7 +391,7 @@ function timerPlusAendern(w, p, name){
   b.reps = p.en; b.workSec = p.ew; b.restSec = p.ep; b.updatedAt = now;
   if(autoAlt) b.name = t("timerSatzBlock", { s:p.ew });
   w.items = []; for(r = 1; r <= p.rn; r++) w.items.push({ blockId:b.id, restAfterSec:r < p.rn ? p.rp : 0 });
-  w.name = (name || "").trim() || t("timerAuto", { m:Math.max(1, Math.round(timerPlusSekunden(p)/60)) });
+  w.name = (name || "").trim() || t("timerAuto", { m:timerNameDauer(timerPlusSekunden(p)) });
   w.updatedAt = now; save();
 }
 function openTimerPlus(bearb, vorgabe){

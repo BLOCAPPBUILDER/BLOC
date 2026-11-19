@@ -367,24 +367,33 @@ function koerperInfoBinden(wurzel){
   }); });
 }
 function tippsAn(){ return state.db.settings.tippsAus !== true; }
+/* Vorrang im Training: Grundübungen (0) vor Neben und Isolation (1) - nach der Rolle der Übung wie im Plan-Assistenten (paRang, Test 8 T1), sonst nach der Muskelverteilung */
+function studioTippRang(ex){ if(!ex) return 1; if(typeof paRang === "function") return paRang(ex) >= 2 ? 0 : 1; return studioWdhGrenze(ex) === 15 ? 0 : 1; }
+var TIPP_KAESTEN_MAX = 3;   // Test 9 U1 (Sportwissenschaftler): höchstens 3 Tipp-Kästen je Training (Pausen-Tipps nach einer Trainingspause ausgenommen)
 function studioTipps(ids, leicht, mitOffen){
-  var o = {}, steig = [];
+  var o = {}, steig = [], sicher = [];
   studioTippsWartend = [];
   if(leicht || !tippsAn()) return o;
   var plat = [];
   ids.forEach(function(id, k){
     var tp = studioProg(id, mitOffen) || (mitOffen ? null : studioPlateau(id)); if(!tp) return;   // ohne Steigerungs-Tipp: Plateau-Hinweis
-    if(tp.art === "plateau"){ var exP = findExercise(id); plat.push({ id:id, tp:tp, k:k, grund:exP && studioWdhGrenze(exP) === 15 ? 0 : 1 }); return; }
-    if(studioTippSicher(tp)) o[id] = tp;
-    else if(!studioTippRuht(id)){ var ex = findExercise(id); steig.push({ id:id, tp:tp, k:k, grund:ex && studioWdhGrenze(ex) === 15 ? 0 : 1 }); }   // „Nicht jetzt“: ruht
+    if(tp.art === "plateau"){ var exP = findExercise(id); plat.push({ id:id, tp:tp, k:k, grund:studioTippRang(exP) }); return; }
+    if(studioTippSicher(tp)){ var exS = findExercise(id); if(studioPauseTipp(tp)) o[id] = tp; else sicher.push({ id:id, tp:tp, k:k, grund:studioTippRang(exS) }); }
+    else if(!studioTippRuht(id)){ var ex = findExercise(id); steig.push({ id:id, tp:tp, k:k, grund:studioTippRang(ex) }); }   // „Nicht jetzt“: ruht
   });
   // längste Wartezeit zuerst, bei Gleichstand Grundübungen, dann die Reihenfolge des Plans; ohne Wartezeit hinten
   steig.sort(function(a, b){ return ((a.tp.seit || Infinity) - (b.tp.seit || Infinity)) || a.grund - b.grund || a.k - b.k; });
-  steig.forEach(function(x, i){ if(i < trainerStufe().tipps) o[x.id] = x.tp; else studioTippsWartend.push(x.id); });
-  /* Plateau-Hinweise zählen nicht gegen das Tipp-Limit (Test 6, P3), sind aber auf 2 je Training begrenzt: Grundübungen zuerst, dann die Reihenfolge des Plans
+  var steigOk = [];
+  steig.forEach(function(x, i){ if(i < trainerStufe().tipps) steigOk.push(x); else studioTippsWartend.push(x.id); });
+  /* Plateau-Hinweise zählen nicht gegen das Steigerungs-Limit (Test 6, P3), sind aber auf 2 je Training begrenzt: Grundübungen zuerst, dann die Reihenfolge des Plans
      (Hauptübungen stehen vorn), dann die am längsten stagnierende (Test 8 T2) */
   plat.sort(function(a, b){ return a.grund - b.grund || a.k - b.k || (a.tp.seit || 0) - (b.tp.seit || 0); });
-  plat.slice(0, PLATEAU_JE_TRAINING).forEach(function(x){ o[x.id] = x.tp; });
+  /* Test 9 U1: insgesamt höchstens 3 Kästen. Reihenfolge: Rücknahme Grundübung, Steigerung Grundübung, dann Nebenübungen (Rücknahme vor Steigerung vor Plateau).
+     Was nicht mehr passt, kommt im nächsten Training wieder (Steigerungen stehen als „Bereit für mehr“ auf der Karte). */
+  var alle = sicher.map(function(x){ x.r = 0; return x; }).concat(steigOk.map(function(x){ x.r = 1; return x; }), plat.slice(0, PLATEAU_JE_TRAINING).map(function(x){ x.r = 2; return x; }));
+  alle.sort(function(a, b){ return a.grund - b.grund || a.r - b.r || a.k - b.k; });
+  var frei = Math.max(0, TIPP_KAESTEN_MAX - Object.keys(o).length);
+  alle.forEach(function(x, i){ if(i < frei) o[x.id] = x.tp; else if(x.r === 1) studioTippsWartend.push(x.id); });
   return o;
 }
 /* Kalibrieren (Test 4, Q5): in den ersten zwei Runden einer Übung mit Gewicht, wenn alle Ziel-Sätze heute am oberen Rand lagen, fragt die Satzkarte
@@ -396,8 +405,9 @@ function studioKalibrierFrage(id, h){
   var e = studioEintrag(id), ex = findExercise(id);
   if(!e || !h || !ex || !tippsAn() || studioNurBlock(ex) || studioAssistiert(id) || studioNachZeit(id)) return false;
   var runden = (e.log || []).filter(function(l){ return arbeitsSaetze(l).length; }).length;
-  var einst = trainerNiveau() === "einsteiger";   // Einsteiger: die Frage „Wie schwer war das?“ kehrt wieder (alle 3 Runden, Test 6 P2), sonst nur in den ersten zwei Runden
-  if(e.kalibriert && !(einst && runden - (e.kalibriertRunde || 0) >= 3 && runden <= 30)) return false;
+  var einst = trainerNiveau() === "einsteiger";   // Einsteiger: die Frage „Wie schwer war das?“ kehrt wieder (Test 6 P2), sonst nur in den ersten zwei Runden
+  /* Test 9 U5 (Sportwissenschaftler): Einsteiger in den ersten 4 Runden jedes Mal, danach etwa alle 6 Runden (≈ alle 2 Wochen), ab Runde 30 nur noch alle 10 */
+  if(e.kalibriert && !(einst && runden - (e.kalibriertRunde || 0) >= (runden <= 4 ? 1 : runden <= 30 ? 6 : 10))) return false;
   if(!einst && runden > 2) return false;
   var z = studioZiel(id), b = studioBereich(id), a = arbeitsSaetze(h);
   return a.length >= z.saetze && a.every(function(x){ return x[0] > 0 && x[1] >= b.max; });

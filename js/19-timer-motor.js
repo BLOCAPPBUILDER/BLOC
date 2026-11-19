@@ -198,7 +198,7 @@ function playerTemplate(){
     '<div id="pl-bgs" aria-hidden="true"></div>'+
     '<div class="player-top">'+
       '<button class="exit" data-exit title="'+t("endBtn")+'">&times;</button>'+
-      '<div class="pl-mitte"></div>'+
+      '<div class="pl-mitte"><div class="ex-dots" id="pl-exkreise" role="img"></div></div>'+
       (playerTrackt() ? '<button class="exit" data-plsave title="'+esc(t("trSpeichern"))+'" aria-label="'+esc(t("trSpeichern"))+'">'+ICON_SAVE+'</button>' : '')+
       '<button class="exit" data-vol-toggle title="'+t("volume")+'">'+ICON_VOLUME+'</button>'+
     '</div>'+
@@ -404,12 +404,6 @@ function updateDots(step){
   wrap.style.gap = gap+"px";
   var html = "";
   var cur = step.phase === "rest" ? step.rep+1 : step.rep;   // Pause: der kommende Satz blinkt, der gerade geschaffte ist erledigt
-  if(n <= 8){   // wenige Sätze: Kästchen wie die Satzleiste im Satz-Training (2026-11-19, einheitlich)
-    wrap.className = "rep-dots satz-saetze satz-satzleiste pl-satzleiste"; wrap.style.gap = "";
-    for(var j = 1; j <= n; j++) html += '<i class="'+(j < cur ? "an" : j === cur ? "jetzt" : "")+'"><b>'+esc(t("satzNr", { n:j }))+'</b>'+(j < cur ? "✓" : j === cur ? esc(t(step.phase === "rest" ? "satzGleich" : "satzJetzt")) : "–")+'</i>';
-    wrap.innerHTML = html; return;
-  }
-  wrap.className = "rep-dots";
   for(var i=1;i<=n;i++){
     var cls = i<cur ? "done" : (i===cur ? "now":"");
     html += '<span class="'+cls+'" style="width:'+size+'px;height:'+size+'px;border-radius:'+Math.max(3, Math.round(size*.15))+'px"></span>';
@@ -437,10 +431,33 @@ function playerUebungen(){
   steps._uebungen = l;
   return l;
 }
+/* Kevin 2026-11-19: reine Timer (ohne Übungen) wie früher mit Kreisen in der Kopfzeile, Workouts mit Übungen mit der Übungsleiste */
+function updateExKreise(step){
+  var wrap = document.getElementById("pl-exkreise");
+  if(!wrap) return;
+  var n = playerState.steps.exCount || 0;
+  if(n < 2 || n > 30){ wrap.innerHTML = ""; wrap.style.display = "none"; return; }
+  wrap.style.display = "";
+  var cur = step.exNr || 1, bald = step.phase === "blockrest" || step.phase === "prep";
+  var avail = Math.max(60, (wrap.parentNode.clientWidth || 220) - 4), gap = n > 12 ? 5 : 8;
+  var size = Math.max(6, Math.min(14, Math.floor((avail - (n-1)*gap)/n)));
+  wrap.setAttribute("aria-label", t("exOf", { i:Math.min(cur, n), n:n }));
+  wrap.style.gap = gap+"px";
+  var html = "";
+  for(var i=1;i<=n;i++){
+    var cls = i < cur ? "done" : i === cur ? "now"+(bald ? " bald" : "") : "";
+    html += '<span class="'+cls+'" style="width:'+size+'px;height:'+size+'px"></span>';
+  }
+  wrap.innerHTML = html;
+}
+function playerMitUebungen(){ return playerState.steps.some(function(st){ return st.phase === "work" && st.ex; }); }
 function updateExDots(step){
   var wrap = document.getElementById("pl-exdots");
   if(!wrap) return;
-  var l = playerUebungen(), n = l.length;
+  var l = playerUebungen(), n = l.length, mitEx = playerMitUebungen();
+  var kreise = document.getElementById("pl-exkreise");
+  if(!mitEx){ wrap.innerHTML = ""; wrap.style.display = "none"; updateExKreise(step); return; }
+  if(kreise){ kreise.innerHTML = ""; kreise.style.display = "none"; }
   if(n < 2 || n > 40){ wrap.innerHTML = ""; wrap.style.display = "none"; return; }
   wrap.style.display = "";
   var fertig = 0, cur = step.exNr || 1;
