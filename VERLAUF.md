@@ -95,6 +95,12 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-19 · Satz-Training: Übungsleiste und Satzleiste (Fassung 2026-11-19-2)
+
+Nach Mockup, Entscheidung Kevin („passt, so umsetzen“; „Besetzt · später“ und „Tauschen“ ausdrücklich nicht im Training, Tauschen gehört ins Bearbeiten des BLOCs).
+- **Übungsleiste** statt der Punkte oben: alle Übungen mit Namen (ohne Klammerzusatz), „x / y Sätze“ bzw. „fertig ✓“ und Fortschrittsbalken; aktive orange, fertige grün; Tipp springt hin, die Reihenfolge ist frei. Darüber „Deine Übungen · n von m fertig“. Das BLOC-Logo steht jetzt in der Kopfzeile.
+- **Satzleiste** statt der Kreise: je Satz ein Kästchen „Satz 1 · 60 × 10 ✓“, „jetzt“ oder „–“; Zusatzsätze hängen hinten an. Die Zeile „Heute“ entfällt (steht jetzt in der Satzleiste).
+
 ## 2026-11-19 · Timer im Hintergrund: Medien-Anzeige wie Spotify, Töne vom Dienst (Fassung 2026-11-19-1)
 
 Rückmeldung vom Handy: im Hintergrund kein Ton, keine Anzeige wie bei Spotify.

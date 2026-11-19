@@ -1839,3 +1839,23 @@ body.prot-sheet-offen{ overflow:hidden; }
 .satz-fertig{ color:#fff; border-color:rgba(255,255,255,.45); background:rgba(255,255,255,.12); }
 .st-steigern{ flex-wrap:wrap; }
 .st-steigern > span{ flex:1 1 100%; }
+
+/* Satz-Training: Übungsleiste statt Punkte und Satzleiste statt Kreise (2026-11-19, Kevin) */
+.satz-top .satz-logo{ flex:1; margin:0; }
+.satz-leiste-kopf{ display:flex; justify-content:space-between; font-size:12px; font-weight:600; opacity:.8; padding:0 18px; margin:2px 0 6px; }
+.satz-punkte.satz-leiste{ flex:none; justify-content:flex-start; flex-wrap:nowrap; overflow-x:auto; gap:8px; padding:0 14px 10px; scrollbar-width:none; }
+.satz-leiste::-webkit-scrollbar{ display:none; }
+.satz-punkt.satz-pill{ width:auto; height:auto; min-width:108px; max-width:150px; flex:none; border-radius:16px; padding:7px 11px 8px; text-align:left; border:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.1); color:#fff; font:inherit; transform:none; -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); }
+.satz-pill b{ display:block; font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.satz-pill small{ display:block; font-size:11px; opacity:.8; margin-top:1px; white-space:nowrap; }
+.satz-pill-bar{ display:block; height:3px; border-radius:2px; background:rgba(255,255,255,.2); margin-top:6px; overflow:hidden; }
+.satz-pill-bar em{ display:block; height:100%; width:0; background:var(--accent); transition:width .3s; }
+.satz-punkt.satz-pill.an{ border:1.5px solid var(--accent); background:rgba(232,100,60,.22); transform:none; }
+.satz-punkt.satz-pill.fertig{ background:rgba(70,160,110,.24); border-color:rgba(110,200,150,.55); }
+.satz-punkt.satz-pill.fertig.an{ border-color:var(--accent); }
+.satz-pill.fertig .satz-pill-bar em{ background:#5fc28d; }
+.satz-saetze.satz-satzleiste{ flex-wrap:wrap; gap:6px; margin:10px 0 4px; }
+.satz-satzleiste i{ width:auto; height:auto; flex:1 1 0; min-width:64px; border-radius:12px; border:1px solid rgba(255,255,255,.25); padding:6px 4px; font-style:normal; font-size:12px; text-align:center; line-height:1.35; background:transparent; box-shadow:none; color:#fff; }
+.satz-satzleiste i b{ display:block; font-size:11px; font-weight:700; opacity:.8; }
+.satz-satzleiste i.an{ background:rgba(70,160,110,.28); border-color:rgba(110,200,150,.6); }
+.satz-satzleiste i.jetzt{ border:1.5px solid var(--accent); box-shadow:none; }
