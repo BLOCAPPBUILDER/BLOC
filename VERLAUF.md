@@ -95,6 +95,13 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-19 · Run mit Medien-Anzeige: Pause/Weiter über Uhr und Kopfhörer (Fassung 2026-11-19-8)
+
+Kevin: „Kann man die Uhr testen, Run pausieren, Timer pausieren?“ Eine eigene Uhr-Anbindung gibt es noch nicht; der Timer lässt sich aber über die Medien-Steuerung (Uhr, Kopfhörer) bedienen. Jetzt auch der Lauf.
+- **App (Android):** `BlocTimerService` hat einen Lauf-Modus: Laufzeit zählt hoch, Text „2,31 km · 5:26 /km“ (pausiert: „Pausiert · 12:34 · 2,31 km“), Pause/Weiter in Benachrichtigung, Sperrbildschirm, Uhr und Kopfhörer. Pause/Weiter löst denselben Knopf aus wie in der App (`runPause`); Auto-Pause und Weiterlaufen melden sich sofort, sonst alle 10 s.
+- **JS:** `runMedien` in `js/16-lauf.js`, Ereignis „aktion“ in `js/00-native.js` steuert jetzt Timer oder Lauf. Braucht neuen App-Build.
+- Hinweis: Beim Lauf stehen damit zwei Einträge in der Benachrichtigungsleiste (GPS-Dienst und Medien-Anzeige).
+
 ## 2026-11-19 · Alle Übungsbilder nachgeschärft (Fassung 2026-11-19-7)
 
 Kevin: „Kann man die Figuren nachschärfen? Teilweise sind sie unscharf.“ Größere Originale gibt es nicht (alle 384 px, einige aus WhatsApp-Bögen nur 250–300 px und hochskaliert).

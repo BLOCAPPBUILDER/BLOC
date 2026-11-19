@@ -20,7 +20,7 @@ import java.util.Iterator;
 
 /**
  * Brücke zum Timer-Dienst (BlocTimerService).
- * zeigen({ titel, pause, fertig, ton, klang, laut, txtPause, txtWeiter, schritte:[{ name, ende, dauer }], toene:[{ at, art }] })
+ * zeigen({ titel, pause, fertig, ton, klang, laut, txtPause, txtWeiter, modus:"timer"|"lauf", laufStart, schritte:[{ name, ende, dauer }], toene:[{ at, art }] })
  *   startet bzw. aktualisiert die Anzeige; mit ton:true spielt der Dienst die Töne (App im Hintergrund).
  * klaenge({ klang, dateien:{ work:"<base64 WAV>", … } }) legt die vorab gerenderten Klänge im App-Cache ab (nur lokal).
  * stoppen() nimmt alles weg. Ereignis „aktion“ ({ a:"pause"|"weiter" }): Knopf in der Benachrichtigung oder am Kopfhörer.
@@ -77,6 +77,9 @@ public class BlocTimerPlugin extends Plugin {
             it.putExtra(BlocTimerService.X_LAUT, laut == null ? 1f : (float) Math.max(0, Math.min(1, laut)));
             it.putExtra(BlocTimerService.X_TXT_PAUSE, call.getString("txtPause", "Pause"));
             it.putExtra(BlocTimerService.X_TXT_WEITER, call.getString("txtWeiter", "Weiter"));
+            it.putExtra(BlocTimerService.X_MODUS, call.getString("modus", "timer"));
+            Double ls = call.getDouble("laufStart", 0.0);
+            it.putExtra(BlocTimerService.X_LAUF_START, ls == null ? 0L : ls.longValue());
             ContextCompat.startForegroundService(getContext(), it);
             call.resolve();
         } catch (Exception e) {

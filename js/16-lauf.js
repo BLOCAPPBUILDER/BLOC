@@ -135,6 +135,7 @@ function runAutoPruefen(){
   r.pauseAb = r.lastMove; r.auto = true; r.pausePos = r.letzte.p;
   vibrate(120);
   runAnzeige();
+  runMedien(true);
 }
 function runAutoWeiter(lat, lon, acc, speed){
   var r = run;
@@ -146,6 +147,7 @@ function runAutoWeiter(lat, lon, acc, speed){
   r.pausenMs += Date.now() - r.pauseAb; r.pauseAb = 0; r.auto = false; r.letzte = null; r.kal = null; r.lastMove = Date.now(); r.regung = 0;
   vibrate(120);
   runAnzeige();
+  runMedien(true);
 }
 /* Intervall-Lauf: Laufen und Gehen im Wechsel nach der Laufzeit (ohne Pausen); Signalton, Vibration und Ansage beim Wechsel, Tick in den letzten 3 s */
 function runIvTick(){
@@ -282,8 +284,9 @@ function runLosgehts(){
   runGeplant = null;
   runLauschen();
   runWachen(true);
-  run.uhr = setInterval(function(){ runAutoPruefen(); runAnzeige(); runSichern(); }, 1000);
+  run.uhr = setInterval(function(){ runAutoPruefen(); runAnzeige(); runSichern(); runMedien(false); }, 1000);
   renderRun();
+  runMedien(true);
 }
 function runLauschen(){
   var r = run;
@@ -298,11 +301,26 @@ function runStopWatch(){
   if(run.uhr) clearInterval(run.uhr);
   run.watch = null; run.uhr = 0;
 }
+/* Medien-Anzeige der App (wie beim Timer, 2026-11-19): Laufzeit zählt hoch, Strecke und Tempo als Text, Pause/Weiter auch über Uhr und Kopfhörer.
+   Nur in der App; meldet sich höchstens alle 10 s (und sofort bei Start, Pause, Weiter, Ende). */
+var runMedienAm = 0;
+function runMedien(sofort){
+  if(typeof nativTimerAnzeige !== "function" || typeof IST_NATIV === "undefined" || !IST_NATIV) return;
+  var r = run;
+  if(!r){ nativTimerAnzeige(null); runMedienAm = 0; return; }
+  if(!sofort && Date.now() - runMedienAm < 10000) return;
+  runMedienAm = Date.now();
+  var sek = runZeit(r)/1000, text = runKm(r.dist)+" km · "+runTempo(r, sek, r.dist)+" "+runTempoEinheit(r);
+  if(r.pauseAb) text = t(r.auto ? "runAutoPausiert" : "runPaused")+" · "+fmtUhr(runZeit(r))+" · "+runKm(r.dist)+" km";
+  nativTimerAnzeige({ modus:"lauf", titel:"BLOC · "+t(runIstRad(r) ? "runArtRad" : "runArtLauf"), pause:!!r.pauseAb, laufStart:Date.now() - runZeit(r),
+    schritte:[{ name:text, ende:0 }], txtPause:t("pause"), txtWeiter:t("timerWeiter") });
+}
 function runPause(){
   if(!run) return;
   if(run.pauseAb){ run.pausenMs += Date.now() - run.pauseAb; run.pauseAb = 0; run.auto = false; run.letzte = null; run.kal = null; run.lastMove = Date.now(); runWachen(true); }   // Lücke zählt nicht als Strecke
   else { run.pauseAb = Date.now(); run.auto = false; }
   renderRun();
+  runMedien(true);
 }
 var runSichernAm = 0;
 function runSichern(){   // alle 10 s eine Kopie, damit ein beendeter Browser den Lauf nicht verschluckt
@@ -338,6 +356,7 @@ function runBeenden(speichern){
   try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
   var dunkel = document.getElementById("run-dunkel"); if(dunkel) dunkel.remove();
   run = null;
+  runMedien(true);   // Medien-Anzeige weg
   delete state.db.settings.runLive;
   var ok = speichern ? runSpeichern({ id:r.id, start:r.start, dur:dauer, dist:r.dist, pts:r.pts, splits:r.splits, hm:r.hasAlt ? r.hm : null, pause:pausen, iv:iv, name:r.ziel && r.ziel.name, art:r.art }) : (save(), false);
   if(ok){ runNeu = r.id; go("#rundetail/"+r.id); } else renderRun();   // runNeu: Abschlusskarte oben im Detail

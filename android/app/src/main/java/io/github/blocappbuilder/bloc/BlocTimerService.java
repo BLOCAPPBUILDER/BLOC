@@ -37,7 +37,7 @@ public class BlocTimerService extends Service {
     static final int NR = 4711;
     static final String X_TITEL = "titel", X_NAMEN = "namen", X_ENDEN = "enden", X_DAUERN = "dauern", X_PAUSE = "pause", X_FERTIG = "fertig",
         X_TON = "ton", X_CUE_AT = "cueAt", X_CUE_ART = "cueArt", X_KLANG = "klang", X_LAUT = "laut",
-        X_TXT_PAUSE = "txtPause", X_TXT_WEITER = "txtWeiter";
+        X_TXT_PAUSE = "txtPause", X_TXT_WEITER = "txtWeiter", X_MODUS = "modus", X_LAUF_START = "laufStart";
     static final String AKTION_PAUSE = "io.github.blocappbuilder.bloc.TIMER_PAUSE", AKTION_WEITER = "io.github.blocappbuilder.bloc.TIMER_WEITER";
 
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -48,6 +48,8 @@ public class BlocTimerService extends Service {
     private long[] cueAt = new long[0];
     private String[] cueArt = new String[0];
     private float laut = 1f;
+    private boolean lauf = false;     // Lauf/Rad: Zeit zählt hoch (laufStart = Wanduhr, bei der die Laufzeit 0 wäre), Text kommt fertig von der Seite
+    private long laufStart = 0;
     private final Runnable weiter = this::anzeigen;
     private final Runnable tonTakt = this::toeneSpielen;
     private int naechsterCue = 0;
@@ -101,11 +103,13 @@ public class BlocTimerService extends Service {
             laut = intent.getFloatExtra(X_LAUT, 1f);
             String tp = intent.getStringExtra(X_TXT_PAUSE); if (tp != null) txtPause = tp;
             String tw = intent.getStringExtra(X_TXT_WEITER); if (tw != null) txtWeiter = tw;
+            lauf = "lauf".equals(intent.getStringExtra(X_MODUS));
+            laufStart = intent.getLongExtra(X_LAUF_START, 0);
         }
         vordergrund();
         planen();
         toenePlanen();
-        wachHalten(!pause);
+        wachHalten(!pause && !lauf);   // beim Lauf hält der GPS-Dienst die App wach
         return START_NOT_STICKY;   // wird die App beendet, soll kein Timer von selbst wieder auftauchen
     }
 
@@ -144,7 +148,7 @@ public class BlocTimerService extends Service {
 
     private void planen() {
         handler.removeCallbacks(weiter);
-        if (pause) return;
+        if (pause || lauf) return;   // Lauf: die Seite meldet sich selbst regelmäßig
         int i = aktuell();
         if (i < 0) { wachHalten(false); return; }
         handler.postDelayed(weiter, Math.max(50, enden[i] - System.currentTimeMillis() + 30));
@@ -173,10 +177,13 @@ public class BlocTimerService extends Service {
         oeffnen.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent pi = PendingIntent.getActivity(this, 0, oeffnen, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        int i = aktuell();
+        int i = lauf ? 0 : aktuell();
         String text;
         boolean laeuft = !pause && i >= 0;
-        if (pause) {
+        if (lauf) {
+            text = namen.length > 0 ? namen[0] : "";   // „3,42 km · 5:31 /km“ bzw. „Pausiert · …“
+            sitzungAktualisieren(text, 0, Math.max(0, System.currentTimeMillis() - laufStart), !pause);
+        } else if (pause) {
             text = namen.length > 0 ? namen[0] : "";   // die Seite schickt den fertigen Text („Los! · Timer pausiert · 0:29“)
             sitzungAktualisieren(text, 0, 0, false);
         } else if (i >= 0) {
@@ -207,7 +214,9 @@ public class BlocTimerService extends Service {
         if (i >= 0 || pause) {
             b.addAction(new NotificationCompat.Action(laeuft ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play, laeuft ? txtPause : txtWeiter, pa));
         }
-        if (laeuft) {
+        if (laeuft && lauf) {
+            b.setWhen(laufStart).setShowWhen(true).setUsesChronometer(true);   // Laufzeit zählt hoch
+        } else if (laeuft) {
             b.setWhen(enden[i]).setShowWhen(true).setUsesChronometer(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) b.setChronometerCountDown(true);
         }

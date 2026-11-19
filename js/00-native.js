@@ -144,6 +144,10 @@ function nativTimerKlaenge(){
   if(!bt || typeof bt.addListener !== "function") return;
   try{
     bt.addListener("aktion", function(d){
+      if((typeof playerState === "undefined" || !playerState) && typeof run !== "undefined" && run){   // Lauf: Pause/Weiter wie der Knopf in der App
+        if((d && d.a === "pause") === !run.pauseAb) runPause();
+        return;
+      }
       if(typeof playerState === "undefined" || !playerState) return;
       var pb = document.getElementById("pl-playpause");
       if(!pb) return;
