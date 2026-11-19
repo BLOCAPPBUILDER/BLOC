@@ -95,6 +95,13 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-19 · Zwei Übungsbilder bereinigt (Fassung 2026-11-19-5)
+
+Nach Kevins Durchsicht der 19 Bilder, die die Prüfung vom 30.10. als fachlich falsch eingestuft hatte („keine großen Probleme“):
+- **High Knees:** nur noch eine Figur (beide Posen waren identisch), mittig eingepasst.
+- **Prone T-Raise:** Kreis mit der Ansicht von vorn entfernt, beide Posen neu eingepasst.
+- Übersicht `BLOC-Bilder-fehlend-und-mittelmaessig.html` (OneDrive-Ablage): 64 Übungen ohne Foto, 67 mittelmäßig, die 19 als geprüft markiert.
+
 ## 2026-11-19 · Timer-Layout zurück, Test 9 Feinschliff (Fassung 2026-11-19-4)
 
 Kevin: Timer wieder wie vorher (oben Kreise, unten Quadrate); bei Workouts mit Übungen nach Zeit nur oben die Übungsleiste, unten die Quadrate. Test 9 (U1–U5) umgesetzt, fachlich mit dem Sportwissenschaftler.
