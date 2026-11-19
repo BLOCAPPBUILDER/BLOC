@@ -50,11 +50,34 @@ function timerAnzeigeText(st){
   var z = st.phase === "work" && playerState.steps.units > 1 ? st.unit+"/"+playerState.steps.units : "";
   return [lb, n, z].filter(Boolean).join(" · ");
 }
+/* Alle kommenden Töne mit Wanduhr-Zeit, wie planAudio sie im Audio-Takt einplant: Phasenwechsel und 3-2-1-Countdown */
+function timerToene(){
+  var ps = playerState, out = [];
+  if(!ps || ps.paused || !state.db.settings.sound) return out;
+  function countdown(endMs, st){ for(var k = 3; k >= 1; k--){ var at = endMs - k*1000; if(st.duration > k && at >= Date.now() - 50) out.push({ at:at, art:"tick" }); } }
+  var st0 = ps.steps[ps.idx]; if(!st0 || st0.phase === "done") return out;
+  countdown(ps.endAt, st0);
+  var tEnd = ps.endAt;
+  for(var j = ps.idx + 1; j < ps.steps.length && out.length < 1900; j++){
+    var st = ps.steps[j];
+    out.push({ at:tEnd, art:st.phase === "done" ? "done" : st.phase });
+    if(st.phase === "done") break;
+    countdown(tEnd + st.duration*1000, st);
+    tEnd += st.duration*1000;
+  }
+  return out;
+}
+/* Wechsel in den Hintergrund und zurück: Ton-Übergabe an den Dienst bzw. zurück an die Seite */
+document.addEventListener("visibilitychange", function(){
+  if(!playerState || typeof IST_NATIV === "undefined" || !IST_NATIV) return;
+  if(document.visibilityState === "hidden" && !playerState.paused && typeof nativTimerAn !== "undefined" && nativTimerAn) schedCancel();
+  timerAnzeigeMelden();
+});
 function timerAnzeigeMelden(){
   if(typeof nativTimerAnzeige !== "function" || !IST_NATIV) return;
   var ps = playerState, st = ps && ps.steps[ps.idx];
   if(!st || st.phase === "done"){ nativTimerAnzeige(null); return; }
-  var titel = "BLOC · "+(ps.workout.name || t("tabTimer")), schritte = [];
+  var titel = "BLOC · "+(ps.workout.name || t("tabTimer")), schritte = [], toene = [];
   if(ps.paused){
     var s = Math.ceil(Math.max(0, ps.remainingMs)/1000);
     schritte.push({ name:timerAnzeigeText(st)+" · "+t("infoPaused")+" · "+Math.floor(s/60)+":"+String(s%60).padStart(2, "0"), ende:0 });
@@ -64,10 +87,18 @@ function timerAnzeigeMelden(){
       var x = ps.steps[i];
       if(x.phase === "done") break;
       if(i > ps.idx) ende += x.duration*1000;
-      if(x.duration > 0) schritte.push({ name:timerAnzeigeText(x), ende:ende });
+      if(x.duration > 0) schritte.push({ name:timerAnzeigeText(x), ende:ende, dauer:x.duration*1000 });
     }
+    toene = timerToene();
   }
-  nativTimerAnzeige({ titel:titel, pause:!!ps.paused, fertig:t("doneTitle"), schritte:schritte });
+  var d = { titel:titel, pause:!!ps.paused, fertig:t("doneTitle"), schritte:schritte, txtPause:t("pause"), txtWeiter:t("timerWeiter"), laut:1 };
+  /* App im Hintergrund: der Dienst spielt die Töne selbst (Android hält den WebView-Ton an); sichtbar: wieder die Seite */
+  var hinten = document.visibilityState === "hidden" && !ps.paused && state.db.settings.sound;
+  if(!hinten || typeof nativTimerKlaenge !== "function"){ d.ton = false; nativTimerAnzeige(d); return; }
+  nativTimerKlaenge().then(function(k){
+    if(!playerState || document.visibilityState !== "hidden") return;
+    d.ton = !!k; d.klang = k; d.toene = toene; nativTimerAnzeige(d);
+  });
 }
 
 function workoutForSource(source){
@@ -130,6 +161,7 @@ function launchPlayer(w, source){
   enterStep(0, { manual:true });
   requestWakeLock();
   startBgTicker();
+  if(typeof nativTimerKlaenge === "function" && IST_NATIV) nativTimerKlaenge();   // Klänge für den Hintergrund schon vorbereiten
 }
 
 

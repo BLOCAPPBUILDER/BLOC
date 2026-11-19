@@ -95,6 +95,13 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-19 · Timer im Hintergrund: Medien-Anzeige wie Spotify, Töne vom Dienst (Fassung 2026-11-19-1)
+
+Rückmeldung vom Handy: im Hintergrund kein Ton, keine Anzeige wie bei Spotify.
+- **Anzeige:** `BlocTimerService` hat jetzt eine MediaSession mit Medien-Benachrichtigung (Medienbereich oben, Sperrbildschirm): Workout-Name, Phase/Übung, Fortschrittsbalken der Phase, Pause/Weiter-Knopf (auch Kopfhörer). Pause/Weiter geht an die Seite zurück (Ereignis „aktion“). Neue Abhängigkeit `androidx.media:media:1.7.0`.
+- **Töne:** Android hält den WebView-Ton im Hintergrund an. Die Seite rendert die Klänge des gewählten Stils einmal vorab (OfflineAudioContext, dieselbe Klangerzeugung) als WAV in den App-Cache; im Hintergrund spielt der Dienst Phasenwechsel und 3-2-1 selbst (SoundPool, ohne Audio-Fokus, Musik läuft weiter). Sichtbar übernimmt wieder die Seite; doppelte Töne gibt es nicht. Teil-Wecker (WAKE_LOCK) nur, solange ein Timer läuft.
+- Einheitstest: Kalibrierfrage am Ende +1, eine Plateau-Prüfung datumsunabhängig gemacht (104 grün). Braucht neuen App-Build.
+
 ## 2026-11-18 · Kalibrierfrage am Trainingsende (Fassung 2026-11-18-5)
 
 - „Wie schwer war das?“ steht nicht mehr auf jeder Übungskarte, sondern auf der Abschlusskarte: lagen alle Übungen mit Gewicht am oberen Rand (mindestens zwei), eine gemeinsame Frage „Wie schwer war das insgesamt?“, sonst je Übung eine Zeile (Sportwissenschaftler). Danach steht dort, was sich ändert („Beinpresse: Nächstes Mal 20 kg“).

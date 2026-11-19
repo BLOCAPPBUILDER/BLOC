@@ -348,6 +348,7 @@ function schedCountdown(endMs, step){
    full=false: nur hinten anhängen, wenn der Plan zur Neige geht */
 function planAudio(full){
   if(!playerState || playerState.paused) return;
+  if(document.visibilityState === "hidden" && typeof nativTimerAn !== "undefined" && nativTimerAn && IST_NATIV) return;   // im Hintergrund spielt der Timer-Dienst der App die Töne
   if(!state.db.settings.sound || !audioCtx()) return;
   var steps = playerState.steps, i = playerState.idx;
   if(full) schedCancel();
@@ -403,3 +404,38 @@ document.addEventListener("visibilitychange", function(){
   if(document.visibilityState==="visible" && playerState && playerState.running) requestWakeLock();
 });
 
+
+/* ============ Klänge für den Timer-Dienst der App (Test am Handy 2026-11-19) ============
+   Im Hintergrund hält Android den WebView-Ton an. Damit die Signaltöne trotzdem kommen, rendert die Seite jeden Klang des gewählten Stils
+   einmal vorab mit derselben Klangerzeugung (tone) in einen OfflineAudioContext und gibt ihn als WAV an den nativen Dienst, der ihn dann
+   selbst abspielt (nativTimerKlaenge in js/00-native.js). Nur in der App; nichts verlässt das Gerät. */
+var KLANG_ARTEN = ["work", "rest", "blockrest", "prep", "done", "tick"];
+function klangSchluessel(){
+  var s = state.db.settings;
+  return ("k-" + (s.soundStyle || "klangschale") + "-" + (s.space ? 1 : 0) + "-" + Math.round((s.volume != null ? s.volume : 1)*100)).toLowerCase().replace(/[^a-z0-9-]/g, "");
+}
+function klangNoten(art){ var st = currentSoundStyle(); return art === "tick" ? tickNotes(st) : (st[art] || st.work || []); }
+function klangWavBase64(noten){
+  var OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  if(!OAC || !noten || !noten.length) return Promise.resolve("");
+  var rate = 32000, ende = noten.reduce(function(m, n){ return Math.max(m, (n.d || 0)/1000 + (n.dur || 500)/1000); }, 0);
+  var len = Math.ceil(rate*Math.min(8, ende + 1.2)), off = new OAC(1, len, rate);
+  var altCtx = actx, altBus = audioBus, altWaves = chipWaves;
+  actx = off; audioBus = null; chipWaves = {};
+  try{ noten.forEach(function(n){ tone(n, (n.d || 0)/1000); }); }
+  finally{ actx = altCtx; audioBus = altBus; chipWaves = altWaves; }
+  return off.startRendering().then(function(buf){
+    var d = buf.getChannelData(0), n = d.length, wav = new DataView(new ArrayBuffer(44 + n*2));
+    function txt(o, s){ for(var i = 0; i < s.length; i++) wav.setUint8(o + i, s.charCodeAt(i)); }
+    txt(0, "RIFF"); wav.setUint32(4, 36 + n*2, true); txt(8, "WAVE"); txt(12, "fmt "); wav.setUint32(16, 16, true); wav.setUint16(20, 1, true); wav.setUint16(22, 1, true);
+    wav.setUint32(24, rate, true); wav.setUint32(28, rate*2, true); wav.setUint16(32, 2, true); wav.setUint16(34, 16, true); txt(36, "data"); wav.setUint32(40, n*2, true);
+    for(var i = 0; i < n; i++){ var v = Math.max(-1, Math.min(1, d[i])); wav.setInt16(44 + i*2, v < 0 ? v*0x8000 : v*0x7fff, true); }
+    var bytes = new Uint8Array(wav.buffer), s = "";
+    for(var j = 0; j < bytes.length; j += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(j, j + 0x8000));
+    return btoa(s);
+  });
+}
+function klaengeRendern(){
+  var o = {};
+  return Promise.all(KLANG_ARTEN.map(function(art){ return klangWavBase64(klangNoten(art)).then(function(b){ if(b) o[art] = b; }); })).then(function(){ return o; });
+}

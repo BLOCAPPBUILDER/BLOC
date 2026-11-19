@@ -1326,7 +1326,7 @@
     wahr(W.paRang(W.findExercise("cable-single-arm-shoulder-press")) < 2, "einarmiges Kabel-Schulterdrücken nie Haupt");
     // T2: Plateau am Gewicht, eine Wdh. mehr ist kein Fortschritt; altes „Nicht jetzt“ blockt nicht; höchstens 2 je Training
     var s = W.state.db.settings, alt = s.studio, altN = s.niveau, tag = 86400000, n = Date.now();
-    function log(fn) { var l = []; for (var w = 13; w >= 1; w--) l.push({ at:n - w*7*tag, s:fn(14 - w).map(function (x) { return [85, x, "n", 9]; }), zu:true }); return l; }
+    function log(fn) { var l = []; for (var w = 13; w >= 1; w--) l.push({ at:n - w*7*tag + tag, s:fn(14 - w).map(function (x) { return [85, x, "n", 9]; }), zu:true }); return l; }
     try {
       s.niveau = "erfahren";
       s.studio = { "bench-press": { kg:85, schritt:2.5, ziel:{ saetze:3, wdh:8 }, tippRuhe:n - 60*tag, log:log(function (wk) { return wk <= 6 ? [9, 8, 8] : [9, 8, 9]; }) } };
@@ -1357,6 +1357,23 @@
       gleich(p1.name, "Mein Tag", "eigener Name bleibt");
       var bl = s.stPlaene.filter(function (b) { return b.gen === res.gid && b.nameRez; }); wahr(bl.length && bl.every(function (b) { return !/Ganzkörper|Aufwärmen/.test(b.name); }), "BLOC-Namen englisch: " + bl.map(function (b) { return b.name; }).join(", "));
     } finally { var o = JSON.parse(sik); s.programme = o.pr; s.stPlaene = o.st; s.kalender = o.ka; s.studio = o.stu; if (o.lang === undefined) delete s.lang; else s.lang = o.lang; W.applyLang(); }
+  });
+  test("Kalibrierfrage am Trainingsende: gemeinsam, wenn alle Übungen mit Gewicht am oberen Rand lagen, sonst je Übung", function () {
+    var s = W.state.db.settings, sik = JSON.stringify({ stu:s.studio, n:s.niveau, sb:s.satzBasis }), n = Date.now();
+    try {
+      s.niveau = "einsteiger"; s.satzBasis = {};
+      W.satzKontext = { leicht:false, tipps:{}, rpe:{} };
+      s.studio = { "leg-press": { kg:15, schritt:5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n, s:[[15, 12], [15, 12], [15, 12]] }] },
+                   "cable-row": { kg:15, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n, s:[[15, 12], [15, 12], [15, 12]] }] } };
+      var k = W.satzKalibrierIds(["leg-press", "cable-row"]);
+      gleich([k.ids.length, k.alle], [2, true], "beide am oberen Rand: eine gemeinsame Frage");
+      wahr(/insgesamt/.test(W.satzKalibrierHTML(k)), "Text der gemeinsamen Frage");
+      s.studio["cable-row"].log[0].s = [[15, 9], [15, 9], [15, 8]];
+      k = W.satzKalibrierIds(["leg-press", "cable-row"]);
+      gleich([k.ids, k.alle], [["leg-press"], false], "nur eine am Rand: Frage je Übung");
+      wahr(/data-kalib="leg-press:leicht"/.test(W.satzKalibrierHTML(k)), "Zeile für die Beinpresse");
+      gleich(W.satzKalibrierHTML(W.satzKalibrierIds([])), "", "ohne passende Übung keine Frage");
+    } finally { var o = JSON.parse(sik); s.studio = o.stu; if (o.n === undefined) delete s.niveau; else s.niveau = o.n; s.satzBasis = o.sb; }
   });
   test("Pausen-Tipp lässt sich mit „Behalten“ ablehnen", function () {
     var s = W.state.db.settings, alt = s.studio, tag = 86400000, n = Date.now();
