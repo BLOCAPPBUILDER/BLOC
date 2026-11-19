@@ -1068,7 +1068,7 @@ function fotoUmschalterHTML(an){
 }
 function fotoBuehneHTML(exId, name, an){
   return '<div class="info-pane-bild"'+(an ? '' : ' hidden')+'><button type="button" class="foto-stage" data-foto="'+exId+'" aria-label="'+esc(t("fotoGross"))+': '+esc(name)+'">'+
-    '<img src="./img/ex/'+exId+'.webp" alt="'+esc(name)+'" loading="lazy" decoding="async" width="384" height="384"></button></div>';
+    '<img src="./img/ex/'+exId+'.webp" alt="'+esc(name)+'" loading="lazy" decoding="async" width="768" height="768"></button></div>';
 }
 function fotoGross(exId, name){
   fotoZu();
