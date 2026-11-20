@@ -95,6 +95,14 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-20 · 63 neue Übungsbilder (Fassung 2026-11-20-1)
+
+- Aus Kevins PDF „Übungen“ (Sammelbögen, je Übung zwei Posen) 63 der 65 Übungen ohne Foto übernommen; jetzt 602 Übungen mit Bild.
+- Zuschnitt wie die übrigen Bilder: weißer Hintergrund, keine Beschriftung, quadratisch 768 px (Vorschau 160 px). Breite Paare übereinander gestapelt, damit die Figuren groß bleiben.
+- Abgleich mit den bewegten Figuren (Pose A/B) und dem Übungstext: alle 63 passen in Bewegung und Ablauf.
+- Nicht übernommen: Planche (Tuck) halten und Hollow Rock (zeigen eine andere Übung als der Text); beide bleiben bei der Strichfigur. „Wadenheben mit Band“ in der stehenden Fassung (wie Text und Figur), 90/90-Hüftwechsel aus dem größeren der beiden Bögen.
+- Einige Vorlagen waren klein (ca. 200 bis 300 px je Übung); diese Bilder wirken am Handy etwas weicher.
+
 ## 2026-11-19 · Run mit Medien-Anzeige: Pause/Weiter über Uhr und Kopfhörer (Fassung 2026-11-19-8)
 
 Kevin: „Kann man die Uhr testen, Run pausieren, Timer pausieren?“ Eine eigene Uhr-Anbindung gibt es noch nicht; der Timer lässt sich aber über die Medien-Steuerung (Uhr, Kopfhörer) bedienen. Jetzt auch der Lauf.
