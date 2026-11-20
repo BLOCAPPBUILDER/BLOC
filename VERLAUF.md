@@ -95,6 +95,10 @@ Umsetzung des zweiten Testberichts (Testberichte/BLOC-Fortschritt-13-Wochen/BERI
 - **Halteübungen:** Steigerung über die Zeit (+5 s bis 60 s, dann mehr Gewicht und 30 s bzw. schwerere Variante; 5 s weniger bei deutlich zu kurz oder nach langer Pause); „je Seite“ bei einseitigen.
 - Tests: einheitstest +9, Schnelltest „Fortschritt“ unabhängig von der Uhrzeit.
 
+## 2026-11-20 · Bild „Planche (Tuck) halten“ (Fassung 2026-11-20-3)
+
+- Neues Bild von Kevin: Stütz auf Parallettes, Knie angezogen, Füße in der Luft; passt zu Text und Figur. Beschriftung entfernt, Zuschnitt wie die übrigen Bilder. Damit haben alle 604 Übungen ein Bild.
+
 ## 2026-11-20 · 64 neue Übungsbilder (Fassung 2026-11-20-2)
 
 - Aus Kevins PDF „Übungen“ (Sammelbögen, je Übung zwei Posen) 64 der 65 Übungen ohne Foto übernommen; jetzt 603 Übungen mit Bild.
