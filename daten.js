@@ -575,14 +575,14 @@ var ILLU_POSES = {
   /* Kraft mit Gewicht */
   "goblet-squat":       [qWith(P_ST,{ a:[[57,36,58,29]], x:gKB(60,26) }), qWith(P_SQ,{ a:[[54,50,56,42]], x:gKB(58,39) })],
   "kb-swing":           [KB_HIKE, KB_TOP],
-  "db-thruster":        [qWith(P_SQ,{ a:[[56,46,53,36]], x:gDB(53,34) }), qWith(P_STUP,{ x:gDB(65,6) })],
+  "db-thruster":        [qWith(P_SQ,{ a:[[56,46,53,36]], x:gDB(53,34) }), qWith(P_STUP,{ a:[[51.7,19,53.5,6]], x:gDB(53.5,5) })],
   "romanian-deadlift":  [qWith(P_ST,{ x:gDB(53,49) }), qWith(P_HG,{ x:gDB(61,68) })],
   "db-deadlift":        [Q(null,[60,46],[38,62],[[54,66,50,89,58,89]],[[60,62,58,76]], gDB(58,78)), qWith(P_ST,{ x:gDB(53,49) })],
   "bent-over-row":      [qWith(P_HG,{ x:gDB(61,68) }), qWith(P_HG,{ a:[[50,36,56,48]], x:gDB(56,50) })],
   "one-arm-row":        [qWith(P_HG,{ a:[[62,54,61,66],[66,52,68,62]], x:gDB(61,68)+gBench(62,90,62) }), qWith(P_HG,{ a:[[50,36,56,48],[66,52,68,62]], x:gDB(56,50)+gBench(62,90,62) })],
   "floor-press":        [qWith(P_LBK,{ a:[[30,88,32,76]], x:gDB(32,74) }), qWith(P_LBK,{ a:[[28,72,29,60]], x:gDB(29,58) })],
-  "shoulder-press":     [qWith(P_STUP,{ a:[[58,40,57,30]], x:gDB(57,28) }), qWith(P_STUP,{ x:gDB(65,6) })],
-  "push-press":         [Q(null,[50,32],[48,60],[[57,72,52,89,60,89]],[[58,44,57,34]], gDB(57,32)), qWith(P_STUP,{ x:gDB(65,6) })],
+  "shoulder-press":     [qWith(P_STUP,{ a:[[58,40,57,30]], x:gDB(57,28) }), qWith(P_STUP,{ a:[[51.7,19,53.5,6]], x:gDB(53.5,5) })],
+  "push-press":         [Q(null,[50,32],[48,60],[[57,72,52,89,60,89]],[[58,44,57,34]], gDB(57,32)), qWith(P_STUP,{ a:[[51.7,19,53.5,6]], x:gDB(53.5,5) })],
   "weighted-reverse-lunge": [qWith(P_ST,{ x:gDB(53,49) }), qWith(P_L1,{ a:[[49,48,50,60]], x:gDB(50,62) })],
   "front-rack-carry":   [qWith(P_WALK1,{ a:[[58,34,57,27]], x:gKB(59,23) }), qWith(qSwap(P_WALK1),{ a:[[58,34,57,27]], x:gKB(59,23) })],
   "farmer-carry":       [qWith(P_WALK1,{ x:gKB(53,47) }), qWith(qSwap(P_WALK1),{ x:gKB(53,47) })],
@@ -672,7 +672,7 @@ Object.assign(ILLU_POSES, {
   "close-grip-push-ups":[P_PH, P_PL],
   "diamond-push-ups":   [P_PH, P_PL],
   "sphinx-push-ups":    [P_FP, P_PH],
-  "triceps-curls":   [qWith(P_STUP,{ x:gDB(64,4) }), qWith(P_STUP,{ a:[[55,15,46,22]], x:gDB(45,23) })],
+  "triceps-curls":   [qWith(P_STUP,{ a:[[52,19,53.5,6]], x:gDB(53.5,5) }), qWith(P_STUP,{ a:[[52,19,44,29]], x:gDB(43,30) })],
   "arm-circles":        [qWith(P_F,{ a:[[37,26,24,26],[63,26,76,26]] }), qWith(P_F,{ a:[[37,20,26,12],[63,20,74,12]] })],
   /* Dehnen */
   "neck-stretch":       [Q([43,14],[50,21],[50,52],P_FLEGS,[[40,14,42,6],[56,34,58,48]],"",true), null],
@@ -1036,8 +1036,8 @@ Object.assign(ILLU_POSES, {
   "hammer-curl":       [Q(null,[50,20],[50,50],ST_STAND,[[52,32,53,44]], gHand(53,44,'<path class="ip" d="M53 39v10"/>')),
                         Q(null,[50,20],[50,50],ST_STAND,[[52,32,60,23]], gHand(60,23,'<path class="ip" d="M60 18v10"/>'))],
   "barbell-curl":      [Q(null,[50,20],[50,50],ST_STAND,[[52,32,53,44]], gScheibe(54,45,5)), Q(null,[50,20],[50,50],ST_STAND,[[52,32,60,23]], gScheibe(61,22,5))],
-  "overhead-cable-triceps": [qWith(ILLU_POSES["triceps-curls"][1], { x:gLinie("M22 0V89")+gRolle(26,14)+gQuer(46,23,3) }),
-                             qWith(ILLU_POSES["triceps-curls"][0], { x:gLinie("M22 0V89")+gRolle(26,14)+gQuer(64,4,3) })],
+  "overhead-cable-triceps": [qWith(ILLU_POSES["triceps-curls"][1], { x:gLinie("M22 0V89")+gRolle(26,14)+gQuer(44,29,3) }),
+                             qWith(ILLU_POSES["triceps-curls"][0], { x:gLinie("M22 0V89")+gRolle(26,14)+gQuer(53.5,5,3) })],
   "triceps-machine":   [Q(null,[42,34],[42,63],ST_BEINE,[[34,44,42,52]], ST_SITZ+gGriff(42,52)), Q(null,[42,34],[42,63],ST_BEINE,[[43,46,44,58]], ST_SITZ+gGriff(44,58))],
   /* Gluteus-Maschine: vorgebeugt am Brustpolster, ein Fuß drückt die Platte nach hinten oben */
   "glute-machine":     [Q(null,[66,30],[48,50],[[50,70,50,89,58,89],[48,69,46,87,52,89]],[[68,40,74,44]], gLinie("M80 10V89M66 42L74 32")+gGriff(74,44)+gPlatte(47,84,4,-3)),
@@ -1067,7 +1067,7 @@ Object.assign(ILLU_POSES, {
                         Q(null,[50,20],[50,52],ST_FRONT,[[58,32,66,42],[56,34,65,44]], gLinie("M12 0V89")+gQuer(66,43,3), true)],
   "captains-chair":    [Q(null,[48,30],[48,58],[[49,74,49,87,55,88]],[[56,40,64,34]], gLinie("M42 18V62M44 40H66M40 62V89")),
                         Q(null,[48,30],[48,58],[[64,50,64,64,70,64]],[[56,40,64,34]], gLinie("M42 18V62M44 40H66M40 62V89"))],
-  "barbell-overhead-press": [qWith(P_STUP,{ a:[[58,40,57,30]], x:gScheibe(57,28,6) }), qWith(P_STUP,{ a:[[54,16,53,5]], x:gScheibe(53,4,6) })],
+  "barbell-overhead-press": [qWith(P_STUP,{ a:[[58,40,57,30]], x:gScheibe(57,28,6) }), qWith(P_STUP,{ a:[[51.6,19,53,5]], x:gScheibe(53,4,6) })],
   "barbell-rdl":       [qWith(P_ST,{ x:gScheibe(53,50,7) }), qWith(P_HG,{ x:gScheibe(61,70,7) })],
   /* Multipresse: wie Bankdrücken, die Stange läuft in einer Schiene */
   "smith-bench-press": [stLiegen([31,56,33,44], gLinie("M33 12V60")+gScheibe(33,42,7)), stLiegen([33,77.5,33,64.5], gLinie("M33 12V60")+gScheibe(33,61.5,7))],
@@ -2171,8 +2171,8 @@ EQUIPS.splice(3, 0, { id:"band", de:"Widerstandsband", en:"Resistance band" });
   E("band-overhead-triceps", "Trizeps-Strecken über Kopf mit Band", "Overhead Band Triceps Press", "arms", 3, 30, 1,
     "Eine Hand hinter dem Rücken, die andere drückt nach oben", "One hand behind your back, the other presses overhead",
     2, 1, "kraft",
-    [SU([[-55,160],[100,95]], function(q){ return bl(hand(q,1), [42,46], hand(q,0)); }),
-     SU([[-72,-78],[100,95]], function(q){ return bl(hand(q,1), [42,46], hand(q,0)); })],
+    [SU([[-83,125],[100,95]], function(q){ return bl(hand(q,1), [42,46], hand(q,0)); }),
+     SU([[-83,-83],[100,95]], function(q){ return bl(hand(q,1), [42,46], hand(q,0)); })],
     ["Ein Ende des Bandes mit einer Hand hinter dem Rücken auf Höhe des unteren Rückens halten, das andere Ende mit der oberen Hand greifen und den Ellbogen hinter den Kopf beugen.|Den oberen Ellbogen nah am Kopf lassen.|Den Arm nach oben strecken, langsam beugen. Nach der Hälfte die Seite wechseln.",
      "Hold one end of the band behind your back at lower-back height with one hand, take the other end with your top hand and bend your elbow behind your head.|Keep the top elbow close to your head.|Extend your arm upwards and bend it slowly. Switch sides halfway."],
     ["Oberarm bleibt senkrecht, Rippen unten.|Bauch fest, kein Hohlkreuz.", "Den Ellbogen nach vorn oder zur Seite ausweichen lassen.",
@@ -2219,8 +2219,8 @@ EQUIPS.splice(3, 0, { id:"band", de:"Widerstandsband", en:"Resistance band" });
   E("band-overhead-extension", "Trizeps-Strecken über Kopf mit Band (beidhändig)", "Two-hand Overhead Band Extension", "arms", 6, 30, 0,
     "Auf dem Band stehen, beide Hände über dem Kopf strecken", "Stand on the band, extend both hands overhead",
     2, 1, "kraft",
-    [SU([[-55,160]], function(q){ return bl([46,89], [38,52], hand(q)); }),
-     SU([[-72,-78]], function(q){ return bl([46,89], [38,52], hand(q)); })],
+    [SU([[-83,125]], function(q){ return bl([46,89], [38,52], hand(q)); }),
+     SU([[-83,-83]], function(q){ return bl([46,89], [38,52], hand(q)); })],
     ["Mit einem Fuß auf das Bandende treten, das andere Ende mit beiden Händen hinter dem Kopf halten.|Die Ellbogen zeigen nach oben, dicht am Kopf.|Die Arme nach oben strecken und langsam wieder beugen.",
      "Step on one end of the band and hold the other end with both hands behind your head.|Elbows point up, close to your head.|Extend your arms upwards and bend them slowly."],
     ["Ellbogen eng am Kopf, Rippen unten.|Bauch und Gesäß fest.", "Die Ellbogen nach außen öffnen oder ins Hohlkreuz fallen.",
@@ -5683,7 +5683,7 @@ ILLU_POSES["star-jumps"] = [Q(null,[50,20],[50,52],[[46,70,45,89,39,89],[54,70,5
 ILLU_POSES["squat-jacks"] = [Q(null,[50,34],[50,62],[[40,75,43,89,38,89],[60,75,57,89,62,89]],[[42,46,50,46],[58,46,50,46]],"",true,1), Q(null,[50,36],[50,64],[[30,72,27,89,21,89],[70,72,73,89,79,89]],[[42,47,50,46],[58,47,50,46]],"",true,1)];
 ILLU_POSES["turkish-get-up"] = [Q(null,[20,84],[46,86],[[60,70,66,88,73,88],[64,87,82,88]],[[26,71,27,58],[36,87,47,88]],gHand(27,58,'<circle class="ipf" cx="27" cy="52.5" r="5"/>'),false,1), Q(null,[50,32],[50,59],[[50,74,50,89,58,89],[47,74,46,89,52,89]],[[53,24,56,11],[47,47,46,57]],gHand(56,11,'<circle class="ipf" cx="56" cy="5.5" r="4.5"/>'),false,1)];
 ILLU_POSES["kb-windmill"] = [Q(null,[50,34],[50,60],[[43,76,36,89,32,89],[57,76,64,89,68,89]],[[58,25,59,12],[44,50,43,62]],gHand(59,12,'<circle class="ipf" cx="59" cy="7.5" r="4.5"/>'),true,1), Q(null,[31,43],[50,60],[[43,76,36,89,32,89],[57,76,64,89,68,89]],[[34,32,34,19],[35,59,38,72]],gHand(34,19,'<circle class="ipf" cx="34" cy="14.5" r="4.5"/>'),true,1)];
-ILLU_POSES["kb-snatch"] = [Q(null,[64,40],[38,54],[[46,71,47,89,55,89]],[[58,56,56,70],[59,56,57,70]],gKB(56,70),false,1), Q(null,[50,28],[50,57],[[50,73,50,89,58,89]],[[58,19,62,10],[57,20,61,11]],gHand(62,10,'<circle class="ipf" cx="62" cy="5.5" r="4.5"/>'),false,1)];
+ILLU_POSES["kb-snatch"] = [Q(null,[64,40],[38,54],[[46,71,47,89,55,89]],[[58,56,56,70],[59,56,57,70]],gKB(56,70),false,1), Q(null,[50,28],[50,57],[[50,73,50,89,58,89]],[[50.6,20.8,51,9],[48,44,50,55]],gHand(51,9,'<circle class="ipf" cx="51" cy="4.5" r="4.5"/>'),false,1)];
 ILLU_POSES["kb-press"] = [Q(null,[50,26],[50,56],[[44,73,41,89,36,89],[56,73,59,89,64,89]],[[58,42,56,33],[43,42,42,54]],gHand(56,33,'<circle class="ipf" cx="60" cy="30" r="5"/>'),true,1), Q(null,[50,26],[50,56],[[44,73,41,89,36,89],[56,73,59,89,64,89]],[[60,21,60,10],[43,42,42,54]],gHand(60,10,'<circle class="ipf" cx="60" cy="5.5" r="4.5"/>'),true,1)];
 ILLU_POSES["kb-sumo-high-pull"] = [Q(null,[50,42],[50,66],[[36,76,30,89,25,89],[64,76,70,89,75,89]],[[46,58,49,70],[54,58,51,70]],gHand(49,70,'<circle class="ipf" cx="50" cy="75" r="5.5"/><path class="ip" d="M46 71q4-6 8 0"/>'),true,1), Q(null,[50,22],[50,52],[[41,70,36,89,31,89],[59,70,64,89,69,89]],[[37,24,47,36],[63,24,53,36]],gHand(47,36,'<circle class="ipf" cx="50" cy="40" r="5.5"/><path class="ip" d="M46 37q4-6 8 0"/>'),true,1)];
 ILLU_POSES["kb-figure-8"] = [Q([50,33],[50,43],[50,62],[[35,77,30,89,25,89],[65,77,70,89,75,89]],[[44,58,48,71],[56,58,52,71]],gHand(48,71,'<circle class="ipf" cx="50" cy="76" r="6"/><path class="ip" d="M46 72q4-6 8 0"/>'),true,1)];
@@ -5699,7 +5699,7 @@ ILLU_POSES["pendlay-row"] = [Q(null,[64,44],[36,56],[[46,72,44,89,52,89]],[[60,5
 ILLU_POSES["cable-reverse-fly"] = [Q(null,[50,22],[50,52],[[43,70,40,89,35,89],[57,70,60,89,65,89]],[[54,39,46,51],[46,39,54,51]],'<path class="ip" d="M6 10V89M94 10V89"/><path class="ip gb" d="M8 80L54 51M92 80L46 51"/>',true,1), Q(null,[50,22],[50,52],[[43,70,40,89,35,89],[57,70,60,89,65,89]],[[37,28,24,33],[63,28,76,33]],'<path class="ip" d="M6 10V89M94 10V89"/><path class="ip gb" d="M8 80L24 33M92 80L76 33"/>',true,1)];
 ILLU_POSES["kb-deadlift"] = [Q(null,[64, 40],[40, 50],[[44, 70, 44, 89, 52, 89]],[[62, 56, 60, 74]],"<g class=\"gh\" data-at=\"60,74\"><circle class=\"ipf\" cx=\"60\" cy=\"78\" r=\"5\"/><path class=\"ip\" d=\"M57 75q3-5 6 0\"/></g>",false,1), Q(null,[50, 20],[50, 50],[[50, 70, 50, 89, 58, 89]],[[52, 34, 53, 47]],"<g class=\"gh\" data-at=\"52,50\"><circle class=\"ipf\" cx=\"52\" cy=\"54\" r=\"5\"/><path class=\"ip\" d=\"M49 51q3-5 6 0\"/></g>",false,1)];
 ILLU_POSES["seated-barbell-shoulder-press"] = [Q(null,[50,32],[50,62],[[38,68,36,89,31,89],[62,68,64,89,69,89]],[[37,45,36,31],[63,45,64,31]],'<rect class="ipf" x="42" y="28" width="16" height="36" rx="4"/><path class="ip" d="M36 65H64M50 65V89M38 89H62"/>'+gHand(36,31,'<path class="ip" d="M12 31H88M12 25V37M88 25V37"/>'),true,1), Q(null,[50,32],[50,62],[[38,68,36,89,31,89],[62,68,64,89,69,89]],[[40,23,38,10],[60,23,62,10]],'<rect class="ipf" x="42" y="28" width="16" height="36" rx="4"/><path class="ip" d="M36 65H64M50 65V89M38 89H62"/>'+gHand(38,10,'<path class="ip" d="M14 10H86M14 4V16M86 4V16"/>'),true,1)];
-ILLU_POSES["landmine-press"] = [Q(null,[50,36],[50,66],[[66,66,66,89,74,89],[50,86,34,87,29,86]],[[58,52,58,41]],'<path class="ip gb" d="M6 88L58 41"/><path class="ip" d="M4 89H12"/>'+gHand(58,41,'<circle class="ipf" cx="58" cy="41" r="4.5"/>'),false,1), Q(null,[52,27],[50,56],[[66,66,66,89,74,89],[44,72,30,85,26,86]],[[62,30,68,18]],'<path class="ip gb" d="M6 88L68 18"/><path class="ip" d="M4 89H12"/>'+gHand(68,18,'<circle class="ipf" cx="68" cy="18" r="4.5"/>'),false,1)];
+ILLU_POSES["landmine-press"] = [Q(null,[50,36],[50,66],[[66,66,66,89,74,89],[50,86,34,87,29,86]],[[58,52,58,41]],'<path class="ip gb" d="M6 88L58 41"/><path class="ip" d="M4 89H12"/>'+gHand(58,41,'<circle class="ipf" cx="58" cy="41" r="4.5"/>'),false,1), Q(null,[52,27],[50,56],[[66,66,66,89,74,89],[44,72,30,85,26,86]],[[59.9,24.7,68,18]],'<path class="ip gb" d="M6 88L68 18"/><path class="ip" d="M4 89H12"/>'+gHand(68,18,'<circle class="ipf" cx="68" cy="18" r="4.5"/>'),false,1)];
 ILLU_POSES["cable-front-raise"] = [Q(null,[50,20],[50,50],[[50,70,50,89,58,89]],[[53,37,56,50],[52,37,55,50]],'<path class="ip" d="M5 28V89"/><circle class="ip" cx="9" cy="84" r="2.5"/><path class="ip gb" d="M9 84L56 50"/>'+gHand(56,50,'<path class="ip" d="M56 46V54"/>'),false,1), Q(null,[50,20],[50,50],[[50,70,50,89,58,89]],[[63,26,76,24],[49,38,50,51]],'<path class="ip" d="M5 28V89"/><circle class="ip" cx="9" cy="84" r="2.5"/><path class="ip gb" d="M9 84L76 24"/>'+gHand(76,24,'<path class="ip" d="M76 20V28"/>'),false,1)];
 ILLU_POSES["seated-lateral-raise"] = [Q(null,[50,30],[50,60],[[40,67,37,89,32,89],[60,67,63,89,68,89]],[[42,46,38,58],[58,46,62,58]],'<path class="ip" d="M34 64H66M50 64V89M38 89H62"/>'+gDB(38,58)+gDB(62,58),true,1), Q(null,[50,30],[50,60],[[40,67,37,89,32,89],[60,67,63,89,68,89]],[[38,36,25,31],[62,36,75,31]],'<path class="ip" d="M34 64H66M50 64V89M38 89H62"/>'+gDB(25,31)+gDB(75,31),true,1)];
 ILLU_POSES["plate-front-raise"] = [Q(null,[50,20],[50,50],[[44,70,41,89,36,89],[56,70,59,89,64,89]],[[45,38,42,52],[55,38,58,52]],gHand(42,52,'<circle class="ipf" cx="50" cy="56" r="9"/>'),true,1), Q(null,[50,20],[50,50],[[44,70,41,89,36,89],[56,70,59,89,64,89]],[[42,36,44,28],[58,36,56,28]],gHand(44,28,'<circle class="ipf" cx="50" cy="32" r="9"/>'),true,1)];
@@ -5781,7 +5781,7 @@ ILLU_POSES["cable-wrist-curl"] = [Q(null,[52, 42],[38, 68],[[58, 66, 58, 87, 66,
 ILLU_POSES["cable-wrist-curl"][1] = qWith(ILLU_POSES["cable-wrist-curl"][0],{ a:[[58,58,72,52]] });
 ILLU_POSES["cable-standing-twist-row"] = [Q(null,[50, 22],[50, 52],[[42, 70, 36, 89, 30, 89], [58, 70, 64, 89, 70, 89]],[[62, 29, 74, 36], [43, 36, 44, 48]],'<path class="ip" d="M97 12V89"/><path class="ip" d="M97 36L74 36"/><g class="gh" data-at="74,36"><path class="ip" d="M74 32v8"/></g>',true,1), Q(null,[50, 22],[50, 52],[[42, 70, 36, 89, 30, 89], [58, 70, 64, 89, 70, 89]],[[58, 40, 58, 50], [43, 36, 44, 48]],'<path class="ip" d="M97 12V89"/><path class="ip" d="M97 36L58 50"/><g class="gh" data-at="58,50"><path class="ip" d="M58 46v8"/></g>',true,1)];
 ILLU_POSES["cable-single-arm-bent-row"] = [Q(null,[64, 38],[38, 52],[[48, 70, 44, 89, 52, 89]],[[66, 53, 66, 66], [60, 55, 50, 67]],'<path class="ip" d="M94 30V89"/><path class="ip" d="M94 86L66 66"/><g class="gh" data-at="66,66"><path class="ip" d="M66 62v8"/></g>',false,1), Q(null,[64, 38],[38, 52],[[48, 70, 44, 89, 52, 89]],[[53, 48, 55, 61], [60, 55, 50, 67]],'<path class="ip" d="M94 30V89"/><path class="ip" d="M94 86L55 61"/><g class="gh" data-at="55,61"><path class="ip" d="M55 57v8"/></g>',false,1)];
-ILLU_POSES["cable-single-arm-shoulder-press"] = [Q(null,[50, 22],[50, 52],[[52, 70, 50, 89, 58, 89]],[[56, 38, 54, 27]],'<path class="ip" d="M94 89L54 27"/><g class="gh" data-at="54,27"><path class="ip" d="M54 23v8"/></g>',false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[57, 17, 58, 5]],'<path class="ip" d="M94 89L58 5"/><g class="gh" data-at="58,5"><path class="ip" d="M58 1v8"/></g>',false,1)];
+ILLU_POSES["cable-single-arm-shoulder-press"] = [Q(null,[50, 22],[50, 52],[[52, 70, 50, 89, 58, 89]],[[56, 38, 54, 27]],'<path class="ip" d="M94 89L54 27"/><g class="gh" data-at="54,27"><path class="ip" d="M54 23v8"/></g>',false,1), Q(null,[50, 28],[50, 56],[[50, 72, 50, 89, 58, 89]],[[51.7, 19, 53.5, 6]],'<path class="ip" d="M94 89L53.5 6"/><g class="gh" data-at="53.5,6"><path class="ip" d="M53.5 2v8"/></g>',false,1)];
 ILLU_POSES["cable-decline-fly"] = [Q(null,[50, 22],[50, 52],[[44, 70, 38, 89, 32, 89], [56, 70, 62, 89, 68, 89]],[[36, 28, 24, 18], [64, 28, 76, 18]],'<path class="ip" d="M6 0L24 18M94 0L76 18"/><g class="gh" data-at="24,18"><path class="ip" d="M24 14v8"/></g><g class="gh" data-at="76,18"><path class="ip" d="M76 14v8"/></g>',true,1), Q(null,[50, 26],[50, 54],[[45, 72, 41, 89, 35, 89], [55, 72, 59, 89, 65, 89]],[[42, 42, 46, 56], [58, 42, 54, 56]],'<path class="ip" d="M6 0L46 56M94 0L54 56"/><g class="gh" data-at="46,56"><path class="ip" d="M46 52v8"/></g><g class="gh" data-at="54,56"><path class="ip" d="M54 52v8"/></g>',true,1)];
 ILLU_POSES["hamstring-walkout"] = [Q([14, 83],[24, 84],[46, 66],[[64, 68, 64, 89, 72, 89]],[[33, 88, 43, 88]],'',false,1), Q([14, 83],[24, 84],[46, 66],[[66, 76, 86, 88, 90, 86]],[[33, 88, 43, 88]],'',false,1)];
 ILLU_POSES["step-up"] = [Q(null,[40, 22],[40, 52],[[56, 58, 60, 75, 68, 77], [40, 71, 40, 89, 48, 89]],[[42, 36, 43, 49]],'<path class="ip" d="M54 89V79H86V89"/>',false,1), Q(null,[62, 18],[62, 47],[[62, 63, 62, 77, 70, 78], [56, 62, 56, 77, 64, 78]],[[64, 32, 65, 44]],'<path class="ip" d="M54 89V79H86V89"/>',false,1)];
@@ -6076,12 +6076,12 @@ Object.keys(PLAENE_INFO).forEach(function(id){ LIB_WORKOUT_INFO[id] = PLAENE_INF
 
   /* ---------- Schultern ---------- */
   P["seated-db-shoulder-press"] = [Q(null,[42,34],[42,63],ST_BEINE,[[47,49,48,37]], ST_SITZ+gDB(48,35)),
-                                   Q(null,[42,34],[42,63],ST_BEINE,[[47,26,48,14]], ST_SITZ+gDB(48,12))];
+                                   Q(null,[42,34],[42,63],ST_BEINE,[[44,26,45,14]], ST_SITZ+gDB(45,12))];
   var SEATF = gLinie("M36 62H64M50 62V89");
   V2["seated-db-shoulder-press"] = { typ:"front", p:[fr([50,30],[50,60],SEAT,[[37,36,37,24],[63,36,63,24]], SEATF+gDB(37,23)+gDB(63,23)),
                                                      fr([50,30],[50,60],SEAT,[[41,26,42,14],[59,26,58,14]], SEATF+gDB(42,12)+gDB(58,12))] };
   P["arnold-press"] = [Q(null,[50,28],[50,56],[[50,72,50,89,58,89]],[[57,43,56,32]], gDB(56,30)),
-                       Q(null,[50,28],[50,56],[[50,72,50,89,58,89]],[[53,21,53,9]], gDB(53,7))];
+                       Q(null,[50,28],[50,56],[[50,72,50,89,58,89]],[[51.6,20.5,53,8.5]], gDB(53,7))];
   V2["arnold-press"] = { typ:"front", p:[fr([50,28],[50,58],FRONT,[[45,43,48,33],[55,43,52,33]], gDB(48,31)+gDB(52,31)),
                                          fr([50,28],[50,58],FRONT,[[41,24,42,12],[59,24,58,12]], gDB(42,10)+gDB(58,10))] };
   var CS_T = gLinie("M10 30V89M90 30V89")+gRolle(14,84)+gRolle(86,84);
@@ -6313,7 +6313,7 @@ Object.keys(PLAENE_INFO).forEach(function(id){ LIB_WORKOUT_INFO[id] = PLAENE_INF
   /* ---------- Multipresse und Langhantel (Ergänzungen) ---------- */
   var SM_R = gLinie("M24 0V89M72 0V89");
   P["smith-overhead-press"] = [Q(null,[50,28],[50,56],[[50,72,50,89,58,89]],[[58,40,57,30]], SM_R+gScheibe(57,28,6)),
-                               Q(null,[50,28],[50,56],[[50,72,50,89,58,89]],[[58,17,64,7]], SM_R+gScheibe(64,6,6))];
+                               Q(null,[50,28],[50,56],[[50,72,50,89,58,89]],[[51.7,19,53.5,6]], SM_R+gScheibe(53.5,5,6))];
   P["smith-incline-press"] = [qWith(P["incline-db-press"][0], { x:ST_SCHRAEG+gLinie("M37 4V66")+gScheibe(34,49,6) }),
                               qWith(P["incline-db-press"][1], { x:ST_SCHRAEG+gLinie("M37 4V66")+gScheibe(40,26,6) })];
   var SM_RR = gLinie("M72 30V89");
@@ -6335,7 +6335,7 @@ Object.keys(PLAENE_INFO).forEach(function(id){ LIB_WORKOUT_INFO[id] = PLAENE_INF
                         Q(null,[46,36],[36,62],[[57,62,52,89,60,89]],[[54,47,50,43]], gScheibe(54,48,7))];
   P["barbell-good-morning"] = [P["barbell-squat"][0], Q(null,[66,40],[40,50],[[44,70,44,89,52,89]],[[55,44,60,38]], gScheibe(62,38,7))];
   P["barbell-push-press"] = [Q(null,[50,32],[48,60],[[57,72,52,89,60,89]],[[58,44,57,34]], gScheibe(57,32,6)),
-                             qWith(P_STUP,{ x:gScheibe(65,6,6) })];
+                             qWith(P_STUP,{ a:[[51.7,19,53.5,6]], x:gScheibe(53.5,5,6) })];
 
   /* Gerätelinien der neuen Studio-Übungen wie bei den übrigen: Farbe „Gerät“ */
   function gm(q){ if(q && q.x) q.x = q.x.replace(/class="(ip|ipf)( gp)?"/g, 'class="$1$2 gm"'); }

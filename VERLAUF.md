@@ -8,6 +8,12 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-21 · Sätze ändern, Überkopf-Figuren korrigiert (Fassung 2026-11-21-7)
+
+- **Sätze ändern:** Ein eingetragener Satz lässt sich im Satz-Training antippen, ändern und speichern; das startet keine neue Pause.
+- **Figuren:** 15 Überkopf-Übungen in Seitenansicht stehen oben jetzt nahezu senkrecht, nach fachlicher Prüfung (Drücken 0 bis +8°, Trizeps Oberarm am Ohr, Landmine bleibt schräg mit geradem Arm). Frontansichten zeigen die Griffbreite und bleiben.
+- **Kontrast:** Die Figur ist im Satz-Training auf der Küste immer hell.
+
 ## 2026-11-21 · Satz-Training aufgeräumt (Fassung 2026-11-21-6)
 
 Kevin hat aus drei Entwürfen Version 1 gewählt.
