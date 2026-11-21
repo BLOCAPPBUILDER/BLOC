@@ -45,7 +45,7 @@ var PAT = {
     k_ziele:"Ziele", k_fokus:"Fokus", k_niveau:"Aktivität", k_schwer:"Intensität", k_tage:"Tage", k_dauer:"Zeit", k_train:"Trainingsart", k_ausr:"Geräte", k_bereiche:"Bereiche", k_einschr:"Einschränkungen", k_impact:"Impact", k_sport:"Anderer Sport",
     tagePro:"{n} Tage pro Woche", einheitenSumme:"{n} TrainingsBLOCs pro Woche · {m} Wochen", keinFokus:"ausgewogen", alles:"alle",
     gk:"Ganzkörper", ok:"Oberkörper", uk:"Unterkörper", cardio:"Intervall-Cardio", mob:"Mobility", erh:"Aktive Erholung", lauf:"Run", lauf_ein:"Run: Geh-Lauf", sportName:"Sport", sportSub:"Fester Termin",
-    planName:"{z} · {n}× pro Woche", tagName:"{z} · Tag {n} · {p}", blocName:"{z} {t}", aufwaermen:"Aufwärmen", dehnen:"Dehnen", mainBloc:"{z} {t}",
+    planName:"{z} · {n}× pro Woche", planName2:"{z} + {y} · {n}× pro Woche", tagName:"{z} · Tag {n} · {p}", blocName:"{z} {t}", aufwaermen:"Aufwärmen", dehnen:"Dehnen", mainBloc:"{z} {t}",
     einEinheit:"Mit nur einem Trainingstag pro Woche bleibt jede Muskelgruppe bei einmal pro Woche. Zwei Tage sind besser (WHO: mindestens zwei Tage Krafttraining).",
     info0:"Starte mit 5 bis 10 Minuten Aufwärmen. Dehnen kannst du in den TrainingsBLOCs von Hand ergänzen.",
     info1:"Höre jeden Satz {r} Wiederholungen vor dem Muskelversagen auf; bis zum Versagen musst du nicht gehen. Schaffst du zweimal in allen Sätzen die obere Wiederholungszahl, schlägt BLOC die nächste Gewichtsstufe vor (meist 2 bis 10 % mehr), danach beginnst du wieder unten im Bereich. Ohne Gewicht: eine schwerere Variante oder mehr Wiederholungen.",
@@ -63,7 +63,7 @@ var PAT = {
     ohneZug:"Für echtes Rudern fehlt dir Stange, Band oder Gerät – deshalb trainieren Übungen im Liegen den oberen Rücken. Mit einem Widerstandsband (unter „Geräte“ wählen) baut BLOC Rudern ein.",
     whoRest:"Den Rest bis 150 Minuten schaffst du nebenbei, z. B. mit zügigen Spaziergängen, Radfahren oder Treppen im Alltag.",
     endeTitel:"Plan geschafft", endeText:"{p}: {n} von {m} Trainings erledigt. Weiter mit denselben Übungen und deinen aktuellen Gewichten?",
-    endeTage:"Dein Programm mit {n} Tagen", endeAlle:"Alle {n} Tage verlängern", endeWeiter:"Nächsten Block starten", endeWiederholen:"Block wiederholen", endeTitelBeendet:"Plan beendet", endeTextBeendet:"{p}: {n} von {m} Trainings erledigt. Den Block noch einmal machen?", endeNeu:"Neuen Plan erstellen", endeAus:"Ausblenden", endeOk:"{n} Termine für die nächsten {w} Wochen im Kalender",
+    endeLang:"{p} ist seit dem {d} beendet. Verlängern oder neu erstellen?", endeVerlaengern:"Plan verlängern", endeTage:"Dein Programm mit {n} Tagen", endeAlle:"Alle {n} Tage verlängern", endeWeiter:"Nächsten Block starten", endeWiederholen:"Block wiederholen", endeTitelBeendet:"Plan beendet", endeTextBeendet:"{p}: {n} von {m} Trainings erledigt. Den Block noch einmal machen?", endeNeu:"Neuen Plan erstellen", endeAus:"Ausblenden", endeOk:"{n} Termine für die nächsten {w} Wochen im Kalender",
     tageListe:"Trainingstage"
   },
   en:{
@@ -102,7 +102,7 @@ var PAT = {
     k_ziele:"Goals", k_fokus:"Focus", k_niveau:"Activity", k_schwer:"Intensity", k_tage:"Days", k_dauer:"Time", k_train:"Training type", k_ausr:"Equipment", k_bereiche:"Areas", k_einschr:"Limitations", k_impact:"Impact", k_sport:"Other sport",
     tagePro:"{n} days a week", einheitenSumme:"{n} TrainingsBLOCs a week · {m} weeks", keinFokus:"balanced", alles:"all",
     gk:"Full body", ok:"Upper body", uk:"Lower body", cardio:"Interval cardio", mob:"Mobility", erh:"Active recovery", lauf:"Run", lauf_ein:"Run: walk-run", sportName:"Sport", sportSub:"Fixed date",
-    planName:"{z} · {n}× a week", tagName:"{z} · Day {n} · {p}", blocName:"{z} {t}", aufwaermen:"Warm-up", dehnen:"Stretching", mainBloc:"{z} {t}",
+    planName:"{z} · {n}× a week", planName2:"{z} + {y} · {n}× a week", tagName:"{z} · Day {n} · {p}", blocName:"{z} {t}", aufwaermen:"Warm-up", dehnen:"Stretching", mainBloc:"{z} {t}",
     einEinheit:"With one training day a week every muscle group is trained once. Two days are better (WHO: at least two days of strength training).",
     info0:"Start with 5 to 10 minutes of warm-up. You can add stretching to the TrainingsBLOCs by hand.",
     info1:"Stop every set {r} reps before muscle failure; you do not have to go to failure. If you reach the upper rep number in all sets twice, BLOC suggests the next weight step (usually 2 to 10 % more), then you start again at the bottom of the range. Without weight: a harder variation or more reps.",
@@ -120,7 +120,7 @@ var PAT = {
     ohneZug:"Real rows need a bar, band or machine – so exercises lying face down train your upper back. With a resistance band (choose it under equipment) BLOC adds rows.",
     whoRest:"You can cover the rest up to 150 minutes on the side, e.g. with brisk walks, cycling or taking the stairs.",
     endeTitel:"Plan completed", endeText:"{p}: {n} of {m} workouts done. Carry on with the same exercises and your current weights?",
-    endeTage:"Your {n}-day program", endeAlle:"Extend all {n} days", endeWeiter:"Start next block", endeWiederholen:"Repeat block", endeTitelBeendet:"Plan ended", endeTextBeendet:"{p}: {n} of {m} workouts done. Do the block again?", endeNeu:"Create a new plan", endeAus:"Hide", endeOk:"{n} sessions for the next {w} weeks in your calendar",
+    endeLang:"{p} ended on {d}. Extend it or create a new one?", endeVerlaengern:"Extend plan", endeTage:"Your {n}-day program", endeAlle:"Extend all {n} days", endeWeiter:"Start next block", endeWiederholen:"Repeat block", endeTitelBeendet:"Plan ended", endeTextBeendet:"{p}: {n} of {m} workouts done. Do the block again?", endeNeu:"Create a new plan", endeAus:"Hide", endeOk:"{n} sessions for the next {w} weeks in your calendar",
     tageListe:"Training days"
   }
 };
@@ -322,6 +322,8 @@ function paGeraetOk(ex, a){
   if(art !== "body" && !arten.some(function(x){ return a.train.indexOf(x) > -1; })) return false;
   var g = exAusr(ex);
   if(g.length && !g.some(function(x){ return gear.indexOf(x) > -1; })) return false;
+  /* Test 13, C: Übungen, die zusätzlich eine Stange oder einen Barren brauchen (Klimmzug mit Bandhilfe), nur mit Calisthenic-Park oder im Studio */
+  if(ex.equip.some(function(q){ return q === "bar" || q === "dip"; }) && ex.equip.indexOf("none") < 0 && ex.equip.indexOf("gym") < 0 && a.train.indexOf("cali") < 0) return false;
   if(ex.equip.indexOf("gym") > -1 && !gear.some(function(x){ return ["smith", "kabel", "lh", "maschine"].indexOf(x) > -1; })) return false;   // Studio-Übungen (Bank, Rack, Maschine) nur mit einem Studio-Gerät
   return true;
 }
@@ -443,6 +445,21 @@ function paErzeuge(a0){
     ["erh", "cardio", "gk", "uk", "mob"].forEach(function(t0){ for(var i = typen.length - 1; i >= 0; i--) if(wahl2 < 0 && typen[i] === t0 && frei(i)) wahl2 = i; });
     if(wahl2 >= 0) typen[wahl2] = "run";
   }
+  /* Test 13, F (Fachprüfung, Praxiswerte): zwei Läufe nur für regelmäßig Laufende mit Ziel Ausdauer: bei Ausdauer als erstem Ziel ab 4 Tagen, sonst ab 5 Tagen (mindestens 2 bzw. 3 Krafttage bleiben).
+     Muskelaufbau als erstes Ziel bei 4 Tagen: 3 Kraft, 1 Lauf. Der zweite Lauf liegt möglichst nicht direkt neben dem ersten. */
+  var laufRegel = hatRun && a.laufen === "reg" && (a.niveau === "n12" || a.niveau === "n3") && a.ziele.indexOf("ausdauer") > -1;
+  if(laufRegel && hatW && (nTage >= 5 || (haupt === "ausdauer" && nTage >= 4)) && typen.filter(function(x){ return x === "run"; }).length === 1){
+    var minKraft = nTage >= 5 ? 3 : 2, istKraft = function(x){ return x === "gk" || x === "ok" || x === "uk"; }, run1 = days[typen.indexOf("run")], best2 = -1, wert2 = -99;
+    typen.forEach(function(x, i){
+      if(x === "run" || (a.sport && (days[i] === a.sport.tag || days[i] === (a.sport.tag + 1) % 7 || days[i] === (a.sport.tag + 6) % 7))) return;
+      if(istKraft(x) && typen.filter(istKraft).length <= minKraft) return;
+      var ab = Math.min((days[i] - run1 + 7) % 7, (run1 - days[i] + 7) % 7), w2 = (istKraft(x) ? 0 : 4) + (ab >= 2 ? 2 : 0) + (x === "uk" ? -1 : 0);
+      if(w2 > wert2){ wert2 = w2; best2 = i; }
+    });
+    if(best2 >= 0) typen[best2] = "run";
+  }
+  var nLauf = typen.filter(function(x){ return x === "run"; }).length;
+  var laufKm = hatRun && a.laufen === "reg" ? (a.niveau === "n3" ? (haupt === "ausdauer" || nLauf < 2 ? 5 : 4) : a.niveau === "n12" ? (haupt === "ausdauer" || nLauf < 2 ? 4 : 3) : a.niveau === "unreg" ? 3 : 0) : 0;
   var warmN = a.dauer <= 20 ? 2 : 3, dehnN = a.dauer >= 45 ? 4 : 3;   // Dehnen hängt nicht an den Trainingstagen: wer will, ergänzt es im TrainingsBLOC von Hand
   var nMain = (a.dauer <= 20 ? 4 : a.dauer <= 30 ? 5 : a.dauer <= 45 ? 7 : 9) - (pause >= 120 ? 1 : 0) - ((sw === "leicht" || sw === "anfaenger") && a.dauer >= 60 ? 1 : 0);   // Übungen je Einheit (ohne Aufwärmen und Dehnen)
   var planBenutzt = {}, zaehl = { gk:0, ok:0, uk:0 }, tageSpecs = [], ziele = {}, eigen = paGefiltert(a), fokusGr = a.fokus.filter(function(f){ return f !== "ausgew"; });
@@ -727,12 +744,20 @@ function paErzeuge(a0){
   if(nTage === 1 && haupt !== "beweglich" && haupt !== "ausdauer") info.push(pt("einEinheit"));
   info.push(pt("info4")); info.push(pt("quelle"));
   var kraftTage = tageSpecs.filter(function(t0){ return t0.typ === "gk" || t0.typ === "ok" || t0.typ === "uk"; }).length;
-  return { name:pt("planName", { z:pt("z_" + haupt), n:nTage }), nameRez:{ k:"planName", v:{ z:{ k:"z_" + haupt }, n:nTage } }, tage:tageSpecs, ziele:ziele, sport:a.sport, info:info.join(" "), wochen:a.wochen, saetze:saetze, wdh:wdh, pause:pause, cardio:PA_CARDIO[sw], nTage:tageSpecs.length,
+  var zweit = laufRegel && haupt !== "ausdauer" ? "ausdauer" : "";   // das Laufziel steht auch im Namen
+  return { name:zweit ? pt("planName2", { z:pt("z_" + haupt), y:pt("z_" + zweit), n:nTage }) : pt("planName", { z:pt("z_" + haupt), n:nTage }),
+    nameRez:zweit ? { k:"planName2", v:{ z:{ k:"z_" + haupt }, y:{ k:"z_" + zweit }, n:nTage } } : { k:"planName", v:{ z:{ k:"z_" + haupt }, n:nTage } }, laufKm:laufKm, tage:tageSpecs, ziele:ziele, sport:a.sport, info:info.join(" "), wochen:a.wochen, saetze:saetze, wdh:wdh, pause:pause, cardio:PA_CARDIO[sw], nTage:tageSpecs.length,
     kraftTage:kraftTage, minuten:tageSpecs.length*a.dauer };
 }
 
 /* ---------- Anlegen: BLOCs, TrainingsBLOCs je Trainingstag, Kalender ---------- */
 var PA_LAUF = [[1, 2, 8], [2, 2, 6], [3, 2, 5], [4, 2, 4], [5, 1, 4], [8, 1, 3], [10, 1, 3], [10, 1, 3]];   // Wochen des Laufeinstiegs: Minuten laufen, Minuten gehen, Wiederholungen (Praxis, an Gehen-Laufen-Programme angelehnt)
+/* Test 13, F: Distanz je Lauf: etwa 10 % mehr pro Woche (Faustregel), in der Leichtwoche etwa 20 % weniger; auf halbe Kilometer gerundet */
+function paLaufKmWoche(km, wk, wochen){
+  if(!(km > 0)) return 0;
+  var x = km*(1 + 0.1*wk)*(paLeichtWochen(wochen).indexOf(wk) > -1 ? 0.8 : 1);
+  return Math.round(x*2)/2;
+}
 function paLeichtWochen(wochen){ return wochen >= 8 ? [3, 7] : wochen >= 6 ? [5] : [3]; }
 function paGruppe(gid){ return programmListe().filter(function(p){ return p.gruppe === gid; }); }
 function paBlocLoeschen(gid){ state.db.settings.stPlaene = stPlaene().filter(function(x){ return x.gen !== gid; }); }
@@ -748,7 +773,7 @@ function paKalender(p){
       var e;
       if(nurLauf){
         var nm = pt("lauf"); if(p.laufStufe){ var st = PA_LAUF[Math.min(wk, PA_LAUF.length - 1)]; nm = pt("lauf_w", { a:st[0], b:st[1], n:st[2] }); }
-        e = kalHinzu(kalTagKey(tag), { art:"run", name:nm, km:0 });
+        e = kalHinzu(kalTagKey(tag), { art:"run", name:nm, km:paLaufKmWoche(p.laufKm, wk, wochen) });
       } else {
         e = kalHinzu(kalTagKey(tag), { art:"programm", ref:p.id });
         if(paLeichtWochen(wochen).indexOf(wk) > -1 && p.items.some(function(it){ return /^plan:/.test(it); })) e.leicht = true;   // Leichtwoche: weniger Sätze (nicht am reinen Mobility-Tag)
@@ -797,6 +822,7 @@ function paAnlegen(a0, ersetzeGid){
     });
     var p = { id:uid(), name:pt("tagName", { p:sp.name, n:k + 1, z:t0.name }), nameRez:sp.nameRez && t0.nameRez ? { k:"tagName", v:{ p:sp.nameRez, n:k + 1, z:t0.nameRez } } : null, items:items, tage:[t0.tag], wochen:a.wochen, am:"alle", pos:0, gruppe:gid, gen:true, updatedAt:Date.now() };
     if(t0.typ === "run" && a.laufen === "ein") p.laufStufe = true;
+    if(t0.typ === "run" && sp.laufKm > 0) p.laufKm = sp.laufKm;
     if(k === 0){ p.assi = a; p.info = sp.info; p.sport = sp.sport; p.gruppeName = sp.name; p.gruppeNameRez = sp.nameRez; }
     neue.push(p);
   });
@@ -832,15 +858,16 @@ function paEndeGruppen(){
   return g;
 }
 function paEndeProgs(gid){ return gid.indexOf("p:") === 0 ? gid.slice(2).split(",").map(programmFinde).filter(Boolean) : paGruppe(gid); }
-var PA_ENDE_QUOTE = 0.8;
+var PA_ENDE_QUOTE = 0.8, PA_ENDE_TAGE = 180;
 function paPlanEnde(){
-  var heute = kalTagKey(Date.now()), grenze = kalTagKey(Date.now() - 21*86400000), best = null, gruppen = paEndeGruppen();
+  /* Test 13, E: die Karte bleibt bis zu 180 Tage; nach mehr als 21 Tagen nur, wenn gerade kein anderer Plan läuft */
+  var heute = kalTagKey(Date.now()), grenze = kalTagKey(Date.now() - PA_ENDE_TAGE*86400000), frisch = kalTagKey(Date.now() - 21*86400000), best = null, gruppen = paEndeGruppen(), laeuft = programmListe().some(progAktiv);
   Object.keys(gruppen).forEach(function(gid){
     var ids = gruppen[gid].map(function(p){ return p.id; });
     var ter = kalListe().filter(function(e){ return e.prog && ids.indexOf(e.prog.id) > -1 && e.art !== "sport"; });
     if(!ter.length || ter.some(function(e){ return e.tag > heute || (e.tag === heute && !kalErledigt(e)); })) return;   // auch am letzten Tag, sobald er erledigt ist
     var letzter = ter.reduce(function(m, e){ return e.tag > m ? e.tag : m; }, "");
-    if(letzter < grenze || gruppen[gid][0].endeGesehen === letzter) return;
+    if(letzter < grenze || (letzter < frisch && laeuft) || gruppen[gid][0].endeGesehen === letzter) return;
     /* Test 6 P14: nur der aktuelle Block zählt (die letzten p.wochen Wochen), nicht alle Blöcke des Plans zusammen */
     var wo = gruppen[gid][0].wochen || 6, ab = kalTagKey(new Date(letzter).getTime() - wo*7*86400000), ter2 = ter.filter(function(e){ return e.tag > ab; });
     var ok = ter2.filter(kalErledigt).length;
@@ -861,6 +888,14 @@ function paPlanEndeHTML(){
   var en = paPlanEnde();
   if(!en) return "";
   var geschafft = en.m > 0 && en.n/en.m >= PA_ENDE_QUOTE;   // „geschafft“ erst ab 80 % (Test 4, Q6, Entscheidung Kevin)
+  if(en.letzter < kalTagKey(Date.now() - 21*86400000)){   // länger her: sachlich „beendet“, verlängern oder neu erstellen
+    var seit = kalTagDatum(en.letzter).toLocaleDateString(currentLang() === "en" ? "en-GB" : "de-DE", { day:"numeric", month:"numeric", year:"numeric" });
+    return '<section class="card plan-ende" data-planende="'+esc(en.gid)+'"><div class="pe-kopf"><b>'+esc(pt("endeTitelBeendet"))+'</b></div>'+
+      '<p>'+esc(pt("endeLang", { p:en.tage > 1 ? pt("endeTage", { n:en.tage }) : (en.p.gruppeName || en.p.name), d:seit }))+'</p>'+
+      '<div class="pe-knoepfe"><button type="button" class="btn btn-primary" data-peweiter>'+esc(en.tage > 1 ? pt("endeAlle", { n:en.tage }) : pt("endeVerlaengern"))+'</button>'+
+      '<button type="button" class="btn btn-secondary" data-peneu>'+esc(pt("endeNeu"))+'</button>'+
+      '<button type="button" class="pe-aus" data-peaus>'+esc(pt("endeAus"))+'</button></div></section>';
+  }
   return '<section class="card plan-ende" data-planende="'+esc(en.gid)+'"><div class="pe-kopf">'+(geschafft ? '<span class="pe-haken" aria-hidden="true">✓</span>' : '')+'<b>'+esc(pt(geschafft ? "endeTitel" : "endeTitelBeendet"))+'</b></div>'+
     '<p>'+esc(pt(geschafft ? "endeText" : "endeTextBeendet", { p:en.tage > 1 ? pt("endeTage", { n:en.tage }) : (en.p.gruppeName || en.p.name), n:en.n, m:en.m }))+'</p>'+
     '<div class="pe-knoepfe"><button type="button" class="btn btn-primary" data-peweiter>'+esc(en.tage > 1 ? pt("endeAlle", { n:en.tage }) : pt(geschafft ? "endeWeiter" : "endeWiederholen"))+'</button>'+
@@ -1042,7 +1077,7 @@ function paBinden(s, idx, steps){
         return;
       }
       var l = selArr(a[k]).map(String);
-      if(s.exkl && v === s.exkl){ l = v === "keine" ? [] : [v]; }
+      if(s.exkl && v === s.exkl){ l = v === "keine" && s.id !== "ausr" ? [] : [v]; }   // Test 13, A
       else { l = l.filter(function(x){ return x !== s.exkl; }); var i = l.indexOf(v); if(i > -1) l.splice(i, 1); else l.push(v); }
       a[k] = l;
       if(k === "ziele") a.ziel = l[0] || "";

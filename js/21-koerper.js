@@ -455,12 +455,14 @@ function renderProgramme(){
   var liste = progSortiert();
   app.innerHTML =
     topbar(t("tabKoerper"), { back:"#training", right:kopfSymboleNeu("training") }) +
+    (typeof paPlanEndeHTML === "function" ? paPlanEndeHTML() : "")+   // Test 13, E
     (liste.length ? progWochenHTML()+'<div class="pg-liste-karten">'+liste.map(progKarteHTML).join("")+'</div>' : '<div class="pg-leerseite">'+svgIcon('<circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="5" r="2.2"/><path d="M8.2 19h8.3a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7h8.3"/>')+'<p>'+esc(t("progLeer"))+'</p></div>')+
     '<button type="button" class="btn btn-primary pg-neu" data-pgneu>'+ICON_PLUS+' '+esc(t("progNeu"))+'</button>'+
     '<button type="button" class="btn btn-secondary pg-neu pg-assi" data-pgassi>'+svgIcon(HOME_ICON.plan)+' '+esc(pt("eintrag"))+'</button>'+
     '<div style="height:90px"></div>';
   bindCommon();
   function neu(){ var y = window.scrollY; renderKoerper(); window.scrollTo(0, y); }
+  if(typeof paPlanEndeBinden === "function") paPlanEndeBinden(neu);
   function teile(v){ var a = v.split(":"); return { p:programmFinde(a[0]), n:+a[1] }; }
   app.querySelectorAll("[data-pgassi]").forEach(function(b){ b.addEventListener("click", function(){ paOeffnen(null, null); }); });
   app.querySelectorAll("[data-pgneu]").forEach(function(b){ b.addEventListener("click", function(){ programmNeu(); renderKoerper(); window.scrollTo(0, 0); }); });

@@ -1604,6 +1604,58 @@
       kg.value = "62,5"; wd.value = "8"; wahr(!W.satzFelderLeer(kg, wd), "Komma ist gültig"); wahr(!W.satzFelderLeer(null, wd), "ohne Gewichtsfeld");
     } finally { box.remove(); wd.remove(); }
   });
+  /* Dreizehnter Test (2026-11-21): A–H */
+  function t13Ids(pl) { var o = []; pl.tage.forEach(function (t0) { t0.teile.forEach(function (x) { if (x.bloc) o = o.concat(x.bloc.ids); }); }); return o; }
+  test("Test 13 A/C: Plan ohne Geräte nur mit Körpergewicht; mit Band keine Übung, die eine Stange braucht", function () {
+    var ohne = W.paErzeuge({ ziele:["muskel"], niveau:"n12", schwer:"mittel", tage:[0, 2, 4], dauer:45, train:["body"], ausr:["keine"], impact:"gerne", einschr:[], bereiche:["workout"] });
+    var ids = t13Ids(ohne); wahr(ids.length > 0, "Plan hat Übungen");
+    ids.forEach(function (id) { gleich(W.exAusr(W.findExercise(id)).length, 0, id + ": kein Gerät"); });
+    var band = W.paErzeuge({ ziele:["muskel"], niveau:"n12", schwer:"mittel", tage:[0, 2, 4], dauer:45, train:["studio", "body"], ausr:["band"], impact:"gerne", einschr:[], bereiche:["workout"] });
+    t13Ids(band).forEach(function (id) { var eq = W.findExercise(id).equip; wahr(eq.indexOf("bar") < 0 && eq.indexOf("dip") < 0, id + ": braucht Stange"); });
+    wahr(!W.paGeraetOk({ id:"x", equip:["band", "bar"], cats:["back"] }, W.paSauber({ train:["studio"], ausr:["band"] })), "Band + Stange ohne Park: ausgeschlossen");
+  });
+  test("Test 13 B/D: geteilter BLOC behält seine Ziele, eigene Werte bleiben; Wiederholungen passen zum Gewicht", function () {
+    t10(function (s) {
+      var n = Date.now(); s.stPlaene = [];
+      s.studio["bench-press"] = { kg:92.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 2*86400000, s:[[92.5, 10]], zu:true }] };
+      var p = W.planAnlegen({ name:"Geteilt", ids:["bench-press"], br:45, std:"saetze", modus:{}, z:{ "bench-press":{ s:5, w:5, p:180 } } });
+      W.stPlanAktiv = p.id; var z = W.studioZiel("bench-press");
+      gleich([z.saetze, z.wdh, W.studioEintrag("bench-press").pause].join(), "5,5,180", "neuer BLOC: 5×5");
+      gleich(W.studioVorschlag("bench-press").wdh, 5, "Vorbelegung folgt dem Ziel des neuen BLOCs");
+      W.stPlanAktiv = null; gleich(s.studio["bench-press"].ziel.wdh, 10, "eigene Werte unverändert");
+      s.stPlaene = [{ id:"t10a", name:"A", ids:["bench-press"], werte:{ "bench-press":{ kg:112.5, ziel:{ saetze:5, wdh:5 } } } }];
+      s.studio["bench-press"].log = [{ at:n - 86400000, s:[[92.5, 10]], zu:true, b:"t10a" }];
+      W.stPlanAktiv = "t10a"; var v = W.studioVorschlag("bench-press");
+      gleich([v.kg, v.wdh].join(), "112.5,5", "anderes Gewicht als zuletzt: Wiederholungen vom Ziel");
+    });
+  });
+  test("Test 13 E: Planende bleibt sichtbar, solange kein anderer Plan läuft", function () {
+    t10(function (s) {
+      var tag = 86400000, alt = W.kalTagKey(Date.now() - 60*tag);
+      s.programme = [{ id:"pe", name:"Mein Plan", items:["plan:t10a"], tage:[0], wochen:4 }];
+      s.kalender = { e:[{ id:"k1", tag:alt, art:"programm", ref:"pe", prog:{ id:"pe", i:0 } }] };
+      wahr(W.paPlanEnde(), "60 Tage nach Planende: Karte"); wahr(/verlängern/i.test(W.paPlanEndeHTML()) || /extend/i.test(W.paPlanEndeHTML()), "Text nennt Verlängern");
+      s.programme.push({ id:"pz", name:"Neu", items:["plan:t10b"], tage:[1], wochen:4 });
+      s.kalender.e.push({ id:"k2", tag:W.kalTagKey(Date.now() + 3*tag), art:"programm", ref:"pz", prog:{ id:"pz", i:0 } });
+      gleich(W.paPlanEnde(), null, "anderer Plan läuft: keine alte Karte");
+    });
+  });
+  test("Test 13 F: Lauf bekommt Distanz; zwei Läufe nur mit Ausdauer als Hauptziel", function () {
+    function plan(z, n) { return W.paErzeuge({ ziele:z, niveau:"n3", schwer:"mittel", tage:n, dauer:45, train:["studio"], ausr:["kh", "lh", "maschine"], impact:"gerne", einschr:[], bereiche:["workout", "run"], laufen:"reg" }); }
+    function laeufe(p) { return p.tage.filter(function (x) { return x.typ === "run"; }).length; }
+    var a = plan(["muskel", "ausdauer"], [0, 1, 3, 5]); gleich(laeufe(a), 1, "Muskelaufbau zuerst: 1 Lauf"); gleich(a.laufKm, 5, "5 km"); wahr(/\+/.test(a.name), "beide Ziele im Namen: " + a.name);
+    var b = plan(["ausdauer", "muskel"], [0, 1, 3, 5]); gleich(laeufe(b), 2, "Ausdauer zuerst: 2 Läufe"); wahr(b.kraftTage >= 2, "mindestens 2 Krafttage");
+    gleich(laeufe(plan(["muskel", "ausdauer"], [0, 1, 2, 4, 5])), 2, "5 Tage: 2 Läufe");
+    gleich(W.paLaufKmWoche(5, 1, 4), 5.5, "Woche 2: +10 %"); gleich(W.paLaufKmWoche(5, 3, 4), 5, "Leichtwoche: weniger");
+  });
+  test("Test 13 H: Wiedereinstieg nach Pausenlänge gestaffelt", function () {
+    t10(function (s) {
+      var n = Date.now(), tag = 86400000; s.stPlaene = [];
+      function vor(d) { s.studio["bench-press"] = { kg:100, schritt:2.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - d*tag, s:[[100, 10], [100, 10], [100, 10]], zu:true }] }; return W.studioProg("bench-press"); }
+      gleich(vor(63).kg, 85, "63 Tage: −15 %"); gleich(vor(150).kg, 80, "150 Tage: −20 %");
+      var tp = vor(210); gleich(tp.kg, 75, "210 Tage: −25 %"); wahr(/Neustart|fresh start/.test(W.studioSteigerTippText(tp)), "Hinweis Neustart");
+    });
+  });
   /* Fünfter Test (2026-11-14): R1–R7 */
   test("Test 5 R1/R2/R5: Plantag erst beim Speichern erledigt, Plank nach Zeit, Rücknahme höchstens ~15 %", function () {
     var s = W.state.db.settings, alt = { kalender:s.kalender, einheiten:s.einheiten, studio:s.studio }, histAlt = W.state.db.history, heute = W.kalTagKey(Date.now()), tag = 86400000, n = Date.now();
