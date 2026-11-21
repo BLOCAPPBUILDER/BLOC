@@ -1792,6 +1792,7 @@
       await bis(function () { return $(".km-zelle.heute") && $(".kal-panel"); }, 2000, "Zurück im aktuellen Monat");
       var heuteKey = W.kalTagKey(new Date());
       W.kalHinzu(heuteKey, { art: "zufall" }).erledigt = false;   // heutige Trainings der Testläufe sollen ihn nicht automatisch abhaken
+      Object.keys(W.studioAlle()).forEach(function (id) { (W.studioAlle()[id].log || []).forEach(function (l) { l.zu = true; }); });   // offene Sätze früherer Prüfungen: sonst stünde hier „Training fortsetzen“
       W.save();
       await heim();
       // Kopfblock, Stufe A: das heute eingeplante Training steht im Kopfblock (statt „Bereit für dein Training?“)

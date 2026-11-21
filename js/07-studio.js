@@ -12,7 +12,7 @@ function studioEintragAlle(id){ return (state.db.settings.studio || {})[id] || n
    Die Runden tragen ihren BLOC (l.b): Vorschlag, „Letztes Mal“ und Steigerung vergleichen nur Trainings desselben BLOCs. Logbuch, Bestwerte und Pausen-Erkennung bleiben übungsweit.
    Ein BLOC ohne eigene Werte nutzt die Werte der Übung; beim ersten Ändern bekommen auch die anderen BLOCs ihren bisherigen Stand fest zugeordnet. */
 var STUDIO_JE_BLOC = ["kg", "pause", "ziel", "timer", "erhoeht", "manuell", "tippRuhe", "zielBasis", "ruecknahmeKg", "ruecknahmeN", "satzPlus", "vorStufe", "kalibriert", "kalibriertRunde"];
-var STUDIO_GETEILT = ["log", "notiz", "schritt", "einheit", "modus", "zuletzt"];
+var STUDIO_GETEILT = ["log", "best", "notiz", "schritt", "einheit", "modus", "zuletzt"];
 function studioWertKopie(v){ return v && typeof v === "object" ? JSON.parse(JSON.stringify(v)) : v; }
 function studioWerteKopie(e){ var o = {}; STUDIO_JE_BLOC.forEach(function(k){ if(e[k] !== undefined) o[k] = studioWertKopie(e[k]); }); return o; }
 function studioBlocPlan(id){   // der geöffnete BLOC (oder der erste folgende), in dem die Übung steht
@@ -68,13 +68,25 @@ function studioZiel(id){
    beginnt eine neue Runde - so wird ein zweites Training am selben Tag nicht mit dem ersten verschmolzen. Offen ist nur die heutige, nicht gespeicherte Runde. */
 function studioOffen(e){
   var log = (e && e.log) || [], l = log.length ? log[log.length-1] : null;
-  return l && !l.zu && studioTag(l.at) === studioTag(Date.now()) ? l : null;
+  return l && rundeNochOffen(l) ? l : null;
 }
+/* Test 11, E: ein Training über Mitternacht bleibt eins - offen ist eine Runde am selben Tag oder bis 4 Stunden nach ihrem letzten Satz; sie behält ihren Starttag */
+var RUNDE_OFFEN_MS = 4*3600000;
+function rundeNochOffen(l){ return !!l && !l.zu && (studioTag(l.at) === studioTag(Date.now()) || Date.now() - (l.letzte || l.at) < RUNDE_OFFEN_MS); }
 function studioRundeFuer(en, jetzt, id){   // die offene Runde der Übung (im BLOC: dieses BLOCs), sonst eine neue
   if(!en.log) en.log = [];
   var p = id ? studioBlocPlan(id) : null;
   var l = studioOffen(p ? { log:en.log.filter(function(x){ return x.b == null || x.b === p.id; }) } : en);
-  if(!l){ l = { at:jetzt, s:[] }; if(p) l.b = p.id; en.log.push(l); if(en.log.length > 200) en.log = en.log.slice(-200); }
+  if(!l){
+    l = { at:jetzt, s:[] }; if(p) l.b = p.id;
+    if(en.kg !== undefined) l.kgVor = en.kg;   // zum Verwerfen des Trainings (Test 11, D)
+    en.log.push(l);
+    if(en.log.length > 200){   // Test 11, B: was aus dem Log fällt, bleibt in den Allzeit-Bestwerten
+      en.best = studioBestMerge(studioBestwerte(en.log.slice(0, en.log.length - 200)), en.best);
+      en.log = en.log.slice(-200);
+    }
+  }
+  l.letzte = jetzt;
   return l;
 }
 /* Arbeitsgewicht einer Runde: das häufigste Gewicht der normalen Sätze, bei Gleichstand das höhere. Aufwärm- und Drop-Sätze zählen nicht -
@@ -195,6 +207,16 @@ function studioBestwerte(log, bis){
   });
   return { kg:kg, rm:rm, vol:vol, wdh:wdh, wsum:wsum, wBest:wBest, kg3:kg3, rm3:rm3, wBest3:wBest3 };
 }
+/* Allzeit-Bestwerte (Test 11, B): e.best hält die Werte der Runden, die aus dem Log gefallen sind */
+function studioBestMerge(a, b){
+  if(!b) return a;
+  var o = Object.assign({}, a);
+  if((b.kg || 0) > (o.kg || 0)){ o.kg = b.kg; o.wBest = b.wBest || 0; } else if(b.kg === o.kg) o.wBest = Math.max(o.wBest || 0, b.wBest || 0);
+  if((b.kg3 || 0) > (o.kg3 || 0)){ o.kg3 = b.kg3; o.wBest3 = b.wBest3 || 0; } else if(b.kg3 === o.kg3) o.wBest3 = Math.max(o.wBest3 || 0, b.wBest3 || 0);
+  ["rm", "vol", "wdh", "wsum", "rm3"].forEach(function(f){ o[f] = Math.max(o[f] || 0, b[f] || 0); });
+  return o;
+}
+function studioBestwerteGesamt(id, log, bis){ var e = studioEintragAlle(id); return studioBestMerge(studioBestwerte(log, bis), e && e.best); }
 /* Neuer Rekord einer Einheit gegenüber allem davor: mit Gewicht Bestgewicht, 1RM oder mehr Wiederholungen beim Bestgewicht - jeweils nur aus Sätzen
    mit mindestens 5 Wiederholungen (1RM: 5 bis 12); ohne Gewicht die meisten Wiederholungen in einem Satz */
 function studioIstRekord(jetzt, vor){

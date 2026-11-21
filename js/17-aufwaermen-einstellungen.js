@@ -456,10 +456,20 @@ function renderSettings(){
         var istBloc = parsed && typeof parsed === "object" && !Array.isArray(parsed.cards) &&
           (Array.isArray(parsed.blocks) || Array.isArray(parsed.workouts) || Array.isArray(parsed.myWorkouts) || (parsed.settings && typeof parsed.settings === "object"));
         if(!istBloc){ showToast(t("fileError")); return; }
-        confirmSheet(t("importQ"), t("importText"), t("importBtn"), function(){
-          var db = dbAusRoh(parsed);
-          state.db = db; save(); syncCustomEx(); applyTheme(); applyLang(); applySpace();
-          go("#home");
+        var inhalt = importInhalt(parsed), aktuell = importInhalt(state.db) || { blocs:0, trainings:0 };   // Test 11, C
+        if(!inhalt){ showToast(t("fileError")); return; }
+        if(!inhalt.summe && hatEigenes(state.db)){ showToast(t("importLeer")); return; }
+        confirmSheet(t("importQ"), t("importText")+" "+t("importVorschau", { a:inhalt.blocs, b:inhalt.trainings, c:inhalt.termine, d:aktuell.blocs, e:aktuell.trainings }), t("importBtn"), function(){
+          function ersetzen(){
+            try{
+              var db = dbAusRoh(parsed);
+              state.db = db; save(); syncCustomEx(); applyTheme(); applyLang(); applySpace();
+              go("#home");
+            }catch(e){ showToast(t("fileError")); }
+          }
+          if(!hatEigenes(state.db)){ ersetzen(); return; }
+          var snap = { zeit:Date.now(), daten:JSON.parse(JSON.stringify(state.db)) };   // vorher den aktuellen Stand sichern
+          snapSchreiben(snap).then(function(){ snapZeit = snap.zeit; }).catch(function(){}).then(ersetzen);
         });
       }catch(e){ showToast(t("fileError")); }
     };

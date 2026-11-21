@@ -457,7 +457,7 @@ function statModule(){
   function summe(l){ return l.reduce(function(a, b){ return a + b.s; }, 0); }
   function dauer(sek){ return sek >= 60 ? fmtDuration(Math.round(sek/60)*60) : sek > 0 ? "<1 Min" : "–"; }
   var besA = besucheAlle(hist);
-  var montag = new Date(); montag.setHours(0, 0, 0, 0); montag = montag.getTime() - ((new Date().getDay() + 6) % 7)*tag;
+  var montag = new Date(); montag.setHours(0, 0, 0, 0); montag.setDate(montag.getDate() - (montag.getDay() + 6) % 7); montag = montag.getTime();
   function trainingsTage(von, bis){   // verschiedene Tage mit Training (nicht Einheiten): ein Tag zählt einmal, egal wie viele Trainings
     var o = {}; besA.forEach(function(b){ if(b.von >= von && b.von < bis){ var dd = new Date(b.von); o[dd.getFullYear()+"-"+dd.getMonth()+"-"+dd.getDate()] = 1; } });
     return Object.keys(o).length;
@@ -682,17 +682,22 @@ function recentExercises(days){
 /* „Trainings insgesamt“ (Test 3, P6, Entscheidung Kevin): ein TrainingsBLOC ist ein Training, auch wenn er aus mehreren BLOCs besteht.
    Für die Tage im Verlauf zählen die gespeicherten Trainings (je TrainingsBLOC einmal, x.prog) statt der Besuche; ältere Wochen bleiben, wie sie archiviert sind. */
 function trainingsGesamt(gesamt, besA){
-  if(!besA || !besA.length) return gesamt;
-  var ab = Math.min.apply(null, besA.map(function(b){ return b.von; })), abTag = einheitTagKey(ab), keys = {}, tage = {};
-  var liste = einheitenListe().filter(function(x){ return x && x.tag && x.tag >= abTag && (x.ex || []).length; }), mitProg = {};
+  besA = besA || [];
+  var keys = {}, tage = {};
+  var liste = einheitenListe().filter(function(x){ return x && x.tag && (x.ex || []).length; }), mitProg = {};
   liste.forEach(function(x){ if(einheitProg(x)) mitProg[x.tag] = 1; });
   liste.forEach(function(x){
     var pr = einheitProg(x); tage[x.tag] = 1;
     if(!pr && x.plan && !stPlanFind(x.plan) && mitProg[x.tag]) return;   // BLOC inzwischen gelöscht: gehörte zum TrainingsBLOC dieses Tages
     keys[x.tag+"|"+(pr || x.id)] = 1;
   });
-  var besMit = besA.filter(function(b){ return tage[einheitTagKey(b.von)]; }).length;
-  return Math.max(Object.keys(keys).length, gesamt - besMit + Object.keys(keys).length);
+  if(!liste.length) return gesamt;
+  /* Test 11 (V5 aus Test 10): gespeicherte Trainings zählen je TrainingsBLOC einmal - auch in archivierten Wochen. Dazu kommen Läufe und Besuche an Tagen ohne gespeichertes Training. */
+  var frei = besA.filter(function(b){ return (b.areas && b.areas.run) || !tage[einheitTagKey(b.von)]; }).length;
+  var sw = state.db.settings.statW || {}, jeWoche = {}, archivExtra = 0;
+  liste.forEach(function(x){ var w = wocheKey(x.at || kalTagDatum(x.tag).getTime()); jeWoche[w] = (jeWoche[w] || 0) + 1; });
+  Object.keys(sw).forEach(function(w){ var q = sw[w] || {}; archivExtra += Math.max(0, (q.bn || 0) - (jeWoche[w] || 0)) + ((q.a && q.a.run && q.a.run.n) || 0); });
+  return Object.keys(keys).length + frei + Math.min(archivExtra, Math.max(0, gesamt - besA.length));
 }
 /* Test 10, V5: zu welchem TrainingsBLOC ein gespeichertes Training gehört - auch wenn es ohne geöffneten TrainingsBLOC gespeichert wurde (zuerst der Termin dieses Tages) */
 function einheitProg(x){
@@ -732,21 +737,72 @@ function einheitHeute(plan){
 }
 function einheitAnhaengen(plan){
   var key = einheitTagKey(), pid = plan ? plan.id : "", gef = null;
-  einheitenListe().forEach(function(x){ if(x.tag === key && (x.plan || "") === pid && x.zu && Date.now() - (x.zuAt || 0) < EINHEIT_NACH) gef = x; });
+  einheitenListe().forEach(function(x){ if((x.plan || "") === pid && x.zu && Date.now() - (x.zuAt || 0) < EINHEIT_NACH) gef = x; });   // auch über Mitternacht (Test 11, E)
   return gef;
 }
 /* Was in der offenen Runde zu den Übungen eingetragen wurde (Sätze aus Karte und Timer; Übungen ohne Gewicht zählen mit, wenn sie seit dem letzten Speichern im Verlauf stehen).
    Die Dauer zählt nur die Verlaufseinträge seit dem letzten Speichern (settings.rundeZu) - die Pause zwischen zwei Trainings zählt nicht. */
+function trainingStart(ids){   // Beginn der offenen Runden (0: keine)
+  var m = 0;
+  ids.forEach(function(id){ var l = studioOffen(studioEintrag(id)); if(l && l.s.length && (!m || l.at < m)) m = l.at; });
+  return m;
+}
+/* Test 11, D: mit „Später weiter“ verlassene Trainings, die nicht mehr offen sind, werden an ihrem Starttag als Training eingetragen - nichts bleibt halb liegen.
+   Nur Runden mit l.letzte (neues Format): alte Daten bleiben unberührt. */
+function trainingsNachtragen(){
+  var alle = studioAlle(), g = {}, liste = einheitenListe();
+  Object.keys(alle).forEach(function(id){
+    ((alle[id] && alle[id].log) || []).forEach(function(l){
+      if(!l || l.zu || !l.letzte || !(l.s || []).length || rundeNochOffen(l)) return;
+      var tag = einheitTagKey(l.at), key = (l.b || "")+"|"+tag, x = g[key] || (g[key] = { id:uid(), tag:tag, plan:l.b || "", ex:[], saetze:0, vol:0, wdh:0, rek:0, von:l.at, at:l.letzte, zu:true, nachgetragen:true });
+      x.ex.push({ id:id, s:JSON.parse(JSON.stringify(l.s)), rekord:false });
+      x.saetze += arbeitsSaetze(l).length; x.vol += studioVolumen(l, id); x.wdh += studioWdhSumme(l);
+      x.von = Math.min(x.von, l.at); x.at = Math.max(x.at, l.letzte);
+      l.zu = true; l.zuAt = l.letzte;
+    });
+  });
+  var neu = Object.keys(g);
+  if(!neu.length) return 0;
+  neu.forEach(function(k0){
+    var x = g[k0], p = x.plan ? stPlanFind(x.plan) : null;
+    x.vol = Math.round(x.vol); x.dauer = Math.round((x.at - x.von)/1000); x.zuAt = x.at; x.name = p ? p.name : ""; delete x.von;
+    var pr = einheitProg(x); if(pr) x.prog = pr;
+    liste.push(x);
+  });
+  liste.sort(function(a, b){ return (a.at || 0) - (b.at || 0); });
+  if(liste.length > 1000) liste.splice(0, liste.length - 1000);
+  save();
+  return neu.length;
+}
+/* Ein noch nicht gespeichertes Training zum Fortsetzen (Startseite): der BLOC mit dem jüngsten offenen Satz */
+function trainingOffenInfo(){
+  var best = null;
+  stPlaene().forEach(function(p){
+    if(p.entwurf) return;
+    var n = 0, zuletzt = 0;
+    stPlanIds(p).forEach(function(id){
+      var e = studioEintragAlle(id), log = (e && e.log) || [];
+      for(var i = log.length - 1; i >= 0; i--){
+        if(log[i].b !== p.id) continue;
+        if(log[i].letzte && rundeNochOffen(log[i]) && log[i].s.length){ n += log[i].s.length; zuletzt = Math.max(zuletzt, log[i].letzte); }
+        break;
+      }
+    });
+    if(n && (!best || zuletzt > best.zuletzt)) best = { p:p, n:n, zuletzt:zuletzt };
+  });
+  return best;
+}
 function trainingHeute(ids){
   var heute = studioTag(Date.now()), hist = state.db.history || [], inHist = {}, ex = [], saetze = 0, vol = 0, rek = 0, dauer = 0, wdh = 0;
   var zu = +state.db.settings.rundeZu || 0; if(studioTag(zu) !== heute) zu = 0;
-  function neu(h){ return h && studioTag(h.at) === heute && (h.studio || h.at) >= zu; }
+  var start = trainingStart(ids);   // über Mitternacht: auch die Einträge seit dem Start zählen
+  function neu(h){ return h && (studioTag(h.at) === heute || (start && h.at >= start)) && (h.studio || h.at) >= zu; }
   hist.forEach(function(h){ if(neu(h)) (h.ex || []).forEach(function(id){ inHist[id] = true; }); });
   ids.forEach(function(id){
     var e = studioEintrag(id), g = studioEintragAlle(id), log = (g && g.log) || [], l = studioOffen(e), i = l ? log.indexOf(l) : -1;   // Rekorde: gegen die ganze Übung
     if(l && l.s.length){
-      var vor = studioBestwerte(log, i), jetzt = studioBestwerte([l]);
-      var rekord = i > 0 && !studioAssistiert(id) && !l.leicht && studioIstRekord(jetzt, vor);
+      var vor = studioBestwerteGesamt(id, log, i), jetzt = studioBestwerte([l]);
+      var rekord = (i > 0 || !!(g && g.best)) && !studioAssistiert(id) && !l.leicht && studioIstRekord(jetzt, vor);
       ex.push({ id:id, s:JSON.parse(JSON.stringify(l.s)), rekord:rekord });
       saetze += arbeitsSaetze(l).length; vol += studioVolumen(l, id); wdh += studioWdhSumme(l); if(rekord) rek++;
     } else if(inHist[id]) ex.push({ id:id, s:[], rekord:false });
@@ -773,7 +829,7 @@ function trainingSpeichern(k, notiz){
     save();
     return dran;
   }
-  var e = vorh || { id:uid(), tag:einheitTagKey(), plan:k.plan ? k.plan.id : "" };
+  var e = vorh || { id:uid(), tag:einheitTagKey(trainingStart(k.ids) || Date.now()), plan:k.plan ? k.plan.id : "" };   // Test 11, E: das Training behält seinen Starttag
   e.at = Date.now(); e.name = k.plan ? k.plan.name : ""; e.ex = d.ex; e.saetze = d.saetze; e.vol = d.vol; e.wdh = d.wdh; e.dauer = d.dauer; e.rek = d.rek;
   var pk = k.plan && typeof programmKontextFuer === "function" ? programmKontextFuer("plan:"+k.plan.id) : null;
   if(!(pk && pk.p) && einheitProg(e)) e.prog = einheitProg(e);

@@ -1480,6 +1480,83 @@
       gleich(v.beine + v.po, 1, "gewählte Muskeln zählen"); gleich(v.brust, undefined, "nur die gewählten");
     });
   });
+  /* Elfter Test (2026-11-21): A–H */
+  test("Test 11 A: Update ordnet jedem BLOC Gewicht und Ziel aus seiner letzten Runde zu, ohne Runter-Tipp", function () {
+    t10(function (s) {
+      var n = Date.now(), tag = 86400000;
+      function satz(kg, w) { return [[kg, w], [kg, w], [kg, w]]; }
+      s.studio["bench-press"] = { kg:92.5, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 4*tag, s:satz(112.5, 5), zu:true, b:"t10a" }, { at:n - 2*tag, s:satz(92.5, 10), zu:true, b:"t10b" }] };
+      delete s.blocWerteV; W.blocWerteMigrieren(W.state.db);
+      W.stPlanAktiv = "t10a"; var z = W.studioZiel("bench-press"), b = W.studioBereich("bench-press");
+      gleich([W.studioArbeitsKg("bench-press"), b.min, b.max].join(), "112.5,5,7", "Push Schwer: 112,5 kg, 5–7 Wdh.");
+      gleich(W.studioProg("bench-press"), null, "kein Tipp aus übernommenen Werten");
+      W.stPlanAktiv = "t10b"; z = W.studioZiel("bench-press");
+      gleich([W.studioArbeitsKg("bench-press"), z.wdh].join(), "92.5,10", "Push Volumen: 92,5 kg, Ziel 10");
+    });
+  });
+  test("Test 11 B: Allzeit-Bestwert überlebt das Kürzen des Logs, kein falscher Rekord", function () {
+    t10(function (s) {
+      var n = Date.now(), tag = 86400000, log = [{ at:n - 500*tag, s:[[150, 5]], zu:true }];
+      for (var i = 199; i >= 1; i--) log.push({ at:n - i*2*tag, s:[[92.5, 8]], zu:true });
+      s.studio["bench-press"] = { kg:92.5, log:log }; s.stPlaene = [];
+      W.studioSatzLog("bench-press", 120, 5);
+      var e = s.studio["bench-press"];
+      gleich(e.log.length, 200, "Log bleibt bei 200"); gleich(W.studioBestwerteGesamt("bench-press", e.log).kg, 150, "Bestwert bleibt 150");
+      gleich(W.trainingHeute(["bench-press"]).rek, 0, "120 kg ist kein Rekord");
+    });
+  });
+  test("Test 11 C/F: Import erkennt beschädigte und leere Dateien, Schnappschuss-Schutz zählt echte Inhalte", function () {
+    gleich(W.importInhalt({ v:5, settings:{ studio:"kaputt", stPlaene:"x" } }), null, "falsche Typen: abgelehnt");
+    gleich(W.importInhalt({ blocks:[] }).summe, 0, "leere Datei hat keinen Inhalt");
+    var g = W.importInhalt({ settings:{ stPlaene:[{}, {}], einheiten:[{}], kalender:{ e:[{}] }, studio:{ a:{ log:[] } } } });
+    gleich([g.blocs, g.trainings, g.termine].join(), "2,1,1", "Vorschau zählt");
+    wahr(!W.hatEigenes({ settings:{ studio:"kaputt" } }), "beschädigt zählt nicht als eigener Inhalt");
+    wahr(W.hatEigenes({ settings:{ stPlaene:[{}], einheiten:[{}] } }), "nur Pläne und Trainings zählen");
+  });
+  test("Test 11 D: Verwerfen stellt das Gewicht wieder her; „Später weiter“ wird fortgesetzt und später nachgetragen", function () {
+    t10(function (s) {
+      var n = Date.now(), jetzt = W.Date.now;
+      s.studio["bench-press"] = { kg:60, log:[{ at:n - 5*86400000, s:[[60, 10]], zu:true, b:"t10a" }] };
+      W.stPlanAktiv = "t10a"; W.studioSatzLog("bench-press", 70, 8);
+      gleich(W.trainingOffenInfo().p.id, "t10a", "Startseite bietet Fortsetzen an");
+      W.satzVerwerfen(["bench-press"]);
+      gleich(s.studio["bench-press"].log.length, 1, "Runde ist weg"); gleich(W.studioArbeitsKg("bench-press"), 60, "altes Gewicht zurück"); gleich(W.state.db.history.length, 0, "Verlauf ohne Eintrag");
+      W.studioSatzLog("bench-press", 70, 8);
+      try {
+        W.Date.now = function () { return n + 2*86400000; };
+        gleich(W.trainingsNachtragen(), 1, "liegengebliebenes Training wird eingetragen");
+        var x = s.einheiten[s.einheiten.length - 1];
+        gleich([x.plan, x.tag, x.saetze].join(), ["t10a", W.einheitTagKey(n), 1].join(), "am Starttag");
+        gleich(W.trainingsNachtragen(), 0, "nur einmal");
+      } finally { W.Date.now = jetzt; }
+    });
+  });
+  test("Test 11 E: Training über Mitternacht bleibt eines und behält den Starttag", function () {
+    t10(function (s) {
+      var echt = W.Date.now, d = new Date(); d.setDate(d.getDate() + 3); d.setHours(23, 58, 0, 0); var t0 = d.getTime(), tagAlt = W.einheitTagKey(t0);
+      try {
+        W.Date.now = function () { return t0; }; W.stPlanAktiv = "t10a"; W.studioSatzLog("bench-press", 60, 10);
+        W.Date.now = function () { return t0 + 5*60000; }; W.studioSatzLog("bench-press", 60, 10);
+        gleich(s.studio["bench-press"].log.length, 1, "eine Runde");
+        gleich(W.satzHeute("bench-press").s.length, 2, "beide Sätze zählen");
+        var e = W.trainingSpeichern({ plan:s.stPlaene[0], ids:["bench-press"] }, null);
+        gleich([e.tag, e.saetze].join(), tagAlt + ",2", "gespeichert am Starttag mit 2 Sätzen");
+      } finally { W.Date.now = echt; }
+    });
+  });
+  test("Test 11 G/V5: Wochenstart immer Montag 0:00; Trainings insgesamt zählt je TrainingsBLOC", function () {
+    var alt = W.ddWoche;
+    try { for (var i = 0; i > -60; i--) { W.ddWoche = i; var d = new Date(W.ddWochenStart()); wahr(d.getDay() === 1 && d.getHours() === 0, "Woche " + i + ": " + d); } } finally { W.ddWoche = alt; }
+    t10(function (s) {
+      var tag = 86400000, n = Date.now(), al = [];
+      s.programme = [{ id:"pg", name:"Tag", items:["plan:t10a", "plan:t10b"], tage:[0] }];
+      for (var w = 1; w <= 3; w++) ["t10a", "t10b"].forEach(function (pid) { var at = n - w*30*tag; al.push({ id:pid + w, tag:W.einheitTagKey(at), at:at, plan:pid, ex:[{ id:"bench-press", s:[[1, 1]] }] }); });
+      s.einheiten = al;
+      s.statW = {}; al.forEach(function (x) { var k = W.wocheKey(x.at); s.statW[k] = { bn:2 }; });
+      gleich(W.trainingsGesamt(6, []), 3, "6 Einträge in 3 TrainingsBLOCs: 3 Trainings");
+      delete s.statW;
+    });
+  });
   /* Fünfter Test (2026-11-14): R1–R7 */
   test("Test 5 R1/R2/R5: Plantag erst beim Speichern erledigt, Plank nach Zeit, Rücknahme höchstens ~15 %", function () {
     var s = W.state.db.settings, alt = { kalender:s.kalender, einheiten:s.einheiten, studio:s.studio }, histAlt = W.state.db.history, heute = W.kalTagKey(Date.now()), tag = 86400000, n = Date.now();
