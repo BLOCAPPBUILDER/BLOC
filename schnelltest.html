@@ -2055,12 +2055,12 @@
       await antwort('[data-pa-opt="muskel"]'); await antwort('[data-pa-opt="ausdauer"]'); await antwort('[data-pa-weiter]');   // zwei Ziele
       pruefe($("[data-pagrp=\"brust\"]") && $(".kk-filter"), "Fokus: Körperfigur und Muskelgruppen wie im Filter");
       await antwort('[data-pagrp="brust"]'); await antwort('[data-pa-weiter]');                                                   // Fokus Brust über die Gruppe
-      await antwort('[data-pa-opt="n12"]');                                                                                       // Aktivität
+      await antwort('[data-pa-opt="n12"]'); pruefe(!!$('[data-pa-opt="n12"]') && !/intensiv/.test($(".pa-titel").textContent), "Antwort springt nicht von selbst weiter"); await antwort('[data-pa-weiter]');                                                                                       // Aktivität
       pruefe($$('[data-pa-opt]').length === 4 && /intensiv/.test($(".pa-titel").textContent), "Frage Intensität mit vier Stufen (Anfänger bis Schwer)");
-      await antwort('[data-pa-opt="mittel"]');
+      await antwort('[data-pa-opt="mittel"]'); await antwort('[data-pa-weiter]');
       for (var d of [0, 2, 4]) klick($('[data-pa-tag="' + d + '"]'));
       await antwort('[data-pa-weiter]');
-      await antwort('[data-pa-opt="45"]');
+      await antwort('[data-pa-opt="45"]'); await antwort('[data-pa-weiter]');
       pruefe($$("[data-pa-opt]").length === 9 && /Geräte/.test($(".pa-titel").textContent), "Geräte zuerst: Keine Geräte und die acht Ausrüstungs-Chips wie im Filter");
       pruefe($("[data-pa-weiter]").disabled, "Geräte müssen gewählt werden");
       await antwort('[data-pa-opt="kh"]'); await antwort('[data-pa-opt="band"]'); await antwort('[data-pa-weiter]');
@@ -2071,7 +2071,7 @@
       pruefe($$("[data-pa-lauf]").length === 2, "Run: Einsteiger oder regelmäßig");
       await antwort('[data-pa-weiter]');
       await antwort('[data-pa-weiter]');                                                                                          // Einschränkungen: keine
-      await antwort('[data-pa-opt="gerne"]');
+      await antwort('[data-pa-opt="gerne"]'); await antwort('[data-pa-weiter]');
       await antwort('[data-pa-weiter]');                                                                                          // Sport überspringen
       await bis(function () { return $(".pa-vorschau"); }, 2000, "Übersicht mit Vorschau");
       pruefe(/TrainingsBLOCs/.test($(".pa-vorschau").textContent) && $$("[data-pa-sprung]").length >= 11, "Übersicht: Vorschau und Antworten zum Ändern");

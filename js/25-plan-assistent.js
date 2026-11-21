@@ -1027,8 +1027,7 @@ function paBinden(s, idx, steps){
       var v = b.getAttribute("data-pa-opt"), k = s.key;
       if(s.art === "eins"){
         a[k] = k === "dauer" ? +v : v;
-        paZeichnen();
-        setTimeout(function(){ if(paA === a && paSchritte()[paIdx] && paSchritte()[paIdx].id === s.id){ if(s.id === "niveau" && !a.schwer) a.schwer = paSchwerStandard(a); paWeiter(); } }, 240);
+        paZeichnen();   // Auswahl nur markieren: weiter geht es erst mit dem Knopf „Weiter“
         return;
       }
       var l = selArr(a[k]).map(String);

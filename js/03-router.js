@@ -338,8 +338,28 @@ function tabLeiste(route){
     });
   });
 }
+/* Gewählte Filter gelten höchstens bis zum Ende des Kalendertags. Geprüft wird beim App-Start und bei der Rückkehr aus dem Hintergrund,
+   nie mitten in der Bedienung: Wer um Mitternacht gerade filtert, verliert seine Auswahl nicht. Sortierung A–Z bleibt stehen. */
+var FILTER_FELDER = ["stGruppen", "stArten", "stGeraete", "stTrain", "stAusr", "stSchw", "stZonen", "wsRegionen", "wsZonen", "buildCats", "buildCat", "buildEquips", "buildZonen"];
+var filterTagOffen = true;
+function filterTagPruefen(){
+  var s = state.db.settings, heute = kalTagKey(new Date());
+  if(s.filterTag === heute) return false;
+  FILTER_FELDER.forEach(function(k){ delete s[k]; });
+  s.filterTag = heute;
+  suchTrain = []; suchAusr = []; suchZonen = []; suchSchw = []; suchLib = [];
+  save();
+  return true;
+}
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState !== "visible" || !filterTagPruefen()) return;
+  var route = parseHash()[0];
+  if(["katalog", "library", "uebungskatalog", "search", "warmstretch", "mybuild"].indexOf(route) < 0) return;   // nur Seiten mit Filter neu zeichnen
+  var y = window.scrollY; render(); window.scrollTo(0, y);
+});
 function render(){
   if(document.getElementById("playerRoot").innerHTML) return; // don't re-render behind active player
+  if(filterTagOffen){ filterTagOffen = false; filterTagPruefen(); }
   setTimeout(leistenFarbeAbgleichen, 0);   // nach dem Zeichnen: Statusleiste passend (Satz-Training dunkel, sonst das gewählte Design)
   var parts = parseHash();
   var route = parts[0] || "home";
@@ -350,7 +370,7 @@ function render(){
     var sz = state.db.settings; delete sz.libFilterOpen; delete sz.stFilterOpen; delete sz.wsFilterOpen; delete sz.buildFilterOpen; delete sz.stTimerAuf;
     /* Gewählte Filter (Gruppe, Ausrüstung, Körperkarte; Mobility & Stretch; Übungsauswahl) werden nicht aufbewahrt: jeder neue Besuch beginnt ohne Filter.
        Sortierung A–Z und die Art des Bauens bleiben als Einstellungen stehen. */
-    ["stGruppen", "stArten", "stGeraete", "stTrain", "stAusr", "stSchw", "stZonen", "wsRegionen", "wsZonen", "buildCats", "buildCat", "buildEquips", "buildZonen"].forEach(function(k){ delete sz[k]; });
+    FILTER_FELDER.forEach(function(k){ delete sz[k]; });
     hinweisBesucht = {};   // Erklärtexte: der nächste Besuch einer Seite zählt wieder
     katOffen = {};         // Katalog: beim nächsten Besuch stehen wieder nur die Überschriften
   }
