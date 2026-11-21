@@ -112,25 +112,25 @@ function satzKarteHTML(id, i, n){
   var info = EX_INFO[id], post = EX_POSTURE[id];
   return '<section class="satz-karte" data-satzk="'+i+'" data-id="'+esc(id)+'" aria-label="'+esc((i+1)+"/"+n+" "+tplText(ex.name))+'">'+
     '<div class="satz-glas">'+
-      '<h2 class="satz-name">'+esc(tplText(ex.name))+(info ? ' <button type="button" class="info-btn" data-satzinfo="'+esc(id)+'" aria-label="'+esc(t("info"))+'">i</button>' : '')+'</h2>'+
-      (kachelMuskel(ex) ? '<div class="satz-mus">'+kachelMuskel(ex)+'</div>' : '')+
-      griffHTML(id)+
+      '<div class="satz-kopf"><div class="satz-kopf-t"><h2 class="satz-name">'+esc(tplText(ex.name))+'</h2>'+
+        '<div class="satz-unter">'+(kachelMuskel(ex) ? '<div class="satz-mus">'+kachelMuskel(ex)+'</div>' : '')+'<div class="satz-ziel">'+esc(t("stGoal"))+' <b>'+satzName(z.saetze)+' × '+(zeitE ? studioTimer(id).work+' s'+(ex.perSide ? ' '+t("perSide") : '') : b.min+'–'+b.max)+'</b>'+(e.kg != null && !koerper ? ' · <b>'+studioKg(e.kg)+' kg</b>' : '')+'</div>'+'</div></div>'+
+        (info ? '<button type="button" class="info-btn" data-satzinfo="'+esc(id)+'" aria-label="'+esc(t("info"))+'">i</button>' : '')+'</div>'+
+      (info ? '' : griffHTML(id))+   // mit Info-Fenster stehen Griff, Ausführung und Haltung dort
       (ILLU[id] ? '<div class="satz-figur">'+illuHTML(id, "satz-illu")+'</div>' : (ex.custom ? '<div class="satz-figur"><span class="ex-symbol big">'+exSymbol(ex)+'</span></div>' : ''))+
-      /* Satzleiste (2026-11-19, Kevin): statt Kreisen je Satz ein Kästchen mit kg × Wdh. (erledigt), „jetzt“ oder leer; Zusatzsätze hängen hinten an */
-      '<div class="satz-saetze satz-satzleiste" role="img" aria-label="'+esc((h ? h.s.length : 0)+" / "+z.saetze)+'">'+(function(){ var o = "", fertigeAnzahl = h ? h.s.length : 0, n = Math.min(Math.max(z.saetze, fertigeAnzahl), 12);
-        for(var q = 0; q < n; q++){ var s = h && h.s[q]; o += '<i class="'+(s ? 'an' : q === fertigeAnzahl ? 'jetzt' : '')+'"><b>'+esc(t("satzNr", { n:q + 1 }))+'</b>'+(s ? esc(satzText(s).replace("×", " × "))+' ✓' : q === fertigeAnzahl ? esc(t("satzJetzt")) : '–')+'</i>'; }
-        if(fertigeAnzahl >= z.saetze && fertigeAnzahl < 12) o += '<i class="extra" title="'+esc(t("satzOptional"))+'"><b>+</b>'+esc(t("satzNr", { n:fertigeAnzahl + 1 }))+'</i>';   // Zusatzsatz möglich (Kevin: „4 / 3 Sätze soll möglich sein“)
-        return o; })()+'</div>'+
       (function(){ var tp = h ? null : satzKontext.tipps[id]; return tp ? '<div class="satz-tipp'+(tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter" || tp.art === "stufeZurueck" ? ' runter' : '')+'"><span>'+esc(studioSteigerTippText(tp))+'</span><button type="button" data-satztipp>'+esc(t("tippUebernehmen"))+'</button>'+(!studioTippNein(tp) ? '' : '<button type="button" class="satz-tipp-nein" data-satznein>'+esc(t(studioTippNein(tp)))+'</button>')+'</div>' : ''; })()+
-      '<div class="satz-ziel">'+esc(t("stGoal"))+' <b>'+satzName(z.saetze)+' × '+(zeitE ? studioTimer(id).work+' s'+(ex.perSide ? ' '+t("perSide") : '') : b.min+'–'+b.max)+'</b>'+(e.kg != null && !koerper ? ' · <b>'+studioKg(e.kg)+' kg</b>' : '')+'</div>'+
       (!h && satzKontext.wartend.indexOf(id) > -1 ? '<div class="satz-hinweis">'+esc(t("tippWartet"))+'</div>' : '')+
       (satzKontext.leicht ? '<div class="satz-hinweis">'+esc(t("leichtHinweis", { n:z.saetze }))+' <button type="button" class="satz-leicht-aus" data-leichtaus>'+esc(t("leichtAus"))+'</button></div>' : '')+
-      (v.erstes && !koerper && !zeitE && !h ? '<div class="satz-hinweis">'+esc(t("erstesMalHinweis", { n:b.max }))+'</div>' : '')+
+      (v.erstes && !koerper && !zeitE && !h && !info ? '<div class="satz-hinweis">'+esc(t("erstesMalHinweis", { n:b.max }))+'</div>' : '')+
       (letzte ? '<div class="satz-zeile"><span>'+esc(t("stLetztes"))+'</span>'+letzte.s.map(function(x){
         return '<button type="button" class="satz-chip" data-ukg="'+x[0]+'" data-uw="'+x[1]+'" aria-label="'+esc(t("stUebernehmen")+" "+studioKg(x[0])+" × "+x[1])+'">'+esc(satzText(x).replace("×", " × "))+'</button>'; }).join("")+'</div>' : '')+
 
       (function(){ var bl = satzBlockVon(id); if(!bl) return ''; var k2 = bl.ids.indexOf(id), letzte = k2 === bl.ids.length - 1, nx = findExercise(bl.ids[(k2 + 1) % bl.ids.length]);
         return '<div class="satz-hinweis satz-block"><b>'+esc(t(blockArt(bl.ids.length) === "zirkel" ? "blkZirkel" : "blkSuper"))+'</b> · '+(k2 + 1)+'/'+bl.ids.length+' · '+esc(t(letzte ? "blkDannPause" : "blkDanach", { n:nx ? tplText(nx.name) : "" }))+'</div>'; })()+
+      /* Aufgeräumt (2026-11-21, Kevin, Version 1): erledigt steht der Wert, sonst nur die Satznummer; der aktuelle Satz ist markiert */
+      '<div class="satz-saetze satz-satzleiste" role="img" aria-label="'+esc((h ? h.s.length : 0)+" / "+z.saetze)+'">'+(function(){ var o = "", fertigeAnzahl = h ? h.s.length : 0, n = Math.min(Math.max(z.saetze, fertigeAnzahl), 12);
+        for(var q = 0; q < n; q++){ var s = h && h.s[q]; o += '<i class="'+(s ? 'an' : q === fertigeAnzahl ? 'jetzt' : '')+'">'+esc(s ? satzText(s).replace("×", " × ") : t("satzNr", { n:q + 1 }))+'</i>'; }
+        if(fertigeAnzahl >= z.saetze && fertigeAnzahl < 12) o += '<i class="extra" title="'+esc(t("satzOptional"))+'"><b>+</b>'+esc(t("satzNr", { n:fertigeAnzahl + 1 }))+'</i>';   // Zusatzsatz möglich (Kevin: „4 / 3 Sätze soll möglich sein“)
+        return o; })()+'</div>'+
       '<div class="satz-eingabe'+(koerper ? ' eins' : '')+'">'+
         (koerper ? '' : '<div class="satz-feld"><label>'+esc(t("stKg"))+'</label><div class="satz-zaehler"><button type="button" data-kgminus aria-label="&minus;">&minus;</button>'+
           '<input type="text" inputmode="decimal" class="satz-kg" value="'+studioKg(v.kg)+'" aria-label="'+esc(t("stKg"))+'"><button type="button" data-kgplus aria-label="&plus;">&plus;</button></div></div>')+
@@ -139,13 +139,10 @@ function satzKarteHTML(id, i, n){
       '</div>'+
       (anstrengungModus() ? '<div class="satz-rpe" role="group" aria-label="'+esc(t("rpeTitel"))+'"><span>'+(anstrengungModus() === "rir" ? "RIR" : "RPE")+'</span>'+[6, 7, 8, 9, 10].map(function(r){
         var an = satzKontext.rpe[id] === r; return '<button type="button" class="'+(an ? 'an' : '')+'" data-satzrpe="'+r+'" aria-pressed="'+an+'">'+(anstrengungModus() === "rir" ? 10 - r : r)+'</button>'; }).join("")+'</div>' : '')+
-      '<button type="button" class="satz-los" data-satzset>✓ '+esc(t("stSetDone"))+' '+((h ? h.s.length : 0)+1)+'</button>'+
+    '</div><div class="satz-aktion">'+
       '<div class="satz-pause" hidden><span>'+esc(t("stPause"))+'</span><b></b><button type="button" data-satzskip>'+esc(t("stSkip"))+'</button></div>'+
-      /* „Wie schwer war das?“ steht seit Test 8 auf der Abschlusskarte (satzKalibrierHTML), nicht mehr auf jeder Übung */
-      (fertig ? '<button type="button" class="satz-weiter" data-satzweiter>'+esc(i < n-1 ? t("satzNaechste") : t("satzFertig"))+' ›</button>' : '')+
-      (info ? '<details class="satz-info"><summary>'+esc(t("stInfo"))+'<span class="tpl-chev" aria-hidden="true">&#9662;</span></summary>'+
-        '<ol>'+info[lang].split("|").map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ol>'+
-        (post ? '<ul>'+post[lang*2].split("|").map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ul><p><b>'+esc(t("avoid"))+':</b> '+esc(post[lang*2+1])+'</p>' : '')+'</details>' : '')+
+      (fertig && i < n-1 ? '<button type="button" class="satz-weiter" data-satzweiter>'+esc(t("satzNaechste"))+' ›</button>' : '')+   // bei der letzten Übung übernimmt der Fertig-Knopf unten
+      '<button type="button" class="satz-los'+(fertig ? ' zusatz' : '')+'" data-satzset>'+(fertig ? '+ ' : '')+esc(t("satzEintragenN", { n:(h ? h.s.length : 0)+1 }))+'</button>'+
     '</div></section>';
 }
 /* Kalibrieren am Ende (Test 8, Sportwissenschaftler): Lagen alle Übungen mit Gewicht heute am oberen Rand (mindestens zwei), gibt es eine gemeinsame Frage
@@ -190,10 +187,8 @@ function renderSatzTraining(planId, start){
         '<div class="satz-logo" aria-hidden="true"><b>BLOC</b></div>'+
         '<button type="button" class="exit" data-satzsave aria-label="'+esc(t("trSpeichern"))+'">'+ICON_SAVE+'</button></div>'+
       /* Übungsleiste (2026-11-19, Kevin): statt Punkten alle Übungen mit Namen und Stand; ein Tipp springt hin, die Reihenfolge ist frei */
-      '<div class="satz-leiste-kopf"><span>'+esc(t("satzLeiste"))+'</span><span id="satz-nr"></span></div>'+
       '<div class="satz-punkte satz-leiste" role="tablist" aria-label="'+esc(p.name)+'">'+ids.map(function(id, i){
-          var ex = findExercise(id); return '<button type="button" class="satz-punkt satz-pill" data-satzgo="'+i+'" role="tab" aria-label="'+esc((i+1)+". "+(ex ? tplText(ex.name) : ""))+'">'+
-            '<b>'+esc(ex ? tplText(ex.name).replace(/\s*\([^)]*\)\s*$/, "") : "")+'</b><small></small><i class="satz-pill-bar"><em></em></i></button>'; }).join("")+'</div>'+
+          var ex = findExercise(id); return '<button type="button" class="satz-punkt satz-tab" data-satzgo="'+i+'" role="tab" aria-label="'+esc((i+1)+". "+(ex ? tplText(ex.name) : ""))+'">'+(i+1)+'<i class="satz-pill-bar"><em></em></i></button>'; }).join("")+'</div>'+
       progChipHTML("plan:"+p.id)+
       '<div class="satz-wisch" id="satzWisch">'+ids.map(function(id, i){ return satzKarteHTML(id, i, ids.length); }).join("")+'</div>'+
       '<div class="satz-fuss"><button type="button" class="satz-fertig" data-satzfertig disabled>'+esc(t("satzFertig"))+'</button></div>'+
@@ -215,11 +210,10 @@ function renderSatzTraining(planId, start){
     root.querySelectorAll(".satz-punkt").forEach(function(d, k){
       var h = satzHeute(ids[k]), n = h ? h.s.length : 0, soll = satzZielSaetze(ids[k]), f = fertig1(ids[k]);
       d.classList.toggle("fertig", f);
-      var sm = d.querySelector("small"), bar = d.querySelector("em");
-      if(sm) sm.textContent = f ? t("satzPillSaetzeOk", { n:n, m:soll }) : t("satzPillSaetze", { n:n, m:soll });   // mehr Sätze als geplant sind erlaubt: „4 / 3 Sätze ✓“
+      var bar = d.querySelector("em"), ex = findExercise(ids[k]);
+      d.setAttribute("aria-label", (k+1)+". "+(ex ? tplText(ex.name) : "")+", "+t(f ? "satzPillSaetzeOk" : "satzPillSaetze", { n:n, m:soll }));   // die Leiste zeigt nur Nummer und Balken
       if(bar) bar.style.width = Math.min(100, Math.round(n/Math.max(1, soll)*100)) + "%";
     });
-    var nf = document.getElementById("satz-nr"); if(nf) nf.textContent = t("satzLeisteStand", { n:ids.filter(fertig1).length, m:ids.length });
     fertigKnopf(false);
   }
   function fertig1(id){ var h = satzHeute(id); return !!h && h.s.length >= satzZielSaetze(id); }
@@ -401,7 +395,10 @@ function renderSatzTraining(planId, start){
       var s0 = state.db.settings; s0.leichtAus = s0.leichtAus || {}; s0.leichtAus[kalTagKey(Date.now())+"|"+p.id] = true; save();
       studioPauseStop(); renderSatzTraining(p.id, i);
     });
-    if((a = k.querySelector("[data-satzinfo]"))) a.addEventListener("click", function(){ openExInfo(id, false); });
+    if((a = k.querySelector("[data-satzinfo]"))) a.addEventListener("click", function(){
+      openExInfo(id, false);
+      if(studioVorschlag(id).erstes && !koerper && !zeitE && !satzHeute(id)){ var kopf = document.querySelector("#overlayRoot .info-head"); if(kopf) kopf.insertAdjacentHTML("afterend", '<div class="info-tip">'+esc(t("erstesMalHinweis", { n:studioBereich(id).max }))+'</div>'); }   // Startgewicht-Hinweis steht jetzt hier statt auf der Karte
+    });
   }
   Array.prototype.forEach.call(wisch.children, bindKarte);
   if(satzUhr) clearInterval(satzUhr);
