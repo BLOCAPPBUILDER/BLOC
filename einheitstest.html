@@ -1782,6 +1782,56 @@
     } finally { s0.stPlaene = vorP; s0.studio = vorE; s0.katTab = vorTab; root.innerHTML = ""; }
   });
 
+  test("Test 14 A: Löschen entfernt Runde, Kurzverlauf, Rekord und setzt das Arbeitsgewicht zurück; andere Trainings bleiben", function () {
+    var s = W.state.db.settings, vS = s.studio, vE = s.einheiten, vH = W.state.db.history, id = "leg-press", jetzt = Date.now(), alt = jetzt - 7 * 864e5, neu = jetzt - 2 * 864e5;
+    try {
+      var r1 = { at: alt, s: [[60, 10], [60, 10]], zu: true, zuAt: alt, letzte: alt }, r2 = { at: neu, s: [[500, 10], [500, 10]], zu: true, zuAt: neu + 6e4, letzte: neu + 6e4, kgVor: 60 };
+      s.studio = {}; s.studio[id] = { kg: 500, log: [r1, r2], zuletzt: neu };
+      var e1 = { id: "e1", tag: W.einheitTagKey(alt), plan: "", at: alt, ex: [{ id: id, s: [[60, 10], [60, 10]], rekord: false }], saetze: 2, vol: 1200, wdh: 20, rek: 0, zu: true };
+      var e2 = { id: "e2", tag: W.einheitTagKey(neu), plan: "", at: neu + 6e4, ex: [{ id: id, s: [[500, 10], [500, 10]], rekord: true }], saetze: 2, vol: 10000, wdh: 20, rek: 1, zu: true };
+      s.einheiten = [e1, e2];
+      W.state.db.history = [{ at: alt, ex: [id], dur: 120, studio: alt, b: "timer" }, { at: neu, ex: [id], dur: 120, studio: neu, b: "timer" }];
+      W.einheitLoeschen(e2);
+      gleich(s.studio[id].log.length, 1, "Runde weg");
+      gleich(s.studio[id].kg, 60, "Arbeitsgewicht zurück");
+      gleich(W.studioBestwerteGesamt(id, s.studio[id].log).kg, 60, "Bestwert zurück");
+      gleich(s.einheiten.map(function (x) { return x.id; }), ["e1"], "anderes Training bleibt");
+      gleich(W.state.db.history.length, 1, "Kurzverlauf ohne das gelöschte Training");
+    } finally { s.studio = vS; s.einheiten = vE; W.state.db.history = vH; }
+  });
+  test("Test 14 A: Satz eines gespeicherten Trainings ändern passt Log, Volumen, Arbeitsgewicht und Rekord an", function () {
+    var s = W.state.db.settings, vS = s.studio, vE = s.einheiten, id = "leg-press", alt = Date.now() - 7 * 864e5, neu = Date.now() - 2 * 864e5;
+    try {
+      var r1 = { at: alt, s: [[60, 10]], zu: true, zuAt: alt }, r2 = { at: neu, s: [[500, 10], [500, 10]], zu: true, zuAt: neu };
+      s.studio = {}; s.studio[id] = { kg: 500, log: [r1, r2] };
+      var e = { id: "e2", tag: W.einheitTagKey(neu), plan: "", at: neu, ex: [{ id: id, s: [[500, 10], [500, 10]], rekord: true }], saetze: 2, vol: 10000, wdh: 20, rek: 1, zu: true };
+      s.einheiten = [e];
+      W.einheitSatzAendern(e, 0, 0, 50, 10); W.einheitSatzAendern(e, 0, 1, 50, 9);
+      gleich(r2.s, [[50, 10], [50, 9]], "Log geändert");
+      gleich(e.vol, 950, "Volumen"); gleich(e.wdh, 19, "Wiederholungen");
+      gleich(s.studio[id].kg, 50, "Arbeitsgewicht"); gleich(e.rek, 0, "kein Rekord mehr");
+    } finally { s.studio = vS; s.einheiten = vE; }
+  });
+  test("Test 14 C: über 500 kg wird gemeldet, deutlich mehr als das Arbeitsgewicht fragt nach, normale Steigerung nicht", function () {
+    var s = W.state.db.settings, vS = s.studio, D = W.document, root = D.getElementById("overlayRoot"), inp = D.createElement("input"), weiter = 0;
+    try {
+      s.studio = { "leg-press": { kg: 100, log: [] } };
+      inp.value = "1125"; wahr(W.satzKgStopp("leg-press", inp, function () { weiter++; }) && !root.innerHTML, "über 500 hält an, ohne Frage");
+      inp.value = "102,5"; wahr(!W.satzKgStopp("leg-press", inp, function () { weiter++; }), "normale Steigerung läuft durch");
+      inp.value = "140"; wahr(W.satzKgStopp("leg-press", inp, function () { weiter++; }) && root.querySelector("[data-ok]"), "große Steigerung fragt nach");
+      root.querySelector("[data-ok]").click(); gleich(weiter, 1, "nach dem Ja geht es weiter");
+    } finally { s.studio = vS; root.innerHTML = ""; }
+  });
+  test("Test 14 E: verlängerter Lauf knüpft an die höhere der letzten zwei erledigten Distanzen an", function () {
+    var s = W.state.db.settings, vK = s.kalender, vF = W.kalErledigt, p = { id: "px", laufKm: 5 };
+    try {
+      s.kalender = { e: [{ id: "k1", tag: "2026-01-01", art: "run", km: 6, prog: { id: "px" } }, { id: "k2", tag: "2026-01-08", art: "run", km: 7.5, prog: { id: "px" } }, { id: "k3", tag: "2026-01-15", art: "run", km: 6, prog: { id: "px" } }, { id: "k4", tag: "2026-01-22", art: "run", km: 9, prog: { id: "px" } }] };
+      W.kalErledigt = function (e) { return e.id !== "k4"; };
+      W.paLaufAnknuepfen(p); gleich(p.laufKm, 7.5, "Distanz");
+      var q = { id: "py", laufKm: 5 }; W.paLaufAnknuepfen(q); gleich(q.laufKm, 5, "ohne erledigte Läufe unverändert");
+    } finally { s.kalender = vK; W.kalErledigt = vF; }
+  });
+
   function eintrag(name) { var li = document.createElement("li"); li.textContent = name + " …"; liste.appendChild(li); return li; }
   document.getElementById("los").addEventListener("click", async function () {
     var knopf = this;

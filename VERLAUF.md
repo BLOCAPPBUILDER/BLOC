@@ -8,6 +8,16 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-21 · Vierzehnter Test: Löschen, Gewichtsfeld, Plausibilität (Fassung 2026-11-21-8)
+
+Umsetzung von BERICHT-Test14-als-Prompt.md.
+- **A:** Ein gelöschtes Training nimmt seine Runden, den Kurzverlauf, Rekorde und das Arbeitsgewicht mit. Sätze gespeicherter Trainings lassen sich antippen und ändern.
+- **B:** Die Schrift im Gewichtsfeld richtet sich nach der Feldbreite, auch 192,5 bleibt ganz sichtbar.
+- **C:** Über 500 kg wird gemeldet; mehr als 30 % und 5 kg über dem Arbeitsgewicht fragt nach.
+- **D:** Die Plan-Ende-Karte spricht von „Plan“ statt „Block“, mit eigenem Text bei 0 erledigten Trainings.
+- **E:** Ein verlängerter Plan knüpft beim Lauf an die zuletzt erledigte Distanz an.
+- **F:** Info-Knopf mit 44 px Tippfläche; der Hauptknopf bleibt bei vielen Sätzen sichtbar, die Karte scrollt innen.
+
 ## 2026-11-21 · Sätze ändern, Überkopf-Figuren korrigiert (Fassung 2026-11-21-7)
 
 - **Sätze ändern:** Ein eingetragener Satz lässt sich im Satz-Training antippen, ändern und speichern; das startet keine neue Pause.

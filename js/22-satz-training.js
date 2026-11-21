@@ -354,6 +354,7 @@ function renderSatzTraining(planId, start){
     var alt = wisch.children[i], neu = document.createElement("div"), id = ids[i];
     neu.innerHTML = satzKarteHTML(id, i, ids.length);
     wisch.replaceChild(neu.firstChild, alt); bindKarte(wisch.children[i]);
+    var gl = wisch.children[i].querySelector(".satz-glas"); if(gl) gl.scrollTop = gl.scrollHeight;   // kleine Handys: die Eingabe bleibt nach dem Neuaufbau im Blick
   }
   function bindKarte(k){
     var id = k.getAttribute("data-id"), i = +k.getAttribute("data-satzk"), ex = findExercise(id), z = studioZiel(id), koerper = studioNurBlock(ex);
@@ -374,8 +375,9 @@ function renderSatzTraining(planId, start){
       karteNeu(i); pauseZeigen();
     }); });
     if((a = k.querySelector("[data-satzabbruch]"))) a.addEventListener("click", function(){ tipp(); satzKontext.bearbeiten = null; karteNeu(i); pauseZeigen(); });
-    k.querySelector("[data-satzset]").addEventListener("click", function(){
+    k.querySelector("[data-satzset]").addEventListener("click", function satzLos(ok){
       if(satzFelderLeer(koerper ? null : kgIn, wIn)) return;
+      if(ok !== true && !koerper && satzKgStopp(id, kgIn, function(){ satzLos(true); })) return;
       var bq = satzKontext.bearbeiten;
       if(bq && bq.id === id){   // gespeicherten Satz überschreiben: keine neue Pause, kein weiterer Satz
         var okA = satzAendern(id, bq.q, koerper ? 0 : kgWert(), Math.max(1, Math.min(wMax, parseInt(wIn.value) || 1)));

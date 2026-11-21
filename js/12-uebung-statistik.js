@@ -986,22 +986,145 @@ function statTrainingsBinden(neu){
     });
   });
 }
-function openTrainingDetail(x, neu){
+/* Test 14, A: die Log-Runden, aus denen ein gespeichertes Training besteht. Zugeordnet wird über BLOC, Tag und genau gleiche Sätze (ein Training kann mehrere angehängte Runden enthalten);
+   passt nicht alles, gilt die Übung als nicht zuordenbar und ihr Log bleibt unberührt. */
+function einheitRunden(x, a){
+  var g = studioEintragAlle(a.id), log = (g && g.log) || [], soll = a.s || [], pos = 0, treffer = [], tag2 = einheitTagKey(x.at);
+  if(!soll.length) return [];
+  for(var i = 0; i < log.length && pos < soll.length; i++){
+    var l = log[i]; if(!l || !l.s || !l.s.length || rundeNochOffen(l)) continue;
+    if(l.b != null && l.b !== (x.plan || "")) continue;
+    var tl = einheitTagKey(l.at); if(tl !== x.tag && tl !== tag2) continue;
+    if(pos + l.s.length > soll.length || JSON.stringify(soll.slice(pos, pos + l.s.length)) !== JSON.stringify(l.s)) continue;
+    treffer.push({ l:l, von:pos }); pos += l.s.length;
+  }
+  return pos === soll.length ? treffer : [];
+}
+/* Arbeitsgewicht nach Löschen oder Ändern: nur wenn die neueste Runde betroffen ist; übungsweit und je BLOC mit eigenen Werten */
+function einheitKgNeu(id, betroffen){
+  var g = studioEintragAlle(id); if(!g || !betroffen.length) return;
+  var log = g.log || [];
+  function setzen(o, drin){
+    var hier = betroffen.filter(drin), rest = log.filter(drin); if(!hier.length) return;
+    var neu = Math.max.apply(null, hier.map(function(l){ return l.at; }));
+    if(rest.some(function(l){ return l.at > neu; })) return;
+    var kg = null;
+    for(var i = rest.length - 1; i >= 0 && kg == null; i--) kg = rundeArbeitsKg(rest[i]);
+    if(kg == null && !rest.length) kg = hier.slice().sort(function(a, b){ return a.at - b.at; })[0].kgVor;
+    if(kg == null) delete o.kg; else o.kg = kg;
+  }
+  setzen(g, function(){ return true; });
+  stPlaene().forEach(function(p){ if(p.werte && p.werte[id]) setzen(p.werte[id], function(l){ return l.b == null || l.b === p.id; }); });
+  var letzte = log[log.length - 1];
+  if(letzte) g.zuletzt = letzte.letzte || letzte.zuAt || letzte.at; else delete g.zuletzt;
+}
+function einheitRekordeNeu(ids){
+  einheitenListe().forEach(function(x){
+    if(!(x.ex || []).some(function(a){ return ids.indexOf(a.id) > -1; })) return;
+    x.rek = 0;
+    x.ex.forEach(function(a){
+      if(ids.indexOf(a.id) > -1){
+        var tr = einheitRunden(x, a), g = studioEintragAlle(a.id), log = (g && g.log) || [];
+        if(tr.length){
+          var i = log.indexOf(tr[0].l), rn = tr.map(function(r){ return r.l; });
+          a.rekord = (i > 0 || !!(g && g.best)) && !studioAssistiert(a.id) && !rn.some(function(l){ return l.leicht; }) && studioIstRekord(studioBestwerte(rn), studioBestwerteGesamt(a.id, log, i));
+        }
+      }
+      if(a.rekord) x.rek++;
+    });
+  });
+}
+/* Training löschen: mit seinen Runden, dem Eintrag im Kurzverlauf und dem davon abhängigen Arbeitsgewicht. Andere Trainings bleiben. */
+function einheitLoeschen(x){
+  var weg = {}, hist = state.db.history || [];
+  (x.ex || []).forEach(function(a){
+    var tr = einheitRunden(x, a), g = studioEintragAlle(a.id);
+    if(!tr.length || !g) return;
+    weg[a.id] = tr.map(function(r){ return r.l; });
+    g.log = g.log.filter(function(l){ return weg[a.id].indexOf(l) < 0; });
+  });
+  var ids = Object.keys(weg);
+  function trifft(l, h){ var von = h.studio, bis = von + (+h.dur || 0)*1000; return l.at <= bis && (l.letzte || l.zuAt || l.at) >= von; }
+  state.db.history = hist.filter(function(h){
+    if(!h || !h.studio) return true;
+    var vorher = (h.ex || []).length;
+    h.ex = (h.ex || []).filter(function(id){
+      if(!weg[id] || !weg[id].some(function(l){ return trifft(l, h); })) return true;
+      return ((studioEintragAlle(id) || {}).log || []).some(function(l){ return trifft(l, h); });
+    });
+    return !vorher || h.ex.length > 0;
+  });
+  ids.forEach(function(id){ einheitKgNeu(id, weg[id]); });
+  state.db.settings.einheiten = einheitenListe().filter(function(e){ return e.id !== x.id; });
+  einheitRekordeNeu(ids);
+  save();
+}
+/* Satz eines gespeicherten Trainings ändern: im Training und in seiner Log-Runde */
+function einheitSatzAendern(x, i, j, kg, w){
+  var a = x.ex[i], s = a && a.s[j]; if(!s) return false;
+  var geaendert = [];
+  einheitRunden(x, a).forEach(function(r){ if(j >= r.von && j < r.von + r.l.s.length){ var y = r.l.s[j - r.von]; y[0] = kg; y[1] = w; geaendert.push(r.l); } });
+  s[0] = kg; s[1] = w;
+  x.vol = Math.round(x.ex.reduce(function(v, e){ return v + studioVolumen({ s:e.s }, e.id); }, 0));
+  x.wdh = x.ex.reduce(function(v, e){ return v + studioWdhSumme({ s:e.s }); }, 0);
+  einheitKgNeu(a.id, geaendert);
+  einheitRekordeNeu([a.id]);
+  save();
+  return true;
+}
+function trainingUebungenAendernHTML(ex, wahl){
+  return ex.map(function(x, i){
+    var e = findExercise(x.id);
+    return '<div class="st-v-zeile tr-v-edit"><span>'+esc(e ? tplText(e.name) : x.id)+(x.rekord ? '<i class="st-rekord" title="'+esc(t("stRekord"))+'">★</i>' : '')+'</span>'+
+      '<span class="tr-saetze">'+(x.s.length ? x.s.map(function(s, j){ var st = satzText(s), an = wahl && wahl.i === i && wahl.j === j;
+        return '<button type="button" class="tr-satz'+(an ? ' an' : '')+'" data-tredit="'+i+':'+j+'" aria-pressed="'+!!an+'" aria-label="'+esc(t("satzAendern", { n:j + 1, w:st }))+'">'+esc(st)+'</button>'; }).join("") : '<b>✓</b>')+'</span></div>';
+  }).join("");
+}
+function openTrainingDetail(x, neu, wahl){
   var root = document.getElementById("overlayRoot");
   var tag = new Date(x.tag+"T12:00:00").toLocaleDateString(currentLang(), { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+  var wa = wahl && x.ex[wahl.i], ws = wa && wa.s[wahl.j], wEx = wa && findExercise(wa.id), ohneKg = !!ws && !(ws[0] > 0) && (!wEx || studioNurBlock(wEx)), sek = !!ws && ws[4] === 1;
+  var schritt = wa ? studioZiel(wa.id).schritt : 2.5, wSchritt = sek ? 5 : 1, wMax = sek ? 600 : 100;
+  var editor = ws ? '<div class="tr-edit"><b>'+esc(t("trSatzAendern", { u:wEx ? tplText(wEx.name) : wa.id, n:wahl.j + 1 }))+'</b><div class="st-eingabe'+(ohneKg ? ' tr-eins' : '')+'">'+
+      (ohneKg ? '' : '<div class="st-feld"><label for="tr-kg">'+esc(t("stKg"))+'</label><div class="stepper st-step"><button type="button" data-kgminus aria-label="&minus;">&minus;</button><input type="text" inputmode="decimal" id="tr-kg" value="'+esc(studioKg(ws[0]))+'"><button type="button" data-kgplus aria-label="&plus;">&plus;</button></div></div>')+
+      '<div class="st-feld"><label for="tr-w">'+esc(t(sek ? "planArbeit" : "stReps"))+'</label><div class="stepper st-step"><button type="button" data-wminus aria-label="&minus;">&minus;</button><input type="number" inputmode="numeric" id="tr-w" value="'+ws[1]+'"><button type="button" data-wplus aria-label="&plus;">&plus;</button></div></div>'+
+    '</div><div class="btn-row"><button type="button" class="btn btn-secondary" data-trabbruch>'+esc(t("cancel"))+'</button><button type="button" class="btn btn-primary" data-trsatzok>'+esc(t("satzSpeichernN", { n:wahl.j + 1 }))+'</button></div></div>' : '';
   root.innerHTML = '<div class="confirm-overlay"><div class="confirm-sheet tr-sheet" role="dialog" aria-label="'+esc(t("trTitel"))+'">'+
     '<h3>'+esc(x.name || t("trFrei"))+'</h3><p>'+esc(tag)+'</p>'+
-    trainingZahlenHTML({ ex:x.ex, saetze:x.saetze, vol:x.vol, wdh:x.wdh, dauer:x.dauer, rek:x.rek })+trainingUebungenHTML(x.ex)+
+    trainingZahlenHTML({ ex:x.ex, saetze:x.saetze, vol:x.vol, wdh:x.wdh, dauer:x.dauer, rek:x.rek })+trainingUebungenAendernHTML(x.ex, wahl)+
+    (ws ? editor : '<p class="tr-satz-hinweis">'+esc(t("trSatzHinweis"))+'</p>')+
     (x.notiz ? '<p class="tr-notiz">'+esc(x.notiz)+'</p>' : '')+
-    '<div class="btn-row"><button class="btn btn-secondary" data-cancel>'+esc(t("close"))+'</button>'+
-    '<button class="btn btn-secondary" data-trdel>'+ICON_TRASH+' '+esc(t("del"))+'</button></div></div></div>';
+    (ws ? '' : '<div class="btn-row"><button class="btn btn-secondary" data-cancel>'+esc(t("close"))+'</button>'+
+    '<button class="btn btn-secondary" data-trdel>'+ICON_TRASH+' '+esc(t("del"))+'</button></div>')+'</div></div>';
   function zu(){ root.innerHTML = ""; }
-  root.querySelector("[data-cancel]").addEventListener("click", zu);
   root.querySelector(".confirm-overlay").addEventListener("click", function(ev){ if(ev.target.classList.contains("confirm-overlay")) zu(); });
+  root.querySelectorAll("[data-tredit]").forEach(function(b){ b.addEventListener("click", function(){
+    var p = b.getAttribute("data-tredit").split(":"), i = +p[0], j = +p[1];
+    openTrainingDetail(x, neu, wahl && wahl.i === i && wahl.j === j ? null : { i:i, j:j });
+  }); });
+  if(ws){
+    var kgIn = root.querySelector("#tr-kg"), wIn = root.querySelector("#tr-w");
+    var kgWert = function(){ if(!kgIn) return 0; var v = parseFloat(String(kgIn.value).replace(",", ".")); return isFinite(v) && v >= 0 ? Math.min(500, v) : 0; };
+    var a;
+    if((a = root.querySelector("[data-kgminus]"))) a.addEventListener("click", function(){ kgIn.value = studioKg(Math.max(0, kgWert() - schritt)); });
+    if((a = root.querySelector("[data-kgplus]"))) a.addEventListener("click", function(){ kgIn.value = studioKg(Math.min(500, kgWert() + schritt)); });
+    root.querySelector("[data-wminus]").addEventListener("click", function(){ wIn.value = Math.max(1, (parseInt(wIn.value) || 0) - wSchritt); });
+    root.querySelector("[data-wplus]").addEventListener("click", function(){ wIn.value = Math.min(wMax, (parseInt(wIn.value) || 0) + wSchritt); });
+    root.querySelector("[data-trabbruch]").addEventListener("click", function(){ openTrainingDetail(x, neu); });
+    root.querySelector("[data-trsatzok]").addEventListener("click", function(){
+      if(satzFelderLeer(kgIn, wIn)) return;
+      var kg = kgWert(), w = Math.max(1, Math.min(wMax, parseInt(wIn.value) || 1));
+      function fertig(){ einheitSatzAendern(x, wahl.i, wahl.j, kg, w); showToast(t("satzGeaendert", { n:wahl.j + 1 })); if(neu) neu(); openTrainingDetail(x, neu); }
+      if(satzKgStopp(wa.id, kgIn, fertig, function(){ openTrainingDetail(x, neu, wahl); })) return;
+      fertig();
+    });
+    return;
+  }
+  root.querySelector("[data-cancel]").addEventListener("click", zu);
   root.querySelector("[data-trdel]").addEventListener("click", function(){
-    confirmSheet(t("trDelQ"), t("cantUndo"), t("del"), function(){
-      state.db.settings.einheiten = einheitenListe().filter(function(e){ return e.id !== x.id; });
-      save(); if(neu) neu();
+    confirmSheet(t("trDelQ"), t("trDelText"), t("del"), function(){
+      einheitLoeschen(x);
+      if(neu) neu();
     });
   });
 }
