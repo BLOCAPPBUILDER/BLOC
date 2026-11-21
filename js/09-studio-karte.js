@@ -109,8 +109,8 @@ function studioVorschlag(id){
    mitOffen: die offene Runde zählt als fertig (Auswertung direkt am Ende des Trainings). */
 var PROG_SPRUNG = 0.10, PROG_PAUSE_TAGE = 14, KOERPER_MAX = 20, KOERPER_NEU = 10, RPE_LEICHT = 7, PROG_DOPPEL_MAX = 0.20;
 /* Tage seit der letzten Runde (jede Runde, auch Leichtwoche), in Kalendertagen - nicht in Millisekunden, sonst hängt es an der Uhrzeit (Test 3, P2) */
-function studioPauseTage(e, mitOffen){
-  var o = studioOffen(e), l = ((e && e.log) || []).filter(function(x){ return x.s && x.s.length && (mitOffen || x !== o); });
+function studioPauseTage(e, mitOffen){   // übungsweit: wer die Übung in einem anderen BLOC trainiert hat, macht keine Pause
+  var g = e && e.alleLog ? { log:e.alleLog } : e, o = studioOffen(g), l = ((g && g.log) || []).filter(function(x){ return x.s && x.s.length && (mitOffen || x !== o); });
   if(!l.length) return 0;
   var a = new Date(l[l.length-1].at), b = new Date(); a.setHours(12, 0, 0, 0); b.setHours(12, 0, 0, 0);
   return Math.round((b - a)/86400000);
@@ -274,7 +274,7 @@ function studioTippRuht(id){
 function studioPauseTipp(tp){ return !!tp && (tp.art === "pause" || tp.grund === "pause" || !!tp.pause); }
 function studioTippNein(tp){ return studioPauseTipp(tp) ? "tippBehalten" : studioTippSicher(tp) ? "" : "tippNichtJetzt"; }
 function studioTippAblehnen(id){
-  var a = studioAlle(), en = a[id] || (a[id] = { log:[] }), tp = en.log && en.log.length ? (studioNachZeit(id) ? studioProgZeit(id) : studioProg(id)) : null;
+  var en = studioSchreib(id), tp = en.log && en.log.length ? (studioNachZeit(id) ? studioProgZeit(id) : studioProg(id)) : null;
   if(studioPauseTipp(tp)){ en.manuell = Date.now(); save(); return "tippBehaltenOk"; }
   en.tippRuhe = Date.now(); save(); return "tippRuhtOk";
 }
@@ -414,7 +414,7 @@ function studioKalibrierFrage(id, h){
 }
 var KALIB_EINE_STUFE_MAX = 0.35;   // Kalibrieren korrigiert das Startgewicht (keine Progression): mindestens eine Stufe, wenn sie höchstens +35 % ist
 function studioKalibrieren(id, leicht){
-  var a = studioAlle(), en = a[id] || (a[id] = { log:[] }), z = studioZiel(id), kg = studioArbeitsKg(id), neu = null;
+  var en = studioSchreib(id), z = studioZiel(id), kg = studioArbeitsKg(id), neu = null;
   en.kalibriert = true; en.kalibriertRunde = (en.log || []).filter(function(l){ return arbeitsSaetze(l).length; }).length;
   if(leicht && kg > 0){
     var s = z.schritt, grenze = /squat|deadlift/.test(id) || trainerNiveau() === "einsteiger" ? 0.10 : PROG_DOPPEL_MAX;
@@ -504,7 +504,7 @@ function studioTippKurz(v){
 /* Tipp übernehmen: Gewicht bzw. Wiederholungsziel setzen. Nach einer Gewichtserhöhung gilt wieder das ursprüngliche Wiederholungsziel (falls es wegen
    eines zu großen Sprungs angehoben war). Gibt das neue Gewicht zurück (oder null). */
 function studioTippUebernehmen(id, tp){
-  var a = studioAlle(), en = a[id] || (a[id] = { log:[] }), z = studioZiel(id);
+  var en = studioSchreib(id), z = studioZiel(id);
   if(tp.art === "zeit" || tp.art === "zeitRunter"){
     en.timer = en.timer || {}; en.timer.work = tp.sek;
   } else if(tp.art === "variante" || tp.art === "stufeZurueck"){
@@ -531,7 +531,7 @@ function studioTippUebernehmen(id, tp){
     if((tp.grund === "sprung" || tp.grund === "nachRueck") && !en.zielBasis) en.zielBasis = z.wdh;
     en.ziel = { saetze:z.saetze, wdh:tp.wdh };
   }
-  en.erhoeht = Date.now(); save();
+  en.erhoeht = Date.now(); studioSpiegeln(id); save();
   return tp.art === "kg" || tp.art === "runter" || tp.art === "pause" || tp.art === "assist" || tp.art === "assistRunter" ? tp.kg : null;
 }
 /* Leichtwoche: steht heute im Kalender ein Termin aus dem Plan-Assistenten mit Leichtwoche, zu dem dieser BLOC gehört? */
@@ -566,7 +566,7 @@ function statsLeisteHTML(attr, kurz, pts, farbe){
     '<span class="ssl-chev">'+ICON_CHEV+'</span></button>';
 }
 function studioStatsLeiste(id){
-  var e = studioEintrag(id) || {}, log = (e.log || []).filter(function(l){ return arbeitsSaetze(l).length; }), kurz = t("stStatsNone");
+  var e = studioEintragAlle(id) || {}, log = (e.log || []).filter(function(l){ return arbeitsSaetze(l).length; }), kurz = t("stStatsNone");
   if(log.length) kurz = studioNurBlock(findExercise(id)) ? t("stStatsKurzWdh", { w:studioBestwerte(log).wdh, n:log.length })
     : t("stStatsKurz", { kg:studioKg(studioBestwerte(log).kg), n:log.length });
   return statsLeisteHTML("data-ststats", kurz, studioWochen(id));
@@ -622,7 +622,7 @@ function openStatistik(o){
 }
 function openStudioStats(id, sicht){
   sicht = sicht === "rm" || sicht === "vol" ? sicht : "kg";
-  var ex = findExercise(id), e = studioEintrag(id) || {}, log = (e.log || []).filter(function(l){ return arbeitsSaetze(l).length; });
+  var ex = findExercise(id), e = studioEintragAlle(id) || {}, log = (e.log || []).filter(function(l){ return arbeitsSaetze(l).length; });
   var saetze = 0;
   log.forEach(function(l){ saetze += arbeitsSaetze(l).length; });
   var b = studioBestwerte(log), gesamt = log.reduce(function(a, l){ return a + studioVolumen(l, id); }, 0);
@@ -695,7 +695,8 @@ function studioTimerBinden(id, eintrag, nachher){
     en.ziel = en.ziel || {}; en.ziel.saetze = reps; en.manuell = Date.now();
     // gehört die Übung im geöffneten Plan zu einem Supersatz oder Zirkel, gehen alle Übungen des Blocks dieselben Runden
     var pl = typeof studioModusPlan === "function" ? studioModusPlan(id) : null, bl = pl ? planBlockVon(pl, id) : null;
-    if(bl) bl.ids.forEach(function(x){ var e2 = studioAlle()[x] || (studioAlle()[x] = { log:[] }); e2.ziel = e2.ziel || {}; e2.ziel.saetze = reps; });
+    if(bl) bl.ids.forEach(function(x){ var e2 = studioSchreib(x); e2.ziel = e2.ziel || {}; e2.ziel.saetze = reps; studioSpiegeln(x); });
+    studioSpiegeln(id);
     save();
     if(nachher) nachher();
   });
@@ -853,7 +854,7 @@ function renderStudioKarte(id){
   var eintragBox = app.querySelector(".st-eintrag");   // Eingabe ein-/ausklappbar, die Wahl merkt sich die App (für alle Übungen)
   if(eintragBox) eintragBox.addEventListener("toggle", function(){ var zu = !eintragBox.open; if(!!state.db.settings.stEintragZu !== zu){ state.db.settings.stEintragZu = zu; save(); } });   // „toggle“ feuert auch beim ersten Zeichnen: dann nichts speichern
   function neu(){ var y = window.scrollY; renderStudioKarte(id); window.scrollTo(0, y); }
-  function eintrag(){ var a = studioAlle(); return a[id] || (a[id] = { log:[] }); }
+  function eintrag(){ return studioSchreib(id); }
   var kgIn = app.querySelector("#st-kg"), wIn = app.querySelector("#st-w");   // im Timer-Modus gibt es keine Eingabe, ohne Gewicht kein kg-Feld
   function kgWert(){ if(!kgIn) return 0; var x = parseFloat(String(kgIn.value).replace(",", ".")); return isFinite(x) && x >= 0 ? Math.min(500, x) : 0; }
   function an(sel, fn){ var el = app.querySelector(sel); if(el) el.addEventListener("click", fn); }
@@ -907,7 +908,7 @@ function renderStudioKarte(id){
   an("[data-stset]", function(){
     var en = eintrag(), jetzt = Date.now(), kg = kgWert(), w = Math.max(1, Math.min(100, parseInt(wIn.value) || 1)), typ = studioSatzTypWahl;
     var davor = studioBestwerte(en.log);   // Bestwerte vor diesem Satz
-    var l = studioRundeFuer(en, jetzt);
+    var l = studioRundeFuer(en, jetzt, id);
     var satz = [kg, w], rpe = anstrengungModus() ? studioRpeWahl : 0;   // typ "n" steht als Platzhalter, wenn nur die Anstrengung angegeben ist
     if(typ !== "n" || rpe) satz.push(typ);
     if(rpe) satz.push(rpe);
@@ -921,7 +922,7 @@ function renderStudioKarte(id){
       davor.kg3 > 0 && kg === davor.kg3 && w > davor.wBest3 ? { id:id, art:"wdh", w:w, vorher:davor.wBest3 } : null;   // gleiches Gewicht, mehr Wiederholungen
     studioSatzTypWahl = "n"; studioRpeWahl = 0;
     if(!koerper){ var ak = rundeArbeitsKg(l); en.kg = ak != null ? ak : kg; }   // Arbeitsgewicht der Runde, nicht der letzte (evtl. leichte) Satz
-    en.zuletzt = jetzt;
+    en.zuletzt = jetzt; studioSpiegeln(id);
     studioVerlauf(id, jetzt);
     trainingNachSatz(id);
     save();
@@ -931,8 +932,8 @@ function renderStudioKarte(id){
     neu();
   });
   an("[data-stundo]", function(){
-    var en = eintrag(), l = studioOffen(en);
-    if(l){ l.s.pop(); if(!l.s.length) en.log.pop(); else if(!koerper){ var ak2 = rundeArbeitsKg(l); if(ak2 != null) en.kg = ak2; } }
+    var en = eintrag(), l = studioOffen(studioEintrag(id));
+    if(l){ l.s.pop(); if(!l.s.length) en.log.splice(en.log.indexOf(l), 1); else if(!koerper){ var ak2 = rundeArbeitsKg(l); if(ak2 != null) en.kg = ak2; } }
     studioPR = null;
     studioPauseStop(); save(); trainingNachSatz(id); neu();
   });
@@ -947,7 +948,7 @@ function renderStudioKarte(id){
   an("[data-ststats]", function(){ openStudioStats(id); });
   an(".topbar [data-exfav]", function(){ toggleExFav(id); neu(); });
   studioTimerBinden(id, eintrag, neu);
-  app.querySelectorAll("[data-stpause]").forEach(function(b){ b.addEventListener("click", function(){ eintrag().pause = +b.getAttribute("data-stpause"); save(); neu(); }); });
+  app.querySelectorAll("[data-stpause]").forEach(function(b){ b.addEventListener("click", function(){ eintrag().pause = +b.getAttribute("data-stpause"); studioSpiegeln(id); save(); neu(); }); });
   var notiz = app.querySelector("#st-notiz");
   notiz.addEventListener("input", function(){ eintrag().notiz = notiz.value; save(); });
   if(trKontext.ids.length) trainingLeisteBinden(trKontext, neu);
@@ -1047,11 +1048,11 @@ function bindFavItems(refresh){
 
 /* Satz eintragen aus dem Timer: kleines Fenster mit Gewicht und Wiederholungen (vorausgefüllt), schreibt in dasselbe Protokoll wie die Übungs-Karte */
 function studioSatzLog(id, kg, w, zeit, rpe){   // zeit: w sind Sekunden (Satz mit Zeit statt Wiederholungen); rpe: 6–10 oder 0 (Test 4, Q3)
-  var alle = studioAlle(), en = alle[id] || (alle[id] = { log:[] }), jetzt = Date.now();
-  var l = studioRundeFuer(en, jetzt);   // nach „Training speichern“ beginnt eine neue Runde
+  var en = studioSchreib(id), jetzt = Date.now();
+  var l = studioRundeFuer(en, jetzt, id);   // nach „Training speichern“ beginnt eine neue Runde
   rpe = rpe > 0 ? rpe : 0;
   l.s.push(zeit ? [kg, w, "n", rpe, 1] : rpe ? [kg, w, "n", rpe] : [kg, w]);
-  var ak = rundeArbeitsKg(l); en.kg = ak != null ? ak : kg; en.zuletzt = jetzt;   // Arbeitsgewicht der Runde, nicht der letzte Satz
+  var ak = rundeArbeitsKg(l); en.kg = ak != null ? ak : kg; en.zuletzt = jetzt; studioSpiegeln(id);   // Arbeitsgewicht der Runde, nicht der letzte Satz
   studioVerlauf(id, jetzt);
   trainingNachSatz(id);
   save();

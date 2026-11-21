@@ -6,8 +6,10 @@ function renderExEdit(id){
   var c = isNew ? null : findCustom(id);
   if(!isNew && !c){ goBack("#library"); return; }
   // Entwurf nur im Speicher, bis „Speichern“ getippt wird
-  var d = c ? JSON.parse(JSON.stringify(c)) : Object.assign({ name:"", cats:[], equip:["none"], perSide:false, reps:4, work:30, rest:15, hint:"" }, exEditVorgabe || {});
+  var d = c ? JSON.parse(JSON.stringify(c)) : Object.assign({ name:"", cats:[], muskeln:[], art:"wdh", wdh:10, equip:["none"], perSide:false, reps:3, work:30, rest:90, hint:"" }, exEditVorgabe || {});
   exEditVorgabe = null;
+  if(!Array.isArray(d.muskeln)) d.muskeln = [];
+  var artX = function(){ return d.art === "wdh" ? "wdh" : "zeit"; };   // ältere eigene Übungen ohne Art laufen weiter nach Zeit
   function draw(){
     app.innerHTML =
       topbar(t(isNew ? "exNewTitle" : "exEditTitle"), { back:"#library" }) +
@@ -18,6 +20,11 @@ function renderExEdit(id){
         '<div class="sp-chips">'+LIB_CATS.map(function(cc){
           return '<button type="button" class="lib-chip'+(d.cats.indexOf(cc.id)>-1?' active':'')+'" data-xcat="'+cc.id+'" aria-pressed="'+(d.cats.indexOf(cc.id)>-1)+'">'+catIcon(cc.id)+esc(tplText(cc))+'</button>';
         }).join("")+'</div>'+
+        '<label>'+t("exMuskeln")+' <span class="lbl-hint">'+esc(t("exMuskelnHint"))+'</span></label>'+
+        '<div class="sp-chips">'+MUSKEL_GRP.map(function(g){
+          var an = d.muskeln.indexOf(g.id) > -1;
+          return '<button type="button" class="lib-chip'+(an ? ' active' : '')+'" data-xmg="'+g.id+'" aria-pressed="'+an+'">'+esc(t(g.key))+'</button>';
+        }).join("")+'</div>'+
         '<label>'+t("exEquip")+'</label>'+
         '<div class="sp-chips">'+EQUIPS.map(function(e){
           return '<button type="button" class="lib-chip'+(d.equip.indexOf(e.id)>-1?' active':'')+'" data-xequip="'+e.id+'" aria-pressed="'+(d.equip.indexOf(e.id)>-1)+'">'+svgIcon(EQUIP_ICON[e.id])+esc(tplText(e))+'</button>';
@@ -25,9 +32,13 @@ function renderExEdit(id){
       '</div>'+
       '<div class="card">'+
         toggleRow("x-side", t("exPerSide"), t("exPerSideDesc"), d.perSide)+
-        '<label>'+t("exReco")+'</label>'+
-        '<div class="tm-grid"><div><label>'+t("tmReps")+'</label>'+stepperHTML("x-reps", d.reps, 1, 30, 1)+'</div>'+
-        '<div><label>'+t("tmWork")+'</label>'+stepperHTML("x-work", d.work, 5, 600, 5)+'</div>'+
+        '<label>'+t("exArt")+'</label>'+
+        '<div class="seg-row" role="group" aria-label="'+esc(t("exArt"))+'">'+
+          '<button type="button" data-xart="wdh" class="'+(artX() === "wdh" ? 'active' : '')+'" aria-pressed="'+(artX() === "wdh")+'">'+esc(t("planEinheitWdh"))+'</button>'+
+          '<button type="button" data-xart="zeit" class="'+(artX() === "zeit" ? 'active' : '')+'" aria-pressed="'+(artX() === "zeit")+'">'+esc(t("planEinheitZeit"))+'</button></div>'+
+        '<label>'+t(artX() === "wdh" ? "exRecoWdh" : "exReco")+'</label>'+
+        '<div class="tm-grid"><div><label>'+t(artX() === "wdh" ? "planSaetze" : "tmReps")+'</label>'+stepperHTML("x-reps", d.reps, 1, 30, 1)+'</div>'+
+        (artX() === "wdh" ? '<div><label>'+t("stReps")+'</label>'+stepperHTML("x-wdh", d.wdh || 10, 1, 100, 1)+'</div>' : '<div><label>'+t("tmWork")+'</label>'+stepperHTML("x-work", d.work, 5, 600, 5)+'</div>')+
         '<div><label>'+t("tmRest")+'</label>'+stepperHTML("x-rest", d.rest, 0, 300, 5)+'</div></div>'+
         '<label for="x-hint">'+t("exHint")+'</label>'+
         '<input type="text" id="x-hint" value="'+esc(d.hint||"")+'" maxlength="80" placeholder="'+esc(t("exHintPh"))+'">'+
@@ -42,13 +53,21 @@ function renderExEdit(id){
     hintIn.addEventListener("input", function(){ d.hint = hintIn.value; });
     function lesen(){
       d.reps = parseInt(app.querySelector("#x-reps").value)||1;
-      d.work = parseInt(app.querySelector("#x-work").value)||5;
+      var wk = app.querySelector("#x-work"), wd = app.querySelector("#x-wdh");
+      if(wk) d.work = parseInt(wk.value)||5;
+      if(wd) d.wdh = parseInt(wd.value)||10;
       d.rest = parseInt(app.querySelector("#x-rest").value)||0;
     }
     bindSteppers(app.querySelector(".tm-grid"), lesen);
     bindToggle("x-side", function(v){ d.perSide = v; });
     app.querySelectorAll("[data-xcat]").forEach(function(b){ b.addEventListener("click", function(){
       lesen(); d.cats = selToggle(d.cats, b.getAttribute("data-xcat")); var y = window.scrollY; draw(); window.scrollTo(0, y);
+    }); });
+    app.querySelectorAll("[data-xmg]").forEach(function(b){ b.addEventListener("click", function(){
+      lesen(); var g = b.getAttribute("data-xmg"), i = d.muskeln.indexOf(g); if(i > -1) d.muskeln.splice(i, 1); else d.muskeln.push(g); var y = window.scrollY; draw(); window.scrollTo(0, y);
+    }); });
+    app.querySelectorAll("[data-xart]").forEach(function(b){ b.addEventListener("click", function(){
+      lesen(); d.art = b.getAttribute("data-xart"); if(d.art === "wdh" && d.rest < 60) d.rest = 90; var y = window.scrollY; draw(); window.scrollTo(0, y);
     }); });
     app.querySelectorAll("[data-xequip]").forEach(function(b){ b.addEventListener("click", function(){
       lesen(); d.equip = selToggle(d.equip, b.getAttribute("data-xequip")); var y = window.scrollY; draw(); window.scrollTo(0, y);
@@ -665,9 +684,24 @@ function recentExercises(days){
 function trainingsGesamt(gesamt, besA){
   if(!besA || !besA.length) return gesamt;
   var ab = Math.min.apply(null, besA.map(function(b){ return b.von; })), abTag = einheitTagKey(ab), keys = {}, tage = {};
-  einheitenListe().forEach(function(x){ if(x && x.tag && x.tag >= abTag && (x.ex || []).length){ keys[x.tag+"|"+(x.prog || x.id)] = 1; tage[x.tag] = 1; } });
+  var liste = einheitenListe().filter(function(x){ return x && x.tag && x.tag >= abTag && (x.ex || []).length; }), mitProg = {};
+  liste.forEach(function(x){ if(einheitProg(x)) mitProg[x.tag] = 1; });
+  liste.forEach(function(x){
+    var pr = einheitProg(x); tage[x.tag] = 1;
+    if(!pr && x.plan && !stPlanFind(x.plan) && mitProg[x.tag]) return;   // BLOC inzwischen gelöscht: gehörte zum TrainingsBLOC dieses Tages
+    keys[x.tag+"|"+(pr || x.id)] = 1;
+  });
   var besMit = besA.filter(function(b){ return tage[einheitTagKey(b.von)]; }).length;
   return Math.max(Object.keys(keys).length, gesamt - besMit + Object.keys(keys).length);
+}
+/* Test 10, V5: zu welchem TrainingsBLOC ein gespeichertes Training gehört - auch wenn es ohne geöffneten TrainingsBLOC gespeichert wurde (zuerst der Termin dieses Tages) */
+function einheitProg(x){
+  if(x.prog) return x.prog;
+  if(!x.plan || typeof programmListe !== "function") return "";
+  var teil = "plan:"+x.plan, l = programmListe().filter(function(p){ return (p.items || []).indexOf(teil) > -1; });
+  if(!l.length) return "";
+  var am = kalListe().filter(function(e){ return e.tag === x.tag && e.prog && l.some(function(p){ return p.id === e.prog.id; }); })[0];
+  return am ? am.prog.id : l[0].id;
 }
 function einheitenListe(){ var s = state.db.settings; return Array.isArray(s.einheiten) ? s.einheiten : (s.einheiten = []); }
 function einheitTagKey(ts){
@@ -709,7 +743,7 @@ function trainingHeute(ids){
   function neu(h){ return h && studioTag(h.at) === heute && (h.studio || h.at) >= zu; }
   hist.forEach(function(h){ if(neu(h)) (h.ex || []).forEach(function(id){ inHist[id] = true; }); });
   ids.forEach(function(id){
-    var e = studioEintrag(id), log = (e && e.log) || [], l = studioOffen(e), i = l ? log.indexOf(l) : -1;
+    var e = studioEintrag(id), g = studioEintragAlle(id), log = (g && g.log) || [], l = studioOffen(e), i = l ? log.indexOf(l) : -1;   // Rekorde: gegen die ganze Übung
     if(l && l.s.length){
       var vor = studioBestwerte(log, i), jetzt = studioBestwerte([l]);
       var rekord = i > 0 && !studioAssistiert(id) && !l.leicht && studioIstRekord(jetzt, vor);
@@ -742,6 +776,7 @@ function trainingSpeichern(k, notiz){
   var e = vorh || { id:uid(), tag:einheitTagKey(), plan:k.plan ? k.plan.id : "" };
   e.at = Date.now(); e.name = k.plan ? k.plan.name : ""; e.ex = d.ex; e.saetze = d.saetze; e.vol = d.vol; e.wdh = d.wdh; e.dauer = d.dauer; e.rek = d.rek;
   var pk = k.plan && typeof programmKontextFuer === "function" ? programmKontextFuer("plan:"+k.plan.id) : null;
+  if(!(pk && pk.p) && einheitProg(e)) e.prog = einheitProg(e);
   if(pk && pk.p) e.prog = pk.p.id;   // gehört zu einem TrainingsBLOC: zählt mit dessen anderen BLOCs als ein Training
   e.zu = true; e.zuAt = Date.now();   // abgeschlossen: weitere Sätze sind ein neues Training (siehe einheitHeute)
   if(notiz != null) e.notiz = String(notiz).trim();

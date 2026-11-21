@@ -63,7 +63,7 @@ var PAT = {
     ohneZug:"Für echtes Rudern fehlt dir Stange, Band oder Gerät – deshalb trainieren Übungen im Liegen den oberen Rücken. Mit einem Widerstandsband (unter „Geräte“ wählen) baut BLOC Rudern ein.",
     whoRest:"Den Rest bis 150 Minuten schaffst du nebenbei, z. B. mit zügigen Spaziergängen, Radfahren oder Treppen im Alltag.",
     endeTitel:"Plan geschafft", endeText:"{p}: {n} von {m} Trainings erledigt. Weiter mit denselben Übungen und deinen aktuellen Gewichten?",
-    endeWeiter:"Nächsten Block starten", endeWiederholen:"Block wiederholen", endeTitelBeendet:"Plan beendet", endeTextBeendet:"{p}: {n} von {m} Trainings erledigt. Den Block noch einmal machen?", endeNeu:"Neuen Plan erstellen", endeAus:"Ausblenden", endeOk:"{n} Termine für die nächsten {w} Wochen im Kalender",
+    endeTage:"Dein Programm mit {n} Tagen", endeAlle:"Alle {n} Tage verlängern", endeWeiter:"Nächsten Block starten", endeWiederholen:"Block wiederholen", endeTitelBeendet:"Plan beendet", endeTextBeendet:"{p}: {n} von {m} Trainings erledigt. Den Block noch einmal machen?", endeNeu:"Neuen Plan erstellen", endeAus:"Ausblenden", endeOk:"{n} Termine für die nächsten {w} Wochen im Kalender",
     tageListe:"Trainingstage"
   },
   en:{
@@ -120,7 +120,7 @@ var PAT = {
     ohneZug:"Real rows need a bar, band or machine – so exercises lying face down train your upper back. With a resistance band (choose it under equipment) BLOC adds rows.",
     whoRest:"You can cover the rest up to 150 minutes on the side, e.g. with brisk walks, cycling or taking the stairs.",
     endeTitel:"Plan completed", endeText:"{p}: {n} of {m} workouts done. Carry on with the same exercises and your current weights?",
-    endeWeiter:"Start next block", endeWiederholen:"Repeat block", endeTitelBeendet:"Plan ended", endeTextBeendet:"{p}: {n} of {m} workouts done. Do the block again?", endeNeu:"Create a new plan", endeAus:"Hide", endeOk:"{n} sessions for the next {w} weeks in your calendar",
+    endeTage:"Your {n}-day program", endeAlle:"Extend all {n} days", endeWeiter:"Start next block", endeWiederholen:"Repeat block", endeTitelBeendet:"Plan ended", endeTextBeendet:"{p}: {n} of {m} workouts done. Do the block again?", endeNeu:"Create a new plan", endeAus:"Hide", endeOk:"{n} sessions for the next {w} weeks in your calendar",
     tageListe:"Training days"
   }
 };
@@ -813,14 +813,25 @@ function paAnlegen(a0, ersetzeGid){
    „Neuen Plan erstellen“ und „Ausblenden“ (gemerkt je Planende: p.endeGesehen = letzter Termin). */
 /* Gruppen für das Planende: Pläne aus dem Assistenten je Gruppe, eigene TrainingsBLOCs mit Wochenplan einzeln („p:“ + ID) (Test 3, P3) */
 function paEndeGruppen(){
-  var g = {};
+  var g = {}, eigene = [];
   programmListe().forEach(function(p){
     if(p.gen && p.gruppe) (g[p.gruppe] = g[p.gruppe] || []).push(p);
-    else if(!p.gen && p.items.length && p.tage && p.tage.length) g["p:"+p.id] = [p];
+    else if(!p.gen && p.items.length && p.tage && p.tage.length){
+      var l = kalListe().reduce(function(m, e){ return e.prog && e.prog.id === p.id && e.art !== "sport" && e.tag > m ? e.tag : m; }, "");
+      eigene.push({ p:p, l:l });
+    }
   });
+  /* Test 10, V3: eigene TrainingsBLOCs, die innerhalb derselben Woche enden, sind ein Programm und werden zusammen verlängert */
+  eigene.sort(function(a, b){ return a.l < b.l ? -1 : a.l > b.l ? 1 : 0; });
+  var c = null, cluster = [];
+  eigene.forEach(function(x){
+    if(c && x.l && c.l && (Date.parse(x.l) - Date.parse(c.l))/86400000 <= 6) c.ps.push(x.p);
+    else { c = { l:x.l, ps:[x.p] }; cluster.push(c); }
+  });
+  cluster.forEach(function(q){ g["p:"+q.ps.map(function(p){ return p.id; }).join(",")] = q.ps; });
   return g;
 }
-function paEndeProgs(gid){ return gid.indexOf("p:") === 0 ? [programmFinde(gid.slice(2))].filter(Boolean) : paGruppe(gid); }
+function paEndeProgs(gid){ return gid.indexOf("p:") === 0 ? gid.slice(2).split(",").map(programmFinde).filter(Boolean) : paGruppe(gid); }
 var PA_ENDE_QUOTE = 0.8;
 function paPlanEnde(){
   var heute = kalTagKey(Date.now()), grenze = kalTagKey(Date.now() - 21*86400000), best = null, gruppen = paEndeGruppen();
@@ -833,7 +844,7 @@ function paPlanEnde(){
     /* Test 6 P14: nur der aktuelle Block zählt (die letzten p.wochen Wochen), nicht alle Blöcke des Plans zusammen */
     var wo = gruppen[gid][0].wochen || 6, ab = kalTagKey(new Date(letzter).getTime() - wo*7*86400000), ter2 = ter.filter(function(e){ return e.tag > ab; });
     var ok = ter2.filter(kalErledigt).length;
-    if(!best || letzter > best.letzter) best = { gid:gid, p:gruppen[gid][0], letzter:letzter, n:ok, m:ter2.length };
+    if(!best || letzter > best.letzter) best = { gid:gid, p:gruppen[gid][0], letzter:letzter, n:ok, m:ter2.length, tage:gid.indexOf("p:") === 0 ? gruppen[gid].length : 1 };
   });
   return best;
 }
@@ -851,8 +862,8 @@ function paPlanEndeHTML(){
   if(!en) return "";
   var geschafft = en.m > 0 && en.n/en.m >= PA_ENDE_QUOTE;   // „geschafft“ erst ab 80 % (Test 4, Q6, Entscheidung Kevin)
   return '<section class="card plan-ende" data-planende="'+esc(en.gid)+'"><div class="pe-kopf">'+(geschafft ? '<span class="pe-haken" aria-hidden="true">✓</span>' : '')+'<b>'+esc(pt(geschafft ? "endeTitel" : "endeTitelBeendet"))+'</b></div>'+
-    '<p>'+esc(pt(geschafft ? "endeText" : "endeTextBeendet", { p:en.p.gruppeName || en.p.name, n:en.n, m:en.m }))+'</p>'+
-    '<div class="pe-knoepfe"><button type="button" class="btn btn-primary" data-peweiter>'+esc(pt(geschafft ? "endeWeiter" : "endeWiederholen"))+'</button>'+
+    '<p>'+esc(pt(geschafft ? "endeText" : "endeTextBeendet", { p:en.tage > 1 ? pt("endeTage", { n:en.tage }) : (en.p.gruppeName || en.p.name), n:en.n, m:en.m }))+'</p>'+
+    '<div class="pe-knoepfe"><button type="button" class="btn btn-primary" data-peweiter>'+esc(en.tage > 1 ? pt("endeAlle", { n:en.tage }) : pt(geschafft ? "endeWeiter" : "endeWiederholen"))+'</button>'+
     '<button type="button" class="btn btn-secondary" data-peneu>'+esc(pt("endeNeu"))+'</button>'+
     '<button type="button" class="pe-aus" data-peaus>'+esc(pt("endeAus"))+'</button></div></section>';
 }

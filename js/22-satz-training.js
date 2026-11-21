@@ -157,6 +157,7 @@ function renderSatzTraining(planId, start){
   var p = stPlanFind(planId), ids = p ? satzListe(p) : [];
   if(!p || !ids.length){ go("#katalog"); return; }
   start = clamp(parseInt(start) || 0, 0, ids.length - 1);
+  stPlanAktiv = p.id;   // Test 10, V1: es gelten die Werte des BLOCs, der gerade trainiert wird (nicht des zuletzt geöffneten)
   satzKontext = { leicht:planLeichtHeute(p.id), tipps:{}, plan:p, rpe:{} };
   satzKontext.tipps = studioTipps(ids, satzKontext.leicht, false); satzKontext.wartend = studioTippsWartend.slice();   // eine Regel für alle Ansichten; höchstens zwei Tipps, in der Leichtwoche keine
   /* Ist heute schon ein Training dieses Plans gespeichert und hat eine Übung noch keinen Rundenstart (früher gespeichert, vor dem Neustart-Verhalten),

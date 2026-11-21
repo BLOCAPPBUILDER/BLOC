@@ -214,7 +214,22 @@ function dbAusRoh(parsed){
   delete db.settings.lockScreen;   // „Anzeige auf dem Sperrbildschirm“ gibt es nicht mehr
   migrateExIds(db);
   dbMigrieren(db, +parsed.v || 1);
+  blocWerteMigrieren(db);
   return db;
+}
+/* Test 10, V1: einmalig die vorhandenen Runden ihrem BLOC zuordnen (l.b), soweit ein gespeichertes Training das belegt; der Rest bleibt ohne Zuordnung und gilt für alle BLOCs */
+function blocWerteMigrieren(db){
+  var s = db.settings; if(s.blocWerteV === 1) return;
+  function tag(ts){ var d = new Date(ts); return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2); }
+  var plaene = {}; (Array.isArray(s.stPlaene) ? s.stPlaene : []).forEach(function(p){ if(p && p.id) plaene[p.id] = 1; });
+  (Array.isArray(s.einheiten) ? s.einheiten : []).slice().sort(function(a, b){ return (a.at || 0) - (b.at || 0); }).forEach(function(x){
+    if(!x || !x.plan || !plaene[x.plan]) return;
+    (x.ex || []).forEach(function(u){
+      var e = s.studio && s.studio[u.id]; if(!e || !Array.isArray(e.log) || !(u.s || []).length) return;
+      for(var i = 0; i < e.log.length; i++){ var l = e.log[i]; if(l && l.b == null && tag(l.at) === x.tag){ l.b = x.plan; break; } }
+    });
+  });
+  s.blocWerteV = 1;
 }
 function loadDB(){
   try{

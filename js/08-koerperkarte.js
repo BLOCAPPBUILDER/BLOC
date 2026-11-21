@@ -15,6 +15,7 @@ var MUSKEL_GRP = [
 var MUSKEL_KAT = { chest:"brust", back:"ruecken", arms:"arme", core:"bauch", legs:"beine" };
 function mgVerteilung(ex){
   var res = {}, m = EX_MUSCLES[ex.id];
+  if(ex.muskeln && ex.muskeln.length){ ex.muskeln.forEach(function(g){ res[g] = 1/ex.muskeln.length; }); return res; }   // eigene Übung mit gewählten Muskeln (Test 10, V7)
   function add(text, w){
     var tr = MUSKEL_GRP.filter(function(g){ return g.re.test(text.toLowerCase()); });
     tr.forEach(function(g){ res[g.id] = (res[g.id] || 0) + w/tr.length; });
