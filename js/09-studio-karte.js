@@ -95,6 +95,7 @@ function studioVorschlag(id){
   var kg = e.kg != null ? e.kg : (vor ? (rundeArbeitsKg(vor) || 0) : 0);
   var amKg = va.filter(function(x){ return x[0] === kg; }), wdh = amKg.length ? amKg[0][1] : va.length ? va[0][1] : z.wdh;
   if(e.erhoeht && (!vor || e.erhoeht >= vor.at)) wdh = studioBereich(id).min;
+  else if((!amKg.length && e.kg != null) || (e.manuell && vor && e.manuell >= vor.at)){ var b0 = studioBereich(id); if(wdh < b0.min || wdh > b0.max) wdh = z.wdh; }   // Test 13, B/D: letzte Runde mit anderem Gewicht oder Ziel seitdem geändert: Wiederholungen passend zum Ziel des BLOCs
   return { kg:kg, wdh:wdh, erstes:!vor && e.kg == null };
 }
 /* ---------- Die eine Steigerungsregel (doppelte Progression, 2026-11-12) ----------
@@ -156,7 +157,8 @@ function studioProg(id, mitOffen){
   var assist = studioAssistiert(id);
   if(!mitOffen && kg > 0 && pTage > trainerStufe().pause && !(e.erhoeht && e.erhoeht >= letzte0.at) && !(e.manuell && e.manuell >= letzte0.at)){
     if(assist) return { art:"assistRunter", kg:Math.round((kg + z.schritt)*100)/100, alt:kg, tage:pTage, pause:true };   // nach Pause: etwas mehr Unterstützung
-    var r0 = studioRunterPct(kg, z.schritt, pTage > PAUSE_LANG_TAGE ? 0.15 : pTage > 21 ? 0.10 : 0.05, pTage > PAUSE_LANG_TAGE ? RUNTER_MAX_LANG : RUNTER_MAX);   // 15–21 Tage ≈ 5 %, 3–8 Wochen ≈ 10 %, darüber ≈ 15 % (Praxiswerte)   // lange Pause: etwas leichter wieder einsteigen (nach > 8 Wochen bis 20 %)
+    /* Test 13, H (Fachprüfung, Praxiswerte): bis 3 Wochen 5 %, bis 8 Wochen 10 %, bis 16 Wochen 15 %, bis 6 Monate 20 %, darüber 25 % */
+    var r0 = studioRunterPct(kg, z.schritt, pTage > 180 ? 0.25 : pTage > 112 ? 0.20 : pTage > PAUSE_LANG_TAGE ? 0.15 : pTage > 21 ? 0.10 : 0.05, pTage > 180 ? 0.30 : pTage > 112 ? 0.25 : pTage > PAUSE_LANG_TAGE ? RUNTER_MAX_LANG : RUNTER_MAX);   // 15–21 Tage ≈ 5 %, 3–8 Wochen ≈ 10 %, darüber ≈ 15 % (Praxiswerte)   // lange Pause: etwas leichter wieder einsteigen (nach > 8 Wochen bis 20 %)
     if(r0 > 0) return { art:"pause", kg:r0, alt:kg, tage:pTage };
     if(z.wdh > 6) return { art:"wdhRunter", grund:"pause", wdh:Math.max(Math.min(5, z.wdh), z.wdh - 2), alt:z.wdh, kg:kg, tage:pTage };   // Stufe zu groß: Gewicht halten, Wdh. senken
   }
@@ -485,7 +487,7 @@ function studioSteigerTippText(v){
   if(v.tempo) return studioSteigerTippText(Object.assign({}, v, { tempo:false }))+" "+t("tippTempo");
   if(v.art === "kg") return t("tippKg", { max:v.max, neu:studioKg(v.kg), p:v.prozent, min:v.min, max0:v.max0 })+(v.rpeLeicht ? " "+t("tippRpeLeicht") : "")+(v.gross ? " "+t("tippGross") : "");
   if(v.art === "runter") return t("tippRunter", { w:v.wdh, neu:studioKg(v.kg) });
-  if(v.art === "pause") return t("tippPause", { d:v.tage, neu:studioKg(v.kg) });
+  if(v.art === "pause") return t(v.tage > 180 ? "tippPauseNeustart" : "tippPause", { d:v.tage, neu:studioKg(v.kg) });
   if(v.art === "wdhRunter") return v.grund === "pause" ? t("tippPauseWdh", { d:v.tage, kg:studioKg(v.kg), neu:v.wdh }) : t("tippWdhRunter", { neu:v.wdh });
   if(v.grund === "nachRueck") return t("tippNachRueck", { kg:studioKg(v.sprung), neu:v.wdh });
   return v.grund === "sprung" ? t("tippSprung", { max:v.max, kg:studioKg(v.sprung), neu:v.wdh }) : t("tippWdh", { max:v.max, neu:v.wdh });

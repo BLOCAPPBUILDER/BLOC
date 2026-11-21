@@ -8,6 +8,19 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-21 · Dreizehnter Test: Plan ohne Geräte, Teilen, Lauf, Wiedereinstieg (Fassung 2026-11-21-5)
+
+Umsetzung von BERICHT-Test13-als-Prompt.md; F und H fachlich vom Sportwissenschaftler geprüft (Zahlen sind Praxiswerte, zu Pausen-Prozenten gibt es keine belastbare Studienlage).
+- **A:** „Keine Geräte“ lässt sich im Plan-Assistenten wählen; der Plan enthält nur Körpergewichtsübungen.
+- **B:** Ein geteilter BLOC behält seine Ziele als eigene Werte, die Werte der empfangenden Person bleiben unverändert.
+- **C:** Übungen, die zusätzlich Stange oder Barren brauchen, nur mit Calisthenic-Park oder Studio.
+- **D:** Vorbelegung: Wiederholungen passen zum Ziel, wenn die letzte Runde ein anderes Gewicht hatte oder das Ziel seitdem geändert wurde.
+- **E:** Karte „Plan beendet“ bis 180 Tage nach Planende, auf Heute und auf der Trainingsplan-Seite; nach 21 Tagen nur, wenn kein anderer Plan läuft.
+- **F:** Lauftage bekommen eine Distanz (+10 % pro Woche, Leichtwoche weniger). Zwei Läufe für regelmäßig Laufende mit Ziel Ausdauer: Ausdauer zuerst ab 4 Tagen, sonst ab 5 Tagen. Beide Ziele stehen im Planname.
+- **G:** Teilen: richtige Mehrzahl, Hinweis auf fehlende Übungen und gleichnamige BLOCs.
+- **H:** Wiedereinstieg gestaffelt: bis 16 Wochen −15 %, bis 6 Monate −20 %, darüber −25 % mit Neustart-Hinweis. Bleibt ein Tipp mit „Übernehmen“/„Behalten“.
+- Tests: einheitstest +5 (123), schnelltest 54.
+
 ## 2026-11-21 · Zwölfter Test: Termin startet den echten BLOC (Fassung 2026-11-21-4)
 
 Umsetzung von BERICHT-Test12-als-Prompt.md.

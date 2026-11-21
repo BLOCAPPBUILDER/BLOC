@@ -245,6 +245,7 @@ function planAusShare(x){
   });
   return d;
 }
+function studioZielOhneBloc(id){ var alt = stPlanAktiv; stPlanAktiv = null; var z = studioZiel(id); stPlanAktiv = alt; return z; }
 /* legt den eingelesenen BLOC an; eigene Werte des Empfängers (Ziele, Pause …) bleiben unberührt */
 function planAnlegen(d){
   adoptSharedCustoms({ items:d.ids.map(function(id){ return { ex:id }; }) });
@@ -257,6 +258,17 @@ function planAnlegen(d){
     var o = d.z[id];
     if(!o) return;
     var e = a[id] || (a[id] = { log:[] });
+    /* Test 13, B: Übung ist schon da: die Ziele aus der Datei gelten nur für diesen neuen BLOC, die eigenen Werte der Übung bleiben */
+    if(e.ziel || e.kg != null || (e.log || []).length){
+      var z0 = studioZielOhneBloc(id), w = { ziel:{ saetze:o.s || z0.saetze, wdh:o.w || z0.wdh }, manuell:Date.now() };
+      if(e.kg != null) w.kg = e.kg;
+      if(o.p != null) w.pause = o.p; else if(e.pause != null) w.pause = e.pause;
+      if(o.t){ w.timer = {}; if(o.t.reps) w.timer.reps = o.t.reps; if(o.t.work) w.timer.work = o.t.work; if(o.t.rest >= 0) w.timer.rest = o.t.rest; } else if(e.timer) w.timer = JSON.parse(JSON.stringify(e.timer));
+      if(!p.werte) p.werte = {};
+      p.werte[id] = w;
+      if(o.e && !e.einheit) e.einheit = o.e;
+      return;
+    }
     if((o.s || o.w) && !e.ziel){ e.ziel = {}; if(o.s) e.ziel.saetze = o.s; if(o.w) e.ziel.wdh = o.w; e.manuell = Date.now(); }
     if(o.p != null && e.pause == null) e.pause = o.p;
     if(o.e && !e.einheit) e.einheit = o.e;
@@ -268,7 +280,9 @@ function planAnlegen(d){
 function planDateiOeffnen(j, extern){
   var d = planAusShare(j);
   if(!d){ showToast(t("fileError")); return; }
-  openActionSheet(extern ? t("blocDateiFrage", { n:d.name }) : d.name, [{ ico:P_CHECK, label:t("planDateiOk", { n:d.ids.length }), fn:function(){
+  /* Test 13, G: richtige Mehrzahl; fehlende Übungen und gleichnamige BLOCs werden genannt */
+  var hinweis = (d.fehlt > 0 ? " · "+t("planDateiFehlt", { n:d.fehlt }) : "")+(stPlaene().some(function(x){ return !x.entwurf && x.name === d.name; }) ? " · "+t("planDateiGleich") : "");
+  openActionSheet((extern ? t("blocDateiFrage", { n:d.name }) : d.name)+hinweis, [{ ico:P_CHECK, label:t("planDateiOkU", { u:planAnzahl(d.ids.length) }), fn:function(){
     var p = planAnlegen(d);
     stPlanAktiv = p.id; stPlanBauen = false; stPlanQuery = "";
     showToast(t("planDateiOk2", { n:p.name })); go("#katalog");
