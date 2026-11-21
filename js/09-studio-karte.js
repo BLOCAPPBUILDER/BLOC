@@ -609,7 +609,8 @@ function openStatistik(o){
     (hinweis ? '<p class="st-stats-hinweis">'+esc(hinweis)+'</p>' : '')+
     (o.warnung ? '<p class="st-stats-hinweis st-warnung">'+esc(o.warnung)+'</p>' : '')+
     (o.letzte && o.letzte.length ? '<div class="info-title">'+esc(o.letzteTitel)+'</div>'+o.letzte.map(function(z){
-      return '<div class="st-v-zeile"><span>'+esc(z[0])+'</span><b>'+esc(z[1])+(z[2] ? '<i class="st-rekord" title="'+esc(t("stRekord"))+'">★</i>' : '')+'</b></div>'; }).join("") : '');
+      return '<div class="st-v-zeile"><span>'+esc(z[0])+'</span><b>'+esc(z[1])+(z[2] ? '<i class="st-rekord" title="'+esc(t("stPrAb", { n:REKORD_MIN_WDH }))+'">★</i>' : '')+'</b></div>'; }).join("")+
+      '<p class="st-stats-hinweis">★ '+esc(t("stPrAb", { n:REKORD_MIN_WDH }))+'</p>' : '');
   root.innerHTML = '<div class="confirm-overlay"><div class="confirm-sheet st-stats" role="dialog" aria-label="'+esc(t("stStats"))+'" style="--cat:'+o.farbe+'">'+
     '<h3>'+esc(t("stStats"))+SEP+esc(o.titel)+'</h3>'+innen+
     '<button type="button" class="btn btn-secondary" data-cancel style="margin-top:14px;">'+t("close")+'</button></div></div>';
@@ -835,7 +836,8 @@ function renderStudioKarte(id){
       (studioPR ? '<div class="st-pr" role="status"><span class="st-pr-stern" aria-hidden="true">★</span><div><b>'+esc(t(studioPR.art === "rm" ? "stPrRm" : "stPrTitel"))+'</b><small>'+
         esc(studioPR.art === "wdh" ? t("stPrWdhText", { w:studioPR.w, v:studioPR.vorher }) :
             studioPR.art === "rm" ? t("stPrRmText", { rm:studioKg(Math.round(studioPR.rm*10)/10), v:studioKg(Math.round(studioPR.vorherRm*10)/10) })
-                                  : t("stPrText", { kg:studioKg(studioPR.kg), w:studioPR.w, v:studioKg(studioPR.vorher) }))+'</small></div></div>' : '')+
+                                  : t("stPrText", { kg:studioKg(studioPR.kg), w:studioPR.w, v:studioKg(studioPR.vorher) }))+
+        (studioNurBlock(ex) ? '' : ' · '+esc(t("stPrAb", { n:REKORD_MIN_WDH })))+'</small></div></div>' : '')+
       '<div class="st-pause" id="st-pause"'+(studioPause && studioPause.id === id ? '' : ' hidden')+'>'+
         '<span>'+esc(t("stPause"))+'</span><b id="st-pause-zeit"></b><button type="button" class="btn btn-secondary" data-stskip>'+esc(t("stSkip"))+'</button></div>'+
       '<div class="st-pausewahl">'+esc(t("stPause"))+': '+(koerper ? [30, 60, 90, 120] : [60, 90, 120, 180]).map(function(sec){
@@ -906,6 +908,7 @@ function renderStudioKarte(id){
     an("[data-stscheiben]", function(){ openScheibenSheet(kgWert()); });
   }
   an("[data-stset]", function(){
+    if(satzFelderLeer(kgIn, wIn)) return;
     var en = eintrag(), jetzt = Date.now(), kg = kgWert(), w = Math.max(1, Math.min(100, parseInt(wIn.value) || 1)), typ = studioSatzTypWahl;
     var davor = studioBestwerteGesamt(id, en.log);   // Bestwerte vor diesem Satz
     var l = studioRundeFuer(en, jetzt, id);
@@ -1047,6 +1050,22 @@ function bindFavItems(refresh){
 
 
 /* Satz eintragen aus dem Timer: kleines Fenster mit Gewicht und Wiederholungen (vorausgefüllt), schreibt in dasselbe Protokoll wie die Übungs-Karte */
+/* Test 12, E: leeres (oder unlesbares) Gewicht bzw. Wiederholungen werden nicht still zu 0 kg / 1 Wdh.: Feld markieren, nichts eintragen */
+function satzFelderLeer(kgIn, wIn){
+  var leer = [];
+  if(kgIn && !isFinite(parseFloat(String(kgIn.value).replace(",", ".")))) leer.push(kgIn);
+  if(wIn && !isFinite(parseInt(wIn.value))) leer.push(wIn);
+  [kgIn, wIn].forEach(function(f){
+    if(!f) return;
+    var box = f.closest(".stepper") || f, fehlt = leer.indexOf(f) > -1;
+    box.classList.toggle("feld-fehlt", fehlt);
+    if(fehlt) f.addEventListener("input", function weg(){ box.classList.remove("feld-fehlt"); f.removeEventListener("input", weg); });
+  });
+  if(!leer.length) return false;
+  leer[0].focus();
+  showToast(t("satzFeldLeer"));
+  return true;
+}
 function studioSatzLog(id, kg, w, zeit, rpe){   // zeit: w sind Sekunden (Satz mit Zeit statt Wiederholungen); rpe: 6–10 oder 0 (Test 4, Q3)
   var en = studioSchreib(id), jetzt = Date.now();
   var l = studioRundeFuer(en, jetzt, id);   // nach „Training speichern“ beginnt eine neue Runde
@@ -1088,6 +1107,7 @@ function openGewichtSheet(id, nachher){
   root.querySelector("[data-cancel]").addEventListener("click", zu);
   root.querySelector(".confirm-overlay").addEventListener("click", function(ev){ if(ev.target.classList.contains("confirm-overlay")) zu(); });
   root.querySelector("[data-ok]").addEventListener("click", function(){
+    if(satzFelderLeer(kgIn, wIn)) return;
     var kg = kgWert(), w = Math.max(1, Math.min(100, parseInt(wIn.value) || 1));
     studioSatzLog(id, kg, w); zu();
     showToast(studioKg(kg)+" kg × "+w);

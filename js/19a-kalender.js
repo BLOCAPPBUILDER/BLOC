@@ -161,7 +161,11 @@ function kalStarten(e){
   else if(e.art === "workout"){ coverDraft = null; go("#cover/my/"+e.ref); }
   else if(e.art === "lib"){ coverDraft = null; go("#cover/lib/"+e.ref); }
   else if(e.art === "timer"){ if(findWorkout(e.ref)) go("#play/"+e.ref); }
-  else if(e.art === "plan"){ var pl = stPlanFind(e.ref); if(pl && stPlanIds(pl).length) planAlsWorkout(pl); else go("#studioplan/"+e.ref); }
+  else if(e.art === "plan"){   // Test 12, A: der BLOC selbst startet (ohne Deckblatt und ohne Kopie)
+    var pl = stPlanFind(e.ref);
+    if(pl && stPlanIds(pl).length){ if(planStartArt(pl) === "timer") planAlsWorkout(pl, true); else go("#satz/"+pl.id+"/0"); }
+    else go("#studioplan/"+e.ref);
+  }
   else if(e.art === "sport"){ /* fester Termin: nichts zu starten */ }
   else if(e.art === "run"){ state.db.settings.runArt = e.rad ? "rad" : "lauf"; save(); runGeplant ={ name:e.name || t(e.rad ? "kalRadName" : "kalRunName"), km:e.km || 0, rad:!!e.rad, t:Date.now() }; go("#run"); }
   else openSurprise();

@@ -73,6 +73,14 @@ function studioOffen(e){
 /* Test 11, E: ein Training über Mitternacht bleibt eins - offen ist eine Runde am selben Tag oder bis 4 Stunden nach ihrem letzten Satz; sie behält ihren Starttag */
 var RUNDE_OFFEN_MS = 4*3600000;
 function rundeNochOffen(l){ return !!l && !l.zu && (studioTag(l.at) === studioTag(Date.now()) || Date.now() - (l.letzte || l.at) < RUNDE_OFFEN_MS); }
+/* Höchstens 200 Runden; was aus dem Log fällt, bleibt in den Allzeit-Bestwerten (Test 11, B). Offene Runden bleiben immer. */
+function studioLogKuerzen(en){
+  var log = en && en.log; if(!log || log.length <= 200) return;
+  var weg = log.slice(0, log.length - 200);
+  if(weg.some(rundeNochOffen)) return;
+  en.best = studioBestMerge(studioBestwerte(weg), en.best);
+  en.log = log.slice(-200);
+}
 function studioRundeFuer(en, jetzt, id){   // die offene Runde der Übung (im BLOC: dieses BLOCs), sonst eine neue
   if(!en.log) en.log = [];
   var p = id ? studioBlocPlan(id) : null;
@@ -80,11 +88,8 @@ function studioRundeFuer(en, jetzt, id){   // die offene Runde der Übung (im BL
   if(!l){
     l = { at:jetzt, s:[] }; if(p) l.b = p.id;
     if(en.kg !== undefined) l.kgVor = en.kg;   // zum Verwerfen des Trainings (Test 11, D)
-    en.log.push(l);
-    if(en.log.length > 200){   // Test 11, B: was aus dem Log fällt, bleibt in den Allzeit-Bestwerten
-      en.best = studioBestMerge(studioBestwerte(en.log.slice(0, en.log.length - 200)), en.best);
-      en.log = en.log.slice(-200);
-    }
+    studioLogKuerzen(en);
+    en.log.push(l);   // die neue Runde kostet noch keine alte: gekürzt wird beim Abschließen (Test 12, B: Verwerfen verliert nichts)
   }
   l.letzte = jetzt;
   return l;

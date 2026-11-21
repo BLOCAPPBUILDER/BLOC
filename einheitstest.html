@@ -1501,8 +1501,10 @@
       s.studio["bench-press"] = { kg:92.5, log:log }; s.stPlaene = [];
       W.studioSatzLog("bench-press", 120, 5);
       var e = s.studio["bench-press"];
-      gleich(e.log.length, 200, "Log bleibt bei 200"); gleich(W.studioBestwerteGesamt("bench-press", e.log).kg, 150, "Bestwert bleibt 150");
+      gleich(W.studioBestwerteGesamt("bench-press", e.log).kg, 150, "Bestwert bleibt 150");
       gleich(W.trainingHeute(["bench-press"]).rek, 0, "120 kg ist kein Rekord");
+      W.satzBasisSetzen(["bench-press"]); e = s.studio["bench-press"];
+      gleich(e.log.length, 200, "nach dem Abschließen 200 Runden"); gleich(W.studioBestwerteGesamt("bench-press", e.log).kg, 150, "Bestwert bleibt nach dem Kürzen");
     });
   });
   test("Test 11 C/F: Import erkennt beschädigte und leere Dateien, Schnappschuss-Schutz zählt echte Inhalte", function () {
@@ -1556,6 +1558,51 @@
       gleich(W.trainingsGesamt(6, []), 3, "6 Einträge in 3 TrainingsBLOCs: 3 Trainings");
       delete s.statW;
     });
+  });
+  /* Zwölfter Test (2026-11-21): A–E */
+  test("Test 12 A/D: Termin startet den echten BLOC, Deckblatt kopiert nicht", function () {
+    t10(function (s) {
+      var mwAlt = W.state.db.myWorkouts;
+      try {
+        t10Werte("t10a", 5, 5, 112.5, 180); t10Werte("t10b", 3, 10, 92.5, 90);
+        W.stPlanAktiv = null; W.kalStarten({ id:"k", art:"plan", ref:"t10a" });
+        gleich(W.location.hash, "#satz/t10a/0", "Termin öffnet das Satz-Training des BLOCs");
+        gleich(s.stPlaene.length, 2, "keine Kopie");
+        W.state.db.myWorkouts = [{ id:"mw1", name:"Push Schwer", fromPlan:"t10a", items:[{ ex:"bench-press" }] }];
+        W.katPlanAusDraft({ key:"my:mw1", name:"Push Schwer", items:[{ ex:"bench-press" }] });
+        gleich(s.stPlaene.length, 2, "Deckblatt legt keinen zweiten BLOC an"); gleich(W.stPlanAktiv, "t10a", "öffnet das Original");
+      } finally { W.state.db.myWorkouts = mwAlt; W.go("#home"); }
+    });
+  });
+  test("Test 12 A: vorhandene Kopie wird zusammengeführt, geänderte bleibt", function () {
+    var n = Date.now(), tag = W.einheitTagKey(n);
+    var db = { myWorkouts:[{ id:"m", fromPlan:"o" }, { id:"m2", fromPlan:"o" }], settings:{
+      stPlaene:[{ id:"o", name:"Push", ids:["bench-press"], werte:{ "bench-press":{ kg:112.5, ziel:{ saetze:5, wdh:5 } } } }, { id:"k", name:"Push", ids:["bench-press"], fromWo:"my:m" }, { id:"eigen", name:"Push 2", ids:["bench-press"], fromWo:"my:m2" }],
+      studio:{ "bench-press":{ kg:92.5, log:[{ at:n, s:[[92.5, 10]], zu:true, b:"k" }] } }, einheiten:[{ id:"e", tag:tag, plan:"k", ex:[] }], kalender:{ e:[{ id:"t", tag:tag, art:"plan", ref:"k" }] },
+      programme:[{ id:"p", items:["plan:o", "plan:k"] }], favs:["plan:k"] } };
+    W.blocKopienZusammen(db); var s = db.settings;
+    gleich(s.stPlaene.map(function (p) { return p.id; }).join(), "o,eigen", "Kopie weg, umbenannter BLOC bleibt");
+    gleich([s.studio["bench-press"].log[0].b, s.einheiten[0].plan, s.kalender.e[0].ref, s.favs[0]].join(), "o,o,o,plan:o", "alles zeigt aufs Original");
+    gleich(s.programme[0].items.join(), "plan:o", "keine Doppelung im TrainingsBLOC");
+    gleich(s.stPlaene[0].werte["bench-press"].kg, 112.5, "Original behält seine Werte");
+  });
+  test("Test 12 B: Verwerfen an der 200er-Grenze verliert keine alte Runde", function () {
+    t10(function (s) {
+      var n = Date.now(), log = [];
+      for (var i = 200; i >= 1; i--) log.push({ at:n - i*2*86400000, s:[[60 + (i === 200 ? 90 : 0), 8]], zu:true });
+      s.studio["bench-press"] = { kg:60, log:log }; s.stPlaene = [];
+      W.studioSatzLog("bench-press", 70, 8); W.satzVerwerfen(["bench-press"]);
+      var e = s.studio["bench-press"];
+      gleich(e.log.length, 200, "weiter 200 Runden"); gleich(e.log[0].s[0][0], 150, "die älteste ist noch da"); gleich(e.best, undefined, "nichts ausgelagert");
+    });
+  });
+  test("Test 12 E: leere Felder tragen nichts ein", function () {
+    var d = W.document, kg = d.createElement("input"), wd = d.createElement("input"), box = d.createElement("div"); box.className = "stepper"; box.appendChild(kg); d.body.appendChild(box); d.body.appendChild(wd);
+    try {
+      kg.value = ""; wd.value = "8"; wahr(W.satzFelderLeer(kg, wd), "leeres Gewicht"); wahr(box.classList.contains("feld-fehlt"), "Feld markiert");
+      kg.value = "60"; wd.value = ""; wahr(W.satzFelderLeer(kg, wd), "leere Wiederholungen"); wahr(!box.classList.contains("feld-fehlt"), "Gewicht nicht mehr markiert");
+      kg.value = "62,5"; wd.value = "8"; wahr(!W.satzFelderLeer(kg, wd), "Komma ist gültig"); wahr(!W.satzFelderLeer(null, wd), "ohne Gewichtsfeld");
+    } finally { box.remove(); wd.remove(); }
   });
   /* Fünfter Test (2026-11-14): R1–R7 */
   test("Test 5 R1/R2/R5: Plantag erst beim Speichern erledigt, Plank nach Zeit, Rücknahme höchstens ~15 %", function () {
