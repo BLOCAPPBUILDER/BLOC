@@ -8,6 +8,18 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-21 · Zehnter Test: Werte je BLOC (Fassung 2026-11-21-2)
+
+Umsetzung von BERICHT-Test10-als-Prompt.md (Schwerpunkt Selbstbauer). Entscheidungen Kevin: Werte je BLOC, keine neue Ebene „Programm“, Tipps bleiben aktiv und vergleichen je BLOC.
+- **V1:** Steckt eine Übung in mehreren BLOCs, hat jeder BLOC eigene Sätze, Wiederholungen, Gewicht, Pause und Steigerung (`plan.werte[id]`). Runden tragen ihren BLOC (`l.b`), Vorschlag und „Letztes Mal“ vergleichen nur denselben BLOC. Logbuch, Bestwerte und Pausen-Erkennung bleiben übungsweit. Vorhandene Runden werden beim Laden über die gespeicherten Trainings zugeordnet.
+- **V2:** „BLOC löschen?“ nennt die TrainingsBLOCs, in denen er steckt, und nimmt ihn dort heraus.
+- **V3:** TrainingsBLOCs, die in derselben Woche enden, werden gemeinsam verlängert („Alle 4 Tage verlängern“).
+- **V4 (kleine Lösung):** Überblick „Sätze pro Woche je Muskel“ über den TrainingsBLOCs.
+- **V5:** Mehrere BLOCs eines TrainingsBLOCs zählen auch ohne geöffneten TrainingsBLOC als ein Training.
+- **V6:** „BLOC löschen“ statt „Plan löschen“, Texte im Baukasten vereinheitlicht. „Training speichern“ bleibt: Es speichert das Training, nicht den BLOC.
+- **V7:** Eigene Übung: Muskeln wählbar, Art Wiederholungen oder Zeit.
+- Tests: einheitstest +3 (108), schnelltest 54.
+
 ## 2026-11-21 · Filter verfallen am nächsten Tag, Plan-Fragen nur mit „Weiter“ (Fassung 2026-11-21-1)
 
 - Gewählte Filter werden beim ersten Öffnen an einem neuen Kalendertag zurückgesetzt, auch bei Rückkehr aus dem Hintergrund. Die Sortierung bleibt.

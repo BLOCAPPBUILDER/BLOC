@@ -37,7 +37,7 @@ function decodeShare(str){
 }
 function customDefOf(ex){
   var c = findCustom(ex.id);
-  if(c) return { id:c.id, name:c.name, cats:c.cats, equip:c.equip, perSide:!!c.perSide, reps:c.reps, work:c.work, rest:c.rest, hint:c.hint||"" };
+  if(c) return { id:c.id, name:c.name, cats:c.cats, equip:c.equip, perSide:!!c.perSide, reps:c.reps, work:c.work, rest:c.rest, hint:c.hint||"", art:c.art, wdh:c.wdh, muskeln:c.muskeln };
   return { id:ex.id, name:tplText(ex.name), cats:ex.cats, equip:ex.equip, perSide:ex.perSide, reps:ex.setReps, work:ex.workSec, rest:ex.restSec, hint:tplText(ex.hint) };
 }
 function sharePayload(d){
@@ -197,7 +197,8 @@ function uebungDateiOeffnen(j, extern){
 }
 /* BLOC (Plan aus Übungen mit Sätzen): Übungen, Art, Pause und je Übung die Ziele (Sätze, Wiederholungen, Pause, Einheit, Timer) - ohne Gewichte und Verlauf */
 function planPayload(p){
-  var ids = stPlanIds(p), custom = [], z = {}, m = {};
+  var ids = stPlanIds(p), custom = [], z = {}, m = {}, aktivAlt = stPlanAktiv;
+  stPlanAktiv = p.id;   // die Werte dieses BLOCs teilen
   ids.forEach(function(id){
     var ex = findExercise(id), e = studioEintrag(id) || {}, r = {};
     if(ex && ex.custom) custom.push(customDefOf(ex));
@@ -209,6 +210,7 @@ function planPayload(p){
     if(Object.keys(r).length) z[id] = r;
     if(p.modus && (p.modus[id] === "timer" || p.modus[id] === "saetze")) m[id] = p.modus[id];
   });
+  stPlanAktiv = aktivAlt;
   var o = { n:p.name, i:ids, b:p.blockRest != null ? p.blockRest : 45, s:planStartArt(p), m:m, z:z };
   if(custom.length) o.c = custom;
   return o;

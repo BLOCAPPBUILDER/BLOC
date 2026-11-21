@@ -423,11 +423,38 @@ function progKarteHTML(p){
         '<button type="button" class="btn btn-secondary kp-ok" data-pgaus="'+esc(p.id)+'"'+(kalListe().some(function(e){ return e.prog && e.prog.id === p.id; }) ? '' : ' disabled')+'>'+esc(t("progAusKalender"))+'</button></details>'+
     '</div></details>';
 }
+/* Test 10, V4 (kleine Lösung, Entscheidung Kevin): Sätze pro Woche je Muskel aus den aktiven TrainingsBLOCs; Hilfsmuskeln zählen anteilig */
+function progWochenSaetze(){
+  var sum = {}, alt = stPlanAktiv;
+  programmListe().filter(progAktiv).forEach(function(p){
+    var mal = (p.tage || []).length || 1;
+    (p.items || []).forEach(function(r){
+      if(String(r).indexOf("plan:") !== 0) return;
+      var q = stPlanFind(String(r).slice(5)); if(!q) return;
+      stPlanAktiv = q.id;
+      stPlanIds(q).forEach(function(id){
+        var ex = findExercise(id); if(!ex || ex.main === "stretch") return;
+        var n = studioZiel(id).saetze*mal, v = mgVerteilung(ex);
+        Object.keys(v).forEach(function(g){ sum[g] = (sum[g] || 0) + n*v[g]; });
+      });
+    });
+  });
+  stPlanAktiv = alt;
+  return sum;
+}
+function progWochenHTML(){
+  var sum = progWochenSaetze(), mx = Math.max.apply(null, Object.keys(sum).map(function(k){ return sum[k]; }).concat([0]));
+  if(!(mx > 0)) return "";
+  return '<details class="card pg-satzwoche"><summary style="font-weight:700;cursor:pointer">'+esc(t("pgSaetzeTitel"))+'</summary><div class="dd-verteilung" style="margin-top:10px">'+
+    MUSKEL_GRP.map(function(g){ var n = Math.round(sum[g.id] || 0);
+      return '<div class="ausw-row'+(n ? '' : ' null')+'"><span class="ausw-n">'+esc(t(g.key))+'</span><span class="ausw-bar"><i style="width:'+Math.round((sum[g.id] || 0)/mx*100)+'%"></i></span><b>'+n+'</b></div>'; }).join("")+
+    '<div class="dd-fussnote">'+esc(t("pgSaetzeHinweis"))+'</div></div></details>';
+}
 function renderProgramme(){
   var liste = progSortiert();
   app.innerHTML =
     topbar(t("tabKoerper"), { back:"#training", right:kopfSymboleNeu("training") }) +
-    (liste.length ? '<div class="pg-liste-karten">'+liste.map(progKarteHTML).join("")+'</div>' : '<div class="pg-leerseite">'+svgIcon('<circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="5" r="2.2"/><path d="M8.2 19h8.3a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7h8.3"/>')+'<p>'+esc(t("progLeer"))+'</p></div>')+
+    (liste.length ? progWochenHTML()+'<div class="pg-liste-karten">'+liste.map(progKarteHTML).join("")+'</div>' : '<div class="pg-leerseite">'+svgIcon('<circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="5" r="2.2"/><path d="M8.2 19h8.3a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7h8.3"/>')+'<p>'+esc(t("progLeer"))+'</p></div>')+
     '<button type="button" class="btn btn-primary pg-neu" data-pgneu>'+ICON_PLUS+' '+esc(t("progNeu"))+'</button>'+
     '<button type="button" class="btn btn-secondary pg-neu pg-assi" data-pgassi>'+svgIcon(HOME_ICON.plan)+' '+esc(pt("eintrag"))+'</button>'+
     '<div style="height:90px"></div>';

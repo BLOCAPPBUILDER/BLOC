@@ -1425,6 +1425,61 @@
       gleich(W.studioProg("bench-press"), null, "Tipp ignoriert und trainiert (Runde noch offen): kommt nicht wieder");
     } finally { s.studio = alt; }
   });
+  /* Zehnter Test (2026-11-21): V1–V7 */
+  function t10(fn){
+    var s = W.state.db.settings, k = ["studio", "stPlaene", "einheiten", "programme", "kalender", "satzBasis", "rundeZu"], alt = {}, hist = W.state.db.history, aktiv = W.stPlanAktiv;
+    k.forEach(function (x) { alt[x] = s[x]; });
+    try { s.studio = {}; s.einheiten = []; s.programme = []; s.kalender = { e:[] }; s.satzBasis = {}; delete s.rundeZu; W.state.db.history = [];
+      s.stPlaene = [{ id:"t10a", name:"Push Schwer", ids:["bench-press"] }, { id:"t10b", name:"Push Volumen", ids:["bench-press"] }]; fn(s);
+    } finally { k.forEach(function (x) { if(alt[x] === undefined) delete s[x]; else s[x] = alt[x]; }); W.state.db.history = hist; W.stPlanAktiv = aktiv; }
+  }
+  function t10Werte(pid, saetze, wdh, kg, pause) { W.stPlanAktiv = pid; var w = W.studioSchreib("bench-press"); w.ziel = { saetze:saetze, wdh:wdh }; w.kg = kg; w.pause = pause; w.manuell = Date.now(); W.studioSpiegeln("bench-press"); }
+  test("Test 10 V1: Ziel, Gewicht, Pause und „Letztes Mal“ gelten je BLOC; Logbuch bleibt übungsweit", function () {
+    t10(function (s) {
+      t10Werte("t10a", 5, 5, 100, 180); t10Werte("t10b", 3, 10, 80, 90);
+      W.stPlanAktiv = "t10a"; var z = W.studioZiel("bench-press");
+      gleich([z.saetze, z.wdh, W.studioArbeitsKg("bench-press"), W.studioEintrag("bench-press").pause].join(), "5,5,100,180", "Push Schwer behält seine Werte");
+      W.studioSatzLog("bench-press", 100, 5);
+      W.stPlanAktiv = "t10b"; z = W.studioZiel("bench-press");
+      gleich([z.saetze, z.wdh, W.studioArbeitsKg("bench-press")].join(), "3,10,80", "Push Volumen behält seine Werte");
+      gleich(W.studioLetzte("bench-press", true), null, "Volumen sieht nicht das Training von Schwer");
+      W.studioSatzLog("bench-press", 80, 10);
+      gleich(W.studioArbeitsKg("bench-press"), 80, "Satz im Volumentag ändert nur diesen BLOC");
+      W.stPlanAktiv = "t10a"; gleich(W.studioArbeitsKg("bench-press"), 100, "Schwer bleibt bei 100");
+      gleich(W.studioLetzte("bench-press", true).s[0][0], 100, "„Letztes Mal“ von Schwer");
+      gleich(s.studio["bench-press"].log.length, 2, "Logbuch enthält beide Trainings");
+      var roh = JSON.parse(JSON.stringify(s.stPlaene[0].werte["bench-press"]));
+      wahr(!("log" in roh) && roh.kg === 100, "gespeichert werden nur die BLOC-Werte");
+    });
+  });
+  test("Test 10 V1: Pause bleibt übungsweit; Übung in nur einem BLOC und bestehende Daten laufen weiter", function () {
+    t10(function (s) {
+      var tag = 86400000, n = Date.now();
+      s.studio["bench-press"] = { kg:60, ziel:{ saetze:3, wdh:10 }, log:[{ at:n - 40*tag, s:[[60, 10], [60, 10], [60, 10]], zu:true, b:"t10b" }, { at:n - 2*tag, s:[[100, 5]], zu:true, b:"t10a" }] };
+      W.stPlanAktiv = "t10b"; var tp = W.studioProg("bench-press");
+      wahr(!tp || tp.art !== "pause", "gestern im anderen BLOC trainiert: kein Pausen-Tipp");
+      s.stPlaene = [s.stPlaene[0]]; W.stPlanAktiv = "t10a";
+      wahr(W.studioEintrag("bench-press") === s.studio["bench-press"], "nur ein BLOC: unveränderter Eintrag");
+      var db = { settings:{ stPlaene:[{ id:"x" }], einheiten:[{ plan:"x", tag:W.einheitTagKey(n), at:n, ex:[{ id:"u", s:[[1, 1]] }] }], studio:{ u:{ log:[{ at:n, s:[[1, 1]] }] } } } };
+      W.blocWerteMigrieren(db); gleich(db.settings.studio.u.log[0].b, "x", "Migration ordnet die Runde dem BLOC zu");
+    });
+  });
+  test("Test 10 V2/V3/V5/V7: Löschen, Programmende, Trainingszahl, eigene Übung", function () {
+    t10(function (s) {
+      s.programme = [{ id:"pg1", name:"Montag", items:["plan:t10a", "plan:t10b"], tage:[0], wochen:12 }, { id:"pg2", name:"Dienstag", items:["plan:t10b"], tage:[1], wochen:12 }];
+      gleich(W.planVerwendung("t10b").length, 2, "BLOC in zwei TrainingsBLOCs");
+      var heute = W.kalTagKey(Date.now()), gestern = W.kalTagKey(Date.now() - 86400000), vor3 = W.kalTagKey(Date.now() - 3*86400000);
+      s.kalender = { e:[{ id:"k1", tag:vor3, art:"programm", ref:"pg1", prog:{ id:"pg1", i:0 } }, { id:"k2", tag:gestern, art:"programm", ref:"pg2", prog:{ id:"pg2", i:0 } }] };
+      var gr = W.paEndeGruppen(), key = Object.keys(gr).filter(function (k) { return k.indexOf("p:") === 0; });
+      gleich(key.length, 1, "gemeinsam endende Tage sind eine Gruppe"); gleich(gr[key[0]].length, 2, "beide Tage");
+      gleich(W.paEndeProgs(key[0]).length, 2, "beide werden verlängert");
+      s.einheiten = [{ id:"e1", tag:heute, at:Date.now(), plan:"t10a", ex:[{ id:"bench-press", s:[[1, 1]] }] }, { id:"e2", tag:heute, at:Date.now(), plan:"t10b", ex:[{ id:"bench-press", s:[[1, 1]] }] }];
+      s.programme[1].items = ["plan:zzz"];
+      gleich(W.trainingsGesamt(2, [{ von:Date.now(), bis:Date.now() }, { von:Date.now(), bis:Date.now() }]), 1, "zwei BLOCs eines TrainingsBLOCs ohne Kontext: 1 Training");
+      var ex = { id:"my-t", cats:["bw"], muskeln:["beine", "po"] }, v = W.mgVerteilung(ex);
+      gleich(v.beine + v.po, 1, "gewählte Muskeln zählen"); gleich(v.brust, undefined, "nur die gewählten");
+    });
+  });
   /* Fünfter Test (2026-11-14): R1–R7 */
   test("Test 5 R1/R2/R5: Plantag erst beim Speichern erledigt, Plank nach Zeit, Rücknahme höchstens ~15 %", function () {
     var s = W.state.db.settings, alt = { kalender:s.kalender, einheiten:s.einheiten, studio:s.studio }, histAlt = W.state.db.history, heute = W.kalTagKey(Date.now()), tag = 86400000, n = Date.now();

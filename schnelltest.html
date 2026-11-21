@@ -1618,7 +1618,7 @@
       klick($("[data-satzset]"));
       await bis(function () { var e = W.studioEintrag("leg-press"); return e && e.log && e.log.length && e.log[e.log.length - 1].s.length >= 1; }, 3000, "Satz im Wisch-Bereich gespeichert");
       pruefe(!$("[data-satzundo]"), "„Letzten Satz löschen“ gibt es nicht mehr");
-      var enL = W.studioEintrag("leg-press"); enL.log.pop(); W.save();   // die späteren Prüfungen gehen von einem leeren Heute aus
+      var enL = W.studioEintragAlle("leg-press"); enL.log.pop(); W.save();   // die späteren Prüfungen gehen von einem leeren Heute aus
       W.go("#studioplan/p-prog");
       await bis(function () { return $$(".pz-zeile").length === 2; }, 3000, "zurück im Plan");
       // Plan als Timer-Workout: Runden = Sätze, im Timer Gewicht eintragen, letztes Mal im Fenster, landet in der Statistik

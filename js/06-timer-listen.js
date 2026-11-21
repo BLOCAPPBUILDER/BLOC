@@ -101,10 +101,7 @@ function bindTrash(refresh){
         });
       } else if(kind === "plan"){   // Studio › Mein Plan
         var pl = stPlanFind(id); if(!pl) return;
-        confirmSheet(t("planDelQ"), "„"+pl.name+"“ – "+t("cantUndo"), t("del"), function(){
-          state.db.settings.stPlaene = stPlaene().filter(function(x){ return x.id !== id; });
-          save(); refresh(); showToast(t("deletedToast", { n:pl.name }));
-        });
+        planLoeschenFrage(pl, refresh);
       } else if(kind === "my"){
         var mw = findMy(id); if(!mw) return;
         confirmSheet(t("myDeleteQ"), "„"+mw.name+"“ – "+t("cantUndo"), t("del"), function(){ deleteMyNow(id); refresh(); showToast(t("deletedToast", { n:mw.name })); });

@@ -7,13 +7,60 @@
    modus:"timer" } - nur auf dem Gerät. kg, pause und ziel stellt man im Plan (Zeile je Übung) oder auf der Übungskarte ein, beides ist dasselbe. */
 var studioQuery = "", studioPause = null;
 function studioAlle(){ return state.db.settings.studio || (state.db.settings.studio = {}); }
-function studioEintrag(id){ return (state.db.settings.studio || {})[id] || null; }
+function studioEintragAlle(id){ return (state.db.settings.studio || {})[id] || null; }   // die ganze Übung: Logbuch, Bestwerte, Statistik
+/* Werte je BLOC (Test 10, V1, Entscheidung Kevin): steckt eine Übung in mehreren BLOCs, hat jeder BLOC eigene Ziele, Gewicht, Pause und eigenen Steigerungsstand (p.werte[id]).
+   Die Runden tragen ihren BLOC (l.b): Vorschlag, „Letztes Mal“ und Steigerung vergleichen nur Trainings desselben BLOCs. Logbuch, Bestwerte und Pausen-Erkennung bleiben übungsweit.
+   Ein BLOC ohne eigene Werte nutzt die Werte der Übung; beim ersten Ändern bekommen auch die anderen BLOCs ihren bisherigen Stand fest zugeordnet. */
+var STUDIO_JE_BLOC = ["kg", "pause", "ziel", "timer", "erhoeht", "manuell", "tippRuhe", "zielBasis", "ruecknahmeKg", "ruecknahmeN", "satzPlus", "vorStufe", "kalibriert", "kalibriertRunde"];
+var STUDIO_GETEILT = ["log", "notiz", "schritt", "einheit", "modus", "zuletzt"];
+function studioWertKopie(v){ return v && typeof v === "object" ? JSON.parse(JSON.stringify(v)) : v; }
+function studioWerteKopie(e){ var o = {}; STUDIO_JE_BLOC.forEach(function(k){ if(e[k] !== undefined) o[k] = studioWertKopie(e[k]); }); return o; }
+function studioBlocPlan(id){   // der geöffnete BLOC (oder der erste folgende), in dem die Übung steht
+  var p = stPlanAktiv ? stPlanFind(stPlanAktiv) : null; if(!p) return null;
+  if(stPlanIds(p).indexOf(id) > -1) return p;
+  return planFolge(p).filter(function(q){ return stPlanIds(q).indexOf(id) > -1; })[0] || null;
+}
+function studioBlocFuer(id){   // nur nötig, wenn die Übung in mehreren BLOCs steckt oder der BLOC schon eigene Werte hat
+  var p = studioBlocPlan(id); if(!p) return null;
+  if(p.werte && p.werte[id]) return p;
+  return stPlaene().filter(function(q){ return stPlanIds(q).indexOf(id) > -1; }).length > 1 ? p : null;
+}
+function studioEintrag(id){
+  var e = studioEintragAlle(id); if(!e) return null;
+  var p = studioBlocFuer(id); if(!p) return e;
+  var q = (p.werte && p.werte[id]) || e, v = {};
+  Object.keys(e).forEach(function(k){ if(k !== "log" && STUDIO_JE_BLOC.indexOf(k) < 0) v[k] = e[k]; });
+  STUDIO_JE_BLOC.forEach(function(k){ if(q[k] !== undefined) v[k] = studioWertKopie(q[k]); });
+  v.log = (e.log || []).filter(function(l){ return l.b == null || l.b === p.id; });
+  Object.defineProperty(v, "alleLog", { value:e.log || [], enumerable:false });
+  return v;
+}
+/* Zum Schreiben: im BLOC dessen eigene Werte (gespeichert werden nur sie), Protokoll, Notiz und Schritt gehen weiter an die Übung */
+function studioSchreib(id){
+  var a = studioAlle(), e = a[id] || (a[id] = { log:[] }), p = studioBlocFuer(id);
+  if(!p) return e;
+  if(!p.werte) p.werte = {};
+  if(!p.werte[id]){
+    stPlaene().forEach(function(q){ if(q !== p && stPlanIds(q).indexOf(id) > -1 && !(q.werte && q.werte[id])){ if(!q.werte) q.werte = {}; q.werte[id] = studioWerteKopie(e); } });
+    p.werte[id] = studioWerteKopie(e);
+  }
+  var w = p.werte[id];
+  STUDIO_GETEILT.forEach(function(k){
+    Object.defineProperty(w, k, { configurable:true, enumerable:false, get:function(){ return e[k]; }, set:function(x){ e[k] = x; } });
+  });
+  return w;
+}
+/* Die Übungswerte folgen dem zuletzt Eingestellten: Startwert für neue BLOCs und freies Training */
+function studioSpiegeln(id){
+  var p = studioBlocFuer(id), w = p && p.werte && p.werte[id], e = studioEintragAlle(id);
+  if(w && e) ["kg", "pause", "ziel"].forEach(function(k){ if(w[k] !== undefined) e[k] = studioWertKopie(w[k]); });
+}
 /* Ziel einer Übung: Sätze × Wiederholungen. Voreinstellung aus STUDIO_ZIEL, überschrieben von dem, was im Plan oder auf der Karte eingestellt wurde
    (settings.studio[id].ziel = { saetze, wdh }) - es gilt überall gleich: Plan, Übungskarte, Timer und die Steigerung nach der doppelten Progression. */
 function studioZiel(id){
   var ex = findExercise(id), e = studioEintrag(id), g = e && e.ziel;
   // Übungen ohne Gewicht (nur Block) bringen ihre Satzzahl aus Air mit; Wiederholungen sind dort frei wählbar (Voreinstellung 12)
-  var z = STUDIO_ZIEL[id] || [studioNurBlock(ex) ? ((e && e.timer && e.timer.reps) || 3) : 3, 12, studioGeraetSchritt(ex, e)];   // Satz-Ziel 3 wie überall (Test 3: Plank stand auf 6)
+  var z = STUDIO_ZIEL[id] || (ex && ex.custom && ex.art === "wdh" ? [ex.setReps || 3, ex.zielWdh || 10, studioGeraetSchritt(ex, e)] : null) || [studioNurBlock(ex) ? ((e && e.timer && e.timer.reps) || 3) : 3, 12, studioGeraetSchritt(ex, e)];   // Satz-Ziel 3 wie überall (Test 3: Plank stand auf 6)
   // schritt: Gewichtsschritt der +/−-Knöpfe, je Übung einstellbar (Karte), sonst die Voreinstellung
   return { saetze:g && g.saetze > 0 ? g.saetze : z[0], wdh:g && g.wdh > 0 ? g.wdh : z[1], schritt:e && e.schritt > 0 ? e.schritt : z[2] };
 }
@@ -23,10 +70,11 @@ function studioOffen(e){
   var log = (e && e.log) || [], l = log.length ? log[log.length-1] : null;
   return l && !l.zu && studioTag(l.at) === studioTag(Date.now()) ? l : null;
 }
-function studioRundeFuer(en, jetzt){   // die offene Runde der Übung, sonst eine neue
+function studioRundeFuer(en, jetzt, id){   // die offene Runde der Übung (im BLOC: dieses BLOCs), sonst eine neue
   if(!en.log) en.log = [];
-  var l = studioOffen(en);
-  if(!l){ l = { at:jetzt, s:[] }; en.log.push(l); if(en.log.length > 200) en.log = en.log.slice(-200); }
+  var p = id ? studioBlocPlan(id) : null;
+  var l = studioOffen(p ? { log:en.log.filter(function(x){ return x.b == null || x.b === p.id; }) } : en);
+  if(!l){ l = { at:jetzt, s:[] }; if(p) l.b = p.id; en.log.push(l); if(en.log.length > 200) en.log = en.log.slice(-200); }
   return l;
 }
 /* Arbeitsgewicht einer Runde: das häufigste Gewicht der normalen Sätze, bei Gleichstand das höhere. Aufwärm- und Drop-Sätze zählen nicht -
@@ -94,7 +142,7 @@ function wochenKurve(pts, cls){
 }
 /* Wochenwerte je Sicht: "kg" bestes Gewicht, "rm" geschätztes 1RM, "vol" Volumen (Gewicht × Wiederholungen, alle Arbeitssätze der Woche) */
 function studioWochen(id, sicht){
-  var e = studioEintrag(id), log = (e && e.log || []).filter(function(l){ return arbeitsSaetze(l).length; });
+  var e = studioEintragAlle(id), log = (e && e.log || []).filter(function(l){ return arbeitsSaetze(l).length; });
   if(!sicht && studioNurBlock(findExercise(id))) sicht = "wdh";   // ohne Gewicht zählen die Wiederholungen: "wdh" beste Wiederholungen je Satz, "wsum" alle der Woche
   if(sicht === "vol") return wochenWerte(log.map(function(l){ return [l.at, studioVolumen(l, id)]; }), false, true).slice(-16);
   if(sicht === "wsum") return wochenWerte(log.map(function(l){ return [l.at, studioWdhSumme(l)]; }), false, true).slice(-16);
@@ -268,7 +316,7 @@ var STUDIO_GRUPPEN_ICON = { beine:CAT_ICON.legs, brust:'<path d="M4 8c2.5-2 5.5-
 function studioKachel(id){
   var ex = findExercise(id);
   if(!ex) return "";
-  var e = studioEintrag(id), last = e && e.log && e.log.length ? e.log[e.log.length-1] : null;
+  var e = studioEintragAlle(id), last = e && e.log && e.log.length ? e.log[e.log.length-1] : null;
   var la = last ? arbeitsSaetze(last) : [], sub = la.length ? (la[0][0] > 0 ? studioKg(la[0][0])+" kg · " : "")+la.length+" × "+la[0][1] : t("stNoData");
   if(studioNurBlock(ex) && !la.length && zielGesetzt(id)){ sub = satzKurz(id).replace("×", " × "); last = null; }   // ohne Eintrag das selbst gesetzte Ziel: „3 × 12“ bzw. „3 × 40 s“
   return '<div class="fig-karte st-kachel" role="button" tabindex="0" data-studio="'+id+'" data-q="'+esc(exSearchText(ex))+'" style="--cat:'+studioFarbe(ex)+'">'+
@@ -494,6 +542,7 @@ var HALTE_UEBUNG = /carry|farmer|plate-pinch-hold|boat-hold|bridge-hold|active-h
 function studioEinheit(id){
   var e = studioEintrag(id);
   if(e && (e.einheit === "wdh" || e.einheit === "zeit")) return e.einheit;
+  var ex0 = findExercise(id); if(ex0 && ex0.custom && ex0.art) return ex0.art;   // eigene Übung: die beim Anlegen gewählte Art
   if(HALTE_UEBUNG.test(String(id))) return "zeit";
   var p = studioModusPlan(id);
   if(p) return planStartArt(p) === "timer" ? "zeit" : "wdh";   // im Plan: Satz für Satz = Wiederholungen, Mit Timer = Zeit
@@ -516,7 +565,7 @@ function satzKurz(id){   // „3×12“ bzw. „3×40 s“ für die kleinen Plan
   return z.saetze+"×"+z.wdh;
 }
 function satzLetzter(id){
-  var e = studioEintrag(id), last = e && e.log && e.log.length ? e.log[e.log.length-1] : null;
+  var e = studioEintragAlle(id), last = e && e.log && e.log.length ? e.log[e.log.length-1] : null;
   var la = last ? arbeitsSaetze(last) : [];
   if(!la.length) return "";
   return (la[0][0] > 0 ? studioKg(la[0][0])+" kg · " : "")+satzName(la.length)+" × "+la[0][1];
@@ -586,7 +635,7 @@ function planVerbinden(p, i){
     var runden = studioZiel(a).saetze;   // alle Übungen des Blocks gehen gleich viele Runden
     planBloecke(p).forEach(function(bl){
       if(bl.b !== bid) return;
-      bl.ids.forEach(function(id){ var en = studioAlle()[id] || (studioAlle()[id] = { log:[] }); en.ziel = en.ziel || {}; en.ziel.saetze = runden; });
+      bl.ids.forEach(function(id){ var en = studioSchreib(id); en.ziel = en.ziel || {}; en.ziel.saetze = runden; studioSpiegeln(id); });
     });
   }
   // Einzelne Übungen brauchen keine Block-ID
@@ -726,6 +775,20 @@ function planKopie(p){
   stPlaene().push(q); save();
   return q;
 }
+/* Test 10, V2: BLOC löschen sagt, wo er verwendet wird, und nimmt ihn dort heraus (TrainingsBLOCs, folgende BLOCs, offene Einzeltermine) */
+function planVerwendung(id){ return programmListe().filter(function(q){ return (q.items || []).indexOf("plan:"+id) > -1; }); }
+function planLoeschenFrage(pl, fertig){
+  var v = planVerwendung(pl.id), wo = v.map(function(q){ return q.name; }).join(", ");
+  confirmSheet(t("planDelQ"), "„"+pl.name+"“ – "+(v.length ? t("planDelNutzung", { n:wo })+" " : "")+t("cantUndo"), t("del"), function(){
+    var heute = kalTagKey(Date.now());
+    v.forEach(function(q){ q.items = q.items.filter(function(x){ return x !== "plan:"+pl.id; }); q.pos = 0; q.updatedAt = Date.now(); if(!q.items.length) programmAusKalender(q); });
+    stPlaene().forEach(function(q){ if(Array.isArray(q.folge)) q.folge = q.folge.filter(function(x){ return x !== pl.id; }); });
+    state.db.settings.kalender = { e:kalListe().filter(function(e){ return !(e.art === "plan" && e.ref === pl.id && !e.prog && e.tag >= heute && e.erledigt !== true); }) };
+    state.db.settings.stPlaene = stPlaene().filter(function(x){ return x.id !== pl.id; });
+    save(); fertig();
+    showToast(t("deletedToast", { n:pl.name }));
+  });
+}
 function planSaetzeSumme(ids){
   return ids.reduce(function(a, id){ return findExercise(id) ? a + studioZiel(id).saetze : a; }, 0);
 }
@@ -748,7 +811,7 @@ function planZeilenBinden(root, fn, neuZeichnen, p){
       if(tp.naechste) planVarianteTauschen(p, id, tp.naechste, tp.art === "variante", tp.art === "stufeZurueck");   // nächste Stufe: Übung im BLOC tauschen
       studioTippUebernehmen(id, tp); if(neuZeichnen) neuZeichnen();
     });
-    function eintrag(){ var a = studioAlle(); return a[id] || (a[id] = { log:[] }); }
+    function eintrag(){ return studioSchreib(id); }
     function setzen(feld, v){
       var en = eintrag(); if(feld === "saetze" || feld === "wdh" || feld === "kg") en.manuell = Date.now();   // von Hand angepasst: gilt wieder, spätere Auto-Anhebung wertet nur neuere Einheiten aus
       if(feld === "saetze" || feld === "wdh"){ en.ziel = en.ziel || {}; en.ziel[feld] = v; }
@@ -765,11 +828,12 @@ function planZeilenBinden(root, fn, neuZeichnen, p){
         if(bid) root.querySelectorAll('.pz-zeile[data-pzblk="'+bid+'"]').forEach(function(z2){
           var id2 = z2.getAttribute("data-pz");
           if(id2 === id) return;
-          var e2 = studioAlle()[id2] || (studioAlle()[id2] = { log:[] });
-          e2.ziel = e2.ziel || {}; e2.ziel.saetze = v; e2.manuell = Date.now();
+          var e2 = studioSchreib(id2);
+          e2.ziel = e2.ziel || {}; e2.ziel.saetze = v; e2.manuell = Date.now(); studioSpiegeln(id2);
           var inp = z2.querySelector('[data-feld="saetze"] input'); if(inp) inp.value = studioKg(v);
         });
       }
+      studioSpiegeln(id);
       save();
       fn();
     }
@@ -939,7 +1003,7 @@ function renderStudioPlan(){
   });
   /* Plan als Workout mit Timer: Air- und Studio-Übungen laufen hintereinander (Studio-Übungen mit ihren Satz- und Pausenwerten);
      eine Kopie unter Meine, die beim erneuten Starten aktualisiert wird */
-  app.querySelectorAll("[data-planart]").forEach(function(b){ b.addEventListener("click", function(){ p.startArt = b.getAttribute("data-planart"); stPlanIds(p).forEach(function(id){ var en = studioEintrag(id); if(en) delete en.einheit; }); p.updatedAt = Date.now(); save(); neu(); }); });   // Umschalten setzt alle Übungen auf die Einheit der Art zurück (Satz für Satz = Wiederholungen, Timer = Zeit)
+  app.querySelectorAll("[data-planart]").forEach(function(b){ b.addEventListener("click", function(){ p.startArt = b.getAttribute("data-planart"); stPlanIds(p).forEach(function(id){ var en = studioEintragAlle(id); if(en) delete en.einheit; }); p.updatedAt = Date.now(); save(); neu(); }); });   // Umschalten setzt alle Übungen auf die Einheit der Art zurück (Satz für Satz = Wiederholungen, Timer = Zeit)
   function planLos(){   // erst die Wahl darüber (nach Sätzen oder mit Timer), dann ein einziges Los geht’s in den passenden Bereich
     if(planStartArt(p) === "timer") planAlsWorkout(p, true);
     else go("#satz/"+p.id+"/0");   // nach Sätzen: Glas-Bereich zum Wischen, je Satz Gewicht × Wiederholungen eintragen
@@ -959,11 +1023,7 @@ function renderStudioPlan(){
     ]);
   });
   function planLoeschen(){
-    confirmSheet(t("planDelQ"), "„"+p.name+"“ – "+t("cantUndo"), t("del"), function(){
-      state.db.settings.stPlaene = stPlaene().filter(function(x){ return x.id !== p.id; });
-      stPlanAktiv = null; stPlanBauen = false; save(); renderKatalog(); window.scrollTo(0, 0);
-      showToast(t("deletedToast", { n:p.name }));
-    });
+    planLoeschenFrage(p, function(){ stPlanAktiv = null; stPlanBauen = false; save(); renderKatalog(); window.scrollTo(0, 0); });
   }
   an("[data-plandel]", planLoeschen);
   var nm = app.querySelector("#plan-name");

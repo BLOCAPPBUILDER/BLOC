@@ -169,7 +169,8 @@ function customToEx(c){
   var equip = c.equip && c.equip.length ? c.equip.slice() : ["none"];
   var ex = { id:c.id, custom:true, name:{ de:c.name, en:c.name }, cats:cats, perSide:!!c.perSide,
            setReps:c.reps, reps: c.perSide ? c.reps*2 : c.reps, workSec:c.work, restSec:c.rest,
-           hint:{ de:c.hint||"", en:c.hint||"" }, level:2, equip:equip };
+           hint:{ de:c.hint||"", en:c.hint||"" }, level:2, equip:equip,
+           art:c.art === "wdh" || c.art === "zeit" ? c.art : undefined, zielWdh:c.wdh > 0 ? c.wdh : undefined, muskeln:Array.isArray(c.muskeln) ? c.muskeln.slice() : [] };
   ex.main = deriveMain(ex);
   return ex;
 }
