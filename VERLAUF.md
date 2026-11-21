@@ -8,6 +8,15 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-21 · Satz-Training aufgeräumt (Fassung 2026-11-21-6)
+
+Kevin hat aus drei Entwürfen Version 1 gewählt.
+- **Hintergrund:** die Küste ist sichtbar, ein dunkler Verlauf hält die Schrift lesbar.
+- **Übungsleiste:** schmale Nummern mit Fortschrittsbalken statt großer Karten; Tippen und Wischen wechseln weiter die Übung.
+- **Karte:** Name, Muskeln und Ziel oben, Figur, Satzleiste, Gewicht und Wiederholungen. Erledigte Sätze zeigen ihren Wert.
+- **Info-Fenster:** „Zur Übung“, Griff und der Startgewicht-Hinweis stehen jetzt hinter dem i (ohne Info-Fenster bleiben Griff und Hinweis auf der Karte).
+- **Knöpfe:** eine Hauptaktion unten. Nach dem Soll wird „Nächste Übung“ zur Hauptaktion, ein Zusatzsatz bleibt möglich. „Fertig“ erscheint erst, wenn der letzte Satz drin ist; früher beenden geht über den Haken oben.
+
 ## 2026-11-21 · Dreizehnter Test: Plan ohne Geräte, Teilen, Lauf, Wiedereinstieg (Fassung 2026-11-21-5)
 
 Umsetzung von BERICHT-Test13-als-Prompt.md; F und H fachlich vom Sportwissenschaftler geprüft (Zahlen sind Praxiswerte, zu Pausen-Prozenten gibt es keine belastbare Studienlage).
