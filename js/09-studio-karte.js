@@ -567,8 +567,8 @@ function statsLeisteHTML(attr, kurz, pts, farbe){
 }
 function studioStatsLeiste(id){
   var e = studioEintragAlle(id) || {}, log = (e.log || []).filter(function(l){ return arbeitsSaetze(l).length; }), kurz = t("stStatsNone");
-  if(log.length) kurz = studioNurBlock(findExercise(id)) ? t("stStatsKurzWdh", { w:studioBestwerte(log).wdh, n:log.length })
-    : t("stStatsKurz", { kg:studioKg(studioBestwerte(log).kg), n:log.length });
+  if(log.length) kurz = studioNurBlock(findExercise(id)) ? t("stStatsKurzWdh", { w:studioBestwerteGesamt(id, log).wdh, n:log.length })
+    : t("stStatsKurz", { kg:studioKg(studioBestwerteGesamt(id, log).kg), n:log.length });
   return statsLeisteHTML("data-ststats", kurz, studioWochen(id));
 }
 /* Diagramm je Woche. fmt formatiert die Achsenwerte (Standard: Gewicht), schritt ist der Abstand, wenn alle Werte gleich sind.
@@ -625,14 +625,14 @@ function openStudioStats(id, sicht){
   var ex = findExercise(id), e = studioEintragAlle(id) || {}, log = (e.log || []).filter(function(l){ return arbeitsSaetze(l).length; });
   var saetze = 0;
   log.forEach(function(l){ saetze += arbeitsSaetze(l).length; });
-  var b = studioBestwerte(log), gesamt = log.reduce(function(a, l){ return a + studioVolumen(l, id); }, 0);
+  var b = studioBestwerteGesamt(id, log), gesamt = log.reduce(function(a, l){ return a + studioVolumen(l, id); }, 0);
   var koerper = studioNurBlock(ex);   // ohne Gewicht zählen die Wiederholungen
   function kgT(v){ return studioKg(Math.round(v*10)/10)+" kg"; }
   // Rekorde automatisch erkennen: eine Einheit mit neuem Bestgewicht oder neuem geschätzten 1RM (ohne Gewicht: mehr Wiederholungen in einem Satz)
   // gegenüber allen davor trägt einen Stern
   var rekorde = log.map(function(l, i){
     if(!i || studioAssistiert(id) || l.leicht) return false;   // Leichtwoche: kein Rekord (Test 6 P9)
-    return studioIstRekord(studioBestwerte([l]), studioBestwerte(log, i));
+    return studioIstRekord(studioBestwerte([l]), studioBestwerteGesamt(id, log, i));
   });
   if(koerper){
     sicht = sicht === "wsum" ? "wsum" : "wdh";
@@ -907,7 +907,7 @@ function renderStudioKarte(id){
   }
   an("[data-stset]", function(){
     var en = eintrag(), jetzt = Date.now(), kg = kgWert(), w = Math.max(1, Math.min(100, parseInt(wIn.value) || 1)), typ = studioSatzTypWahl;
-    var davor = studioBestwerte(en.log);   // Bestwerte vor diesem Satz
+    var davor = studioBestwerteGesamt(id, en.log);   // Bestwerte vor diesem Satz
     var l = studioRundeFuer(en, jetzt, id);
     var satz = [kg, w], rpe = anstrengungModus() ? studioRpeWahl : 0;   // typ "n" steht als Platzhalter, wenn nur die Anstrengung angegeben ist
     if(typ !== "n" || rpe) satz.push(typ);

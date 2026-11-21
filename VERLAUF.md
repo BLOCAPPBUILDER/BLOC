@@ -8,6 +8,20 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-21 · Elfter Test: Update, Bestwerte, Import, halbe Trainings (Fassung 2026-11-21-3)
+
+Umsetzung von BERICHT-Test11-als-Prompt.md. Offene Fragen mit den Vorschlägen des Berichts umgesetzt: × fragt nach, ein Training zählt bis 4 Stunden nach dem letzten Satz zum Starttag.
+- **A:** Beim Update bekommt jeder BLOC mit geteilter Übung Gewicht und Ziel aus seiner eigenen letzten Runde; bis zum nächsten Training kein Runter-Tipp aus übernommenen Werten.
+- **B:** Allzeit-Bestwerte (`e.best`) bleiben erhalten, wenn alte Runden aus dem Log fallen; kein falscher Rekord mehr.
+- **C:** Import prüft die Feldtypen, lehnt leere Dateien ab, zeigt eine Vorschau und sichert den aktuellen Stand vorher als Schnappschuss.
+- **D:** × mit eingetragenen Sätzen fragt: Speichern, Später weiter, Verwerfen. Die Startseite zeigt „Training fortsetzen“; liegengebliebene Trainings werden später am Starttag eingetragen.
+- **E:** Ein Training über Mitternacht bleibt eines und behält seinen Starttag.
+- **F:** Der Schnappschuss-Schutz zählt echte Inhalte, beschädigte Stände nicht.
+- **G:** Wochenstart nach Kalendertagen (Zeitumstellung).
+- **H:** Dateiname der Sicherung mit lokalem Datum.
+- **V5 (aus Test 10):** „Trainings insgesamt“ zählt je TrainingsBLOC, auch in archivierten Wochen.
+- Tests: einheitstest +6 (114), schnelltest 54.
+
 ## 2026-11-21 · Zehnter Test: Werte je BLOC (Fassung 2026-11-21-2)
 
 Umsetzung von BERICHT-Test10-als-Prompt.md (Schwerpunkt Selbstbauer). Entscheidungen Kevin: Werte je BLOC, keine neue Ebene „Programm“, Tipps bleiben aktiv und vergleichen je BLOC.

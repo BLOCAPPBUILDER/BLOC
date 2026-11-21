@@ -15,6 +15,25 @@ function satzBasisSetzen(ids){
   s.rundeZu = jetzt;
   save();
 }
+/* Offene Runden der Übungen entfernen und das vorherige Arbeitsgewicht wiederherstellen; der Eintrag im Kurz-Verlauf fällt mit weg (Test 11, D) */
+function satzVerwerfen(ids){
+  var start = Infinity, weg = [];
+  ids.forEach(function(id){
+    var l = studioOffen(studioEintrag(id)), g = studioEintragAlle(id), i = l && g ? g.log.indexOf(l) : -1;
+    if(i < 0) return;
+    start = Math.min(start, l.at); weg.push(id);
+    g.log.splice(i, 1);
+    var en = studioSchreib(id);
+    if(l.kgVor !== undefined){ en.kg = l.kgVor; studioSpiegeln(id); } else { delete en.kg; delete g.kg; }
+  });
+  if(weg.length) state.db.history = (state.db.history || []).filter(function(h){
+    if(!h || !h.studio || h.studio < start) return true;
+    h.ex = (h.ex || []).filter(function(x){ return weg.indexOf(x) < 0; });
+    return h.ex.length > 0;
+  });
+  save();
+  return weg.length;
+}
 function satzHeute(id){
   var l = studioOffen(studioEintrag(id));
   if(!l) return null;
@@ -289,7 +308,25 @@ function renderSatzTraining(planId, start){
   }, { passive:true });
   root.querySelectorAll("[data-satzgo]").forEach(function(b){ b.addEventListener("click", function(){ geheZu(+b.getAttribute("data-satzgo"), true); }); });
   function raus(){ studioPauseStop(); if(satzUhr){ clearInterval(satzUhr); satzUhr = 0; } if(programmKontextFuer("plan:"+p.id)) go("#koerper"); else goBack("#katalog"); }
-  root.querySelector("[data-satzexit]").addEventListener("click", raus);
+  /* Test 11, D: mit eingetragenen Sätzen fragen: speichern, später weiter (bleibt offen, Startseite zeigt „Training fortsetzen“) oder verwerfen */
+  function verlassen(){
+    if(root.querySelector(".satz-ende") || !ids.some(satzHeute)){ raus(); return; }
+    var or = document.getElementById("overlayRoot"), n = ids.reduce(function(a, id){ var h = satzHeute(id); return a + (h ? h.s.length : 0); }, 0);
+    or.innerHTML = '<div class="confirm-overlay"><div class="confirm-sheet" role="dialog" aria-label="'+esc(t("satzRausTitel"))+'"><h3>'+esc(t("satzRausTitel"))+'</h3>'+
+      '<p>'+esc(t("satzRausText", { s:satzName(n) }))+'</p>'+
+      '<button type="button" class="btn btn-primary" data-rausok>'+esc(t("trSpeichern"))+'</button>'+
+      '<button type="button" class="btn btn-secondary" data-rausspaeter>'+esc(t("satzRausSpaeter"))+'</button>'+
+      '<button type="button" class="btn btn-danger" data-rausweg>'+esc(t("satzRausWeg"))+'</button></div></div>';
+    function zu(){ or.innerHTML = ""; }
+    or.querySelector(".confirm-overlay").addEventListener("click", function(ev){ if(ev.target === this) zu(); });
+    or.querySelector("[data-rausok]").addEventListener("click", function(){ zu(); abschluss(); });
+    or.querySelector("[data-rausspaeter]").addEventListener("click", function(){ zu(); raus(); });
+    or.querySelector("[data-rausweg]").addEventListener("click", function(){
+      zu();
+      confirmSheet(t("satzRausWegQ"), t("cantUndo"), t("satzRausWeg"), function(){ satzVerwerfen(ids); raus(); });
+    });
+  }
+  root.querySelector("[data-satzexit]").addEventListener("click", verlassen);
   progChipBinden(root, "plan:"+p.id, function(){ studioPauseStop(); if(satzUhr){ clearInterval(satzUhr); satzUhr = 0; } });
   root.querySelector("[data-satzsave]").addEventListener("click", function(){ if(!root.querySelector(".satz-ende")) abschluss(); });
   function pauseZeigen(){

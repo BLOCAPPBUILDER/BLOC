@@ -17,7 +17,8 @@ var ddWoche = 0;   // 0 = diese Woche, -1 = die vorherige … (nur für diesen B
 var ddModus = null;   // "ist" (nur Trainiertes) | "plan" (dazu die Termine aus dem Kalender); null = automatisch
 function ddWochenStart(){
   var d = new Date(); d.setHours(0, 0, 0, 0);
-  return d.getTime() - ((d.getDay() + 6) % 7)*86400000 + ddWoche*7*86400000;   // Montag 0:00 der gewählten Woche
+  d.setDate(d.getDate() - (d.getDay() + 6) % 7 + ddWoche*7);   // Montag 0:00 der gewählten Woche (Kalendertage: stimmt auch bei der Zeitumstellung, Test 11, G)
+  return d.getTime();
 }
 /* Übungen eines Kalender-Eintrags (Workout, Katalog, BLOC); Run und Zufall haben keine feste Übungsliste */
 function ddGeplantIds(e){

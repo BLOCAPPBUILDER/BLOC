@@ -150,7 +150,7 @@ function announceStep(idx){
 /* Teilen: die Sicherungsdatei direkt an Drive, Mail, Messenger … übergeben (Android/iOS-Teilen-Menü).
    Chrome teilt nicht jede Dateiart - geht JSON nicht, dieselbe Datei als .txt (Import liest beides). */
 function backupTeilDatei(){
-  var name = "bloc-sicherung-"+new Date().toISOString().slice(0,10), inhalt = JSON.stringify(state.db,null,2);
+  var name = "bloc-sicherung-"+kalTagKey(Date.now()), inhalt = JSON.stringify(state.db,null,2);
   try{
     var f = new File([inhalt], name+".json", { type:"application/json" });
     if(navigator.canShare && navigator.canShare({ files:[f] })) return f;
@@ -161,7 +161,7 @@ function backupTeilDatei(){
 }
 /* App (Android): Sicherungsdatei über das Teilen-Menü ausgeben (Drive, Dateien, Mail …); ein Abbruch dort ist kein Fehler */
 function backupNativ(danach){
-  dateiAusgeben("bloc-sicherung-"+new Date().toISOString().slice(0,10)+".json", JSON.stringify(state.db,null,2), "application/json").then(function(){
+  dateiAusgeben("bloc-sicherung-"+kalTagKey(Date.now())+".json", JSON.stringify(state.db,null,2), "application/json").then(function(){
     state.db.settings.lastExport = Date.now();
     save();
     showToast(t("backupShared"));
@@ -188,17 +188,27 @@ function exportBackup(){
   var blob = new Blob([JSON.stringify(state.db,null,2)], {type:"application/json"});
   var url = URL.createObjectURL(blob);
   var a = document.createElement("a");
-  a.href = url; a.download = "sporttimer-backup-"+new Date().toISOString().slice(0,10)+".json";
+  a.href = url; a.download = "sporttimer-backup-"+kalTagKey(Date.now())+".json";
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
   state.db.settings.lastExport = Date.now();
   save();
 }
-function hatEigenes(db){
-  var st = (db && db.settings) || {};
-  return !!(db && ((db.blocks||[]).length || (db.workouts||[]).length || (db.myWorkouts||[]).length || (db.customEx||[]).length ||
-    Object.keys(st.studio || {}).length));   // auch Gewichte im Freien Training
+/* Test 11, C/F: Inhalt eines Stands zählen und dabei die Feldtypen prüfen; null = beschädigt (falscher Typ in einem wichtigen Feld) */
+function importInhalt(d){
+  if(!d || typeof d !== "object" || Array.isArray(d)) return null;
+  function feld(x){ return x === undefined || x === null || Array.isArray(x); }
+  function obj(x){ return x === undefined || x === null || (typeof x === "object" && !Array.isArray(x)); }
+  if(!["blocks", "workouts", "myWorkouts", "customEx", "history"].every(function(k){ return feld(d[k]); }) || !obj(d.settings)) return null;
+  var st = d.settings || {};
+  if(!obj(st.studio) || !feld(st.stPlaene) || !feld(st.einheiten) || !feld(st.programme) || !obj(st.kalender)) return null;
+  if(st.kalender && !feld(st.kalender.e)) return null;
+  function n(x){ return Array.isArray(x) ? x.length : 0; }
+  var o = { blocs:n(st.stPlaene), trainings:n(st.einheiten), termine:n(st.kalender && st.kalender.e), uebungen:Object.keys(st.studio || {}).length };
+  o.summe = o.blocs + o.trainings + o.termine + o.uebungen + n(st.programme) + n(d.blocks) + n(d.workouts) + n(d.myWorkouts) + n(d.customEx);
+  return o;
 }
+function hatEigenes(db){ var x = importInhalt(db); return !!(x && x.summe); }   // beschädigte Stände zählen nicht als eigene Inhalte
 /* Erinnerung an die Sicherungsdatei - bewusst selten: BLOC kopiert den Stand ohnehin alle 7 Tage auf dem Gerät (Schnappschuss, siehe unten),
    die Datei schützt zusätzlich bei neuem Handy oder gelöschten Website-Daten. Sie erscheint nur, wenn es eigene Inhalte gibt, seit 60 Tagen (oder nie)
    keine Datei gesichert wurde und es schon einen Schnappschuss gibt; × blendet sie für 30 Tage aus. Der Installations-Hinweis hat Vorrang. */

@@ -219,17 +219,51 @@ function dbAusRoh(parsed){
 }
 /* Test 10, V1: einmalig die vorhandenen Runden ihrem BLOC zuordnen (l.b), soweit ein gespeichertes Training das belegt; der Rest bleibt ohne Zuordnung und gilt für alle BLOCs */
 function blocWerteMigrieren(db){
-  var s = db.settings; if(s.blocWerteV === 1) return;
+  var s = db.settings; if(s.blocWerteV === 2) return;
   function tag(ts){ var d = new Date(ts); return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2); }
   var plaene = {}; (Array.isArray(s.stPlaene) ? s.stPlaene : []).forEach(function(p){ if(p && p.id) plaene[p.id] = 1; });
-  (Array.isArray(s.einheiten) ? s.einheiten : []).slice().sort(function(a, b){ return (a.at || 0) - (b.at || 0); }).forEach(function(x){
+  if(s.blocWerteV !== 1) (Array.isArray(s.einheiten) ? s.einheiten : []).slice().sort(function(a, b){ return (a.at || 0) - (b.at || 0); }).forEach(function(x){
     if(!x || !x.plan || !plaene[x.plan]) return;
     (x.ex || []).forEach(function(u){
       var e = s.studio && s.studio[u.id]; if(!e || !Array.isArray(e.log) || !(u.s || []).length) return;
       for(var i = 0; i < e.log.length; i++){ var l = e.log[i]; if(l && l.b == null && tag(l.at) === x.tag){ l.b = x.plan; break; } }
     });
   });
-  s.blocWerteV = 1;
+  /* Test 11, A: steckt eine Übung in mehreren BLOCs, bekommt jeder BLOC Gewicht und Ziel aus seiner eigenen letzten Runde (nicht die Werte des zuletzt trainierten BLOCs) */
+  var st = s.studio && typeof s.studio === "object" && !Array.isArray(s.studio) ? s.studio : {}, pl = (Array.isArray(s.stPlaene) ? s.stPlaene : []).filter(function(p){ return p && Array.isArray(p.ids); });
+  Object.keys(st).forEach(function(id){
+    var e = st[id], drin = pl.filter(function(p){ return p.ids.indexOf(id) > -1; });
+    if(!e || !Array.isArray(e.log) || drin.length < 2) return;
+    drin.forEach(function(p){
+      if(p.werte && p.werte[id]) return;
+      var w = blocWerteAusLog(e, p.id); if(!w) return;
+      if(!p.werte || typeof p.werte !== "object") p.werte = {};
+      p.werte[id] = w;
+    });
+  });
+  s.blocWerteV = 2;
+}
+/* Eigene Werte eines BLOCs aus seinen Runden: Arbeitsgewicht und Wiederholungen der letzten Runde, die meisten Sätze der letzten drei. Passt das bisherige Ziel, bleibt es.
+   w.manuell = letzte eigene Runde: bis zum nächsten Training gibt es aus den übernommenen Werten keinen Runter-Tipp. */
+function blocWerteAusLog(e, pid){
+  function arbeit(l){ return ((l && l.s) || []).filter(function(x){ return Array.isArray(x) && x[2] !== "w" && x[2] !== "d"; }); }
+  var r = e.log.filter(function(l){ return l && l.b === pid && arbeit(l).length; });
+  if(!r.length) return null;
+  var l = r[r.length-1], a = arbeit(l);
+  if(a.some(function(x){ return x[4] === 1; })) return null;   // Übung nach Zeit: dort gibt es kein Gewichts-/Wdh.-Ziel abzuleiten
+  var n = {}, kg = null;
+  a.forEach(function(x){ n[x[0]] = (n[x[0]] || 0) + 1; });
+  Object.keys(n).forEach(function(q){ if(kg === null || n[q] > n[kg] || (n[q] === n[kg] && +q > +kg)) kg = q; });
+  kg = +kg;
+  var w0 = a.filter(function(x){ return x[0] === kg; }).map(function(x){ return x[1]; }).sort(function(p, q){ return p - q; }), wdh = w0[Math.floor((w0.length - 1)/2)];
+  var saetze = Math.max.apply(null, r.slice(-3).map(function(x){ return arbeit(x).length; })), alt = e.ziel || {};
+  if(alt.wdh > 0 && wdh >= Math.max(Math.min(5, alt.wdh), alt.wdh - 2) && wdh <= alt.wdh + 2) wdh = alt.wdh;
+  var o = {};
+  ["pause", "timer", "kalibriert", "kalibriertRunde"].forEach(function(f){ if(e[f] !== undefined) o[f] = JSON.parse(JSON.stringify(e[f])); });
+  if(kg > 0) o.kg = kg; else if(e.kg !== undefined) o.kg = e.kg;
+  o.ziel = { saetze:Math.min(20, saetze), wdh:wdh };
+  o.manuell = Math.max(+e.manuell || 0, l.at || 0);
+  return o;
 }
 function loadDB(){
   try{

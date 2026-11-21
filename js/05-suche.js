@@ -210,6 +210,7 @@ function renderSearch(){
 }
 /* Startseite: Kopf, Hinweise, Meine Woche (führt in den Kalender), Kopfblock (heutiges Training › Favoriten › Baukasten), Favoriten, darunter die Bereiche */
 function renderHome(){
+  if(typeof trainingsNachtragen === "function") trainingsNachtragen();   // Test 11, D
   var favHTML = favItemsHTML();
   var nFav = favEntries().length;
   app.innerHTML =
@@ -281,6 +282,10 @@ function kopfNeuHTML(){
 /* Aussehen „New“: Karte „Heute geplant“ (Plan von heute) bzw. „Bereit für dein Training?“; gleiche Logik wie der Kopfblock, gleiches data-herostart */
 function heroNeuHTML(){
   if(fokusAus("katalog")) return "";
+  var offen = trainingOffenInfo();   // Test 11, D: angefangenes Training
+  if(offen) return '<section class="geplant-neu"><button type="button" class="gn-main" data-nav="#satz/'+esc(offen.p.id)+'/0">'+
+    '<span class="gn-play" aria-hidden="true">'+ICON_PLAY+'</span><span class="gn-text"><small>'+esc(t("heroFortsetzen"))+'</small><b>'+esc(offen.p.name)+'</b><span>'+esc(t("heroOffenSaetze", { s:satzName(offen.n) }))+'</span></span>'+
+    '<span class="gn-chev" aria-hidden="true">'+ICON_CHEV+'</span></button></section>';
   var heute = heroHeutige(), modus = "baukasten", label = t("heroTitel"), titel = t("heroLos"), sub = "";
   if(heute.length){ var info = kalHeroInfo(heute); modus = "plan"; label = t("heroGeplantNeu"); titel = info.titel; sub = info.sub; }
   else return typeof paPlanEndeHTML === "function" ? paPlanEndeHTML() : "";   // nichts geplant: höchstens die Karte „Plan geschafft“ (Planende): kein „Aus deinen Favoriten wählen“, die Seite bleibt hier leer (der Baukasten steht weiter unten)
