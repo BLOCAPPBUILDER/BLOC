@@ -63,7 +63,7 @@ var PAT = {
     ohneZug:"Für echtes Rudern fehlt dir Stange, Band oder Gerät – deshalb trainieren Übungen im Liegen den oberen Rücken. Mit einem Widerstandsband (unter „Geräte“ wählen) baut BLOC Rudern ein.",
     whoRest:"Den Rest bis 150 Minuten schaffst du nebenbei, z. B. mit zügigen Spaziergängen, Radfahren oder Treppen im Alltag.",
     endeTitel:"Plan geschafft", endeText:"{p}: {n} von {m} Trainings erledigt. Weiter mit denselben Übungen und deinen aktuellen Gewichten?",
-    endeLang:"{p} ist seit dem {d} beendet. Verlängern oder neu erstellen?", endeVerlaengern:"Plan verlängern", endeTage:"Dein Programm mit {n} Tagen", endeAlle:"Alle {n} Tage verlängern", endeWeiter:"Nächsten Block starten", endeWiederholen:"Block wiederholen", endeTitelBeendet:"Plan beendet", endeTextBeendet:"{p}: {n} von {m} Trainings erledigt. Den Block noch einmal machen?", endeNeu:"Neuen Plan erstellen", endeAus:"Ausblenden", endeOk:"{n} Termine für die nächsten {w} Wochen im Kalender",
+    endeLang:"{p} ist seit dem {d} beendet. Verlängern oder neu erstellen?", endeVerlaengern:"Plan verlängern", endeTage:"Dein Programm mit {n} Tagen", endeAlle:"Alle {n} Tage verlängern", endeWeiter:"Plan fortsetzen", endeWiederholen:"Plan wiederholen", endeTitelBeendet:"Plan beendet", endeTextBeendet:"{p}: {n} von {m} Trainings erledigt. Den Plan noch einmal machen?", endeTextNull:"{p}: Noch kein Training erledigt. Plan neu starten?", endeNeu:"Neuen Plan erstellen", endeAus:"Ausblenden", endeOk:"{n} Termine für die nächsten {w} Wochen im Kalender",
     tageListe:"Trainingstage"
   },
   en:{
@@ -120,7 +120,7 @@ var PAT = {
     ohneZug:"Real rows need a bar, band or machine – so exercises lying face down train your upper back. With a resistance band (choose it under equipment) BLOC adds rows.",
     whoRest:"You can cover the rest up to 150 minutes on the side, e.g. with brisk walks, cycling or taking the stairs.",
     endeTitel:"Plan completed", endeText:"{p}: {n} of {m} workouts done. Carry on with the same exercises and your current weights?",
-    endeLang:"{p} ended on {d}. Extend it or create a new one?", endeVerlaengern:"Extend plan", endeTage:"Your {n}-day program", endeAlle:"Extend all {n} days", endeWeiter:"Start next block", endeWiederholen:"Repeat block", endeTitelBeendet:"Plan ended", endeTextBeendet:"{p}: {n} of {m} workouts done. Do the block again?", endeNeu:"Create a new plan", endeAus:"Hide", endeOk:"{n} sessions for the next {w} weeks in your calendar",
+    endeLang:"{p} ended on {d}. Extend it or create a new one?", endeVerlaengern:"Extend plan", endeTage:"Your {n}-day program", endeAlle:"Extend all {n} days", endeWeiter:"Continue plan", endeWiederholen:"Repeat plan", endeTitelBeendet:"Plan ended", endeTextBeendet:"{p}: {n} of {m} workouts done. Do the plan again?", endeTextNull:"{p}: No workouts done yet. Restart the plan?", endeNeu:"Create a new plan", endeAus:"Hide", endeOk:"{n} sessions for the next {w} weeks in your calendar",
     tageListe:"Training days"
   }
 };
@@ -897,17 +897,25 @@ function paPlanEndeHTML(){
       '<button type="button" class="pe-aus" data-peaus>'+esc(pt("endeAus"))+'</button></div></section>';
   }
   return '<section class="card plan-ende" data-planende="'+esc(en.gid)+'"><div class="pe-kopf">'+(geschafft ? '<span class="pe-haken" aria-hidden="true">✓</span>' : '')+'<b>'+esc(pt(geschafft ? "endeTitel" : "endeTitelBeendet"))+'</b></div>'+
-    '<p>'+esc(pt(geschafft ? "endeText" : "endeTextBeendet", { p:en.tage > 1 ? pt("endeTage", { n:en.tage }) : (en.p.gruppeName || en.p.name), n:en.n, m:en.m }))+'</p>'+
+    '<p>'+esc(pt(geschafft ? "endeText" : en.n ? "endeTextBeendet" : "endeTextNull", { p:en.tage > 1 ? pt("endeTage", { n:en.tage }) : (en.p.gruppeName || en.p.name), n:en.n, m:en.m }))+'</p>'+
     '<div class="pe-knoepfe"><button type="button" class="btn btn-primary" data-peweiter>'+esc(en.tage > 1 ? pt("endeAlle", { n:en.tage }) : pt(geschafft ? "endeWeiter" : "endeWiederholen"))+'</button>'+
     '<button type="button" class="btn btn-secondary" data-peneu>'+esc(pt("endeNeu"))+'</button>'+
     '<button type="button" class="pe-aus" data-peaus>'+esc(pt("endeAus"))+'</button></div></section>';
+}
+/* Test 14, E: beim Verlängern knüpft die Laufdistanz an die zuletzt erledigten Läufe an (die höhere der letzten zwei, weil der letzte in einer Leichtwoche liegen kann) */
+function paLaufAnknuepfen(p){
+  if(!(p.laufKm > 0)) return;
+  var l = kalListe().filter(function(e){ return e.art === "run" && e.prog && e.prog.id === p.id && e.km > 0 && kalErledigt(e); }).sort(function(a, b){ return a.tag < b.tag ? -1 : a.tag > b.tag ? 1 : 0; });
+  if(!l.length) return;
+  var km = Math.max.apply(null, l.slice(-2).map(function(e){ return e.km; }));
+  if(km > p.laufKm) p.laufKm = km;
 }
 function paPlanEndeBinden(neu){
   var box = app.querySelector("[data-planende]"), en = box ? paPlanEnde() : null;
   if(!en) return;
   function gesehen(){ paEndeProgs(en.gid).forEach(function(p){ p.endeGesehen = en.letzter; }); save(); }
   box.querySelector("[data-peweiter]").addEventListener("click", function(){
-    var n = 0; paEndeProgs(en.gid).forEach(function(p){ n += programmUebernehmen(p); });   // Assistent: mit Leichtwoche (paKalender), eigener Plan: Wochenplan
+    var n = 0; paEndeProgs(en.gid).forEach(function(p){ paLaufAnknuepfen(p); n += programmUebernehmen(p); });   // Assistent: mit Leichtwoche (paKalender), eigener Plan: Wochenplan
     showToast(pt("endeOk", { n:n, w:en.p.wochen || 6 })); neu();
   });
   box.querySelector("[data-peneu]").addEventListener("click", function(){ gesehen(); paOeffnen(null); });

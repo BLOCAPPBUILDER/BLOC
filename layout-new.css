@@ -1933,3 +1933,27 @@ body.prot-sheet-offen{ overflow:hidden; }
 .satz-root .satz-satzleiste button:active{ transform:scale(.97); }
 .satz-root .satz-satzleiste button.bearb{ color:#fff; background:rgba(255,90,54,.18); box-shadow:inset 0 0 0 2px var(--accent); }
 .satz-root .satz-satzleiste i{ display:flex; align-items:center; justify-content:center; min-height:44px; }
+
+/* Test 14, B: die Schrift richtet sich nach dem Feld, auch 192,5 bleibt ganz sichtbar */
+.satz-root .satz-feld{ min-width:0; }
+.satz-root .satz-zaehler{ container-type:inline-size; }
+.satz-root .satz-zaehler button{ width:38px; }
+.satz-root .satz-zaehler .satz-kg, .satz-root .satz-zaehler .satz-w{ font-size:clamp(14px, calc((100cqw - 76px) / 3.75), 26px); }
+/* Test 14, F: Info-Knopf 44 px, der Hauptknopf bleibt auch bei vielen Sätzen im Bild (die Karte scrollt innen) */
+.satz-root .satz-kopf .info-btn{ width:44px; height:44px; margin:-8px -8px 0 0; border:0; }
+.satz-root .satz-kopf .info-btn::after{ content:none; }
+.satz-root .satz-kopf .info-btn::before{ content:""; position:absolute; left:8px; top:8px; width:28px; height:28px; box-sizing:border-box; border:2px solid currentColor; border-radius:50%; }
+.satz-root .satz-karte{ overflow:hidden; min-height:0; }
+.satz-root .satz-glas{ flex:1 1 auto; min-height:0; overflow-y:auto; scrollbar-width:none; }
+.satz-root .satz-glas::-webkit-scrollbar{ display:none; }
+.satz-root .satz-glas > *{ flex-shrink:0; }
+.satz-aktion{ position:static; flex:none; }
+/* Gespeichertes Training: Sätze antippen und ändern (Test 14, A) */
+.tr-v-edit{ align-items:flex-start; gap:10px; }
+.tr-saetze{ display:flex; flex-wrap:wrap; justify-content:flex-end; gap:6px; }
+.tr-satz{ min-height:44px; padding:6px 10px; border:1px solid var(--border); border-radius:12px; background:var(--surface-2); color:var(--text); font:inherit; font-size:13px; font-weight:700; cursor:pointer; }
+.tr-satz.an{ border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent); }
+.tr-satz-hinweis{ margin:8px 0 0; font-size:12.5px; color:var(--text-dim); }
+.tr-edit{ margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+.tr-edit > b{ display:block; margin-bottom:8px; font-size:14px; }
+.tr-edit .st-eingabe.tr-eins{ grid-template-columns:1fr; }

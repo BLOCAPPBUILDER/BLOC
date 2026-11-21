@@ -909,8 +909,9 @@ function renderStudioKarte(id){
     });
     an("[data-stscheiben]", function(){ openScheibenSheet(kgWert()); });
   }
-  an("[data-stset]", function(){
+  an("[data-stset]", function stSatz(ok){
     if(satzFelderLeer(kgIn, wIn)) return;
+    if(ok !== true && satzKgStopp(id, kgIn, function(){ stSatz(true); })) return;
     var en = eintrag(), jetzt = Date.now(), kg = kgWert(), w = Math.max(1, Math.min(100, parseInt(wIn.value) || 1)), typ = studioSatzTypWahl;
     var davor = studioBestwerteGesamt(id, en.log);   // Bestwerte vor diesem Satz
     var l = studioRundeFuer(en, jetzt, id);
@@ -1053,6 +1054,20 @@ function bindFavItems(refresh){
 
 /* Satz eintragen aus dem Timer: kleines Fenster mit Gewicht und Wiederholungen (vorausgefüllt), schreibt in dasselbe Protokoll wie die Übungs-Karte */
 /* Test 12, E: leeres (oder unlesbares) Gewicht bzw. Wiederholungen werden nicht still zu 0 kg / 1 Wdh.: Feld markieren, nichts eintragen */
+/* Test 14, C: über 500 kg wird gemeldet statt still begrenzt; deutlich mehr als das Arbeitsgewicht (über 30 % und über 5 kg) fragt kurz nach.
+   true: hier anhalten (weiter läuft nach dem Ja). zurueck: bei „Abbrechen“. */
+function satzKgStopp(id, kgIn, weiter, zurueck){
+  if(!kgIn) return false;
+  var x = parseFloat(String(kgIn.value).replace(",", "."));
+  if(!isFinite(x)) return false;
+  if(x > 500){ kgIn.focus(); showToast(t("satzKgMax")); return true; }
+  var e = studioEintrag(id), r = e && +e.kg > 0 ? +e.kg : 0;
+  if(r > 0 && !studioAssistiert(id) && x > r*1.3 && x - r > 5){
+    confirmSheet(t("satzKgFrage", { kg:studioKg(x) }), t("satzKgFrageText", { r:studioKg(r) }), t("satzKgJa"), weiter, zurueck);
+    return true;
+  }
+  return false;
+}
 function satzFelderLeer(kgIn, wIn){
   var leer = [];
   if(kgIn && !isFinite(parseFloat(String(kgIn.value).replace(",", ".")))) leer.push(kgIn);
@@ -1111,9 +1126,9 @@ function openGewichtSheet(id, nachher){
   root.querySelector("[data-ok]").addEventListener("click", function(){
     if(satzFelderLeer(kgIn, wIn)) return;
     var kg = kgWert(), w = Math.max(1, Math.min(100, parseInt(wIn.value) || 1));
-    studioSatzLog(id, kg, w); zu();
-    showToast(studioKg(kg)+" kg × "+w);
-    if(nachher) nachher();
+    function eintragen(){ studioSatzLog(id, kg, w); zu(); showToast(studioKg(kg)+" kg × "+w); if(nachher) nachher(); }
+    if(satzKgStopp(id, kgIn, eintragen, function(){ openGewichtSheet(id, nachher); })) return;
+    eintragen();
   });
 }
 
