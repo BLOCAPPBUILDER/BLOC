@@ -480,7 +480,10 @@ function katPlanAusDraft(d){
   d.items.forEach(function(it){ var ex = findExercise(it.ex); if(ex && ex.main !== "stretch" && ids.indexOf(it.ex) < 0) ids.push(it.ex); });
   if(!ids.length) return;
   var l = stPlaene(), p = null;
-  l.forEach(function(x){ if(x.fromWo === d.key) p = x; });
+  /* Test 12, A: ein Workout, das aus einem BLOC entstanden ist, öffnet diesen BLOC - keine Kopie */
+  var mw0 = /^my:/.test(String(d.key)) ? findMy(String(d.key).slice(3)) : null, quelle = d.fromPlan || (mw0 && mw0.fromPlan);
+  if(quelle) p = stPlanFind(quelle);
+  if(!p) l.forEach(function(x){ if(x.fromWo === d.key) p = x; });
   if(!p){
     p = { id:uid(), name:d.name || t("planDefault", { n:l.length+1 }), ids:ids, updatedAt:Date.now(), fromWo:d.key };
     l.push(p);

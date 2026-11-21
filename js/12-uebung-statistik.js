@@ -760,6 +760,7 @@ function trainingsNachtragen(){
       x.von = Math.min(x.von, l.at); x.at = Math.max(x.at, l.letzte);
       l.zu = true; l.zuAt = l.letzte;
     });
+    studioLogKuerzen(alle[id]);
   });
   var neu = Object.keys(g);
   if(!neu.length) return 0;

@@ -8,6 +8,15 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-21 · Zwölfter Test: Termin startet den echten BLOC (Fassung 2026-11-21-4)
+
+Umsetzung von BERICHT-Test12-als-Prompt.md.
+- **A/D:** Ein einzeln geplanter BLOC startet direkt (Satz-Training oder Timer), ohne Deckblatt „Eigenes Workout“ und ohne stille Kopie; der Termin ist danach erledigt. Das Deckblatt eines Workouts aus einem BLOC öffnet diesen BLOC. Vorhandene unveränderte Kopien werden einmalig zusammengeführt (Runden, Trainings, Termine, TrainingsBLOCs, Favoriten); das Original behält seine Werte.
+- **B:** Das Log wird erst beim Abschließen auf 200 Runden gekürzt: Verwerfen kostet keine alte Runde mehr.
+- **C:** Bestleistung und Statistik nennen die Regel „Rekord ab 5 Wdh.“.
+- **E:** Leeres Gewicht oder leere Wiederholungen werden nicht eingetragen, das Feld wird markiert.
+- Tests: einheitstest +4 (118), schnelltest 54.
+
 ## 2026-11-21 · Elfter Test: Update, Bestwerte, Import, halbe Trainings (Fassung 2026-11-21-3)
 
 Umsetzung von BERICHT-Test11-als-Prompt.md. Offene Fragen mit den Vorschlägen des Berichts umgesetzt: × fragt nach, ein Training zählt bis 4 Stunden nach dem letzten Satz zum Starttag.

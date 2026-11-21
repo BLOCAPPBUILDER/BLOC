@@ -11,7 +11,7 @@ function satzBasisN(id){ var b = (state.db.settings.satzBasis || {})[id]; return
 /* Seit 2026-11-12 schließt das Speichern die Runde (l.zu, siehe studioOffen): weitere Sätze landen in einer neuen Runde. satzBasis bleibt für ältere Daten von heute. */
 function satzBasisSetzen(ids){
   var s = state.db.settings, o = s.satzBasis || (s.satzBasis = {}), tag = studioTag(Date.now()), jetzt = Date.now();
-  ids.forEach(function(id){ var l = studioOffen(studioEintrag(id)); if(l){ l.zu = true; l.zuAt = jetzt; } o[id] = { tag:tag, n:0 }; });
+  ids.forEach(function(id){ var l = studioOffen(studioEintrag(id)); if(l){ l.zu = true; l.zuAt = jetzt; studioLogKuerzen(studioEintragAlle(id)); } o[id] = { tag:tag, n:0 }; });
   s.rundeZu = jetzt;
   save();
 }
@@ -357,6 +357,7 @@ function renderSatzTraining(planId, start){
     [kgIn, wIn].forEach(function(f){ if(f) f.addEventListener("focus", function(){ f.select(); }); });
     k.querySelectorAll("[data-ukg]").forEach(function(b){ b.addEventListener("click", function(){ tipp(); if(kgIn) kgIn.value = studioKg(+b.getAttribute("data-ukg")); wIn.value = b.getAttribute("data-uw"); }); });
     k.querySelector("[data-satzset]").addEventListener("click", function(){
+      if(satzFelderLeer(koerper ? null : kgIn, wIn)) return;
       var kg = koerper ? 0 : kgWert(), w = Math.max(1, Math.min(wMax, parseInt(wIn.value) || 1)), e = studioEintrag(id) || {};
       var rpe = anstrengungModus() ? (satzKontext.rpe[id] || 0) : 0; delete satzKontext.rpe[id];
       studioSatzLog(id, kg, w, zeitE, rpe);

@@ -215,6 +215,7 @@ function dbAusRoh(parsed){
   migrateExIds(db);
   dbMigrieren(db, +parsed.v || 1);
   blocWerteMigrieren(db);
+  blocKopienZusammen(db);
   return db;
 }
 /* Test 10, V1: einmalig die vorhandenen Runden ihrem BLOC zuordnen (l.b), soweit ein gespeichertes Training das belegt; der Rest bleibt ohne Zuordnung und gilt für alle BLOCs */
@@ -242,6 +243,39 @@ function blocWerteMigrieren(db){
     });
   });
   s.blocWerteV = 2;
+}
+/* Test 12, A: beim Start eines geplanten BLOCs entstandene stille Kopien einmalig zurückführen. Nur unveränderte Kopien (gleicher Name, keine neue Übung);
+   Runden, Trainings, Termine, Pläne und Favoriten zeigen danach auf das Original, dessen eigene Werte bleiben. */
+function blocKopienZusammen(db){
+  var s = db.settings; if(s.blocKopienV === 1) return;
+  s.blocKopienV = 1;
+  if(!Array.isArray(s.stPlaene)) return;
+  var pl = s.stPlaene, my = Array.isArray(db.myWorkouts) ? db.myWorkouts : [], karte = {}, n = 0;
+  var st = s.studio && typeof s.studio === "object" && !Array.isArray(s.studio) ? s.studio : {};
+  pl.forEach(function(q){
+    if(!q || !Array.isArray(q.ids) || String(q.fromWo || "").indexOf("my:") !== 0) return;
+    var mw = my.filter(function(m){ return m && m.id === q.fromWo.slice(3); })[0];
+    var o = mw && mw.fromPlan ? pl.filter(function(x){ return x && x.id === mw.fromPlan; })[0] : null;
+    if(!o || o === q || !Array.isArray(o.ids) || o.name !== q.name || !q.ids.every(function(id){ return o.ids.indexOf(id) > -1; })) return;
+    o.ids.forEach(function(id){   // das Original behält seine Werte, auch wenn danach die Runden der Kopie dazukommen
+      var e = st[id]; if(!e || !Array.isArray(e.log) || (o.werte && o.werte[id])) return;
+      var w = blocWerteAusLog(e, o.id); if(w){ if(!o.werte || typeof o.werte !== "object") o.werte = {}; o.werte[id] = w; }
+    });
+    karte[q.id] = o.id; n++;
+  });
+  if(!n) return;
+  function neu(id){ return karte[id] || id; }
+  Object.keys(st).forEach(function(id){ ((st[id] && st[id].log) || []).forEach(function(l){ if(l && karte[l.b]) l.b = karte[l.b]; }); });
+  (Array.isArray(s.einheiten) ? s.einheiten : []).forEach(function(x){ if(x && karte[x.plan]) x.plan = karte[x.plan]; });
+  ((s.kalender && Array.isArray(s.kalender.e)) ? s.kalender.e : []).forEach(function(e){ if(e && e.art === "plan" && karte[e.ref]) e.ref = karte[e.ref]; });
+  (Array.isArray(s.programme) ? s.programme : []).forEach(function(p){
+    if(!p || !Array.isArray(p.items)) return;
+    p.items = p.items.map(function(r){ var a = String(r); return a.indexOf("plan:") === 0 ? "plan:"+neu(a.slice(5)) : r; }).filter(function(r, i, l){ return l.indexOf(r) === i; });
+  });
+  if(Array.isArray(s.favs)) s.favs = s.favs.map(function(f){ var a = String(f); return a.indexOf("plan:") === 0 ? "plan:"+neu(a.slice(5)) : f; }).filter(function(f, i, l){ return l.indexOf(f) === i; });
+  my.forEach(function(m){ if(m && karte[m.fromPlan]) m.fromPlan = karte[m.fromPlan]; });
+  s.stPlaene = pl.filter(function(q){ return !(q && karte[q.id]); });
+  s.stPlaene.forEach(function(q){ if(Array.isArray(q.folge)) q.folge = q.folge.map(neu).filter(function(x, i, l){ return x !== q.id && l.indexOf(x) === i; }); });
 }
 /* Eigene Werte eines BLOCs aus seinen Runden: Arbeitsgewicht und Wiederholungen der letzten Runde, die meisten Sätze der letzten drei. Passt das bisherige Ziel, bleibt es.
    w.manuell = letzte eigene Runde: bis zum nächsten Training gibt es aus den übernommenen Werten keinen Runter-Tipp. */
