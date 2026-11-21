@@ -8,6 +8,11 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-21 · Filter verfallen am nächsten Tag, Plan-Fragen nur mit „Weiter“ (Fassung 2026-11-21-1)
+
+- Gewählte Filter werden beim ersten Öffnen an einem neuen Kalendertag zurückgesetzt, auch bei Rückkehr aus dem Hintergrund. Die Sortierung bleibt.
+- Plan-Assistent: Eine Antwort wird nur markiert, weiter geht es erst mit dem Knopf „Weiter“.
+
 ## 2026-11-14 · Ignorierter Pausen-Tipp kommt nicht wieder (Fassung 2026-11-14-4)
 
 - Wer nach der Pause einfach trainiert (auch nur ein Satz, Runde noch offen), sieht den Pausen-Tipp erst bei der nächsten Pause von mehr als 2 Wochen wieder.
