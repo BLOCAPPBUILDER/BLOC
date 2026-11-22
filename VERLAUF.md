@@ -7,6 +7,11 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 - Die Änderungen aus den Fassungen -12 und -13 (Test 15) sind jetzt auch auf `main` und damit in der Web-Version.
 
+## 2026-11-22 · Fotos nur noch auf Startseite und Tools
+
+- 30 Fotos und die wechselnden Foto-Pools entfernt; Bereichsköpfe und Favoriten bleiben ohne Foto.
+- Noch außerhalb: `ort-fitnessstudio.jpg`, `ort-freiluft.jpg`, `neu-h-brust-2.jpg` (Trainingsart-Auswahl, Plan-Assistent, Katalog).
+
 ## 2026-11-22 · Weitere ungenutzte Bilder entfernt (Fassung 2026-11-22-15)
 
 - Entfernt, weil nirgends angezeigt: `neu-faq.jpg`, `neu-p-freiluft-leiter.jpg`, `neu-p-timer-box.jpg`, samt Einträgen in `sw.js`, `FOTO_FOKUS` und `FOTO_SAT`.

@@ -240,7 +240,7 @@ function renderKalender(){
   }
   var sichtbar = tage.filter(function(d){ return !monat || d.getMonth() === kalBasis.getMonth(); }).map(kalTagKey);
   var sum = kalSumme(sichtbar), vpN = kalVerpasstN(sichtbar);
-  html = bereichKopfNeuHTML("kal", t("tabKalender"), t("kalKicker"), "", { klar:true, foto:"img/neu-d-kalender.jpg", fotoHell:"img/neu-h-kettlebell.jpg", zurueck:"#home" }) +
+  html = bereichKopfNeuHTML("kal", t("tabKalender"), t("kalKicker"), "", { klar:true, zurueck:"#home" }) +
     '<div class="card lib-tabs-card"><div class="theme-pick lib-tabs seg-2">'+
       '<button type="button" data-kalansicht="woche" class="'+(!monat ? 'active' : '')+'">'+esc(t("kalWoche"))+'</button>'+
       '<button type="button" data-kalansicht="monat" class="'+(monat ? 'active' : '')+'">'+esc(t("kalMonat"))+'</button></div></div>'+

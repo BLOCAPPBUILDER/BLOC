@@ -104,11 +104,6 @@ function openBereicheSheet(){
   zeichnen();
 }
 /* „Überrasch mich“: schmale Leiste (eine Zeile) direkt unter den Reitern vom Workout-Bereich - das Alleinstellungsmerkmal, aber ohne viel Höhe zu kosten */
-/* Bild-Kopf der Suche: ein schmales Foto direkt unter der Kopfzeile (die übrigen Seiten haben keinen Bild-Kopf mehr). Foto: Pexels (siehe quellen.html) */
-var BEREICH_BILD = { suche:"img/bereich-suche.jpg" };
-function bereichBildHTML(key){
-  return '<div class="bereich-bild"><img src="'+BEREICH_BILD[key]+'" alt="" draggable="false"></div>';
-}
 /* Heute im Kalender eingeplante Trainings, die noch offen sind (leer, wenn nichts oder alles erledigt) */
 function heroHeutige(){
   if(typeof kalAn !== "function") return [];
