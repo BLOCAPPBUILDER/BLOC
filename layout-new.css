@@ -1988,3 +1988,43 @@ details.run-eigen[open], details.run-opt[open], details.run-ansage[open]{ positi
 :root[data-layout="new"] .run-hero.run-mitte .rh-km small{ font-size:20px; letter-spacing:0; }
 :root[data-layout="new"] .run-hero.run-mitte .rh-sub{ display:block; margin:0; padding:4px 8px; text-align:center; background:none !important; border:0 !important; -webkit-backdrop-filter:none; backdrop-filter:none; }
 :root[data-layout="new"] .run-hero.run-mitte .rh-kcal{ display:flex; align-items:center; }
+
+/* Gewichtsvorschlag, Variante A „Minimal“ (2026-11-22): Etikett und X über dem Feld, rotes i rechts unter der Figur */
+.satz-root .satz-figur.mit-i{ padding-bottom:22px; }
+.satz-figbox{ position:relative; display:flex; justify-content:center; max-width:100%; }
+.satz-tipp-i{ position:absolute; right:-6px; bottom:-32px; z-index:2; width:44px; height:44px; display:grid; place-items:center; padding:0; border:0; background:none; color:var(--accent); cursor:pointer; }
+.satz-tipp-i span{ width:26px; height:26px; display:grid; place-items:center; border-radius:50%; border:2px solid currentColor; background:rgba(20,22,26,.35); font-family:Georgia,"Times New Roman",serif; font-style:italic; font-weight:700; font-size:15px; line-height:1; }
+.satz-fk-tipp .satz-tipp-i{ position:static; flex:none; width:32px; }
+.satz-root .satz-eingabe.mit-tipp .satz-feldkopf{ display:flex; align-items:center; justify-content:center; height:36px; margin:0 0 4px; min-width:0; }
+.satz-root .satz-feldkopf label{ margin:0; }
+.satz-feldkopf.hat-tipp .satz-fk-label{ display:none; }
+.satz-fk-tipp{ display:inline-flex; align-items:center; min-width:0; max-width:100%; }
+.satz-pille{ flex:0 1 auto; min-width:0; height:44px; padding:0; border:0; background:none; color:#fff; font:inherit; cursor:pointer; }
+.satz-pille span{ display:block; max-width:100%; height:32px; padding:0 10px; box-sizing:border-box; border-radius:99px; background:var(--accent); font-size:13px; font-weight:800; line-height:32px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.satz-pille.runter span{ background:#c9822a; }
+.satz-pille:active span{ transform:scale(.97); }
+.satz-tipp-x{ flex:none; width:30px; height:44px; padding:0; border:0; background:none; color:rgba(255,255,255,.78); font-size:20px; line-height:1; cursor:pointer; }
+.tipp-aus .satz-fk-tipp, .tipp-aus .satz-tipp-i{ display:none; }
+.tipp-aus .satz-feldkopf.hat-tipp .satz-fk-label{ display:block; }
+.satz-tipp-sheet .confirm-sheet{ background:#1d2025; color:#f4f4f6; }
+.stt-kopf{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.stt-kopf h3{ margin:0; font-size:20px; }
+.stt-zu{ width:44px; height:44px; margin:-8px -8px -8px 0; border:0; background:none; color:#fff; font-size:24px; cursor:pointer; }
+.satz-tipp-sheet ol{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+.satz-tipp-sheet li{ display:flex; gap:10px; }
+.satz-tipp-sheet li > i{ flex:none; width:24px; height:24px; display:grid; place-items:center; border-radius:50%; background:rgba(255,90,54,.2); color:#ff8f6b; font-style:normal; font-size:12.5px; font-weight:800; }
+.satz-tipp-sheet li b{ display:block; font-size:14px; }
+.satz-tipp-sheet li span{ display:block; margin-top:1px; color:rgba(255,255,255,.76); font-size:13px; line-height:1.35; }
+.stt-text{ margin:10px 0 0; color:rgba(255,255,255,.84); font-size:14px; line-height:1.45; }
+.stt-notiz{ margin:12px 0 0; padding:10px 12px; border-radius:13px; background:rgba(255,255,255,.07); color:rgba(255,255,255,.82); font-size:12.5px; line-height:1.4; }
+.stt-notiz b{ color:#fff; }
+.stt-kn{ display:flex; flex-direction:column; gap:6px; margin-top:12px; }
+.stt-kn button{ height:48px; border-radius:15px; font:inherit; font-size:15px; font-weight:800; cursor:pointer; }
+.stt-ja{ border:0; background:var(--accent); color:#fff; }
+.stt-nein{ border:0; background:none; color:rgba(255,255,255,.85); }
+@media (max-height:620px){   /* sehr kleine Handys: kg und Wdh. bleiben auch mit Vorschlag vollständig sichtbar */
+  .satz-root .satz-figur.mit-i{ min-height:40px; margin:0; padding-bottom:0; }
+  .satz-root .satz-figur.mit-i .satz-illu{ max-height:8vh; }
+  .satz-figur.mit-i .satz-tipp-i{ right:-44px; bottom:-8px; }
+  .satz-root .satz-eingabe.mit-tipp .satz-feldkopf{ height:32px; margin-bottom:2px; }
+}
