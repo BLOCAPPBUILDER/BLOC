@@ -119,6 +119,7 @@ function runPunkt(lat, lon, acc, ts, speed, alt, altAcc){
     r.splits.push(Math.round(r.tZ + anteil*(nun - r.tZ)));
     runAnsage(k);
   }
+  runTeilHinweis(r, vor, nun);   // zwischen den Kilometern: alle 100 m prüfen, ob man zu langsam ist
   r.tZ = nun;
   if(!r.pts.length || runMeter(r.pts[r.pts.length-1], p) >= 3) r.pts.push(p);   // alle 3 m ein Routenpunkt (vorher 5 m), damit Kurven nicht abgeschnitten werden
   r.verlauf.push({ t:nun, d:r.dist });
@@ -223,6 +224,25 @@ function runPaceHinweis(r, k){
   if(n < 3) return de ? "Im Plan." : "On target.";
   if(diff > 0) return de ? n+" Sekunden zu langsam." : n+" seconds too slow.";
   return de ? n+" Sekunden schneller als geplant." : n+" seconds faster than planned.";
+}
+/* Zwischen den Kilometern (nur bei Pace-Vorgabe, nur zu Fuß, nur wenn zu langsam): alle 100 m wird das Tempo der letzten 100 m mit der Vorgabe verglichen.
+   Liegt es mehr als 12 s/km darüber, kommt ein kurzer Hinweis; danach ruht er 200 m, damit es nicht nervt. Volle Kilometer meldet runPaceHinweis. */
+var RUN_TEIL_TOL = 12;
+function runTeilHinweis(r, vor, nun){
+  var ziel = r.ziel && r.ziel.pace, c;
+  while(Math.floor(r.dist/100) > (r.n100 || 0)){
+    c = (r.n100 || 0) + 1; r.n100 = c;
+    var anteil = (c*100 - vor)/(r.dist - vor), tc = r.tZ + anteil*(nun - r.tZ), seg = (tc - (r.t100 || 0))/1000*10;   // Sekunden je km der letzten 100 m
+    r.t100 = tc;
+    if(!ziel || r.art === "rad" || r.stumm || c % 10 === 0 || c < 2 || c < (r.hinweisAb || 0)) continue;
+    var diff = Math.round(seg - ziel);
+    if(diff > RUN_TEIL_TOL){
+      r.hinweisAb = c + 3;   // frühestens 200 m später wieder
+      var txt = currentLang() !== "en" ? "Zu langsam, "+diff+" Sekunden pro Kilometer über dem Ziel." : "Too slow, "+diff+" seconds per kilometre over target.";
+      (r.gesagt || (r.gesagt = [])).push(txt);
+      runSag(txt);
+    }
+  }
 }
 function runAnsage(k){
   var r = run, e = runAnsageEinst();
