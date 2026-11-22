@@ -2396,3 +2396,12 @@ details[open] > summary > .pg-pfeil{ transform:rotate(180deg); }
 .fv-chips{ display:flex; gap:6px; margin-top:8px; } .fv-chips span{ flex:1; text-align:center; padding:6px 4px; border-radius:999px; background:color-mix(in srgb, var(--text) 9%, transparent); font-size:12px; font-weight:600; }
 /* Test 12, E: leeres Pflichtfeld beim Satz */
 .stepper.feld-fehlt{ outline:2px solid var(--danger); outline-offset:1px; }
+
+/* Einstiege: sichtbarer Fokus und Gedrückt-Zustand */
+.bau-karte:focus-visible, .act-opt:focus-visible, .bn-knoepfe .btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.bau-karte:active, .act-opt:active{ transform:scale(.98); }
+.bau-karte:disabled, .act-opt:disabled{ opacity:.5; }
+.bn-knoepfe .btn{ min-height:44px; }
+.act-opt{ min-height:44px; }
+:root .bau-karte .bk-t small{ white-space:normal; overflow:visible; text-overflow:clip; }
+.bau-karte.bau-sp:not(.ws-bau) .bk-t{ padding-right:64px; }

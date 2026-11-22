@@ -815,9 +815,9 @@
     var d = document.createElement("div"); d.innerHTML = seiten[2].extra;
     wahr(d.querySelector("[role=img][aria-label]"), "Schaubild mit Beschriftung für Screenreader");
     var sv = d.querySelector(".intro-schaubild").textContent;
-    wahr(/BLOC 1/.test(sv) && /BLOC 2/.test(sv) && /RUN/.test(sv) && /Trainingsplan/.test(sv) && /TrainingsBLOC 1/.test(sv) && !/Workout/.test(sv), "Schaubild nennt Trainingsplan, TrainingsBLOC 1 mit BLOC 1, BLOC 2 und RUN, ohne Workout");
+    wahr(/BLOC 1/.test(sv) && /BLOC 2/.test(sv) && /RUN/.test(sv) && /Trainingsplan/.test(sv) && /Training 1/.test(sv) && !/Workout/.test(sv), "Schaubild nennt Trainingsplan, TrainingsBLOC 1 mit BLOC 1, BLOC 2 und RUN, ohne Workout");
     wahr(d.querySelectorAll(".sb-zu").length === 2, "Weitere TrainingsBLOCs stehen zugeklappt (Tag 2 und 3)");
-    wahr(/TrainingsBLOC/.test(d.textContent), "Schaubild und Legende nennen TrainingsBLOC");
+    wahr(/Training 1/.test(d.textContent) && !/TrainingsBLOC/.test(d.textContent), "Schaubild und Legende nennen Training");
   });
   test("Sicherungs-Erinnerung: selten (60 Tage ohne Datei, Schnappschuss vorhanden, × ruht 30 Tage)", function () {
     var s = W.state.db.settings, tag = 86400000, alt = { z: W.snapZeit, ex: s.lastExport, bis: s.backupTipBis, bl: W.state.db.blocks, it: W.installTipHTML };

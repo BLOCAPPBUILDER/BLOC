@@ -15,6 +15,20 @@ Dieses Dokument beschreibt den **aktuellen Stand**. Die Geschichte der Änderung
 - **Keine Build-Schritte:** Vanilla-JavaScript, die Dateien werden so ausgeliefert, wie sie im Repository liegen.
 - **Deutsche Bezeichner und Kommentare**, Speicher in `localStorage`.
 
+## Begriffe
+
+**Übung → BLOC → Training → Trainingsplan** (EN: Exercise → BLOC → Session → Training plan, kurz: plan).
+
+- **Übung:** eine einzelne Bewegung.
+- **BLOC:** Übungen, die zusammengehören, mit Sätzen oder mit Timer. Ein Timer-Abschnitt wie „6 × 30 s“ heißt **Intervall**.
+- **Training:** was man an einem Termin macht: ein oder mehrere BLOCs, optional ein Run. Ein Training kann mehrere Wochentage haben und seine Einträge reihum durchlaufen.
+- **Trainingsplan (Plan):** mehrere Trainings über Wochen.
+- **Workout:** nur der Name des Bereichs neben Run und Mobility & Stretch.
+
+Interne Namen (`programme`, `stPlaene`, `plan`, `workouts`, `blocks`) bleiben unverändert. Ältere Abschnitte unten nennen teils noch die früheren Wörter.
+
+**Einstiege:** Nur für heute: Überrasch mich, BLOC bauen (Mit Sätzen · Mit Timer). Für mehrere Wochen: Plan erstellen lassen, Plan selbst bauen.
+
 ## Aufbau der App
 
 **Unten eine Leiste** (nur auf den Hauptseiten): **Start · Suche · Kalender · Statistik · Einstellungen** (im Aussehen New: **Heute · Tools · Fortschritt · Kalender** mit rundem Hauptknopf, siehe Designs).

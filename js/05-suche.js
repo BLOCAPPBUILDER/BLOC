@@ -300,13 +300,19 @@ function builderKarteHTML(){
   return '<div class="sec-head"><div class="section-title">'+esc(t("builderTitel"))+'</div></div>'+
     '<section class="builder-neu"><div class="bn-text"><span class="bn-kicker">'+esc(t("builderKicker"))+'</span><b>'+esc(t("builderText"))+'</b></div>'+
     '<div class="bn-knoepfe"><button type="button" class="btn btn-primary" data-builder="zufall">'+esc(t("builderZufall"))+'</button>'+
-    '<button type="button" class="btn btn-secondary" data-builder="selber">'+esc(t("builderSelber"))+'</button></div></section>';
+    '<button type="button" class="btn btn-secondary" data-builder="selber">'+esc(t("builderSelber"))+'</button></div>'+
+    '<span class="bn-kicker">'+esc(t("bauWochen"))+'</span><div class="bn-knoepfe"><button type="button" class="btn btn-secondary" data-builderplan="assi">'+esc(t("planLassen"))+'</button>'+
+    '<button type="button" class="btn btn-secondary" data-builderplan="selbst">'+esc(t("planSelbst"))+'</button></div></section>';
 }
 function bindBuilderKarte(){
   app.querySelectorAll("[data-builder]").forEach(function(b){
     b.addEventListener("click", function(){
+      if(b.getAttribute("data-builder") === "selber"){ bauWahlOeffnen(); return; }
       builderAuto = b.getAttribute("data-builder"); katTabSetzen("baukasten"); go("#katalog");
     });
+  });
+  app.querySelectorAll("[data-builderplan]").forEach(function(b){
+    b.addEventListener("click", function(){ if(b.getAttribute("data-builderplan") === "assi") paOeffnen(null, null); else go("#koerper"); });
   });
 }
 /* Fragen & Antworten am Ende der Seite „Training“ (Inhalt: faq.js, erzeugt aus docs/FAQ-ENTWURF.md). Reine Anzeige, nichts wird gespeichert oder geladen.

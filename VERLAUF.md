@@ -8,6 +8,12 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-22 · Einheitliche Begriffe, Einstiege nach Dauer (Fassung 2026-11-22-5)
+
+- **Begriffe:** Übung → BLOC → Training → Trainingsplan (EN: Exercise → BLOC → Session → Training plan). „Workout“ heißt nur noch der Bereich. Timer-Blöcke heißen Intervall. Nur sichtbare Texte; Speicherformat, Routen, IDs und gespeicherte Namen (auch „TrainingsBLOC 1“) bleiben.
+- **Einstiege:** „Nur für heute“: Überrasch mich, BLOC bauen (Mit Sätzen · Mit Timer). „Für mehrere Wochen“: Plan erstellen lassen, Plan selbst bauen. Gleich auf Heute und im Workout-Baukasten.
+- Tests: Prüfungen auf alte Wörter und den neuen Zwischenschritt angepasst.
+
 ## 2026-11-22 · Gewichtsvorschlag überall gleich (Fassung 2026-11-22-4)
 
 - Übungskarte und BLOC-Ansicht zeigen den Vorschlag wie das Satz-Training: Etikett, rotes i mit Erklärung und X.

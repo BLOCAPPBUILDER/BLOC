@@ -40,7 +40,7 @@ function introProfilSpeichern(wurzel){
 function introSchaubildHTML(){
   function bloc(titel, zeilen, cls){ return '<div class="sb-bloc'+(cls ? ' '+cls : '')+'"><b>'+esc(titel)+'</b>'+zeilen.map(function(n){ return '<span>'+esc(n)+'</span>'; }).join("")+'</div>'; }
   var a = [t("inExKniebeuge"), t("inExBankdruecken"), t("inExKreuzheben")], b = [t("inExKlimmzug"), t("inExRudern"), t("inExSchulterdruecken")], run = [t("inRunKm"), t("inRunLocker")];
-  function tag(nr, inhalt, cls){ return '<div class="sb-tag'+(cls ? ' '+cls : '')+'"><i class="sb-tb">TrainingsBLOC '+nr+'</i>'+inhalt+'</div>'; }
+  function tag(nr, inhalt, cls){ return '<div class="sb-tag'+(cls ? ' '+cls : '')+'"><i class="sb-tb">'+esc(t("progName", { n:nr }))+'</i>'+inhalt+'</div>'; }
   var leer = bloc("BLOC 1", ["…"], "sb-leer")+bloc("BLOC 2", ["…"], "sb-leer")+'<div class="sb-bloc sb-rest"><b>…</b></div>';
   return '<div class="intro-schaubild" role="img" aria-label="'+esc(t("inSchaubildAlt"))+'">'+
     '<div class="sb-plan">'+esc(t("inDPlan"))+'</div>'+
@@ -131,7 +131,7 @@ function sayEN(text){
 function announceStep(idx){
   if(!voiceOn()) return;
   var steps = playerState.steps, cur = steps[idx], nx = steps[idx+1];
-  if(cur.phase==="done"){ sayEN("Workout complete. Well done!"); return; }
+  if(cur.phase==="done"){ sayEN("BLOC complete. Well done!"); return; }
   if(!nx || nx.phase!=="work") return;
   var ex = findExercise(nx.ex), name = ex ? ex.name.en : nx.label;
   var side = nx.side ? (nx.side==="left" ? " Left side." : " Right side.") : "";
