@@ -3,6 +3,12 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-22 · Test 15, F/G: Kalender-Menü klarer, Gewichtssumme gerundet (Fassung 2026-11-22-13)
+
+- **F:** Kalender-Hinzufügen heißt jetzt „BLOC mit Sätzen“, „Workout aus dem Katalog“, „Eigenes Timer-Workout“ (vorher „BLOC“, „BLOC aus dem Katalog“, „Meine BLOCs“).
+- **G:** Das Gesamtgewicht einer Übung (`js/09-studio-karte.js`) rundet je Runde und summiert, damit es zu den gerundeten Trainingssummen passt (13.891 vs. 13.890).
+- Meilenstein-Text und Verlauf-Hinweis waren schon in -12.
+
 ## 2026-11-22 · Test 15: Termin merken, verpasste Termine, Balance einheitlich (Fassung 2026-11-22-12)
 
 - **A Termin merken:** `kalStarten` merkt den gestarteten Termin (`kalTerminAktiv`), das gespeicherte Training trägt ihn als `x.termin`; `kalAbgleich` hakt genau diesen Termin ab (auch nachgeholt an einem anderen Tag). Trainings mit BLOC-Bezug haken keinen Termin ohne Bezug mehr ab.
