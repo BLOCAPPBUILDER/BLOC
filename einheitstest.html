@@ -332,24 +332,22 @@
     gleich(W.runPaceHinweis({ ziel: null, art: "lauf", splits: [1] }, 1), "", "ohne Vorgabe");
     gleich(W.runPaceHinweis({ ziel: { pace: 330 }, art: "rad", splits: [342000] }, 1), "", "Rad: keine Pace");
   });
-  test("Run: zwischen den Kilometern gibt es nach 100 m einen Hinweis, aber nur wenn man zu langsam ist (danach 200 m Ruhe)", function () {
-    var gesagt = [], alt = W.runSag;
-    W.runSag = function (t) { gesagt.push(t); };
+  test("Run: zwischen den Kilometern klingt alle 100 m ein „Dong Dong“, aber nur wenn man mehr als 5 s/km zu langsam ist", function () {
+    var n = 0, alt = W.runTeilDong;
+    W.runTeilDong = function () { n++; };
     try {
-      var r = { ziel: { pace: 330 }, art: "lauf", dist: 0, tZ: 0, gesagt: [] };
-      r.dist = 250; W.runTeilHinweis(r, 0, 90000);   // 360 s/km, 30 über dem Ziel
-      gleich(gesagt.length, 1, "ein Hinweis nach 200 m");
-      wahr(/30 Sekunden/.test(gesagt[0]), "nennt die Abweichung");
-      gesagt.length = 0;
-      var r2 = { ziel: { pace: 330 }, art: "lauf", dist: 500, tZ: 0, gesagt: [] };
-      W.runTeilHinweis(r2, 0, 160000);   // 320 s/km: im Ziel
-      gleich(gesagt.length, 0, "schnell genug: nichts");
+      W.runTeilHinweis({ ziel: { pace: 330 }, art: "lauf", dist: 250, tZ: 0, gesagt: [] }, 0, 90000);   // 360 s/km
+      gleich(n, 1, "zu langsam: ein Ton bei 200 m (100 m ist zu früh)");
+      n = 0; W.runTeilHinweis({ ziel: { pace: 330 }, art: "lauf", dist: 500, tZ: 0, gesagt: [] }, 0, 160000);   // 320 s/km
+      gleich(n, 0, "schnell genug: still");
+      n = 0; W.runTeilHinweis({ ziel: { pace: 330 }, art: "lauf", dist: 300, tZ: 0, gesagt: [] }, 0, 100500);   // 335 s/km: nur 5 s drüber
+      gleich(n, 0, "genau an der Schwelle: still");
       W.runTeilHinweis({ ziel: null, art: "lauf", dist: 300, tZ: 0, gesagt: [] }, 0, 200000);
       W.runTeilHinweis({ ziel: { pace: 330 }, art: "rad", dist: 300, tZ: 0, gesagt: [] }, 0, 200000);
-      gleich(gesagt.length, 0, "ohne Vorgabe und auf dem Rad: nichts");
-    } finally { W.runSag = alt; }
-  });
-  test("Aussehen ist immer Modern (Classic entfernt), auch mit ?schnelltest", function () {
+      W.runTeilHinweis({ ziel: { pace: 330 }, art: "lauf", stumm: true, dist: 300, tZ: 0, gesagt: [] }, 0, 200000);
+      gleich(n, 0, "ohne Vorgabe, auf dem Rad und stumm: still");
+    } finally { W.runTeilDong = alt; }
+  });  test("Aussehen ist immer Modern (Classic entfernt), auch mit ?schnelltest", function () {
     gleich(W.document.documentElement.getAttribute("data-layout"), "new", "data-layout");
   });
 
