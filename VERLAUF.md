@@ -8,6 +8,11 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-22 · BLOC-Hinweis und Run als Daumen-Dock (Fassung 2026-11-22-2)
+
+- **BLOC-Ansicht:** Der Druck-Zug-Hinweis steht als Etikett in der Auswertung, der Text kommt beim Aufklappen.
+- **Run:** Distanz oben, Laufen/Rad, Einstellungen und Start im Dock unten. „Lauf starten“ ist überall gleich und in BLOC-Orange.
+
 ## 2026-11-22 · Satz-Training: Variante A „Eine Karte“ (Fassung 2026-11-22-1)
 
 - Figur nutzt den freien Platz der Karte, Satzfelder, Zähler und Hauptknopf haben einheitliche Größen. Gilt für Übungen mit und ohne Gewicht. Der Timer bleibt unverändert.

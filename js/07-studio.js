@@ -713,6 +713,12 @@ function planBalanceHTML(p, ids){
   if(c.p < c.z + 2) return "";
   return '<div class="tm-hint plan-balance"><span>'+esc(t("planBalance", { p:c.p, z:c.z }))+'</span><button type="button" class="pb-aus" data-pbaus aria-label="'+esc(t("close"))+'">&times;</button></div>';
 }
+/* Variante A (2026-11-22, Kevin): in der zugeklappten Auswertung steht nur das Etikett, der Text kommt beim Aufklappen */
+function planBalanceChipHTML(p, ids){
+  if(!planBalanceHTML(p, ids)) return "";
+  var c = planZugDruck(ids);
+  return '<span class="ausw-chip"><i aria-hidden="true"></i>'+esc(t("planBalanceChip", { p:c.p, z:c.z }))+'</span>';
+}
 /* Tipps der Plan-Ansicht: dieselbe Regel und dieselbe Grenze (höchstens zwei) wie im Satz-Training, in der Leichtwoche keine */
 function planTipps(p){ return studioTipps(stPlanIds(p), planLeichtHeute(p.id), false); }
 function planZeileHTML(id, nr, bl, p){   // bl: { art, k, n, bid } - die Übung steht in einem Supersatz oder Zirkel
@@ -988,8 +994,7 @@ function renderStudioPlan(){
           ['saetze', 'timer'].map(function(m){ var an = planStartArt(p) === m; return '<button type="button" data-planart="'+m+'" class="'+(an ? 'active' : '')+'" aria-pressed="'+an+'">'+(m === 'timer' ? ICON_PLAY+' ' : '')+esc(t(m === 'timer' ? 'stModusTimer' : 'planArtWdh'))+'</button>'; }).join("")+'</div>'+
         '' : '')+
       (ids.length ? planKopfKarteHTML(p, ids) : '')+
-      (ids.length ? auswertungHTML(ids) : '')+
-      (ids.length ? planBalanceHTML(p, ids) : '')+   // erst die Übersicht über die Übungen im Ganzen, dann die Zeilen
+      (ids.length ? auswertungHTML(ids, { chip:planBalanceChipHTML(p, ids), hinweis:planBalanceHTML(p, ids) }) : '')+
       (ids.length ? '<div class="pz-liste">'+planListeHTML(p)+'</div>' : '<div class="fav-empty">'+esc(t("planEmpty"))+'</div>')+
       // dynamische Leiste: links „Plan speichern“ (beim gespeicherten BLOC „Training speichern“), rechts immer „LOS GEHTS!“
       (ids.length ? '<div class="wb-leiste tr-leiste"><div class="wb-leiste-in">'+

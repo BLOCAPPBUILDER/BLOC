@@ -476,6 +476,16 @@ function runHeroRechtsHTML(runs, rad){
   var sum = runs.reduce(function(a, x){ return a + runKcal(x.dist, x.dur/1000, runIstRad(x), x.hm); }, 0);
   return '<div class="rh-sub rh-kcal"><b>≈ '+esc(sum.toLocaleString(currentLang() === "en" ? "en-GB" : "de-DE"))+'</b><small>'+esc(t("runKcalGesamt"))+SEP+esc(t(rad ? "runFahrtenKurz" : "runLaeufeKurz", { n:runs.length }))+'</small></div>';
 }
+/* Daumen-Dock (2026-11-22, Kevin): die drei Einstellungen als Kacheln, jede öffnet ihre Karte direkt über dem Dock */
+function runKachelnHTML(){
+  var z = runZielEinst(), rad = runArt() === "rad", iv = runIvEinst(), e = runAnsageEinst();
+  var l = [["eigen", t("runEigen"), runZielText(z.km, rad)]];
+  if(!rad) l.push(["iv", t("runIvAn"), iv.an ? fmtUhr(iv.lauf*1000)+" / "+fmtUhr(iv.geh*1000) : t("runAus")]);
+  l.push(["ans", t("runAnsagen"), e.every ? t("runAlleKm", { n:e.every }) : t("runAus")]);
+  return '<div class="run-kacheln">'+l.map(function(k){ var auf = !!runKlapp[k[0]];
+    return '<button type="button" class="run-kachel'+(auf ? ' an' : '')+'" data-runkachel="'+k[0]+'" aria-expanded="'+auf+'"><small>'+esc(k[1])+'</small><b>'+esc(k[2])+'</b></button>'; }).join("")+'</div>';
+}
+function runKachelWert(k, text){ var b = app.querySelector('[data-runkachel="'+k+'"] b'); if(b) b.textContent = text; }
 var runKlapp = { eigen:false, iv:false, ans:false, verlauf:false };   // welche Karten auf der Run-Seite aufgeklappt sind
 function runOptionenHTML(){
   var iv = runIvEinst(), rad = runArt() === "rad";
@@ -745,11 +755,7 @@ function renderRun(){
       (runGeplant.km > 0 ? '<div class="sub">'+esc(t("runZielKm", { km:runKm(runGeplant.km*1000) }))+'</div>' : '')+
       '<button type="button" class="btn btn-primary run-startbtn" data-runstart>'+ICON_PLAY+' '+esc(t("runStart"))+'</button>'+
       '<button type="button" class="ghost" data-rungeplantweg>'+esc(t("runGeplantWeg"))+'</button></div>' : '')+
-    '<div class="card run-hero"><div class="rh-km">'+esc(runKm(km*1000))+'<small>km</small></div>'+runHeroRechtsHTML(artRuns, art === "rad")+
-      '<div class="theme-pick wahl-pick seg-2 run-art" role="group" aria-label="'+esc(t("runArt"))+'">'+
-        '<button type="button" data-runart="lauf" class="'+(art === "lauf" ? "active" : "")+'">'+esc(t("runArtLauf"))+'</button>'+
-        '<button type="button" data-runart="rad" class="'+(art === "rad" ? "active" : "")+'">'+esc(t("runArtRad"))+'</button></div>'+
-      '<button type="button" class="btn btn-primary run-startbtn" data-runstart>'+ICON_PLAY+' '+esc(t(art === "rad" ? "runStartRad" : "runStart"))+'</button></div>'+
+    '<div class="card run-hero run-mitte"><div class="rh-km">'+esc(runKm(km*1000))+'<small>km</small></div>'+runHeroRechtsHTML(artRuns, art === "rad")+'</div>'+
     runEigenerLaufHTML()+runOptionenHTML()+runAnsageHTML()+runZuletztHTML(runs)+
     '<details class="run-klapp run-verlauf" data-k="verlauf"'+(runKlapp.verlauf ? ' open' : '')+'><summary class="section-title"><span>'+esc(t("runVerlauf"))+'</span><span class="tpl-chev" aria-hidden="true">&#9662;</span></summary>'+   // der Verlauf steht unten, einklappbar
     (runs.length ? runs.map(function(x){
@@ -759,10 +765,24 @@ function renderRun(){
         '<div class="card-aside"><div class="card-acts">'+trashBtn("run", x.id, runKm(x.dist)+" km")+'</div></div></div>';
     }).join("") : '<div class="empty" style="padding:24px 20px;">'+esc(t("runNone"))+'</div>')+'</details>'+
     '<div class="page-hint">'+esc(t("runBetaHint"))+'</div>'+
-    '<div style="height:40px"></div>';
+    '<div class="run-dock-platz"></div>'+
+    '<div class="run-dock"><div class="theme-pick wahl-pick seg-2 run-art" role="group" aria-label="'+esc(t("runArt"))+'">'+
+        '<button type="button" data-runart="lauf" class="'+(art === "lauf" ? "active" : "")+'">'+esc(t("runArtLauf"))+'</button>'+
+        '<button type="button" data-runart="rad" class="'+(art === "rad" ? "active" : "")+'">'+esc(t("runArtRad"))+'</button></div>'+
+      runKachelnHTML()+
+      '<button type="button" class="btn btn-primary run-startbtn" data-runstart>'+ICON_PLAY+' '+esc(t(art === "rad" ? "runStartRad" : "runStart"))+'</button></div>';
   bindCommon();
   bindTrash(function(){ renderRun(); });
-  app.querySelectorAll("details.run-klapp").forEach(function(d){ d.addEventListener("toggle", function(){ runKlapp[d.getAttribute("data-k")] = d.open; }); });
+  app.querySelectorAll("details.run-klapp").forEach(function(d){ d.addEventListener("toggle", function(){
+    var k = d.getAttribute("data-k"), b = app.querySelector('[data-runkachel="'+k+'"]');
+    runKlapp[k] = d.open;
+    if(b){ b.classList.toggle("an", d.open); b.setAttribute("aria-expanded", String(d.open)); }
+  }); });
+  app.querySelectorAll("[data-runkachel]").forEach(function(b){ b.addEventListener("click", function(){   // immer nur eine Karte offen
+    var k = b.getAttribute("data-runkachel"), d = app.querySelector('details[data-k="'+k+'"]'), auf = d && !d.open;
+    ["eigen", "iv", "ans"].forEach(function(x){ var o = app.querySelector('details[data-k="'+x+'"]'); if(o) o.open = false; });
+    if(d) d.open = auf;
+  }); });
   var kh = app.querySelector("[data-koerper]"); if(kh) kh.addEventListener("click", function(){ openKoerperSheet(function(){ renderRun(); }); });
   if(app.querySelector("#run-iv-an")) bindToggle("run-iv-an", function(v){ var e = runIvEinst(); s.runIv = { an:v, lauf:e.lauf, geh:e.geh }; save(); renderRun(); });
   bindSteppers(app, function(){
@@ -786,6 +806,7 @@ function renderRun(){
     zr.addEventListener("input", function(){
       var el = app.querySelector("#run-ziel-wert"), vs = app.querySelector("#run-vorschau"), rad = runArt() === "rad", km = runZielVonRegler(zr.value, rad);
       if(el) el.textContent = runZielText(km, rad);
+      runKachelWert("eigen", runZielText(km, rad));
       if(vs) vs.textContent = runVorschauText(km, runZielEinst().pace, rad);
     });
     zr.addEventListener("change", function(){
@@ -818,7 +839,7 @@ function renderRun(){
   if(gw) gw.addEventListener("click", function(){ runGeplant = null; renderRun(); });
   var ev = app.querySelector("#run-every");
   if(ev){
-    ev.addEventListener("input", function(){ var n = +ev.value; app.querySelector("#run-every-wert").textContent = n ? t("runAlleKm", { n:n }) : t("runAus"); });
+    ev.addEventListener("input", function(){ var n = +ev.value, w = n ? t("runAlleKm", { n:n }) : t("runAus"); app.querySelector("#run-every-wert").textContent = w; runKachelWert("ans", w); });
     ev.addEventListener("change", function(){ var e = runAnsageEinst(); s.runAnsage = { every:+ev.value, was:e.was }; save(); var y = window.scrollY; renderRun(); window.scrollTo(0, y); });
   }
   app.querySelectorAll("[data-runwas]").forEach(function(b){

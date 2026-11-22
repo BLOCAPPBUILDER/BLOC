@@ -1957,3 +1957,34 @@ body.prot-sheet-offen{ overflow:hidden; }
 .tr-edit{ margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
 .tr-edit > b{ display:block; margin-bottom:8px; font-size:14px; }
 .tr-edit .st-eingabe.tr-eins{ grid-template-columns:1fr; }
+
+/* BLOC-Ansicht, Variante A (2026-11-22): der Druck-Zug-Hinweis ist ein Etikett in der Auswertung, der Text steht aufgeklappt */
+.ausw > summary:has(.ausw-chip){ position:relative; padding-right:128px; }
+.ausw-chip{ position:absolute; right:34px; top:50%; transform:translateY(-50%); display:inline-flex; align-items:center; gap:6px; padding:5px 9px; border-radius:99px; background:color-mix(in srgb, #f5b82e 20%, transparent); color:var(--text); font-size:12px; font-weight:800; white-space:nowrap; }
+.ausw-chip i{ width:7px; height:7px; border-radius:50%; background:#f5b82e; flex:none; }
+.ausw > .plan-balance{ margin:0 14px 10px; }
+.ausw > .plan-balance .pb-aus{ min-width:44px; min-height:44px; margin:-10px -10px -10px 0; }
+
+/* Run, Variante C „Daumen-Dock“ (2026-11-22): oben die Distanz, unten alle Bedienelemente; Start in BLOC-Orange */
+.run-dock{ --dock-t:var(--text); position:fixed; left:50%; bottom:calc(10px + env(safe-area-inset-bottom)); z-index:30; box-sizing:border-box; width:min(calc(100% - 20px), 520px); transform:translateX(-50%); display:flex; flex-direction:column; gap:8px; padding:10px; border-radius:26px; color:var(--dock-t); background:color-mix(in srgb, var(--surface) 86%, transparent); border:1px solid var(--border); box-shadow:0 10px 30px rgba(0,0,0,.22); -webkit-backdrop-filter:blur(18px) saturate(140%); backdrop-filter:blur(18px) saturate(140%); }
+.run-bg ~ .run-dock{ --dock-t:#f4f4f6; background:rgba(26,29,34,.62); border-color:rgba(255,255,255,.2); }
+:root[data-layout="new"] .run-dock .run-art > button{ grid-column:auto !important; width:auto !important; }
+:root[data-layout="new"] .run-dock .run-art{ display:grid !important; grid-template-columns:repeat(2, minmax(0, 1fr)) !important; gap:4px; margin:0; padding:3px; border-radius:15px; background:color-mix(in srgb, var(--dock-t) 9%, transparent); }
+.run-dock .run-art button{ min-height:44px; margin:0; border:0; border-radius:12px; background:none; color:var(--dock-t); font-weight:700; }
+.run-dock .run-art button.active{ background:var(--dock-t); color:var(--surface); box-shadow:none; }
+.run-bg ~ .run-dock .run-art button.active{ background:#fff; color:#101214; }
+.run-kacheln{ display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0, 1fr); gap:6px; }
+.run-kachel{ min-height:60px; padding:6px 3px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; border-radius:15px; border:1px solid color-mix(in srgb, var(--dock-t) 20%, transparent); background:color-mix(in srgb, var(--dock-t) 8%, transparent); color:var(--dock-t); font:inherit; cursor:pointer; }
+.run-kachel small{ max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11.5px; opacity:.76; }
+.run-kachel b{ max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13.5px; }
+.run-kachel.an{ border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent); }
+:root[data-layout="new"] .run-startbtn{ width:100%; height:64px; min-height:64px; margin:0; border:0 !important; border-radius:22px; background:var(--accent) !important; color:#fff !important; font-size:17px; font-weight:800; box-shadow:none; }
+:root[data-layout="new"] .run-startbtn svg{ color:#fff !important; fill:currentColor; }
+.run-dock-platz{ height:calc(236px + env(safe-area-inset-bottom)); }
+details.run-eigen:not([open]), details.run-opt:not([open]), details.run-ansage:not([open]){ display:none; }
+details.run-eigen[open], details.run-opt[open], details.run-ansage[open]{ position:fixed; left:50%; bottom:calc(234px + env(safe-area-inset-bottom)); z-index:31; box-sizing:border-box; width:min(calc(100% - 20px), 520px); max-height:calc(100dvh - 310px); margin:0; overflow-y:auto; transform:translateX(-50%); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); }
+:root[data-layout="new"] .run-hero.run-mitte{ display:flex !important; flex-direction:column; align-items:center; gap:4px; padding:26px 0 18px; background:none; border:0; box-shadow:none; }
+:root[data-layout="new"] .run-hero.run-mitte .rh-km{ display:flex; align-items:baseline; justify-content:center; gap:8px; margin:0; padding:0; background:none !important; border:0 !important; font-size:clamp(68px, 23vw, 92px); line-height:1; letter-spacing:-.04em; -webkit-backdrop-filter:none; backdrop-filter:none; }
+:root[data-layout="new"] .run-hero.run-mitte .rh-km small{ font-size:20px; letter-spacing:0; }
+:root[data-layout="new"] .run-hero.run-mitte .rh-sub{ display:block; margin:0; padding:4px 8px; text-align:center; background:none !important; border:0 !important; -webkit-backdrop-filter:none; backdrop-filter:none; }
+:root[data-layout="new"] .run-hero.run-mitte .rh-kcal{ display:flex; align-items:center; }
