@@ -180,101 +180,19 @@ applyLang();
 var app = document.getElementById("app");
 
 /* Leiste unten: vier Ziele (Heute · Training · Path · Kalender), Suche und Einstellungen sind Symbole in der Kopfzeile */
-/* Foto-Pool für das Aussehen New: je Art mehrere Bilder. fotosZuteilen vergibt sie so, dass kein Bild doppelt vorkommt,
-   solange es freie gibt: zuerst das passende der eigenen Art (ab einem festen Startpunkt, dann das nächste freie), danach das
-   nächste freie aus allen anderen. Die Reihenfolge der Vergabe ist nach Schlüssel sortiert, damit es stabil bleibt. */
-var FOTO_POOL = (function(){
-  var P = function(n){ return "img/neu-p-" + n + ".jpg"; };
-  return {
-    tp:  ["img/neu-freiluft.jpg", P("freiluft-meer"), P("liegestuetz-strand"), P("liegestuetz-stadt")],
-    st:  [P("studio-hantelreihe"), P("studio-gewichtsblock"), P("studio-halle"), "img/neu-workout.jpg", "img/neu-kopf.jpg"],   // Geräte zuerst (Wunsch: Workout-Karte ohne Person)
-    ti:  ["img/neu-h-brust-2.jpg"],   // Timer im Dunkeln wie im Hellen (2026-10-23)
-    ws:  [P("mobility-sitz"), P("mobility-ausfall")],   // ohne neu-mobility (Kopf im Profil, passte nicht zum Bereich)
-    run: ["img/neu-run.jpg", P("run-licht"), P("run-strasse"), P("run-sw")],
-    /* Themen für Favoriten (nach Inhalt des Workouts, siehe favFotoPool) */
-    core:     ["img/neu-d-core.jpg", P("frau-kniebeuge"), P("liegestuetz-feld")],
-    beine:    [P("frau-kniebeuge"), P("mobility-ausfall"), P("freiluft-meer"), P("studio-gewichtsblock")],
-    ruecken:  [P("frau-klimmzug"), P("frau-latzug"), "img/neu-freiluft.jpg"],
-    brust:    [P("liegestuetz-strand"), P("liegestuetz-stadt"), P("liegestuetz-feld")],
-    arme:     [P("frau-klimmzug"), P("studio-hantelreihe"), P("studio-halle")],
-    schulter: [P("frau-latzug"), P("studio-hantelreihe")],
-    mobility: [P("mobility-sitz"), P("mobility-ausfall")],
-    timer:    ["img/neu-h-brust-2.jpg", "img/neu-timer.jpg", P("studio-halle"), P("liegestuetz-feld")]
-  };
-})();
-/* Heller Modus: helle Fotos (Pexels, siehe BilderBloc\Helle Bilder). Silhouetten und Schwarz-Weiß-Bilder bleiben dem Dunkel überlassen;
-   Run behält in beiden Modi das klassische Läuferbild. Karten auf Training und Favoriten sind im Hellen „helle Karten“ (layout-new.css). */
-var FOTO_POOL_HELL = {
-  tp:  FOTO_POOL.tp,   // wie im Dunkel (die hellen Klimmzug-Bilder sind gelöscht)
-  st:  ["img/neu-p-frau-kniebeuge.jpg"],   // Workout im Hellen: Kniebeuge (2026-10-23)
-  ti:  ["img/neu-h-brust-2.jpg"],   // Timer im Hellen (2026-10-23)
-  ws:  FOTO_POOL.ws,   // wie im Dunkel
-  run: FOTO_POOL.run,
-  core:     ["img/neu-h-core-1.jpg", "img/neu-h-core-2.jpg", "img/neu-h-kettlebell.jpg", "img/neu-h-kb-gelb.jpg"],
-  beine:    ["img/neu-p-frau-kniebeuge.jpg", "img/neu-h-band.jpg", "img/neu-h-halle.jpg"],
-  ruecken:  ["img/neu-p-frau-klimmzug.jpg", "img/neu-p-frau-latzug.jpg"],
-  brust:    ["img/neu-h-brust-1.jpg", "img/neu-h-brust-2.jpg", "img/neu-h-rack.jpg"],
-  arme:     ["img/neu-p-frau-klimmzug.jpg", "img/neu-h-kb-gelb.jpg", "img/neu-h-rack.jpg", "img/neu-h-kettlebell.jpg"],
-  schulter: ["img/neu-p-frau-latzug.jpg", "img/neu-h-rack.jpg"],
-  mobility: FOTO_POOL.mobility,
-  timer:    ["img/neu-h-brust-2.jpg", "img/neu-h-kettlebell.jpg", "img/neu-h-kb-gelb.jpg"]
-};
-function fotoPool(){ return themeIstDunkel() ? FOTO_POOL : FOTO_POOL_HELL; }
-/* Bildausschnitt je Foto: breite, flache Karten zeigen nur einen Streifen; hier steht, welcher Teil des Bildes dabei
-   sichtbar bleiben soll (Prozent für background-position bzw. object-position). Ohne Eintrag gilt der Wert aus layout-new.css. */
+/* Fotos gibt es nur noch auf der Startseite und bei Tools (feste Zuordnung, keine wechselnden Bilder, Favoriten ohne Foto). */
 var FOTO_FOKUS = {
-  "img/neu-p-freiluft-meer.jpg":"50% 76%",   // Sportplatz am Meer
-  // Stangen in der Mitte
-  "img/neu-freiluft.jpg":"50% 66%",          // Gerüste knapp unter der Mitte
-  "img/bereich-run.jpg":"85% 50%",           // klassisches Run-Bild: Läufer rechts der Mitte
-  "img/neu-run.jpg":"50% 60%",
-  "img/neu-p-run-licht.jpg":"50% 70%",
-  "img/neu-p-run-strasse.jpg":"50% 68%",
-  "img/neu-p-run-sw.jpg":"50% 70%",
-  "img/neu-mobility.jpg":"50% 25%",          // Kopf und Arme statt nur der Hände
-  "img/neu-p-mobility-ausfall.jpg":"50% 35%",
+  "img/bereich-run.jpg":"85% 50%",
   "img/neu-p-mobility-sitz.jpg":"50% 60%",
-  "img/neu-workout.jpg":"50% 48%",
   "img/neu-p-dehnung-silhouette.jpg":"35% 45%",
-  "img/neu-timer.jpg":"50% 66%",             // Person auf der Box im unteren Drittel
-  "img/neu-kopf.jpg":"50% 60%",
-  "img/neu-p-liegestuetz-strand.jpg":"50% 70%",
-  "img/neu-p-liegestuetz-stadt.jpg":"50% 55%",
-  "img/neu-p-liegestuetz-feld.jpg":"50% 55%",
-  "img/neu-p-studio-halle.jpg":"50% 55%",
-  "img/neu-p-frau-latzug.jpg":"50% 38%", "img/neu-p-frau-klimmzug.jpg":"50% 40%", "img/neu-p-frau-kniebeuge.jpg":"50% 30%",
-  "img/neu-h-halle.jpg":"50% 62%", "img/neu-h-rack.jpg":"50% 45%", "img/neu-h-dehnen.jpg":"50% 40%",
-  "img/neu-h-band.jpg":"50% 62%", "img/neu-h-kettlebell.jpg":"50% 32%", "img/neu-h-kb-gelb.jpg":"50% 70%", "img/neu-d-kalender.jpg":"50% 45%", "img/neu-h-brust-1.jpg":"50% 50%", "img/neu-h-brust-2.jpg":"50% 66%", "img/neu-h-core-1.jpg":"50% 50%", "img/neu-h-core-2.jpg":"50% 62%", "img/neu-d-core.jpg":"50% 68%", "img/neu-d-katalog.jpg":"50% 42%"
+  "img/neu-p-frau-kniebeuge.jpg":"50% 30%"
 };
 function fotoFokus(pfad){ return FOTO_FOKUS[pfad] || ""; }
 function fotoHash(s){ var h = 0; s = String(s); for(var i = 0; i < s.length; i++) h = (h*31 + s.charCodeAt(i)) % 100003; return h; }
-function fotosZuteilen(items){   // items: [{ key, pool }] → { key: Pfad }
-  var alle = [], belegt = {}, out = {}, POOL = fotoPool();
-  Object.keys(POOL).forEach(function(k){ POOL[k].forEach(function(f){ if(alle.indexOf(f) < 0) alle.push(f); }); });
-  items.slice().sort(function(a, b){ return a.key < b.key ? -1 : a.key > b.key ? 1 : 0; }).forEach(function(it){
-    var pool = POOL[it.pool] || POOL.st, h = fotoHash(it.key), w = null, i, f;
-    for(i = 0; i < pool.length && !w; i++){ f = pool[(h + i) % pool.length]; if(!belegt[f]) w = f; }
-    var VERWANDT = { st:["st"], tp:["tp"], ti:["ti", "st"], ws:["ws"], run:["run"] };   // erst Bilder aus verwandten Arten
-    (VERWANDT[it.pool] || ["st", "tp"]).forEach(function(a){
-      var p2 = POOL[a] || [];
-      for(i = 0; i < p2.length && !w; i++){ f = p2[(h + i) % p2.length]; if(!belegt[f]) w = f; }
-    });
-    for(i = 0; i < alle.length && !w; i++){ f = alle[(h + i) % alle.length]; if(!belegt[f]) w = f; }
-    if(!w) w = pool[h % pool.length];   // mehr Karten als Bilder: dann darf sich eines wiederholen
-    belegt[w] = true; out[it.key] = w;
-  });
-  return out;
-}/* Foto je Bereich für heute: dieselbe Zuteilung für die Karten auf Training und die Köpfe der Bereichsseiten (kein Bild doppelt,
-   wechselt von Tag zu Tag). Schlüssel wie data-bereich: katalog, warm, intervall, run. */
 function bereichFotosNeu(){
-  var tag = Math.floor(Date.now()/86400000), ART = { katalog:"st", warm:"ws", intervall:"ti", run:"run" }, out = {};
-  var zu = fotosZuteilen(Object.keys(ART).map(function(k){ return { key:k + ":" + tag, pool:ART[k] }; }));
-  Object.keys(ART).forEach(function(k){ out[k] = zu[k + ":" + tag]; });
-  out.run = "img/bereich-run.jpg";   // Run behält das klassische Läuferbild (Karte und Kopf der Run-Seite)
-  out.warm = "img/neu-p-mobility-sitz.jpg";   // Mobility & Stretch: Dehnung im Sitzen (2026-11-11; das Ausfallschritt-Bild gehört dem Timer, nie dasselbe Bild doppelt)
-  out.intervall = "img/neu-p-dehnung-silhouette.jpg";   // Timer: Ausfallschritt-Dehnung als Silhouette (Karte und Kopf der Timer-Seite, 2026-11-10)
-  return out;
-}var builderAuto = null;   // "zufall" | "selber": der Workout-Builder auf Heute löst im Baukasten gleich die Wahl aus
+  return { run:"img/bereich-run.jpg", warm:"img/neu-p-mobility-sitz.jpg", intervall:"img/neu-p-dehnung-silhouette.jpg" };
+}
+var builderAuto = null;   // "zufall" | "selber": der Workout-Builder auf Heute löst im Baukasten gleich die Wahl aus
 /* Kopfzeilen-Symbole im Aussehen „New“: fester Aufbau, überall nur Suche + Einstellungen rechts. Hell/Dunkel und Körperdaten stehen in den Einstellungen. */
 var SYM_SUCHE = '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5l5 5"/>';
 function themeIstDunkel(){

@@ -127,10 +127,6 @@
 :root[data-layout="new"] .training-seite .area-tile .at-name, :root[data-layout="new"] .training-seite .area-tile .at-sub{ text-shadow:0 1px 6px rgba(0,0,0,.55); }
 :root[data-layout="new"] .training-seite .area-tile .at-ico{ box-shadow:none; }
 :root[data-layout="new"] .training-seite .area-tile .at-chev{ color:#fff; }
-:root[data-layout="new"] .training-seite .area-tile[data-bereich="katalog"]{ background-image:url("img/neu-workout.jpg"); }
-:root[data-layout="new"] .training-seite .area-tile[data-bereich="warm"]{ background-image:url("img/neu-mobility.jpg"); }
-:root[data-layout="new"] .training-seite .area-tile[data-bereich="intervall"]{ background-image:url("img/neu-timer.jpg"); }
-:root[data-layout="new"] .training-seite .area-tile[data-bereich="run"]{ background-image:url("img/bereich-run.jpg"); background-position:50% 50%; }
 
 /* Workout-Builder */
 :root[data-layout="new"] .builder-neu{
@@ -386,7 +382,7 @@
 }
 
 /* ---------- Hell (2026-10-16): Karten auf Training und Favoriten als helle Karte - Foto oben, unten warm-heller Verlauf, dunkle Schrift;
-   dazu helle Fotos aus FOTO_POOL_HELL (js/03-router.js). Baukasten und Titelbilder bleiben unveraendert. "System" hat kein data-theme,
+   Baukasten und Titelbilder bleiben unveraendert. "System" hat kein data-theme,
    deshalb steht jede Regel zweimal (data-theme="light" und prefers-color-scheme). Dazu Lesbarkeit im Heute-Kopf. ---------- */:root[data-layout="new"][data-theme="light"] .training-seite .area-tile.zeile::before{ background:linear-gradient(180deg, rgba(255,250,244,0) 18%, rgba(255,250,244,.80) 64%, rgba(255,250,244,.94) 100%); }
 :root[data-layout="new"][data-theme="light"] .fav-foto::before{ background:linear-gradient(180deg, rgba(255,250,244,0) 16%, rgba(255,250,244,.88) 56%, rgba(255,250,244,.96) 100%); }
 :root[data-layout="new"][data-theme="light"] .training-seite .area-tile .at-name, :root[data-layout="new"][data-theme="light"] .training-seite .area-tile .at-chev, :root[data-layout="new"][data-theme="light"] .ff-name{ color:var(--text); }

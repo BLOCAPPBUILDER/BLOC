@@ -252,13 +252,12 @@ function renderHome(){
   if(wib) wib.addEventListener("click", openWasIstWas);
 }
 /* Aussehen „New“: Kopf einer Bereichsseite wie im Entwurf (Timer): Foto, Zurück und Suche oben, darunter Zeile und Titel */
-/* opt (optional): { foto, fotoHell } festes Bild statt der Tageszuteilung (Kalender, Katalog); zurueck: Ziel des Zurück-Knopfs oder false (Hauptseite); ohneSuche: eigene Lupe steckt schon in extra */
+/* opt (optional): zurueck: Ziel des Zurück-Knopfs oder false (Hauptseite); ohneSuche: eigene Lupe steckt schon in extra */
 function bereichKopfNeuHTML(key, titel, kicker, extra, opt){
   opt = opt || {};
   var lupe = "", rest = extra || "", lm = rest.match(/<button type="button" class="iconbtn lib-lupe[\s\S]*?<\/button>/);   // Suche der Liste ersetzt die allgemeine Lupe
   if(lm){ lupe = lm[0]; rest = rest.replace(lm[0], ""); }
-  var foto = opt.foto ? (themeIstDunkel() || !opt.fotoHell ? opt.foto : opt.fotoHell) : (bereichFotosNeu()[key] || "img/neu-timer.jpg");   // sonst dasselbe Bild wie die Karte auf Training
-  return '<section class="kopf-bereich'+(opt.klar ? ' klar' : '')+'">'+(opt.klar ? '' : '<img class="kb-bild" src="'+foto+'" alt="" draggable="false"'+(fotoFokus(foto) ? ' style="object-position:'+fotoFokus(foto)+'"' : '')+'>')+
+  return '<section class="kopf-bereich klar">'+
     '<div class="kb-zeile">'+(opt.zurueck === false ? '<span></span>' : '<button type="button" class="iconbtn kb-rund" data-back="'+(opt.zurueck || "#training")+'" aria-label="'+esc(t("back"))+'">'+ICON_BACK+'</button>')+
     '<span class="kb-rechts">'+(lupe || '<button type="button" class="iconbtn kb-rund" data-nav="#search" aria-label="'+esc(t("search"))+'">'+svgIcon(SYM_SUCHE)+'</button>')+
       '<button type="button" class="iconbtn kb-rund" data-nav="#settings" aria-label="'+esc(t("settings"))+'">'+ICON_SETTINGS+'</button></span></div>'+
@@ -397,7 +396,7 @@ function faqHTML(){
 /* Aussehen „New“: Seite „Tools“ - die oberste Kachel steht groß (Standard: Workout-Builder), die übrigen versetzt in zwei Spalten, die letzte bei ungerader Zahl über die ganze Breite.
    Reihenfolge in settings.toolsReihe; Kachel lange drücken (0,5 s) und ziehen verschiebt sie. */
 /* Farbstärke je Foto auf Tools: aus der Sättigung der kräftigsten Bildanteile (90. Perzentil) gemessen, damit alle Kacheln nach dem Angleichen gleich kräftig wirken (Ziel 0,36) */
-var FOTO_SAT = { "img/neu-h-hanteln-orange.jpg":.5, "img/neu-wissen.jpg":1, "img/neu-p-dehnung-silhouette.jpg":1, "img/neu-p-frau-kniebeuge.jpg":.68, "img/neu-h-rack.jpg":.63, "img/neu-protein.jpg":.82, "img/bereich-run.jpg":.68, "img/neu-p-mobility-sitz.jpg":1, "img/neu-p-mobility-ausfall.jpg":1, "img/neu-h-brust-2.jpg":.78 };
+var FOTO_SAT = { "img/neu-h-hanteln-orange.jpg":.5, "img/neu-wissen.jpg":1, "img/neu-p-dehnung-silhouette.jpg":1, "img/neu-p-frau-kniebeuge.jpg":.68, "img/neu-protein.jpg":.82, "img/bereich-run.jpg":.68, "img/neu-p-mobility-sitz.jpg":1 };
 var TOOLS_KEYS = ["katalog", "warm", "plan", "intervall", "run", "protein", "faq"];   // Standardreihenfolge (2026-11-11): links Mobility, Timer, Protein; rechts Trainingsplan, Run, Wissensaustausch
 function toolsReihe(){
   var r = [];
