@@ -956,11 +956,11 @@ function renderStudioPlan(){
     // Trainingsart, Ausrüstung und Muskel stehen im Filter (leer = alles)
     function artOk(id){ var ex = findExercise(id); return !!ex && studioFilterOk(id, fTrain, fAusr, fSchw) && (!zonen.length || zonePasst(ex, zonen)); }
     var rest = ids.filter(function(id){ return !da[id]; });   // Übungen im Plan, die in keinem Bereich stehen (z. B. ausgeblendete)
-    html += '<div class="card nm-weg"><label for="plan-name">'+t("name")+'</label><input type="text" id="plan-name" value="'+esc(p.name)+'" maxlength="60"></div>'+
+    html += (p.entwurf ? bauArtKopfHTML("gewicht")+bauNrHTML(2, t("name")) : '')+'<div class="card'+(p.entwurf ? '' : ' nm-weg')+'"><label for="plan-name">'+t("name")+'</label><input type="text" id="plan-name" value="'+esc(p.name)+'" maxlength="60"></div>'+
       (ids.length ? kkKopfHTML(ids) : '')+
       // Der Plan selbst: die gewählten Übungen in ihrer Reihenfolge. Bleibt beim Scrollen oben stehen; antippen wählt eine Übung aus,
       // dann verschieben ◀ ▶ sie und ✕ nimmt sie heraus.
-      '<div class="plan-sticky" id="plan-sticky"><div class="plan-sticky-kopf"><b>'+esc(t("planKopf"))+'</b><span>'+esc(ids.length ? planAnzahl(ids.length) : t("planNochLeer"))+'</span></div>'+
+      '<div class="plan-sticky" id="plan-sticky"><div class="plan-sticky-kopf"><b>'+(p.entwurf ? bauNrKopf(3, t("wbAblauf")) : esc(t("planKopf")))+'</b><span>'+esc(ids.length ? planAnzahl(ids.length) : t("planNochLeer"))+'</span></div>'+
         (ids.length ? '<div class="wb-streifen">'+ids.map(function(id, i){
           var ex = findExercise(id);
           return ex ? '<button type="button" class="wb-mini'+(stPlanSel === i ? ' sel' : '')+'" data-plansel="'+i+'" style="--cat:'+studioFarbe(ex)+'" aria-pressed="'+(stPlanSel === i)+'" aria-label="'+esc((i+1)+". "+tplText(ex.name)+", "+satzZiel(id))+'">'+
@@ -969,7 +969,7 @@ function renderStudioPlan(){
           (stPlanSel > -1 && stPlanSel < ids.length ? '<div class="plan-ctrl"><button type="button" data-planmv="-1" aria-label="'+esc(t("moveLeft"))+'"'+(stPlanSel === 0 ? ' disabled' : '')+'>&#9664;</button>'+
             '<button type="button" class="del" data-plandelsel>'+ICON_TRASH+' '+esc(t("planRaus"))+'</button>'+
             '<button type="button" data-planmv="1" aria-label="'+esc(t("moveRight"))+'"'+(stPlanSel === ids.length-1 ? ' disabled' : '')+'>&#9654;</button></div>' : '') : '')+'</div>'+
-      tippZeileHTML("info", "tippInfo")+hw.z(0, "page-hint")+
+      (p.entwurf ? bauNrHTML(4, t("wbWaehlen")) : '')+tippZeileHTML("info", "tippInfo")+hw.z(0, "page-hint")+
       studioFilterHTML(gruppen, fGr, fTrain, fAusr, studioAnzahl(gruppen, fGr, artOk), zonen)+suchFeldHTML(stPlanQuery, "pl", t("stSearch"), true);   // Suche unter dem Filter
     if(rest.length) gruppen = gruppen.concat([{ id:"rest", name:t("planSonst"), ids:rest, immer:true }]);
     function planKachel(id){
@@ -1020,6 +1020,7 @@ function renderStudioPlan(){
   bindCommon();
   function neu(){ var y = window.scrollY; renderKatalog(); window.scrollTo(0, y); }
   function an(sel, fn){ var el = app.querySelector(sel); if(el) el.addEventListener("click", fn); }
+  if(stPlanBauen && p.entwurf) bauArtBinden("gewicht", function(){ bauNachTimer(p); });
   an("[data-planedit]", function(){ stPlanBauen = true; stPlanSel = -1; stPlanQuery = ""; renderKatalog(); window.scrollTo(0, 0); });
   if(!stPlanBauen && ids.length && !p.entwurf) trainingLeisteBinden({ plan:p, ids:ids }, neu);
   if(!stPlanBauen && ids.length) planKopfKarteBinden(p, ids, neu);

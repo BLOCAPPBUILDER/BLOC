@@ -198,7 +198,7 @@ function playerTemplate(){
     '<div id="pl-bgs" aria-hidden="true"></div>'+
     '<div class="player-top">'+
       '<button class="exit" data-exit title="'+t("endBtn")+'">&times;</button>'+
-      '<div class="pl-mitte"><div class="ex-dots" id="pl-exkreise" role="img"></div></div>'+
+      '<div class="pl-mitte"><div class="pl-logo" aria-hidden="true">BLOC</div><div class="ex-dots" id="pl-exkreise" role="img"></div></div>'+
       (playerTrackt() ? '<button class="exit" data-plsave title="'+esc(t("trSpeichern"))+'" aria-label="'+esc(t("trSpeichern"))+'">'+ICON_SAVE+'</button>' : '')+
       '<button class="exit" data-vol-toggle title="'+t("volume")+'">'+ICON_VOLUME+'</button>'+
     '</div>'+
@@ -208,7 +208,7 @@ function playerTemplate(){
     '</div>'+
     '<div class="progressbar"><div class="progressbar-fill" id="pl-progress" style="width:0%"></div></div>'+
     '<div id="pl-exdots" class="pl-leiste-wrap"></div>'+   /* Übungsleiste wie im Satz-Training (2026-11-19) */
-    '<div class="pl-logo" aria-hidden="true">BLOC</div>'+progChipHTML(programmRefAusQuelle(playerState && playerState.source))+
+    progChipHTML(programmRefAusQuelle(playerState && playerState.source))+
     '<div id="pl-body" class="player-mid"></div>'+
     '</div>';
 }
@@ -460,16 +460,15 @@ function updateExDots(step){
   if(kreise){ kreise.innerHTML = ""; kreise.style.display = "none"; }
   if(n < 2 || n > 40){ wrap.innerHTML = ""; wrap.style.display = "none"; return; }
   wrap.style.display = "";
-  var fertig = 0, cur = step.exNr || 1;
+  var cur = step.exNr || 1;
   var pills = l.map(function(u){
     var erl = playerState.erledigt || {}, done = u.works.filter(function(w){ return erl[w]; }).length, alle = done >= u.works.length;
-    if(alle) fertig++;
-    var cls = "satz-punkt satz-pill" + (alle ? " fertig" : "") + (u.nr === cur ? " an" : "");
-    return '<button type="button" class="'+cls+'" data-plgo="'+u.start+'" aria-label="'+esc(u.nr+". "+u.name)+'"><b>'+esc(u.name)+'</b><small>'+esc(alle ? t("satzPillFertig") : t("satzPillSaetze", { n:done, m:u.works.length }))+'</small>'+
+    var cls = "satz-punkt satz-tab" + (alle ? " fertig" : "") + (u.nr === cur ? " an" : "");
+    return '<button type="button" class="'+cls+'" data-plgo="'+u.start+'" aria-label="'+esc(u.nr+". "+u.name+", "+t(alle ? "satzPillSaetzeOk" : "satzPillSaetze", { n:done, m:u.works.length }))+'">'+u.nr+
       '<i class="satz-pill-bar"><em style="width:'+Math.round(done/Math.max(1, u.works.length)*100)+'%"></em></i></button>';
   }).join("");
   var alt = wrap.querySelector(".satz-leiste"), x = alt ? alt.scrollLeft : 0;
-  wrap.innerHTML = '<div class="satz-leiste-kopf"><span>'+esc(t("satzLeiste"))+'</span><span>'+esc(t("satzLeisteStand", { n:fertig, m:n }))+'</span></div><div class="satz-punkte satz-leiste">'+pills+'</div>';
+  wrap.innerHTML = '<div class="satz-punkte satz-leiste">'+pills+'</div>';   // wie im Satz-Training: Nummer und Balken
   var leiste = wrap.querySelector(".satz-leiste"), an = leiste.querySelector(".an");
   leiste.scrollLeft = x;
   if(an) leiste.scrollTo({ left:Math.max(0, an.offsetLeft - (leiste.clientWidth - an.offsetWidth)/2), behavior:"smooth" });

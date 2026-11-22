@@ -236,7 +236,7 @@ function bauModus(){
 }
 function bauArtHTML(modus, mitHinweis){
   function b(k, key){ return '<button type="button" data-bauart="'+k+'" class="'+(modus === k ? 'active' : '')+'" aria-pressed="'+(modus === k)+'">'+esc(t(key))+'</button>'; }
-  return '<div class="seg-row bau-modus" role="group" aria-label="'+esc(t("bauArtTitel"))+'">'+b("timer", "bauArtZeit")+b("gewicht", "bauArtSaetze")+'</div>'+
+  return '<div class="seg-row bau-modus" role="group" aria-label="'+esc(t("bauArtTitel"))+'">'+b("gewicht", "bauMitSaetzen")+b("timer", "bauMitTimer")+'</div>'+
     "";
 }
 /* fn(neueArt) läuft nur, wenn die andere Art gewählt wurde; die Wahl wird für den Ort gemerkt */
@@ -270,7 +270,7 @@ function bauNachSaetzen(b){
   }
   save();
   bauEntwurf = null;
-  katZuMeine();
+  if(katTab() !== "baukasten") katZuMeine();
   stPlanAktiv = p.id; stPlanBauen = true; stPlanSel = -1; stPlanQuery = "";
   navStack.pop();
   if(navTop() !== "#katalog") navStack.push("#katalog");
@@ -284,12 +284,24 @@ function katKatalogOeffnen(){
   s.katTab = "katalog"; s.katAbt = "workouts"; stPlanAktiv = null; stPlanBauen = false; katOffen = {}; save();
   go("#katalog"); renderKatalog(); window.scrollTo(0, 0);
 }
-/* „BLOC bauen“: Auswahl Mit Sätzen (bisheriger Plan-Bau) · Mit Timer (bisheriger Timer-Baukasten). Auch von Heute aus. */
+/* „BLOC bauen“ (2026-11-22, Kevin): keine Abfrage von unten, die Bauseite beginnt mit Schritt 1 „Wie willst du den BLOC bauen?“; die letzte Wahl bleibt gemerkt */
 function bauWahlOeffnen(){
-  openActionSheet(t("bauWahlTitel"), [
-    { ico:HOME_ICON.katalog, label:t("bauMitSaetzen"), fn:function(){ katTabSetzen("baukasten"); go("#katalog"); katPlanNeu(); } },
-    { ico:HOME_ICON.intervall, label:t("bauMitTimer"), fn:function(){ go("#mybuild/new"); } }
-  ]);
+  katTabSetzen("baukasten");
+  if(bauModus() === "gewicht"){ go("#katalog"); katPlanNeu(); }
+  else go("#mybuild/new");
+}
+/* Nummerierte Schritte der Bauseiten: 1 Art, 2 Name, 3 Ablauf, 4 Übungen */
+function bauNrHTML(nr, titel){ return '<div class="bau-schritt bau-nr"><span>'+nr+'</span>'+esc(titel)+'</div>'; }
+function bauNrKopf(nr, titel){ return '<i class="bau-nr-z">'+nr+'</i>'+esc(titel); }
+function bauArtKopfHTML(modus){ return bauNrHTML(1, t("bauWahlTitel"))+bauArtHTML(modus, false); }
+/* Sätze → Timer: ein noch nicht gespeicherter BLOC wandert mit seinen Übungen in den Timer-Bau */
+function bauNachTimer(p){
+  var ids = stPlanIds(p).filter(findExercise), f = document.getElementById("plan-name"), nm = f ? f.value.trim() : p.name;
+  var std = t("planDefault", { n:stPlaene().filter(function(x){ return !x.entwurf; }).length+1 });
+  state.db.settings.stPlaene = stPlaene().filter(function(x){ return x.id !== p.id; });
+  stPlanAktiv = null; stPlanBauen = false; stPlanSel = -1; save();
+  bauEntwurf = { key:"new", neu:true, d:{ id:uid(), name:nm && nm !== std ? nm : t("myDefaultName"), mode:"uniform", reps:6, work:30, rest:10, blockRest:45, items:ids.map(itemFromEx) } };
+  go("#mybuild/new");
 }
 /* ---------- Baukasten: Überrasch mich, selber bauen oder aus dem Katalog ---------- */
 function renderKatalogBaukasten(){
