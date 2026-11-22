@@ -2028,3 +2028,12 @@ details.run-eigen[open], details.run-opt[open], details.run-ansage[open]{ positi
   .satz-figur.mit-i .satz-tipp-i{ right:-44px; bottom:-8px; }
   .satz-root .satz-eingabe.mit-tipp .satz-feldkopf{ height:32px; margin-bottom:2px; }
 }
+
+/* Derselbe Vorschlag auf Übungskarte und in der BLOC-Ansicht (2026-11-22) */
+.vorschlag-zeile{ display:inline-flex; align-items:center; min-width:0; max-width:100%; }
+.vorschlag-zeile .satz-tipp-i{ position:static; flex:none; width:36px; }
+.vorschlag-zeile .satz-tipp-i span{ background:transparent; }
+.vorschlag-zeile .satz-tipp-x{ color:var(--text-dim); }
+.st-tipp-kurz{ display:flex; justify-content:center; margin:0 0 8px; }
+.st-tipp-kurz[hidden]{ display:none; }
+.pz-text .vorschlag-zeile{ align-self:flex-start; margin-top:2px; }

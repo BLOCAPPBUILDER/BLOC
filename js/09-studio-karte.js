@@ -801,9 +801,7 @@ function renderStudioKarte(id){
         }).join("")+'</div>' : '')+
       (leicht ? '<div class="st-leicht">'+esc(t("leichtHinweis", { n:leichtSaetze(z.saetze) }))+'</div>' : '')+
       (v.erstes && !koerper && !(h && h.s.length) ? '<div class="st-leicht">'+esc(t("erstesMalHinweis", { n:bereich.max }))+'</div>' : '')+
-      (stg ? '<div class="st-steigern"><span>'+esc(studioSteigerTippText(stg))+'</span>'+
-        '<button type="button" class="btn btn-primary" data-stup>'+esc(t("tippUebernehmen"))+'</button>'+
-        (!studioTippNein(stg) ? '' : '<button type="button" class="btn btn-secondary st-tipp-nein" data-stnein>'+esc(t(studioTippNein(stg)))+'</button>')+'</div>' : '')+
+      (stg ? '<div class="st-tipp-kurz">'+vorschlagZeileHTML(stg, { ja:'data-stup', nein:'data-stnein', info:'data-sttippinfo' })+'</div>' : '')+
       '<div class="st-heute"><b>'+esc(t("stToday"))+':</b> '+(h && h.s.length ? h.s.map(function(x, i){
         return '<span class="st-satz">'+(i+1)+'. '+esc(satzText(x).replace("×", " × "))+'</span>'; }).join("") : '<span class="st-leer">–</span>')+'</div>'+
       (blKontext ? '<div class="st-block"><span><b>'+esc(t(blKontext.art === "zirkel" ? "blkZirkel" : "blkSuper"))+'</b> · '+(blKontext.i+1)+'/'+blKontext.n+
@@ -943,11 +941,19 @@ function renderStudioKarte(id){
     studioPR = null;
     studioPauseStop(); save(); trainingNachSatz(id); neu();
   });
-  an("[data-stnein]", function(){ showToast(t(studioTippAblehnen(id))); neu(); });
-  an("[data-stup]", function(){
+  function stNein(){ showToast(t(studioTippAblehnen(id))); neu(); }
+  function stJa(){
     var plk = stPlanAktiv ? stPlanFind(stPlanAktiv) : null;
     if(stg.naechste && plk && planVarianteTauschen(plk, id, stg.naechste, stg.art === "variante", stg.art === "stufeZurueck")){ studioTippUebernehmen(id, stg); showToast(studioTippKurz(stg)); go("#studio/"+stg.naechste); return; }
-    var neuKg = studioTippUebernehmen(id, stg); showToast(neuKg != null ? t("stRaised", { kg:studioKg(neuKg) }) : studioTippKurz(stg)); neu(); });
+    var neuKg = studioTippUebernehmen(id, stg); showToast(neuKg != null ? t("stRaised", { kg:studioKg(neuKg) }) : studioTippKurz(stg)); neu(); }
+  an("[data-stnein]", stNein);
+  an("[data-stup]", stJa);
+  app.querySelectorAll("[data-sttippinfo]").forEach(function(b){ b.addEventListener("click", function(){ satzTippSheet(id, stg, stJa, stNein); }); });
+  if(stg && kgIn && satzTippAmKg(stg)){   // eigenes Gewicht eingetragen: der Vorschlag tritt zurück, beim Ausgangswert ist er wieder da
+    var tippKgStart = kgWert(), tippBox = app.querySelector(".st-tipp-kurz"), tippSicht = function(){ tippBox.hidden = kgWert() !== tippKgStart; };
+    kgIn.addEventListener("input", tippSicht);
+    app.querySelector(".st-hero").addEventListener("click", tippSicht);
+  }
   an("[data-stskip]", function(){ studioPauseStop(); neu(); });
   an("[data-stblock]", function(){ studioPauseStop(); go("#studio/"+app.querySelector("[data-stblock]").getAttribute("data-stblock")); });
   an("[data-stinfo]", function(){ openExInfo(id, false); });
