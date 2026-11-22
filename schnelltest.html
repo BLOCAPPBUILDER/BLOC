@@ -120,9 +120,10 @@
     W.state.db.settings.katTab = "katalog"; W.state.db.settings.katAbt = "uebungen"; W.renderKatalog();
     await bis(function () { return $("#st-q") && $$("[data-studio]:not([data-ortfremd])").length > 0; }, 3000, "Übungskatalog");
   }
-  async function bauMitSaetzen() {   // „BLOC bauen“ fragt erst: Mit Sätzen · Mit Timer
+  async function bauMitSaetzen() {   // „BLOC bauen“ öffnet die Bauseite, Schritt 1 steht oben
+    W.state.db.settings.bauModus = "gewicht";
     klick(await bis(function () { return $("[data-bauselber]"); }, 3000, "BLOC bauen"));
-    klick(await bis(function () { return $('#overlayRoot [data-act="0"]'); }, 2000, "Auswahl Mit Sätzen"));
+    await bis(function () { return $('[data-bauart="gewicht"].active') && $$(".bau-nr").length === 3 && $(".plan-sticky-kopf .bau-nr-z"); }, 2000, "Bauseite mit Schritt 1 Mit Sätzen");
   }
   async function zuBaukasten(modus) {   // setzt die Wahl im Filter (Trainingsart, Ausrüstung) zurück; modus: "timer" (Standard) oder "gewicht" (Nach Zeit / Nach Sätzen)
     trainSetzen([]);
@@ -779,7 +780,7 @@
       // Nach Sätzen: im Workout-Bau (nicht im Baukasten) wandern dieselben Übungen in einen Plan
       klick('[data-bauart="gewicht"]');
       await bis(function () { return $("[data-plandone]") && $("#plan-name"); }, 3000, "Plan-Bau");
-      pruefe(!$("[data-bauart]") && $$("#plan-sticky .wb-mini").length === 2, "Plan: Übungen fehlen oder die Frage Zeit/Sätze steht noch da: " + $$("#plan-sticky .wb-mini").length);
+      pruefe($('[data-bauart="gewicht"].active') && $$("#plan-sticky .wb-mini").length === 2, "Plan: Übungen fehlen oder Schritt 1 steht nicht auf Mit Sätzen: " + $$("#plan-sticky .wb-mini").length);
       // nur Übungen ohne Eintrag: eine Übung mit gespeicherten Sätzen (Beinpresse aus einem früheren Test) zeigt ihren letzten Satz und darf das
       var ohneLog = $$("[data-planex] .st-sub").filter(function (e) { var en = W.studioEintrag(e.parentNode.getAttribute("data-planex")); return !(en && en.log && en.log.length); });
       pruefe(!ohneLog.some(function (e) { return /\d+ Sätze × \d+/.test(e.textContent); }), "Plan-Kacheln sollen die Voreinstellung „3 Sätze × 12“ nicht zeigen (die trägt man selbst ein): " + $$("[data-planex] .st-sub").map(function (e) { return e.parentNode.getAttribute("data-planex") + "=" + e.textContent; }).join(", "));
@@ -959,7 +960,7 @@
       klick(await bis(function () { return $('[data-planex="leg-press"]'); }, 2000, "Beinpresse im Fitnessstudio"));
       await bis(function () { return $(".kk-kopf .kk-zeile"); }, 2000, "Körperkarte oben im Plan");
       await bis(function () { return $$(".plan-sticky [data-plansel]").length === 2; }, 2000, "Der Plan zeigt oben die gewählten Übungen");
-      pruefe(/BLOC/.test($(".plan-sticky-kopf").textContent) && /2/.test($(".plan-sticky-kopf").textContent), "Überschrift „BLOC“ mit Anzahl: " + $(".plan-sticky-kopf").textContent);
+      pruefe(/Dein Ablauf/.test($(".plan-sticky-kopf").textContent) && /2 Übungen/.test($(".plan-sticky-kopf").textContent), "Schritt 3 „Dein Ablauf“ mit Anzahl: " + $(".plan-sticky-kopf").textContent);
       klick($('.plan-sticky [data-plansel="0"]'));   // im Plan antippen wählt aus, der Papierkorb nimmt die Übung heraus
       klick(await bis(function () { return $("[data-plandelsel]"); }, 2000, "Steuerung im Plan"));
       await bis(function () { return $$(".plan-sticky [data-plansel]").length === 1; }, 2000, "Übung aus dem Plan genommen");
@@ -1431,7 +1432,7 @@
       await zuBaukasten("timer");
       await bauMitSaetzen();
       await bis(function () { return $("#plan-name") && $("[data-plandone]"); }, 3000, "Selber bauen (Nach Zeit) führt in den Plan-Bau");
-      pruefe(!$("[data-bauart]") && !$("#overlayRoot .sp-sheet"), "Plan-Bau fragt nicht mehr nach Zeit oder Sätzen");
+      pruefe($('[data-bauart="gewicht"].active') && !$("#overlayRoot .sp-sheet"), "Plan-Bau: Schritt 1 oben auf der Seite, kein Fenster");
       var plN = W.stPlaene().filter(function (x) { return x.entwurf; })[0];
       pruefe(plN && !plN.standard, "Selber bauen setzt keine Voreinstellung (standard) mehr: " + JSON.stringify(plN && plN.standard));
       await trainNur(["studio", "body"]);   // Fitnessstudio und Körpergewicht zugleich (Mehrfachwahl)

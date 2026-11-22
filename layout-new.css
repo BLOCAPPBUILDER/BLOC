@@ -1855,8 +1855,20 @@ body.prot-sheet-offen{ overflow:hidden; }
 .satz-satzleiste i b{ display:block; font-size:11px; font-weight:700; opacity:.8; }
 .satz-satzleiste i.an{ background:rgba(70,160,110,.28); border-color:rgba(110,200,150,.6); }
 .satz-satzleiste i.jetzt{ border:1.5px solid var(--accent); box-shadow:none; }
+/* Bauseiten: Schritte 1 bis 4 (2026-11-22) */
+.bau-nr + .card > label{ position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+.bau-nr + .seg-row.bau-modus{ margin-bottom:6px; }
+.plan-sticky-kopf b{ display:inline-flex; align-items:center; gap:8px; }
+.bau-nr-z{ width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; flex:none; background:var(--accent); color:var(--accent-text, #fff); font-size:12px; font-style:normal; font-weight:800; }
+/* Timer: Kopfzeile wie im Satz-Training (X, BLOC mittig, rechte Taste, darunter Nummern mit Balken) */
+@media (orientation:portrait){
+  :root[data-layout="new"] .player-top{ padding:14px 14px 6px; gap:10px; }
+  :root[data-layout="new"] .player-top .exit{ width:44px; height:44px; border-color:rgba(255,255,255,.25); background:rgba(255,255,255,.12); }
+  :root[data-layout="new"] .player-top .pl-mitte{ flex-direction:column; gap:6px; padding:0; }
+  :root[data-layout="new"] .player .pl-logo, :root[data-layout="new"] .player[data-phase] .pl-logo{ margin:0; font-size:24px; }
+}
 /* Timer: dieselbe Übungsleiste und Satzleiste (2026-11-19) */
-.pl-leiste-wrap{ margin:8px 0 0; color:#fff; }
+.pl-leiste-wrap{ margin:0; color:#fff; }
 .pl-leiste-wrap .satz-leiste-kopf{ padding:0 18px; }
 .rep-dots.pl-satzleiste{ max-width:360px; width:calc(100% - 32px); margin-left:auto; margin-right:auto; }
 .satz-satzleiste i{ min-width:56px; }
@@ -1866,14 +1878,14 @@ body.prot-sheet-offen{ overflow:hidden; }
 
 /* Satz-Training aufgeräumt (2026-11-21, Kevin, Version 1): Küste sichtbar, schmale Übungsleiste, ruhige Karte, Hauptknopf unten. Nur im Satz-Training, der Timer behält seine Leisten. */
 .satz-root .satz-bg{ inset:0; background:linear-gradient(180deg, rgba(8,14,20,.5) 0, rgba(8,14,20,.18) 26%, rgba(8,14,20,.42) 55%, rgba(8,14,20,.8) 100%), url(img/neu-p-freiluft-meer.jpg) center/cover no-repeat; filter:brightness(.82) saturate(1.05); }
-.satz-root .satz-punkte.satz-leiste{ gap:6px; padding:0 16px 4px; }
-.satz-root .satz-punkt.satz-tab{ flex:1 0 44px; width:auto; min-width:44px; height:44px; padding:0; border:0; border-radius:0; background:none; color:rgba(255,255,255,.66); font:inherit; font-size:12px; font-weight:700; display:flex; flex-direction:column; justify-content:center; gap:6px; transform:none; }
-.satz-root .satz-punkt.satz-tab.an{ color:#fff; background:none; transform:none; }
-.satz-root .satz-punkt.satz-tab.fertig{ color:#86e3ab; background:none; }
-.satz-root .satz-tab .satz-pill-bar{ width:100%; margin:0; background:rgba(255,255,255,.2); }
-.satz-root .satz-tab em{ background:#fff; }
-.satz-root .satz-tab.an em{ background:var(--accent); }
-.satz-root .satz-tab.fertig em{ background:#5fd38d; }
+:is(.satz-root, .pl-leiste-wrap) .satz-punkte.satz-leiste{ gap:6px; padding:0 16px 4px; }
+:is(.satz-root, .pl-leiste-wrap) .satz-punkt.satz-tab{ flex:1 0 44px; width:auto; min-width:44px; height:44px; padding:0; border:0; border-radius:0; background:none; color:rgba(255,255,255,.66); font:inherit; font-size:12px; font-weight:700; display:flex; flex-direction:column; justify-content:center; gap:6px; transform:none; }
+:is(.satz-root, .pl-leiste-wrap) .satz-punkt.satz-tab.an{ color:#fff; background:none; transform:none; }
+:is(.satz-root, .pl-leiste-wrap) .satz-punkt.satz-tab.fertig{ color:#86e3ab; background:none; }
+:is(.satz-root, .pl-leiste-wrap) .satz-tab .satz-pill-bar{ width:100%; margin:0; background:rgba(255,255,255,.2); }
+:is(.satz-root, .pl-leiste-wrap) .satz-tab em{ background:#fff; }
+:is(.satz-root, .pl-leiste-wrap) .satz-tab.an em{ background:var(--accent); }
+:is(.satz-root, .pl-leiste-wrap) .satz-tab.fertig em{ background:#5fd38d; }
 .satz-root .satz-karte{ display:flex; flex-direction:column; padding:4px 14px 10px; }
 .satz-root .satz-glas{ flex:1 0 auto; display:flex; flex-direction:column; padding:18px; border-radius:26px; background:rgba(255,255,255,.09); border-color:rgba(255,255,255,.14); box-shadow:none; }
 .satz-kopf{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }

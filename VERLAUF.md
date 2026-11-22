@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-22 · Timer-Kopf wie im Satz-Training, BLOC bauen mit Schritten (Fassung 2026-11-22-19)
+
+- **BLOC bauen:** Die Abfrage „Wie willst du den BLOC bauen?“ steht als Schritt 1 oben auf der Bauseite statt im Fenster von unten. Danach 2 Name, 3 Ablauf, 4 Übungen wählen; beim Umschalten wandern die Übungen mit.
+- Workouts mit Timer zeigen oben X, BLOC mittig, Ton und darunter die nummerierte Leiste mit Balken. Reine Timer behalten ihre Kreise.
+
 ## 2026-11-22 · Bildnachweis vollständig (Fassung 2026-11-22-18)
 
 - `quellen.html` nennt jetzt für alle 15 Fotos Urheber und Pexels-Link. Neu recherchiert: `bereich-run.jpg`, `neu-freiluft.jpg`, `neu-p-mobility-sitz.jpg`, `neu-h-brust-2.jpg`, `neu-hell-hintergrund.jpg`.
