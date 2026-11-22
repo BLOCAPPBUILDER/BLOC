@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-22 · Satz-Training: Variante A „Eine Karte“ (Fassung 2026-11-22-1)
+
+- Figur nutzt den freien Platz der Karte, Satzfelder, Zähler und Hauptknopf haben einheitliche Größen. Gilt für Übungen mit und ohne Gewicht. Der Timer bleibt unverändert.
+
 ## 2026-11-21 · Vierzehnter Test: Löschen, Gewichtsfeld, Plausibilität (Fassung 2026-11-21-8)
 
 Umsetzung von BERICHT-Test14-als-Prompt.md.
