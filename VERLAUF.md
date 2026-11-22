@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-22 · Run-Dock auf Rad: „Eigene Fahrt“ (Fassung 2026-11-22-8)
+
+- Im Rad-Modus heißt die Zielkachel im Run-Dock „Eigene Fahrt“ (EN „Own ride“) statt „Eigener Lauf“; Laufen unverändert (`runEigenRad` in texte.js, `js/16-lauf.js`).
+
 ## 2026-11-22 · Heute: Baukasten-Karte wieder wie vorher (Fassung 2026-11-22-7)
 
 - Auf Heute fehlen wieder das Etikett „Nur für heute“ und der Block „Für mehrere Wochen“ (Plan erstellen lassen / Plan selbst bauen); die Karte heißt wieder „Workout-Builder › Baukasten · Dein Workout, in einer Minute“ mit „Überrasch mich“ und „Selber bauen“ (Texte `builderTitel`, `builderKicker`, `builderText`, `builderSelber` DE/EN zurückgesetzt). Der Plan-Assistent bleibt über die Baukasten-Seite (Tools › Workout) und den Reiter Fortschritt erreichbar. Alles andere aus -5 (Begriffe, Einstiege) bleibt.
