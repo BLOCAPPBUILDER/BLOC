@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-22 · Weitere ungenutzte Bilder entfernt (Fassung 2026-11-22-15)
+
+- Entfernt, weil nirgends angezeigt: `neu-faq.jpg`, `neu-p-freiluft-leiter.jpg`, `neu-p-timer-box.jpg`, samt Einträgen in `sw.js`, `FOTO_FOKUS` und `FOTO_SAT`.
+
 ## 2026-11-22 · Bildnachweis je Foto, ungenutzte Bilder entfernt (Fassung 2026-11-22-14)
 
 - `quellen.html` nennt für elf Pexels-Fotos Motiv, Urheber, Link, Datei und Lizenz (Deutsch und Englisch).
