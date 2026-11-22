@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-22 · Web-Version auf Stand der App (Fassung 2026-11-22-16)
+
+- Die Änderungen aus den Fassungen -12 und -13 (Test 15) sind jetzt auch auf `main` und damit in der Web-Version.
+
 ## 2026-11-22 · Weitere ungenutzte Bilder entfernt (Fassung 2026-11-22-15)
 
 - Entfernt, weil nirgends angezeigt: `neu-faq.jpg`, `neu-p-freiluft-leiter.jpg`, `neu-p-timer-box.jpg`, samt Einträgen in `sw.js`, `FOTO_FOKUS` und `FOTO_SAT`.
@@ -12,6 +16,23 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 - `quellen.html` nennt für elf Pexels-Fotos Motiv, Urheber, Link, Datei und Lizenz (Deutsch und Englisch).
 - Entfernt, weil nirgends mehr angezeigt: `neu-kopf-hell-meer.jpg`, `neu-kopf-hell.jpg`, `neu-run-bg.jpg`, `start-halle.jpg` (auch aus `sw.js`).
 - Noch ohne Einzelnachweis: `neu-p-studio-hantelreihe.jpg`.
+
+## 2026-11-22 · Test 15, F/G: Kalender-Menü klarer, Gewichtssumme gerundet (Fassung 2026-11-22-13)
+
+- **F:** Kalender-Hinzufügen heißt jetzt „BLOC mit Sätzen“, „Workout aus dem Katalog“, „Eigenes Timer-Workout“ (vorher „BLOC“, „BLOC aus dem Katalog“, „Meine BLOCs“).
+- **G:** Das Gesamtgewicht einer Übung (`js/09-studio-karte.js`) rundet je Runde und summiert, damit es zu den gerundeten Trainingssummen passt (13.891 vs. 13.890).
+- Meilenstein-Text und Verlauf-Hinweis waren schon in -12.
+
+## 2026-11-22 · Test 15: Termin merken, verpasste Termine, Balance einheitlich (Fassung 2026-11-22-12)
+
+- **A Termin merken:** `kalStarten` merkt den gestarteten Termin (`kalTerminAktiv`), das gespeicherte Training trägt ihn als `x.termin`; `kalAbgleich` hakt genau diesen Termin ab (auch nachgeholt an einem anderen Tag). Trainings mit BLOC-Bezug haken keinen Termin ohne Bezug mehr ab.
+- **B Runden:** `einheitRunden` sucht von der neuesten Runde bis zur Speicherzeit des Trainings: zwei gleiche Trainings am Tag treffen je ihre eigene Runde (Ändern/Löschen).
+- **C Balance:** „Drücken : Ziehen“ in Mehr Einblicke rechnet mit `ddBalance` (Muskelzonen wie im Reiter Körper, nach Sätzen gewichtet) und zeigt Prozent.
+- **D Löschen:** Die Rückfrage nennt die offenen Termine; offene Termine (auch vergangene) gehen mit, erledigte bleiben mit dem alten Namen.
+- **E Verpasst:** Vergangene offene Termine sind markiert („Verpasst“), Menü „Heute nachholen“, Monatszähler nur Heute und Zukunft plus „n verpasst“.
+- **F/G Texte:** Hinweis der Verlauf-Kachel nennt Satz-Trainings; Meilenstein heißt „Meilenstein: n Trainings erreicht!“.
+- Offen: Kalender-Menü mit drei ähnlichen Wegen (BLOC / Katalog / Meine BLOCs) und Gewichtssumme 13.891 vs. 13.890 (Rundung je Training).
+- Tests: Einheitstest 132, Schnelltest 54, alle grün.
 
 ## 2026-11-22 · Läufe: Speicher geschont, bei vollem Speicher ehrliche Meldung (Fassung 2026-11-22-11)
 

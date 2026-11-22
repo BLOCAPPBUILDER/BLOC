@@ -811,11 +811,15 @@ function planKopie(p){
 function planVerwendung(id){ return programmListe().filter(function(q){ return (q.items || []).indexOf("plan:"+id) > -1; }); }
 function planLoeschenFrage(pl, fertig){
   var v = planVerwendung(pl.id), wo = v.map(function(q){ return q.name; }).join(", ");
-  confirmSheet(t("planDelQ"), "„"+pl.name+"“ – "+(v.length ? t("planDelNutzung", { n:wo })+" " : "")+t("cantUndo"), t("del"), function(){
-    var heute = kalTagKey(Date.now());
+  // Test 15, D: Termine dieses BLOCs nennen; offene (auch vergangene) gehen mit, erledigte bleiben mit dem alten Namen
+  function terminOffen(e){ return e.art === "plan" && e.ref === pl.id && !e.prog && !kalErledigt(e); }
+  var nT = kalListe().filter(terminOffen).length;
+  confirmSheet(t("planDelQ"), "„"+pl.name+"“ – "+(v.length ? t("planDelNutzung", { n:wo })+" " : "")+(nT ? t(nT === 1 ? "planDelTermin1" : "planDelTermine", { n:nT })+" " : "")+t("cantUndo"), t("del"), function(){
     v.forEach(function(q){ q.items = q.items.filter(function(x){ return x !== "plan:"+pl.id; }); q.pos = 0; q.updatedAt = Date.now(); if(!q.items.length) programmAusKalender(q); });
     stPlaene().forEach(function(q){ if(Array.isArray(q.folge)) q.folge = q.folge.filter(function(x){ return x !== pl.id; }); });
-    state.db.settings.kalender = { e:kalListe().filter(function(e){ return !(e.art === "plan" && e.ref === pl.id && !e.prog && e.tag >= heute && e.erledigt !== true); }) };
+    var weg = kalListe().filter(terminOffen).map(function(e){ return e.id; });
+    kalListe().forEach(function(e){ if(e.art === "plan" && e.ref === pl.id && weg.indexOf(e.id) < 0 && !e.name) e.name = pl.name; });
+    state.db.settings.kalender = { e:kalListe().filter(function(e){ return weg.indexOf(e.id) < 0; }) };
     state.db.settings.stPlaene = stPlaene().filter(function(x){ return x.id !== pl.id; });
     save(); fertig();
     showToast(t("deletedToast", { n:pl.name }));

@@ -2095,6 +2095,8 @@ body.mit-tabs .fab-menu{ bottom:calc(166px + env(safe-area-inset-bottom)); }
 .ke-ok svg{ width:22px; height:22px; }
 .kal-eintrag.erledigt .ke-ok{ background:#1f9d63; border-color:#1f9d63; color:#fff; }
 .kal-eintrag.erledigt .ke-text b{ text-decoration:line-through; opacity:.7; }
+.kal-eintrag.verpasst{ opacity:.72; }
+.kal-eintrag.verpasst .ke-text small{ color:var(--warn, #d98a1f); }
 .kal-eintrag.fehlt{ opacity:.6; }
 .kt-add{ display:flex; align-items:center; gap:8px; align-self:flex-start; padding:10px 6px; border:0; background:none; color:var(--text-dim); font:inherit; font-size:15px; cursor:pointer; }
 .kt-add svg{ width:20px; height:20px; }

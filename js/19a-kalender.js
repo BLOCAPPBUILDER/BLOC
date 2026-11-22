@@ -67,18 +67,31 @@ function kalAbgleich(tag){
     var pg = e.art === "programm" && typeof programmFinde === "function" ? programmFinde(e.ref) : null;
     return pg ? pg.items.filter(function(it){ return /^plan:/.test(it); }).map(function(it){ return it.slice(5); }) : [];
   }
-  var passt = {};
+  var passt = {}, alle = typeof einheitenListe === "function" ? einheitenListe() : [];
+  // 1) Training mit gemerktem Termin (auch an anderem Tag nachgeholt): genau dieser Termin ist erledigt
   liste.forEach(function(e){
     if(e.art === "sport" || e.art === "run") return;
+    var x = null;
+    alle.forEach(function(z){ if(z && z.termin === e.id && (z.ex || []).length) x = z; });
+    if(!x) return;
+    passt[e.id] = true;
+    var i = offen.indexOf(x); if(i > -1){ offen.splice(i, 1); tr--; }
+  });
+  // 2) Training eines anderen Termins (gemerkt) gehört nicht zu diesem Tag
+  offen = offen.filter(function(x){ if(x.termin && kalFinde(x.termin)){ tr--; return false; } return true; });
+  liste.forEach(function(e){
+    if(e.art === "sport" || e.art === "run" || passt[e.id]) return;
     var ids = planIds(e);
     for(var i = 0; i < offen.length; i++) if(offen[i].plan && ids.indexOf(offen[i].plan) > -1){ passt[e.id] = true; offen.splice(i, 1); tr--; break; }
   });
+  // 3) Trainings mit BLOC-Bezug haken keinen Termin ohne Bezug ab (Test 15, A)
+  offen.forEach(function(x){ if(x.plan) tr--; });
   liste.forEach(function(e){
     var auto = false;
     if(e.art === "sport"){ res[e.id] = e.erledigt === true; return; }   // fester Termin: nur von Hand abgehakt
     if(e.art === "run"){ if(rn > 0){ rn--; auto = true; } }
     else if(passt[e.id]) auto = true;
-    else if(tr > 0 && planIds(e).length === 0){ tr--; auto = true; if(offen.length) offen.shift(); }   // Test 6 P13: Termine mit Plan haken nur ihr eigenes Training ab, andere Einheiten erscheinen „Ohne Termin“
+    else if(tr > 0 && planIds(e).length === 0){ tr--; auto = true; var j = -1; offen.forEach(function(x, k){ if(j < 0 && !x.plan) j = k; }); if(j > -1) offen.splice(j, 1); }   // Test 6 P13: Termine mit Plan haken nur ihr eigenes Training ab, andere Einheiten erscheinen „Ohne Termin“
     res[e.id] = e.erledigt === true ? true : e.erledigt === false ? false : auto;
   });
   return { status:res, frei:offen };
@@ -107,6 +120,9 @@ function kalSumme(tage){
   tage.forEach(function(tag){ var ab = kalAbgleich(tag), st = ab.status; frei += ab.frei.length; kalAn(tag).forEach(function(e){ n++; if(st[e.id]) ok++; if(e.art === "run") km += e.km || 0; }); });
   return { n:n, km:km, ok:ok, frei:frei };
 }
+/* Test 15, E: verpasst = Termin vor heute, nicht erledigt (und nicht von Hand als erledigt gesetzt) */
+function kalVerpasst(e){ return e.tag < kalTagKey(Date.now()) && !kalErledigt(e); }
+function kalVerpasstN(tage){ var n = 0; tage.forEach(function(tag){ kalAn(tag).forEach(function(e){ if(kalVerpasst(e)) n++; }); }); return n; }
 /* Name, Zeile darunter und Farbe eines Eintrags; ok:false, wenn das Ziel gelöscht wurde */
 /* Farbe eines Eintrags nach dem Ort seiner Übungen, wie im Katalog: Fitnessstudio rot, Freiluft blau; Mobility & Stretch grün (nur Dehnübungen) */
 function kalOrtFarbe(exs){
@@ -126,7 +142,7 @@ function kalAufloesen(e){
     }
   } else if(e.art === "plan"){
     var p = stPlanFind(e.ref);
-    if(!p) o.ok = false; else { o.name = p.name; o.sub = (e.leicht && typeof pt === "function" ? pt("leichtwoche")+" · " : "")+planAnzahl(stPlanIds(p).length); o.farbe = kalOrtFarbe(stPlanIds(p).map(findExercise).filter(Boolean)); }
+    if(!p){ o.ok = false; if(e.name) o.name = e.name; } else { o.name = p.name; o.sub = (e.leicht && typeof pt === "function" ? pt("leichtwoche")+" · " : "")+planAnzahl(stPlanIds(p).length); o.farbe = kalOrtFarbe(stPlanIds(p).map(findExercise).filter(Boolean)); }
   } else if(e.art === "lib"){
     var lw = findLibWorkout(e.ref);
     if(!lw) o.ok = false;
@@ -152,7 +168,10 @@ function kalAufloesen(e){
   if(!o.name) o.name = t("kalFehlt");
   return o;
 }
+/* Welcher Termin gerade gestartet wurde: das gespeicherte Training merkt ihn sich (x.termin), so hakt später genau dieser Termin ab - auch ein nachgeholter an einem anderen Tag */
+var kalTerminAktiv = null;
 function kalStarten(e){
+  if(e && e.art !== "sport") kalTerminAktiv = { id:e.id, at:Date.now() };
   if(e.prog && typeof programmFinde === "function"){   // Termin eines Trainingsplans: gleich los, das Training weiß, dass es dazugehört
     var pp = programmFinde(e.prog.id);
     if(pp && pp.items[e.prog.i]){ progKontext = { pid:pp.id, i:e.prog.i }; return progDirektStarten(progEintrag(pp.items[e.prog.i])); }
@@ -175,8 +194,9 @@ function kalStarten(e){
 function kalNeu(){ var y = window.scrollY; renderKalender(); window.scrollTo(0, y); }
 function kalEintragHTML(e){
   var o = kalAufloesen(e);
-  return '<div class="kal-eintrag'+(kalErledigt(e) ? ' erledigt' : '')+(o.ok ? '' : ' fehlt')+'" data-kaleid="'+esc(e.id)+'" data-kalname="'+esc(o.name)+'" style="--kc:'+o.farbe+'" role="button" tabindex="0">'+
-    '<i class="ke-balken"></i><span class="ke-text"><b>'+esc(o.name)+'</b><small>'+esc(o.ok ? o.sub : t("kalFehlt"))+'</small></span>'+
+  var vp = kalVerpasst(e);
+  return '<div class="kal-eintrag'+(kalErledigt(e) ? ' erledigt' : '')+(vp ? ' verpasst' : '')+(o.ok ? '' : ' fehlt')+'" data-kaleid="'+esc(e.id)+'" data-kalname="'+esc(o.name)+'" style="--kc:'+o.farbe+'" role="button" tabindex="0">'+
+    '<i class="ke-balken"></i><span class="ke-text"><b>'+esc(o.name)+'</b><small>'+esc((vp ? t("kalVerpasst")+" · " : "")+(o.ok ? o.sub : t("kalFehlt")))+'</small></span>'+
     '</div>';
 }
 /* Beim Öffnen der Wochenansicht: liegt der heutige Tag unter der unteren Leiste, wird er ins Bild geholt (sonst sieht man ihn erst nach dem Scrollen) */
@@ -219,7 +239,7 @@ function renderKalender(){
     if(!kalAuswahl || imMonat.indexOf(kalAuswahl) < 0) kalAuswahl = imMonat.indexOf(heute) > -1 ? heute : imMonat[0];   // gewählter Tag steht immer im angezeigten Monat
   }
   var sichtbar = tage.filter(function(d){ return !monat || d.getMonth() === kalBasis.getMonth(); }).map(kalTagKey);
-  var sum = kalSumme(sichtbar);
+  var sum = kalSumme(sichtbar), vpN = kalVerpasstN(sichtbar);
   html = bereichKopfNeuHTML("kal", t("tabKalender"), t("kalKicker"), "", { klar:true, foto:"img/neu-d-kalender.jpg", fotoHell:"img/neu-h-kettlebell.jpg", zurueck:"#home" }) +
     '<div class="card lib-tabs-card"><div class="theme-pick lib-tabs seg-2">'+
       '<button type="button" data-kalansicht="woche" class="'+(!monat ? 'active' : '')+'">'+esc(t("kalWoche"))+'</button>'+
@@ -231,7 +251,7 @@ function renderKalender(){
     (!monat ? (sum.km > 0 ? '<div class="kal-summe">'+esc(runKm(sum.km*1000).replace(/[,.]00$/, "")+" km Run")+'</div>' : '')+
       '<div class="kal-aktionen"><button type="button" class="btn btn-secondary kal-kopieren" data-kalkopieren>'+svgIcon('<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>')+' '+esc(t("kalKopieren"))+'</button>'+
         '<button type="button" class="btn btn-secondary kal-kopieren" data-kalloeschen>'+svgIcon('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12h10l1-12M9 7V4h6v3"/>')+' '+esc(t("kalAlleLoeschen"))+'</button></div>' : '')+
-    (monat ? '<div class="kal-summe">'+esc((sum.n ? t("kalGeplant", { n:sum.n })+(sum.ok ? " · "+t("kalErledigtN", { n:sum.ok }) : "")+(sum.km > 0 ? " · "+runKm(sum.km*1000).replace(/[,.]00$/, "")+" km Run" : "") : sum.frei ? "" : t("kalNichtsGeplant"))+
+    (monat ? '<div class="kal-summe">'+esc((sum.n - vpN > 0 ? t("kalGeplant", { n:sum.n - vpN })+(vpN ? " · "+t("kalVerpasstN", { n:vpN }) : "")+(sum.ok ? " · "+t("kalErledigtN", { n:sum.ok }) : "")+(sum.km > 0 ? " · "+runKm(sum.km*1000).replace(/[,.]00$/, "")+" km Run" : "") : sum.frei ? "" : t("kalNichtsGeplant"))+
       (sum.frei ? (sum.n ? " · " : "")+t("kalOhnePlanN", { n:sum.frei }) : ""))+'</div>' : '');
   if(!monat){
     html += tage.map(function(d, i){
@@ -300,6 +320,7 @@ function kalTagText(tag){
 }
 function kalEintragMenue(e){
   var o = kalAufloesen(e), acts = [];
+  if(kalVerpasst(e)) acts.push({ ico:P_PLAY, label:t("kalNachholen"), fn:function(){ kalVerschiebe(e.id, kalTagKey(Date.now())); kalNeu(); } });
   if(o.ok) acts.push({ ico:P_PLAY, label:t("kalStart"), fn:function(){ kalStarten(e); } });
   acts.push({ ico:ICON_EDIT, label:t("kalVerschieben"), fn:function(){ kalVerschiebenMenue(e); } });
   acts.push({ ico:P_TRASH, label:t("kalLoeschen"), danger:true, fn:function(){ kalEntferne(e.id); kalNeu(); } });
