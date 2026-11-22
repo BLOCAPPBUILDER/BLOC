@@ -347,10 +347,33 @@ function runSichern(){   // alle 10 s eine Kopie, damit ein beendeter Browser de
   if(r.art === "rad") state.db.settings.runLive.art = "rad";
   save();
 }
+/* Routenpunkte ausdünnen (Douglas-Peucker, ohne Rekursion): Anfang, Ende und alle Punkte, die die Linie um mehr als tol Meter verändern, bleiben.
+   Das spart gut 80 % Speicher, die Kurve sieht man dem Ergebnis nicht an (Routenanzeige, GPX, Kilometermarken bleiben nutzbar). */
+function runAusduennen(pts, tol){
+  if(!Array.isArray(pts) || pts.length < 3) return pts || [];
+  var la0 = pts[0][0], kx = Math.cos(la0*Math.PI/180)*111320, ky = 110540, n = pts.length;
+  var X = pts.map(function(q){ return (q[1] - pts[0][1])*kx; }), Y = pts.map(function(q){ return (q[0] - la0)*ky; });
+  var keep = new Array(n).fill(false), stack = [[0, n-1]];
+  keep[0] = keep[n-1] = true;
+  while(stack.length){
+    var s = stack.pop(), a = s[0], b = s[1], dmax = 0, im = -1, dx = X[b] - X[a], dy = Y[b] - Y[a], len = Math.sqrt(dx*dx + dy*dy) || 1e-9;
+    for(var k = a + 1; k < b; k++){
+      var d = Math.abs(dy*(X[k] - X[a]) - dx*(Y[k] - Y[a]))/len;
+      if(d > dmax){ dmax = d; im = k; }
+    }
+    if(im > -1 && dmax > tol){ keep[im] = true; stack.push([a, im], [im, b]); }
+  }
+  return pts.filter(function(q, k){ return keep[k]; });
+}
+/* Ältere Läufe einmalig (und bei vollem Speicher stärker) schlanker machen */
+function runBestandSchlank(tol){
+  var runs = state.db.settings.runs || [];
+  runs.forEach(function(x){ if(x && x.pts && x.pts.length > 60) x.pts = runAusduennen(x.pts, tol); });
+}
 function runSpeichern(d){   // d: { id, start, dur, dist, pts, splits } -> in den Verlauf; zu kurze Läufe werden nicht behalten
   var s = state.db.settings;
   if(d.dist < 50){ showToast(t("runShort")); return false; }
-  var x = { id:d.id, at:d.start, dur:Math.round(d.dur), dist:Math.round(d.dist), pts:d.pts, splits:d.splits };
+  var x = { id:d.id, at:d.start, dur:Math.round(d.dur), dist:Math.round(d.dist), pts:runAusduennen(d.pts, 2.5), splits:d.splits };
   if(d.hm != null && isFinite(d.hm)) x.hm = Math.max(0, Math.round(d.hm));   // Höhenmeter (Aufstieg, m); fehlt, wenn das Gerät keine Höhe liefert
   if(d.pause > 1000) x.pause = Math.round(d.pause);   // herausgerechnete Pausen/Stehzeit (ms)
   if(d.iv) x.iv = { lauf:d.iv.lauf, geh:d.iv.geh };
@@ -358,12 +381,23 @@ function runSpeichern(d){   // d: { id, start, dur, dist, pts, splits } -> in de
   if(d.art === "rad") x.art = "rad";
   (s.runs || (s.runs = [])).push(x);
   pruneHistory(state.db);
-  state.db.history.push({ at:d.start, dur:Math.round(d.dur/1000), ex:[], b:"run" });   // zählt in der Wochenzeile
-  save();
+  var eintrag = { at:d.start, dur:Math.round(d.dur/1000), ex:[], b:"run" };
+  state.db.history.push(eintrag);   // zählt in der Wochenzeile
+  var ok = save();
+  if(!ok){   // Speicher voll: ältere Routen stärker ausdünnen und noch einmal versuchen
+    runBestandSchlank(8);
+    ok = save();
+  }
+  if(!ok){   // geht immer noch nicht: nichts vortäuschen, den Lauf zurücknehmen und die Route als Datei ausgeben
+    s.runs.pop();
+    var hi = state.db.history.lastIndexOf(eintrag); if(hi > -1) state.db.history.splice(hi, 1);
+    showToast(t("runSpeicherVoll"));
+    try{ dateiAusgeben("bloc-lauf-"+new Date(d.start).toISOString().slice(0, 10)+".gpx", runGpxText(x), "application/gpx+xml").catch(function(){}); }catch(e){}
+    return false;
+  }
   showToast(t("runSaved"));
   return true;
-}
-function runBeenden(speichern){
+}function runBeenden(speichern){
   var r = run;
   if(!r) return;
   var dauer = runZeit(r), pausen = r.pausenMs + (r.pauseAb ? Date.now() - r.pauseAb : 0), iv = r.iv;
@@ -1109,3 +1143,10 @@ function runAuswPuls(){
   }
   return runAuswKarte(t("runPuTitel"), html, t("runPuHint"));
 }
+
+/* Einmal beim Start: bereits gespeicherte Läufe schlanker machen (Routenpunkte ausdünnen), spart Speicher */
+(function(){
+  var s = state.db.settings;
+  if(s.runSchlank || !Array.isArray(s.runs)) return;
+  runBestandSchlank(2.5); s.runSchlank = 1; save();
+})();

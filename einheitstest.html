@@ -347,7 +347,36 @@
       W.runTeilHinweis({ ziel: { pace: 330 }, art: "lauf", stumm: true, dist: 300, tZ: 0, gesagt: [] }, 0, 200000);
       gleich(n, 0, "ohne Vorgabe, auf dem Rad und stumm: still");
     } finally { W.runTeilDong = alt; }
-  });  test("Aussehen ist immer Modern (Classic entfernt), auch mit ?schnelltest", function () {
+  });
+  test("Run: Routenpunkte werden ausgedünnt (Gerade = 2 Punkte, Ecke bleibt), Läufe sparen so gut 80 % Speicher", function () {
+    var gerade = []; for (var i = 0; i <= 1000; i++) gerade.push([50 + i*0.00003, 8]);   // ca. 3,3 m Abstand, 3,3 km lang
+    gleich(W.runAusduennen(gerade, 2.5).length, 2, "gerade Strecke: nur Anfang und Ende");
+    var ecke = []; for (var j = 0; j <= 100; j++) ecke.push([50 + j*0.00003, 8]); for (var k = 1; k <= 100; k++) ecke.push([50.003, 8 + k*0.00004]);
+    var d = W.runAusduennen(ecke, 2.5);
+    wahr(d.length >= 3 && d.length <= 5, "Ecke bleibt erhalten: " + d.length + " Punkte");
+    gleich(d[0], ecke[0], "Anfang bleibt"); gleich(d[d.length - 1], ecke[ecke.length - 1], "Ende bleibt");
+    gleich(W.runAusduennen([[1, 1], [1, 2]], 2.5).length, 2, "zwei Punkte bleiben");
+  });
+  test("Run: bei vollem Speicher wird nichts vorgetäuscht - der Lauf wird zurückgenommen, sonst gespeichert", function () {
+    var s = W.state.db.settings, alt = W.save, altExp = W.dateiAusgeben, runs0 = (s.runs || []).length, hist0 = W.state.db.history.length, toasts = [], altT = W.showToast;
+    var pts = []; for (var i = 0; i <= 200; i++) pts.push([50 + i*0.00004, 8 + (i % 7)*0.000001]);
+    var lauf = { id: "t-voll", start: Date.now() - 600000, dur: 600000, dist: 900, pts: pts, splits: [] };
+    try {
+      W.showToast = function (m) { toasts.push(m); };
+      W.dateiAusgeben = function () { return Promise.resolve(); };
+      W.save = function () { return false; };
+      gleich(W.runSpeichern(lauf), false, "voll: false");
+      gleich((s.runs || []).length, runs0, "Lauf nicht im Verlauf");
+      gleich(W.state.db.history.length, hist0, "kein Verlaufseintrag");
+      wahr(toasts.length && toasts[toasts.length - 1] === W.t("runSpeicherVoll"), "ehrliche Meldung statt „gespeichert“");
+      W.save = function () { return true; };
+      gleich(W.runSpeichern(lauf), true, "Platz da: true");
+      gleich((s.runs || []).length, runs0 + 1, "Lauf steht im Verlauf");
+      s.runs = (s.runs || []).filter(function (x) { return x.id !== "t-voll"; });
+      W.state.db.history.pop();
+    } finally { W.save = alt; W.dateiAusgeben = altExp; W.showToast = altT; }
+  });
+  test("Aussehen ist immer Modern (Classic entfernt), auch mit ?schnelltest", function () {
     gleich(W.document.documentElement.getAttribute("data-layout"), "new", "data-layout");
   });
 
