@@ -393,7 +393,8 @@ function auswertungHTML(ids, opt){
     var wenig = r.rows.filter(function(x){ return x.pct < 8; }).map(function(x){ return t(x.key); });
     notiz = wenig.length ? t(opt.woche ? "ausWoNote" : "ausAllNote", { n:wenig.join(", ") }) : t(opt.woche ? "ausWoOk" : "ausAllOk");
   } else notiz = t("ausNote");
-  return '<details class="ausw card"'+(opt.offen ? ' open' : '')+'><summary><span class="ausw-t">'+esc(opt.titel || t("ausTitle"))+'</span><span class="ausw-s">'+esc(opt.sub || t("ausSum"))+'</span></summary>'+
+  return '<details class="ausw card"'+(opt.offen ? ' open' : '')+'><summary><span class="ausw-t">'+esc(opt.titel || t("ausTitle"))+'</span><span class="ausw-s">'+esc(opt.sub || t("ausSum"))+'</span>'+(opt.chip || '')+'</summary>'+
+    (opt.hinweis || '')+   // Hinweis zum BLOC steht aufgeklappt ganz oben (Variante A, 2026-11-22)
     (r.leer ? '' : kkSummeHTML(ids))+
     (r.leer ? '' : r.rows.map(function(x){
       return '<div class="ausw-row'+(x.pct ? '' : ' null')+'"><span class="ausw-n">'+esc(t(x.key))+'</span>'+
