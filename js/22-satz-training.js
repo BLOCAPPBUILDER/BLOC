@@ -128,6 +128,13 @@ function satzFeldKopf(label, tp, hier, hatFigur){
     (hatFigur ? '' : satzTippIHTML())+
     (nein ? '<button type="button" class="satz-tipp-x" data-satznein aria-label="'+esc(t(nein))+'">&times;</button>' : '')+'</span></div>';
 }
+/* Derselbe Vorschlag auf Übungskarte und in der BLOC-Ansicht: Etikett, rotes i, X in einer Zeile. a: Attribute für ja, nein, info */
+function vorschlagZeileHTML(tp, a){
+  var nein = studioTippNein(tp), ab = studioTippSicher(tp);
+  return '<span class="vorschlag-zeile"><button type="button" class="satz-pille'+(ab ? ' runter' : '')+'" '+(satzTippDirekt(tp) ? a.ja : a.info)+' aria-label="'+esc(satzTippLabel(tp))+'"><span>'+esc(satzTippLabel(tp))+'</span></button>'+
+    '<button type="button" class="satz-tipp-i" '+a.info+' aria-label="'+esc(t("tippWarum"))+'"><span>i</span></button>'+
+    (nein ? '<button type="button" class="satz-tipp-x" '+a.nein+' aria-label="'+esc(t(nein))+'">&times;</button>' : '')+'</span>';
+}
 /* Gleiche Sätze zusammengefasst: „3 × 10 · 40 kg“; sonst leer */
 function satzGleichText(l){
   var s = (l && l.s) || [], x = s[0];
