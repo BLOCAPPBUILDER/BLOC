@@ -1213,10 +1213,10 @@
       gleich(p.ids, ["air-squats", "close-grip-push-ups"], "neue Übung an derselben Stelle"); gleich(p.blk["close-grip-push-ups"], "b1", "Block wandert mit");
       gleich(W.studioZiel("close-grip-push-ups").wdh, 10, "neue Stufe startet mit Ziel 10 (8–12)"); gleich(s.studio["close-grip-push-ups"].pause, 75, "Pause übernommen");
       gleich(W.studioNaechsteStufe("jumping-jacks"), null, "Cardio-Kette: kein Tipp");
-      gleich(W.studioNaechsteStufe("diamond-push-ups"), null, "Klatsch-Liegestütz kommt nicht per Tipp");
-      gleich(W.studioNaechsteStufe("close-grip-push-ups"), "archer-push-ups", "Archer vor Diamant");
+      gleich(W.studioNaechsteStufe("archer-push-ups"), null, "Klatsch-Liegestütz kommt nicht per Tipp");
+      gleich(W.studioNaechsteStufe("close-grip-push-ups"), "diamond-push-ups", "Diamant vor Archer"); gleich(W.studioNaechsteStufe("diamond-push-ups"), "archer-push-ups", "Archer nach Diamant");
       gleich(W.studioNaechsteStufe("pull-ups"), "commando-pull-ups", "Kette endet ohne Muscle-up"); gleich(W.studioNaechsteStufe("commando-pull-ups"), null, "kein Muscle-up per Tipp");
-      gleich(W.studioNaechsteStufe("plank"), "hollow-hold", "Plank → Hollow Hold (nicht Seitstütz)");
+      gleich(W.studioNaechsteStufe("plank"), "plank-shoulder-taps", "Plank → Shoulder Taps (nicht Seitstütz)");
       // neue Stufe zweimal klar verfehlt: zurück zur alten
       s.studio["close-grip-push-ups"].log = [{ at:n + 1000, s:[[0, 5], [0, 4], [0, 4]], zu:true }, { at:n + 2000, s:[[0, 5], [0, 4], [0, 4]], zu:true }];
       var zr = W.studioProg("close-grip-push-ups");
@@ -1693,7 +1693,7 @@
       var tag = 86400000, alt = W.kalTagKey(Date.now() - 60*tag);
       s.programme = [{ id:"pe", name:"Mein Plan", items:["plan:t10a"], tage:[0], wochen:4 }];
       s.kalender = { e:[{ id:"k1", tag:alt, art:"programm", ref:"pe", prog:{ id:"pe", i:0 } }] };
-      wahr(W.paPlanEnde(), "60 Tage nach Planende: Karte"); wahr(/verlängern/i.test(W.paPlanEndeHTML()) || /extend/i.test(W.paPlanEndeHTML()), "Text nennt Verlängern");
+      wahr(W.paPlanEnde(), "60 Tage nach Planende: Karte"); wahr(/fortsetzen/i.test(W.paPlanEndeHTML()) || /continue/i.test(W.paPlanEndeHTML()), "Text nennt Fortsetzen");
       s.programme.push({ id:"pz", name:"Neu", items:["plan:t10b"], tage:[1], wochen:4 });
       s.kalender.e.push({ id:"k2", tag:W.kalTagKey(Date.now() + 3*tag), art:"programm", ref:"pz", prog:{ id:"pz", i:0 } });
       gleich(W.paPlanEnde(), null, "anderer Plan läuft: keine alte Karte");
@@ -1706,6 +1706,40 @@
     var b = plan(["ausdauer", "muskel"], [0, 1, 3, 5]); gleich(laeufe(b), 2, "Ausdauer zuerst: 2 Läufe"); wahr(b.kraftTage >= 2, "mindestens 2 Krafttage");
     gleich(laeufe(plan(["muskel", "ausdauer"], [0, 1, 2, 4, 5])), 2, "5 Tage: 2 Läufe");
     gleich(W.paLaufKmWoche(5, 1, 4), 5.5, "Woche 2: +10 %"); gleich(W.paLaufKmWoche(5, 3, 4), 5, "Leichtwoche: weniger");
+  });
+  test("Test 16: Einsteiger-Cardio sanft, Rücken ohne Drehung, Start vorn in der Kette", function () {
+    function A(x) { return W.paSauber(Object.assign({ ziele:["allgemein"], niveau:"gar", schwer:"anfaenger", tage:[0, 2, 4], dauer:30, train:["body"], ausr:["keine"], bereiche:["workout"], impact:"schonend", einschr:[] }, x)); }
+    [[], ["ruecken"], ["knie"], ["knie", "ruecken"]].forEach(function (e) {
+      var c = W.paPools(A({ einschr:e })).cardio.map(function (o) { return o.ex; });
+      wahr(c.length >= 6, "mindestens 6 Übungen bei " + e + ": " + c.length);
+      wahr(!c.some(function (x) { return /push-off|box-step|stair/.test(x.id) || x.level > 1; }), "kein Abdruck, keine Stufe, nur Level 1");
+    });
+    wahr(W.paErzeuge(A({ ziele:["ausdauer"] })).tage.some(function (x) { return x.typ === "geh"; }), "zügiges Gehen ist eingeplant");
+    wahr(W.paAusgeschlossen(W.findExercise("lunge-with-rotation"), A({ einschr:["ruecken"] })), "Rücken: keine Drehung im Ausfallschritt");
+    wahr(W.paAusgeschlossen(W.findExercise("shadow-boxing"), A({ einschr:["ruecken"] })), "Rücken: kein Schattenboxen");
+    gleich(W.findExercise("lunge-with-rotation").level, 2, "Drehung ist Level 2");
+    var k = W.paPools(A({ niveau:"n12", schwer:"leicht", impact:"gerne" })).kraft, ids = []; Object.keys(k).forEach(function (g) { k[g].forEach(function (o) { ids.push(o.ex.id); }); });
+    ["pistol-assist", "hindu-push-ups", "bear-crawl"].forEach(function (id) { wahr(ids.indexOf(id) < 0, id + " nicht als Start"); });
+  });
+  test("Test 16 B: Laufdistanz bleibt in der Zeit, nach der Leichtwoche kein Sprung", function () {
+    gleich(W.paLaufKmWoche(5, 5, 6, 6.5), 6, "Leichtwoche");
+    wahr(W.paLaufKmWoche(20, 2, 6, 6.5) <= 6.5, "Zeitgrenze");
+    var vor = W.paLaufKmWoche(10, 2, 8), nach = W.paLaufKmWoche(10, 4, 8);
+    wahr(nach <= vor + 1, "nach der Leichtwoche höchstens an die Woche davor: " + vor + " → " + nach);
+  });
+  test("Test 16 A: abgebrochener Termin bleibt offen, fremder BLOC übernimmt ihn nicht", function () {
+    gleich(W.kalTerminPasst({ art:"plan", ref:"b" }, "a"), false, "anderer BLOC"); gleich(W.kalTerminPasst({ art:"plan", ref:"a" }, "a"), true, "gleicher BLOC");
+    W.kalTerminAktiv = { id:"x", at:Date.now(), n:W.kalSatzZahl() }; W.kalTerminVerlassen(); gleich(W.kalTerminAktiv, null, "ohne Satz gelöscht");
+  });
+  test("Test 16 D/F/H: Pace-Rundung und Stufen-Hinweis", function () {
+    gleich(W.fmtUhrRund(369600), "6:10", "kaufmännisch gerundet");
+    var s = W.state.db.settings, alt = s.studio, altZ = s.ziel, n = Date.now(), tag = 86400000;
+    try {
+      s.ziel = "muskel"; s.studio = { "push-ups": { einheit:"wdh", ziel:{ saetze:3, wdh:12 }, log:[{ at:n - 4*tag, s:[[0, 15], [0, 15], [0, 15]] }, { at:n - tag, s:[[0, 15], [0, 15], [0, 15]] }] } };
+      var tp = W.studioProg("push-ups"); wahr(tp && tp.art === "varianteWdh", "Muskelaufbau: Variante ab 15 Wdh. " + JSON.stringify(tp));
+      s.studio = { "backpack-row": { einheit:"wdh", ziel:{ saetze:3, wdh:12 }, log:[{ at:n - 4*tag, s:[[0, 15], [0, 15], [0, 15]] }, { at:n - tag, s:[[0, 15], [0, 15], [0, 15]] }] } };
+      var h = W.studioProg("backpack-row"); wahr(h && h.art === "stufeHinweis" && h.saetze === 4 && h.rucksack, "konkreter Hinweis: " + JSON.stringify(h));
+    } finally { s.studio = alt; s.ziel = altZ; }
   });
   test("Test 13 H: Wiedereinstieg nach Pausenlänge gestaffelt", function () {
     t10(function (s) {

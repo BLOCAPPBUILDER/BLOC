@@ -116,7 +116,7 @@ function satzAendern(id, q, kg, w){
 /* Gewichtsvorschlag, Variante A „Minimal“ (2026-11-22, Kevin): Etikett mit X über dem passenden Feld, rotes i rechts unter der Figur öffnet die Erklärung.
    Gewicht und Wiederholungen übernimmt das Etikett direkt; Plateau, Satz mehr und Übungswechsel erst nach der Erklärung. */
 function satzTippAmKg(tp){ return ["kg", "runter", "pause", "assist", "assistRunter"].indexOf(tp.art) > -1 && tp.kg != null; }
-function satzTippDirekt(tp){ return !tp.naechste && ["plateau", "satz", "variante", "varianteWdh", "stufeZurueck"].indexOf(tp.art) < 0; }
+function satzTippDirekt(tp){ return !tp.naechste && ["plateau", "satz", "variante", "varianteWdh", "stufeZurueck", "stufeHinweis"].indexOf(tp.art) < 0; }
 function satzTippLabel(tp){ return satzTippAmKg(tp) ? (tp.art === "kg" || tp.art === "assist" ? "↑ " : "↓ ")+studioKg(tp.kg)+" kg" : studioTippKurz(tp).replace(/^([↑↓≈] )(Vorschlag|Suggestion): /, "$1"); }
 function satzTippIHTML(){ return '<button type="button" class="satz-tipp-i" data-satztippinfo aria-label="'+esc(t("tippWarum"))+'"><span>i</span></button>'; }
 function satzFeldKopf(label, tp, hier, hatFigur){

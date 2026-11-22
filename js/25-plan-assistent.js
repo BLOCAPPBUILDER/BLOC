@@ -63,7 +63,8 @@ var PAT = {
     ohneZug:"Für echtes Rudern fehlt dir Stange, Band oder Gerät – deshalb trainieren Übungen im Liegen den oberen Rücken. Mit einem Widerstandsband (unter „Geräte“ wählen) baut BLOC Rudern ein.",
     whoRest:"Den Rest bis 150 Minuten schaffst du nebenbei, z. B. mit zügigen Spaziergängen, Radfahren oder Treppen im Alltag.",
     endeTitel:"Plan geschafft", endeText:"{p}: {n} von {m} Trainings erledigt. Weiter mit denselben Übungen und deinen aktuellen Gewichten?",
-    endeLang:"{p} ist seit dem {d} beendet. Verlängern oder neu erstellen?", endeVerlaengern:"Plan verlängern", endeTage:"Dein Plan mit {n} Trainings", endeAlle:"Alle {n} Trainings verlängern", endeWeiter:"Plan fortsetzen", endeWiederholen:"Plan wiederholen", endeTitelBeendet:"Plan beendet", endeTextBeendet:"{p}: {n} von {m} Trainings erledigt. Den Plan noch einmal machen?", endeTextNull:"{p}: Noch kein Training erledigt. Plan neu starten?", endeNeu:"Neuen Plan erstellen", endeAus:"Ausblenden", endeOk:"{n} Termine für die nächsten {w} Wochen im Kalender",
+    endeLang:"{p} ist seit dem {d} beendet. Fortsetzen oder neu erstellen?", endeVerlaengern:"Plan fortsetzen", endeTage:"Dein Plan mit {n} Trainings", endeAlle:"Alle {n} Trainings fortsetzen", endeWeiter:"Plan fortsetzen", endeWiederholen:"Plan fortsetzen", endeTitelBeendet:"Plan beendet", endeTextBeendet:"{p}: {n} von {m} Trainings erledigt. Den Plan fortsetzen?", endeTextNull:"{p}: Noch kein Training erledigt. Plan fortsetzen?", endeNeu:"Neuen Plan erstellen", endeAus:"Ausblenden", endeOk:"{n} Termine für die nächsten {w} Wochen im Kalender",
+    gehen:"Zügiges Gehen · {m} Min", infoGehen:"An Ausdauertagen ist zügiges Gehen vorgesehen, aufzuzeichnen im Bereich Run. Das Tempo passt, wenn du dabei noch sprechen kannst.",
     tageListe:"Trainings"
   },
   en:{
@@ -120,7 +121,8 @@ var PAT = {
     ohneZug:"Real rows need a bar, band or machine – so exercises lying face down train your upper back. With a resistance band (choose it under equipment) BLOC adds rows.",
     whoRest:"You can cover the rest up to 150 minutes on the side, e.g. with brisk walks, cycling or taking the stairs.",
     endeTitel:"Plan completed", endeText:"{p}: {n} of {m} sessions done. Carry on with the same exercises and your current weights?",
-    endeLang:"{p} ended on {d}. Extend it or create a new one?", endeVerlaengern:"Extend plan", endeTage:"Your plan with {n} sessions", endeAlle:"Extend all {n} sessions", endeWeiter:"Continue plan", endeWiederholen:"Repeat plan", endeTitelBeendet:"Plan ended", endeTextBeendet:"{p}: {n} of {m} sessions done. Do the plan again?", endeTextNull:"{p}: No sessions done yet. Restart the plan?", endeNeu:"Create a new plan", endeAus:"Hide", endeOk:"{n} sessions for the next {w} weeks in your calendar",
+    endeLang:"{p} ended on {d}. Continue it or create a new one?", endeVerlaengern:"Continue plan", endeTage:"Your plan with {n} sessions", endeAlle:"Continue all {n} sessions", endeWeiter:"Continue plan", endeWiederholen:"Continue plan", endeTitelBeendet:"Plan ended", endeTextBeendet:"{p}: {n} of {m} sessions done. Continue the plan?", endeTextNull:"{p}: No sessions done yet. Continue the plan?", endeNeu:"Create a new plan", endeAus:"Hide", endeOk:"{n} sessions for the next {w} weeks in your calendar",
+    gehen:"Brisk walk · {m} min", infoGehen:"Endurance days use brisk walking, recorded in the Run area. The pace is right if you can still talk.",
     tageListe:"Sessions"
   }
 };
@@ -170,6 +172,7 @@ var PA_AUS = {
   sprung:/jump|hop|skater|sprint|fast-feet|high-knees|burpee|box|rope|calf-raise|lateral|bound|plyo|tuck-jump|star-jump|jack|mountain|boxer|stair/
 };
 /* Test 9 U4a (Sportwissenschaftler): bei Kraft/Muskelaufbau kein springender Rumpf (Plank Jacks, Mountain Climber) auf Krafttagen, sondern ruhige Rumpfübungen */
+var PA_RUECKEN_DREH = /lunge-with-rotation|push-up-rotation|high-plank-thoracic-rotation|seated-trunk-rotation|rotational|shadow-box/;
 var PA_KRAFT_RUHIG = /(^|-)jacks?($|-)|mountain-climb|climbers?($|-)|plank-jump|plank-hop/;
 /* Hochleistungs-Fertigkeiten kommen in automatischen Plänen nie vor */
 var PA_NIE = /planche|front-lever|back-lever|human-flag|one-arm|muscle-up|skin-the-cat|dragon-flag|handstand-push|ring-muscle|iron-cross/;
@@ -312,6 +315,8 @@ function paAusgeschlossen(ex, a){
   if(imp) l.push(PA_AUS.impact);
   a.einschr.forEach(function(e){ if(PA_AUS[e]) l.push(PA_AUS[e]); });
   if(PA_NIE.test(id) || PA_SPEZIAL.test(id)) return true;
+  if(ex.main !== "stretch" && a.einschr.indexOf("ruecken") > -1 && PA_RUECKEN_DREH.test(id)) return true;   // Test 16, J: vorsichtige Vorauswahl, kein Verbot von Rotation
+  if(a.alter === "65" && id === "lunge-with-rotation") return true;
   if(PA_POWER.test(id) && a.ziele.some(function(z){ return z === "muskel" || z === "kraft"; })) return true;
   return l.some(function(re){ return re.test(id) && !(re !== PA_AUS.impact && PA_AUSNAHME.test(id) && re === PA_AUS.handgelenk); });
 }
@@ -328,19 +333,49 @@ function paGeraetOk(ex, a){
   return true;
 }
 function paSchwerLevel(a){ return a.schwer || paSchwerStandard(a); }
+/* Test 16, I: sanfter Ausdauertag bei „gar nicht aktiv“, 65+ oder „gelenkschonend“: kein Abdruck, keine Stufe, nur Level 1; der Zirkel wird aus vorhandenen ruhigen Übungen ergänzt */
+var PA_SANFT_RAUS = /push-off|box-step|stair/, PA_SANFT_ZIRKEL = ["chair-squat", "wall-push-up", "glute-bridge", "bird-dog", "dead-bug", "reverse-snow-angels", "prone-y-raise", "air-squats"];
+function paSanft(a){ return a.niveau === "gar" || a.alter === "65" || a.impact === "schonend"; }
+/* Test 16, K: Einstieg höchstens auf den ersten zwei Stufen einer Kette (Band-Ketten zählen nicht); Spezialvarianten erst über den Varianten-Vorschlag */
+var PA_SPEZIAL_START = /hindu|pistol|bear-crawl|hand-release/, paKettenPosCache = null;
+function paKettenPos(id){
+  if(!paKettenPosCache){
+    paKettenPosCache = {};
+    LZ_KETTEN.forEach(function(k){
+      if(k.some(function(x){ var e = findExercise(x); return e && e.equip.indexOf("band") > -1; })) return;
+      k.forEach(function(x, i){ if(paKettenPosCache[x] === undefined || i < paKettenPosCache[x]) paKettenPosCache[x] = i; });
+    });
+  }
+  return paKettenPosCache[id] || 0;
+}
+/* Test 16, H: gespeicherte Antworten des Plans, zu dem die Übung gehört, und ob eine nächste Stufe dazu passt */
+function paAntwortenFuer(id){
+  var l = stPlaene().filter(function(p){ return p.gen && (p.ids || []).indexOf(id) > -1; });
+  for(var i = l.length - 1; i >= 0; i--){ var q = paGruppe(l[i].gen).filter(function(p){ return p.assi; })[0]; if(q) return paSauber(q.assi); }
+  return null;
+}
+function paStufeOk(nid, a){
+  var ex = findExercise(nid); if(!ex) return false;
+  var einsteiger = a ? a.niveau === "gar" || a.niveau === "unreg" || a.alter === "65" || paSchwerLevel(a) === "anfaenger" : trainerNiveau() === "einsteiger";
+  if(einsteiger && (ex.level > 2 || nid === "copenhagen-plank")) return false;
+  return !a || (!paAusgeschlossen(ex, a) && paGeraetOk(ex, a));
+}
 /* Pool je Muskelgruppe für Kraft-Slots (ohne Cardio und Dehnen), je Cardio-Pool und Stretch-Pool */
 function paPools(a){
   var sw = paSchwerLevel(a), nurLeicht = a.niveau === "gar" || a.alter === "65" || sw === "anfaenger";
-  var kraft = {}, cardio = [], dehnen = [];
+  var kraft = {}, cardio = [], dehnen = [], sanft = paSanft(a), kStart = a.niveau === "gar" || a.niveau === "unreg" || a.niveau === "n12";
   EXERCISES.forEach(function(ex){
     if(ex.custom) return;
     if(ex.main === "stretch"){ if(!paAusgeschlossen(ex, a) && paGeraetOk(ex, a)) dehnen.push(ex); return; }
     if(!fuerBau(ex) || paAusgeschlossen(ex, a) || !paGeraetOk(ex, a)) return;
     if(nurLeicht && ex.level > 2) return;
+    if(ex.main === "ausdauer" && sanft && (ex.level > 1 || PA_SANFT_RAUS.test(ex.id))) return;
+    if(ex.main !== "ausdauer" && kStart && (PA_SPEZIAL_START.test(ex.id) || paKettenPos(ex.id) > 1)) return;
     var lv = ex.level || 2, art = exTrainArt(ex);
     var sc = (sw === "anfaenger" ? (lv === 1 ? 3 : lv === 2 ? -1 : -5) : sw === "leicht" ? (lv === 1 ? 3 : lv === 2 ? 1 : -4) : sw === "mittel" ? (lv === 2 ? 3 : lv === 1 ? 2 : 0) : (lv === 3 ? 3 : lv === 2 ? 2 : 0));
     sc += paGrundUebung(ex) + paArtBonus(ex, art, a);
     if(a.niveau === "gar" && lv === 1) sc += 1.5;
+    if(a.alter === "65" && (ex.id === "reverse-lunges" || ex.id === "chair-squat")) sc += 2;   // Test 16, J
     if(a.einschr.indexOf("knie") > -1 && PA_KNIE_GUT[ex.id]) sc += 3;
     var anf = nurLeicht || a.ziele.indexOf("allgemein") > -1;
     if(anf && /side-bend|kickback/.test(ex.id)) return;   // Seitbeugen und Kickback nicht für Einsteiger / „Allgemein fit“ (fachliche Prüfung Test 5)
@@ -348,6 +383,10 @@ function paPools(a){
     if(ex.main !== "ausdauer" && (a.ziele.indexOf("muskel") > -1 || a.ziele.indexOf("kraft") > -1) && (PA_AUS.impact.test(ex.id) || PA_KRAFT_RUHIG.test(ex.id) || /overhead-squat/.test(ex.id))) return;
     var o = { ex:ex, sc:sc };
     if(ex.main === "ausdauer") cardio.push(o); else { var g = paTopGruppe(ex); if(g) (kraft[g] = kraft[g] || []).push(o); }
+  });
+  if(sanft) PA_SANFT_ZIRKEL.forEach(function(id){
+    var ex = findExercise(id);
+    if(ex && !paAusgeschlossen(ex, a) && paGeraetOk(ex, a) && !(a.einschr.indexOf("knie") > -1 && /squat/.test(id))) cardio.push({ ex:ex, sc:2 });
   });
   return { kraft:kraft, cardio:cardio, dehnen:dehnen };
 }
@@ -479,7 +518,7 @@ function paErzeuge(a0){
     var m = {}; ids.forEach(function(id){ m[id] = "timer"; });
     return { bloc:{ name:pt("dehnen"), nameRez:{ k:"dehnen" }, ids:ids, std:"timer", modus:m, dehn:true } };
   }
-  var mobIdx = 0, cardioIdx = 0, ohneZug = false, lhKreuzheben = false, nBank = 0, kraftZiel = haupt === "kraft" || a.ziele.indexOf("kraft") > -1;
+  var sanftCardio = 0, mobIdx = 0, cardioIdx = 0, ohneZug = false, lhKreuzheben = false, nBank = 0, kraftZiel = haupt === "kraft" || a.ziele.indexOf("kraft") > -1;
   /* Sätze, Wiederholungen, Pause je Rolle (auch für Übungen, die der Wochenausgleich später austauscht) */
   function paZielFuer(r){
     var kraft = haupt === "kraft", muskel = haupt === "muskel" || a.ziele.indexOf("muskel") > -1, jung = a.alter === "u50", w = wdh, sz = saetze, ps = pause;
@@ -644,6 +683,9 @@ function paErzeuge(a0){
     } else if(typ === "run"){
       tname = a.laufen === "ein" ? pt("lauf_ein") : pt("lauf"); trez = { k:a.laufen === "ein" ? "lauf_ein" : "lauf" };
       teile.push({ run:true });
+    } else if(typ === "cardio" && paSanft(a) && sanftCardio++ % 2 === 0){   // Test 16, I: zügiges Gehen als Standard, der Zirkel ergänzt jeden zweiten Ausdauertag
+      typ = "geh"; trez = { k:"gehen", v:{ m:a.dauer } }; tname = pt("gehen", { m:a.dauer });
+      teile.push({ run:true });
     } else if(typ === "cardio"){
       var nCd = a.dauer <= 20 ? 4 : a.dauer <= 30 ? 5 : a.dauer <= 45 ? 7 : 8, cb = {}, cids = [];
       for(var k2 = 0; k2 < nCd; k2++){ var ce = paWaehle(pools.cardio, cb, seed + "c" + k2, planBenutzt); if(!ce) break; cb[ce.id] = 1; planBenutzt[ce.id] = 1; cids.push(ce.id); }
@@ -739,6 +781,7 @@ function paErzeuge(a0){
   if(a.laufen === "ein" && hatRun) info.push(pt("info3")); else if(a.laufen === "reg" && hatRun) info.push(pt("info3b"));
   if(a.sport) info.push(pt("info6", { s:a.sport.name }));
   if(a.alter === "65") info.push(pt("info5"));
+  if(tageSpecs.some(function(t0){ return t0.typ === "geh"; })) info.push(pt("infoGehen"));
   if(a.einschr.indexOf("knie") > -1 && hatW) info.push(pt("info7"));   // Test 8 (Sportwissenschaftler): Kniebeugen-Muster als Option mit Hinweis, nicht automatisch eingeplant
   if(ohneZug) info.push(pt("ohneZug"));
   if(nTage === 1 && haupt !== "beweglich" && haupt !== "ausdauer") info.push(pt("einEinheit"));
@@ -753,10 +796,24 @@ function paErzeuge(a0){
 /* ---------- Anlegen: BLOCs, TrainingsBLOCs je Trainingstag, Kalender ---------- */
 var PA_LAUF = [[1, 2, 8], [2, 2, 6], [3, 2, 5], [4, 2, 4], [5, 1, 4], [8, 1, 3], [10, 1, 3], [10, 1, 3]];   // Wochen des Laufeinstiegs: Minuten laufen, Minuten gehen, Wiederholungen (Praxis, an Gehen-Laufen-Programme angelehnt)
 /* Test 13, F: Distanz je Lauf: etwa 10 % mehr pro Woche (Faustregel), in der Leichtwoche etwa 20 % weniger; auf halbe Kilometer gerundet */
-function paLaufKmWoche(km, wk, wochen){
+function paLaufKmWoche(km, wk, wochen, maxKm){
   if(!(km > 0)) return 0;
-  var x = km*(1 + 0.1*wk)*(paLeichtWochen(wochen).indexOf(wk) > -1 ? 0.8 : 1);
-  return Math.round(x*2)/2;
+  /* Test 16, B: etwa 10 % je Woche; die Woche nach der Leichtwoche knüpft an die Woche davor an; die Zeit pro Training begrenzt die Distanz */
+  var leicht = paLeichtWochen(wochen), stand = km;
+  for(var i = 1; i <= wk; i++) if(leicht.indexOf(i) < 0 && leicht.indexOf(i - 1) < 0) stand *= 1.1;
+  var x = Math.round(stand*(leicht.indexOf(wk) > -1 ? 0.8 : 1)*2)/2;
+  return maxKm > 0 ? Math.min(x, Math.max(1, maxKm)) : x;
+}
+var PA_LAUF_PACE = 390;   // Sekunden je km ohne eigene Läufe (6:30, Praxiswert)
+function paLaufPace(){
+  var l = (state.db.settings.runs || []).filter(function(x){ return x.art !== "rad" && x.dist >= 1000 && x.dur > 0; }).sort(function(a, b){ return a.at - b.at; }).slice(-3);
+  if(!l.length) return PA_LAUF_PACE;
+  var s = l.reduce(function(m, x){ return m + x.dur/x.dist; }, 0)/l.length;
+  return Math.max(240, Math.min(600, s));
+}
+function paLaufMaxKm(p){
+  var g = p.gruppe ? paGruppe(p.gruppe) : [p], q = g.filter(function(x){ return x.assi; })[0], d = q ? +q.assi.dauer : 0;
+  return d > 0 ? Math.floor(d*60/paLaufPace()*2)/2 : 0;
 }
 function paLeichtWochen(wochen){ return wochen >= 8 ? [3, 7] : wochen >= 6 ? [5] : [3]; }
 function paGruppe(gid){ return programmListe().filter(function(p){ return p.gruppe === gid; }); }
@@ -773,7 +830,8 @@ function paKalender(p){
       var e;
       if(nurLauf){
         var nm = pt("lauf"); if(p.laufStufe){ var st = PA_LAUF[Math.min(wk, PA_LAUF.length - 1)]; nm = pt("lauf_w", { a:st[0], b:st[1], n:st[2] }); }
-        e = kalHinzu(kalTagKey(tag), { art:"run", name:nm, km:paLaufKmWoche(p.laufKm, wk, wochen) });
+        if(p.gehen) nm = pt("gehen", { m:p.gehen });
+        e = kalHinzu(kalTagKey(tag), { art:"run", name:nm, km:paLaufKmWoche(p.laufKm, wk, wochen, paLaufMaxKm(p)) });
       } else {
         e = kalHinzu(kalTagKey(tag), { art:"programm", ref:p.id });
         if(paLeichtWochen(wochen).indexOf(wk) > -1 && p.items.some(function(it){ return /^plan:/.test(it); })) e.leicht = true;   // Leichtwoche: weniger Sätze (nicht am reinen Mobility-Tag)
@@ -821,6 +879,7 @@ function paAnlegen(a0, ersetzeGid){
       items.push("plan:" + bl.id);
     });
     var p = { id:uid(), name:pt("tagName", { p:sp.name, n:k + 1, z:t0.name }), nameRez:sp.nameRez && t0.nameRez ? { k:"tagName", v:{ p:sp.nameRez, n:k + 1, z:t0.nameRez } } : null, items:items, tage:[t0.tag], wochen:a.wochen, am:"alle", pos:0, gruppe:gid, gen:true, updatedAt:Date.now() };
+    if(t0.typ === "geh") p.gehen = a.dauer;
     if(t0.typ === "run" && a.laufen === "ein") p.laufStufe = true;
     if(t0.typ === "run" && sp.laufKm > 0) p.laufKm = sp.laufKm;
     if(k === 0){ p.assi = a; p.info = sp.info; p.sport = sp.sport; p.gruppeName = sp.name; p.gruppeNameRez = sp.nameRez; }

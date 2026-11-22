@@ -642,7 +642,7 @@ function statModule(){
       var l1 = laeufe.reduce(function(m, x){ return !m || x.dist > m.dist ? x : m; }, null);
       if(l1) rek.push([t("statRekLang"), runKm(l1.dist)+" km", l1.at]);
       var bk = null; laeufe.forEach(function(x){ var b = runBesterKm(x); if(b !== null && (!bk || b < bk.v)) bk = { v:b, at:x.at }; });
-      if(bk) rek.push([t("statRekKm"), fmtUhr(bk.v)+" /km", bk.at]);
+      if(bk) rek.push([t("statRekKm"), fmtUhrRund(bk.v)+" /km", bk.at]);
       var bp = gut.reduce(function(m, x){ return !m || x.dur/x.dist < m.dur/m.dist ? x : m; }, null);
       if(bp) rek.push([t("statRekPace"), runPace(bp.dur/1000, bp.dist)+" /km", bp.at]);
       if(rek.length) h += '<div class="sk-unter titel">'+esc(t("statRekorde"))+'</div><div class="rekorde">'+rek.map(function(x){
@@ -837,7 +837,7 @@ function trainingSpeichern(k, notiz){
   var pk = k.plan && typeof programmKontextFuer === "function" ? programmKontextFuer("plan:"+k.plan.id) : null;
   if(!(pk && pk.p) && einheitProg(e)) e.prog = einheitProg(e);
   if(pk && pk.p) e.prog = pk.p.id;   // gehört zu einem TrainingsBLOC: zählt mit dessen anderen BLOCs als ein Training
-  if(!vorh && typeof kalTerminAktiv !== "undefined" && kalTerminAktiv && Date.now() - kalTerminAktiv.at < 43200000 && typeof kalFinde === "function" && kalFinde(kalTerminAktiv.id)){ e.termin = kalTerminAktiv.id; kalTerminAktiv = null; }   // Test 15, A: das Training merkt sich den gestarteten Termin
+  if(!vorh && typeof kalTerminAktiv !== "undefined" && kalTerminAktiv && Date.now() - kalTerminAktiv.at < 43200000 && typeof kalFinde === "function" && kalFinde(kalTerminAktiv.id)){ if(kalTerminPasst(kalFinde(kalTerminAktiv.id), k.plan ? k.plan.id : "")) e.termin = kalTerminAktiv.id; kalTerminAktiv = null; }   // Test 15/16, A: das Training merkt sich den gestarteten Termin, wenn der BLOC dazu passt
   e.zu = true; e.zuAt = Date.now();   // abgeschlossen: weitere Sätze sind ein neues Training (siehe einheitHeute)
   if(notiz != null) e.notiz = String(notiz).trim();
   if(!vorh) l.push(e);

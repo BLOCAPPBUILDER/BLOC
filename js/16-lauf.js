@@ -429,7 +429,7 @@ function runHighlights(x){
   else {
     if(x.dist > Math.max.apply(null, others.map(function(o){ return o.dist; }))) out.push(t("runLaengster"));
     var bk = runBesterKm(x), ok = others.map(runBesterKm).filter(function(v){ return v !== null; });
-    if(bk !== null && (!ok.length || bk < Math.min.apply(null, ok))) out.push(t("runSchnellsterKm", { z:fmtUhr(bk) }));
+    if(bk !== null && (!ok.length || bk < Math.min.apply(null, ok))) out.push(t("runSchnellsterKm", { z:fmtUhrRund(bk) }));
     var lang = others.filter(function(o){ return o.dist >= 1000; });
     if(x.dist >= 1000 && lang.length && x.dur/x.dist < Math.min.apply(null, lang.map(function(o){ return o.dur/o.dist; }))) out.push(t("runSchnellstePace"));
   }
@@ -559,7 +559,7 @@ function runAnsageHTML(){
 /* Pace je Kilometer als Balken: je schneller, desto länger; der schnellste ist kräftig. Ein angefangener Rest-Kilometer (ab 100 m) steht zuletzt */
 function runKmZeilen(x){
   var sp = x.splits || [], zeilen = [], bk = runBesterKm(x);
-  sp.forEach(function(ms, i){ var dauer = ms - (i ? sp[i-1] : 0); zeilen.push({ n:String(i+1), dauer:dauer, text:fmtUhr(dauer), schnell:dauer === bk && sp.length > 1 }); });
+  sp.forEach(function(ms, i){ var dauer = ms - (i ? sp[i-1] : 0); zeilen.push({ n:String(i+1), dauer:dauer, text:fmtUhrRund(dauer), schnell:dauer === bk && sp.length > 1 }); });
   var rest = x.dist - sp.length*1000, rz = x.dur - (sp.length ? sp[sp.length-1] : 0);
   if(rest >= 100 && rz > 0) zeilen.push({ n:"+"+runKm(rest), dauer:rz/rest*1000, text:runPace(rz/1000, rest), rest:true });
   var best = Math.min.apply(null, zeilen.map(function(z){ return z.dauer; }));
@@ -779,7 +779,7 @@ function runStreckeNeu(x){
   var schritt = Math.max(1, Math.ceil(marken.length/6)), punkte = "", chips = "";
   marken.forEach(function(m, j){
     punkte += '<circle cx="'+m.p[0].toFixed(1)+'" cy="'+m.p[1].toFixed(1)+'" r="4.5" class="rs-punkt"/>';
-    if(j % schritt === 0) chips += '<span class="rs-chip'+(m.p[0]/W > .62 ? ' links' : '')+'" style="left:'+(m.p[0]/W*100).toFixed(1)+'%;top:'+(m.p[1]/H*100).toFixed(1)+'%"><b>'+m.km+' km</b><small>'+esc(fmtUhr(m.dauer))+(runIstRad(x) ? '' : ' /km')+'</small></span>';
+    if(j % schritt === 0) chips += '<span class="rs-chip'+(m.p[0]/W > .62 ? ' links' : '')+'" style="left:'+(m.p[0]/W*100).toFixed(1)+'%;top:'+(m.p[1]/H*100).toFixed(1)+'%"><b>'+m.km+' km</b><small>'+esc(fmtUhrRund(m.dauer))+(runIstRad(x) ? '' : ' /km')+'</small></span>';
   });
   var a = xy(pts[0]), z = xy(pts[pts.length-1]);
   return '<div class="run-strecke"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(t("runRoute"))+'">'+
@@ -1040,7 +1040,7 @@ function runAuswBest(){
   [1, 3, 5, 10, 21].forEach(function(n){
     var b = null;
     l.forEach(function(x){ var d = runBestFenster(x, n); if(d !== null && (!b || d < b.d)) b = { d:d, at:x.at }; });
-    if(b) rows.push(runAuswZeile(esc(t("runBestN", { n:n }))+(n > 1 ? ' <small>'+esc("Ø "+runPace(b.d/1000, n*1000)+" /km")+'</small>' : ''), esc(fmtUhr(b.d)), esc(runAuswDatum(b.at))));
+    if(b) rows.push(runAuswZeile(esc(t("runBestN", { n:n }))+(n > 1 ? ' <small>'+esc("Ø "+runPace(b.d/1000, n*1000)+" /km")+'</small>' : ''), esc(fmtUhrRund(b.d)), esc(runAuswDatum(b.at))));
   });
   if(!rows.length) return "";
   return runAuswKarte(t("runBestTitel"), '<div class="rekorde">'+rows.join("")+'</div>', t("runBestHint"));
@@ -1058,16 +1058,16 @@ function runPacingVon(x){
 function runAuswPacing(){
   var l = runAuswLaeufe().map(runPacingVon).filter(Boolean).slice(-6).reverse();   // neueste zuerst
   if(!l.length) return "";
-  var z = l[0], neg = l.filter(function(r){ return r.ratio < 1; }).length;
-  var urteil = z.ratio < 1 ? "runPacNeg" : z.ratio <= 1.05 ? "runPacOk" : z.ratio <= 1.10 ? "runPacEtwas" : "runPacDeutlich";
-  var chips = [[fmtUhr(z.a), t("runPacStart")], [fmtUhr(z.b), t("runPacEnde")], [Math.round(z.cv*100)+" %", t("runPacGleich")]];
+  var z = l[0], neg = l.filter(function(r){ return r.ratio < 0.99; }).length;
+  var urteil = z.ratio < 0.99 ? "runPacNeg" : z.ratio <= 1.05 ? "runPacOk" : z.ratio <= 1.10 ? "runPacEtwas" : "runPacDeutlich";
+  var chips = [[fmtUhrRund(z.a), t("runPacStart")], [fmtUhrRund(z.b), t("runPacEnde")], [Math.round(z.cv*100)+" %", t("runPacGleich")]];
   var html = '<div class="sk-unter" style="margin-top:0">'+esc(runAuswDatum(z.x.at)+" · "+runKm(z.x.dist)+" km")+'</div>'+
     statBalken(z.d.map(function(ms){ return ms/1000; }), z.d.map(function(v, i){ return String(i + 1); }), statPz, bereichDaten("run")[3])+
     '<div class="chips-stat">'+chips.map(function(c){ return '<span><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></span>'; }).join("")+'</div>'+
     '<div class="sk-unter">'+esc(t(urteil))+'</div>';
   if(l.length > 1){
     html += '<div class="sk-unter titel">'+esc(t("runPacFruehere"))+'</div><div class="rekorde">'+l.slice(1).map(function(r){
-      return runAuswZeile(esc(runKm(r.x.dist)+" km"), esc(fmtUhr(r.a)+" → "+fmtUhr(r.b)), esc(runAuswDatum(r.x.at)));
+      return runAuswZeile(esc(runKm(r.x.dist)+" km"), esc(fmtUhrRund(r.a)+" → "+fmtUhrRund(r.b)), esc(runAuswDatum(r.x.at)));
     }).join("")+'</div><div class="sk-unter">'+esc(t("runPacSumme", { n:neg, m:l.length }))+'</div>';
   }
   return runAuswKarte(t("runPacTitel"), html, t("runPacHint"));

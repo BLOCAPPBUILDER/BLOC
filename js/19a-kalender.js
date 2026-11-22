@@ -170,8 +170,19 @@ function kalAufloesen(e){
 }
 /* Welcher Termin gerade gestartet wurde: das gespeicherte Training merkt ihn sich (x.termin), so hakt später genau dieser Termin ab - auch ein nachgeholter an einem anderen Tag */
 var kalTerminAktiv = null;
+function kalSatzZahl(){ var a = studioAlle(), n = 0; Object.keys(a).forEach(function(id){ (a[id].log || []).forEach(function(l){ n += (l.s || []).length; }); }); return n; }
+/* Test 16, A: nur ein Training mit dem BLOC des Termins übernimmt ihn; Termine ohne festen BLOC (Workout, Zufall) gelten für das gestartete Training */
+function kalTerminPasst(e, planId){
+  if(!e || e.art === "sport" || e.art === "run") return false;
+  if(e.art === "plan") return e.ref === planId;
+  var pg = e.art === "programm" ? programmFinde(e.ref) : e.prog ? programmFinde(e.prog.id) : null;
+  if(pg) return !!planId && pg.items.some(function(it){ return progRefPasst(it, "plan:"+planId); });
+  return true;
+}
+/* Test 16, A: zurück auf einer Hauptseite, ohne einen Satz eingetragen: der Termin bleibt offen */
+function kalTerminVerlassen(){ if(kalTerminAktiv && kalSatzZahl() <= (kalTerminAktiv.n || 0)) kalTerminAktiv = null; }
 function kalStarten(e){
-  if(e && e.art !== "sport") kalTerminAktiv = { id:e.id, at:Date.now() };
+  if(e && e.art !== "sport") kalTerminAktiv = { id:e.id, at:Date.now(), n:kalSatzZahl() };
   if(e.prog && typeof programmFinde === "function"){   // Termin eines Trainingsplans: gleich los, das Training weiß, dass es dazugehört
     var pp = programmFinde(e.prog.id);
     if(pp && pp.items[e.prog.i]){ progKontext = { pid:pp.id, i:e.prog.i }; return progDirektStarten(progEintrag(pp.items[e.prog.i])); }
