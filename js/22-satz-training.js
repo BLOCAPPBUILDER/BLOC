@@ -113,6 +113,50 @@ function satzAendern(id, q, kg, w){
   save();
   return true;
 }
+/* Gewichtsvorschlag, Variante A „Minimal“ (2026-11-22, Kevin): Etikett mit X über dem passenden Feld, rotes i rechts unter der Figur öffnet die Erklärung.
+   Gewicht und Wiederholungen übernimmt das Etikett direkt; Plateau, Satz mehr und Übungswechsel erst nach der Erklärung. */
+function satzTippAmKg(tp){ return ["kg", "runter", "pause", "assist", "assistRunter"].indexOf(tp.art) > -1 && tp.kg != null; }
+function satzTippDirekt(tp){ return !tp.naechste && ["plateau", "satz", "variante", "varianteWdh", "stufeZurueck"].indexOf(tp.art) < 0; }
+function satzTippLabel(tp){ return satzTippAmKg(tp) ? (tp.art === "kg" || tp.art === "assist" ? "↑ " : "↓ ")+studioKg(tp.kg)+" kg" : studioTippKurz(tp).replace(/^([↑↓≈] )(Vorschlag|Suggestion): /, "$1"); }
+function satzTippIHTML(){ return '<button type="button" class="satz-tipp-i" data-satztippinfo aria-label="'+esc(t("tippWarum"))+'"><span>i</span></button>'; }
+function satzFeldKopf(label, tp, hier, hatFigur){
+  if(!tp) return '<label>'+esc(label)+'</label>';
+  if(!hier) return '<div class="satz-feldkopf"><label>'+esc(label)+'</label></div>';
+  var nein = studioTippNein(tp), ab = studioTippSicher(tp);
+  return '<div class="satz-feldkopf hat-tipp"><label class="satz-fk-label">'+esc(label)+'</label><span class="satz-fk-tipp">'+
+    '<button type="button" class="satz-pille'+(ab ? ' runter' : '')+'" '+(satzTippDirekt(tp) ? 'data-satztipp' : 'data-satztippinfo')+' aria-label="'+esc(satzTippLabel(tp))+'"><span>'+esc(satzTippLabel(tp))+'</span></button>'+
+    (hatFigur ? '' : satzTippIHTML())+
+    (nein ? '<button type="button" class="satz-tipp-x" data-satznein aria-label="'+esc(t(nein))+'">&times;</button>' : '')+'</span></div>';
+}
+/* Gleiche Sätze zusammengefasst: „3 × 10 · 40 kg“; sonst leer */
+function satzGleichText(l){
+  var s = (l && l.s) || [], x = s[0];
+  if(s.length < 2 || !(x[0] > 0) || x[4] === 1) return "";
+  var gleich = s.every(function(q){ var ty = satzTyp(q); return q[0] === x[0] && q[1] === x[1] && q[4] !== 1 && ty !== "w" && ty !== "d"; });
+  return gleich ? s.length+" × "+x[1]+" · "+studioKg(x[0])+" kg" : "";
+}
+function satzTippSheet(id, tp, ja, nein){
+  var b = studioBereich(id), letzte = studioLetzte(id, false), inhalt, titel = satzTippAmKg(tp) ? t("tippWarumKg", { kg:studioKg(tp.kg) }) : t("tippWarum");
+  function schritt(nr, kopf, text){ return '<li><i>'+nr+'</i><div><b>'+esc(kopf)+'</b><span>'+esc(text)+'</span></div></li>'; }
+  if(tp.art === "kg" && !tp.zeitNeu){
+    var sText = letzte ? (satzGleichText(letzte) || letzte.s.map(function(x){ return satzText(x).replace("×", " × "); }).join(" · ")) : "";
+    inhalt = '<ol>'+schritt(1, t("tippErkl1T"), t("tippErkl1", { min:b.min, max:b.max }))+schritt(2, t("tippErkl2T"), t("tippErkl2", { s:sText }))+
+      schritt(3, t("tippErkl3T"), t("tippErkl3", { d:studioKg(Math.round((tp.kg - tp.alt)*100)/100), p:tp.prozent, kg:studioKg(tp.kg) }))+
+      schritt(4, t("tippErkl4T"), t("tippErkl4", { min:tp.min, max:tp.max0 }))+'</ol>'+
+      (tp.rpeLeicht || tp.gross ? '<p class="stt-text">'+esc((tp.rpeLeicht ? t("tippRpeLeicht") : "")+(tp.rpeLeicht && tp.gross ? " " : "")+(tp.gross ? t("tippGross") : ""))+'</p>' : '');
+  } else inhalt = '<p class="stt-text">'+esc(studioSteigerTippText(tp))+'</p>';
+  var ov = document.createElement("div"); ov.className = "confirm-overlay satz-tipp-sheet"; ov.style.zIndex = 99999;
+  ov.innerHTML = '<div class="confirm-sheet" role="dialog" aria-label="'+esc(titel)+'"><div class="stt-kopf"><h3>'+esc(titel)+'</h3><button type="button" class="stt-zu" data-zu aria-label="'+esc(t("close"))+'">&times;</button></div>'+inhalt+
+    (satzTippAmKg(tp) ? '<div class="stt-notiz"><b>'+esc(t("tippGewichtFehlt"))+'</b> '+esc(t("tippGewichtFehltText"))+'</div>' : '')+
+    '<div class="stt-kn"><button type="button" class="stt-ja" data-ja>'+esc(satzTippAmKg(tp) ? t("tippKgUebernehmen", { kg:studioKg(tp.kg) }) : t("tippUebernehmen"))+'</button>'+
+    (nein && studioTippNein(tp) ? '<button type="button" class="stt-nein" data-nein>'+esc(t(studioTippNein(tp)))+'</button>' : '')+'</div></div>';
+  document.body.appendChild(ov);
+  function zu(){ ov.remove(); }
+  ov.addEventListener("click", function(e){ if(e.target === ov) zu(); });
+  ov.querySelector("[data-zu]").addEventListener("click", zu);
+  ov.querySelector("[data-ja]").addEventListener("click", function(){ zu(); ja(); });
+  var n = ov.querySelector("[data-nein]"); if(n) n.addEventListener("click", function(){ zu(); nein(); });
+}
 function satzKarteHTML(id, i, n){
   var ex = findExercise(id);
   if(!ex) return "";
@@ -124,19 +168,19 @@ function satzKarteHTML(id, i, n){
   var info = EX_INFO[id], post = EX_POSTURE[id];
   var bearb = satzKontext.bearbeiten && satzKontext.bearbeiten.id === id ? satzKontext.bearbeiten.q : -1, bs = bearb > -1 && h ? h.s[bearb] : null;   // gerade geänderter Satz
   if(!bs) bearb = -1;
+  var tp = h ? null : satzKontext.tipps[id], hatFigur = !!ILLU[id] || !!ex.custom, tippKg = !!tp && !koerper && satzTippAmKg(tp);
   return '<section class="satz-karte" data-satzk="'+i+'" data-id="'+esc(id)+'" aria-label="'+esc((i+1)+"/"+n+" "+tplText(ex.name))+'">'+
     '<div class="satz-glas">'+
       '<div class="satz-kopf"><div class="satz-kopf-t"><h2 class="satz-name">'+esc(tplText(ex.name))+'</h2>'+
         '<div class="satz-unter">'+(kachelMuskel(ex) ? '<div class="satz-mus">'+kachelMuskel(ex)+'</div>' : '')+'<div class="satz-ziel">'+esc(t("stGoal"))+' <b>'+satzName(z.saetze)+' × '+(zeitE ? studioTimer(id).work+' s'+(ex.perSide ? ' '+t("perSide") : '') : b.min+'–'+b.max)+'</b>'+(e.kg != null && !koerper ? ' · <b>'+studioKg(e.kg)+' kg</b>' : '')+'</div>'+'</div></div>'+
         (info ? '<button type="button" class="info-btn" data-satzinfo="'+esc(id)+'" aria-label="'+esc(t("info"))+'">i</button>' : '')+'</div>'+
       (info ? '' : griffHTML(id))+   // mit Info-Fenster stehen Griff, Ausführung und Haltung dort
-      (ILLU[id] ? '<div class="satz-figur">'+illuHTML(id, "satz-illu")+'</div>' : (ex.custom ? '<div class="satz-figur"><span class="ex-symbol big">'+exSymbol(ex)+'</span></div>' : ''))+
-      (function(){ var tp = h ? null : satzKontext.tipps[id]; return tp ? '<div class="satz-tipp'+(tp.art === "runter" || tp.art === "wdhRunter" || tp.art === "pause" || tp.art === "zeitRunter" || tp.art === "stufeZurueck" ? ' runter' : '')+'"><span>'+esc(studioSteigerTippText(tp))+'</span><button type="button" data-satztipp>'+esc(t("tippUebernehmen"))+'</button>'+(!studioTippNein(tp) ? '' : '<button type="button" class="satz-tipp-nein" data-satznein>'+esc(t(studioTippNein(tp)))+'</button>')+'</div>' : ''; })()+
+      (hatFigur ? '<div class="satz-figur'+(tp ? ' mit-i' : '')+'"><div class="satz-figbox">'+(ILLU[id] ? illuHTML(id, "satz-illu") : '<span class="ex-symbol big">'+exSymbol(ex)+'</span>')+(tp ? satzTippIHTML() : '')+'</div></div>' : '')+
       (!h && satzKontext.wartend.indexOf(id) > -1 ? '<div class="satz-hinweis">'+esc(t("tippWartet"))+'</div>' : '')+
       (satzKontext.leicht ? '<div class="satz-hinweis">'+esc(t("leichtHinweis", { n:z.saetze }))+' <button type="button" class="satz-leicht-aus" data-leichtaus>'+esc(t("leichtAus"))+'</button></div>' : '')+
       (v.erstes && !koerper && !zeitE && !h && !info ? '<div class="satz-hinweis">'+esc(t("erstesMalHinweis", { n:b.max }))+'</div>' : '')+
-      (letzte ? '<div class="satz-zeile"><span>'+esc(t("stLetztes"))+'</span>'+letzte.s.map(function(x){
-        return '<button type="button" class="satz-chip" data-ukg="'+x[0]+'" data-uw="'+x[1]+'" aria-label="'+esc(t("stUebernehmen")+" "+studioKg(x[0])+" × "+x[1])+'">'+esc(satzText(x).replace("×", " × "))+'</button>'; }).join("")+'</div>' : '')+
+      (letzte ? '<div class="satz-zeile"><span>'+esc(t("stLetztes"))+'</span>'+(satzGleichText(letzte) ? [letzte.s[0]] : letzte.s).map(function(x){
+        return '<button type="button" class="satz-chip" data-ukg="'+x[0]+'" data-uw="'+x[1]+'" aria-label="'+esc(t("stUebernehmen")+" "+studioKg(x[0])+" × "+x[1])+'">'+esc(satzGleichText(letzte) || satzText(x).replace("×", " × "))+'</button>'; }).join("")+'</div>' : '')+
 
       (function(){ var bl = satzBlockVon(id); if(!bl) return ''; var k2 = bl.ids.indexOf(id), letzte = k2 === bl.ids.length - 1, nx = findExercise(bl.ids[(k2 + 1) % bl.ids.length]);
         return '<div class="satz-hinweis satz-block"><b>'+esc(t(blockArt(bl.ids.length) === "zirkel" ? "blkZirkel" : "blkSuper"))+'</b> · '+(k2 + 1)+'/'+bl.ids.length+' · '+esc(t(letzte ? "blkDannPause" : "blkDanach", { n:nx ? tplText(nx.name) : "" }))+'</div>'; })()+
@@ -147,10 +191,10 @@ function satzKarteHTML(id, i, n){
                  : '<i class="'+(q === fertigeAnzahl && bearb < 0 ? 'jetzt' : '')+'">'+esc(t("satzNr", { n:q + 1 }))+'</i>'; }
         if(fertigeAnzahl >= z.saetze && fertigeAnzahl < 12) o += '<i class="extra" title="'+esc(t("satzOptional"))+'"><b>+</b>'+esc(t("satzNr", { n:fertigeAnzahl + 1 }))+'</i>';   // Zusatzsatz möglich (Kevin: „4 / 3 Sätze soll möglich sein“)
         return o; })()+'</div>'+
-      '<div class="satz-eingabe'+(koerper ? ' eins' : '')+'">'+
-        (koerper ? '' : '<div class="satz-feld"><label>'+esc(t("stKg"))+'</label><div class="satz-zaehler"><button type="button" data-kgminus aria-label="&minus;">&minus;</button>'+
+      '<div class="satz-eingabe'+(koerper ? ' eins' : '')+(tp ? ' mit-tipp' : '')+'">'+
+        (koerper ? '' : '<div class="satz-feld">'+satzFeldKopf(t("stKg"), tp, tippKg, hatFigur)+'<div class="satz-zaehler"><button type="button" data-kgminus aria-label="&minus;">&minus;</button>'+
           '<input type="text" inputmode="decimal" class="satz-kg" value="'+studioKg(bs ? bs[0] : v.kg)+'" aria-label="'+esc(t("stKg"))+'"><button type="button" data-kgplus aria-label="&plus;">&plus;</button></div></div>')+
-        '<div class="satz-feld"><label>'+esc(t(zeitE ? "planArbeit" : "stReps"))+'</label><div class="satz-zaehler"><button type="button" data-wminus aria-label="&minus;">&minus;</button>'+
+        '<div class="satz-feld">'+satzFeldKopf(t(zeitE ? "planArbeit" : "stReps"), tp, !tippKg, hatFigur)+'<div class="satz-zaehler"><button type="button" data-wminus aria-label="&minus;">&minus;</button>'+
           '<input type="number" inputmode="numeric" class="satz-w" value="'+(bs ? bs[1] : zeitE ? zeitStart : v.wdh)+'" aria-label="'+esc(t(zeitE ? "planArbeit" : "stReps"))+'"><button type="button" data-wplus aria-label="&plus;">&plus;</button></div></div>'+
       '</div>'+
       (anstrengungModus() && !bs ? '<div class="satz-rpe" role="group" aria-label="'+esc(t("rpeTitel"))+'"><span>'+(anstrengungModus() === "rir" ? "RIR" : "RPE")+'</span>'+[6, 7, 8, 9, 10].map(function(r){
@@ -415,8 +459,8 @@ function renderSatzTraining(planId, start){
       var r = +b.getAttribute("data-satzrpe"); satzKontext.rpe[id] = satzKontext.rpe[id] === r ? 0 : r; tipp();
       k.querySelectorAll("[data-satzrpe]").forEach(function(c){ var an = +c.getAttribute("data-satzrpe") === satzKontext.rpe[id]; c.classList.toggle("an", an); c.setAttribute("aria-pressed", an); });
     }); });
-    if((a = k.querySelector("[data-satznein]"))) a.addEventListener("click", function(){ var m = studioTippAblehnen(id); delete satzKontext.tipps[id]; showToast(t(m)); karteNeu(i); });
-    if((a = k.querySelector("[data-satztipp]"))) a.addEventListener("click", function(){
+    function tippNein(){ var m = studioTippAblehnen(id); delete satzKontext.tipps[id]; showToast(t(m)); karteNeu(i); }
+    function tippJa(){
       var tp = satzKontext.tipps[id]; if(!tp) return;
       if(tp.naechste && planVarianteTauschen(p, id, tp.naechste, tp.art === "variante", tp.art === "stufeZurueck")){   // nächste Stufe der Kette: Übung im BLOC tauschen und neu aufbauen
         studioTippUebernehmen(id, tp); showToast(studioTippKurz(tp)); studioPauseStop(); renderSatzTraining(p.id, i); return;
@@ -424,7 +468,15 @@ function renderSatzTraining(planId, start){
       var neuKg = studioTippUebernehmen(id, tp); delete satzKontext.tipps[id];
       vibrate([20, 30, 40]); karteNeu(i);   // Feld neu vorbelegt: neues Gewicht, Wiederholungen unten im Bereich
       if(neuKg == null) showToast(studioTippKurz(tp));
-    });
+    }
+    if((a = k.querySelector("[data-satznein]"))) a.addEventListener("click", tippNein);
+    if((a = k.querySelector("[data-satztipp]"))) a.addEventListener("click", tippJa);
+    k.querySelectorAll("[data-satztippinfo]").forEach(function(b){ b.addEventListener("click", function(){ var tp = satzKontext.tipps[id]; if(tp) satzTippSheet(id, tp, tippJa, tippNein); }); });
+    /* Eigenes Gewicht eingetragen: der Vorschlag tritt zurück; kommt der Ausgangswert wieder, ist er wieder da */
+    var tippKgStart = kgIn ? kgWert() : 0;
+    function tippSicht(){ var tp = satzKontext.tipps[id]; if(kgIn && tp && satzTippAmKg(tp) && k.querySelector(".satz-pille")) k.classList.toggle("tipp-aus", kgWert() !== tippKgStart); }
+    if(kgIn) kgIn.addEventListener("input", tippSicht);
+    k.addEventListener("click", tippSicht);
     if((a = k.querySelector("[data-leichtaus]"))) a.addEventListener("click", function(){   // Leichtwoche ist ein Angebot: heute normal trainieren
       var s0 = state.db.settings; s0.leichtAus = s0.leichtAus || {}; s0.leichtAus[kalTagKey(Date.now())+"|"+p.id] = true; save();
       studioPauseStop(); renderSatzTraining(p.id, i);

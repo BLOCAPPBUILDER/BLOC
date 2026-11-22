@@ -8,6 +8,10 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 
 
+## 2026-11-22 · Gewichtsvorschlag minimal (Fassung 2026-11-22-3)
+
+- Satz-Training: Der Vorschlag steht als Etikett mit X über dem passenden Feld. Das rote i rechts unter der Figur erklärt ihn. Größere Änderungen (Plateau, Satz mehr, Übungswechsel) laufen über die Erklärung.
+
 ## 2026-11-22 · BLOC-Hinweis und Run als Daumen-Dock (Fassung 2026-11-22-2)
 
 - **BLOC-Ansicht:** Der Druck-Zug-Hinweis steht als Etikett in der Auswertung, der Text kommt beim Aufklappen.
