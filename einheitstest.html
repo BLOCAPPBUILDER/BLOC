@@ -1822,6 +1822,50 @@
       root.querySelector("[data-ok]").click(); gleich(weiter, 1, "nach dem Ja geht es weiter");
     } finally { s.studio = vS; root.innerHTML = ""; }
   });
+  test("Alle Daten löschen: entfernt Daten, Schnappschuss und Kopie; Abbrechen löscht nichts; Schutz beim Start bleibt", async function () {
+    var key = W.DB_KEY, dbAlt = JSON.parse(JSON.stringify(W.state.db)), snapAlt = await W.snapLesen().catch(function () { return null; }), tipAlt = W.localStorage.getItem("sporttimer-tip-hidden");
+    function warte2(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+    try {
+      var s = W.state.db.settings;
+      s.name = "Testperson"; s.koerper = { kg:81, cm:180, alter:40, sex:"m" };
+      s.programme = [{ id:"tdel", name:"Geheimplan", items:["run"], tage:[1], wochen:4, am:"alle", pos:0, assi:{ einschr:["knie"], alter:"50", sport:{ name:"Geheimsport" } } }];
+      s.einheiten = [{ id:"edel", at:Date.now(), tag:"2026-11-22", plan:"", name:"Geheimtraining", ex:[], saetze:1, vol:1 }];
+      s.runs = [{ id:"rdel", at:Date.now(), dur:1000, dist:1000, pts:[[52.51234, 13.41234], [52.51334, 13.41334]], splits:[] }];
+      W.save();
+      W.localStorage.setItem(key + "-defekt", "Geheimkopie"); W.localStorage.setItem("sporttimer-tip-hidden", "1"); W.DB_GERETTET = true;
+      var alt = Date.now() - 8*86400000;
+      await W.snapSchreiben({ zeit:alt, daten:JSON.parse(JSON.stringify(W.state.db)) });
+      // Schutz beim normalen Start: ein leerer Stand überschreibt den Schnappschuss nicht
+      var voll = W.state.db; W.state.db = W.frischDB(); W.save(); await W.snapPruefen();
+      gleich((await W.snapLesen()).zeit, alt, "leerer Stand lässt den Schnappschuss stehen");
+      W.state.db = voll; W.save();
+      // Abbrechen löscht nichts
+      W.go("#settings"); await warte2(80);
+      W.document.querySelector("[data-reset]").click(); W.document.querySelector("[data-cancel]").click(); await warte2(80);
+      wahr(/Geheimplan/.test(W.localStorage.getItem(key)) && W.localStorage.getItem(key + "-defekt") === "Geheimkopie" && !!(await W.snapLesen()), "Abbrechen lässt alles stehen");
+      // Bestätigen löscht alles
+      W.document.querySelector("[data-reset]").click(); W.document.querySelector("[data-ok]").click();
+      for (var n = 0; n < 40 && (W.state.db.settings.name || W.snapZeit !== 0); n++) await warte2(50);
+      var roh = W.localStorage.getItem(key) || "";
+      wahr(!/Testperson|Geheim|knie|52\.51|"kg":81/.test(roh), "Hauptdaten enthalten nichts Altes");
+      gleich(W.localStorage.getItem(key + "-defekt"), null, "-defekt-Kopie gelöscht");
+      gleich(W.localStorage.getItem("sporttimer-tip-hidden"), null, "Hinweis-Schlüssel gelöscht");
+      gleich(await W.snapLesen(), null, "Schnappschuss gelöscht");
+      gleich(W.snapZeit, 0, "snapZeit zurückgesetzt"); gleich(W.DB_GERETTET, false, "DB_GERETTET zurückgesetzt");
+      wahr(!W.snapZeileHTML().includes("data-snaprestore"), "Wiederherstellung bietet nichts Altes an");
+      await W.snapPruefen();
+      gleich(await W.snapLesen(), null, "frischer Stand legt beim nächsten Start keinen Schnappschuss an");
+      W.state.db.settings.runs = [{ id:"nur", at:Date.now(), dur:1, dist:1, pts:[], splits:[] }]; W.save(); await W.snapPruefen();
+      wahr(!!(await W.snapLesen()), "ein Stand nur mit Läufen wird weiter gesichert");
+    } finally {
+      var ov = W.document.getElementById("overlayRoot"); if (ov) ov.innerHTML = "";
+      W.state.db = dbAlt; W.save(); W.localStorage.removeItem(key + "-defekt"); W.DB_GERETTET = false;
+      if (tipAlt === null) W.localStorage.removeItem("sporttimer-tip-hidden"); else W.localStorage.setItem("sporttimer-tip-hidden", tipAlt);
+      if (snapAlt) await W.snapSchreiben(snapAlt); else await W.snapLoeschen();
+      W.snapZeit = snapAlt ? snapAlt.zeit : 0;
+      W.go("#home");
+    }
+  });
   test("Test 14 E: verlängerter Lauf knüpft an die höhere der letzten zwei erledigten Distanzen an", function () {
     var s = W.state.db.settings, vK = s.kalender, vF = W.kalErledigt, p = { id: "px", laufKm: 5 };
     try {

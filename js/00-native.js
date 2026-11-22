@@ -40,6 +40,7 @@ function dateiAusgeben(name, text, mime, nachricht){
 
 /* Ausgegebene Sicherungen und Laufstrecken (Klartext, auch Standortdaten) liegen im App-Cache: beim Start alte Dateien wegräumen.
    Nicht sofort nach dem Teilen, die Ziel-App liest die Datei evtl. verzögert - deshalb erst, wenn sie über eine Stunde alt ist. */
+var BLOC_CACHE_DATEI = /^bloc-(sicherung|lauf|workout|trainingsplan|plan|uebung)-.*\.(json|bloc|gpx)$/;
 function nativCacheAufraeumen(){
   var fs = nativPlugin("Filesystem");
   if(!fs) return;
@@ -48,12 +49,22 @@ function nativCacheAufraeumen(){
       (r.files || []).forEach(function(f){
         var name = typeof f === "string" ? f : f && f.name;
         var alt = !f || typeof f === "string" || !f.mtime || Date.now() - f.mtime > 3600000;
-        if(name && alt && /^bloc-(sicherung|lauf|workout|trainingsplan|plan|uebung)-.*\.(json|bloc|gpx)$/.test(name)) fs.deleteFile({ path:name, directory:"CACHE" }).catch(function(){});
+        if(name && alt && BLOC_CACHE_DATEI.test(name)) fs.deleteFile({ path:name, directory:"CACHE" }).catch(function(){});
       });
     }).catch(function(){});
   }catch(e){}
 }
 if(IST_NATIV) setTimeout(nativCacheAufraeumen, 4000);
+/* „Alle Daten löschen“: ausgegebene BLOC-Dateien im App-Cache sofort entfernen, unabhängig vom Alter. Liefert true, wenn nichts übrig blieb (im Browser gibt es diesen Cache nicht). */
+function nativCacheLeeren(){
+  if(!IST_NATIV) return Promise.resolve(true);
+  var fs = nativPlugin("Filesystem");
+  if(!fs) return Promise.resolve(false);
+  return fs.readdir({ path:"", directory:"CACHE" }).then(function(r){
+    var namen = (r.files || []).map(function(f){ return typeof f === "string" ? f : f && f.name; }).filter(function(n){ return n && BLOC_CACHE_DATEI.test(n); });
+    return Promise.all(namen.map(function(n){ return fs.deleteFile({ path:n, directory:"CACHE" }); }));
+  }).then(function(){ return true; }, function(){ return false; });
+}
 
 /* navigator.share gibt es im Android-WebView nicht: einfache Texte und Links gehen über das Teilen-Menü der App */
 if(IST_NATIV && !navigator.share){

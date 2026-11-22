@@ -1139,8 +1139,8 @@ window.BLOC_TEXTE = {
     importBtn:"Einlesen",
     fileError:"Datei konnte nicht gelesen werden.",
     deleteAllQ:"Alle Daten löschen?",
-    deleteAllText:"Eigene BLOCs, Intervalle, Übungen, Gewichte und Einstellungen werden unwiderruflich gelöscht.",
-    deleteAllBtn:"Alles löschen",
+    deleteAllText:"Gelöscht werden alle Daten von BLOC auf diesem Gerät: BLOCs, Trainings, Trainingspläne, Körperdaten, Läufe mit Routen, Einstellungen und der automatische Schnappschuss. Sie lassen sich nicht wiederherstellen. Selbst gespeicherte oder geteilte Dateien bleiben bestehen.",
+    deleteAllBtn:"Alles löschen", deleteAllOk:"Alle Daten auf diesem Gerät sind gelöscht.", deleteAllFehlT:"Nicht alles wurde gelöscht", deleteAllFehlText:"Noch vorhanden: {x}. Versuch es noch einmal. Klappt das nicht, lösche die Website-Daten im Browser oder den App-Speicher in den Android-Einstellungen.", deleteAllNochmal:"Nochmal versuchen", deleteAllFehl_snap:"der automatische Schnappschuss", deleteAllFehl_cache:"Dateien im App-Zwischenspeicher", deleteAllFehl_speicher:"Daten im App-Speicher",
     installApp:"App installieren",
     iosSteps:[
       "Diese Seite in <b>Safari</b> öffnen (nicht Chrome – dort fehlt der nötige Button).",
@@ -2364,8 +2364,8 @@ window.BLOC_TEXTE = {
     importBtn:"Load",
     fileError:"Couldn't read the file.",
     deleteAllQ:"Delete all data?",
-    deleteAllText:"Your own BLOCs, intervals, exercises, weights and settings will be permanently deleted.",
-    deleteAllBtn:"Delete everything",
+    deleteAllText:"This deletes all BLOC data on this device: BLOCs, sessions, training plans, body data, runs with routes, settings and the automatic snapshot. It cannot be restored. Files you saved or shared yourself are not affected.",
+    deleteAllBtn:"Delete everything", deleteAllOk:"All data on this device has been deleted.", deleteAllFehlT:"Not everything was deleted", deleteAllFehlText:"Still there: {x}. Please try again. If that does not work, clear the site data in your browser or the app storage in Android settings.", deleteAllNochmal:"Try again", deleteAllFehl_snap:"the automatic snapshot", deleteAllFehl_cache:"files in the app cache", deleteAllFehl_speicher:"data in app storage",
     installApp:"Install app",
     iosSteps:[
       "Open this page in <b>Safari</b> (not Chrome – the button you need is missing there).",
