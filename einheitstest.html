@@ -488,6 +488,21 @@
       gleich(W.kalListe().length, 2, "nach dem Löschen");
     } finally { s.kalender = alt; }
   });
+  test("Kalender: nachgeholtes Training hakt seinen Termin ab, verpasste Termine sind markiert (Test 15, A/E)", function () {
+    var s = W.state.db.settings, altK = s.kalender, altE = s.einheiten;
+    try {
+      s.kalender = undefined; s.einheiten = [];
+      var mi = W.kalHinzu("2026-10-14", { art: "plan", ref: "pKraftB" });
+      var cardio = W.kalHinzu("2026-10-15", { art: "zufall" });
+      s.einheiten.push({ id: "e1", tag: "2026-10-15", at: Date.UTC(2026, 9, 15, 10), plan: "pKraftB", termin: mi.id, ex: [{ id: "x", s: [[10, 5]] }], zu: true });
+      gleich(W.kalStatus("2026-10-14")[mi.id], true, "Mittwochs-Termin abgehakt");
+      gleich(W.kalStatus("2026-10-15")[cardio.id], false, "anderer Termin am Donnerstag bleibt offen");
+      var offen = W.kalHinzu("2020-01-06", { art: "zufall" });
+      wahr(W.kalVerpasst(offen), "alter, offener Termin ist verpasst");
+      wahr(!W.kalVerpasst(mi), "erledigter Termin ist nicht verpasst");
+      gleich(W.kalVerpasstN(["2020-01-06", "2026-10-14"]), 1, "Zähler verpasst");
+    } finally { s.kalender = altK; s.einheiten = altE; }
+  });
   test("Kalender: Woche kopieren auf die nächsten Wochen, ohne Doppeltes", function () {
     var s = W.state.db.settings, alt = s.kalender;
     try {

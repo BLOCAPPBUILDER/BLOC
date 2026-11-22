@@ -3,6 +3,17 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-22 · Test 15: Termin merken, verpasste Termine, Balance einheitlich (Fassung 2026-11-22-12)
+
+- **A Termin merken:** `kalStarten` merkt den gestarteten Termin (`kalTerminAktiv`), das gespeicherte Training trägt ihn als `x.termin`; `kalAbgleich` hakt genau diesen Termin ab (auch nachgeholt an einem anderen Tag). Trainings mit BLOC-Bezug haken keinen Termin ohne Bezug mehr ab.
+- **B Runden:** `einheitRunden` sucht von der neuesten Runde bis zur Speicherzeit des Trainings: zwei gleiche Trainings am Tag treffen je ihre eigene Runde (Ändern/Löschen).
+- **C Balance:** „Drücken : Ziehen“ in Mehr Einblicke rechnet mit `ddBalance` (Muskelzonen wie im Reiter Körper, nach Sätzen gewichtet) und zeigt Prozent.
+- **D Löschen:** Die Rückfrage nennt die offenen Termine; offene Termine (auch vergangene) gehen mit, erledigte bleiben mit dem alten Namen.
+- **E Verpasst:** Vergangene offene Termine sind markiert („Verpasst“), Menü „Heute nachholen“, Monatszähler nur Heute und Zukunft plus „n verpasst“.
+- **F/G Texte:** Hinweis der Verlauf-Kachel nennt Satz-Trainings; Meilenstein heißt „Meilenstein: n Trainings erreicht!“.
+- Offen: Kalender-Menü mit drei ähnlichen Wegen (BLOC / Katalog / Meine BLOCs) und Gewichtssumme 13.891 vs. 13.890 (Rundung je Training).
+- Tests: Einheitstest 132, Schnelltest 54, alle grün.
+
 ## 2026-11-22 · Läufe: Speicher geschont, bei vollem Speicher ehrliche Meldung (Fassung 2026-11-22-11)
 
 - **Routen ausdünnen:** Beim Speichern eines Laufs werden die Routenpunkte mit Douglas-Peucker (2,5 m) ausgedünnt (`runAusduennen`, js/16-lauf.js): Geraden bestehen nur noch aus Anfang und Ende, Kurven und Ecken bleiben; das spart gut 80 % Speicher pro Lauf. Bereits gespeicherte Läufe werden einmal beim Start ebenso schlanker gemacht (`settings.runSchlank`).

@@ -427,15 +427,17 @@ function statEinblickeHTML(voll){
   liste.filter(function(x){ return x.at >= jetzt - 28*tag; }).forEach(function(x){
     (x.ex || []).forEach(function(e){
       var ex = findExercise(e.id); if(!ex) return;
-      var n = arbeitsSaetze(e).length, mu = exProfile(ex).pattern;
-      if(mu === "push") push += n; else if(mu === "pull") pull += n;
+      var n = arbeitsSaetze(e).length;
+      if(typeof ddBalance === "function" && n){   // Test 15, C: dieselbe Regel wie die Balance im Reiter Körper (Muskelzonen), hier nach Sätzen gewichtet
+        var bz = ddBalance([e.id]); push += bz.push*n; pull += bz.pull*n;
+      } else { var mu = exProfile(ex).pattern; if(mu === "push") push += n; else if(mu === "pull") pull += n; }
       arbeitsSaetze(e).forEach(function(s){ if(s[3] > 0){ rpeSumme += s[3]; rpeAnz++; } });
     });
   });
   if(push + pull >= 8){
     var anteil = Math.round(100*push/(push + pull)), r = pull ? push/pull : 9;
     teile.push('<div class="sk-unter titel">'+esc(t("statEinBalance"))+'</div>'+
-      '<div class="who-zeile"><span>'+esc(t("statEinDruecken"))+" : "+esc(t("statEinZiehen"))+'</span><b>'+push+' : '+pull+'</b><i class="who-bar"><u style="width:'+anteil+'%"></u></i></div>'+
+      '<div class="who-zeile"><span>'+esc(t("statEinDruecken"))+" : "+esc(t("statEinZiehen"))+'</span><b>'+anteil+' % : '+(100 - anteil)+' %</b><i class="who-bar"><u style="width:'+anteil+'%"></u></i></div>'+
       '<div class="sk-unter">'+esc(t(r > 1.4 ? "statEinPush" : r < 0.7 ? "statEinPull" : "statEinGut"))+'</div>');
   }
   if(anstrengungModus() && rpeAnz >= 6){
@@ -835,6 +837,7 @@ function trainingSpeichern(k, notiz){
   var pk = k.plan && typeof programmKontextFuer === "function" ? programmKontextFuer("plan:"+k.plan.id) : null;
   if(!(pk && pk.p) && einheitProg(e)) e.prog = einheitProg(e);
   if(pk && pk.p) e.prog = pk.p.id;   // gehört zu einem TrainingsBLOC: zählt mit dessen anderen BLOCs als ein Training
+  if(!vorh && typeof kalTerminAktiv !== "undefined" && kalTerminAktiv && Date.now() - kalTerminAktiv.at < 43200000 && typeof kalFinde === "function" && kalFinde(kalTerminAktiv.id)){ e.termin = kalTerminAktiv.id; kalTerminAktiv = null; }   // Test 15, A: das Training merkt sich den gestarteten Termin
   e.zu = true; e.zuAt = Date.now();   // abgeschlossen: weitere Sätze sind ein neues Training (siehe einheitHeute)
   if(notiz != null) e.notiz = String(notiz).trim();
   if(!vorh) l.push(e);
@@ -989,16 +992,18 @@ function statTrainingsBinden(neu){
 /* Test 14, A: die Log-Runden, aus denen ein gespeichertes Training besteht. Zugeordnet wird über BLOC, Tag und genau gleiche Sätze (ein Training kann mehrere angehängte Runden enthalten);
    passt nicht alles, gilt die Übung als nicht zuordenbar und ihr Log bleibt unberührt. */
 function einheitRunden(x, a){
-  var g = studioEintragAlle(a.id), log = (g && g.log) || [], soll = a.s || [], pos = 0, treffer = [], tag2 = einheitTagKey(x.at);
+  var g = studioEintragAlle(a.id), log = (g && g.log) || [], soll = a.s || [], pos = soll.length, treffer = [], tag2 = einheitTagKey(x.at);
   if(!soll.length) return [];
-  for(var i = 0; i < log.length && pos < soll.length; i++){
+  // Test 15, B: von hinten (neueste Runde zuerst) bis zur Speicherzeit des Trainings - bei zwei gleichen Trainings am Tag trifft jedes seine eigene Runde
+  for(var i = log.length - 1; i >= 0 && pos > 0; i--){
     var l = log[i]; if(!l || !l.s || !l.s.length || rundeNochOffen(l)) continue;
     if(l.b != null && l.b !== (x.plan || "")) continue;
+    if(l.at > x.at + 60000) continue;
     var tl = einheitTagKey(l.at); if(tl !== x.tag && tl !== tag2) continue;
-    if(pos + l.s.length > soll.length || JSON.stringify(soll.slice(pos, pos + l.s.length)) !== JSON.stringify(l.s)) continue;
-    treffer.push({ l:l, von:pos }); pos += l.s.length;
+    if(l.s.length > pos || JSON.stringify(soll.slice(pos - l.s.length, pos)) !== JSON.stringify(l.s)) continue;
+    pos -= l.s.length; treffer.unshift({ l:l, von:pos });
   }
-  return pos === soll.length ? treffer : [];
+  return pos === 0 ? treffer : [];
 }
 /* Arbeitsgewicht nach Löschen oder Ändern: nur wenn die neueste Runde betroffen ist; übungsweit und je BLOC mit eigenen Werten */
 function einheitKgNeu(id, betroffen){
