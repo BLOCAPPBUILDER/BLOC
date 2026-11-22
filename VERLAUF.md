@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-22 · Run: Hinweis „zu langsam“ schon nach 100 m (Fassung 2026-11-22-9)
+
+- Mit **Pace-Vorgabe** (nur zu Fuß) prüft die App jetzt auch **zwischen den Kilometern** alle 100 m das Tempo der letzten 100 m. Liegt es mehr als 12 s/km über der Vorgabe, kommt ein kurzer Hinweis („Zu langsam, 30 Sekunden pro Kilometer über dem Ziel.“); nur wenn man zu langsam ist, nie bei „im Plan“ oder schneller, und danach 200 m Ruhe. Die Ansage nach jedem vollen Kilometer bleibt; der Lautsprecher stellt beides stumm (`runTeilHinweis`, js/16-lauf.js; Einheitstest 129/129).
+
 ## 2026-11-22 · Run-Dock auf Rad: „Eigene Fahrt“ (Fassung 2026-11-22-8)
 
 - Im Rad-Modus heißt die Zielkachel im Run-Dock „Eigene Fahrt“ (EN „Own ride“) statt „Eigener Lauf“; Laufen unverändert (`runEigenRad` in texte.js, `js/16-lauf.js`).
