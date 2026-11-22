@@ -5,7 +5,7 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 
 ## 2026-11-22 · Run: „Dong Dong“ statt Sprache zwischen den Kilometern (Fassung 2026-11-22-10)
 
-- Der Hinweis zwischen den Kilometern ist jetzt ein **warmer Doppelton** (zweimal „Dong“, Klangschale 294 Hz) statt Sprache: alle 100 m wird das Tempo der letzten 100 m geprüft, und sobald es **mehr als 5 s/km** über der Pace-Vorgabe liegt, klingt der Ton; bei „im Plan“ oder schneller bleibt es still (, , js/16-lauf.js). Keine Ruhezeit mehr zwischen den Tönen, solange man zu langsam bleibt. Nach jedem vollen Kilometer bleibt die Ansage mit der Sekundenabweichung. Der Lautsprecher oben schaltet auch den Ton aus.
+- Der Hinweis zwischen den Kilometern ist jetzt ein **warmer Doppelton** (zweimal „Dong“, Klangschale 294 Hz) statt Sprache: alle 100 m wird das Tempo der letzten 100 m geprüft, und sobald es **mehr als 5 s/km** über der Pace-Vorgabe liegt, klingt der Ton; bei „im Plan“ oder schneller bleibt es still (runTeilDong, RUN_TEIL_TOL in js/16-lauf.js). Keine Ruhezeit mehr zwischen den Tönen, solange man zu langsam bleibt. Nach jedem vollen Kilometer bleibt die Ansage mit der Sekundenabweichung. Der Lautsprecher oben schaltet auch den Ton aus.
 
 ## 2026-11-22 · Run: Hinweis „zu langsam“ schon nach 100 m (Fassung 2026-11-22-9)
 
