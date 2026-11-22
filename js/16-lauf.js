@@ -226,25 +226,20 @@ function runPaceHinweis(r, k){
   return de ? n+" Sekunden schneller als geplant." : n+" seconds faster than planned.";
 }
 /* Zwischen den Kilometern (nur bei Pace-Vorgabe, nur zu Fuß, nur wenn zu langsam): alle 100 m wird das Tempo der letzten 100 m mit der Vorgabe verglichen.
-   Liegt es mehr als 12 s/km darüber, kommt ein kurzer Hinweis; danach ruht er 200 m, damit es nicht nervt. Volle Kilometer meldet runPaceHinweis. */
-var RUN_TEIL_TOL = 12;
+   Liegt es mehr als 5 s/km darüber, klingt zweimal ein warmer „Dong Dong“ (Klangschale, keine Sprache); bei „im Plan“ oder schneller bleibt es still.
+   Volle Kilometer meldet runPaceHinweis per Ansage. Der Lautsprecher oben (stumm) schaltet auch den Ton aus. */
+var RUN_TEIL_TOL = 5;
+function runTeilDong(){ playNotes([bowlHit(294, 0, .85, 2200), bowlHit(294, 700, .85, 2800)]); }
 function runTeilHinweis(r, vor, nun){
   var ziel = r.ziel && r.ziel.pace, c;
   while(Math.floor(r.dist/100) > (r.n100 || 0)){
     c = (r.n100 || 0) + 1; r.n100 = c;
     var anteil = (c*100 - vor)/(r.dist - vor), tc = r.tZ + anteil*(nun - r.tZ), seg = (tc - (r.t100 || 0))/1000*10;   // Sekunden je km der letzten 100 m
     r.t100 = tc;
-    if(!ziel || r.art === "rad" || r.stumm || c % 10 === 0 || c < 2 || c < (r.hinweisAb || 0)) continue;
-    var diff = Math.round(seg - ziel);
-    if(diff > RUN_TEIL_TOL){
-      r.hinweisAb = c + 3;   // frühestens 200 m später wieder
-      var txt = currentLang() !== "en" ? "Zu langsam, "+diff+" Sekunden pro Kilometer über dem Ziel." : "Too slow, "+diff+" seconds per kilometre over target.";
-      (r.gesagt || (r.gesagt = [])).push(txt);
-      runSag(txt);
-    }
+    if(!ziel || r.art === "rad" || r.stumm || c % 10 === 0 || c < 2) continue;
+    if(Math.round(seg - ziel) > RUN_TEIL_TOL) runTeilDong();
   }
-}
-function runAnsage(k){
+}function runAnsage(k){
   var r = run, e = runAnsageEinst();
   if(!r || r.stumm) return;
   var extra = runPaceHinweis(r, k), regulaer = e.every && k % e.every === 0;
