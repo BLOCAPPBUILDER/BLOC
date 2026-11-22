@@ -383,6 +383,8 @@ function fmtUhr(ms){
   var s = Math.max(0, Math.floor(ms/1000)), h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = s%60;
   return (h ? h+":"+(m<10?"0":"")+m : m)+":"+(x<10?"0":"")+x;
 }
+/* Test 16, F: Pace und Kilometerzeiten runden kaufmännisch wie die Ansage; die laufende Uhr bleibt bei fmtUhr */
+function fmtUhrRund(ms){ return fmtUhr(Math.round(ms/1000)*1000); }
 function fmtTime(totalSec){
   totalSec = Math.max(0, Math.round(totalSec));
   var m = Math.floor(totalSec/60), s = totalSec%60;

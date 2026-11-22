@@ -22,6 +22,15 @@ Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fa
 - Entfernt, weil nirgends mehr angezeigt: `neu-kopf-hell-meer.jpg`, `neu-kopf-hell.jpg`, `neu-run-bg.jpg`, `start-halle.jpg` (auch aus `sw.js`).
 - Noch ohne Einzelnachweis: `neu-p-studio-hantelreihe.jpg`.
 
+## 2026-11-22 · Test 16: Termine, sanftes Cardio, Laufplan, Varianten (Fassung 2026-11-22-17)
+
+- **A:** Abgebrochener Termin bleibt offen, nur der passende BLOC übernimmt ihn.
+- **I/J/K:** Sanftes Cardio ohne Abdruck und Stufe, zügiges Gehen als Standard, Zirkel aus vorhandenen Übungen (keine neuen Übungen). Rücken ohne Drehübungen, Einstieg höchstens auf den ersten zwei Kettenstufen.
+- **B:** Laufdistanz durch Zeit und Pace begrenzt, kein Sprung nach der Leichtwoche.
+- **H:** Ketten neu, Variante bei Kraft/Muskelaufbau ab 15 Wdh., passend zu den Antworten, sonst konkreter Hinweis.
+- **C/D/E/F:** Englischer Menütext, Negative Split erst ab 1 %, einheitlich „Plan fortsetzen“, Pace einheitlich gerundet.
+- **G:** Alarm- und Boot-Rechte sind im gebauten Manifest nicht enthalten. Verantwortliche Person, Rechtsgrundlagen und Betroffenenrechte bleiben für die Fachperson offen.
+
 ## 2026-11-22 · Test 15, F/G: Kalender-Menü klarer, Gewichtssumme gerundet (Fassung 2026-11-22-13)
 
 - **F:** Kalender-Hinzufügen heißt jetzt „BLOC mit Sätzen“, „Workout aus dem Katalog“, „Eigenes Timer-Workout“ (vorher „BLOC“, „BLOC aus dem Katalog“, „Meine BLOCs“).

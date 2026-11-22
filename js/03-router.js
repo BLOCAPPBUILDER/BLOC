@@ -279,6 +279,7 @@ function render(){
   setTimeout(leistenFarbeAbgleichen, 0);   // nach dem Zeichnen: Statusleiste passend (Satz-Training dunkel, sonst das gewählte Design)
   var parts = parseHash();
   var route = parts[0] || "home";
+  if((route === "home" || route === "training" || route === "kalender") && typeof kalTerminVerlassen === "function") kalTerminVerlassen();
   if(route !== "katalog") builderAuto = null;   // ein nicht ausgelöster Wunsch des Workout-Builders gilt nicht für den nächsten Besuch
   tabLeiste(route);
   if(route==="home" || route==="training"){   // Filter und aufklappbare Bereiche (Air-Filter, Studio-Filter, Studio-Timer) beginnen bei jedem neuen Besuch zugeklappt

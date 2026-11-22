@@ -967,15 +967,20 @@ function bereichsFarbe(){
 }
 /* Nachbarn in den Leichter/Schwerer-Ketten (Daten: LZ_KETTEN in daten.js) */
 function leichterSchwerer(id){
-  for(var i = 0; i < LZ_KETTEN.length; i++){
-    var k = LZ_KETTEN[i], j = k.indexOf(id);
-    if(j < 0) continue;
-    var l = j > 0 ? k[j-1] : null, s = j < k.length-1 ? k[j+1] : null;
-    if(l && !(findExercise(l) && EX_INFO[l])) l = null;
-    if(s && !(findExercise(s) && EX_INFO[s])) s = null;
-    return l || s ? { l:l, s:s } : null;
-  }
-  return null;
+  /* Test 16, H: alle Ketten der Übung; Band-Stufen nur mit Band (eigene Übung mit Band oder Band in den Plan-Antworten), dann haben sie Vorrang */
+  var ich = findExercise(id), a = typeof paAntwortenFuer === "function" ? paAntwortenFuer(id) : null;
+  var mitBand = !!(ich && ich.equip.indexOf("band") > -1) || !!(a && a.ausr.indexOf("band") > -1);
+  function istBand(x){ var e = findExercise(x); return !!e && e.equip.indexOf("band") > -1; }
+  function gut(x){ return !!x && !!findExercise(x) && !!EX_INFO[x] && (mitBand || !istBand(x)); }
+  var ketten = LZ_KETTEN.filter(function(k){ return k.indexOf(id) > -1; });
+  if(mitBand) ketten = ketten.filter(function(k){ return k.some(istBand); }).concat(ketten.filter(function(k){ return !k.some(istBand); }));
+  var l = null, s = null;
+  ketten.forEach(function(k){
+    var j = k.indexOf(id);
+    if(!l && j > 0 && gut(k[j-1])) l = k[j-1];
+    if(!s && j < k.length-1 && gut(k[j+1])) s = k[j+1];
+  });
+  return l || s ? { l:l, s:s } : null;
 }
 /* ---------- Befestigung des Widerstandsbands ----------
    Aufklappbare Karte unter den bewegten Figuren (Info-Fenster und Übungskarte): wo und wie das Band befestigt wird - eine kleine Skizze, die Schritte
