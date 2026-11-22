@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-22 · Bildnachweis vollständig (Fassung 2026-11-22-18)
+
+- `quellen.html` nennt jetzt für alle 15 Fotos Urheber und Pexels-Link. Neu recherchiert: `bereich-run.jpg`, `neu-freiluft.jpg`, `neu-p-mobility-sitz.jpg`, `neu-h-brust-2.jpg`, `neu-hell-hintergrund.jpg`.
+
 ## 2026-11-22 · Web-Version auf Stand der App (Fassung 2026-11-22-16)
 
 - Die Änderungen aus den Fassungen -12 und -13 (Test 15) sind jetzt auch auf `main` und damit in der Web-Version.
