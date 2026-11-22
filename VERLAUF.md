@@ -3,6 +3,12 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-22 · Läufe: Speicher geschont, bei vollem Speicher ehrliche Meldung (Fassung 2026-11-22-11)
+
+- **Routen ausdünnen:** Beim Speichern eines Laufs werden die Routenpunkte mit Douglas-Peucker (2,5 m) ausgedünnt (`runAusduennen`, js/16-lauf.js): Geraden bestehen nur noch aus Anfang und Ende, Kurven und Ecken bleiben; das spart gut 80 % Speicher pro Lauf. Bereits gespeicherte Läufe werden einmal beim Start ebenso schlanker gemacht (`settings.runSchlank`).
+- **Voller Speicher:** `runSpeichern` prüft jetzt das Ergebnis von `save()`. Klappt es nicht, werden ältere Routen stärker ausgedünnt (8 m) und es wird noch einmal versucht; scheitert es weiter, wird der Lauf **nicht** als gespeichert gemeldet, sondern zurückgenommen, die Meldung „Speicher voll – der Lauf wurde nicht gespeichert“ erscheint, und die Route kommt als GPX-Datei (`runSpeicherVoll`). Einheitstest 131/131 (zwei neue Prüfungen).
+- Offen: Umzug der Routen in IndexedDB (nur nötig, wenn trotz Ausdünnen der Speicher knapp wird).
+
 ## 2026-11-22 · Run: „Dong Dong“ statt Sprache zwischen den Kilometern (Fassung 2026-11-22-10)
 
 - Der Hinweis zwischen den Kilometern ist jetzt ein **warmer Doppelton** (zweimal „Dong“, Klangschale 294 Hz) statt Sprache: alle 100 m wird das Tempo der letzten 100 m geprüft, und sobald es **mehr als 5 s/km** über der Pace-Vorgabe liegt, klingt der Ton; bei „im Plan“ oder schneller bleibt es still (runTeilDong, RUN_TEIL_TOL in js/16-lauf.js). Keine Ruhezeit mehr zwischen den Tönen, solange man zu langsam bleibt. Nach jedem vollen Kilometer bleibt die Ansage mit der Sekundenabweichung. Der Lautsprecher oben schaltet auch den Ton aus.
