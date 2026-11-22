@@ -457,7 +457,7 @@ function runEigenerLaufHTML(){
   var z = runZielEinst(), rad = runArt() === "rad", liste = runWorkouts().slice().sort(function(a, b){ return b.at - a.at; });
   function chip(attr, wert, an, text){ return '<button type="button" class="kp-chip'+(an ? ' an' : '')+'" data-'+attr+'="'+wert+'" aria-pressed="'+an+'">'+esc(text)+'</button>'; }
   /* einklappbar: die Zeile oben nennt Titel und aktuelle Strecke, der Rest steht darunter (offen/zu merkt sich runKlapp bis zum Schließen der App) */
-  return '<details class="card run-eigen run-klapp'+(z.km > 0 ? ' rk-an' : '')+'" data-k="eigen"'+(runKlapp.eigen ? ' open' : '')+'><summary class="kp-titel run-ziel-kopf"><i class="rk-ico" aria-hidden="true">'+svgIcon(RK_ICO.eigen)+'</i><span class="rk-text">'+esc(t("runEigen"))+'<small id="run-vorschau">'+esc(runVorschauText(z.km, z.pace, rad))+'</small></span><b id="run-ziel-wert">'+esc(runZielText(z.km, rad))+'</b><span class="tpl-chev" aria-hidden="true">&#9662;</span></summary>'+
+  return '<details class="card run-eigen run-klapp'+(z.km > 0 ? ' rk-an' : '')+'" data-k="eigen"'+(runKlapp.eigen ? ' open' : '')+'><summary class="kp-titel run-ziel-kopf"><i class="rk-ico" aria-hidden="true">'+svgIcon(RK_ICO.eigen)+'</i><span class="rk-text">'+esc(t(rad ? "runEigenRad" : "runEigen"))+'<small id="run-vorschau">'+esc(runVorschauText(z.km, z.pace, rad))+'</small></span><b id="run-ziel-wert">'+esc(runZielText(z.km, rad))+'</b><span class="tpl-chev" aria-hidden="true">&#9662;</span></summary>'+
     '<input type="range" id="run-ziel" min="0" max="'+(rad ? 200 : 42)+'" step="'+(rad ? 5 : 1)+'" value="'+runReglerVonKm(z.km, rad)+'" aria-label="'+esc(t("runZielKmL"))+'">'+
     '<div class="run-ziel-marken" aria-hidden="true"><span>'+esc(t("runZielFrei"))+'</span>'+(rad ? '<span>50</span><span>100</span><span>200</span>' : '<span>10</span><span>21</span><span>42</span>')+'</div>'+
     (z.km && !rad ? '<div class="kp-titel run-ziel-kopf" style="margin-top:12px"><span>'+esc(t("runPaceVorgabe"))+'</span><b id="run-pace-wert">'+esc(runPaceText(z.pace))+'</b></div>'+
@@ -479,7 +479,7 @@ function runHeroRechtsHTML(runs, rad){
 /* Daumen-Dock (2026-11-22, Kevin): die drei Einstellungen als Kacheln, jede öffnet ihre Karte direkt über dem Dock */
 function runKachelnHTML(){
   var z = runZielEinst(), rad = runArt() === "rad", iv = runIvEinst(), e = runAnsageEinst();
-  var l = [["eigen", t("runEigen"), runZielText(z.km, rad)]];
+  var l = [["eigen", t(rad ? "runEigenRad" : "runEigen"), runZielText(z.km, rad)]];
   if(!rad) l.push(["iv", t("runIvAn"), iv.an ? fmtUhr(iv.lauf*1000)+" / "+fmtUhr(iv.geh*1000) : t("runAus")]);
   l.push(["ans", t("runAnsagen"), e.every ? t("runAlleKm", { n:e.every }) : t("runAus")]);
   return '<div class="run-kacheln">'+l.map(function(k){ var auf = !!runKlapp[k[0]];
