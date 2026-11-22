@@ -23,7 +23,7 @@ function buildSteps(w){
     }
     if(i < w.items.length-1 && (it.restAfterSec>0 || it.nextBloc)){
       var nb = findBlock(w.items[i+1].blockId);
-      steps.push({ phase:"blockrest", label:"Blockpause", titel: it.nextBloc ? t("blocBereit", { name:it.nextBloc }) : "", blockName: nb?nb.name:"", duration:it.nextBloc ? Math.max(it.restAfterSec, 30) : it.restAfterSec, ex: nb && nb.ex || "", kg: "", exNr:exNr+1 });
+      steps.push({ phase:"blockrest", label:t("phBlockrest"), titel: it.nextBloc ? t("blocBereit", { name:it.nextBloc }) : "", blockName: nb?nb.name:"", duration:it.nextBloc ? Math.max(it.restAfterSec, 30) : it.restAfterSec, ex: nb && nb.ex || "", kg: "", exNr:exNr+1 });
     }
   }
   steps.push({ phase:"done", label:"Fertig", duration:0, exNr:exNr+1 });

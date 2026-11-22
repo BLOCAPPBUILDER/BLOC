@@ -15,6 +15,20 @@ Dieses Dokument beschreibt den **aktuellen Stand**. Die Geschichte der Änderung
 - **Keine Build-Schritte:** Vanilla-JavaScript, die Dateien werden so ausgeliefert, wie sie im Repository liegen.
 - **Deutsche Bezeichner und Kommentare**, Speicher in `localStorage`.
 
+## Begriffe
+
+**Übung → BLOC → Training → Trainingsplan** (EN: Exercise → BLOC → Session → Training plan, kurz: plan).
+
+- **Übung:** eine einzelne Bewegung.
+- **BLOC:** Übungen, die zusammengehören, mit Sätzen oder mit Timer. Ein Timer-Abschnitt wie „6 × 30 s“ heißt **Intervall**.
+- **Training:** was man an einem Termin macht: ein oder mehrere BLOCs, optional ein Run. Ein Training kann mehrere Wochentage haben und seine Einträge reihum durchlaufen.
+- **Trainingsplan (Plan):** mehrere Trainings über Wochen.
+- **Workout:** nur der Name des Bereichs neben Run und Mobility & Stretch.
+
+Interne Namen (`programme`, `stPlaene`, `plan`, `workouts`, `blocks`) bleiben unverändert. Ältere Abschnitte unten nennen teils noch die früheren Wörter.
+
+**Einstiege:** Nur für heute: Überrasch mich, BLOC bauen (Mit Sätzen · Mit Timer). Für mehrere Wochen: Plan erstellen lassen, Plan selbst bauen.
+
 ## Aufbau der App
 
 **Unten eine Leiste** (nur auf den Hauptseiten): **Start · Suche · Kalender · Statistik · Einstellungen** (im Aussehen New: **Heute · Tools · Fortschritt · Kalender** mit rundem Hauptknopf, siehe Designs).
@@ -79,6 +93,8 @@ Design C60 (Kassetten-Look mit Walzenzähler) gibt es nicht mehr; gespeicherte S
 - **Workouts teilen:** als Link (`#import/…`) oder in der App als Datei `bloc-workout-….json` (Teilen-Menü). Öffnen über Einstellungen, Daten, „Workout-Datei öffnen“ (`workoutDateiOeffnen`, `js/13-teilen-editor.js`); gelesen wird nur der Code, geprüft wird wie beim Link. Es gibt bewusst keinen Eingang von außen (keine Deep Links).
 - **Pläne und Übungen teilen (2026-11-04):** TrainingsBLOC (`programmTeilen`), BLOC (`planTeilen`) und eigene Übung (`uebungTeilen`) gehen in der App und im Browser als Datei (`bloc-trainingsplan-….json`, `bloc-plan-….json`, `bloc-uebung-….json`, JSON mit `bloc: "programm" | "plan" | "uebung"`, gemeinsamer Ausgang `dateiTeilenBloc`). „Workout- oder Plan-Datei öffnen“ erkennt die Art, prüft alles (`customSauber`, `planAusShare`, `draftFromShare`) und legt erst nach einem Tipp an. Keine Gewichte, kein Verlauf in der Datei.
 - **Content-Security-Policy:** im Web in `index.html` (nur eigene Quellen, keine Inline-Skripte), in der App beim Bauen eingefügt (`scripts/www-bauen.mjs`, mit `'unsafe-inline'` für Skripte, weil Capacitor seine Brücke inline einfügt). Neue externe Quellen (Schriften, Bilder, Verbindungen) werden dadurch blockiert.
+- **Alle Daten löschen** (`alleDatenLoeschen`, `js/14-einfuehrung-sicherung.js`) entfernt alle `sporttimer-`-Schlüssel, den Schnappschuss und in der App die BLOC-Dateien im Cache. Neue Speicherorte dort ergänzen.
+- Offene Rechtsfragen vor einer Veröffentlichung: [docs/DATENSCHUTZ-PRUEFUNG.md](docs/DATENSCHUTZ-PRUEFUNG.md).
 - Datenschutzerklärung: [privacy.html](privacy.html) (bei neuen Funktionen mit Daten, Berechtigungen oder Verbindungen mit aktualisieren; Stand-Datum oben nachziehen).
 
 ## Dateien

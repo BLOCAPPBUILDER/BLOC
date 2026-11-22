@@ -284,6 +284,13 @@ function katKatalogOeffnen(){
   s.katTab = "katalog"; s.katAbt = "workouts"; stPlanAktiv = null; stPlanBauen = false; katOffen = {}; save();
   go("#katalog"); renderKatalog(); window.scrollTo(0, 0);
 }
+/* „BLOC bauen“: Auswahl Mit Sätzen (bisheriger Plan-Bau) · Mit Timer (bisheriger Timer-Baukasten). Auch von Heute aus. */
+function bauWahlOeffnen(){
+  openActionSheet(t("bauWahlTitel"), [
+    { ico:HOME_ICON.katalog, label:t("bauMitSaetzen"), fn:function(){ katTabSetzen("baukasten"); go("#katalog"); katPlanNeu(); } },
+    { ico:HOME_ICON.intervall, label:t("bauMitTimer"), fn:function(){ go("#mybuild/new"); } }
+  ]);
+}
 /* ---------- Baukasten: Überrasch mich, selber bauen oder aus dem Katalog ---------- */
 function renderKatalogBaukasten(){
   var hw = hinweise("bau2", ["katBauHint"]);
@@ -295,6 +302,10 @@ function renderKatalogBaukasten(){
       '<span class="bk-wuerfel" aria-hidden="true"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" rx="20"/><circle cx="30" cy="30" r="7"/><circle cx="70" cy="30" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="30" cy="70" r="7"/><circle cx="70" cy="70" r="7"/></svg></span>'+
       '<span class="bk-pfeil">'+ICON_CHEV+'</span></button>'+
     '<button type="button" class="bau-karte" data-bauselber><span class="bk-ico">'+ICON_PLUS+'</span><span class="bk-t"><b>'+esc(t("bauSelber"))+'</b><small>'+esc(t("bauSelberSub"))+'</small></span><span class="bk-pfeil">'+ICON_CHEV+'</span></button>'+
+    '<div class="bau-schritt">'+esc(t("bauWochen"))+'</div>'+
+    '<button type="button" class="bau-karte" data-bauplanassi><span class="bk-ico">'+svgIcon(HOME_ICON.plan)+'</span><span class="bk-t"><b>'+esc(t("planLassen"))+'</b><small>'+esc(t("planLassenSub"))+'</small></span><span class="bk-pfeil">'+ICON_CHEV+'</span></button>'+
+    '<button type="button" class="bau-karte" data-bauplanselbst><span class="bk-ico">'+ICON_PLUS+'</span><span class="bk-t"><b>'+esc(t("planSelbst"))+'</b><small>'+esc(t("planSelbstSub"))+'</small></span><span class="bk-pfeil">'+ICON_CHEV+'</span></button>'+
+    '<div class="bau-schritt">'+esc(t("bauMehr"))+'</div>'+
     '<button type="button" class="bau-karte" data-baukatalog><span class="bk-ico">'+svgIcon(HOME_ICON.katalog)+'</span><span class="bk-t"><b>'+esc(t("bauKatalog"))+'</b><small>'+esc(t("bauKatalogSub"))+'</small></span><span class="bk-pfeil">'+ICON_CHEV+'</span></button>'+
     '<button type="button" class="bau-karte bau-eigen" data-baueigen><span class="bk-ico">'+ICON_PLUS+'</span><span class="bk-t"><b>'+esc(t("bauEigene"))+'</b><small>'+esc(t("bauEigeneSub"))+'</small></span><span class="bk-pfeil">'+ICON_CHEV+'</span></button>'+
     '<div style="height:40px"></div>';
@@ -305,10 +316,9 @@ function renderKatalogBaukasten(){
   app.querySelector("[data-surprise]").addEventListener("click", function(){ openSurprise(); });
   // „Selber bauen“ fragt nichts mehr nach: die Art (Schritt 1) steht schon, es geht gleich in die Übungsauswahl (Trainingsart, Ausrüstung und Muskel im Filter) -
   // Workout mit Timer oder Plan mit Sätzen, Gewicht und Pausen
-  app.querySelector("[data-bauselber]").addEventListener("click", function(){
-    go("#katalog");
-    katPlanNeu();   // immer der Plan: Übungen wählen, dann je Übung Satz für Satz oder Timer (die Art oben ist die Voreinstellung)
-  });
+  app.querySelector("[data-bauselber]").addEventListener("click", bauWahlOeffnen);
+  app.querySelector("[data-bauplanassi]").addEventListener("click", function(){ paOeffnen(null, null); });
+  app.querySelector("[data-bauplanselbst]").addEventListener("click", function(){ go("#koerper"); });
   if(builderAuto){   // Workout-Builder auf Heute (Aussehen New): gleich Überrasch mich bzw. Selber bauen auslösen
     var baZiel = app.querySelector(builderAuto === "zufall" ? "[data-surprise]" : "[data-bauselber]");
     builderAuto = null;

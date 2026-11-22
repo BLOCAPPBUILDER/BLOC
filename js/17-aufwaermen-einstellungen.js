@@ -476,10 +476,16 @@ function renderSettings(){
     reader.readAsText(file);
   });
   app.querySelector("[data-reset]").addEventListener("click", function(){
-    confirmSheet(t("deleteAllQ"), t("deleteAllText"), t("deleteAllBtn"), function(){
-      state.db = frischDB(); save(); syncCustomEx(); applyTheme(); applyLang(); applySpace();
-      go("#home");
-    });
+    function loeschen(){
+      alleDatenLoeschen().then(function(fehlt){
+        syncCustomEx(); applyTheme(); applyLang(); applySpace();
+        go("#home");
+        if(!fehlt.length){ showToast(t("deleteAllOk")); return; }
+        var was = fehlt.map(function(k){ return t("deleteAllFehl_"+k); }).join(", ");
+        confirmSheet(t("deleteAllFehlT"), t("deleteAllFehlText", { x:was }), t("deleteAllNochmal"), loeschen);
+      });
+    }
+    confirmSheet(t("deleteAllQ"), t("deleteAllText"), t("deleteAllBtn"), loeschen);
   });
 }
 function toggleRow(id, label, desc, checked){

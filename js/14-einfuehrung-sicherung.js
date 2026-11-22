@@ -40,7 +40,7 @@ function introProfilSpeichern(wurzel){
 function introSchaubildHTML(){
   function bloc(titel, zeilen, cls){ return '<div class="sb-bloc'+(cls ? ' '+cls : '')+'"><b>'+esc(titel)+'</b>'+zeilen.map(function(n){ return '<span>'+esc(n)+'</span>'; }).join("")+'</div>'; }
   var a = [t("inExKniebeuge"), t("inExBankdruecken"), t("inExKreuzheben")], b = [t("inExKlimmzug"), t("inExRudern"), t("inExSchulterdruecken")], run = [t("inRunKm"), t("inRunLocker")];
-  function tag(nr, inhalt, cls){ return '<div class="sb-tag'+(cls ? ' '+cls : '')+'"><i class="sb-tb">TrainingsBLOC '+nr+'</i>'+inhalt+'</div>'; }
+  function tag(nr, inhalt, cls){ return '<div class="sb-tag'+(cls ? ' '+cls : '')+'"><i class="sb-tb">'+esc(t("progName", { n:nr }))+'</i>'+inhalt+'</div>'; }
   var leer = bloc("BLOC 1", ["…"], "sb-leer")+bloc("BLOC 2", ["…"], "sb-leer")+'<div class="sb-bloc sb-rest"><b>…</b></div>';
   return '<div class="intro-schaubild" role="img" aria-label="'+esc(t("inSchaubildAlt"))+'">'+
     '<div class="sb-plan">'+esc(t("inDPlan"))+'</div>'+
@@ -131,7 +131,7 @@ function sayEN(text){
 function announceStep(idx){
   if(!voiceOn()) return;
   var steps = playerState.steps, cur = steps[idx], nx = steps[idx+1];
-  if(cur.phase==="done"){ sayEN("Workout complete. Well done!"); return; }
+  if(cur.phase==="done"){ sayEN("BLOC complete. Well done!"); return; }
   if(!nx || nx.phase!=="work") return;
   var ex = findExercise(nx.ex), name = ex ? ex.name.en : nx.label;
   var side = nx.side ? (nx.side==="left" ? " Left side." : " Right side.") : "";
@@ -239,6 +239,7 @@ function bindBackupTip(){
    Klappt das Speichern nicht (voll, gesperrt), wird still beim nächsten Start neu versucht. */
 var SNAP_TAGE = 7, SNAP_DB = "bloc-sicherung", SNAP_STORE = "stand", SNAP_KEY = "schnappschuss";
 var snapZeit = null;   // null = noch nicht nachgesehen, 0 = keiner vorhanden, sonst Zeitpunkt (ms)
+var snapSperre = false;   // true, solange „Alle Daten löschen“ läuft: ein gerade offener Schreibvorgang darf den Schnappschuss nicht neu anlegen
 function snapOeffnen(){
   return new Promise(function(ok, fehler){
     if(!window.indexedDB){ fehler(); return; }
@@ -264,6 +265,7 @@ function snapLesen(){
 function snapSchreiben(wert){
   return snapOeffnen().then(function(db){
     return new Promise(function(ok, fehler){
+      if(snapSperre){ ok(false); return; }
       try{
         var tx = db.transaction(SNAP_STORE, "readwrite");
         tx.objectStore(SNAP_STORE).put(wert, SNAP_KEY);
@@ -273,19 +275,62 @@ function snapSchreiben(wert){
     });
   });
 }
+/* Nur für das bestätigte „Alle Daten löschen“: entfernt den Eintrag (kein deleteDatabase, das würde an den offenen Verbindungen von snapOeffnen hängen) */
+function snapLoeschen(){
+  if(!window.indexedDB) return Promise.resolve();
+  return snapOeffnen().then(function(db){
+    return new Promise(function(ok, fehler){
+      function zu(){ try{ db.close(); }catch(e){} }
+      try{
+        var tx = db.transaction(SNAP_STORE, "readwrite");
+        tx.objectStore(SNAP_STORE).delete(SNAP_KEY);
+        tx.oncomplete = function(){ zu(); ok(); };
+        tx.onerror = tx.onabort = function(){ zu(); fehler(tx.error); };
+      }catch(e){ zu(); fehler(e); }
+    });
+  });
+}
+/* Löscht alle App-Daten auf dem Gerät: Schnappschuss, ausgegebene Dateien im App-Cache und alle localStorage-Schlüssel der App (Hauptdaten, „-defekt“-Kopie, Hinweise).
+   Liefert die Liste dessen, was nicht gelöscht werden konnte („snap“, „cache“, „speicher“); leer = alles weg. */
+function alleDatenLoeschen(){
+  var fehlt = [];
+  snapSperre = true;
+  return snapLoeschen().catch(function(){ fehlt.push("snap"); }).then(nativCacheLeeren).then(function(ok){
+    if(!ok) fehlt.push("cache");
+    try{
+      var namen = [];
+      for(var i = 0; i < localStorage.length; i++){ var k = localStorage.key(i); if(k && k.indexOf("sporttimer-") === 0) namen.push(k); }
+      namen.forEach(function(k){ localStorage.removeItem(k); });
+      if(namen.some(function(k){ return localStorage.getItem(k) !== null; })) fehlt.push("speicher");
+    }catch(e){ fehlt.push("speicher"); }
+    bauEntwurf = null; stPlanAktiv = null; stPlanBauen = false; stPlanNeuId = null; pgNachBau = null; progKontext = null; coverDraft = null;
+    state.db = frischDB(); save();
+    DB_GERETTET = false;
+    snapZeit = fehlt.indexOf("snap") > -1 ? null : 0;
+    snapSperre = false;
+    return fehlt;
+  });
+}
 /* Beim Start: älter als 7 Tage (oder keiner) -> neuen ablegen. Nur wenn die gespeicherten Daten
    lesbar sind - und ein leerer Stand überschreibt nie einen Schnappschuss mit eigenen Inhalten
    (sonst wäre nach versehentlichem Löschen eine Woche später auch die Kopie weg). */
+/* Gibt es überhaupt etwas zu sichern? Auch Läufe, Körperdaten, Name, Protein und Verlauf zählen. Ein frischer Stand (z. B. nach „Alle Daten löschen“) legt keinen ersten Schnappschuss an. */
+function snapLohnt(db){
+  var s = db.settings || {};
+  function n(x){ return x && typeof x === "object" ? Object.keys(x).length : 0; }
+  return hatEigenes(db) || !!s.name || n(s.runs) > 0 || n(s.koerper) > 0 || n(s.protein && s.protein.tage) > 0 || n(s.statW) > 0 || n(db.history) > 0;
+}
 function snapPruefen(){
   var lesbar = false;
   try{ var roh = localStorage.getItem(DB_KEY); lesbar = !!roh && !!JSON.parse(roh); }catch(e){}
-  snapLesen().then(function(alt){
+  return snapLesen().then(function(alt){
     snapZeit = alt ? alt.zeit : 0;
     if(!lesbar) return;
+    if(!alt && !snapLohnt(state.db)) return;
     if(alt && Date.now() - alt.zeit < SNAP_TAGE*86400000) return;
     if(alt && hatEigenes(alt.daten) && !hatEigenes(state.db)) return;
     var neu = { zeit:Date.now(), daten:JSON.parse(JSON.stringify(state.db)) };
-    return snapSchreiben(neu).then(function(){ snapZeit = neu.zeit; });
+    return snapSchreiben(neu).then(function(w){ if(w !== false) snapZeit = neu.zeit; });
   }).catch(function(){}).then(snapZeileAktualisieren);
 }
 window.addEventListener("load", snapPruefen);
