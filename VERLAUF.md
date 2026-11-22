@@ -3,6 +3,12 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-22 · Bildnachweis je Foto, ungenutzte Bilder entfernt (Fassung 2026-11-22-14)
+
+- `quellen.html` nennt für elf Pexels-Fotos Motiv, Urheber, Link, Datei und Lizenz (Deutsch und Englisch).
+- Entfernt, weil nirgends mehr angezeigt: `neu-kopf-hell-meer.jpg`, `neu-kopf-hell.jpg`, `neu-run-bg.jpg`, `start-halle.jpg` (auch aus `sw.js`).
+- Noch ohne Einzelnachweis: `neu-p-studio-hantelreihe.jpg`.
+
 ## 2026-11-22 · Läufe: Speicher geschont, bei vollem Speicher ehrliche Meldung (Fassung 2026-11-22-11)
 
 - **Routen ausdünnen:** Beim Speichern eines Laufs werden die Routenpunkte mit Douglas-Peucker (2,5 m) ausgedünnt (`runAusduennen`, js/16-lauf.js): Geraden bestehen nur noch aus Anfang und Ende, Kurven und Ecken bleiben; das spart gut 80 % Speicher pro Lauf. Bereits gespeicherte Läufe werden einmal beim Start ebenso schlanker gemacht (`settings.runSchlank`).
