@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-23 · THERABAND-Link ersetzt (Fassung 2026-11-23-2)
+
+- Quelle [12] zeigt auf die aktuelle Seite „Care & Safety“; die alte Adresse meldete 404.
+
 ## 2026-11-23 · BLOC bauen in zwei Seiten, eine BLOC-Liste (Fassung 2026-11-23-1)
 
 - **Seite 1:** 1 Name mit Muskelübersicht, 2 Wie möchtest du trainieren? (Filter 2.1 bis 2.4, Übungen), 3 Dein Ablauf. Knopf „Weiter: Werte einstellen“.
