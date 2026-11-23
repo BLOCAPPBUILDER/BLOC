@@ -1741,6 +1741,18 @@
       var h = W.studioProg("backpack-row"); wahr(h && h.art === "stufeHinweis" && h.saetze === 4 && h.rucksack, "konkreter Hinweis: " + JSON.stringify(h));
     } finally { s.studio = alt; s.ziel = altZ; }
   });
+  test("BLOC bauen 2026-11-23: Zeiten für alle, einzelne Übung bleibt, Katalog-BLOC bleibt ohne Stern", function () {
+    var s = W.state.db.settings, alt = { studio:s.studio, pl:s.stPlaene, favs:s.favs, kat:s.blocKatalog, aktiv:W.stPlanAktiv };
+    try {
+      var p = { id:"p-z", name:"Z", ids:["push-ups", "air-squats"], startArt:"timer", updatedAt:1 };
+      s.studio = { "air-squats":{ log:[], einheit:"wdh" } }; s.stPlaene = [p]; s.favs = []; s.blocKatalog = []; W.stPlanAktiv = p.id;
+      W.planZeitAnwenden(p, { reps:4, work:35, rest:20 });
+      var a = W.studioTimer("push-ups"); gleich([a.reps, a.work, a.rest], [4, 35, 20], "Zeit-Übung übernimmt die Werte");
+      gleich(W.studioEinheit("air-squats"), "wdh", "Wiederholungs-Übung bleibt");
+      W.toggleFav("lib:band-full-body"); wahr(W.blocKatalogListe().indexOf("band-full-body") > -1, "Stern nimmt den BLOC auf");
+      W.toggleFav("lib:band-full-body"); wahr(!W.isFav("lib:band-full-body") && W.blocKatalogListe().indexOf("band-full-body") > -1, "ohne Stern bleibt er in der Liste");
+    } finally { s.studio = alt.studio; s.stPlaene = alt.pl; s.favs = alt.favs; if(alt.kat === undefined) delete s.blocKatalog; else s.blocKatalog = alt.kat; W.stPlanAktiv = alt.aktiv; }
+  });
   test("Test 13 H: Wiedereinstieg nach Pausenlänge gestaffelt", function () {
     t10(function (s) {
       var n = Date.now(), tag = 86400000; s.stPlaene = [];

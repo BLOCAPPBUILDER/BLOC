@@ -1006,11 +1006,13 @@ function myWoCard(mw, exs, mains, dur){
     '</div><div class="card-aside"><div class="card-acts">'+favBtn("my:"+mw.id)+'<button type="button" class="fav-btn my-edit" data-myedit="'+mw.id+'" title="'+t("edit")+'" aria-label="'+t("edit")+'">&#9998;</button>'+trashBtn("my", mw.id, mw.name)+'</div></div></div>';
 }
 /* Menü eines fertigen Workouts (⋯ und langes Drücken): unter „Meine“ speichern, ausblenden. ws: aus Mobility & Stretch */
-function woMenue(lw, neu, ws){
-  openActionSheet(tplText(lw.name), [
+function woMenue(lw, neu, ws, entfernen){
+  var l = [
     { ico:ICON_COPY, label:t("adoptMine"), fn:function(){ adoptLibWorkout(lw, ws); } },
     { ico:ICON_EYE_OFF, label:t("hideShort"), fn:function(){ libHide("wo:"+lw.id); showToast(t("hiddenToast")); neu(); } }
-  ]);
+  ];
+  if(entfernen) l.push({ ico:P_TRASH, label:t("blocAusListe"), danger:true, fn:entfernen });   // unter BLOCs: von Hand aus der eigenen Liste nehmen
+  openActionSheet(tplText(lw.name), l);
 }
 
 /* ============ Läufer-Auswertungen für Fortschritt ============

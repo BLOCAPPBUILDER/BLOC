@@ -121,9 +121,8 @@
     await bis(function () { return $("#st-q") && $$("[data-studio]:not([data-ortfremd])").length > 0; }, 3000, "Übungskatalog");
   }
   async function bauMitSaetzen() {   // „BLOC bauen“ öffnet die Bauseite, Schritt 1 steht oben
-    W.state.db.settings.bauModus = "gewicht";
     klick(await bis(function () { return $("[data-bauselber]"); }, 3000, "BLOC bauen"));
-    await bis(function () { return $('[data-bauart="gewicht"].active') && $$(".bau-nr").length === 3 && $(".plan-sticky-kopf .bau-nr-z"); }, 2000, "Bauseite mit Schritt 1 Mit Sätzen");
+    await bis(function () { return $("[data-plandone]") && !$("[data-bauart]") && $$(".bau-nr").length === 2 && $(".plan-sticky-kopf .bau-nr-z"); }, 2000, "Bauseite: 1 Name, 2 Trainieren, 3 Ablauf");
   }
   async function zuBaukasten(modus) {   // setzt die Wahl im Filter (Trainingsart, Ausrüstung) zurück; modus: "timer" (Standard) oder "gewicht" (Nach Zeit / Nach Sätzen)
     trainSetzen([]);
@@ -780,7 +779,7 @@
       // Nach Sätzen: im Workout-Bau (nicht im Baukasten) wandern dieselben Übungen in einen Plan
       klick('[data-bauart="gewicht"]');
       await bis(function () { return $("[data-plandone]") && $("#plan-name"); }, 3000, "Plan-Bau");
-      pruefe($('[data-bauart="gewicht"].active') && $$("#plan-sticky .wb-mini").length === 2, "Plan: Übungen fehlen oder Schritt 1 steht nicht auf Mit Sätzen: " + $$("#plan-sticky .wb-mini").length);
+      pruefe(!$("[data-bauart]") && $$("#plan-sticky .wb-mini").length === 2, "Plan: Übungen fehlen oder die Frage Zeit/Sätze steht noch da: " + $$("#plan-sticky .wb-mini").length);
       // nur Übungen ohne Eintrag: eine Übung mit gespeicherten Sätzen (Beinpresse aus einem früheren Test) zeigt ihren letzten Satz und darf das
       var ohneLog = $$("[data-planex] .st-sub").filter(function (e) { var en = W.studioEintrag(e.parentNode.getAttribute("data-planex")); return !(en && en.log && en.log.length); });
       pruefe(!ohneLog.some(function (e) { return /\d+ Sätze × \d+/.test(e.textContent); }), "Plan-Kacheln sollen die Voreinstellung „3 Sätze × 12“ nicht zeigen (die trägt man selbst ein): " + $$("[data-planex] .st-sub").map(function (e) { return e.parentNode.getAttribute("data-planex") + "=" + e.textContent; }).join(", "));
@@ -970,16 +969,15 @@
       klick($('.plan-sticky [data-plansel="1"]'));   // Reihenfolge: die zweite Übung (Air Squats) nach vorn schieben
       klick(await bis(function () { return $('[data-planmv="-1"]'); }, 2000, "◀ im Plan"));
       await bis(function () { var n = $$(".plan-sticky .wb-mini-name"); return n.length === 2 && /Squat|Kniebeuge/i.test(n[0].textContent); }, 2000, "Air Squats steht jetzt vorn");
-      W.scrollTo(0, 2500); await warte(250);   // weit nach unten: der Plan bleibt oben stehen
-      var rs = $("#plan-sticky").getBoundingClientRect();
-      pruefe(rs.top >= 0 && rs.top < 160 && W.scrollY > 300, "Der Plan soll beim Scrollen oben stehen bleiben: Abstand " + Math.round(rs.top) + ", gescrollt " + Math.round(W.scrollY));
+      // Punkt 3 „Dein Ablauf“ steht unter Filter und Übungen (2026-11-23)
+      pruefe($('.lib-suche[data-lsw="pl"]').getBoundingClientRect().top < $("#plan-sticky").getBoundingClientRect().top, "Dein Ablauf soll unter Filter und Suche stehen");
       W.scrollTo(0, 0);
       klick("[data-plandone]");
       klick(await bis(function () { return $('[data-planart="timer"]'); }, 3000, "Mit Timer")); await warte(150);
       klick(await bis(function () { return $("[data-planlos]"); }, 3000, "Los geht’s")); await warte(150); if ($("#overlayRoot [data-act]")) klick($("#overlayRoot [data-act]"));
       await bis(function () { return /^#playmy\//.test(W.location.hash) && $("#pl-body"); }, 3000, "Training startet direkt");
       var mw = (JSON.parse(W.localStorage.getItem(KEY)).myWorkouts || []).filter(function (m) { return m.fromPlan; })[0];
-      pruefe(mw && mw.items.length === 2 && mw.items.some(function (i) { return i.ex === "leg-press" && i.work === 40; }), "Workout aus dem Plan: " + JSON.stringify(mw));
+      pruefe(mw && mw.items.length === 2 && mw.items.some(function (i) { return i.ex === "leg-press"; }) && mw.items.every(function (i) { return i.work === mw.items[0].work; }), "Workout aus dem Plan (Zeiten für alle gleich): " + JSON.stringify(mw));
       W.exitPlayer();
     }],
     ["Mobility & Stretch: Meine, Körperregionen, Langdruck", async function () {
@@ -1027,7 +1025,7 @@
       await heim();
       zuWorkout();
       await zuMeine();
-      var ohneWs = daten().myWorkouts.filter(function (m) { return !m.ws; }).length;
+      var ohneWs = daten().myWorkouts.filter(function (m) { return !m.ws && !(m.fromPlan && W.stPlanFind(m.fromPlan)); }).length;   // die Timer-Kopie eines BLOCs steht nicht doppelt in der Liste
       pruefe($$(".my-item").length === ohneWs, "Katalog › Meine zeigt " + $$(".my-item").length + " statt " + ohneWs);
     }],
     ["★ und Mülleimer beim Plan unter Meine", async function () {
@@ -1432,7 +1430,7 @@
       await zuBaukasten("timer");
       await bauMitSaetzen();
       await bis(function () { return $("#plan-name") && $("[data-plandone]"); }, 3000, "Selber bauen (Nach Zeit) führt in den Plan-Bau");
-      pruefe($('[data-bauart="gewicht"].active') && !$("#overlayRoot .sp-sheet"), "Plan-Bau: Schritt 1 oben auf der Seite, kein Fenster");
+      pruefe(!$("[data-bauart]") && !$("#overlayRoot .sp-sheet"), "Plan-Bau fragt Zeit oder Sätze erst auf Seite 2");
       var plN = W.stPlaene().filter(function (x) { return x.entwurf; })[0];
       pruefe(plN && !plN.standard, "Selber bauen setzt keine Voreinstellung (standard) mehr: " + JSON.stringify(plN && plN.standard));
       await trainNur(["studio", "body"]);   // Fitnessstudio und Körpergewicht zugleich (Mehrfachwahl)
@@ -1476,7 +1474,7 @@
       await bauMitSaetzen();
       await bis(function () { return $("#plan-name") && $('[data-planex="air-squats"]'); }, 3000, "Plan-Bau");
       pruefe(suchSichtbar("pl"), "Plan-Bau: das Suchfeld soll dauerhaft sichtbar sein");
-      pruefe(!$('.lib-suche[data-lsw="pl"]').closest(".topbar") && $('.lib-suche[data-lsw="pl"]').getBoundingClientRect().top > $("#plan-sticky").getBoundingClientRect().top, "Plan-Bau: die Suche steht unter dem Ablauf und dem Filter");
+      pruefe(!$('.lib-suche[data-lsw="pl"]').closest(".topbar") && $('.lib-suche[data-lsw="pl"]').getBoundingClientRect().top < $("#plan-sticky").getBoundingClientRect().top, "Plan-Bau: die Suche steht in Punkt 2, über Punkt 3 Dein Ablauf");
       klick('[data-planex="air-squats"]'); klick('[data-planex="leg-press"]');
       klick(await bis(function () { return $("[data-plandone]:not([disabled])"); }, 2000, "Weiter"));
       await bis(function () { return $$(".pz-zeile").length === 2; }, 3000, "Plan-Seite mit zwei Zeilen");
@@ -1737,11 +1735,8 @@
       await bis(function () { return $$(".pz-zeile").length === 1; }, 3000, "Plan-Seite");
       // Meine: drei Abschnitte, Fotos, zuklappbar
       await zuMeine();
-      pruefe($$("details.kat-sek").length === 2 && $$("details.kat-sek[open]").length === 2, "Meine: drei Abschnitte, zugeklappt: " + $$("details.kat-sek").length + " / offen " + $$("details.kat-sek[open]").length);
-      pruefe($('details[data-katsek="saetze"]').open, "Nach Sätzen steht offen");
+      pruefe($$("details.kat-sek").length === 0 && $(".bloc-liste .plan-item"), "BLOCs: eine Liste ohne Nach Zeit / Nach Sätzen");
       pruefe($(".plan-item .ort-thumb img") && /freiluft/.test($(".plan-item .ort-thumb img").getAttribute("src")), "Plan mit Foto des Ortes (Freiluft) erwartet");
-      klick($('details[data-katsek="saetze"] > summary'));
-      pruefe(!$('details[data-katsek="saetze"]').open, "Abschnitt lässt sich zuklappen");
       // Training speichern legt einen noch nicht gespeicherten Plan unter Meine ab und steht dort bei den gespeicherten Trainings
       var entw = { id: "p-entw", name: "Entwurf", ids: ["push-ups"], updatedAt: Date.now(), entwurf: true };
       W.stPlaene().push(entw); W.save();
@@ -1809,7 +1804,7 @@
       W.save();
       await heim();
       klick("[data-herostart]");
-      await bis(function () { return $$("#overlayRoot [data-act]").length === 2; }, 2000, "Auswahl mit beiden heutigen Trainings");
+      await bis(function () { return $$("#overlayRoot [data-act]").length === W.heroHeutige().length && W.heroHeutige().length >= 2; }, 2000, "Auswahl mit den heutigen Trainings");   // der zuvor verschobene Termin kann je nach Wochentag auch heute liegen
       W.document.getElementById("overlayRoot").innerHTML = "";
       var zweiter = W.kalAn(heuteKey).pop(); W.kalEntferne(zweiter.id);
       await heim();

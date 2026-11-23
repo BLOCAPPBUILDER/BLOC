@@ -574,9 +574,9 @@ function renderDraftPage(d, cfg){
         '<div class="fig-grid">'+je[b.id].map(function(ex){ return kachel(ex); }).join("")+'</div>', katOffenStd("b-"+b.id, false),
         gew ? '<span class="kat-n">'+esc(t("katGewaehlt", { n:gew }))+'</span>' : '', je[b.id].every(exIstStudio));
     }).join("");
-    palHTML = (cfg.cover || d.ws ? '<div class="section-title">'+t("wbWaehlen")+'</div>' : bauNrHTML(4, t("wbWaehlen")))+
+    palHTML = '<div class="section-title">'+t("wbWaehlen")+'</div>'+
       bauTrainHTML()+
-      (cfg.cover || !d.ws ? '' : bauArtHTML("timer", false))+
+      (cfg.cover ? '' : bauArtHTML("timer", false))+
       tippZeileHTML("info", "tippInfo")+hw.z(0, "page-hint")+
       airFilterHTML("b", !!s.buildFilterOpen, cat, equip, sort, [["std", t("sortStd")], ["az", "A&ndash;Z"]], palListe.length, true, zonen)+
       suchFeldHTML(buildQuery, "b", "", true)+
@@ -624,7 +624,7 @@ function renderDraftPage(d, cfg){
         coverActs+
         (exs.length ? '<div class="cover-langhinweis">'+esc(t("coverLangHint"))+'</div>' : '')+
       '</div>'
-    : (d.ws ? '' : bauArtKopfHTML("timer")+bauNrHTML(2, t("name")))+'<div class="card"><label for="m-name">'+t("name")+'</label>'+
+    : '<div class="card"><label for="m-name">'+t("name")+'</label>'+
         '<input type="text" id="m-name" value="'+esc(d.name)+'" maxlength="40">'+
         (exs.length ? kkKopfHTML(d.items.map(function(it){ return it.ex; }), !!d.ws) : '')+'</div>';
 
@@ -635,10 +635,10 @@ function renderDraftPage(d, cfg){
       (palOpen ? '' : '<button type="button" class="my-new" data-palopen>'+ICON_PLUS+' '+t("myAdd")+'</button>')
     : d.items.length
       // Der Ablauf bleibt beim Scrollen unter der Kopfzeile stehen: beim Wählen sieht man immer, was schon im Workout ist
-      ? '<div class="plan-sticky" id="plan-sticky"><div class="plan-sticky-kopf"><b>'+(d.ws ? esc(t("wbAblauf")) : bauNrKopf(3, t("wbAblauf")))+'</b><span>'+esc(t("exCount", { n:exs.length })+" · "+dauer)+'</span>'+
+      ? '<div class="plan-sticky" id="plan-sticky"><div class="plan-sticky-kopf"><b>'+esc(t("wbAblauf"))+'</b><span>'+esc(t("exCount", { n:exs.length })+" · "+dauer)+'</span>'+
           (exs.length > 2 ? '<button type="button" class="sec-link" data-wbordnen>'+esc(t("wbOrdnen"))+'</button>' : '')+'</div>'+
           '<div class="wb-streifen">'+streifen+'</div></div>'
-      : (d.ws ? '<div class="section-title wb-kopf"><span>'+t("wbAblauf")+'</span></div>' : bauNrHTML(3, t("wbAblauf")))+'<div class="fav-empty">'+esc(t("wbLeer"))+'</div>';
+      : '<div class="section-title wb-kopf"><span>'+t("wbAblauf")+'</span></div><div class="fav-empty">'+esc(t("wbLeer"))+'</div>';
 
   app.innerHTML =
     topbar(cfg.cover ? t("coverTitle") : t("myWorkout"), { back:cfg.back, right: hw.knopf + (palOpen ? lupeHTML("b", buildQuery) : "") + (cfg.cover ? "" :

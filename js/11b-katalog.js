@@ -236,7 +236,7 @@ function bauModus(){
 }
 function bauArtHTML(modus, mitHinweis){
   function b(k, key){ return '<button type="button" data-bauart="'+k+'" class="'+(modus === k ? 'active' : '')+'" aria-pressed="'+(modus === k)+'">'+esc(t(key))+'</button>'; }
-  return '<div class="seg-row bau-modus" role="group" aria-label="'+esc(t("bauArtTitel"))+'">'+b("gewicht", "bauMitSaetzen")+b("timer", "bauMitTimer")+'</div>'+
+  return '<div class="seg-row bau-modus" role="group" aria-label="'+esc(t("bauArtTitel"))+'">'+b("timer", "bauArtZeit")+b("gewicht", "bauArtSaetze")+'</div>'+
     "";
 }
 /* fn(neueArt) läuft nur, wenn die andere Art gewählt wurde; die Wahl wird für den Ort gemerkt */
@@ -284,25 +284,14 @@ function katKatalogOeffnen(){
   s.katTab = "katalog"; s.katAbt = "workouts"; stPlanAktiv = null; stPlanBauen = false; katOffen = {}; save();
   go("#katalog"); renderKatalog(); window.scrollTo(0, 0);
 }
-/* „BLOC bauen“ (2026-11-22, Kevin): keine Abfrage von unten, die Bauseite beginnt mit Schritt 1 „Wie willst du den BLOC bauen?“; die letzte Wahl bleibt gemerkt */
+/* „BLOC bauen“ (2026-11-23, Kevin): ein Weg. Seite 1: 1 Name, 2 Wie möchtest du trainieren? (Filter 2.1 …), 3 Dein Ablauf. Seite 2: Werte, dort Wiederholungen oder Timer */
 function bauWahlOeffnen(){
   katTabSetzen("baukasten");
-  if(bauModus() === "gewicht"){ go("#katalog"); katPlanNeu(); }
-  else go("#mybuild/new");
+  go("#katalog");
+  katPlanNeu();
 }
-/* Nummerierte Schritte der Bauseiten: 1 Art, 2 Name, 3 Ablauf, 4 Übungen */
 function bauNrHTML(nr, titel){ return '<div class="bau-schritt bau-nr"><span>'+nr+'</span>'+esc(titel)+'</div>'; }
 function bauNrKopf(nr, titel){ return '<i class="bau-nr-z">'+nr+'</i>'+esc(titel); }
-function bauArtKopfHTML(modus){ return bauNrHTML(1, t("bauWahlTitel"))+bauArtHTML(modus, false); }
-/* Sätze → Timer: ein noch nicht gespeicherter BLOC wandert mit seinen Übungen in den Timer-Bau */
-function bauNachTimer(p){
-  var ids = stPlanIds(p).filter(findExercise), f = document.getElementById("plan-name"), nm = f ? f.value.trim() : p.name;
-  var std = t("planDefault", { n:stPlaene().filter(function(x){ return !x.entwurf; }).length+1 });
-  state.db.settings.stPlaene = stPlaene().filter(function(x){ return x.id !== p.id; });
-  stPlanAktiv = null; stPlanBauen = false; stPlanSel = -1; save();
-  bauEntwurf = { key:"new", neu:true, d:{ id:uid(), name:nm && nm !== std ? nm : t("myDefaultName"), mode:"uniform", reps:6, work:30, rest:10, blockRest:45, items:ids.map(itemFromEx) } };
-  go("#mybuild/new");
-}
 /* ---------- Baukasten: Überrasch mich, selber bauen oder aus dem Katalog ---------- */
 function renderKatalogBaukasten(){
   var hw = hinweise("bau2", ["katBauHint"]);
@@ -474,19 +463,14 @@ function katSektionBinden(){
 }
 var KAT_ICON_SAETZE = KAT_ICON_STUDIO;   // Hantel
 var KAT_ICON_TRAININGS = '<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4M9 15l2 2 4-4"/>';
-function katPlaeneHTML(){
-  var pl = stPlaene().filter(function(x){ return !x.entwurf; }).sort(function(a, b){ return (b.updatedAt || 0) - (a.updatedAt || 0); });
-  var inhalt = (pl.length ? pl.map(function(p){
-      var ids = stPlanIds(p), namen = ids.slice(0, 3).map(function(id){ return tplText(findExercise(id).name); }).join(", ")+(ids.length > 3 ? " …" : "");
-      var gr = planGruppen(ids), ort = planOrt(ids);
-      return '<div class="list-item entry plan-item" data-plan="'+esc(p.id)+'" role="button" tabindex="0">'+ortThumbHTML(ids)+
-        '<div class="meta"><div class="name">'+esc(p.name)+'</div><div class="sub">'+esc(planAnzahl(ids.length))+(ort ? SEP+esc(ort) : '')+'</div>'+
-        (gr ? '<div class="sub pl-gruppen">'+esc(gr)+'</div>' : '')+
-        (ids.length ? '<div class="sub pl-namen">'+esc(namen)+'</div>' : '')+'</div>'+
-        '<div class="card-aside"><div class="card-acts">'+favBtn("plan:"+p.id)+trashBtn("plan", p.id, p.name)+'</div></div></div>';
-    }).join("") : '<div class="fav-empty">'+esc(t("planNone"))+'</div>')+
-    (pl.length > 1 ? auswertungHTML(pl.reduce(function(a, p){ return a.concat(stPlanIds(p)); }, []), { gesamt:true, titel:t("ausAll") }) : '');
-  return katSektionHTML("saetze", "saetze", KAT_ICON_SAETZE, t("katSekSaetze"), t("katSekSaetzeSub"), pl.length, inhalt);
+function katPlanZeileHTML(p){
+  var ids = stPlanIds(p), namen = ids.slice(0, 3).map(function(id){ var ex = findExercise(id); return ex ? tplText(ex.name) : ""; }).filter(Boolean).join(", ")+(ids.length > 3 ? " …" : "");
+  var gr = planGruppen(ids), ort = planOrt(ids);
+  return '<div class="list-item entry plan-item" data-plan="'+esc(p.id)+'" role="button" tabindex="0">'+ortThumbHTML(ids)+
+    '<div class="meta"><div class="name">'+esc(p.name)+'</div><div class="sub">'+esc(planAnzahl(ids.length))+(ort ? SEP+esc(ort) : '')+'</div>'+
+    (gr ? '<div class="sub pl-gruppen">'+esc(gr)+'</div>' : '')+
+    (ids.length ? '<div class="sub pl-namen">'+esc(namen)+'</div>' : '')+'</div>'+
+    '<div class="card-aside"><div class="card-acts">'+favBtn("plan:"+p.id)+trashBtn("plan", p.id, p.name)+'</div></div></div>';
 }
 function katPlaeneBinden(){
   app.querySelectorAll("[data-plan]").forEach(function(el){

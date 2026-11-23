@@ -102,6 +102,14 @@ function bindTrash(refresh){
       } else if(kind === "plan"){   // Studio › Mein Plan
         var pl = stPlanFind(id); if(!pl) return;
         planLoeschenFrage(pl, refresh);
+      } else if(kind === "katbloc"){   // Katalog-BLOC aus der eigenen Liste nehmen; im Katalog bleibt er
+        var kb = findLibWorkout(id); if(!kb) return;
+        confirmSheet(t("blocAusListeQ"), "„"+tplText(kb.name)+"“ – "+t("blocAusListeText"), t("del"), function(){
+          var st = state.db.settings;
+          st.favs = (st.favs || []).filter(function(k){ return k !== "lib:"+id; });
+          st.blocKatalog = blocKatalogListe().filter(function(x){ return x !== id; });
+          save(); refresh(); showToast(t("deletedToast", { n:tplText(kb.name) }));
+        });
       } else if(kind === "my"){
         var mw = findMy(id); if(!mw) return;
         confirmSheet(t("myDeleteQ"), "„"+mw.name+"“ – "+t("cantUndo"), t("del"), function(){ deleteMyNow(id); refresh(); showToast(t("deletedToast", { n:mw.name })); });

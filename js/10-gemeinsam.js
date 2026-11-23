@@ -334,11 +334,19 @@ function libIstWarmDehn(lw){ return !!lw && (lw.focus === "stretch" || AUFWAERM_
 
 /* ============ Favoriten ============ */
 /* Schlüssel "lib:<id>" (fertiges Workout oder Dehnprogramm) bzw. "my:<id>" (eigenes Workout) */
+/* Katalog-BLOCs in der Liste „BLOCs“ (IDs). Der Stern nimmt sie auf, entfernt werden sie nur von Hand (2026-11-23, Kevin) */
+function blocKatalogListe(){
+  var s = state.db.settings, l = Array.isArray(s.blocKatalog) ? s.blocKatalog : (s.blocKatalog = []);
+  (s.favs || []).forEach(function(k){ if(k.indexOf("lib:") === 0 && l.indexOf(k.slice(4)) < 0) l.push(k.slice(4)); });
+  return l;
+}
 function isFav(k){ return (state.db.settings.favs || []).indexOf(k) > -1; }
 function toggleFav(k){
   var f = (state.db.settings.favs || []).slice(), i = f.indexOf(k);
   if(i > -1) f.splice(i, 1); else f.push(k);
-  state.db.settings.favs = f; save();
+  state.db.settings.favs = f;
+  if(i < 0 && k.indexOf("lib:") === 0) blocKatalogListe();   // Katalog-Favorit: steht ab jetzt unter BLOCs, auch wenn der Stern später wieder weggeht
+  save();
   showToast(t(i > -1 ? "favRemoved" : "favAdded"));
 }
 function favBtn(k){
