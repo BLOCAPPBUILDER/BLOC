@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-23 · Neun Quellen verlinkt (Fassung 2026-11-23-4)
+
+- [F24], [F26], [F27], [F29] bis [F34] haben jetzt ihre DOI als Link. Inhalte und Trainingsplan-Regeln unverändert.
+
 ## 2026-11-23 · Dein Ablauf über den Übungen (Fassung 2026-11-23-3)
 
 - Beim Bauen steht Punkt 3 „Dein Ablauf“ unter dem Filter und über Suche und Übungen und bleibt beim Scrollen oben.
