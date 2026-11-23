@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-23 · Dein Ablauf über den Übungen (Fassung 2026-11-23-3)
+
+- Beim Bauen steht Punkt 3 „Dein Ablauf“ unter dem Filter und über Suche und Übungen und bleibt beim Scrollen oben.
+
 ## 2026-11-23 · THERABAND-Link ersetzt (Fassung 2026-11-23-2)
 
 - Quelle [12] zeigt auf die aktuelle Seite „Care & Safety“; die alte Adresse meldete 404.

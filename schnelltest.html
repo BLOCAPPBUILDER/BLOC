@@ -969,11 +969,15 @@
       klick($('.plan-sticky [data-plansel="1"]'));   // Reihenfolge: die zweite Übung (Air Squats) nach vorn schieben
       klick(await bis(function () { return $('[data-planmv="-1"]'); }, 2000, "◀ im Plan"));
       await bis(function () { var n = $$(".plan-sticky .wb-mini-name"); return n.length === 2 && /Squat|Kniebeuge/i.test(n[0].textContent); }, 2000, "Air Squats steht jetzt vorn");
-      // Punkt 3 „Dein Ablauf“ steht unter Filter und Übungen (2026-11-23)
-      pruefe($('.lib-suche[data-lsw="pl"]').getBoundingClientRect().top < $("#plan-sticky").getBoundingClientRect().top, "Dein Ablauf soll unter Filter und Suche stehen");
+      pruefe($('.lib-suche[data-lsw="pl"]').getBoundingClientRect().top > $("#plan-sticky").getBoundingClientRect().top, "Dein Ablauf soll über der Suche stehen");
+      W.scrollTo(0, 2500); await warte(250);   // weit nach unten: der Ablauf bleibt oben stehen
+      var rs = $("#plan-sticky").getBoundingClientRect();
+      pruefe(rs.top >= 0 && rs.top < 160 && W.scrollY > 300, "Dein Ablauf soll beim Scrollen oben stehen bleiben: Abstand " + Math.round(rs.top) + ", gescrollt " + Math.round(W.scrollY));
       W.scrollTo(0, 0);
       klick("[data-plandone]");
       klick(await bis(function () { return $('[data-planart="timer"]'); }, 3000, "Mit Timer")); await warte(150);
+      var aw = $("details.ausw"), kk = $(".pz-kopfkarte"), lz = $(".pz-liste");
+      pruefe(aw && !aw.open && kk.compareDocumentPosition(aw) & 4 && aw.compareDocumentPosition(lz) & 4, "Seite 2: Auswertung eingeklappt zwischen Pause und Übungen");
       klick(await bis(function () { return $("[data-planlos]"); }, 3000, "Los geht’s")); await warte(150); if ($("#overlayRoot [data-act]")) klick($("#overlayRoot [data-act]"));
       await bis(function () { return /^#playmy\//.test(W.location.hash) && $("#pl-body"); }, 3000, "Training startet direkt");
       var mw = (JSON.parse(W.localStorage.getItem(KEY)).myWorkouts || []).filter(function (m) { return m.fromPlan; })[0];
@@ -1474,7 +1478,7 @@
       await bauMitSaetzen();
       await bis(function () { return $("#plan-name") && $('[data-planex="air-squats"]'); }, 3000, "Plan-Bau");
       pruefe(suchSichtbar("pl"), "Plan-Bau: das Suchfeld soll dauerhaft sichtbar sein");
-      pruefe(!$('.lib-suche[data-lsw="pl"]').closest(".topbar") && $('.lib-suche[data-lsw="pl"]').getBoundingClientRect().top < $("#plan-sticky").getBoundingClientRect().top, "Plan-Bau: die Suche steht in Punkt 2, über Punkt 3 Dein Ablauf");
+      pruefe(!$('.lib-suche[data-lsw="pl"]').closest(".topbar") && $('.lib-suche[data-lsw="pl"]').getBoundingClientRect().top > $("#plan-sticky").getBoundingClientRect().top, "Plan-Bau: die Suche steht unter Punkt 3 Dein Ablauf");
       klick('[data-planex="air-squats"]'); klick('[data-planex="leg-press"]');
       klick(await bis(function () { return $("[data-plandone]:not([disabled])"); }, 2000, "Weiter"));
       await bis(function () { return $$(".pz-zeile").length === 2; }, 3000, "Plan-Seite mit zwei Zeilen");
