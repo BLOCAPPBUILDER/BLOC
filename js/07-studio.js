@@ -1001,9 +1001,9 @@ function renderStudioPlan(){
     html += bauNrHTML(1, t("name"))+'<div class="card"><label for="plan-name">'+t("name")+'</label><input type="text" id="plan-name" value="'+esc(p.name)+'" maxlength="60">'+
       (ids.length ? kkKopfHTML(ids) : '')+'</div>'+
       bauNrHTML(2, t("bauTrainFrage"))+tippZeileHTML("info", "tippInfo")+hw.z(0, "page-hint")+
-      studioFilterHTML(gruppen, fGr, fTrain, fAusr, studioAnzahl(gruppen, fGr, artOk), zonen, { nrVor:"2." })+suchFeldHTML(stPlanQuery, "pl", t("stSearch"), true);   // Suche unter dem Filter
-    /* Punkt 3: die gewählten Übungen in ihrer Reihenfolge; antippen wählt eine Übung aus, dann verschieben ◀ ▶ sie und ✕ nimmt sie heraus */
-    var ablaufPunkt =
+      studioFilterHTML(gruppen, fGr, fTrain, fAusr, studioAnzahl(gruppen, fGr, artOk), zonen, { nrVor:"2." });
+    /* Punkt 3 steht über Suche und Übungen und bleibt beim Wählen oben: die gewählten Übungen in ihrer Reihenfolge; antippen wählt eine aus, dann verschieben ◀ ▶ sie und ✕ nimmt sie heraus */
+    html +=
       '<div class="plan-sticky plan-ablauf" id="plan-sticky"><div class="plan-sticky-kopf"><b>'+bauNrKopf(3, t("wbAblauf"))+'</b><span>'+esc(ids.length ? planAnzahl(ids.length) : t("planNochLeer"))+'</span></div>'+
         (ids.length ? '<div class="wb-streifen">'+ids.map(function(id, i){
           var ex = findExercise(id);
@@ -1012,7 +1012,7 @@ function renderStudioPlan(){
         }).join("")+'</div>'+
           (stPlanSel > -1 && stPlanSel < ids.length ? '<div class="plan-ctrl"><button type="button" data-planmv="-1" aria-label="'+esc(t("moveLeft"))+'"'+(stPlanSel === 0 ? ' disabled' : '')+'>&#9664;</button>'+
             '<button type="button" class="del" data-plandelsel>'+ICON_TRASH+' '+esc(t("planRaus"))+'</button>'+
-            '<button type="button" data-planmv="1" aria-label="'+esc(t("moveRight"))+'"'+(stPlanSel === ids.length-1 ? ' disabled' : '')+'>&#9654;</button></div>' : '') : '')+'</div>';
+            '<button type="button" data-planmv="1" aria-label="'+esc(t("moveRight"))+'"'+(stPlanSel === ids.length-1 ? ' disabled' : '')+'>&#9654;</button></div>' : '') : '')+'</div>'+suchFeldHTML(stPlanQuery, "pl", t("stSearch"), true);
     if(rest.length) gruppen = gruppen.concat([{ id:"rest", name:t("planSonst"), ids:rest, immer:true }]);
     function planKachel(id){
       var ex = findExercise(id);
@@ -1030,7 +1030,7 @@ function renderStudioPlan(){
         gewaehlt ? '<span class="kat-n">'+esc(t("katGewaehlt", { n:gewaehlt }))+'</span>' : '',
         gids.every(function(id){ return exIstStudio(findExercise(id)); }));
     });
-    html += '<div class="empty" data-noresult style="display:none;padding:30px 20px;">'+esc(t("stNone"))+'</div>'+ablaufPunkt+
+    html += '<div class="empty" data-noresult style="display:none;padding:30px 20px;">'+esc(t("stNone"))+'</div>'+
       (p.entwurf ? '' : '<button type="button" class="btn btn-danger" data-plandel style="margin-top:18px;">'+ICON_TRASH+' '+t("planDel")+'</button>')+
       '<div style="height:96px"></div>'+
       '<div class="wb-leiste"><div class="wb-leiste-in"><span><b>'+esc(planAnzahl(ids.length))+'</b></span>'+
@@ -1045,7 +1045,7 @@ function renderStudioPlan(){
         '' : '')+
       (ids.length ? planKopfKarteHTML(p, ids) : '')+
       (ids.length && planStartArt(p) === "timer" ? planZeitKarteHTML(p) : '')+
-      (ids.length ? (p.entwurf ? planBalanceHTML(p, ids) : auswertungHTML(ids, { chip:planBalanceChipHTML(p, ids), hinweis:planBalanceHTML(p, ids) })) : '')+
+      (ids.length ? auswertungHTML(ids, { chip:planBalanceChipHTML(p, ids), hinweis:planBalanceHTML(p, ids) }) : '')+   // Seite 2: eingeklappt, der Druck-Zug-Hinweis steht darin
       (ids.length ? '<div class="pz-liste">'+planListeHTML(p)+'</div>' : '<div class="fav-empty">'+esc(t("planEmpty"))+'</div>')+
       // dynamische Leiste: links „Plan speichern“ (beim gespeicherten BLOC „Training speichern“), rechts immer „LOS GEHTS!“
       (ids.length ? '<div class="wb-leiste tr-leiste"><div class="wb-leiste-in">'+
@@ -1142,6 +1142,8 @@ function renderStudioPlan(){
   });
   app.querySelectorAll("[data-planex]").forEach(function(el){ var id = el.getAttribute("data-planex"); langDruck(el, function(){ openExInfo(id, false); }); });   // Info nur per Langdruck
   if(stPlanBauen){
+    var stPl = app.querySelector("#plan-sticky"), tbPl = app.querySelector(".topbar");   // Dein Ablauf klebt direkt unter der Kopfzeile
+    if(stPl && tbPl) stPl.style.top = Math.max(0, Math.round(tbPl.getBoundingClientRect().height) - 2)+"px";
     var sb = state.db.settings, gb = katalogGruppen(), gv = {}, filterB;
     gb.forEach(function(g){ gv[g.id] = true; });
     var fgB = selArr(sb.stGruppen).filter(function(id){ return gv[id]; });
