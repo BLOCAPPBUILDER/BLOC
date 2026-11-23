@@ -112,7 +112,7 @@ function mainTagsHTML(mains){
 }
 /* Farbe eines Workouts nach Ort: Fitnessstudio orange, Freiluft blau (auf Seiten eines anderen Bereichs dessen Farbe) */
 function woFarbe(exs){ return katWoOrt(exs) === "studio" ? "var(--gym-color)" : "var(--bereich, var(--tp-color))"; }
-function libWoCard(lw, exs, hidden, dur, mains, schw){
+function libWoCard(lw, exs, hidden, dur, mains, schw, entfernbar){
   // --bereich: gesetzt auf Seiten eines anderen Bereichs (Aufwärmen & Dehnen), sonst Workouts-Grün
   return '<div class="list-item entry tpl-item lib-card'+(hidden?' is-hidden':'')+'" style="--cat:'+woFarbe(exs)+'" data-cover="lib/'+lw.id+'" data-q="'+esc(woSearchText(lw.name.de+" "+lw.name.en, exs))+'">'+
     '<button class="playbtn cat" data-cover="lib/'+lw.id+'" title="'+t("startTemplate")+'" aria-label="'+t("startTemplate")+'">'+ICON_PLAY+'</button>'+
@@ -121,7 +121,7 @@ function libWoCard(lw, exs, hidden, dur, mains, schw){
     '</div>'+kkMiniHTML(exs)+   // kleine Körperfigur: welche Muskelgruppen das Workout trainiert (wie in Path › Deep Dive)
     '<div class="card-aside"><div class="card-acts">'+
       (hidden ? '<button type="button" class="tpl-adopt" data-unhideone="wo:'+lw.id+'">'+svgIcon(ICON_EYE)+' '+t("unhide")+'</button>'
-              : favBtn("lib:"+lw.id)+moreBtn("data-womore", lw.id))+
+              : favBtn("lib:"+lw.id)+moreBtn("data-womore", lw.id)+(entfernbar ? trashBtn("katbloc", lw.id, tplText(lw.name)) : ''))+
     '</div></div>'+
     '<span class="pg-figs" data-pgf="lib:'+lw.id+'"></span></div>';   // die Übungen als kleine Figuren in einer eigenen Zeile (wie in der Auswahl bei Path), erst gezeichnet, wenn die Gruppe offen ist
 }
@@ -244,26 +244,24 @@ function libWoSort(list, sort){
 function renderLibrary(){
   var s = state.db.settings;
   if(katTab() !== "blocs") return renderKatalog();
-  ["zeit", "saetze"].forEach(function(k){ if(katOffen["sek-"+k] === undefined) katOffen["sek-"+k] = true; });   // BLOCs: Nach Zeit und Nach Sätzen stehen offen, nur das Tagebuch ist zu
   var hw = hinweise("", []);
-  var eigene = "";
+  /* Eine Liste (2026-11-23, Kevin): selbst gebaute BLOCs, BLOCs aus Trainingsplänen und Katalog-Favoriten, zuletzt geänderte zuerst; gelöscht wird nur von Hand */
+  var zeilen = [], plaene = stPlaene().filter(function(x){ return !x.entwurf; });
+  plaene.forEach(function(p){ zeilen.push({ at:p.updatedAt || 0, html:katPlanZeileHTML(p) }); });
   (state.db.myWorkouts || []).map(normMy).forEach(function(mw){
-    if(mw.ws) return;   // Aufwärm- und Dehn-Workouts liegen unter Mobility & Stretch › Meine
+    if(mw.ws || (mw.fromPlan && stPlanFind(mw.fromPlan))) return;   // Mobility liegt unter Mobility & Stretch; die Timer-Kopie eines BLOCs steht nicht doppelt da
     var exs = mw.items.map(function(it){ return findExercise(it.ex); }).filter(Boolean);
-    eigene += myWoCard(mw, exs, woMains(exs), workoutDuration(myRun(mw)));
+    zeilen.push({ at:mw.updatedAt || 0, html:myWoCard(mw, exs, woMains(exs), workoutDuration(myRun(mw))) });
   });
-  // Mit dem Stern markierte fertige Workouts aus dem Katalog stehen hier mit dabei
-  var nFav = 0;
-  (s.favs || []).forEach(function(k){
-    if(k.indexOf("lib:") !== 0) return;
-    var lw = findLibWorkout(k.slice(4));
+  blocKatalogListe().forEach(function(id){
+    var lw = findLibWorkout(id);
     if(!lw || libIstWarmDehn(lw) || libHidden("wo:"+lw.id)) return;
     var fe = lw.exercises.map(findExercise).filter(Boolean);
-    eigene += libWoCard(lw, fe, false, workoutDuration(libWorkoutRun(lw)), woMains(fe)); nFav++;
+    zeilen.push({ at:0, html:libWoCard(lw, fe, false, workoutDuration(libWorkoutRun(lw)), woMains(fe), undefined, true) });
   });
-  var nZeit = (state.db.myWorkouts || []).filter(function(mw){ return !mw.ws; }).length + nFav;
-  var list = katSektionHTML("zeit", "zeit", HOME_ICON.intervall, t("katSekZeit"), t("katSekZeitSub"), nZeit, eigene || '<div class="fav-empty">'+esc(t("myEmpty"))+'</div>')+
-    katPlaeneHTML();
+  zeilen.sort(function(a, b){ return b.at - a.at; });
+  var list = zeilen.length ? zeilen.map(function(z){ return z.html; }).join("") : '<div class="fav-empty">'+esc(t("blocListeLeer"))+'</div>';
+  if(plaene.length > 1) list += auswertungHTML(plaene.reduce(function(a, p){ return a.concat(stPlanIds(p)); }, []), { gesamt:true, titel:t("ausAll") });
   app.innerHTML =
     katKopfHTML("blocs", hw.knopf) +
     '<div class="bloc-liste">'+list+'</div><div style="height:40px"></div>';
@@ -273,10 +271,10 @@ function renderLibrary(){
   bindTrash(neu);
   katPlaeneBinden();
   blocMenueBinden(neu);
-  katSektionBinden();
   app.querySelectorAll("[data-fav]").forEach(function(el){ el.addEventListener("click", function(e){ e.stopPropagation(); toggleFav(el.getAttribute("data-fav")); neu(); }); });
   app.querySelectorAll("[data-womore]").forEach(function(b){ b.addEventListener("click", function(e){
-    e.stopPropagation(); var lw = findLibWorkout(b.getAttribute("data-womore")); if(lw) woMenue(lw, neu);
+    e.stopPropagation(); var lw = findLibWorkout(b.getAttribute("data-womore"));
+    if(lw) woMenue(lw, neu, undefined, function(){ var d = app.querySelector('[data-del="katbloc:'+lw.id+'"]'); if(d) d.click(); });
   }); });
   app.querySelectorAll("[data-cover]").forEach(function(el){ el.addEventListener("click", function(e){
     e.stopPropagation(); if(el.disabled) return; coverDraft = null; go("#cover/"+el.getAttribute("data-cover"));

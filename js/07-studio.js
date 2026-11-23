@@ -380,7 +380,7 @@ function filterSchrittHTML(nr, titel){ return '<div class="bau-schritt af-schrit
 function studioFilterHTML(gruppen, fGr, fTrain, fAusr, anzahl, zonen, opt){
   var s = state.db.settings;
   opt = opt || {};
-  var mitTrain = true, fSchw = studioSchwWahl();
+  var mitTrain = true, fSchw = studioSchwWahl(), nrV = opt.nrVor || "";
   var namen = fGr.map(function(id){ var g = gruppen.filter(function(x){ return x.id === id; })[0]; return g ? g.name : id; })
     .concat(mitTrain ? fTrain.map(function(a){ return t("trArt_"+a); }) : [], fAusr.map(function(g){ return t("stGer_"+g); }), zonen.map(kkName), fSchw.map(function(a){ return t("schw_"+a); }));
   /* Muskel (Chips + Figur, eine Auswahl); außer Muskeln gibt es nur noch Cardio & Ausdauer (orangenes Leuchten hinter der Figur) und Eigene Übungen */
@@ -389,13 +389,13 @@ function studioFilterHTML(gruppen, fGr, fTrain, fAusr, anzahl, zonen, opt){
   return filterKarteHTML({ offen:!!s.stFilterOpen, toggle:"data-sttoggle", reset:"data-streset", n:namen.length,
     summe:namen.length ? namen.join(", ") : t(opt.art === "Wo" ? "afAlleWo" : "afAlleEx"),
     zeigen:filterZeigenText(anzahl, opt.art || "Ex"), extra:opt.extra,
-    inhalt:(mitTrain ? filterSchrittHTML(1, t("trSchritt1"))+trainFotosHTML("data-sttrain", fTrain, opt.trainZahlen, opt.art === "Wo" ? "katOrtAnz" : "") : '')+
-      filterSchrittHTML(mitTrain ? 2 : 1, t("stGerKopf"))+
+    inhalt:(mitTrain ? filterSchrittHTML(nrV+1, t("trSchritt1"))+trainFotosHTML("data-sttrain", fTrain, opt.trainZahlen, opt.art === "Wo" ? "katOrtAnz" : "") : '')+
+      filterSchrittHTML(nrV+(mitTrain ? 2 : 1), t("stGerKopf"))+
       '<div class="fc-chips af-ausr">'+AUSR_IDS.map(function(g){
         return filterChip("data-stausr", g, fAusr.indexOf(g) > -1, svgIcon(STUDIO_GERAET_ICON[g] || STUDIO_AUSR_ICON[g]), t("stGer_"+g)); }).join("")+'</div>'+
-      filterSchrittHTML(mitTrain ? 3 : 2, t("trSchritt3"))+
+      filterSchrittHTML(nrV+(mitTrain ? 3 : 2), t("trSchritt3"))+
       kkMuskelHTML("data-stzone", "data-stgrp", zonen, { extra:extra, glow:fGr.indexOf("cardio") > -1, ohneLabel:true })+
-      filterSchrittHTML(mitTrain ? 4 : 3, t("schwSchritt"))+schwChipsHTML("data-stschw", fSchw) });
+      filterSchrittHTML(nrV+(mitTrain ? 4 : 3), t("schwSchritt"))+schwChipsHTML("data-stschw", fSchw) });
 }
 function studioFilterBinden(fGr, fTrain, fAusr, zonen, neuZeichnen){
   var s = state.db.settings;
@@ -777,6 +777,48 @@ function planKopfKarteHTML(p, ids){
     '<select id="pk-br">'+rests.sort(function(a, b){ return a - b; }).map(function(v){
       return '<option value="'+v+'"'+(v === br ? ' selected' : '')+'>'+v+' s</option>'; }).join("")+'</select></div>';
 }
+/* Seite 2 mit Timer (2026-11-23, Kevin): einmal für alle Übungen einstellen; einzelne Übungen bleiben darunter frei änderbar, auch zurück auf Wiederholungen */
+function planZeitModus(p){ return p.zeitModus === "alle" || p.zeitModus === "je" ? p.zeitModus : (p.entwurf ? "alle" : "je"); }
+function planZeitWerte(p){
+  if(p.zeitAlle) return p.zeitAlle;
+  var ids = stPlanIds(p), id = ids.filter(function(x){ return studioEinheit(x) === "zeit"; })[0] || ids[0], tm = id ? studioTimer(id) : { reps:3, work:40, rest:60 };
+  return { reps:tm.reps, work:tm.work, rest:tm.rest };
+}
+function planZeitAnwenden(p, w){
+  p.zeitAlle = w;
+  stPlanIds(p).forEach(function(id){
+    if(!findExercise(id) || studioEinheit(id) !== "zeit") return;   // auf Wiederholungen gestellte Übungen bleiben, wie sie sind
+    var en = studioSchreib(id);
+    en.ziel = en.ziel || {}; en.ziel.saetze = w.reps; en.pause = w.rest; en.timer = { reps:w.reps, work:w.work }; en.manuell = Date.now();
+    studioSpiegeln(id);
+  });
+  p.updatedAt = Date.now(); save();
+}
+function planZeitKarteHTML(p){
+  var m = planZeitModus(p), w = planZeitWerte(p);
+  return '<div class="card pz-zeiten"><div class="opt-title">'+esc(t("optTitle"))+'</div>'+
+    '<div class="seg-row" role="group" aria-label="'+esc(t("timesLabel"))+'">'+
+      '<button type="button" data-pzzeit="alle" class="'+(m === "alle" ? 'active' : '')+'" aria-pressed="'+(m === "alle")+'">'+esc(t("modeUniform"))+'</button>'+
+      '<button type="button" data-pzzeit="je" class="'+(m === "je" ? 'active' : '')+'" aria-pressed="'+(m === "je")+'">'+esc(t("modeIndividual"))+'</button></div>'+
+    (m === "alle" ? '<div class="tm-grid"><div><label>'+t("tmReps")+'</label>'+stepperHTML("pa-reps", w.reps, 1, 20, 1)+'</div>'+
+      '<div><label>'+t("tmWork")+'</label>'+stepperHTML("pa-work", w.work, 5, 600, 5)+'</div>'+
+      '<div><label>'+t("tmRest")+'</label>'+stepperHTML("pa-rest", w.rest, 0, 300, 5)+'</div></div>' : '<div class="tm-hint">'+esc(t("planZeitJeHint"))+'</div>')+
+    '<div class="opt-sep"></div>'+toggleRow("pa-voice", t("voice"), t("voiceDesc"), state.db.settings.voice !== false)+'</div>';
+}
+function planZeitKarteBinden(p, neu){
+  var k = app.querySelector(".pz-zeiten"); if(!k) return;
+  k.querySelectorAll("[data-pzzeit]").forEach(function(b){ b.addEventListener("click", function(){
+    var m = b.getAttribute("data-pzzeit"); if(m === planZeitModus(p)) return;
+    p.zeitModus = m;
+    if(m === "alle") planZeitAnwenden(p, planZeitWerte(p)); else { p.updatedAt = Date.now(); save(); }
+    neu();
+  }); });
+  if(k.querySelector("#pa-reps")) bindSteppers(k, function(){
+    planZeitAnwenden(p, { reps:clamp(parseInt(k.querySelector("#pa-reps").value) || 3, 1, 20), work:clamp(parseInt(k.querySelector("#pa-work").value) || 40, 5, 600), rest:clamp(parseInt(k.querySelector("#pa-rest").value), 0, 300) || 0 });
+    neu();
+  });
+  bindToggle("pa-voice", function(v){ state.db.settings.voice = v; save(); });
+}
 function planKopfKarteBinden(p, ids, neu){
   var br = app.querySelector("#pk-br");
   if(br) br.addEventListener("change", function(){ p.blockRest = parseInt(br.value) || 0; p.updatedAt = Date.now(); save(); neu(); });
@@ -956,11 +998,13 @@ function renderStudioPlan(){
     // Trainingsart, Ausrüstung und Muskel stehen im Filter (leer = alles)
     function artOk(id){ var ex = findExercise(id); return !!ex && studioFilterOk(id, fTrain, fAusr, fSchw) && (!zonen.length || zonePasst(ex, zonen)); }
     var rest = ids.filter(function(id){ return !da[id]; });   // Übungen im Plan, die in keinem Bereich stehen (z. B. ausgeblendete)
-    html += (p.entwurf ? bauArtKopfHTML("gewicht")+bauNrHTML(2, t("name")) : '')+'<div class="card'+(p.entwurf ? '' : ' nm-weg')+'"><label for="plan-name">'+t("name")+'</label><input type="text" id="plan-name" value="'+esc(p.name)+'" maxlength="60"></div>'+
-      (ids.length ? kkKopfHTML(ids) : '')+
-      // Der Plan selbst: die gewählten Übungen in ihrer Reihenfolge. Bleibt beim Scrollen oben stehen; antippen wählt eine Übung aus,
-      // dann verschieben ◀ ▶ sie und ✕ nimmt sie heraus.
-      '<div class="plan-sticky" id="plan-sticky"><div class="plan-sticky-kopf"><b>'+(p.entwurf ? bauNrKopf(3, t("wbAblauf")) : esc(t("planKopf")))+'</b><span>'+esc(ids.length ? planAnzahl(ids.length) : t("planNochLeer"))+'</span></div>'+
+    html += bauNrHTML(1, t("name"))+'<div class="card"><label for="plan-name">'+t("name")+'</label><input type="text" id="plan-name" value="'+esc(p.name)+'" maxlength="60">'+
+      (ids.length ? kkKopfHTML(ids) : '')+'</div>'+
+      bauNrHTML(2, t("bauTrainFrage"))+tippZeileHTML("info", "tippInfo")+hw.z(0, "page-hint")+
+      studioFilterHTML(gruppen, fGr, fTrain, fAusr, studioAnzahl(gruppen, fGr, artOk), zonen, { nrVor:"2." })+suchFeldHTML(stPlanQuery, "pl", t("stSearch"), true);   // Suche unter dem Filter
+    /* Punkt 3: die gewählten Übungen in ihrer Reihenfolge; antippen wählt eine Übung aus, dann verschieben ◀ ▶ sie und ✕ nimmt sie heraus */
+    var ablaufPunkt =
+      '<div class="plan-sticky plan-ablauf" id="plan-sticky"><div class="plan-sticky-kopf"><b>'+bauNrKopf(3, t("wbAblauf"))+'</b><span>'+esc(ids.length ? planAnzahl(ids.length) : t("planNochLeer"))+'</span></div>'+
         (ids.length ? '<div class="wb-streifen">'+ids.map(function(id, i){
           var ex = findExercise(id);
           return ex ? '<button type="button" class="wb-mini'+(stPlanSel === i ? ' sel' : '')+'" data-plansel="'+i+'" style="--cat:'+studioFarbe(ex)+'" aria-pressed="'+(stPlanSel === i)+'" aria-label="'+esc((i+1)+". "+tplText(ex.name)+", "+satzZiel(id))+'">'+
@@ -968,9 +1012,7 @@ function renderStudioPlan(){
         }).join("")+'</div>'+
           (stPlanSel > -1 && stPlanSel < ids.length ? '<div class="plan-ctrl"><button type="button" data-planmv="-1" aria-label="'+esc(t("moveLeft"))+'"'+(stPlanSel === 0 ? ' disabled' : '')+'>&#9664;</button>'+
             '<button type="button" class="del" data-plandelsel>'+ICON_TRASH+' '+esc(t("planRaus"))+'</button>'+
-            '<button type="button" data-planmv="1" aria-label="'+esc(t("moveRight"))+'"'+(stPlanSel === ids.length-1 ? ' disabled' : '')+'>&#9654;</button></div>' : '') : '')+'</div>'+
-      (p.entwurf ? bauNrHTML(4, t("wbWaehlen")) : '')+tippZeileHTML("info", "tippInfo")+hw.z(0, "page-hint")+
-      studioFilterHTML(gruppen, fGr, fTrain, fAusr, studioAnzahl(gruppen, fGr, artOk), zonen)+suchFeldHTML(stPlanQuery, "pl", t("stSearch"), true);   // Suche unter dem Filter
+            '<button type="button" data-planmv="1" aria-label="'+esc(t("moveRight"))+'"'+(stPlanSel === ids.length-1 ? ' disabled' : '')+'>&#9654;</button></div>' : '') : '')+'</div>';
     if(rest.length) gruppen = gruppen.concat([{ id:"rest", name:t("planSonst"), ids:rest, immer:true }]);
     function planKachel(id){
       var ex = findExercise(id);
@@ -988,7 +1030,7 @@ function renderStudioPlan(){
         gewaehlt ? '<span class="kat-n">'+esc(t("katGewaehlt", { n:gewaehlt }))+'</span>' : '',
         gids.every(function(id){ return exIstStudio(findExercise(id)); }));
     });
-    html += '<div class="empty" data-noresult style="display:none;padding:30px 20px;">'+esc(t("stNone"))+'</div>'+
+    html += '<div class="empty" data-noresult style="display:none;padding:30px 20px;">'+esc(t("stNone"))+'</div>'+ablaufPunkt+
       (p.entwurf ? '' : '<button type="button" class="btn btn-danger" data-plandel style="margin-top:18px;">'+ICON_TRASH+' '+t("planDel")+'</button>')+
       '<div style="height:96px"></div>'+
       '<div class="wb-leiste"><div class="wb-leiste-in"><span><b>'+esc(planAnzahl(ids.length))+'</b></span>'+
@@ -1002,7 +1044,8 @@ function renderStudioPlan(){
           ['saetze', 'timer'].map(function(m){ var an = planStartArt(p) === m; return '<button type="button" data-planart="'+m+'" class="'+(an ? 'active' : '')+'" aria-pressed="'+an+'">'+(m === 'timer' ? ICON_PLAY+' ' : '')+esc(t(m === 'timer' ? 'stModusTimer' : 'planArtWdh'))+'</button>'; }).join("")+'</div>'+
         '' : '')+
       (ids.length ? planKopfKarteHTML(p, ids) : '')+
-      (ids.length ? auswertungHTML(ids, { chip:planBalanceChipHTML(p, ids), hinweis:planBalanceHTML(p, ids) }) : '')+
+      (ids.length && planStartArt(p) === "timer" ? planZeitKarteHTML(p) : '')+
+      (ids.length ? (p.entwurf ? planBalanceHTML(p, ids) : auswertungHTML(ids, { chip:planBalanceChipHTML(p, ids), hinweis:planBalanceHTML(p, ids) })) : '')+
       (ids.length ? '<div class="pz-liste">'+planListeHTML(p)+'</div>' : '<div class="fav-empty">'+esc(t("planEmpty"))+'</div>')+
       // dynamische Leiste: links „Plan speichern“ (beim gespeicherten BLOC „Training speichern“), rechts immer „LOS GEHTS!“
       (ids.length ? '<div class="wb-leiste tr-leiste"><div class="wb-leiste-in">'+
@@ -1020,10 +1063,9 @@ function renderStudioPlan(){
   bindCommon();
   function neu(){ var y = window.scrollY; renderKatalog(); window.scrollTo(0, y); }
   function an(sel, fn){ var el = app.querySelector(sel); if(el) el.addEventListener("click", fn); }
-  if(stPlanBauen && p.entwurf) bauArtBinden("gewicht", function(){ bauNachTimer(p); });
   an("[data-planedit]", function(){ stPlanBauen = true; stPlanSel = -1; stPlanQuery = ""; renderKatalog(); window.scrollTo(0, 0); });
   if(!stPlanBauen && ids.length && !p.entwurf) trainingLeisteBinden({ plan:p, ids:ids }, neu);
-  if(!stPlanBauen && ids.length) planKopfKarteBinden(p, ids, neu);
+  if(!stPlanBauen && ids.length){ planKopfKarteBinden(p, ids, neu); planZeitKarteBinden(p, neu); }
   var pba = app.querySelector("[data-pbaus]");
   if(pba) pba.addEventListener("click", function(){ p.balanceAus = true; p.updatedAt = Date.now(); save(); neu(); });
   if(!stPlanBauen) planZeilenBinden(app, function(){   // Summe der Sätze oben nachführen
@@ -1031,7 +1073,9 @@ function renderStudioPlan(){
     if(su) su.textContent = planSummeText(stPlanIds(p));
   }, neu, p);
   an("[data-plandone]", function(){   // Auswahl fertig: zur Plan-Seite (bei einem neuen Plan noch Entwurf - dort Sätze, Gewichte, Zeiten, dann „Plan speichern“)
-    stPlanBauen = false; stPlanSel = -1; stPlanQuery = ""; renderKatalog(); window.scrollTo(0, 0);
+    stPlanBauen = false; stPlanSel = -1; stPlanQuery = "";
+    if(p.entwurf && planStartArt(p) === "timer" && planZeitModus(p) === "alle") planZeitAnwenden(p, planZeitWerte(p));
+    renderKatalog(); window.scrollTo(0, 0);
   });
   an("[data-plansave]", function(){   // erst jetzt steht der neue BLOC unter BLOCs; nur kurzes Rütteln und ein Hinweis, man bleibt auf der Seite
     planSpeichernStill(p);
@@ -1044,7 +1088,7 @@ function renderStudioPlan(){
   });
   /* Plan als Workout mit Timer: Air- und Studio-Übungen laufen hintereinander (Studio-Übungen mit ihren Satz- und Pausenwerten);
      eine Kopie unter Meine, die beim erneuten Starten aktualisiert wird */
-  app.querySelectorAll("[data-planart]").forEach(function(b){ b.addEventListener("click", function(){ p.startArt = b.getAttribute("data-planart"); stPlanIds(p).forEach(function(id){ var en = studioEintragAlle(id); if(en) delete en.einheit; }); p.updatedAt = Date.now(); save(); neu(); }); });   // Umschalten setzt alle Übungen auf die Einheit der Art zurück (Satz für Satz = Wiederholungen, Timer = Zeit)
+  app.querySelectorAll("[data-planart]").forEach(function(b){ b.addEventListener("click", function(){ p.startArt = b.getAttribute("data-planart"); stPlanIds(p).forEach(function(id){ var en = studioEintragAlle(id); if(en) delete en.einheit; }); if(p.startArt === "timer" && planZeitModus(p) === "alle") planZeitAnwenden(p, planZeitWerte(p)); p.updatedAt = Date.now(); save(); neu(); }); });   // Umschalten setzt alle Übungen auf die Einheit der Art zurück (Satz für Satz = Wiederholungen, Timer = Zeit)
   function planLos(){   // erst die Wahl darüber (nach Sätzen oder mit Timer), dann ein einziges Los geht’s in den passenden Bereich
     if(planStartArt(p) === "timer") planAlsWorkout(p, true);
     else go("#satz/"+p.id+"/0");   // nach Sätzen: Glas-Bereich zum Wischen, je Satz Gewicht × Wiederholungen eintragen
@@ -1098,8 +1142,6 @@ function renderStudioPlan(){
   });
   app.querySelectorAll("[data-planex]").forEach(function(el){ var id = el.getAttribute("data-planex"); langDruck(el, function(){ openExInfo(id, false); }); });   // Info nur per Langdruck
   if(stPlanBauen){
-    var stPl = app.querySelector("#plan-sticky"), tbPl = app.querySelector(".topbar");   // der Plan klebt direkt unter der Kopfzeile
-    if(stPl && tbPl) stPl.style.top = Math.max(0, Math.round(tbPl.getBoundingClientRect().height) - 2)+"px";
     var sb = state.db.settings, gb = katalogGruppen(), gv = {}, filterB;
     gb.forEach(function(g){ gv[g.id] = true; });
     var fgB = selArr(sb.stGruppen).filter(function(id){ return gv[id]; });

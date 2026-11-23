@@ -3,6 +3,12 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-23 · BLOC bauen in zwei Seiten, eine BLOC-Liste (Fassung 2026-11-23-1)
+
+- **Seite 1:** 1 Name mit Muskelübersicht, 2 Wie möchtest du trainieren? (Filter 2.1 bis 2.4, Übungen), 3 Dein Ablauf. Knopf „Weiter: Werte einstellen“.
+- **Seite 2:** Wiederholungen oder Timer. Bei Timer „Zeiten & Sprachansagen“ mit „Für alle gleich“ oder „Je Übung“; einzelne Übungen bleiben änderbar. Beim Neubau keine eigene Auswertung.
+- **BLOCs:** eine Liste aus eigenen BLOCs, Trainingsplan-BLOCs und Katalog-Favoriten. Der Stern entfernt nur die Markierung, gelöscht wird von Hand.
+
 ## 2026-11-22 · Timer-Kopf wie im Satz-Training, BLOC bauen mit Schritten (Fassung 2026-11-22-19)
 
 - **BLOC bauen:** Die Abfrage „Wie willst du den BLOC bauen?“ steht als Schritt 1 oben auf der Bauseite statt im Fenster von unten. Danach 2 Name, 3 Ablauf, 4 Übungen wählen; beim Umschalten wandern die Übungen mit.
