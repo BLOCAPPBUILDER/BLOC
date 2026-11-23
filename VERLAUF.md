@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-23 · Wissensaustausch und Quellen fachlich korrigiert (Fassung 2026-11-23-5)
+
+- **Texte:** Satzzahl ohne Obergrenze bei zehn [F24, F1], Dehnen ab etwa 60 s [F9], Muskelkater mit Flann 2011 [F55], Periodisierung [F17, F1], Split oder Ganzkörper [F18].
+- **Quellen:** F40 bis F55 stehen jetzt auch auf der Quellen-Seite; F24 bis F34 und F40 bis F54 haben Links. Einordnungen zu [5], [PA7], [PA12], [PA13]. Trainingsplan-Regeln unverändert.
+
 ## 2026-11-23 · Neun Quellen verlinkt (Fassung 2026-11-23-4)
 
 - [F24], [F26], [F27], [F29] bis [F34] haben jetzt ihre DOI als Link. Inhalte und Trainingsplan-Regeln unverändert.
