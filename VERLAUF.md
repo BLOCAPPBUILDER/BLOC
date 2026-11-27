@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-27 · Puls von der Uhr über Health Connect, erste Uhr-App (Fassung 2026-11-27-3)
+
+- **Health Connect** (nur Android-App): Im Lauf-Detail „Puls von der Uhr holen“. BLOC liest nur die Herzfrequenz für die Zeit des Laufs (ohne Pausen) und speichert `hr` (Ø, Max, Puls je km, Verteilung je bpm). Zonen rechnet `runHrZonen` mit dem aktuellen Alter; die Kachel „Pulszonen“ nutzt sie. Hat die Uhr noch nicht übertragen, versucht BLOC es bis 2 Tage lang erneut. Plugin `BlocPulsPlugin.kt`, Erklärseite `PulsDatenschutzActivity`, Datenschutz ergänzt (Art. 9 DSGVO).
+- **Uhr-App** (`android/wear`, Wear OS): erste Testfassung, zeigt den Puls live; noch ohne Verbindung zum Handy.
+
 ## 2026-11-27 · Rechtsprüfung eingearbeitet (Fassung 2026-11-27-2)
 
 - **Impressum** nach § 18 Abs. 1 und 2 MStV (privat, ohne Gewerbe). **Datenschutz:** Speicherdauer, Empfänger GitHub mit Standardvertragsklauseln und Data Privacy Framework. **Haftung:** kein pauschaler Ausschluss mehr, gesetzliche Haftung bleibt.

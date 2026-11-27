@@ -58,6 +58,25 @@
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
 
+        <!-- Health Connect: Erklärung, wofür BLOC die Herzfrequenz liest (bis Android 13 über die Rationale-Aktion, ab Android 14 über den Alias) -->
+        <activity
+            android:name=".PulsDatenschutzActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
+        </activity>
+        <activity-alias
+            android:name="ViewPermissionUsageActivity"
+            android:exported="true"
+            android:targetActivity=".PulsDatenschutzActivity"
+            android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
+            </intent-filter>
+        </activity-alias>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -82,4 +101,11 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" tools:node="remove" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" tools:node="remove" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" tools:node="remove" />
+    <!-- Puls aus Health Connect: nur lesen, nur für die Zeit eigener Läufe (BlocPulsPlugin) -->
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE" />
+    <queries>
+        <package android:name="com.google.android.apps.healthdata" />
+    </queries>
+    <!-- Health Connect braucht Android 9; die Bibliothek verlangt minSdk 26, BLOC prüft die Version selbst vor jedem Aufruf -->
+    <uses-sdk tools:overrideLibrary="androidx.health.connect.client" />
 </manifest>

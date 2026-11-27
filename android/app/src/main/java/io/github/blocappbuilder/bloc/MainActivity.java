@@ -11,7 +11,8 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(BlocDateiPlugin.class);   // vor super.onCreate: BLOC-Dateien von außen (.bloc antippen)
-        registerPlugin(BlocTimerPlugin.class);   // Timer-Anzeige in der Benachrichtigungsleiste, hält den Timer im Hintergrund am Laufen
+        registerPlugin(BlocTimerPlugin.class);
+        registerPlugin(BlocPulsPlugin.class);    // Puls aus Health Connect (Uhr), nur lesen   // Timer-Anzeige in der Benachrichtigungsleiste, hält den Timer im Hintergrund am Laufen
         super.onCreate(savedInstanceState);
         // Schriftgröße wie in der Web-App: der WebView folgt sonst der Schriftgröße des Systems und macht alle Texte größer
         WebView wv = getBridge().getWebView();

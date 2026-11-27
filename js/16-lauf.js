@@ -5,7 +5,7 @@
    im Hintergrund oder bei gesperrtem Handy zeichnet eine Web-App nicht zuverlässig auf - dafür gibt es „Abdunkeln“.
    Gespeichert: settings.runs = [{ id, at, dur (ms, ohne Pausen), dist (m), pts:[[lat,lon]…], splits:[ms bis km 1, 2, …], art:"rad" (nur bei Radfahrten) }].
    Ein laufender Lauf wird alle 10 s als settings.runLive gesichert (falls die Seite beendet wird).
-   Vorbereitet für die spätere Uhr-Anbindung (noch nichts schreibt es): hr:{ avg, max, z:[Sekunden in Zone 1 bis 5] } je Lauf; die Kachel „Pulszonen“ in Fortschritt (runAuswPuls, unten) liest es schon. */
+   Puls von der Uhr über Health Connect: hr je Lauf (Aufbau bei runPulsHolen unten); die Kachel „Pulszonen“ in Fortschritt (runAuswPuls) liest es. */
 var RUN_GENAU = 35;   // Fixes mit schlechterer Genauigkeit (m) werden ignoriert
 var RUN_MAX_MS = 12;  // schneller als 12 m/s (43 km/h) gilt als GPS-Sprung
 var RUN_MAX_RAD = 25; // auf dem Rad erst ab 25 m/s (90 km/h)
@@ -145,7 +145,7 @@ function runAutoWeiter(lat, lon, acc, speed){
   r.regung = speed != null && speed >= 0.6 ? (r.regung || 0) + 1 : 0;
   var weg = r.pausePos && acc <= RUN_GENAU ? runMeter(r.pausePos, [lat, lon]) : 0;
   if(r.regung < 3 && !(speed != null && speed >= 1) && weg < Math.max(8, acc)) return;
-  r.pausenMs += Date.now() - r.pauseAb; r.pauseAb = 0; r.auto = false; r.letzte = null; r.kal = null; r.lastMove = Date.now(); r.regung = 0;
+  runPauseZu(r); r.pausenMs += Date.now() - r.pauseAb; r.pauseAb = 0; r.auto = false; r.letzte = null; r.kal = null; r.lastMove = Date.now(); r.regung = 0;
   vibrate(120);
   runAnzeige();
   runMedien(true);
@@ -332,7 +332,7 @@ function runMedien(sofort){
 }
 function runPause(){
   if(!run) return;
-  if(run.pauseAb){ run.pausenMs += Date.now() - run.pauseAb; run.pauseAb = 0; run.auto = false; run.letzte = null; run.kal = null; run.lastMove = Date.now(); runWachen(true); }   // Lücke zählt nicht als Strecke
+  if(run.pauseAb){ runPauseZu(run); run.pausenMs += Date.now() - run.pauseAb; run.pauseAb = 0; run.auto = false; run.letzte = null; run.kal = null; run.lastMove = Date.now(); runWachen(true); }   // Lücke zählt nicht als Strecke
   else { run.pauseAb = Date.now(); run.auto = false; }
   renderRun();
   runMedien(true);
@@ -379,6 +379,7 @@ function runSpeichern(d){   // d: { id, start, dur, dist, pts, splits } -> in de
   if(d.iv) x.iv = { lauf:d.iv.lauf, geh:d.iv.geh };
   if(d.name) x.name = d.name;
   if(d.art === "rad") x.art = "rad";
+  if(IST_NATIV && s.pulsHC && d.ende) x.hrOffen = { bis:d.ende, p:d.pausenL || [] };   // Puls holt runPulsHolen aus Health Connect, sobald die Uhr übertragen hat
   (s.runs || (s.runs = [])).push(x);
   pruneHistory(state.db);
   var eintrag = { at:d.start, dur:Math.round(d.dur/1000), ex:[], b:"run" };
@@ -396,18 +397,20 @@ function runSpeichern(d){   // d: { id, start, dur, dist, pts, splits } -> in de
     return false;
   }
   showToast(t("runSaved"));
+  if(x.hrOffen) setTimeout(function(){ runPulsHolen(x, false); }, 1500);
   return true;
 }function runBeenden(speichern){
   var r = run;
   if(!r) return;
   var dauer = runZeit(r), pausen = r.pausenMs + (r.pauseAb ? Date.now() - r.pauseAb : 0), iv = r.iv;
+  runPauseZu(r);   // endet in einer Pause: auch diese Zeit gehört nicht zum Puls
   runStopWatch(); runWachen(false);
   try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
   var dunkel = document.getElementById("run-dunkel"); if(dunkel) dunkel.remove();
   run = null;
   runMedien(true);   // Medien-Anzeige weg
   delete state.db.settings.runLive;
-  var ok = speichern ? runSpeichern({ id:r.id, start:r.start, dur:dauer, dist:r.dist, pts:r.pts, splits:r.splits, hm:r.hasAlt ? r.hm : null, pause:pausen, iv:iv, name:r.ziel && r.ziel.name, art:r.art }) : (save(), false);
+  var ok = speichern ? runSpeichern({ id:r.id, start:r.start, dur:dauer, dist:r.dist, pts:r.pts, splits:r.splits, hm:r.hasAlt ? r.hm : null, pause:pausen, iv:iv, name:r.ziel && r.ziel.name, art:r.art, ende:Date.now(), pausenL:r.pausenL || [] }) : (save(), false);
   if(ok){ runNeu = r.id; go("#rundetail/"+r.id); } else renderRun();   // runNeu: Abschlusskarte oben im Detail
 }
 var runNeu = null;
@@ -575,21 +578,31 @@ function runGpxText(r){
   return '<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="BLOC" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>BLOC '+new Date(r.at).toISOString().slice(0, 10)+
     '</name><trkseg>'+pts+'</trkseg></trk></gpx>';
 }
-/* Kalorien-Schätzung für einen Lauf oder eine Radfahrt (nur mit Körperdaten, alles lokal): Laufen = Ruheumsatz in der Zeit + 1,036 kcal je kg und km (Laufkosten nach Margaria),
-   Rad = MET nach Tempo (Compendium of Physical Activities 2011: unter 10 mph / 16 km/h Freizeit 4,0 · 10–12 mph 6,8 · 12–14 mph 8,0 · 14–16 mph 10,0 · ab 16 mph / 25,7 km/h 12,0)
-   × Gewicht × Stunden (Fahrten werden also nicht wie Läufe gerechnet). Eine grobe Schätzung; 0 ohne Körperdaten oder ohne Strecke. */
+/* Kalorien-Schätzung für einen Lauf, eine Wanderung oder eine Radfahrt (nur mit Körperdaten, alles lokal). Alles netto = „zusätzlich verbrannt“,
+   ohne Ruheumsatz, damit nichts doppelt zählt; grob auf 10 kcal gerundet; 0 ohne Körperdaten, ohne Strecke oder bei unplausiblem Tempo (Fahrzeug, GPS-Sprung).
+   Rad: (MET − 1) × kg × Stunden, MET nach Tempo (Compendium of Physical Activities 2024: unter 10 mph / 16 km/h Freizeit 4,0 · 10–12 mph 6,8 · 12–14 mph 8,0 ·
+        14–16 mph 10,0 · 16–20 mph 12,0 · ab 20 mph / 32,2 km/h Rennen ohne Windschatten 16,8). Höhenmeter zählen beim Rad nicht (die MET-Werte enthalten übliches Gelände).
+   Gehen: ACSM-Gehformel VO2 = 0,1·v + 1,8·v·Steigung (+ 3,5 Ruhe, hier weggelassen), 1 l O2 ≈ 5 kcal. Über die Strecke gerechnet ist das
+        flach 0,5 kcal je kg und km plus 0,009 kcal je kg und Höhenmeter Aufstieg (unabhängig von der Zeit).
+   Laufen: 1,036 kcal je kg und km (Laufkosten nach Margaria) plus 0,0045 kcal je kg und Höhenmeter (ACSM-Laufformel: 0,9 ml O2/kg je Höhenmeter).
+   Gehen ↔ Laufen: Mitte des Übergangs ist die einstellbare Pace-Grenze (Körperdaten, Standard 8:30 min/km ≈ 7,1 km/h), ±1 km/h wird weich gemischt
+   (kein Sprung; Fachliche Prüfung 2026-11-16, Höhenmeter beim Laufen und Plausibilitätsgrenzen nach der Prüfung vom 2026-11-27). */
 function runKcal(dist, sek, rad, hm){
   var kd = koerperDaten();
   if(!kd || !(dist > 50) || !(sek > 10)) return 0;
   var km = dist/1000, h = sek/3600, v = km/h;
-  if(rad){ var met = v < 16.1 ? 4 : v < 19.3 ? 6.8 : v < 22.5 ? 8 : v < 25.7 ? 10 : 12; return Math.round((met - 1)*kd.kg*h/10)*10; }   // netto: ohne 1 MET Ruheumsatz
-  /* Gehen/Wandern ↔ Laufen: Mitte des Übergangs ist die einstellbare Pace-Grenze (Körperdaten, Standard 8:30 min/km ≈ 7,1 km/h), ±1 km/h wird weich gemischt (kein Sprung; Fachliche Prüfung 2026-11-16).
-     Gehen = ACSM-Gehformel: VO2 = 0,1·v + 1,8·v·Steigung + 3,5 (ml/kg/min, v in m/min), 1 l O2 ≈ 5 kcal; Steigung = Höhenmeter / Strecke (max 30 %, ohne Höhendaten 0). Alles netto = „zusätzlich verbrannt“ (ohne Ruheumsatz, damit nichts doppelt zählt), grob auf 10 kcal gerundet. */
+  if(rad){
+    if(v > 70) return 0;   // im Schnitt über 70 km/h: kein Fahrrad
+    var met = v < 16.1 ? 4 : v < 19.3 ? 6.8 : v < 22.5 ? 8 : v < 25.7 ? 10 : v < 32.2 ? 12 : 16.8;
+    return Math.round((met - 1)*kd.kg*h/10)*10;
+  }
+  if(v > 25) return 0;   // zu Fuß im Schnitt über 25 km/h: unplausibel
   var vg = 60/kd.geh, w = Math.max(0, Math.min(1, (v - (vg - 1))/2));
-  var lauf = 1.036*kd.kg*km;   // Laufkosten nach Margaria sind netto (ohne Ruheumsatz)
+  var auf = hm > 0 ? Math.min(hm, 0.3*dist) : 0;   // Aufstieg in m, mittlere Steigung höchstens 30 %
+  var lauf = 1.036*kd.kg*km + 0.0045*kd.kg*auf;
   if(w >= 1) return Math.round(lauf/10)*10;
-  var vm = km*1000/(sek/60), gr = hm > 0 ? Math.min(0.3, hm/(km*1000)) : 0, geh = (0.1*vm + 1.8*vm*gr)*kd.kg/1000*5*(sek/60);   // ohne die 3,5 ml/kg/min Ruhe
-  return Math.round((geh*(1-w) + lauf*w)/10)*10;
+  var geh = 0.5*kd.kg*km + 0.009*kd.kg*auf;
+  return Math.round((geh*(1 - w) + lauf*w)/10)*10;
 }
 function runKcalText(dist, sek, rad, hm){ var k = runKcal(dist, sek, rad, hm); return k > 0 ? "≈ "+k.toLocaleString(currentLang() === "en" ? "en-GB" : "de-DE") : "–"; }
 function runTempoJetzt(r){
@@ -983,11 +996,13 @@ function renderRunDetail(id){
     '<div class="run-raster"><div><b>'+esc(runKm(x.dist))+'</b><small>'+esc(t("runDist"))+' (km)</small></div><div><b>'+esc(fmtUhr(x.dur))+'</b><small>'+esc(t("runTime"))+'</small></div>'+
       '<div><b>'+esc(runTempo(x, x.dur/1000, x.dist))+'</b><small>'+esc(t(runIstRad(x) ? "runSpeedAvg" : "runPaceAvg"))+' '+runTempoEinheit(x)+'</small></div>'+(koerperDaten() ? '<div><b>'+esc(runKcalText(x.dist, x.dur/1000, runIstRad(x), x.hm))+'</b><small>'+esc(t("runKcalZus"))+'</small></div>' : '')+(x.hm != null ? '<div><b>'+esc(String(x.hm))+'</b><small>'+esc(t("runElev"))+' (m)</small></div>' : '')+'</div>'+
     (koerperDaten() ? '<div class="sk-unter run-kcal-hinweis">'+esc(t("runKcalHint"))+'</div>' : '<button type="button" class="kh-mehr" data-koerper>'+esc(t("statKcalLink"))+' &#8250;</button>')+
+    '<i id="run-hr-platz" hidden></i>'+runHrKarte(x)+
     '<div class="section-title">'+esc(t("runRoute"))+'</div>'+runStreckeNeu(x)+
     (sp.length ? '<div class="section-title">'+esc(t("runSplits"))+'</div><div class="card run-kms">'+runKmZeilen(x)+'</div>' : '')+
     '<button type="button" class="btn btn-secondary" data-rungpx style="margin-top:14px;">'+esc(t("runGpx"))+'</button>'+
     '<div style="height:40px"></div>';
   bindCommon();
+  runHrBinden(x);
   var nm = app.querySelector("#run-name"), nt = app.querySelector("#run-note");
   var kb = app.querySelector("[data-koerper]"); if(kb) kb.addEventListener("click", function(){ openKoerperSheet(function(){ renderRunDetail(id); }); });
   nm.addEventListener("input", function(){ x.name = nm.value.trim(); if(!x.name) delete x.name; save(); });
@@ -1116,22 +1131,143 @@ function runAuswTrend(){
   var basis = l.filter(function(x){ return x.at >= Date.now() - 90*86400000 && x.dist >= 3000; }), prog = [];
   [[5000, t("runTrP5")], [10000, t("runTrP10")], [21097.5, t("runHalbmarathon")]].forEach(function(z){
     var b = null;
-    basis.forEach(function(x){ if(x.dist < z[0]/4) return; var T = x.dur/1000*Math.pow(z[0]/x.dist, 1.06); if(b === null || T < b) b = T; });
+    // Geh-Lauf-Einheiten (x.iv) zählen nicht: ihr Durchschnittstempo ist kein Renntempo
+    basis.forEach(function(x){ if(x.dist < z[0]/4 || x.iv) return; var T = x.dur/1000*Math.pow(z[0]/x.dist, 1.06); if(b === null || T < b) b = T; });
     if(b !== null) prog.push(runAuswZeile(esc(z[1]), esc(fmtUhr(b*1000)), ""));
   });
   if(prog.length) html += '<div class="sk-unter titel">'+esc(t("runTrProg"))+'</div><div class="rekorde">'+prog.join("")+'</div><div class="sk-unter">'+esc(t("runTrProgHint"))+'</div>';
   return runAuswKarte(t("runTrTitel"), html, t("runTrHint"));
 }
 
+/* ============ Puls aus Health Connect (Uhr) ============
+   Die Uhr (Pixel Watch, Galaxy Watch, Garmin …) zeichnet über ihre eigene App auf und schreibt den Puls in Health Connect.
+   BLOC liest dort nach dem Lauf nur die Herzfrequenz für genau diese Zeit (BlocPulsPlugin, nur in der Android-App) und speichert je Lauf:
+   hr:{ avg, max, pts:[Ø bpm je Kilometer, zuletzt der angefangene Rest], h:{ a:niedrigster bpm, s:[Sekunden je bpm ab a] } }.
+   Aus h werden die Zonen immer mit dem aktuellen Alter berechnet (runHrZonen), so passt es auch, wenn das Alter später eingetragen wird.
+   Solange die Uhr noch nicht übertragen hat, trägt der Lauf hrOffen:{ bis (ms), p:[[Pause von, bis] …] }; BLOC versucht es bis 2 Tage nach dem Lauf erneut.
+   Einstellung settings.pulsHC = 1, sobald die Erlaubnis da ist. Alles bleibt auf dem Gerät. */
+var runHrLaeuft = {}, runHrVersuch = {};
+function runPauseZu(r){ if(r && r.pauseAb) (r.pausenL || (r.pausenL = [])).push([r.pauseAb, Date.now()]); }
+function runHrMax(){ var kd = koerperDaten(), alter = kd ? kd.alter : 0; return alter >= 14 && alter <= 100 ? 208 - 0.7*alter : 0; }
+function runHrRechnen(x, werte){
+  var o = x.hrOffen || {}, p = o.p || [], start = x.at, ende = o.bis || (x.at + x.dur + (x.pause || 0));
+  function inPause(ms){ for(var i = 0; i < p.length; i++) if(ms >= p[i][0] && ms < p[i][1]) return true; return false; }
+  function aktiv(ms){ var a = ms - start; p.forEach(function(q){ if(q[1] <= ms) a -= q[1] - q[0]; }); return a; }
+  var l = (werte || []).filter(function(w){ return w && w[0] >= start && w[0] <= ende && w[1] >= 25 && w[1] <= 250 && !inPause(w[0]); });
+  if(l.length < 5) return null;
+  var sum = 0, gew = 0, max = 0, min = 999, sek = {}, sp = x.splits || [], km = [];
+  l.forEach(function(w, i){
+    var g = Math.min((i + 1 < l.length ? l[i+1][0] : w[0] + 5000) - w[0], 30000)/1000;   // jeder Wert gilt bis zum nächsten, höchstens 30 s (Lücken zählen nicht)
+    var b = Math.round(w[1]);
+    max = Math.max(max, b); min = Math.min(min, b);
+    if(g <= 0) return;
+    sum += b*g; gew += g; sek[b] = (sek[b] || 0) + g;
+    var a = aktiv(w[0]), k = 0; while(k < sp.length && sp[k] < a) k++;
+    if(!km[k]) km[k] = [0, 0]; km[k][0] += b*g; km[k][1] += g;
+  });
+  if(gew < 30) return null;
+  var hr = { avg:Math.round(sum/gew), max:max, pts:[], h:{ a:min, s:[] } };
+  for(var k = 0; k < km.length; k++) hr.pts.push(km[k] && km[k][1] ? Math.round(km[k][0]/km[k][1]) : null);
+  for(var b = min; b <= max; b++) hr.h.s.push(Math.round(sek[b] || 0));
+  return hr;
+}
+/* Sekunden in Zone 1 bis 5 (oder null ohne Alter); Einträge mit fertigem z werden übernommen */
+function runHrZonen(hr){
+  if(!hr) return null;
+  var hfmax = runHrMax();
+  if(hr.h && hfmax){
+    var z = [0, 0, 0, 0, 0];
+    hr.h.s.forEach(function(s, i){ var pz = 100*(hr.h.a + i)/hfmax; z[pz < 60 ? 0 : pz < 70 ? 1 : pz < 80 ? 2 : pz < 90 ? 3 : 4] += s; });
+    return z;
+  }
+  return Array.isArray(hr.z) ? hr.z : null;
+}
+function runPulsHolen(x, laut){
+  var bp = nativPlugin("BlocPuls");
+  if(!bp || !x || !x.hrOffen || runHrLaeuft[x.id]) return;
+  runHrLaeuft[x.id] = 1; runHrVersuch[x.id] = Date.now();
+  bp.lesen({ von:x.at, bis:x.hrOffen.bis }).then(function(r){
+    var hr = runHrRechnen(x, r && r.werte);
+    if(hr){ x.hr = hr; delete x.hrOffen; save(); if(laut) showToast(t("runHrDa")); }
+    else if(Date.now() - x.hrOffen.bis > 2*86400000){ delete x.hrOffen; x.hrLeer = 1; save(); }
+    else if(laut) showToast(t("runHrNochNicht"));
+  }).catch(function(e){
+    if(String(e && (e.message || e)).indexOf("keineErlaubnis") > -1){ delete state.db.settings.pulsHC; delete x.hrOffen; save(); if(laut) showToast(t("runHrNichtErlaubt")); }
+    else if(laut) showToast(t("runHrFehler"));
+  }).then(function(){ delete runHrLaeuft[x.id]; runHrNeu(x); });
+}
+/* Offene Läufe nachholen (App geöffnet oder wieder sichtbar), höchstens einmal je Minute je Lauf */
+function runHrNachholen(){
+  if(!IST_NATIV || !state.db.settings.pulsHC) return;
+  (state.db.settings.runs || []).forEach(function(x){ if(x && x.hrOffen && Date.now() - (runHrVersuch[x.id] || 0) > 60000) runPulsHolen(x, false); });
+}
+document.addEventListener("visibilitychange", function(){ if(document.visibilityState === "visible") runHrNachholen(); });
+setTimeout(runHrNachholen, 3000);
+function runHrVerbinden(x){
+  var bp = nativPlugin("BlocPuls");
+  if(!bp) return;
+  bp.status().then(function(st){
+    if(st.status === "installieren"){ showToast(t("runHrInstall")); return bp.installieren(); }
+    if(st.status !== "ok"){ showToast(t("runHrNichtGeraet")); return; }
+    return (st.erlaubt ? Promise.resolve({ erlaubt:true }) : bp.erlauben()).then(function(e){
+      if(!e || !e.erlaubt){ showToast(t("runHrNichtErlaubt")); return; }
+      state.db.settings.pulsHC = 1;
+      if(x && !x.hr) x.hrOffen = x.hrOffen || { bis:x.at + x.dur + (x.pause || 0), p:[] };   // schon gespeicherter Lauf: seine Pausen kennt BLOC hier nicht
+      if(x) delete x.hrLeer;
+      save(); runHrNeu(x);
+      if(x) runPulsHolen(x, true);
+    });
+  }).catch(function(){ showToast(t("runHrFehler")); });
+}
+/* Karte „Puls“ im Lauf-Detail */
+function runHrKarte(x){
+  var s = state.db.settings, inhalt = "";
+  if(x.hr){
+    var hr = x.hr, zs = runHrZonen(hr), summe = zs ? zs.reduce(function(a, b){ return a + b; }, 0) : 0, hfmax = runHrMax();
+    inhalt = '<div class="run-raster"><div><b>'+hr.avg+'</b><small>'+esc(t("runHrAvg"))+' (bpm)</small></div><div><b>'+hr.max+'</b><small>'+esc(t("runHrMaxL"))+' (bpm)</small></div></div>';
+    if(summe > 0) inhalt += '<div class="sk-unter titel">'+esc(t("runHrZonen"))+'</div>'+RUN_ZONEN.map(function(z, i){
+      var pr = Math.round(100*zs[i]/summe);
+      return '<div class="who-zeile"><span>'+esc("Z"+(i + 1)+" "+t(z[2])+" · "+Math.round(hfmax*z[0]/100)+"–"+Math.round(hfmax*z[1]/100))+'</span><b>'+esc(fmtUhr(zs[i]*1000))+'</b><i class="who-bar"><u style="width:'+pr+'%"></u></i></div>';
+    }).join("");
+    else inhalt += '<div class="sk-unter">'+esc(t("runHrOhneAlter"))+'</div>';
+    var pts = (hr.pts || []).filter(function(v){ return v; });
+    if(pts.length > 1) inhalt += '<div class="sk-unter titel">'+esc(t("runHrKm"))+'</div><div class="rekorde">'+hr.pts.map(function(v, i){
+      return v ? runAuswZeile(esc(i < (x.splits || []).length ? "km "+(i + 1) : t("runHrRest")), esc(v+" bpm"), "") : "";
+    }).join("")+'</div>';
+  } else if(!IST_NATIV) return "";
+  else if(x.hrOffen) inhalt = '<div class="sk-unter" style="margin-top:0">'+esc(t("runHrWarte"))+'</div><button type="button" class="btn btn-secondary" data-hrjetzt>'+esc(t(runHrLaeuft[x.id] ? "runHrHole" : "runHrJetzt"))+'</button>';
+  else if(x.hrLeer) inhalt = '<div class="sk-unter" style="margin-top:0">'+esc(t("runHrKeine"))+'</div>';
+  else if(!s.pulsHC && Date.now() - x.at < 30*86400000) inhalt = '<div class="sk-unter" style="margin-top:0">'+esc(t("runHrVerbHint"))+'</div><button type="button" class="btn btn-secondary" data-hrverb>'+esc(t("runHrVerbinden"))+'</button>';
+  else return "";
+  return '<div id="run-hr"><div class="section-title">'+esc(t("runHrTitel"))+'</div><div class="card run-hr">'+inhalt+'</div></div>';
+}
+function runHrKnoepfe(x){
+  var j = app.querySelector("[data-hrjetzt]"); if(j) j.addEventListener("click", function(){ runPulsHolen(x, true); runHrNeu(x); });
+  var v = app.querySelector("[data-hrverb]"); if(v) v.addEventListener("click", function(){ runHrVerbinden(x); });
+}
+function runHrBinden(x){
+  runHrKnoepfe(x);
+  if(x.hrOffen && Date.now() - (runHrVersuch[x.id] || 0) > 60000) runPulsHolen(x, false);
+}
+/* Nur die Puls-Karte neu zeichnen (Abschlusskarte und Notizen bleiben stehen) */
+function runHrNeu(x){
+  if(!x || location.hash !== "#rundetail/"+x.id) return;
+  var alt = app.querySelector("#run-hr"), box = document.createElement("div");
+  box.innerHTML = runHrKarte(x);
+  if(alt){ if(box.firstChild) alt.replaceWith(box.firstChild); else alt.remove(); }
+  else if(box.firstChild){ var platz = app.querySelector("#run-hr-platz"); if(platz) platz.after(box.firstChild); }
+  runHrKnoepfe(x);
+}
+
 /* 5) Pulszonen (Vorbereitung für Uhr oder Pulsgurt): Zonen aus dem geschätzten Maximalpuls (208 − 0,7 × Alter, Tanaka 2001), Orientierung mit etwa ±10 Schlägen Streuung.
    Sobald Läufe ein Feld hr tragen – { avg, max, z:[Sekunden in Zone 1 bis 5] } –, zeigt die Kachel die Zeit je Zone der letzten 4 Wochen; bis dahin die Zonen mit Schlägen pro Minute.
-   Bisher schreibt nichts hr (BLOC hat noch keine Uhr-Anbindung); beim Einbauen der Uhr dieses Feld je Lauf füllen. */
+   hr schreibt runPulsHolen (Health Connect, oben); die Zonen kommen aus runHrZonen. */
 var RUN_ZONEN = [[50, 60, "runPuZ1"], [60, 70, "runPuZ2"], [70, 80, "runPuZ3"], [80, 90, "runPuZ4"], [90, 100, "runPuZ5"]];
 function runAuswPuls(){
   var kd = koerperDaten(), alter = kd ? kd.alter : 0;
   if(!(alter >= 14 && alter <= 100)) return runAuswKarte(t("runPuTitel"), '<div class="sk-unter" style="margin-top:0">'+esc(t("runPuLeer"))+'</div><button type="button" class="kh-mehr" data-koerper>'+esc(t("runPuAlter"))+' &#8250;</button>', t("runPuHint"));
   var hfmax = Math.round(208 - 0.7*alter), von = Date.now() - 28*86400000, sek = [0, 0, 0, 0, 0];
-  (state.db.settings.runs || []).forEach(function(x){ if(x && x.hr && Array.isArray(x.hr.z) && x.at >= von) x.hr.z.forEach(function(s, i){ if(i < 5) sek[i] += +s || 0; }); });
+  (state.db.settings.runs || []).forEach(function(x){ var z = x && x.at >= von ? runHrZonen(x.hr) : null; if(z) z.forEach(function(s, i){ if(i < 5) sek[i] += +s || 0; }); });
   var summe = sek.reduce(function(a, b){ return a + b; }, 0), html = '<div class="sk-unter" style="margin-top:0">'+esc(t("runPuMax", { n:hfmax }))+'</div>';
   function bpm(z){ return Math.round(hfmax*z[0]/100)+"–"+Math.round(hfmax*z[1]/100); }
   if(summe > 0){
