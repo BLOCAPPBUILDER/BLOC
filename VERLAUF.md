@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-28 · Frei lesbare Quellen (Fassung 2026-11-28-1)
+
+- **Quellen-Seite:** Bei jeder Quelle ohne freien Volltext steht jetzt eine frei lesbare Arbeit („mit derselben Aussage“ oder „zum Thema“), alle mit Europe PMC geprüft; wo es keine gleichwertige gibt, steht das dabei. Neu: F58 (Maximalpuls-Formeln im Vergleich), F59 (Zirkeltraining und Bauchfett). Auch die Quellenliste der Protein-Seite nennt freie Alternativen.
+- **Vorsichtiger formuliert,** weil frei lesbare Studien es nicht so eindeutig sehen: Nordic Curl und Zerrungen, Periodisierung, Sit-ups und Bauchfett, Übungsreihenfolge (Praxisregel), Copenhagen bei Amateuren, Riegel-Prognose (passt bis Halbmarathon).
+
 ## 2026-11-27 · Kalorien, Faktencheck und Quellen (Fassung 2026-11-27-4)
 
 - **Kalorien:** Laufen rechnet jetzt auch den Aufstieg mit (ACSM-Laufformel); unplausible Tempi (zu Fuß über 25 km/h, Rad über 70 km/h) geben keine Schätzung; Rad ab 32 km/h mit 16,8 MET (Compendium 2024). Texte in App, FAQ und Quellen passen jetzt zum Code (netto, ohne Ruheumsatz; Gehen/Laufen/Rad). Neue Einheitstests.

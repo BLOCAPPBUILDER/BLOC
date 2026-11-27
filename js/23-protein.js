@@ -53,14 +53,14 @@ var PROT_T = {
     quellen:[
       "Joint WHO/FAO/UNU Expert Consultation: Protein and amino acid requirements in human nutrition, WHO TRS 935 (2007)",
       "Jäger et al.: ISSN Position Stand: protein and exercise, J Int Soc Sports Nutr 14:20 (2017)",
-      "Thomas, Erdman, Burke: Position of the Academy of Nutrition and Dietetics, Dietitians of Canada and the American College of Sports Medicine: Nutrition and athletic performance, J Acad Nutr Diet 116:501 (2016)",
+      "Thomas, Erdman, Burke: Position of the Academy of Nutrition and Dietetics, Dietitians of Canada and the American College of Sports Medicine: Nutrition and athletic performance, J Acad Nutr Diet 116:501 (2016) – nur Zusammenfassung frei; frei lesbar zum Thema: Jäger et al. 2017 (oben)",
       "Morton et al.: Protein supplementation and resistance training-induced gains in muscle mass and strength, meta-analysis, Br J Sports Med 52:376 (2018)",
       "Schoenfeld, Aragon: How much protein can the body use in a single meal for muscle-building?, J Int Soc Sports Nutr 15:10 (2018)",
       "EFSA NDA Panel: Scientific Opinion on Dietary Reference Values for protein, EFSA Journal 10(2):2557 (2012)",
-      "Mifflin et al.: A new predictive equation for resting energy expenditure in healthy individuals, Am J Clin Nutr 51:241 (1990)",
-      "Frankenfield et al.: Comparison of predictive equations for resting metabolic rate in healthy nonobese and obese adults, J Am Diet Assoc 105:775 (2005)",
+      "Mifflin et al.: A new predictive equation for resting energy expenditure in healthy individuals, Am J Clin Nutr 51:241 (1990) – nur Zusammenfassung frei; frei lesbar zum Thema: ten Haaf, Weijs, PLoS One 9:e108460 (2014)",
+      "Frankenfield et al.: Comparison of predictive equations for resting metabolic rate in healthy nonobese and obese adults, J Am Diet Assoc 105:775 (2005) – nur Zusammenfassung frei; frei lesbar zum Thema: O'Neill et al., Sports Med 53:2373 (2023)",
       "Helms et al.: Evidence-based recommendations for natural bodybuilding contest preparation: nutrition and supplementation, J Int Soc Sports Nutr 11:20 (2014)",
-      "Bauer et al.: Evidence-based recommendations for optimal dietary protein intake in older people (PROT-AGE), J Am Med Dir Assoc 14:542 (2013)",
+      "Bauer et al.: Evidence-based recommendations for optimal dietary protein intake in older people (PROT-AGE), J Am Med Dir Assoc 14:542 (2013) – nur Zusammenfassung frei; frei lesbar mit derselben Aussage: Deutz et al., ESPEN, Clin Nutr 33:929 (2014)",
       "FAO/WHO/UNU: Human energy requirements, FAO Food and Nutrition Technical Report 1 (2004)",
       "Lebensmittelwerte: eigene Auswahl grob gerundeter Richtwerte, stichprobenartig abgeglichen mit USDA FoodData Central"
     ]
@@ -113,14 +113,14 @@ var PROT_T = {
     quellen:[
       "Joint WHO/FAO/UNU Expert Consultation: Protein and amino acid requirements in human nutrition, WHO TRS 935 (2007)",
       "Jäger et al.: ISSN Position Stand: protein and exercise, J Int Soc Sports Nutr 14:20 (2017)",
-      "Thomas, Erdman, Burke: Position of the Academy of Nutrition and Dietetics, Dietitians of Canada and the American College of Sports Medicine: Nutrition and athletic performance, J Acad Nutr Diet 116:501 (2016)",
+      "Thomas, Erdman, Burke: Position of the Academy of Nutrition and Dietetics, Dietitians of Canada and the American College of Sports Medicine: Nutrition and athletic performance, J Acad Nutr Diet 116:501 (2016) – abstract only; free to read on the topic: Jäger et al. 2017 (above)",
       "Morton et al.: Protein supplementation and resistance training-induced gains in muscle mass and strength, meta-analysis, Br J Sports Med 52:376 (2018)",
       "Schoenfeld, Aragon: How much protein can the body use in a single meal for muscle-building?, J Int Soc Sports Nutr 15:10 (2018)",
       "EFSA NDA Panel: Scientific Opinion on Dietary Reference Values for protein, EFSA Journal 10(2):2557 (2012)",
-      "Mifflin et al.: A new predictive equation for resting energy expenditure in healthy individuals, Am J Clin Nutr 51:241 (1990)",
-      "Frankenfield et al.: Comparison of predictive equations for resting metabolic rate in healthy nonobese and obese adults, J Am Diet Assoc 105:775 (2005)",
+      "Mifflin et al.: A new predictive equation for resting energy expenditure in healthy individuals, Am J Clin Nutr 51:241 (1990) – abstract only; free to read on the topic: ten Haaf, Weijs, PLoS One 9:e108460 (2014)",
+      "Frankenfield et al.: Comparison of predictive equations for resting metabolic rate in healthy nonobese and obese adults, J Am Diet Assoc 105:775 (2005) – abstract only; free to read on the topic: O'Neill et al., Sports Med 53:2373 (2023)",
       "Helms et al.: Evidence-based recommendations for natural bodybuilding contest preparation: nutrition and supplementation, J Int Soc Sports Nutr 11:20 (2014)",
-      "Bauer et al.: Evidence-based recommendations for optimal dietary protein intake in older people (PROT-AGE), J Am Med Dir Assoc 14:542 (2013)",
+      "Bauer et al.: Evidence-based recommendations for optimal dietary protein intake in older people (PROT-AGE), J Am Med Dir Assoc 14:542 (2013) – abstract only; free to read, same finding: Deutz et al., ESPEN, Clin Nutr 33:929 (2014)",
       "FAO/WHO/UNU: Human energy requirements, FAO Food and Nutrition Technical Report 1 (2004)",
       "Food values: own selection of roughly rounded guide values, spot-checked against USDA FoodData Central"
     ]
