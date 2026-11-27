@@ -25,14 +25,22 @@ a{ color:var(--accent); }
 nav{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:6px; }
 nav a{ display:inline-flex; align-items:center; min-height:44px; padding:0 14px; border-radius:100px; border:1px solid var(--border); background:var(--surface); color:var(--text); text-decoration:none; font-weight:600; font-size:14px; }
 hr{ border:none; border-top:1px solid var(--border); margin:44px 0 8px; }
+/* Platzhalter, bis die Anbieterangaben feststehen */
+.luecke{ background:var(--warn-bg); border:1px dashed var(--warn-border); border-radius:6px; padding:0 4px; }
 </style>
 </head>
 <body>
 <main>
-<nav><a href="./">&larr; Zur App</a><a href="#haftung">Haftungsausschluss</a><a href="#en">English</a></nav>
+<nav><a href="./">&larr; Zur App</a><a href="#haftung">Haftungsausschluss</a><a href="impressum.html">Impressum</a><a href="#en">English</a></nav>
 
 <h1>Datenschutz &amp; Haftungsausschluss</h1>
-<p class="dim">BLOC – Modular Training Builder · Stand: 22. November 2026</p>
+<p class="dim">BLOC – Modular Training Builder · Stand: 27. November 2026</p>
+
+<!-- PLATZHALTER: Angaben in [eckigen Klammern] wie im Impressum ausfüllen (DE und EN), Klasse „luecke“ dann entfernen. -->
+<div class="card">
+<h2>Verantwortlich</h2>
+<p>Verantwortlich für BLOC und für die Datenverarbeitung im Sinne der Datenschutz-Grundverordnung (DSGVO): <span class="luecke">[Vorname Nachname]</span>, <span class="luecke">[Straße Hausnummer]</span>, <span class="luecke">[PLZ Ort]</span>, Deutschland. E-Mail: <span class="luecke">[E-Mail-Adresse]</span>. Weitere Angaben stehen im <a href="impressum.html">Impressum</a>. Fragen zum Datenschutz kannst du an diese Adresse schicken.</p>
+</div>
 
 <div class="card">
 <h2>Kurz gesagt</h2>
@@ -63,8 +71,14 @@ hr{ border:none; border-top:1px solid var(--border); margin:44px 0 8px; }
 <p>„Alle Daten löschen“ in den Einstellungen entfernt nach einer Rückfrage alle oben genannten Daten von diesem Gerät: die Hauptdaten, den automatischen Schnappschuss, eine eventuell beiseitegelegte Kopie beschädigter Daten und in der Android-App die zum Teilen abgelegten Dateien im App-Zwischenspeicher. Das lässt sich nicht rückgängig machen. Klappt ein Teil nicht, sagt dir die App, was noch vorhanden ist.</p>
 <p>Dateien, die du selbst gespeichert oder geteilt hast, kann die App nicht erreichen. Sie bleiben bestehen, bis du sie selbst löschst. Auch wenn du die App deinstallierst oder die Website-Daten löschst, sind die Daten in der App weg.</p>
 
+<h2>Deine Eingaben: nur auf deinem Gerät</h2>
+<p>Alles, was du in der App einträgst, verarbeitet nur dein Gerät. Der Anbieter erhält diese Daten nicht und kann sie weder einsehen noch ändern oder löschen. Du entscheidest selbst, was du einträgst, ob du eine Sicherung erstellst und wann du Daten löschst. Die App funktioniert auch ohne Angaben zu Körper oder Gesundheit; sie sind freiwillig.</p>
+
 <h2>Verbindungen ins Internet</h2>
-<p>Die Web-App wird von GitHub Pages ausgeliefert. Beim Laden verarbeitet GitHub technisch notwendige Verbindungsdaten wie die IP-Adresse (siehe <a href="https://docs.github.com/de/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">Datenschutzerklärung von GitHub</a>). Deine Eingaben in der App gehören nicht dazu. Danach funktioniert die App auch offline. Sie lädt keine Schriften, Skripte oder anderen Inhalte von fremden Servern. Die Android-App enthält alle Dateien im Paket, lädt nichts nach und sendet keine Daten; ihre Oberfläche darf technisch nur lokale Quellen verwenden.</p>
+<p>Die Web-App wird von GitHub Pages ausgeliefert, einem Dienst der GitHub, Inc. (USA). Beim Laden verarbeitet GitHub technisch notwendige Verbindungsdaten wie die IP-Adresse, die aufgerufene Datei, Datum und Uhrzeit sowie Angaben zu Browser und Gerät. GitHub speichert die IP-Adresse nach eigenen Angaben zur Sicherheit des Dienstes. Wie lange, legt GitHub fest; der Anbieter von BLOC hat auf diese Protokolle keinen Zugriff (siehe <a href="https://docs.github.com/de/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">Datenschutzerklärung von GitHub</a>). Deine Eingaben in der App gehören nicht dazu.</p>
+<p><strong>Rechtsgrundlage</strong> ist das berechtigte Interesse, die App zuverlässig und sicher bereitzustellen (Art. 6 Abs. 1 lit. f DSGVO). <strong>Empfänger</strong> ist GitHub. Dabei können Daten in die USA übermittelt werden. Grundlage dafür ist der Angemessenheitsbeschluss der EU-Kommission zum EU-US Data Privacy Framework (Art. 45 DSGVO), an dem GitHub teilnimmt; GitHub nennt zusätzlich EU-Standardvertragsklauseln.</p>
+<p>Nach dem ersten Laden funktioniert die App auch offline. Sie lädt keine Schriften, Skripte oder anderen Inhalte von fremden Servern. Die Android-App enthält alle Dateien im Paket, lädt nichts nach und sendet keine Daten; ihre Oberfläche darf technisch nur lokale Quellen verwenden.</p>
+<p><strong>Google Play:</strong> Wenn du die Android-App über Google Play installierst, verarbeitet Google dabei Daten nach den eigenen Bedingungen und der <a href="https://policies.google.com/privacy?hl=de" rel="noopener">Datenschutzerklärung von Google</a>, zum Beispiel zu deinem Konto und Gerät. Der Anbieter sieht in der Google Play Console nur zusammengefasste Statistiken (zum Beispiel die Zahl der Installationen) und Absturzberichte ohne Namen oder Kontodaten. Diese Berichte kommen nur von Geräten, auf denen die Weitergabe von Diagnosedaten an Google eingeschaltet ist.</p>
 
 <h2>BLOCs, Trainings und Übungen teilen</h2>
 <p>Teilen passiert nur, wenn du es auslöst. Einen BLOC mit Timer kannst du als Link teilen. Er steckt komprimiert, aber <strong>nicht verschlüsselt</strong> im Link selbst und wird nirgends hochgeladen. Wer den Link hat, kann ihn lesen. Wohin er geht, entscheidest du über die App, mit der du ihn verschickst; dort gelten deren Datenschutzbestimmungen.</p>
@@ -94,6 +108,15 @@ hr{ border:none; border-top:1px solid var(--border); margin:44px 0 8px; }
 <h2>Kinder</h2>
 <p>Für Kinder gilt dasselbe wie für alle: Eingaben bleiben lokal auf dem Gerät und der Anbieter erhält sie nicht. Die App prüft das Alter der Person nicht, die sie nutzt.</p>
 
+<h2>Deine Rechte</h2>
+<p>Du hast nach der DSGVO das Recht auf Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18) und Datenübertragbarkeit (Art. 20). Einer Verarbeitung, die auf berechtigtem Interesse beruht, kannst du aus Gründen widersprechen, die sich aus deiner besonderen Situation ergeben (Art. 21).</p>
+<ul>
+<li><strong>Daten in der App:</strong> Diese Rechte übst du direkt selbst aus. Du siehst alle Daten in der App, kannst sie ändern, als Sicherungsdatei mitnehmen und mit „Alle Daten löschen“ entfernen. Der Anbieter hat keine Kopie.</li>
+<li><strong>Verbindungsdaten bei GitHub und Google:</strong> Der Anbieter hat darauf keinen Zugriff. Du kannst dich direkt an GitHub bzw. Google wenden oder an den Anbieter, der deine Anfrage dann weiterleitet.</li>
+</ul>
+<p>Für Fragen genügt eine E-Mail an die oben unter „Verantwortlich“ genannte Adresse. Du hast außerdem das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren (Art. 77 DSGVO), zum Beispiel bei der Behörde deines Bundeslandes.</p>
+<p>Es gibt keine automatisierte Entscheidungsfindung im Sinne von Art. 22 DSGVO. Die Vorschläge der App (zum Beispiel im Plan-Assistenten) entstehen auf deinem Gerät und haben keine rechtliche Wirkung für dich.</p>
+
 <h1 class="teil" id="haftung">Haftungsausschluss</h1>
 
 <div class="card warn">
@@ -114,7 +137,7 @@ hr{ border:none; border-top:1px solid var(--border); margin:44px 0 8px; }
 <p>Übungen, Anleitungen, Zeiten, Muskelangaben und zusammengestellte BLOCs (auch die von „Überrasch mich“) werden ohne Gewähr für Richtigkeit, Vollständigkeit und Eignung für einen bestimmten Zweck bereitgestellt. Kalorienangaben sind grobe Schätzungen, keine medizinische oder Ernährungsberatung.</p>
 
 <h2>Haftung</h2>
-<p>Die App wird kostenlos zur Verfügung gestellt. Für Verletzungen, gesundheitliche Beschwerden, Sach- oder sonstige Schäden, die aus der Nutzung der App oder aus dem Training mit ihr entstehen, wird keine Haftung übernommen, soweit dies gesetzlich zulässig ist. Unberührt bleibt die gesetzliche Haftung für Vorsatz und grobe Fahrlässigkeit.</p>
+<p>Die App wird kostenlos zur Verfügung gestellt. Für Sach- und Vermögensschäden, die aus der Nutzung der App oder aus dem Training mit ihr entstehen, haftet der Anbieter nur bei Vorsatz und grober Fahrlässigkeit. Unberührt bleibt die gesetzliche Haftung für Schäden aus der Verletzung des Lebens, des Körpers oder der Gesundheit, nach dem Produkthaftungsgesetz und für arglistig verschwiegene Mängel.</p>
 
 <h2>Änderungen</h2>
 <p>Ändert sich etwas an diesen Hinweisen, steht die neue Fassung auf dieser Seite, mit dem neuen Datum oben.</p>
@@ -122,7 +145,12 @@ hr{ border:none; border-top:1px solid var(--border); margin:44px 0 8px; }
 <hr>
 
 <h1 id="en">Privacy &amp; disclaimer</h1>
-<p class="dim">BLOC – Modular Training Builder · Last updated: 22 November 2026</p>
+<p class="dim">BLOC – Modular Training Builder · Last updated: 27 November 2026</p>
+
+<div class="card">
+<h2>Controller</h2>
+<p>Responsible for BLOC and controller for data processing under the General Data Protection Regulation (GDPR): <span class="luecke">[First name Last name]</span>, <span class="luecke">[Street, house number]</span>, <span class="luecke">[Postcode, town]</span>, Germany. Email: <span class="luecke">[email address]</span>. More details are in the <a href="impressum.html#en">legal notice</a>. You can send privacy questions to this address.</p>
+</div>
 
 <div class="card">
 <h2>In short</h2>
@@ -153,8 +181,14 @@ hr{ border:none; border-top:1px solid var(--border); margin:44px 0 8px; }
 <p>“Delete all data” in the settings removes, after a confirmation, all the data listed above from this device: the main data, the automatic snapshot, any set-aside copy of damaged data and, in the Android app, the files placed in the app cache for sharing. This cannot be undone. If a part fails, the app tells you what is still there.</p>
 <p>The app cannot reach files you saved or shared yourself. They remain until you delete them. Uninstalling the app or clearing the site data also removes the data in the app.</p>
 
+<h2>Your entries: only on your device</h2>
+<p>Everything you enter in the app is processed only by your device. The provider does not receive this data and can neither see, change nor delete it. You decide what you enter, whether you create a backup and when you delete data. The app also works without body or health information; it is optional.</p>
+
 <h2>Internet connections</h2>
-<p>The web app is served by GitHub Pages. When it loads, GitHub processes technically necessary connection data such as your IP address (see <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub's privacy statement</a>). Your entries in the app are not part of this. After that the app also works offline. It does not load fonts, scripts or other content from third-party servers. The Android app contains all files in its package, downloads nothing and sends no data; its interface is technically limited to local sources.</p>
+<p>The web app is served by GitHub Pages, a service of GitHub, Inc. (USA). When it loads, GitHub processes technically necessary connection data such as your IP address, the requested file, date and time, and browser and device details. According to GitHub, the IP address is stored for the security of the service. GitHub decides how long; the provider of BLOC has no access to these logs (see <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub's privacy statement</a>). Your entries in the app are not part of this.</p>
+<p>The <strong>legal basis</strong> is the legitimate interest in providing the app reliably and securely (Art. 6(1)(f) GDPR). The <strong>recipient</strong> is GitHub. Data may be transferred to the USA. This is based on the European Commission's adequacy decision for the EU-US Data Privacy Framework (Art. 45 GDPR), in which GitHub participates; GitHub also refers to EU standard contractual clauses.</p>
+<p>After the first load the app also works offline. It does not load fonts, scripts or other content from third-party servers. The Android app contains all files in its package, downloads nothing and sends no data; its interface is technically limited to local sources.</p>
+<p><strong>Google Play:</strong> If you install the Android app through Google Play, Google processes data under its own terms and <a href="https://policies.google.com/privacy?hl=en" rel="noopener">privacy policy</a>, for example about your account and device. In the Google Play Console the provider only sees aggregated statistics (for example the number of installs) and crash reports without names or account data. These reports only come from devices on which sharing diagnostic data with Google is turned on.</p>
 
 <h2>Sharing BLOCs, sessions and exercises</h2>
 <p>Sharing only happens when you start it. You can share a Timer BLOC as a link. It is compressed but <strong>not encrypted</strong> inside the link itself and is not uploaded anywhere. Anyone with the link can read it. You decide where it goes through the app you send it with; that app's privacy policy applies.</p>
@@ -184,6 +218,15 @@ hr{ border:none; border-top:1px solid var(--border); margin:44px 0 8px; }
 <h2>Children</h2>
 <p>The same applies to children as to everyone: entries stay locally on the device and the provider does not receive them. The app does not check the age of the person using it.</p>
 
+<h2>Your rights</h2>
+<p>Under the GDPR you have the right of access (Art. 15), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18) and data portability (Art. 20). You can object to processing based on legitimate interest on grounds relating to your particular situation (Art. 21).</p>
+<ul>
+<li><strong>Data in the app:</strong> you exercise these rights directly yourself. You can see all data in the app, change it, take it with you as a backup file and remove it with “Delete all data”. The provider has no copy.</li>
+<li><strong>Connection data at GitHub and Google:</strong> the provider has no access to it. You can contact GitHub or Google directly, or the provider, who will then forward your request.</li>
+</ul>
+<p>An email to the address under “Controller” above is enough for any question. You also have the right to lodge a complaint with a data protection supervisory authority (Art. 77 GDPR), for example in the country or German state where you live.</p>
+<p>There is no automated decision-making within the meaning of Art. 22 GDPR. The app's suggestions (for example in the plan assistant) are created on your device and have no legal effect on you.</p>
+
 <h1 class="teil">Disclaimer</h1>
 
 <div class="card warn">
@@ -204,7 +247,7 @@ hr{ border:none; border-top:1px solid var(--border); margin:44px 0 8px; }
 <p>Exercises, instructions, times, muscle information and generated BLOCs (including “Surprise me”) are provided without any warranty of accuracy, completeness or fitness for a particular purpose. Calorie figures are rough estimates, not medical or nutritional advice.</p>
 
 <h2>Liability</h2>
-<p>The app is provided free of charge. To the extent permitted by law, no liability is accepted for injuries, health problems, property damage or any other damage arising from the use of the app or from training with it. Statutory liability for intent and gross negligence remains unaffected.</p>
+<p>The app is provided free of charge. For damage to property and financial loss arising from the use of the app or from training with it, the provider is liable only for intent and gross negligence. Statutory liability for injury to life, body or health, under the German Product Liability Act and for fraudulently concealed defects remains unaffected.</p>
 
 <h2>Changes</h2>
 <p>If these notes change, the new version will be published on this page with the new date at the top.</p>

@@ -1227,6 +1227,8 @@ window.BLOC_TEXTE = {
     spRules:"Wechselt Muskelgruppen und gleicht Drücken und Ziehen aus. Intensiv = mehr Sprünge.",
     privacyRow:"Datenschutz & Haftungsausschluss",
     privacyRowSub:"Keine Datensammlung · Training auf eigene Verantwortung",
+    imprintRow:"Impressum & Lizenzen",
+    imprintRowSub:"Anbieter, Kontakt, Open-Source-Lizenzen",
     ownRisk:"Training auf eigene Verantwortung.",
     ownRiskMore:"Haftungsausschluss"
   },
@@ -2457,6 +2459,8 @@ window.BLOC_TEXTE = {
     spRules:"Alternates muscle groups and balances push and pull. Intense = more jumps.",
     privacyRow:"Privacy & disclaimer",
     privacyRowSub:"No data collection · train at your own risk",
+    imprintRow:"Legal notice & licences",
+    imprintRowSub:"Provider, contact, open source licences",
     ownRisk:"Train at your own risk.",
     ownRiskMore:"Disclaimer"
   }
