@@ -1,0 +1,29 @@
+// BLOC fuer die Uhr (Wear OS, z. B. Pixel Watch 1).
+// Gleiche applicationId wie die Handy-App: Nur so finden sich Uhr und Handy
+// spaeter ueber die Data Layer API (zusaetzlich muss der Signaturschluessel gleich sein).
+apply plugin: 'com.android.application'
+
+android {
+    namespace = "io.github.blocappbuilder.bloc.wear"
+    compileSdk = rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "io.github.blocappbuilder.bloc"
+        minSdkVersion 30          // Wear OS 3 und neuer
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "0.1-test"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    // Erste Testfassung kommt ohne Bibliotheken aus (nur Android-Bordmittel).
+}
