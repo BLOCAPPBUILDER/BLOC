@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-27 · Rechtsprüfung eingearbeitet (Fassung 2026-11-27-2)
+
+- **Impressum** nach § 18 Abs. 1 und 2 MStV (privat, ohne Gewerbe). **Datenschutz:** Speicherdauer, Empfänger GitHub mit Standardvertragsklauseln und Data Privacy Framework. **Haftung:** kein pauschaler Ausschluss mehr, gesetzliche Haftung bleibt.
+- `docs/RECHTSPRUEFUNG-OFFEN.md`: Store-Pflichten Google Play und Apple, Punkte für den Betreiber, Entwurf Store-Beschreibung.
+
 ## 2026-11-27 · Impressum, Lizenzen, Datenschutz ergänzt (Fassung 2026-11-27-1)
 
 - **Impressum** (`impressum.html`, DE/EN) mit gelb markierten Platzhaltern für Name, Anschrift und Kontakt; in den Einstellungen die Zeile „Impressum & Lizenzen“.
