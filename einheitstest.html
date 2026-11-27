@@ -115,6 +115,8 @@
       gleich(W.runKcal(20000, 3600, true), 560, "20 km/h: MET 8,0, netto");
       gleich(W.runKcal(24000, 3600, true), 720, "24 km/h: MET 10,0, netto");
       gleich(W.runKcal(30000, 3600, true), 880, "30 km/h: MET 12,0, netto");
+      gleich(W.runKcal(35000, 3600, true), 1260, "35 km/h: Rennen ohne Windschatten, MET 16,8 (Compendium 2024)");
+      gleich(W.runKcal(80000, 3600, true), 0, "80 km/h im Schnitt: kein Fahrrad, keine Schätzung");
       wahr(W.runKcal(20000, 3600, false) !== W.runKcal(20000, 3600, true), "Fahrt und Lauf werden verschieden gerechnet");
       gleich(W.runKcal(20000, 3600, true), 560, "dieselbe Fahrt gibt immer dasselbe");
     } finally { W.state.db.settings.koerper = alt; }
@@ -628,6 +630,8 @@
     try {
       s.koerper = { kg: 80 };
       gleich(W.runKcal(10000, 3600, false), 830, "Lauf 10 km in 1 h: 1,036 kcal je kg und km (netto, auf 10 gerundet)");
+      gleich(W.runKcal(10000, 3600, false, 100), 860, "Lauf 10 km mit 100 Höhenmetern: + 0,0045 kcal je kg und Höhenmeter");
+      gleich(W.runKcal(40000, 3600, false), 0, "40 km/h zu Fuß: unplausibel, keine Schätzung");
       gleich(W.runKcal(20000, 3600, true), 560, "Rad 20 km/h: 8 MET, netto");
       gleich(W.runKcal(30, 3600, false), 0, "zu kurze Strecke: keine Schätzung");
       s.koerper = { kg: 80, cm: 180, alter: 30, sex: "m" };

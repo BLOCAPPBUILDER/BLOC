@@ -3,6 +3,13 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-27 · Kalorien, Faktencheck und Quellen (Fassung 2026-11-27-4)
+
+- **Kalorien:** Laufen rechnet jetzt auch den Aufstieg mit (ACSM-Laufformel); unplausible Tempi (zu Fuß über 25 km/h, Rad über 70 km/h) geben keine Schätzung; Rad ab 32 km/h mit 16,8 MET (Compendium 2024). Texte in App, FAQ und Quellen passen jetzt zum Code (netto, ohne Ruheumsatz; Gehen/Laufen/Rad). Neue Einheitstests.
+- **Rennzeit-Richtwert:** ohne Geh-Lauf-Einheiten; Hinweis erklärt die Grenzen der Riegel-Formel.
+- **Faktencheck FAQ und Hinweise:** Verzehrsstudie II jetzt mit dem Median aus dem Original (85 g / 64 g statt 81 g / 60 g), Morton mit Unsicherheitsspanne, Maximalpuls und Pulszonen (drei Zonen nach Leitlinie, fünf als Konvention), Aktivitätsfaktoren wie in der App, Leichtwoche, Alkohol, Satzzahl, RIR. Aufwärmsätze, Drücken/Ziehen, Leichtwoche und 10-%-Laufregel als Praxisregel gekennzeichnet.
+- **Quellen-Seite:** jede Quelle mit Zugang („Volltext frei“ oder „nur Zusammenfassung frei“), fehlende DOIs ergänzt, neue Quellen [26]–[30], F56, F57, PA14, PA15; Bildnachweis korrigiert; Übungsbilder als mit KI erstellt gekennzeichnet.
+
 ## 2026-11-27 · Puls von der Uhr über Health Connect, erste Uhr-App (Fassung 2026-11-27-3)
 
 - **Health Connect** (nur Android-App): Im Lauf-Detail „Puls von der Uhr holen“. BLOC liest nur die Herzfrequenz für die Zeit des Laufs (ohne Pausen) und speichert `hr` (Ø, Max, Puls je km, Verteilung je bpm). Zonen rechnet `runHrZonen` mit dem aktuellen Alter; die Kachel „Pulszonen“ nutzt sie. Hat die Uhr noch nicht übertragen, versucht BLOC es bis 2 Tage lang erneut. Plugin `BlocPulsPlugin.kt`, Erklärseite `PulsDatenschutzActivity`, Datenschutz ergänzt (Art. 9 DSGVO).
