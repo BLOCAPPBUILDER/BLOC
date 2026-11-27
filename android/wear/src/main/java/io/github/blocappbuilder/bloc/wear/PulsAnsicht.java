@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 
 /**
@@ -21,7 +22,8 @@ public class PulsAnsicht extends View {
     private static final int GEDIMMT = 0xC7FFFFFF;
     private static final int GRUEN = Color.parseColor("#3FCF8E");
 
-    private final Bitmap bild, logo;
+    private final Bitmap bild;
+    private final Drawable marke;
     private final Paint pinsel = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
     private final Typeface zahl, label;
     private String puls = "–", status = "", statistik = "";
@@ -30,7 +32,8 @@ public class PulsAnsicht extends View {
     public PulsAnsicht(Context ctx) {
         super(ctx);
         bild = BitmapFactory.decodeResource(getResources(), R.drawable.bg_lauf);
-        logo = BitmapFactory.decodeResource(getResources(), R.drawable.bloc_logo);
+        marke = ctx.getDrawable(R.drawable.bloc_marke);
+        setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
         zahl = Typeface.create(Typeface.DEFAULT, 800, false);
         label = Typeface.create(Typeface.DEFAULT, 600, false);
     }
@@ -49,22 +52,26 @@ public class PulsAnsicht extends View {
         c.translate((getWidth() - 192 * s) / 2f, (getHeight() - 192 * s) / 2f);
         c.scale(s, s);
 
-        // Logo klein oben (vorläufig, bis die Design-Session Platzierung und Größe festlegt)
-        if (logo != null) c.drawBitmap(logo, null, new RectF(88, 10, 104, 26), pinsel);
-        text(c, "BLOC · PULS", 96, 38, 11, label, GEDIMMT, 0.08f);
+        // BLOC-Marke 20 dp hoch (y 10–30), Seitenverhältnis 358:393
+        if (marke != null) {
+            float b = 20f * 358f / 393f;
+            marke.setBounds(Math.round(96 - b / 2), 10, Math.round(96 + b / 2), 30);
+            marke.draw(c);
+        }
+        text(c, "PULS", 96, 42, 11, label, GEDIMMT, 0.08f);
 
-        // Glas-Karte 130 x 84, y 46–130
-        RectF karte = new RectF(31, 46, 161, 130);
+        // Glas-Karte 130 x 84, y 50–134
+        RectF karte = new RectF(31, 50, 161, 134);
         pinsel.setStyle(Paint.Style.FILL); pinsel.setColor(0x24FFFFFF);
         c.drawRoundRect(karte, 16, 16, pinsel);
         pinsel.setStyle(Paint.Style.STROKE); pinsel.setStrokeWidth(1); pinsel.setColor(0x38FFFFFF);
         c.drawRoundRect(karte, 16, 16, pinsel);
         pinsel.setStyle(Paint.Style.FILL);
 
-        text(c, puls, 96, 102, 52, zahl, WEISS, 0);
-        text(c, "bpm", 96, 120, 12, label, GEDIMMT, 0);
-        text(c, status, 96, 152, 12, label, live ? GRUEN : GEDIMMT, 0);
-        text(c, statistik, 96, 170, 11, label, GEDIMMT, 0);
+        text(c, puls, 96, 106, 52, zahl, WEISS, 0);
+        text(c, "bpm", 96, 124, 12, label, GEDIMMT, 0);
+        text(c, status, 96, 154, 12, label, live ? GRUEN : GEDIMMT, 0);
+        text(c, statistik, 96, 171, 11, label, GEDIMMT, 0);
         c.restore();
     }
 
