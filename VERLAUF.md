@@ -3,6 +3,13 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-27 · Impressum, Lizenzen, Datenschutz ergänzt (Fassung 2026-11-27-1)
+
+- **Impressum** (`impressum.html`, DE/EN) mit gelb markierten Platzhaltern für Name, Anschrift und Kontakt; in den Einstellungen die Zeile „Impressum & Lizenzen“.
+- **Open-Source-Lizenzen** (`lizenzen.html`): alle Bibliotheken der Android-App mit MIT- und Apache-2.0-Text.
+- **Datenschutz:** Verantwortlich (Platzhalter), Rechtsgrundlage und USA-Übermittlung bei GitHub Pages, Google Play, „Deine Rechte“ mit Beschwerderecht. **Haftung:** Leben, Körper, Gesundheit und Produkthaftung ausgenommen.
+- Offene Punkte: `docs/RECHTSPRUEFUNG-OFFEN.md`.
+
 ## 2026-11-23 · Wissensaustausch und Quellen fachlich korrigiert (Fassung 2026-11-23-5)
 
 - **Texte:** Satzzahl ohne Obergrenze bei zehn [F24, F1], Dehnen ab etwa 60 s [F9], Muskelkater mit Flann 2011 [F55], Periodisierung [F17, F1], Split oder Ganzkörper [F18].
