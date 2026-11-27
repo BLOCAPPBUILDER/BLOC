@@ -1,6 +1,6 @@
 # BLOC – offene Punkte der Rechtsprüfung
 
-Stand: 27.11.2026. Arbeitsliste aus zwei technischen Vorprüfungen, **keine Rechtsberatung**. Erinnerung ist für den **11.12.2026, 9 Uhr** eingestellt (geplante Aufgabe „BLOC: Impressum-Angaben und Rechtsprüfung“).
+Stand: 28.11.2026. Arbeitsliste aus zwei technischen Vorprüfungen, **keine Rechtsberatung**. Erinnerung ist für den **11.12.2026, 9 Uhr** eingestellt (geplante Aufgabe „BLOC: Impressum-Angaben und Rechtsprüfung“).
 
 Aktueller Fall: **privat, kein Kleingewerbe**. Pflicht ist schon jetzt ein Impressum nach § 18 Abs. 1 MStV (Name und Anschrift), weil die App öffentlich ist. § 5 DDG (vollständiges Impressum) kommt mit einem Gewerbe dazu, ebenso der Händlerstatus in den Stores.
 
@@ -20,12 +20,19 @@ Regeln: kein Postfach, keine Packstation; die Anschrift ist danach öffentlich. 
 - [x] Haftung: kein pauschaler Ausschluss mehr; gesetzliche Haftung bleibt (Leben, Körper, Gesundheit, Produkthaftung, Vorsatz, grobe Fahrlässigkeit).
 - [x] `lizenzen.html`: alle Bibliotheken der Android-App mit MIT- und Apache-2.0-Text und Cordova-NOTICE.
 - [x] Kein ODR-Hinweis nötig (EU-Plattform seit 20.07.2025 abgeschaltet), es gab auch keinen.
+- [x] Kalorien: Code, App-Texte, FAQ und Quellen-Seite stimmen überein (netto; Gehen, Laufen, Rad; Aufstieg; Plausibilitätsgrenzen).
+- [x] Faktencheck FAQ und Hinweise; Verzehrsstudie II am Original geprüft (Median 85 g / 64 g).
+- [x] Quellen-Seite: Zugang je Quelle gekennzeichnet; für jede nicht frei lesbare Quelle eine frei lesbare Alternative oder der Hinweis, dass es keine gleichwertige gibt (7 Fälle). Alle Alternativen mit Europe PMC geprüft.
+- [x] Übungsbilder auf der Quellen-Seite als „mit KI erstellt“ gekennzeichnet; Bildnachweis korrigiert.
+
+**Gut zu wissen:** Eine Studie hinter einer Bezahlschranke zu zitieren (Autor, Titel, DOI) ist rechtlich kein Problem. Die frei lesbaren Alternativen dienen der Nachprüfbarkeit, nicht dem Rechtsschutz.
 
 ## 3. Wichtig vor jedem Store-Start
 
 - [ ] **Übungsbilder (rund 600 in `img/ex/`):** Herkunft klären und festhalten: welches KI-Werkzeug, welches Konto und welcher Tarif, Nutzungsbedingungen (Nutzung in einer App, kommerziell), Zeitraum. Und vor allem: **Wurden Fotos, Zeichnungen oder Bögen von anderen als Vorlage hochgeladen** (die „Sammelbögen“ aus PDF und WhatsApp)? Wenn ja, wessen? Bilder mit unklarer Herkunft ersetzen.
 - [ ] **Name „BLOC“:** Im Apple App Store gibt es schon „Bloc – Adaptive hypertrophy training“ (Health & Fitness, Krafttraining, mit Abo). Selbst suchen in [DPMAregister](https://register.dpma.de), [EUIPO eSearch](https://euipo.europa.eu/eSearch/) und [TMview](https://www.tmdn.org/tmview/) nach BLOC, BLOCK, BLOK, BLOCS in den Klassen 9, 41, 42, 44. Bei Treffer: Namenszusatz oder neuer Name, Anwalt.
 - [ ] **Pexels-Nachweise** einzeln öffnen und mit Datei, Motiv und Fotograf abgleichen.
+- [ ] **Puls über Health Connect** (andere Sitzung, nur Android): Der Abschnitt dazu steht bisher nur in `privacy.html` auf dem Branch capacitor. Die öffentliche Datenschutz-URL (GitHub Pages, Branch main) braucht ihn auch, bevor die App mit dieser Funktion in den Store geht. Dazu in Google Play die Erklärung für Health-Connect-Berechtigungen ausfüllen.
 - [ ] **Öffentliches Repository:** `BLOCAPPBUILDER/BLOC` ist öffentlich, also auch `VERLAUF.md`, `docs/` und die Git-Historie. Prüfen, ob das gewollt ist (Vorname, interne Entwürfe).
 
 ## 4. Google Play (Stand Ende 2026)
