@@ -376,7 +376,8 @@ function statPaceSvg(runs){
     '<text x="'+Math.min(+last[0], W-px)+'" y="'+Math.max(10, +last[1]-9)+'" text-anchor="end" class="sl-text">'+esc(statPz(p[p.length-1]))+'</text></svg></div>';
 }
 /* ---------- Körperdaten und Ruheumsatz (optional; alles lokal) ----------
-   Der Ruheumsatz je Stunde (Mifflin-St Jeor, ohne Größe und Geschlecht 1 kcal je kg und Stunde) dient der Kalorien-Schätzung für Läufe und Radfahrten (runKcal in js/16-lauf.js).
+   Der Ruheumsatz je Stunde (Mifflin-St Jeor, ohne Größe und Geschlecht 1 kcal je kg und Stunde): Die Kalorien-Schätzung für Läufe und Radfahrten (runKcal in js/16-lauf.js)
+   rechnet seit der Prüfung vom 2026-11-16 netto und braucht ihn nicht mehr; der Einheitstest prüft damit nur, dass die Formel zur Protein-Seite passt.
    Eine grobe Schätzung; Krafttraining und Co. werden nicht geschätzt (zu ungenau). */
 function koerperDaten(){
   var k = state.db.settings.koerper || {}, kg = +k.kg;

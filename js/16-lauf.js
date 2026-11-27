@@ -575,21 +575,31 @@ function runGpxText(r){
   return '<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="BLOC" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>BLOC '+new Date(r.at).toISOString().slice(0, 10)+
     '</name><trkseg>'+pts+'</trkseg></trk></gpx>';
 }
-/* Kalorien-Schätzung für einen Lauf oder eine Radfahrt (nur mit Körperdaten, alles lokal): Laufen = Ruheumsatz in der Zeit + 1,036 kcal je kg und km (Laufkosten nach Margaria),
-   Rad = MET nach Tempo (Compendium of Physical Activities 2011: unter 10 mph / 16 km/h Freizeit 4,0 · 10–12 mph 6,8 · 12–14 mph 8,0 · 14–16 mph 10,0 · ab 16 mph / 25,7 km/h 12,0)
-   × Gewicht × Stunden (Fahrten werden also nicht wie Läufe gerechnet). Eine grobe Schätzung; 0 ohne Körperdaten oder ohne Strecke. */
+/* Kalorien-Schätzung für einen Lauf, eine Wanderung oder eine Radfahrt (nur mit Körperdaten, alles lokal). Alles netto = „zusätzlich verbrannt“,
+   ohne Ruheumsatz, damit nichts doppelt zählt; grob auf 10 kcal gerundet; 0 ohne Körperdaten, ohne Strecke oder bei unplausiblem Tempo (Fahrzeug, GPS-Sprung).
+   Rad: (MET − 1) × kg × Stunden, MET nach Tempo (Compendium of Physical Activities 2024: unter 10 mph / 16 km/h Freizeit 4,0 · 10–12 mph 6,8 · 12–14 mph 8,0 ·
+        14–16 mph 10,0 · 16–20 mph 12,0 · ab 20 mph / 32,2 km/h Rennen ohne Windschatten 16,8). Höhenmeter zählen beim Rad nicht (die MET-Werte enthalten übliches Gelände).
+   Gehen: ACSM-Gehformel VO2 = 0,1·v + 1,8·v·Steigung (+ 3,5 Ruhe, hier weggelassen), 1 l O2 ≈ 5 kcal. Über die Strecke gerechnet ist das
+        flach 0,5 kcal je kg und km plus 0,009 kcal je kg und Höhenmeter Aufstieg (unabhängig von der Zeit).
+   Laufen: 1,036 kcal je kg und km (Laufkosten nach Margaria) plus 0,0045 kcal je kg und Höhenmeter (ACSM-Laufformel: 0,9 ml O2/kg je Höhenmeter).
+   Gehen ↔ Laufen: Mitte des Übergangs ist die einstellbare Pace-Grenze (Körperdaten, Standard 8:30 min/km ≈ 7,1 km/h), ±1 km/h wird weich gemischt
+   (kein Sprung; Fachliche Prüfung 2026-11-16, Höhenmeter beim Laufen und Plausibilitätsgrenzen nach der Prüfung vom 2026-11-27). */
 function runKcal(dist, sek, rad, hm){
   var kd = koerperDaten();
   if(!kd || !(dist > 50) || !(sek > 10)) return 0;
   var km = dist/1000, h = sek/3600, v = km/h;
-  if(rad){ var met = v < 16.1 ? 4 : v < 19.3 ? 6.8 : v < 22.5 ? 8 : v < 25.7 ? 10 : 12; return Math.round((met - 1)*kd.kg*h/10)*10; }   // netto: ohne 1 MET Ruheumsatz
-  /* Gehen/Wandern ↔ Laufen: Mitte des Übergangs ist die einstellbare Pace-Grenze (Körperdaten, Standard 8:30 min/km ≈ 7,1 km/h), ±1 km/h wird weich gemischt (kein Sprung; Fachliche Prüfung 2026-11-16).
-     Gehen = ACSM-Gehformel: VO2 = 0,1·v + 1,8·v·Steigung + 3,5 (ml/kg/min, v in m/min), 1 l O2 ≈ 5 kcal; Steigung = Höhenmeter / Strecke (max 30 %, ohne Höhendaten 0). Alles netto = „zusätzlich verbrannt“ (ohne Ruheumsatz, damit nichts doppelt zählt), grob auf 10 kcal gerundet. */
+  if(rad){
+    if(v > 70) return 0;   // im Schnitt über 70 km/h: kein Fahrrad
+    var met = v < 16.1 ? 4 : v < 19.3 ? 6.8 : v < 22.5 ? 8 : v < 25.7 ? 10 : v < 32.2 ? 12 : 16.8;
+    return Math.round((met - 1)*kd.kg*h/10)*10;
+  }
+  if(v > 25) return 0;   // zu Fuß im Schnitt über 25 km/h: unplausibel
   var vg = 60/kd.geh, w = Math.max(0, Math.min(1, (v - (vg - 1))/2));
-  var lauf = 1.036*kd.kg*km;   // Laufkosten nach Margaria sind netto (ohne Ruheumsatz)
+  var auf = hm > 0 ? Math.min(hm, 0.3*dist) : 0;   // Aufstieg in m, mittlere Steigung höchstens 30 %
+  var lauf = 1.036*kd.kg*km + 0.0045*kd.kg*auf;
   if(w >= 1) return Math.round(lauf/10)*10;
-  var vm = km*1000/(sek/60), gr = hm > 0 ? Math.min(0.3, hm/(km*1000)) : 0, geh = (0.1*vm + 1.8*vm*gr)*kd.kg/1000*5*(sek/60);   // ohne die 3,5 ml/kg/min Ruhe
-  return Math.round((geh*(1-w) + lauf*w)/10)*10;
+  var geh = 0.5*kd.kg*km + 0.009*kd.kg*auf;
+  return Math.round((geh*(1 - w) + lauf*w)/10)*10;
 }
 function runKcalText(dist, sek, rad, hm){ var k = runKcal(dist, sek, rad, hm); return k > 0 ? "≈ "+k.toLocaleString(currentLang() === "en" ? "en-GB" : "de-DE") : "–"; }
 function runTempoJetzt(r){
@@ -1116,7 +1126,8 @@ function runAuswTrend(){
   var basis = l.filter(function(x){ return x.at >= Date.now() - 90*86400000 && x.dist >= 3000; }), prog = [];
   [[5000, t("runTrP5")], [10000, t("runTrP10")], [21097.5, t("runHalbmarathon")]].forEach(function(z){
     var b = null;
-    basis.forEach(function(x){ if(x.dist < z[0]/4) return; var T = x.dur/1000*Math.pow(z[0]/x.dist, 1.06); if(b === null || T < b) b = T; });
+    // Geh-Lauf-Einheiten (x.iv) zählen nicht: ihr Durchschnittstempo ist kein Renntempo
+    basis.forEach(function(x){ if(x.dist < z[0]/4 || x.iv) return; var T = x.dur/1000*Math.pow(z[0]/x.dist, 1.06); if(b === null || T < b) b = T; });
     if(b !== null) prog.push(runAuswZeile(esc(z[1]), esc(fmtUhr(b*1000)), ""));
   });
   if(prog.length) html += '<div class="sk-unter titel">'+esc(t("runTrProg"))+'</div><div class="rekorde">'+prog.join("")+'</div><div class="sk-unter">'+esc(t("runTrProgHint"))+'</div>';
