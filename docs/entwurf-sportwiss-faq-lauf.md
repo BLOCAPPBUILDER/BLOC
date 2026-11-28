@@ -12,7 +12,7 @@ Stand: 2026-11-10. Reiner Entwurf, nichts davon ist in den App-Dateien eingebaut
 - `js/12-uebung-statistik.js`, Kachel `b-run`: Anzahl Läufe, km gesamt, zuletzt, km pro Woche/Monat/Jahr (Balken), Pace-Verlauf der letzten 60 Läufe ab 1 km mit Trend (ab 4 Läufen), Rekorde (längster Lauf, schnellster km, beste Pace), Höhenmeter gesamt, Kalorien-Schätzung (`runKcal`: Mifflin plus MET).
 - `js/16-lauf.js`, `runHighlights`: längster Lauf, schnellster km, erstmals 5/10/21 km.
 - Einblicke (Kraft): Wochenvolumen, Rekorde, Druck:Zug, mittlerer RPE.
-- Gespeichert pro Lauf: `at`, `dur`, `dist`, `pts` (nur lat/lon, ohne Zeit oder Höhe), `splits` (kumulative ms je ganzem km), `hm` (Aufstieg, nur wenn das Gerät Höhe liefert), `pause`, `iv`, `art`, `name`.
+- Gespeichert pro Lauf: `at`, `dur`, `dist`, `pts` (seit 2026-11-28 `[lat, lon, t, alt]`, ältere Läufe nur lat/lon), `pz` (Pausen), `hr.serie` (Puls alle 10 s), `splits` (kumulative ms je ganzem km), `hm` (Aufstieg, nur wenn das Gerät Höhe liefert), `pause`, `iv`, `art`, `name`.
 - Nicht vorhanden: Herzfrequenz, Kadenz, Höhenprofil, RPE pro Lauf.
 
 ### Die Liste (nach Priorität, alle mit vorhandenen Daten machbar)

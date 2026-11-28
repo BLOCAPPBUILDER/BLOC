@@ -359,6 +359,48 @@
     gleich(d[0], ecke[0], "Anfang bleibt"); gleich(d[d.length - 1], ecke[ecke.length - 1], "Ende bleibt");
     gleich(W.runAusduennen([[1, 1], [1, 2]], 2.5).length, 2, "zwei Punkte bleiben");
   });
+  test("Run: Routenpunkte mit Zeit und Höhe [lat, lon, t, alt] - Ausdünnen behält t und alt und mindestens alle 10 s einen Punkt", function () {
+    var gerade = []; for (var i = 0; i <= 1000; i++) gerade.push([50 + i*0.00003, 8, i, i % 3 ? 100 + i/100 : null]);   // 1 Punkt je s, 1000 s
+    var d = W.runAusduennen(gerade, 2.5);
+    wahr(d.length >= 100 && d.length <= 102, "Gerade mit Zeit: Zeitraster 10 s statt nur 2 Punkte (" + d.length + ")");
+    var luecke = 0; for (var k = 1; k < d.length; k++) luecke = Math.max(luecke, d[k][2] - d[k-1][2]);
+    wahr(luecke <= 10, "keine Lücke über 10 s: " + luecke);
+    gleich(d[5].length, 4, "Punkte behalten t und alt");
+    gleich(d[d.length - 1], gerade[1000], "Ende bleibt");
+    gleich(W.runAusduennen(gerade, 2.5, 30).length <= 36, true, "bei vollem Speicher gröber (30 s)");
+    var alt = []; for (var j = 0; j <= 1000; j++) alt.push([50 + j*0.00003, 8]);
+    gleich(W.runAusduennen(alt, 2.5).length, 2, "alte Punkte ohne Zeit: wie bisher");
+  });
+  test("Run: GPX schreibt <ele> und <time> mit, Pausen verschieben die Uhrzeit; alte Läufe ohne beides", function () {
+    var at = Date.UTC(2026, 10, 28, 8, 0, 0);
+    var x = { at: at, pts: [[50, 8, 0, 120], [50.001, 8, 60, null], [50.002, 8, 120, 125]], pz: [[90, 30]] };
+    var g = W.runGpxText(x);
+    wahr(g.indexOf('<trkpt lat="50" lon="8"><ele>120</ele><time>2026-11-28T08:00:00Z</time></trkpt>') > -1, "erster Punkt mit Höhe und Zeit");
+    wahr(g.indexOf('<trkpt lat="50.001" lon="8"><time>2026-11-28T08:01:00Z</time></trkpt>') > -1, "ohne Höhe: nur Zeit");
+    wahr(g.indexOf("<time>2026-11-28T08:02:30Z</time>") > -1, "nach 30 s Pause: Uhrzeit 30 s später");
+    var a = W.runGpxText({ at: at, pts: [[50, 8], [50.001, 8]] });
+    wahr(a.indexOf('<trkpt lat="50" lon="8"/>') > -1 && a.indexOf("<time>") < 0, "alter Lauf: wie bisher");
+    gleich(W.runPausenListe(1000, [[61000, 91000], [151000, 152000]]), [[60, 30], [120, 1]], "Pausenliste in Laufzeit");
+  });
+  test("Run: Puls als Zeitreihe alle 10 s (hr.serie), Ø, Max und km-Werte wie bisher", function () {
+    var at = 1000000, werte = [];
+    for (var s = 0; s < 600; s += 2) werte.push([at + s*1000, 120 + Math.floor(s/60)]);   // alle 2 s, jede Minute 1 Schlag mehr
+    var x = { at: at, dur: 600000, splits: [300000], hrOffen: { bis: at + 600000, p: [[at + 300000, at + 360000]] } };
+    var hr = W.runHrRechnen(x, werte);
+    wahr(hr && Array.isArray(hr.serie), "serie vorhanden");
+    gleich(hr.serie[0], [0, 120], "erster Abschnitt");
+    gleich(hr.serie[1][0], 10, "Abstand 10 s");
+    gleich(hr.serie.length, 54, "9 aktive Minuten = 54 Abschnitte (Pause fehlt)");
+    gleich(hr.serie[30], [300, 126], "nach der Pause geht die Laufzeit nahtlos weiter");
+    wahr(hr.avg > 120 && hr.max === 129 && hr.pts.length === 2, "avg, max und pts wie bisher");
+  });
+  test("Run: Laden prüft das neue Punktformat, alte Läufe bleiben gültig", function () {
+    var runs = [{ pts: [[50, 8, 12.4, 101.6], [50, 8, "x", 3], [50, 8], [null, 8], [50, 8, 5, "hoch"]], pz: [[10, 5], ["a", 1]], hr: { avg: 1, serie: [[0, 120], [10, 999], [20, "x"]] } }];
+    W.streckenSauber(runs);
+    gleich(runs[0].pts, [[50, 8, 12, 102], [50, 8], [50, 8], [50, 8, 5, null]], "Punkte bereinigt");
+    gleich(runs[0].pz, [[10, 5]], "Pausen bereinigt");
+    gleich(runs[0].hr.serie, [[0, 120]], "Pulsreihe bereinigt");
+  });
   test("Run: bei vollem Speicher wird nichts vorgetäuscht - der Lauf wird zurückgenommen, sonst gespeichert", function () {
     var s = W.state.db.settings, alt = W.save, altExp = W.dateiAusgeben, runs0 = (s.runs || []).length, hist0 = W.state.db.history.length, toasts = [], altT = W.showToast;
     var pts = []; for (var i = 0; i <= 200; i++) pts.push([50 + i*0.00004, 8 + (i % 7)*0.000001]);

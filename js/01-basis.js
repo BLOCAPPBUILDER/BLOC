@@ -178,7 +178,13 @@ function streckenSauber(r){
   r.forEach(function(x){
     if(!x || typeof x !== "object") return;
     if(x.hm != null) x.hm = isFinite(x.hm) ? Math.max(0, Math.round(+x.hm)) : undefined;   // Höhenmeter
-    x.pts = (Array.isArray(x.pts) ? x.pts : []).filter(function(p){ return Array.isArray(p) && isFinite(p[0]) && isFinite(p[1]); }).map(function(p){ return [+p[0], +p[1]]; });
+    /* Routenpunkte [lat, lon] (alt) oder [lat, lon, t, alt] (seit 2026-11-28): t = Sekunden ohne Pausen, alt = Höhe in m oder null */
+    function zahl(v){ return typeof v === "number" && isFinite(v); }
+    x.pts = (Array.isArray(x.pts) ? x.pts : []).filter(function(p){ return Array.isArray(p) && zahl(+p[0]) && zahl(+p[1]) && p[0] !== null && p[1] !== null; }).map(function(p){
+      return zahl(p[2]) ? [+p[0], +p[1], Math.max(0, Math.round(p[2])), zahl(p[3]) ? Math.round(p[3]) : null] : [+p[0], +p[1]];
+    });
+    if(x.pz != null) x.pz = Array.isArray(x.pz) ? x.pz.filter(function(q){ return Array.isArray(q) && zahl(q[0]) && zahl(q[1]) && q[1] > 0; }).map(function(q){ return [Math.round(q[0]), Math.round(q[1])]; }) : undefined;
+    if(x.hr && x.hr.serie != null) x.hr.serie = Array.isArray(x.hr.serie) ? x.hr.serie.filter(function(q){ return Array.isArray(q) && zahl(q[0]) && zahl(q[1]) && q[1] >= 25 && q[1] <= 250; }).map(function(q){ return [Math.round(q[0]), Math.round(q[1])]; }) : undefined;
   });
 }
 /* Aus einem gelesenen Stand (localStorage, Sicherungsdatei, Schnappschuss) die Datenbank bauen */

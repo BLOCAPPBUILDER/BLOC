@@ -3,6 +3,14 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-28 · Lauf verstehen, Phase 1: Daten (Fassung 2026-11-28-6)
+
+- **Routenpunkte mit Zeit und Höhe:** `pts` speichert jetzt `[lat, lon, t, alt]` (t = Sekunden ohne Pausen, alt = geglättete Höhe in m oder `null`). Alte Läufe mit `[lat, lon]` bleiben gültig. `runAusduennen` behält t und alt und lässt mindestens alle 10 s einen Punkt stehen (bei vollem Speicher 30 s), damit Tempo und Höhe für die spätere Kurve erhalten bleiben. Pausen stehen als `pz:[[t, s]…]` am Lauf.
+- **Puls als Zeitreihe:** `hr.serie = [[t, bpm]…]`, auf 10 s verdichtet, gleiche Zeitachse wie die Routenpunkte; `avg`, `max`, `pts`, `h` wie bisher.
+- **GPX** schreibt `<ele>` und `<time>` (echte Uhrzeit mit Pausen), wenn vorhanden.
+- Laden (`streckenSauber`) prüft das neue Format; vier neue Einheitstests. Sichtbar ändert sich nichts.
+- Speicher (simulierter 10-km-Lauf, 55 min): vorher ca. 2,2 KB, nachher ca. 15 KB je Lauf (Route 11,2 KB, Pulsreihe 3,5 KB).
+
 ## 2026-11-28 · Lauf-Cover mit Pace-Ring (Fassung 2026-11-28-5)
 
 - **Lauf-Cover:** ohne Strecke und ohne Ziel-Ring; der Ring zeigt jetzt die aktuelle Pace (links 8:30, oben 5:00, rechts 1:30 min/km) mit Häkchen je voller Minute, nur 4 und 6 beschriftet. Rad ohne Ring.

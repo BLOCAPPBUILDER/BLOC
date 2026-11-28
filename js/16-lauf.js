@@ -3,7 +3,9 @@
    GPS-Lauf mit Zeit, Kilometern, Pace, Kilometer-Zwischenzeiten und Routenlinie. Bewusst ohne Hintergrundkarte:
    Die Position wird nur auf dem Gerät verarbeitet, nichts geht ins Internet. Der Bildschirm bleibt an (Wake Lock);
    im Hintergrund oder bei gesperrtem Handy zeichnet eine Web-App nicht zuverlässig auf - dafür gibt es „Abdunkeln“.
-   Gespeichert: settings.runs = [{ id, at, dur (ms, ohne Pausen), dist (m), pts:[[lat,lon]…], splits:[ms bis km 1, 2, …], art:"rad" (nur bei Radfahrten) }].
+   Gespeichert: settings.runs = [{ id, at, dur (ms, ohne Pausen), dist (m), pts:[[lat, lon, t, alt]…], splits:[ms bis km 1, 2, …], art:"rad" (nur bei Radfahrten),
+     pz:[[t, s]…] (Pausen, nur wenn es welche gab) }]. In pts ist t die Laufzeit ohne Pausen in Sekunden und alt die Höhe in m oder null;
+     Läufe vor 2026-11-28 haben nur [lat, lon] und bleiben so gültig (ohne Kurve, GPX ohne Zeit und Höhe).
    Ein laufender Lauf wird alle 10 s als settings.runLive gesichert (falls die Seite beendet wird).
    Puls von der Uhr über Health Connect: hr je Lauf (Aufbau bei runPulsHolen unten); die Kachel „Pulszonen“ in Fortschritt (runAuswPuls) liest es. */
 var RUN_GENAU = 35;   // Fixes mit schlechterer Genauigkeit (m) werden ignoriert
@@ -80,8 +82,9 @@ document.addEventListener("visibilitychange", function(){ if(document.visibility
 
 /* Höhenmeter (nur Aufstieg): die GPS-Höhe schwankt um mehrere Meter, daher erst geglättet und erst ab 3 m Anstieg gegenüber dem letzten Bezugspunkt gezählt;
    Abstieg setzt den Bezugspunkt nur nach unten. Gezählt wird nur, wenn die Strecke wächst (nicht im Stand). Ohne Höhe vom Gerät bleibt r.hasAlt false. */
+function runAltOk(alt, altAcc){ return alt != null && typeof alt === "number" && isFinite(alt) && !(altAcc != null && altAcc > 25); }
 function runHoehe(r, alt, altAcc){
-  if(alt == null || !isFinite(alt) || (altAcc != null && altAcc > 25)) return;
+  if(!runAltOk(alt, altAcc)) return;
   r.hasAlt = true;
   r.alt = r.alt == null ? alt : r.alt + 0.25*(alt - r.alt);
   if(r.hRef == null){ r.hRef = r.alt; return; }
@@ -102,8 +105,10 @@ function runPunkt(lat, lon, acc, ts, speed, alt, altAcc){
   if(acc > RUN_GENAU) return;
   if(speed != null && speed >= 0.6) r.lastMove = Date.now();   // das Gerät meldet selbst Bewegung (auch langsames Gehen, bevor die Strecke die Schwelle erreicht)
   var kf = runKalman(r, lat, lon, acc, ts); lat = kf[0]; lon = kf[1];   // geglätteter Ort
-  var p = [Math.round(lat*1e6)/1e6, Math.round(lon*1e6)/1e6];   // 0,1 m genau (vorher 1 m), sonst wirkt die gerundete Kurve stufig
-  if(!r.letzte){ r.letzte = { p:p, ts:ts }; if(!r.pts.length) r.pts.push(p); return; }
+  /* Routenpunkt [lat, lon, t, alt]: lat/lon 0,1 m genau (sonst wirkt die gerundete Kurve stufig), t = Sekunden seit Start ohne Pausen,
+     alt = geglättete Höhe in m oder null (kein oder zu ungenauer Höhenwert) */
+  var p = [Math.round(lat*1e6)/1e6, Math.round(lon*1e6)/1e6, Math.round(runZeit(r)/1000), null];
+  if(!r.letzte){ r.letzte = { p:p, ts:ts }; if(!r.pts.length){ p[3] = runAltOk(alt, altAcc) ? Math.round(r.alt != null ? r.alt : alt) : null; r.pts.push(p); } return; }
   var dt = (ts - r.letzte.ts)/1000;
   if(dt <= 0) return;
   var d = runMeter(r.letzte.p, p);
@@ -121,6 +126,7 @@ function runPunkt(lat, lon, acc, ts, speed, alt, altAcc){
   }
   runTeilHinweis(r, vor, nun);   // zwischen den Kilometern: alle 100 m prüfen, ob man zu langsam ist
   r.tZ = nun;
+  p[2] = Math.round(nun/1000); p[3] = runAltOk(alt, altAcc) && r.alt != null ? Math.round(r.alt) : null;
   if(!r.pts.length || runMeter(r.pts[r.pts.length-1], p) >= 3) r.pts.push(p);   // alle 3 m ein Routenpunkt (vorher 5 m), damit Kurven nicht abgeschnitten werden
   r.verlauf.push({ t:nun, d:r.dist });
   while(r.verlauf.length > 2 && nun - r.verlauf[1].t > 60000) r.verlauf.shift();   // nur die letzte Minute für „Tempo jetzt“
@@ -363,9 +369,13 @@ function runSichern(){   // alle 10 s eine Kopie, damit ein beendeter Browser de
   save();
 }
 /* Routenpunkte ausdünnen (Douglas-Peucker, ohne Rekursion): Anfang, Ende und alle Punkte, die die Linie um mehr als tol Meter verändern, bleiben.
-   Das spart gut 80 % Speicher, die Kurve sieht man dem Ergebnis nicht an (Routenanzeige, GPX, Kilometermarken bleiben nutzbar). */
-function runAusduennen(pts, tol){
+   Das spart gut 80 % Speicher, die Kurve sieht man dem Ergebnis nicht an (Routenanzeige, GPX, Kilometermarken bleiben nutzbar).
+   Punkte mit Zeit ([lat, lon, t, alt]) behalten t und alt; zusätzlich bleibt mindestens alle maxDt Sekunden (Standard 10 s) ein Punkt stehen,
+   sonst würde eine lange Gerade zu zwei Punkten und Tempo und Höhe dazwischen gingen verloren. Alte Punkte [lat, lon] bleiben wie sie sind. */
+function runAusduennen(pts, tol, maxDt){
   if(!Array.isArray(pts) || pts.length < 3) return pts || [];
+  var mitZeit = pts.every(function(q){ return q.length > 2 && typeof q[2] === "number"; });
+  if(maxDt == null) maxDt = 10;
   var la0 = pts[0][0], kx = Math.cos(la0*Math.PI/180)*111320, ky = 110540, n = pts.length;
   var X = pts.map(function(q){ return (q[1] - pts[0][1])*kx; }), Y = pts.map(function(q){ return (q[0] - la0)*ky; });
   var keep = new Array(n).fill(false), stack = [[0, n-1]];
@@ -378,12 +388,19 @@ function runAusduennen(pts, tol){
     }
     if(im > -1 && dmax > tol){ keep[im] = true; stack.push([a, im], [im, b]); }
   }
+  if(mitZeit && maxDt > 0){   // Zeitraster: liegt bis zum nächsten behaltenen Punkt mehr als maxDt, bleibt der letzte Punkt davor stehen
+    var tLetzt = pts[0][2];
+    for(var j = 1; j < n; j++){
+      if(keep[j]){ tLetzt = pts[j][2]; continue; }
+      if(pts[j+1] && pts[j+1][2] - tLetzt > maxDt){ keep[j] = true; tLetzt = pts[j][2]; }
+    }
+  }
   return pts.filter(function(q, k){ return keep[k]; });
 }
 /* Ältere Läufe einmalig (und bei vollem Speicher stärker) schlanker machen */
-function runBestandSchlank(tol){
+function runBestandSchlank(tol, maxDt){
   var runs = state.db.settings.runs || [];
-  runs.forEach(function(x){ if(x && x.pts && x.pts.length > 60) x.pts = runAusduennen(x.pts, tol); });
+  runs.forEach(function(x){ if(x && x.pts && x.pts.length > 60) x.pts = runAusduennen(x.pts, tol, maxDt); });
 }
 function runSpeichern(d){   // d: { id, start, dur, dist, pts, splits } -> in den Verlauf; zu kurze Läufe werden nicht behalten
   var s = state.db.settings;
@@ -391,6 +408,8 @@ function runSpeichern(d){   // d: { id, start, dur, dist, pts, splits } -> in de
   var x = { id:d.id, at:d.start, dur:Math.round(d.dur), dist:Math.round(d.dist), pts:runAusduennen(d.pts, 2.5), splits:d.splits };
   if(d.hm != null && isFinite(d.hm)) x.hm = Math.max(0, Math.round(d.hm));   // Höhenmeter (Aufstieg, m); fehlt, wenn das Gerät keine Höhe liefert
   if(d.pause > 1000) x.pause = Math.round(d.pause);   // herausgerechnete Pausen/Stehzeit (ms)
+  var pz = runPausenListe(d.start, d.pausenL);
+  if(pz.length) x.pz = pz;   // Pausen [[t, Sekunden] …], t wie bei den Routenpunkten: damit GPX die echte Uhrzeit schreiben kann
   if(d.iv) x.iv = { lauf:d.iv.lauf, geh:d.iv.geh };
   if(d.name) x.name = d.name;
   if(d.art === "rad") x.art = "rad";
@@ -401,7 +420,7 @@ function runSpeichern(d){   // d: { id, start, dur, dist, pts, splits } -> in de
   state.db.history.push(eintrag);   // zählt in der Wochenzeile
   var ok = save();
   if(!ok){   // Speicher voll: ältere Routen stärker ausdünnen und noch einmal versuchen
-    runBestandSchlank(8);
+    runBestandSchlank(8, 30);   // gröber: 8 m Abweichung, Zeitraster 30 s
     ok = save();
   }
   if(!ok){   // geht immer noch nicht: nichts vortäuschen, den Lauf zurücknehmen und die Route als Datei ausgeben
@@ -588,8 +607,30 @@ function runKmZeilen(x){
 }
 function runById(id){ var l = state.db.settings.runs || []; for(var i=0;i<l.length;i++) if(l[i].id === id) return l[i]; return null; }
 
+/* Pausen als [[t, Sekunden] …]: t = Laufzeit ohne Pausen beim Beginn der Pause (wie t der Routenpunkte); aus [[von, bis] in ms] */
+function runPausenListe(start, l){
+  var out = [], weg = 0;
+  (Array.isArray(l) ? l : []).forEach(function(q){
+    if(!q || !(q[1] > q[0])) return;
+    var dauer = Math.round((q[1] - q[0])/1000);
+    if(dauer < 1) return;
+    out.push([Math.max(0, Math.round((q[0] - start - weg)/1000)), dauer]);
+    weg += q[1] - q[0];
+  });
+  return out;
+}
+/* Uhrzeit eines Routenpunkts (ms): Start + t + alle Pausen, die vorher begonnen haben */
+function runPunktZeit(r, tSek){
+  var ms = r.at + tSek*1000;
+  (r.pz || []).forEach(function(q){ if(q[0] < tSek) ms += q[1]*1000; });
+  return ms;
+}
+/* GPX 1.1: je Punkt <ele> (Höhe, wenn vorhanden) und <time> (wenn der Punkt eine Zeit hat); alte Läufe ohne beides wie bisher */
 function runGpxText(r){
-  var pts = (r.pts || []).map(function(p){ return '<trkpt lat="'+p[0]+'" lon="'+p[1]+'"/>'; }).join("");
+  var pts = (r.pts || []).map(function(p){
+    var ele = p[3] != null && isFinite(p[3]) ? '<ele>'+p[3]+'</ele>' : "", zeit = typeof p[2] === "number" && isFinite(p[2]) && r.at ? '<time>'+new Date(runPunktZeit(r, p[2])).toISOString().replace(/\.\d{3}Z$/, "Z")+'</time>' : "";
+    return ele || zeit ? '<trkpt lat="'+p[0]+'" lon="'+p[1]+'">'+ele+zeit+'</trkpt>' : '<trkpt lat="'+p[0]+'" lon="'+p[1]+'"/>';
+  }).join("");
   return '<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="BLOC" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>BLOC '+new Date(r.at).toISOString().slice(0, 10)+
     '</name><trkseg>'+pts+'</trkseg></trk></gpx>';
 }
@@ -1157,7 +1198,8 @@ function runAuswTrend(){
 /* ============ Puls aus Health Connect (Uhr) ============
    Die Uhr (Pixel Watch, Galaxy Watch, Garmin …) zeichnet über ihre eigene App auf und schreibt den Puls in Health Connect.
    BLOC liest dort nach dem Lauf nur die Herzfrequenz für genau diese Zeit (BlocPulsPlugin, nur in der Android-App) und speichert je Lauf:
-   hr:{ avg, max, pts:[Ø bpm je Kilometer, zuletzt der angefangene Rest], h:{ a:niedrigster bpm, s:[Sekunden je bpm ab a] } }.
+   hr:{ avg, max, pts:[Ø bpm je Kilometer, zuletzt der angefangene Rest], h:{ a:niedrigster bpm, s:[Sekunden je bpm ab a] },
+        serie:[[t (s ohne Pausen), bpm] …] alle 10 s (seit 2026-11-28; ältere Läufe haben keine serie) }.
    Aus h werden die Zonen immer mit dem aktuellen Alter berechnet (runHrZonen), so passt es auch, wenn das Alter später eingetragen wird.
    Solange die Uhr noch nicht übertragen hat, trägt der Lauf hrOffen:{ bis (ms), p:[[Pause von, bis] …] }; BLOC versucht es bis 2 Tage nach dem Lauf erneut.
    Einstellung settings.pulsHC = 1, sobald die Erlaubnis da ist. Alles bleibt auf dem Gerät. */
@@ -1181,10 +1223,24 @@ function runHrRechnen(x, werte){
     if(!km[k]) km[k] = [0, 0]; km[k][0] += b*g; km[k][1] += g;
   });
   if(gew < 30) return null;
-  var hr = { avg:Math.round(sum/gew), max:max, pts:[], h:{ a:min, s:[] } };
+  var hr = { avg:Math.round(sum/gew), max:max, pts:[], h:{ a:min, s:[] }, serie:runHrSerie(l, aktiv) };
   for(var k = 0; k < km.length; k++) hr.pts.push(km[k] && km[k][1] ? Math.round(km[k][0]/km[k][1]) : null);
   for(var b = min; b <= max; b++) hr.h.s.push(Math.round(sek[b] || 0));
   return hr;
+}
+/* Puls als Zeitreihe, auf 10 s verdichtet: [[t, bpm] …], t = Beginn des 10-s-Abschnitts in Sekunden Laufzeit ohne Pausen (wie bei den Routenpunkten).
+   Jeder Wert zählt in seinem Abschnitt gleich (Uhren melden unterschiedlich oft); Abschnitte ohne Wert fehlen einfach. */
+var RUN_HR_RASTER = 10;
+function runHrSerie(l, aktiv){
+  var fach = {}, reihe = [];
+  l.forEach(function(w){
+    var a = aktiv(w[0]);
+    if(a < 0) return;
+    var k = Math.floor(a/1000/RUN_HR_RASTER);
+    if(!fach[k]){ fach[k] = [0, 0]; reihe.push(k); }
+    fach[k][0] += w[1]; fach[k][1]++;
+  });
+  return reihe.sort(function(a, b){ return a - b; }).map(function(k){ return [k*RUN_HR_RASTER, Math.round(fach[k][0]/fach[k][1])]; });
 }
 /* Sekunden in Zone 1 bis 5 (oder null ohne Alter); Einträge mit fertigem z werden übernommen */
 function runHrZonen(hr){
