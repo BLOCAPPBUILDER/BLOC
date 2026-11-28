@@ -31,7 +31,8 @@ import java.nio.charset.StandardCharsets;
  * Daten (Programm, Favoriten, BLOCs, Katalog, Timer) kommen direkt vom Handy über die Wear-OS-Verbindung
  * (Data Layer, Pfad /bloc/uhr) – ohne Konto und ohne Server. Eingetragene Sätze gehen als Nachricht zurück.
  */
-public class BlocUhrActivity extends Activity implements SensorEventListener, DataClient.OnDataChangedListener {
+public class BlocUhrActivity extends Activity implements SensorEventListener, DataClient.OnDataChangedListener,
+        com.google.android.gms.wearable.MessageClient.OnMessageReceivedListener {
 
     static final String PFAD_DATEN = "/bloc/uhr";
     static final String PFAD_SATZ = "/bloc/satz";
@@ -68,6 +69,7 @@ public class BlocUhrActivity extends Activity implements SensorEventListener, Da
         }
         Wearable.getDataClient(this).addListener(this);
         datenHolen();
+        Wearable.getMessageClient(this).addListener(this);
     }
 
     @Override
@@ -75,6 +77,7 @@ public class BlocUhrActivity extends Activity implements SensorEventListener, Da
         super.onPause();
         if (sensoren != null) sensoren.unregisterListener(this);
         Wearable.getDataClient(this).removeListener(this);
+        Wearable.getMessageClient(this).removeListener(this);
     }
 
     private void pulsStarten() {
@@ -150,7 +153,17 @@ public class BlocUhrActivity extends Activity implements SensorEventListener, Da
         } catch (Exception ignored) { }
     }
 
-    /** Für später (Lauf, Variante A): kurze Befehle ans Handy, z. B. Pause/Stopp */
+    /** Live-Stand des Laufs vom Handy (/bloc/lauf) */
+    @Override
+    public void onMessageReceived(com.google.android.gms.wearable.MessageEvent e) {
+        if (!"/bloc/lauf".equals(e.getPath())) return;
+        try {
+            JSONObject o = new JSONObject(new String(e.getData(), StandardCharsets.UTF_8));
+            runOnUiThread(() -> ansicht.laufLive(o));
+        } catch (Exception ignored) { }
+    }
+
+    /** Kurze Befehle ans Handy (Lauf: start, pause, weiter, stopp, abbrechen) */
     void anHandy(String pfad, String text) {
         Wearable.getNodeClient(this).getConnectedNodes().addOnSuccessListener(knoten -> {
             for (Node n : knoten) Wearable.getMessageClient(this).sendMessage(n.getId(), pfad, text.getBytes(StandardCharsets.UTF_8));

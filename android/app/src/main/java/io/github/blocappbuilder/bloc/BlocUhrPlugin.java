@@ -2,6 +2,8 @@ package io.github.blocappbuilder.bloc;
 
 import android.net.Uri;
 
+import java.nio.charset.StandardCharsets;
+
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -11,6 +13,9 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 import com.google.android.gms.wearable.DataClient;
 import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.MessageClient;
+import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.Wearable;
 
@@ -22,7 +27,42 @@ import com.google.android.gms.wearable.Wearable;
  * Ohne gekoppelte Uhr bleibt alles lokal liegen und geht nirgendwohin.
  */
 @CapacitorPlugin(name = "BlocUhr")
-public class BlocUhrPlugin extends Plugin {
+public class BlocUhrPlugin extends Plugin implements MessageClient.OnMessageReceivedListener {
+
+    /** Befehle der Uhr beim Lauf (start, pause, weiter, stopp, abbrechen) gehen als Ereignis „uhrBefehl“ an die App */
+    @Override
+    public void load() {
+        try { Wearable.getMessageClient(getContext()).addListener(this); } catch (Exception ignored) { }
+    }
+
+    @Override
+    protected void handleOnDestroy() {
+        try { Wearable.getMessageClient(getContext()).removeListener(this); } catch (Exception ignored) { }
+    }
+
+    @Override
+    public void onMessageReceived(MessageEvent e) {
+        if (!"/bloc/lauf/befehl".equals(e.getPath())) return;
+        JSObject o = new JSObject();
+        o.put("befehl", new String(e.getData(), StandardCharsets.UTF_8));
+        notifyListeners("uhrBefehl", o, true);
+    }
+
+    /** Live-Stand des Laufs (Zeit, km, Pace, Pause) an die verbundene Uhr; kurze Nachricht, wird nicht gespeichert */
+    @PluginMethod
+    public void laufLive(PluginCall call) {
+        String json = call.getString("json");
+        if (json == null) { call.reject("kein json"); return; }
+        try {
+            byte[] daten = json.getBytes(StandardCharsets.UTF_8);
+            Wearable.getNodeClient(getContext()).getConnectedNodes().addOnSuccessListener(knoten -> {
+                for (Node n : knoten) Wearable.getMessageClient(getContext()).sendMessage(n.getId(), "/bloc/lauf", daten);
+                call.resolve();
+            }).addOnFailureListener(x -> call.resolve());
+        } catch (Exception e) {
+            call.resolve();
+        }
+    }
 
     @PluginMethod
     public void senden(PluginCall call) {

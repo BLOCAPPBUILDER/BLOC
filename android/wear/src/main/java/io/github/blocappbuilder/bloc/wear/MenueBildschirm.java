@@ -51,7 +51,7 @@ class MenueBildschirm extends Bildschirm {
                 add("Workout", "BLOCs & Katalog", HANTEL, false, () -> oeffne("workout", true));
                 add("Mobility & Stretch", "BLOCs & Katalog", MOBIL, false, () -> oeffne("mob", true));
                 add("Timer", "Gespeicherte Timer", UHR, false, () -> oeffne("timer", true));
-                add("Run", "GPS übers Handy", RUN, false, () -> uhr.zeige(new LaufBildschirm(uhr)));
+                add("Run", "GPS übers Handy", RUN, false, () -> uhr.zeige(new LaufBildschirm(uhr, false)));
                 break;
             case "play":
                 kopf = "PLAY";

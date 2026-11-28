@@ -52,6 +52,21 @@ public class UhrAnsicht extends View {
 
     void hinweis(String t) { hinweis = t; hinweisBis = SystemClock.uptimeMillis() + 1700; }
 
+    /** Lauf vom Handy wurde auf der Uhr verlassen: nicht bei jeder Nachricht wieder öffnen */
+    boolean laufVerlassen = false;
+
+    /** Live-Stand des Handy-Laufs: in den Lauf-Screen; startet der Lauf auf dem Handy, öffnet er sich im Menü von selbst */
+    void laufLive(org.json.JSONObject o) {
+        boolean aktiv = o.optInt("lauf", 0) == 1;
+        if (!aktiv) laufVerlassen = false;
+        if (screen instanceof LaufBildschirm) { ((LaufBildschirm) screen).live(o); return; }
+        if (aktiv && !laufVerlassen && screen instanceof MenueBildschirm) {
+            LaufBildschirm l = new LaufBildschirm(this, true);
+            zeige(l);
+            l.live(o);
+        }
+    }
+
     void neueDaten(Daten d) {
         if (d == null) return;
         daten = d;

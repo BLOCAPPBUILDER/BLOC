@@ -133,3 +133,54 @@ if(IST_NATIV){
   document.addEventListener("visibilitychange", function(){ if(!document.hidden){ uhrSaetzeAbholen(); uhrSync(true); } });
   setTimeout(function(){ uhrSaetzeAbholen(); uhrSync(true); }, 2500);
 }
+
+/* ---------- Lauf: Uhr als Anzeige und Fernbedienung (Variante A) ----------
+   Das Handy misst GPS, Strecke und Tempo; die Uhr zeigt Zeit, km und Pace live und steuert Start, Pause/Weiter, Stopp (speichern) und Abbrechen.
+   Nachrichten gehen nur, solange ein Lauf vorbereitet wird oder läuft (und einmal am Ende). */
+var uhrLaufAktiv = false, uhrLaufLetzt = 0;
+function uhrLaufStand(){
+  if(typeof runVor !== "undefined" && runVor) return { lauf:1, vor:Math.max(1, Math.ceil((runVor.ende - Date.now())/1000)) };
+  if(typeof run === "undefined" || !run) return null;
+  var r = run, sek = runZeit(r)/1000;
+  return { lauf:1, pause:!!r.pauseAb, auto:!!r.auto, ms:Math.round(runZeit(r)), km:runKm(r.dist),
+           pace:r.verlauf && r.verlauf.length > 1 ? runTempoJetzt(r) : runTempo(r, sek, r.dist), einheit:runTempoEinheit(r),
+           gps:r.fehler ? 0 : 1 };
+}
+function uhrLaufSenden(ende){
+  if(!IST_NATIV) return;
+  var pl = nativPlugin("BlocUhr");
+  if(!pl || typeof pl.laufLive !== "function") return;
+  var s = ende ? { lauf:0, gespeichert:ende === "gespeichert" } : uhrLaufStand();
+  if(!s){ if(uhrLaufAktiv){ uhrLaufAktiv = false; pl.laufLive({ json:JSON.stringify({ lauf:0 }) }).catch(function(){}); } return; }
+  uhrLaufAktiv = s.lauf === 1;
+  uhrLaufLetzt = Date.now();
+  pl.laufLive({ json:JSON.stringify(s) }).catch(function(){});
+}
+/* Befehle von der Uhr */
+function uhrBefehl(b){
+  try{
+    if(b === "start"){
+      if((typeof run !== "undefined" && run) || (typeof runVor !== "undefined" && runVor)){ uhrLaufSenden(); return; }
+      if(location.hash.indexOf("#run") !== 0) go("#run");
+      setTimeout(function(){ runStart(); uhrLaufSenden(); }, 300);
+      return;
+    }
+    if(b === "pause" && run && !run.pauseAb) runPause();
+    else if(b === "weiter" && run && run.pauseAb) runPause();
+    else if(b === "stopp" && run){ runBeenden(true); uhrLaufSenden("gespeichert"); return; }
+    else if(b === "abbrechen"){
+      if(runVor){ runVorStop(); runWachen(false); renderRun(); }
+      else if(run) runBeenden(false);
+      uhrLaufSenden("verworfen");
+      return;
+    }
+    uhrLaufSenden();
+  }catch(e){}
+}
+if(IST_NATIV){
+  setInterval(function(){ if(uhrLaufStand() || uhrLaufAktiv) uhrLaufSenden(); }, 2000);
+  (function(){
+    var pl = nativPlugin("BlocUhr");
+    if(pl && typeof pl.addListener === "function") pl.addListener("uhrBefehl", function(d){ uhrBefehl(d && d.befehl); });
+  })();
+}

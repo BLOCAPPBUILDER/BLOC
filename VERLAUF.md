@@ -3,11 +3,16 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-28 · Lauf mit der Uhr steuern (Fassung 2026-11-28-3)
+
+- **Variante A fertig:** Das Handy schickt während des Laufs alle 2 s Zeit, km, Pace (Rad: km/h) und Pause an die Uhr (`/bloc/lauf`, kurze Nachricht). Die Uhr schickt Start, Pause/Weiter, Stopp (Handy speichert) und Abbrechen (`/bloc/lauf/befehl`), BLOC führt sie aus (`uhrBefehl` in `js/26-uhr.js`).
+- Run auf der Uhr startet den Lauf auf dem Handy (mit GPS-Vorlauf als Countdown auf der Uhr); ein auf dem Handy gestarteter Lauf öffnet sich auf der Uhr von selbst. Ohne Handy misst die Uhr allein Zeit und Puls („Nur Uhr · ohne GPS“), bei Funkloch steht „Handy getrennt“.
+
 ## 2026-11-28 · BLOC auf der Uhr: Menü, Lauf, Timer, Intervall, Satz für Satz (Fassung 2026-11-28-2)
 
 - **Uhr-App** (`android/wear`, Wear OS, Entwurf `Uhr-Glas-Varianten.html`): Menü wie die App (Play, Favoriten, Workout und Mobility & Stretch je mit Meine BLOCs und Katalog, Timer, Run). Lauf (Glas-Linse mit wählbarer Mitte, Puls rechts, Zeit unten, X = abbrechen, Stopp halten), Timer und Intervall (Restzeit-Bogen, Strichfiguren, Übungs-Kreise am Rand), Satz für Satz (Satz-Ring, Bearbeiten mit Krone oder − / +, Satzpause, Wischen zwischen Übungen). Puls vom Sensor der Uhr, Vibration bei Phasenwechsel. Zurück: vom linken Rand wischen (im Training zweimal).
 - **Handy ↔ Uhr** ohne Konto und Server: `BlocUhrPlugin` + `js/26-uhr.js` schicken Programm, Favoriten, BLOCs, Katalog, Timer und Figuren gezippt über die Wear-OS-Verbindung (`/bloc/uhr`); auf der Uhr eingetragene Sätze kommen über `/bloc/satz/…` zurück und werden beim Öffnen der App eingetragen. Ohne Handy zeigt die Uhr Beispieldaten.
-- Noch offen: Lauf-Werte (Pace, km) vom Handy-GPS auf die Uhr, Pause/Stopp der Uhr an den Handy-Lauf, Ambient-Modus.
+- Noch offen: Ambient-Modus.
 
 ## 2026-11-28 · Frei lesbare Quellen (Fassung 2026-11-28-1)
 
