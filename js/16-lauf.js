@@ -323,12 +323,31 @@ function runMedien(sofort){
   if(typeof nativTimerAnzeige !== "function" || typeof IST_NATIV === "undefined" || !IST_NATIV) return;
   var r = run;
   if(!r){ nativTimerAnzeige(null); runMedienAm = 0; return; }
-  if(!sofort && Date.now() - runMedienAm < 10000) return;
+  if(!sofort && Date.now() - runMedienAm < 5000) return;   // alle 5 s: das Cover für Uhren wächst mit
   runMedienAm = Date.now();
   var sek = runZeit(r)/1000, text = runKm(r.dist)+" km · "+runTempo(r, sek, r.dist)+" "+runTempoEinheit(r);
   if(r.pauseAb) text = t(r.auto ? "runAutoPausiert" : "runPaused")+" · "+fmtUhr(runZeit(r))+" · "+runKm(r.dist)+" km";
   nativTimerAnzeige({ modus:"lauf", titel:"BLOC · "+t(runIstRad(r) ? "runArtRad" : "runArtLauf"), pause:!!r.pauseAb, laufStart:Date.now() - runZeit(r),
-    schritte:[{ name:text, ende:0 }], txtPause:t("pause"), txtWeiter:t("timerWeiter") });
+    schritte:[{ name:text, ende:0, cover:runCover(r, sek) }], txtPause:t("pause"), txtWeiter:t("timerWeiter") });
+}
+/* Cover für die Medien-Anzeige (Uhren mit Musiksteuerung), aufgebaut wie der Lauf-Screen der BLOC-Uhr-App (UhrCover.java):
+   Linse = aktuelle Pace (in der Pause gedimmt), links km, rechts Ø-Pace (statt Puls), unten Zeit, Ring = Ziel, dahinter die Strecke */
+function runCover(r, sek){
+  var rad = runIstRad(r), pace = r.verlauf && r.verlauf.length > 1 ? runTempoJetzt(r) : runTempo(r, sek, r.dist);
+  var c = { l:r.pauseAb ? t("pause") : (rad ? "Tempo" : "Pace"), w:pace, e:runTempoEinheit(r), dim:!!r.pauseAb,
+            li:{ w:runKm(r.dist), l:"km" }, re:{ w:runTempo(r, sek, r.dist), l:"Ø "+(rad ? "km/h" : "Pace") }, ul:currentLang() === "en" ? "Time" : "Zeit", uw:fmtUhr(runZeit(r)) };
+  if(r.ziel && r.ziel.km > 0) c.r = "a:"+Math.min(1, r.dist/(r.ziel.km*1000)).toFixed(3);
+  var pts = r.pts || [];
+  if(pts.length > 1){
+    var schritt = Math.max(1, Math.ceil(pts.length/80)), q = [], i;
+    for(i = 0; i < pts.length; i += schritt) q.push(pts[i]);
+    if(q[q.length-1] !== pts[pts.length-1]) q.push(pts[pts.length-1]);
+    var k = Math.cos(q[0][0]*Math.PI/180), xs = q.map(function(p){ return p[1]*k; }), ys = q.map(function(p){ return -p[0]; });
+    var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs), y0 = Math.min.apply(null, ys), y1 = Math.max.apply(null, ys);
+    var s = Math.max(x1 - x0, (y1 - y0)*132/104, 1e-6), ox = (1 - (x1 - x0)/s)/2, oy = (1 - (y1 - y0)/s*132/104)/2;
+    c.p = q.map(function(p, j){ return (ox + (xs[j] - x0)/s).toFixed(3)+","+(oy + (ys[j] - y0)/s*132/104).toFixed(3); }).join(" ");
+  }
+  return c;
 }
 function runPause(){
   if(!run) return;

@@ -46,10 +46,13 @@ public class BlocTimerPlugin extends Plugin {
             JSArray schritte = call.getArray("schritte", new JSArray());
             int n = Math.min(schritte.length(), 400);
             String[] namen = new String[n];
+            String[] cover = new String[n];   // Cover für Uhren (JSON je Schritt, siehe UhrCover)
             long[] enden = new long[n], dauern = new long[n];
             for (int i = 0; i < n; i++) {
                 JSONObject s = schritte.getJSONObject(i);
                 namen[i] = s.optString("name", "");
+                JSONObject cv = s.optJSONObject("cover");
+                cover[i] = cv != null ? cv.toString() : "";
                 enden[i] = s.optLong("ende", 0);
                 dauern[i] = s.optLong("dauer", 0);
             }
@@ -65,6 +68,7 @@ public class BlocTimerPlugin extends Plugin {
             Intent it = new Intent(getContext(), BlocTimerService.class);
             it.putExtra(BlocTimerService.X_TITEL, call.getString("titel", "BLOC"));
             it.putExtra(BlocTimerService.X_NAMEN, namen);
+            it.putExtra(BlocTimerService.X_COVER, cover);
             it.putExtra(BlocTimerService.X_ENDEN, enden);
             it.putExtra(BlocTimerService.X_DAUERN, dauern);
             it.putExtra(BlocTimerService.X_PAUSE, Boolean.TRUE.equals(call.getBoolean("pause", false)));

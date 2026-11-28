@@ -73,6 +73,29 @@ document.addEventListener("visibilitychange", function(){
   if(document.visibilityState === "hidden" && !playerState.paused && typeof nativTimerAn !== "undefined" && nativTimerAn) schedCancel();
   timerAnzeigeMelden();
 });
+/* Cover für die Medien-Anzeige (Uhren mit Musiksteuerung), aufgebaut wie Timer/Intervall der BLOC-Uhr-App (UhrCover.java):
+   Übungsname über der Linse, darin Strichfigur, Phase und Phasenlänge, links Runde, rechts Übung, unten „Als nächstes“,
+   Ring = Runden, Kreise am Rand = Übungen. Die Restzeit zählt die Uhr selbst (Fortschritt der Medien-Anzeige). */
+function timerCoverFigur(ex){
+  if(!ex || typeof ILLU === "undefined" || !ILLU[ex] || !ILLU[ex][0]) return "";
+  return ILLU[ex][0].replace(/<mask[\s\S]*?<\/mask>/g, "").replace(/ mask="[^"]*"/g, "");
+}
+function timerCover(x, n, anzahl, pausiert){
+  var ex = x.ex && typeof findExercise === "function" ? findExercise(x.ex) : null, name = ex ? tplText(ex.name) : (x.blockName || "");
+  var fig = timerCoverFigur(x.ex), d = Math.round(x.duration || 0);
+  var c = { o:fig ? name : "", f:fig, l:pausiert ? t("infoPaused") : phaseVars(x.phase).label, w:pausiert || (Math.floor(d/60)+":"+String(d%60).padStart(2, "0")),
+            e:fig ? "" : name, dim:!!pausiert,
+            li:{ w:(x.rep || 1)+"/"+(x.totalReps || 1), l:currentLang() === "en" ? "Round" : "Runde" } };
+  if(anzahl > 1) c.re = { w:(x.exNr || 1)+"/"+anzahl, l:currentLang() === "en" ? "Exercise" : "Übung" };
+  if(x.totalReps > 1) c.r = "s:"+x.totalReps+":"+x.rep;
+  if(anzahl > 1) c.d = anzahl+":"+((x.exNr || 1) - 1);
+  if(n){
+    c.ul = t("upNext").replace(/:$/, "");
+    c.uw = n.phase === "done" ? t("doneTitle") : n.phase === "work" ? (n.ex && findExercise(n.ex) ? tplText(findExercise(n.ex).name) : (n.blockName || phaseVars(n.phase).label)) : phaseVars(n.phase).label;
+    if(n.duration > 0) c.uw += " · "+Math.floor(n.duration/60)+":"+String(Math.round(n.duration)%60).padStart(2, "0");
+  }
+  return c;
+}
 function timerAnzeigeMelden(){
   if(typeof nativTimerAnzeige !== "function" || !IST_NATIV) return;
   var ps = playerState, st = ps && ps.steps[ps.idx];
@@ -80,14 +103,15 @@ function timerAnzeigeMelden(){
   var titel = "BLOC · "+(ps.workout.name || t("tabTimer")), schritte = [], toene = [];
   if(ps.paused){
     var s = Math.ceil(Math.max(0, ps.remainingMs)/1000);
-    schritte.push({ name:timerAnzeigeText(st)+" · "+t("infoPaused")+" · "+Math.floor(s/60)+":"+String(s%60).padStart(2, "0"), ende:0 });
+    schritte.push({ name:timerAnzeigeText(st)+" · "+t("infoPaused")+" · "+Math.floor(s/60)+":"+String(s%60).padStart(2, "0"), ende:0,
+                    cover:timerCover(st, ps.steps[ps.idx+1], ps.steps.exCount, Math.floor(s/60)+":"+String(s%60).padStart(2, "0")) });
   } else {
     var ende = ps.endAt;
     for(var i = ps.idx; i < ps.steps.length && schritte.length < 400; i++){
       var x = ps.steps[i];
       if(x.phase === "done") break;
       if(i > ps.idx) ende += x.duration*1000;
-      if(x.duration > 0) schritte.push({ name:timerAnzeigeText(x), ende:ende, dauer:x.duration*1000 });
+      if(x.duration > 0) schritte.push({ name:timerAnzeigeText(x), ende:ende, dauer:x.duration*1000, cover:timerCover(x, ps.steps[i+1], ps.steps.exCount) });
     }
     toene = timerToene();
   }

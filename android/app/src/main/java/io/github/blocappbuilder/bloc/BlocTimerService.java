@@ -37,12 +37,17 @@ public class BlocTimerService extends Service {
     static final int NR = 4711;
     static final String X_TITEL = "titel", X_NAMEN = "namen", X_ENDEN = "enden", X_DAUERN = "dauern", X_PAUSE = "pause", X_FERTIG = "fertig",
         X_TON = "ton", X_CUE_AT = "cueAt", X_CUE_ART = "cueArt", X_KLANG = "klang", X_LAUT = "laut",
-        X_TXT_PAUSE = "txtPause", X_TXT_WEITER = "txtWeiter", X_MODUS = "modus", X_LAUF_START = "laufStart";
+        X_TXT_PAUSE = "txtPause", X_TXT_WEITER = "txtWeiter", X_MODUS = "modus", X_LAUF_START = "laufStart",
+        X_COVER = "cover";
     static final String AKTION_PAUSE = "io.github.blocappbuilder.bloc.TIMER_PAUSE", AKTION_WEITER = "io.github.blocappbuilder.bloc.TIMER_WEITER";
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private String titel = "BLOC", fertig = "", klang = "", txtPause = "Pause", txtWeiter = "Weiter";
     private String[] namen = new String[0];
+    private String[] coverJson = new String[0];
+    private UhrCover cover;
+    private String coverSchluessel = "";
+    private android.graphics.Bitmap coverBild;
     private long[] enden = new long[0], dauern = new long[0];
     private boolean pause = false, ton = false;
     private long[] cueAt = new long[0];
@@ -86,6 +91,7 @@ public class BlocTimerService extends Service {
             titel = t != null && !t.isEmpty() ? t : "BLOC";
             String[] n = intent.getStringArrayExtra(X_NAMEN);
             namen = n != null ? n : new String[0];
+            coverJson = laenge(intent.getStringArrayExtra(X_COVER), namen.length);
             long[] e = intent.getLongArrayExtra(X_ENDEN);
             enden = e != null && e.length == namen.length ? e : new long[namen.length];
             long[] d = intent.getLongArrayExtra(X_DAUERN);
@@ -133,6 +139,24 @@ public class BlocTimerService extends Service {
         super.onDestroy();
     }
 
+    private static String[] laenge(String[] a, int n) { return a != null && a.length == n ? a : new String[n]; }
+
+    /** Cover im BLOC-Uhr-Look für Schritt i (nur neu zeichnen, wenn sich etwas ändert) */
+    private android.graphics.Bitmap coverFuer(int i) {
+        if (i < 0 || i >= coverJson.length || coverJson[i] == null || coverJson[i].isEmpty()) return null;
+        String k = coverJson[i];
+        if (k.equals(coverSchluessel) && coverBild != null) return coverBild;
+        if (cover == null) cover = new UhrCover(this);
+        coverBild = cover.zeichne(k);
+        if ((getApplicationInfo().flags & android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0) {   // nur Testfassung: letztes Cover zum Ansehen ablegen (adb run-as … cat cache/uhr-cover.png)
+            try (java.io.FileOutputStream out = new java.io.FileOutputStream(new File(getCacheDir(), "uhr-cover.png"))) {
+                coverBild.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out);
+            } catch (Exception ignored) { }
+        }
+        coverSchluessel = k;
+        return coverBild;
+    }
+
     /** aktueller Schritt: der erste, dessen Ende noch nicht erreicht ist (-1: alle vorbei) */
     private int aktuell() {
         long jetzt = System.currentTimeMillis();
@@ -155,12 +179,16 @@ public class BlocTimerService extends Service {
     }
 
     /* ---------- Medien-Sitzung: Titel, Phase, Fortschritt der Phase, Pause/Weiter ---------- */
-    private void sitzungAktualisieren(String text, long dauerMs, long vergangenMs, boolean laeuft) {
+    private void sitzungAktualisieren(String text, long dauerMs, long vergangenMs, boolean laeuft, android.graphics.Bitmap bild) {
         if (sitzung == null) return;
         MediaMetadataCompat.Builder m = new MediaMetadataCompat.Builder()
             .putString(MediaMetadataCompat.METADATA_KEY_TITLE, text)
             .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, titel)
             .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, "BLOC");
+        if (bild != null) {   // Uhren mit Medien-Steuerung zeigen es als Hintergrund oder kleines Bild
+            m.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bild);
+            m.putBitmap(MediaMetadataCompat.METADATA_KEY_ART, bild);
+        }
         if (dauerMs > 0) m.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, dauerMs);
         sitzung.setMetadata(m.build());
         PlaybackStateCompat.Builder s = new PlaybackStateCompat.Builder()
@@ -178,21 +206,22 @@ public class BlocTimerService extends Service {
         PendingIntent pi = PendingIntent.getActivity(this, 0, oeffnen, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         int i = lauf ? 0 : aktuell();
+        android.graphics.Bitmap bild = coverFuer(lauf || pause ? 0 : i);
         String text;
         boolean laeuft = !pause && i >= 0;
         if (lauf) {
             text = namen.length > 0 ? namen[0] : "";   // „3,42 km · 5:31 /km“ bzw. „Pausiert · …“
-            sitzungAktualisieren(text, 0, Math.max(0, System.currentTimeMillis() - laufStart), !pause);
+            sitzungAktualisieren(text, 0, Math.max(0, System.currentTimeMillis() - laufStart), !pause, bild);
         } else if (pause) {
             text = namen.length > 0 ? namen[0] : "";   // die Seite schickt den fertigen Text („Los! · Timer pausiert · 0:29“)
-            sitzungAktualisieren(text, 0, 0, false);
+            sitzungAktualisieren(text, 0, 0, false, bild);
         } else if (i >= 0) {
             text = namen[i];
             long dauer = dauern[i] > 0 ? dauern[i] : 0;
-            sitzungAktualisieren(text, dauer, dauer > 0 ? dauer - (enden[i] - System.currentTimeMillis()) : 0, true);
+            sitzungAktualisieren(text, dauer, dauer > 0 ? dauer - (enden[i] - System.currentTimeMillis()) : 0, true, bild);
         } else {
             text = fertig;
-            sitzungAktualisieren(text, 0, 0, false);
+            sitzungAktualisieren(text, 0, 0, false, bild);
         }
 
         Intent ip = new Intent(this, BlocTimerService.class).setAction(laeuft ? AKTION_PAUSE : AKTION_WEITER);
@@ -210,6 +239,7 @@ public class BlocTimerService extends Service {
             .setCategory(NotificationCompat.CATEGORY_TRANSPORT)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setColor(0xFFF2643C)
+            .setLargeIcon(bild)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE);
         if (i >= 0 || pause) {
             b.addAction(new NotificationCompat.Action(laeuft ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play, laeuft ? txtPause : txtWeiter, pa));

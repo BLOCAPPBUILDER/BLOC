@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-28 · Cover im Uhr-Look für alle Uhren mit Musiksteuerung (Fassung 2026-11-28-4)
+
+- **Medien-Anzeige mit Cover** (Lauf und Timer, nur Android-App): `UhrCover` zeichnet das Bild wie die Screens der BLOC-Uhr-App – Meer, BLOC, Ring, Glas-Linse, Werte links/rechts, Zeile unten; beim Intervall Übungsname, Strichfigur (`UhrFigur`, gleiche Fassung wie auf der Uhr) und Übungs-Kreise; beim Lauf Ø-Pace statt Puls, Ziel-Ring und die mitwachsende Strecke. Uhren mit Musiksteuerung (Galaxy Watch, Pixel Watch, teils Huawei) zeigen es als Hintergrund oder kleines Bild. Lauf alle 5 s neu, Timer je Schritt (`runCover`, `timerCover`).
+- **Uhr-App:** X zum Abbrechen 2 s gedrückt halten.
+
 ## 2026-11-28 · Lauf mit der Uhr steuern (Fassung 2026-11-28-3)
 
 - **Variante A fertig:** Das Handy schickt während des Laufs alle 2 s Zeit, km, Pace (Rad: km/h) und Pause an die Uhr (`/bloc/lauf`, kurze Nachricht). Die Uhr schickt Start, Pause/Weiter, Stopp (Handy speichert) und Abbrechen (`/bloc/lauf/befehl`), BLOC führt sie aus (`uhrBefehl` in `js/26-uhr.js`).
