@@ -3,6 +3,12 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-28 · BLOC auf der Uhr: Menü, Lauf, Timer, Intervall, Satz für Satz (Fassung 2026-11-28-2)
+
+- **Uhr-App** (`android/wear`, Wear OS, Entwurf `Uhr-Glas-Varianten.html`): Menü wie die App (Play, Favoriten, Workout und Mobility & Stretch je mit Meine BLOCs und Katalog, Timer, Run). Lauf (Glas-Linse mit wählbarer Mitte, Puls rechts, Zeit unten, X = abbrechen, Stopp halten), Timer und Intervall (Restzeit-Bogen, Strichfiguren, Übungs-Kreise am Rand), Satz für Satz (Satz-Ring, Bearbeiten mit Krone oder − / +, Satzpause, Wischen zwischen Übungen). Puls vom Sensor der Uhr, Vibration bei Phasenwechsel. Zurück: vom linken Rand wischen (im Training zweimal).
+- **Handy ↔ Uhr** ohne Konto und Server: `BlocUhrPlugin` + `js/26-uhr.js` schicken Programm, Favoriten, BLOCs, Katalog, Timer und Figuren gezippt über die Wear-OS-Verbindung (`/bloc/uhr`); auf der Uhr eingetragene Sätze kommen über `/bloc/satz/…` zurück und werden beim Öffnen der App eingetragen. Ohne Handy zeigt die Uhr Beispieldaten.
+- Noch offen: Lauf-Werte (Pace, km) vom Handy-GPS auf die Uhr, Pause/Stopp der Uhr an den Handy-Lauf, Ambient-Modus.
+
 ## 2026-11-28 · Frei lesbare Quellen (Fassung 2026-11-28-1)
 
 - **Quellen-Seite:** Bei jeder Quelle ohne freien Volltext steht jetzt eine frei lesbare Arbeit („mit derselben Aussage“ oder „zum Thema“), alle mit Europe PMC geprüft; wo es keine gleichwertige gibt, steht das dabei. Neu: F58 (Maximalpuls-Formeln im Vergleich), F59 (Zirkeltraining und Bauchfett). Auch die Quellenliste der Protein-Seite nennt freie Alternativen.

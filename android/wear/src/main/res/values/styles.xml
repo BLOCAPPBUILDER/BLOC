@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Eigenes Zurück-Wischen vom linken Rand: so stört das System-Wischen nicht beim Übungswechsel (Satz für Satz) -->
+    <style name="BlocUhr" parent="@android:style/Theme.DeviceDefault.NoActionBar">
+        <item name="android:windowSwipeToDismiss">false</item>
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
+</resources>

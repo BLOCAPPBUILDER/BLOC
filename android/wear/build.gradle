@@ -10,8 +10,8 @@ android {
         applicationId "io.github.blocappbuilder.bloc"
         minSdkVersion 30          // Wear OS 3 und neuer
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "0.1-test"
+        versionCode 2
+        versionName "0.2-test"
     }
     buildTypes {
         release {
@@ -25,5 +25,6 @@ android {
 }
 
 dependencies {
-    // Erste Testfassung kommt ohne Bibliotheken aus (nur Android-Bordmittel).
+    // Verbindung Handy <-> Uhr (Data Layer): direkt zwischen den Geraeten, ohne Konto und ohne Server
+    implementation "com.google.android.gms:play-services-wearable:19.0.0"
 }
