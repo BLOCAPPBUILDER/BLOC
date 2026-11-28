@@ -190,9 +190,12 @@ final class Zeichner {
     }
 
     /** Orangener Halte-Ring um den rechten Knopf (Stopp gedrückt halten) */
-    void halteRing(Canvas c, float anteil) {
+    void halteRing(Canvas c, float anteil) { halteRing(c, anteil, KR_X); }
+
+    /** Halte-Ring um einen kleinen Knopf an Position cx */
+    void halteRing(Canvas c, float anteil, float cx) {
         if (anteil <= 0) return;
-        r.set(KR_X - 14.5f, KNOPF_Y - 14.5f, KR_X + 14.5f, KNOPF_Y + 14.5f);
+        r.set(cx - 14.5f, KNOPF_Y - 14.5f, cx + 14.5f, KNOPF_Y + 14.5f);
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(2f);
         p.setStrokeCap(Paint.Cap.ROUND);

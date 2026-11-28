@@ -8,14 +8,14 @@ import org.json.JSONObject;
 /**
  * Lauf (Entwurf C2, Variante A): Das Handy misst GPS, Strecke und Pace; die Uhr zeigt alles live und steuert.
  * Glas-Linse mit wählbarer Mitte (Pace, Puls, Distanz, Zeit), rechts Puls, unten Zeit, weisser Puls-Bogen aussen.
- * Knöpfe: X = abbrechen (zweimal tippen), Pause/Weiter, Stopp = gedrückt halten (Handy speichert).
+ * Knöpfe: X = abbrechen und Stopp = speichern (beide gedrückt halten), Pause/Weiter.
  * Ist das Handy nicht erreichbar, misst die Uhr allein Zeit und Puls.
  */
 class LaufBildschirm extends Bildschirm {
     private static final String[] REIHE = {"pace", "hr", "km", "zeit"};
     private int mitte = 0;
     private boolean pause = false, fertig = false;
-    private long abbrechenSeit = 0, halteStart = 0, wechselZeit = 0;
+    private long abbrechenSeit = 0, halteStart = 0, halteX = 0, wechselZeit = 0;
 
     // Uhr allein
     private long laufMs = 0, letzt = SystemClock.uptimeMillis();
@@ -108,6 +108,7 @@ class LaufBildschirm extends Bildschirm {
             z.mitte(c, s, 96, 90, 30, z.fett, Zeichner.WEISS);
             z.mitte(c, warte ? "mit dem Handy" : "Handy sucht GPS", 96, 100, 6.2f, z.normal, 0xB3FFFFFF);
             z.knopfKlein(c, Zeichner.KL_X, druck(1), Zeichner.KREUZ);
+            xRing(c, jetzt);
             return;
         }
 
@@ -153,6 +154,24 @@ class LaufBildschirm extends Bildschirm {
             z.halteRing(c, a);
             if (a >= 1 && !fertig) beenden();
         }
+        xRing(c, jetzt);
+    }
+
+    /** X gedrückt halten = Lauf abbrechen (nicht speichern) */
+    private void xRing(Canvas c, long jetzt) {
+        if (halteX == 0) return;
+        float a = (jetzt - halteX) / 2000f;   // 2 s halten: Verwerfen soll nicht aus Versehen passieren
+        z.halteRing(c, a, Zeichner.KL_X);
+        if (a >= 1 && !fertig) abbrechen();
+    }
+
+    private void abbrechen() {
+        halteX = 0;
+        if (handy || vorBis > 0 || warte) uhr.activity.anHandy("/bloc/lauf/befehl", "abbrechen");
+        uhr.activity.vibriere(250);
+        uhr.hinweis("Lauf abgebrochen · nicht gespeichert");
+        fertig = true;
+        uhr.postDelayed(uhr::menue, 1400);
     }
 
     private void seite(Canvas c, String k, float x, float blink, long j) {
@@ -180,12 +199,17 @@ class LaufBildschirm extends Bildschirm {
     @Override void runter(float x, float y) {
         super.runter(x, y);
         if (gedrueckt == 3 && !fertig && vorBis == 0 && !warte) { halteStart = SystemClock.uptimeMillis(); uhr.activity.vibriere(20); }
+        if (gedrueckt == 1 && !fertig) { halteX = SystemClock.uptimeMillis(); uhr.activity.vibriere(20); }
     }
 
     @Override void hoch() {
         if (halteStart > 0 && !fertig) {
             if (SystemClock.uptimeMillis() - halteStart < 400) uhr.hinweis("Zum Beenden gedrückt halten");
             halteStart = 0;
+        }
+        if (halteX > 0 && !fertig) {
+            if (SystemClock.uptimeMillis() - halteX < 400) uhr.hinweis("Zum Abbrechen gedrückt halten");
+            halteX = 0;
         }
         super.hoch();
     }
@@ -197,15 +221,7 @@ class LaufBildschirm extends Bildschirm {
 
     @Override void knopf(int k) {
         if (fertig) return;
-        if (k == 1) {
-            long j = SystemClock.uptimeMillis();
-            if (j - abbrechenSeit < 2500) {
-                if (handy || vorBis > 0 || warte) uhr.activity.anHandy("/bloc/lauf/befehl", "abbrechen");
-                uhr.hinweis("Lauf abgebrochen · nicht gespeichert");
-                fertig = true;
-                uhr.postDelayed(uhr::menue, 1400);
-            } else { abbrechenSeit = j; uhr.hinweis("Nochmal tippen = abbrechen"); }
-        } else if (k == 2 && vorBis == 0 && !warte) {
+        if (k == 2 && vorBis == 0 && !warte) {
             pause = !pause;
             if (handy) uhr.activity.anHandy("/bloc/lauf/befehl", pause ? "pause" : "weiter");
             uhr.activity.vibriere(40);
