@@ -137,6 +137,23 @@ final class UhrCover {
                     float a0 = -120 + i * (b + g);
                     bogen(c, a0, a0 + b, 2.8f, i + 1 == an ? 0xFFFF6B47 : i + 1 < an ? 0xFFFFFFFF : 0x38FFFFFF);
                 }
+            } else if (t[0].equals("p")) {   // Pace-Ring: Häkchen je volle Minute (2–8 min/km), 4 und 6 mit kleiner Zahl
+                for (int min = 2; min <= 8; min++) {
+                    float w = (5 - min) / 3.5f * 120;
+                    p.setStyle(Paint.Style.STROKE);
+                    p.setStrokeWidth(1f);
+                    p.setStrokeCap(Paint.Cap.ROUND);
+                    p.setColor(0x8CFFFFFF);
+                    c.drawLine(px(84, w), py(84, w), px(80.5f, w), py(80.5f, w), p);
+                    p.setStyle(Paint.Style.FILL);
+                    if (min == 4 || min == 6) text(c, String.valueOf(min), px(75.5f, w), py(75.5f, w) + 1.8f, 5f, fett, 0x8CFFFFFF, 0);
+                }
+                float a = Math.max(0, Math.min(1, Float.parseFloat(t[1]))), ende = -120 + 240 * a;
+                bogen(c, -120, ende, 2.6f, 0xFFFFFFFF);
+                if (a > 0.002f) {
+                    p.setColor(0x59FFFFFF); c.drawCircle(px(88, ende), py(88, ende), 5f, p);
+                    p.setColor(0xFFFFFFFF); c.drawCircle(px(88, ende), py(88, ende), 3.4f, p);
+                }
             } else if (t[0].equals("a")) {
                 float a = Math.max(0, Math.min(1, Float.parseFloat(t[1]))), ende = -120 + 240 * a;
                 bogen(c, -120, ende, 2.6f, 0xFFFFFFFF);

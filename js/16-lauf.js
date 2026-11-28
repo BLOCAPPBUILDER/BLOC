@@ -331,21 +331,17 @@ function runMedien(sofort){
     schritte:[{ name:text, ende:0, cover:runCover(r, sek) }], txtPause:t("pause"), txtWeiter:t("timerWeiter") });
 }
 /* Cover für die Medien-Anzeige (Uhren mit Musiksteuerung), aufgebaut wie der Lauf-Screen der BLOC-Uhr-App (UhrCover.java):
-   Linse = aktuelle Pace (in der Pause gedimmt), links km, rechts Ø-Pace (statt Puls), unten Zeit, Ring = Ziel, dahinter die Strecke */
+   Linse = aktuelle Pace (in der Pause gedimmt), links km, rechts Ø-Pace (statt Puls), unten Zeit.
+   Der Ring zeigt die aktuelle Pace: links 8:30, oben 5:00, rechts 1:30 min/km, Häkchen je volle Minute, nur 4 und 6 beschriftet (Rad: kein Ring). */
 function runCover(r, sek){
   var rad = runIstRad(r), pace = r.verlauf && r.verlauf.length > 1 ? runTempoJetzt(r) : runTempo(r, sek, r.dist);
   var c = { l:r.pauseAb ? t("pause") : (rad ? "Tempo" : "Pace"), w:pace, e:runTempoEinheit(r), dim:!!r.pauseAb,
             li:{ w:runKm(r.dist), l:"km" }, re:{ w:runTempo(r, sek, r.dist), l:"Ø "+(rad ? "km/h" : "Pace") }, ul:currentLang() === "en" ? "Time" : "Zeit", uw:fmtUhr(runZeit(r)) };
-  if(r.ziel && r.ziel.km > 0) c.r = "a:"+Math.min(1, r.dist/(r.ziel.km*1000)).toFixed(3);
-  var pts = r.pts || [];
-  if(pts.length > 1){
-    var schritt = Math.max(1, Math.ceil(pts.length/80)), q = [], i;
-    for(i = 0; i < pts.length; i += schritt) q.push(pts[i]);
-    if(q[q.length-1] !== pts[pts.length-1]) q.push(pts[pts.length-1]);
-    var k = Math.cos(q[0][0]*Math.PI/180), xs = q.map(function(p){ return p[1]*k; }), ys = q.map(function(p){ return -p[0]; });
-    var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs), y0 = Math.min.apply(null, ys), y1 = Math.max.apply(null, ys);
-    var s = Math.max(x1 - x0, (y1 - y0)*132/104, 1e-6), ox = (1 - (x1 - x0)/s)/2, oy = (1 - (y1 - y0)/s*132/104)/2;
-    c.p = q.map(function(p, j){ return (ox + (xs[j] - x0)/s).toFixed(3)+","+(oy + (ys[j] - y0)/s*132/104).toFixed(3); }).join(" ");
+  if(!rad){
+    var v = r.verlauf || [], spk = 0;   // Sekunden je km, wie die angezeigte Pace
+    if(v.length > 1 && v[v.length-1].d - v[0].d > 5) spk = (v[v.length-1].t - v[0].t)/1000/((v[v.length-1].d - v[0].d)/1000);
+    else if(r.dist > 20) spk = sek/(r.dist/1000);
+    if(spk > 0 && isFinite(spk)) c.r = "p:"+Math.max(0, Math.min(1, (510 - spk)/420)).toFixed(3);   // 8:30 = 0, 5:00 = Mitte, 1:30 = 1 (mit Häkchen je Minute)
   }
   return c;
 }

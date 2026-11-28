@@ -3,6 +3,10 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-28 · Lauf-Cover mit Pace-Ring (Fassung 2026-11-28-5)
+
+- **Lauf-Cover:** ohne Strecke und ohne Ziel-Ring; der Ring zeigt jetzt die aktuelle Pace (links 8:30, oben 5:00, rechts 1:30 min/km) mit Häkchen je voller Minute, nur 4 und 6 beschriftet. Rad ohne Ring.
+
 ## 2026-11-28 · Cover im Uhr-Look für alle Uhren mit Musiksteuerung (Fassung 2026-11-28-4)
 
 - **Medien-Anzeige mit Cover** (Lauf und Timer, nur Android-App): `UhrCover` zeichnet das Bild wie die Screens der BLOC-Uhr-App – Meer, BLOC, Ring, Glas-Linse, Werte links/rechts, Zeile unten; beim Intervall Übungsname, Strichfigur (`UhrFigur`, gleiche Fassung wie auf der Uhr) und Übungs-Kreise; beim Lauf Ø-Pace statt Puls, Ziel-Ring und die mitwachsende Strecke. Uhren mit Musiksteuerung (Galaxy Watch, Pixel Watch, teils Huawei) zeigen es als Hintergrund oder kleines Bild. Lauf alle 5 s neu, Timer je Schritt (`runCover`, `timerCover`).
