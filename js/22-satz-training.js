@@ -185,6 +185,7 @@ function satzKarteHTML(id, i, n){
       (hatFigur ? '<div class="satz-figur'+(tp ? ' mit-i' : '')+'"><div class="satz-figbox">'+(ILLU[id] ? illuHTML(id, "satz-illu") : '<span class="ex-symbol big">'+exSymbol(ex)+'</span>')+(tp ? satzTippIHTML() : '')+'</div></div>' : '')+
       (!h && satzKontext.wartend.indexOf(id) > -1 ? '<div class="satz-hinweis">'+esc(t("tippWartet"))+'</div>' : '')+
       (satzKontext.leicht ? '<div class="satz-hinweis">'+esc(t("leichtHinweis", { n:z.saetze }))+' <button type="button" class="satz-leicht-aus" data-leichtaus>'+esc(t("leichtAus"))+'</button></div>' : '')+
+      (satzKontext.danach && satzKontext.danach[id] ? '<div class="satz-hinweis satz-danach">'+esc(t("leichtDanach", { n:tplText(findExercise(satzKontext.danach[id]).name) }))+'</div>' : '')+
       (v.erstes && !koerper && !zeitE && !h && !info ? '<div class="satz-hinweis">'+esc(t("erstesMalHinweis", { n:b.max }))+'</div>' : '')+
       (letzte ? '<div class="satz-zeile"><span>'+esc(t("stLetztes"))+'</span>'+(satzGleichText(letzte) ? [letzte.s[0]] : letzte.s).map(function(x){
         return '<button type="button" class="satz-chip" data-ukg="'+x[0]+'" data-uw="'+x[1]+'" aria-label="'+esc(t("stUebernehmen")+" "+studioKg(x[0])+" × "+x[1])+'">'+esc(satzGleichText(letzte) || satzText(x).replace("×", " × "))+'</button>'; }).join("")+'</div>' : '')+
@@ -237,12 +238,22 @@ function satzKalibrierText(id, r){
   var n = tplText(findExercise(id).name);
   return n+": "+(r && r.wdh ? t("kalWdh", { w:r.wdh }) : r != null ? t("kalNeu", { kg:studioKg(r) }) : t("kalGemerkt"));
 }
+/* Test 17, F: in der Leichtwoche gibt es keine Vorschläge - eine anstehende schwerere Variante wird aber für das nächste normale Training angekündigt. { Übung: Variante } */
+function leichtVarianten(ids){
+  var o = {};
+  if(!tippsAn()) return o;
+  var alt = studioTippsWartend, tipps = studioTipps(ids, false, false);
+  studioTippsWartend = alt;
+  Object.keys(tipps).forEach(function(id){ var tp = tipps[id]; if((tp.art === "variante" || tp.art === "varianteWdh") && tp.naechste && findExercise(tp.naechste)) o[id] = tp.naechste; });
+  return o;
+}
 function renderSatzTraining(planId, start){
   var p = stPlanFind(planId), ids = p ? satzListe(p) : [];
   if(!p || !ids.length){ go("#katalog"); return; }
   start = clamp(parseInt(start) || 0, 0, ids.length - 1);
   stPlanAktiv = p.id;   // Test 10, V1: es gelten die Werte des BLOCs, der gerade trainiert wird (nicht des zuletzt geöffneten)
   satzKontext = { leicht:planLeichtHeute(p.id), tipps:{}, plan:p, rpe:{} };
+  satzKontext.danach = satzKontext.leicht ? leichtVarianten(ids) : {};
   satzKontext.tipps = studioTipps(ids, satzKontext.leicht, false); satzKontext.wartend = studioTippsWartend.slice();   // eine Regel für alle Ansichten; höchstens zwei Tipps, in der Leichtwoche keine
   /* Ist heute schon ein Training dieses Plans gespeichert und hat eine Übung noch keinen Rundenstart (früher gespeichert, vor dem Neustart-Verhalten),
      beginnt das Satz-Training für sie von vorn - sonst stünde man wieder vor dem fertigen Stand. */

@@ -4,7 +4,7 @@
    Run (frei oder mit Ziel in km) und ein Zufallstraining („Überrasch mich“ erst am Tag selbst).
    Hinzufügen nur über „+ Hinzufügen“ am Tag (BLOC, Workout aus dem Katalog, TrainingsBLOC, Run – je ein Teil). Im Monat
    wählt ein Tipp den Tag, seine Einträge stehen unter dem Raster. Einträge verschiebt man über ihr Menü
-   („Auf einen anderen Tag“). Daten: settings.kalender = { e:[{ id, tag:"JJJJ-MM-TT", art, ref, name, km, erledigt, at }] }
+   („Auf einen anderen Tag“). Daten: settings.kalender = { e:[{ id, tag:"JJJJ-MM-TT", art, ref, name, km, min, gehen, erledigt, at }] }
    - nur auf dem Gerät, wie alles andere. Art: workout | plan | lib | run | zufall; bei run steht rad:true für eine Radfahrt.
    „Woche kopieren“ legt alle Einträge der Woche auf die gleichen Wochentage der nächsten 1-12 Wochen. */
 var kalAnsicht = "woche";      // "woche" | "monat"
@@ -40,6 +40,8 @@ function kalFinde(id){ var l = kalListe(); for(var i = 0; i < l.length; i++) if(
 function kalHinzu(tag, o){
   var e = { id:uid(), tag:tag, art:o.art, ref:o.ref || "", name:o.name || "", km:+o.km || 0, at:Date.now() };   // erledigt fehlt: das ergibt sich aus den Trainings des Tages
   if(o.rad) e.rad = true;   // Run-Eintrag mit dem Rad statt zu Fuß
+  if(o.gehen) e.gehen = true;   // Run-Eintrag „Zügiges Gehen“ (Test 17, E)
+  if(+o.min > 0) e.min = +o.min;   // Zeitziel in Minuten
   kalListe().push(e); save();
   return e;
 }
@@ -123,6 +125,14 @@ function kalSumme(tage){
 /* Test 15, E: verpasst = Termin vor heute, nicht erledigt (und nicht von Hand als erledigt gesetzt) */
 function kalVerpasst(e){ return e.tag < kalTagKey(Date.now()) && !kalErledigt(e); }
 function kalVerpasstN(tage){ var n = 0; tage.forEach(function(tag){ kalAn(tag).forEach(function(e){ if(kalVerpasst(e)) n++; }); }); return n; }
+/* Test 17, E: ist der Run-Termin ein Gang, und mit welchem Zeitziel (Minuten)? Ältere Termine aus dem Plan-Assistenten kennen es nur über ihren Plan (p.gehen) */
+function kalGehMin(e){
+  if(!e || e.art !== "run" || e.rad) return 0;
+  if(e.gehen && e.min > 0) return e.min;
+  var p = e.prog && e.prog.i >= 0 && typeof programmFinde === "function" ? programmFinde(e.prog.id) : null;
+  return p && +p.gehen > 0 ? +p.gehen : 0;
+}
+function kalIstGehen(e){ return !!(e && e.gehen) || kalGehMin(e) > 0; }
 /* Name, Zeile darunter und Farbe eines Eintrags; ok:false, wenn das Ziel gelöscht wurde */
 /* Farbe eines Eintrags nach dem Ort seiner Übungen, wie im Katalog: Fitnessstudio rot, Freiluft blau; Mobility & Stretch grün (nur Dehnübungen) */
 function kalOrtFarbe(exs){
@@ -161,7 +171,9 @@ function kalAufloesen(e){
     o.name = e.name || pt("sportName"); o.sub = pt("sportSub"); o.farbe = "var(--text-dim)";
   } else if(e.art === "run"){
     o.name = e.name || t(e.rad ? "kalRadName" : "kalRunName");
-    o.sub = (e.km > 0 ? runKm(e.km*1000)+" km" : t("kalRunFrei"))+(e.rad ? " · "+t("runArtRad") : "");
+    var gm = kalGehMin(e) || e.min || 0;
+    if(!e.name && kalIstGehen(e)) o.name = typeof pt === "function" && gm ? pt("gehen", { m:gm }) : t("runArtGehen");
+    o.sub = (e.km > 0 ? runKm(e.km*1000)+" km" : gm > 0 ? gm+" min" : t("kalRunFrei"))+(e.rad ? " · "+t("runArtRad") : kalIstGehen(e) ? " · "+t("runArtGehen") : "");
   } else {   // zufall
     o.name = t("kalZufall"); o.sub = t("kalZufallSub");
   }
@@ -185,7 +197,8 @@ function kalStarten(e){
   if(e && e.art !== "sport") kalTerminAktiv = { id:e.id, at:Date.now(), n:kalSatzZahl() };
   if(e.prog && typeof programmFinde === "function"){   // Termin eines Trainingsplans: gleich los, das Training weiß, dass es dazugehört
     var pp = programmFinde(e.prog.id);
-    if(pp && pp.items[e.prog.i]){ progKontext = { pid:pp.id, i:e.prog.i }; return progDirektStarten(progEintrag(pp.items[e.prog.i])); }
+    if(pp && pp.items[e.prog.i] && e.art === "run"){ progKontext = { pid:pp.id, i:e.prog.i }; var pr0 = document.getElementById("playerRoot"); if(!playerState && pr0 && pr0.innerHTML) pr0.innerHTML = ""; }   // Lauftermin: Name, Kilometer und Zeitziel stehen im Termin, nicht im Plan (Test 17, E)
+    else if(pp && pp.items[e.prog.i]){ progKontext = { pid:pp.id, i:e.prog.i }; return progDirektStarten(progEintrag(pp.items[e.prog.i])); }
   }
   if(e.art === "programm"){ var pgm = programmFinde(e.ref); if(pgm && pgm.items.length) programmOeffnen(pgm, (pgm.pos || 0) % pgm.items.length); }   // Trainingsplan: die Einträge laufen der Reihe nach (Weiter mit …)
   else if(e.art === "workout"){ coverDraft = null; go("#cover/my/"+e.ref); }
@@ -197,7 +210,16 @@ function kalStarten(e){
     else go("#studioplan/"+e.ref);
   }
   else if(e.art === "sport"){ /* fester Termin: nichts zu starten */ }
-  else if(e.art === "run"){ state.db.settings.runArt = e.rad ? "rad" : "lauf"; save(); runGeplant ={ name:e.name || t(e.rad ? "kalRadName" : "kalRunName"), km:e.km || 0, rad:!!e.rad, t:Date.now() }; go("#run"); }
+  else if(e.art === "run"){
+    if(!e.id && !e.rad && progKontext){   // aus dem Trainingsplan gestartet (ohne Termin): Gang-Tag oder Lauf-Tag?
+      var pr = programmFinde(progKontext.pid);
+      if(pr && pr.items[progKontext.i] === "run" && +pr.gehen > 0) e = { art:"run", gehen:true, min:+pr.gehen, name:pt("gehen", { m:pr.gehen }) };
+    }
+    var geh = kalIstGehen(e), gMin = kalGehMin(e) || +e.min || 0;
+    state.db.settings.runArt = e.rad ? "rad" : "lauf"; save();
+    runGeplant = { name:e.name || (geh ? kalAufloesen(e).name : t(e.rad ? "kalRadName" : "kalRunName")), km:e.km || 0, min:gMin, gehen:geh, rad:!!e.rad, t:Date.now() };
+    go("#run");
+  }
   else openSurprise();
 }
 
@@ -448,10 +470,12 @@ function kalWocheKopieren(tage, n){
     tage.forEach(function(key){
       var ziel = kalTagKey(kalPlus(kalTagDatum(key), 7*w));
       kalAn(key).forEach(function(e){
-        var gleich = vorhanden.some(function(x){ return x.tag === ziel && x.art === e.art && (x.ref || "") === (e.ref || "") && (x.name || "") === (e.name || "") && (+x.km || 0) === (+e.km || 0) && !!x.rad === !!e.rad; });
+        var gleich = vorhanden.some(function(x){ return x.tag === ziel && x.art === e.art && (x.ref || "") === (e.ref || "") && (x.name || "") === (e.name || "") && (+x.km || 0) === (+e.km || 0) && !!x.rad === !!e.rad && !!x.gehen === !!e.gehen; });
         if(gleich) return;
         var k = { id:uid(), tag:ziel, art:e.art, ref:e.ref || "", name:e.name || "", km:+e.km || 0, at:Date.now() + neu };
         if(e.rad) k.rad = true;
+        if(e.gehen) k.gehen = true;
+        if(e.min > 0) k.min = e.min;
         if(e.prog) k.prog = { id:e.prog.id, i:e.prog.i };   // Termin eines TrainingsBLOCs: startet das Training, nicht die Bearbeiten-Ansicht (Test 3, P1)
         if(e.leicht) k.leicht = true;
         liste.push(k); neu++;

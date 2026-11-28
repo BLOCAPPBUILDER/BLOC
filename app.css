@@ -2129,6 +2129,7 @@ body.mit-tabs .fab-menu{ bottom:calc(166px + env(safe-area-inset-bottom)); }
 .run-geplant{ display:flex; flex-direction:column; gap:6px; align-items:stretch; text-align:center; border:2px solid var(--accent); }
 .run-geplant small{ color:var(--text-dim); font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
 .run-geplant b{ font-size:22px; }
+.run-gaenge{ display:flex; align-items:baseline; gap:10px; padding:12px 16px; } .run-gaenge b{ font-size:17px; font-variant-numeric:tabular-nums; } .run-gaenge small{ margin-left:auto; color:var(--text-dim); font-size:13px; }
 .run-geplant .ghost{ border:0; background:none; color:var(--text-dim); font:inherit; padding:8px; cursor:pointer; }
 .run-ziel{ color:var(--text-dim); font-size:14px; font-weight:600; margin-top:4px; }
 .my-edit{ font-size:20px; }

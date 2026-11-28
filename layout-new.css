@@ -930,6 +930,7 @@ body:has(.kal-nav) #app{ touch-action:pan-y; }   /* waagerechte Wischer gehören
 :root[data-layout="new"] .run-bg ~ .run-eigen, :root[data-layout="new"] .run-bg ~ .run-opt, :root[data-layout="new"] .run-bg ~ .run-ansage,
 :root[data-layout="new"] .run-bg ~ .run-item.list-item.entry, :root[data-layout="new"] .run-bg ~ .run-geplant, :root[data-layout="new"] .run-bg ~ .run-live{
   background:var(--glas); border:1px solid var(--glas-rand); box-shadow:0 8px 26px rgba(0,0,0,.18); color:var(--glas-text); }
+:root[data-layout="new"] .run-bg ~ .run-gaenge{ background:var(--glas); border:1px solid var(--glas-rand); box-shadow:0 8px 26px rgba(0,0,0,.18); color:var(--glas-text); -webkit-backdrop-filter:blur(18px) saturate(140%); backdrop-filter:blur(18px) saturate(140%); }
 :root[data-layout="new"] .run-bg ~ .run-eigen .tm-hint, :root[data-layout="new"] .run-bg ~ .run-ansage .tm-hint, :root[data-layout="new"] .run-bg ~ .run-item .sub{ color:var(--glas-dim); }
 @supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
   :root[data-layout="new"] .run-bg ~ .run-eigen, :root[data-layout="new"] .run-bg ~ .run-opt, :root[data-layout="new"] .run-bg ~ .run-ansage,

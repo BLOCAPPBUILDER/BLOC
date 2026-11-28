@@ -3,7 +3,7 @@
    GPS-Lauf mit Zeit, Kilometern, Pace, Kilometer-Zwischenzeiten und Routenlinie. Bewusst ohne Hintergrundkarte:
    Die Position wird nur auf dem Gerät verarbeitet, nichts geht ins Internet. Der Bildschirm bleibt an (Wake Lock);
    im Hintergrund oder bei gesperrtem Handy zeichnet eine Web-App nicht zuverlässig auf - dafür gibt es „Abdunkeln“.
-   Gespeichert: settings.runs = [{ id, at, dur (ms, ohne Pausen), dist (m), pts:[[lat,lon]…], splits:[ms bis km 1, 2, …], art:"rad" (nur bei Radfahrten) }].
+   Gespeichert: settings.runs = [{ id, at, dur (ms, ohne Pausen), dist (m), pts:[[lat,lon]…], splits:[ms bis km 1, 2, …], art:"rad" (Radfahrt) oder "gehen" (Gang; beides fehlt bei Läufen) }].
    Ein laufender Lauf wird alle 10 s als settings.runLive gesichert (falls die Seite beendet wird).
    Vorbereitet für die spätere Uhr-Anbindung (noch nichts schreibt es): hr:{ avg, max, z:[Sekunden in Zone 1 bis 5] } je Lauf; die Kachel „Pulszonen“ in Fortschritt (runAuswPuls, unten) liest es schon. */
 var RUN_GENAU = 35;   // Fixes mit schlechterer Genauigkeit (m) werden ignoriert
@@ -61,6 +61,14 @@ function runKm(m){ return (m/1000).toFixed(2).replace(".", currentLang() === "en
 /* Art der Aufzeichnung: „lauf“ (zu Fuß, Pace in min/km) oder „rad“ (Tempo in km/h). Die letzte Wahl merkt settings.runArt; gespeichert wird art:"rad" nur bei Fahrten */
 function runArt(){ return state.db.settings.runArt === "rad" ? "rad" : "lauf"; }
 function runIstRad(x){ return !!x && x.art === "rad"; }
+/* Gehen (Test 17, E): aus einem Termin „Zügiges Gehen“; zählt nicht als Lauf (keine Bestzeiten, Rennzeit, Lauf-Kilometer). Vor 2026-11-28 gespeicherte Gänge
+   aus dem Plan erkennt man nur am Namen (runGehenNachtragen). */
+function runIstGeh(x){ return !!x && x.art === "gehen"; }
+function runIstLauf(x){ return !!x && !runIstRad(x) && !runIstGeh(x); }
+function runArtVon(x){ return runIstRad(x) ? "rad" : runIstGeh(x) ? "gehen" : "lauf"; }
+function runArtText(x){ return t(runIstRad(x) ? "runArtRad" : runIstGeh(x) ? "runArtGehen" : "runArtLauf"); }
+/* Ziel einer geplanten oder laufenden Aufzeichnung: Kilometer, sonst Minuten */
+function runZielZeile(z){ return !z ? "" : z.km > 0 ? t("runZielKm", { km:runKm(z.km*1000) }) : z.min > 0 ? t("runZielMin", { m:z.min }) : ""; }
 function runKmh(sek, m){   // „24,5“ km/h
   if(!m || m < 20 || !sek) return "–,–";
   var v = (m/1000)/(sek/3600);
@@ -292,10 +300,9 @@ function runVorLos(){
   runLosgehts();
 }
 function runLosgehts(){
-  var art = runArt();
+  var geplant = runGeplant && Date.now() - runGeplant.t < 6*3600000 ? runGeplant : null, art = geplant && geplant.gehen && runArt() !== "rad" ? "gehen" : runArt();
   run = { id:uid(), start:Date.now(), pauseAb:0, pausenMs:0, dist:0, pts:[], letzte:null, splits:[], tZ:0, verlauf:[], gps:null, fehler:0, stumm:false, gesagt:[], n:0, sumAcc:0, hm:0, alt:null, hRef:null, hasAlt:false,
-    lastMove:Date.now(), auto:false, art:art, iv:art !== "rad" && runIvEinst().an ? runIvEinst() : null, ivPhase:null,
-    ziel:runGeplant && Date.now() - runGeplant.t < 6*3600000 ? runGeplant : null };
+    lastMove:Date.now(), auto:false, art:art, iv:art === "lauf" && runIvEinst().an ? runIvEinst() : null, ivPhase:null, ziel:geplant };
   runGeplant = null;
   runLauschen();
   runWachen(true);
@@ -327,7 +334,7 @@ function runMedien(sofort){
   runMedienAm = Date.now();
   var sek = runZeit(r)/1000, text = runKm(r.dist)+" km · "+runTempo(r, sek, r.dist)+" "+runTempoEinheit(r);
   if(r.pauseAb) text = t(r.auto ? "runAutoPausiert" : "runPaused")+" · "+fmtUhr(runZeit(r))+" · "+runKm(r.dist)+" km";
-  nativTimerAnzeige({ modus:"lauf", titel:"BLOC · "+t(runIstRad(r) ? "runArtRad" : "runArtLauf"), pause:!!r.pauseAb, laufStart:Date.now() - runZeit(r),
+  nativTimerAnzeige({ modus:"lauf", titel:"BLOC · "+runArtText(r), pause:!!r.pauseAb, laufStart:Date.now() - runZeit(r),
     schritte:[{ name:text, ende:0 }], txtPause:t("pause"), txtWeiter:t("timerWeiter") });
 }
 function runPause(){
@@ -344,7 +351,8 @@ function runSichern(){   // alle 10 s eine Kopie, damit ein beendeter Browser de
   runSichernAm = Date.now();
   state.db.settings.runLive = { id:r.id, start:r.start, dur:runZeit(r), dist:r.dist, pts:r.pts, splits:r.splits, at:Date.now() };
   if(r.hasAlt) state.db.settings.runLive.hm = Math.round(r.hm || 0);
-  if(r.art === "rad") state.db.settings.runLive.art = "rad";
+  if(r.art === "rad" || r.art === "gehen") state.db.settings.runLive.art = r.art;
+  if(r.ziel && r.ziel.name) state.db.settings.runLive.name = r.ziel.name;
   save();
 }
 /* Routenpunkte ausdünnen (Douglas-Peucker, ohne Rekursion): Anfang, Ende und alle Punkte, die die Linie um mehr als tol Meter verändern, bleiben.
@@ -378,7 +386,7 @@ function runSpeichern(d){   // d: { id, start, dur, dist, pts, splits } -> in de
   if(d.pause > 1000) x.pause = Math.round(d.pause);   // herausgerechnete Pausen/Stehzeit (ms)
   if(d.iv) x.iv = { lauf:d.iv.lauf, geh:d.iv.geh };
   if(d.name) x.name = d.name;
-  if(d.art === "rad") x.art = "rad";
+  if(d.art === "rad" || d.art === "gehen") x.art = d.art;
   (s.runs || (s.runs = [])).push(x);
   pruneHistory(state.db);
   var eintrag = { at:d.start, dur:Math.round(d.dur/1000), ex:[], b:"run" };
@@ -418,11 +426,11 @@ function runBesterKm(r){   // schnellster einzelner Kilometer (ms) oder null
 }
 /* Was bei diesem Lauf besonders war - im Vergleich zu den früheren Läufen */
 function runHighlights(x){
-  var rad = runIstRad(x);   // Läufe und Fahrten werden nur untereinander verglichen
-  var others = (state.db.settings.runs || []).filter(function(o){ return o.id !== x.id && runIstRad(o) === rad; }), out = [];
-  if(rad){
-    if(!others.length) out.push(t("runErsteRad"));
-    else if(x.dist > Math.max.apply(null, others.map(function(o){ return o.dist; }))) out.push(t("runLaengsteRad"));
+  var art = runArtVon(x);   // Läufe, Gänge und Fahrten werden nur untereinander verglichen
+  var others = (state.db.settings.runs || []).filter(function(o){ return o.id !== x.id && runArtVon(o) === art; }), out = [];
+  if(art !== "lauf"){
+    if(!others.length) out.push(t(art === "rad" ? "runErsteRad" : "runErsteGeh"));
+    else if(x.dist > Math.max.apply(null, others.map(function(o){ return o.dist; }))) out.push(t(art === "rad" ? "runLaengsteRad" : "runLaengsteGeh"));
     return out;
   }
   if(!others.length) out.push(t("runErster"));
@@ -498,7 +506,7 @@ function runZuletztHTML(runs){
   if(!runs.length) return "";
   var lang = currentLang() === "en" ? "en-GB" : "de-DE";
   return '<section class="run-zuletzt" aria-label="'+esc(t("runZuletzt"))+'"><div class="section-title"><span>'+esc(t("runZuletzt"))+'</span></div><div class="rz-reihe">'+runs.slice(0, 6).map(function(x){
-    return '<div class="rz-kachel" role="button" tabindex="0" data-nav="#rundetail/'+x.id+'"><small>'+esc(new Date(x.at).toLocaleDateString(lang, { weekday:"short", day:"numeric", month:"short" }))+(runIstRad(x) ? SEP+esc(t("runArtRad")) : "")+'</small>'+
+    return '<div class="rz-kachel" role="button" tabindex="0" data-nav="#rundetail/'+x.id+'"><small>'+esc(new Date(x.at).toLocaleDateString(lang, { weekday:"short", day:"numeric", month:"short" }))+(runIstLauf(x) ? "" : SEP+esc(runArtText(x)))+'</small>'+
       '<b>'+esc(runKm(x.dist))+'<span> km</span></b><span class="rz-sub">'+esc(fmtUhr(x.dur))+SEP+esc(runTempo(x, x.dur/1000, x.dist)+" "+runTempoEinheit(x))+'</span>'+runMiniStrecke(x)+'</div>';
   }).join("")+'</div></section>';
 }
@@ -803,23 +811,25 @@ function renderRun(){
   if(runVor) return renderRunVor();
   var runs = (s.runs || []).slice().sort(function(a, b){ return b.at - a.at; });
   var live = s.runLive, art = runArt();
-  var artRuns = runs.filter(function(x){ return runIstRad(x) === (art === "rad"); });   // Kachel oben: nur die gewählte Art (Laufen oder Rad)
+  var artRuns = runs.filter(function(x){ return art === "rad" ? runIstRad(x) : runIstLauf(x); });   // Kachel oben: nur die gewählte Art (Laufen oder Rad); Gänge haben ihre eigene Zeile
+  var gaenge = art === "rad" ? [] : runs.filter(runIstGeh), geplant = runGeplant && Date.now() - runGeplant.t < 6*3600000 ? runGeplant : null, zielZ = runZielZeile(geplant);
   var km = artRuns.reduce(function(a, x){ return a + x.dist; }, 0)/1000;
   app.innerHTML =
     runSeitenHintergrundHTML() + bereichKopfNeuHTML("run", t("runTitle"), t("runKicker"), "", { klar:true }) +
     (live ?'<div class="card run-live"><b>'+esc(t("runBroken"))+'</b><div class="sub">'+esc(t("runBrokenText", { km:runKm(live.dist) }))+'</div>'+
       '<div class="btn-row"><button type="button" class="btn btn-secondary" data-runlivedel>'+esc(t("runDiscard"))+'</button>'+
       '<button type="button" class="btn btn-primary" data-runlivesave>'+esc(t("runRecover"))+'</button></div></div>' : '')+
-    (runGeplant && Date.now() - runGeplant.t < 6*3600000 ? '<div class="card run-geplant"><small>'+esc(t("runGeplant"))+'</small><b>'+esc(runGeplant.name || t("kalRunName"))+'</b>'+
-      (runGeplant.km > 0 ? '<div class="sub">'+esc(t("runZielKm", { km:runKm(runGeplant.km*1000) }))+'</div>' : '')+
-      '<button type="button" class="btn btn-primary run-startbtn" data-runstart>'+ICON_PLAY+' '+esc(t("runStart"))+'</button>'+
+    (geplant ? '<div class="card run-geplant"><small>'+esc(t("runGeplant"))+'</small><b>'+esc(geplant.name || t("kalRunName"))+'</b>'+
+      (zielZ ? '<div class="sub">'+esc(zielZ)+'</div>' : '')+
+      '<button type="button" class="btn btn-primary run-startbtn" data-runstart>'+ICON_PLAY+' '+esc(t(geplant.gehen ? "runStartGeh" : geplant.rad ? "runStartRad" : "runStart"))+'</button>'+
       '<button type="button" class="ghost" data-rungeplantweg>'+esc(t("runGeplantWeg"))+'</button></div>' : '')+
     '<div class="card run-hero run-mitte"><div class="rh-km">'+esc(runKm(km*1000))+'<small>km</small></div>'+runHeroRechtsHTML(artRuns, art === "rad")+'</div>'+
+    (gaenge.length ? '<div class="card run-gaenge"><span>'+esc(t("runArtGehen"))+'</span><b>'+esc(runKm(gaenge.reduce(function(a, x){ return a + x.dist; }, 0)))+' km</b><small>'+esc(t(gaenge.length === 1 ? "runGaenge1" : "runGaenge", { n:gaenge.length })+" · "+fmtDuration(Math.max(60, Math.round(gaenge.reduce(function(a, x){ return a + x.dur; }, 0)/60000)*60)))+'</small></div>' : '')+
     runEigenerLaufHTML()+runOptionenHTML()+runAnsageHTML()+runZuletztHTML(runs)+
     '<details class="run-klapp run-verlauf" data-k="verlauf"'+(runKlapp.verlauf ? ' open' : '')+'><summary class="section-title"><span>'+esc(t("runVerlauf"))+'</span><span class="tpl-chev" aria-hidden="true">&#9662;</span></summary>'+   // der Verlauf steht unten, einklappbar
     (runs.length ? runs.map(function(x){
       var d = new Date(x.at);
-      return '<div class="list-item entry run-item" data-nav="#rundetail/'+x.id+'"><div class="meta"><div class="name">'+esc(runKm(x.dist))+' km'+(runIstRad(x) ? '<span class="run-name"> · '+esc(t("runArtRad"))+'</span>' : '')+(x.name ? '<span class="run-name"> · '+esc(x.name)+'</span>' : '')+'</div>'+
+      return '<div class="list-item entry run-item" data-nav="#rundetail/'+x.id+'"><div class="meta"><div class="name">'+esc(runKm(x.dist))+' km'+(runIstLauf(x) ? '' : '<span class="run-name"> · '+esc(runArtText(x))+'</span>')+(x.name ? '<span class="run-name"> · '+esc(x.name)+'</span>' : '')+'</div>'+
         '<div class="sub">'+esc(d.toLocaleDateString(currentLang() === "en" ? "en-GB" : "de-DE", { weekday:"short", day:"numeric", month:"short" }))+SEP+esc(fmtUhr(x.dur))+SEP+esc(runTempo(x, x.dur/1000, x.dist))+' '+runTempoEinheit(x)+(x.hm != null ? SEP+'↑ '+esc(String(x.hm))+' m' : '')+'</div></div>'+
         '<div class="card-aside"><div class="card-acts">'+trashBtn("run", x.id, runKm(x.dist)+" km")+'</div></div></div>';
     }).join("") : '<div class="empty" style="padding:24px 20px;">'+esc(t("runNone"))+'</div>')+'</details>'+
@@ -829,7 +839,7 @@ function renderRun(){
         '<button type="button" data-runart="lauf" class="'+(art === "lauf" ? "active" : "")+'">'+esc(t("runArtLauf"))+'</button>'+
         '<button type="button" data-runart="rad" class="'+(art === "rad" ? "active" : "")+'">'+esc(t("runArtRad"))+'</button></div>'+
       runKachelnHTML()+
-      '<button type="button" class="btn btn-primary run-startbtn" data-runstart>'+ICON_PLAY+' '+esc(t(art === "rad" ? "runStartRad" : "runStart"))+'</button></div>';
+      '<button type="button" class="btn btn-primary run-startbtn" data-runstart>'+ICON_PLAY+' '+esc(t(art === "rad" ? "runStartRad" : geplant && geplant.gehen ? "runStartGeh" : "runStart"))+'</button></div>';
   bindCommon();
   bindTrash(function(){ renderRun(); });
   app.querySelectorAll("details.run-klapp").forEach(function(d){ d.addEventListener("toggle", function(){
@@ -913,7 +923,7 @@ function renderRun(){
   var lv = app.querySelector("[data-runlivesave]");
   if(lv) lv.addEventListener("click", function(){
     var l = s.runLive; delete s.runLive;
-    if(runSpeichern({ id:l.id, start:l.start, dur:l.dur, dist:l.dist, pts:l.pts, splits:l.splits, hm:l.hm, art:l.art })) go("#rundetail/"+l.id); else renderRun();
+    if(runSpeichern({ id:l.id, start:l.start, dur:l.dur, dist:l.dist, pts:l.pts, splits:l.splits, hm:l.hm, art:l.art, name:l.name })) go("#rundetail/"+l.id); else renderRun();
   });
   var ld = app.querySelector("[data-runlivedel]");
   if(ld) ld.addEventListener("click", function(){ delete s.runLive; save(); renderRun(); });
@@ -922,9 +932,9 @@ function renderRunLive(){
   var r = run;
   app.innerHTML =
     runHintergrundHTML() + '<div class="bloc-quer" aria-hidden="true">BLOC</div>' +
-    topbar(t("runTitle"), { back:"#home", right:(runAnsageEinst().every ? '<button type="button" class="iconbtn run-laut' + (r.stumm ? ' aus' : '') + '" data-runlaut aria-pressed="' + !!r.stumm + '" aria-label="' + esc(t(r.stumm ? "runStummAus" : "runStummAn")) + '">' + ICON_VOLUME + '</button>' : '') }) +
+    topbar(t(runIstGeh(r) ? "runArtGehen" : "runTitle"), { back:"#home", right:(runAnsageEinst().every ? '<button type="button" class="iconbtn run-laut' + (r.stumm ? ' aus' : '') + '" data-runlaut aria-pressed="' + !!r.stumm + '" aria-label="' + esc(t(r.stumm ? "runStummAus" : "runStummAn")) + '">' + ICON_VOLUME + '</button>' : '') }) +
     '<div class="run-weiss">' +
-    '<div class="run-gross"><div class="rg-label">'+esc(t("runTime"))+'</div><div id="run-zeit" class="rg-zeit">0:00</div><div class="run-gps" id="run-gps"></div>'+(r.iv ? '<div class="run-iv" id="run-iv"></div>' : '')+(r.ziel && r.ziel.km > 0 ? '<div class="run-ziel">'+esc(t("runZielKm", { km:runKm(r.ziel.km*1000) }))+'</div>' : '')+'</div>'+
+    '<div class="run-gross"><div class="rg-label">'+esc(t("runTime"))+'</div><div id="run-zeit" class="rg-zeit">0:00</div><div class="run-gps" id="run-gps"></div>'+(r.iv ? '<div class="run-iv" id="run-iv"></div>' : '')+(runZielZeile(r.ziel) ? '<div class="run-ziel">'+esc(runZielZeile(r.ziel))+'</div>' : '')+'</div>'+
     '<div class="run-raster">'+
       '<div><b id="run-km">0,00</b><small>'+esc(t("runDist"))+' (km)</small></div>'+
       '<div><b id="run-pace">'+(runIstRad(r) ? '–,–' : '–:––')+'</b><small>'+esc(t(runIstRad(r) ? "runSpeedAvg" : "runPaceAvg"))+' '+runTempoEinheit(r)+'</small></div>'+
@@ -980,7 +990,7 @@ function renderRunDetail(id){
   var hl = neu ? runHighlights(x) : [];
   app.innerHTML =
     runHintergrundHTML() +
-    topbar(t("runDetail"), { back:"#run" }) +
+    topbar(runIstLauf(x) ? t("runDetail") : runArtText(x), { back:"#run" }) +
     // Abschlusskarte direkt nach dem Lauf: was geschafft wurde (der Lauf ist schon gespeichert)
     (neu ? '<div class="card run-fertig"><div class="rf-titel">'+esc(t("runGeschafft"))+'</div><div class="rf-km">'+esc(runKm(x.dist))+' <small>km</small></div>'+
       '<div class="rf-zeile">'+esc(fmtUhr(x.dur))+SEP+esc(runTempo(x, x.dur/1000, x.dist))+' '+runTempoEinheit(x)+(runKcal(x.dist, x.dur/1000, runIstRad(x), x.hm) ? SEP+esc(runKcalText(x.dist, x.dur/1000, runIstRad(x), x.hm))+' '+t("runKcalZus") : '')+(x.hm != null ? SEP+'↑ '+esc(String(x.hm))+' m' : '')+'</div>'+
@@ -1027,8 +1037,8 @@ function woMenue(lw, neu, ws, entfernen){
 
 /* ============ Läufer-Auswertungen für Fortschritt ============
    Vier Kacheln (lauf_best, lauf_pacing, lauf_regel, lauf_trend), eingebunden in statModule (js/12-uebung-statistik.js). Alles aus den gespeicherten Läufen:
-   dur, dist, at und splits (kumulative Zeit in ms je ganzem Kilometer). Pace nur aus Läufen ab 1 km (Radfahrten zählen nicht, außer bei der Regelmäßigkeit). */
-function runAuswLaeufe(){ return (state.db.settings.runs || []).filter(function(x){ return x && !runIstRad(x) && x.dist >= 1000 && x.dur > 0; }).sort(function(a, b){ return a.at - b.at; }); }
+   dur, dist, at und splits (kumulative Zeit in ms je ganzem Kilometer). Pace nur aus Läufen ab 1 km (Radfahrten und Gänge zählen nicht, außer bei der Regelmäßigkeit). */
+function runAuswLaeufe(){ return (state.db.settings.runs || []).filter(function(x){ return runIstLauf(x) && x.dist >= 1000 && x.dur > 0; }).sort(function(a, b){ return a.at - b.at; }); }
 function runAuswLang(){ return currentLang() === "en" ? "en-GB" : "de-DE"; }
 function runAuswDatum(ms){ return new Date(ms).toLocaleDateString(runAuswLang(), { day:"numeric", month:"short" }); }
 function runAuswKarte(titel, inhalt, hinweis){
@@ -1157,6 +1167,23 @@ function runAuswPuls(){
   return runAuswKarte(t("runPuTitel"), html, t("runPuHint"));
 }
 
+/* Einmal beim Start: früher als Lauf gespeicherte Gänge bekommen Art und Namen. Erkannt am Namen („Zügiges Gehen · 30 Min“) oder, weil der Name verloren ging
+   („Dauerlauf“), am einzigen Run-Termin dieses Tages, der ein Gang war - nur bei Geh-Tempo (langsamer als 8 min/km). */
+function runGehenNachtragen(){
+  var n = 0, s = state.db.settings, standard = ["Dauerlauf", "Steady run"];
+  (s.runs || []).forEach(function(x){
+    if(!x || x.art) return;
+    var nm = x.name || "";
+    if(/^(Zügiges Gehen|Brisk walk) · /.test(nm)){ x.art = "gehen"; n++; return; }
+    if(standard.indexOf(nm) < 0 || !(x.dist > 0) || x.dur/x.dist < 480) return;
+    var l = kalAn(kalTagKey(x.at)).filter(function(e){ return e.art === "run"; });
+    if(l.length !== 1 || !kalIstGehen(l[0])) return;
+    x.art = "gehen"; x.name = l[0].name || nm; n++;
+  });
+  if(n) save();
+  return n;
+}
+setTimeout(function(){ if(!state.db.settings.runGehen && Array.isArray(state.db.settings.runs) && state.db.settings.runs.length){ runGehenNachtragen(); state.db.settings.runGehen = 1; save(); } }, 1500);   // erst wenn Kalender und Pläne geladen sind
 /* Einmal beim Start: bereits gespeicherte Läufe schlanker machen (Routenpunkte ausdünnen), spart Speicher */
 (function(){
   var s = state.db.settings;

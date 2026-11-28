@@ -3,6 +3,11 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-28 · Test 17: Gehen als eigene Art, Ankündigung in der Leichtwoche (Fassung 2026-11-28-7)
+
+- **Gehen (E):** eigene Art `gehen` mit Name und Zeitziel aus dem Termin; zählt nicht zu Lauf-Kilometern, Bestzeiten, Pace und Rennzeit, steht als eigene Zeile. Ältere Gänge werden einmal umgestellt. Lauftermine aus einem Plan behalten beim Start Namen und Kilometerziel.
+- **Leichtwoche (F):** Eine anstehende schwerere Variante wird für das nächste normale Training angekündigt.
+
 ## 2026-11-28 · Frei lesbare Quellen (Fassung 2026-11-28-1)
 
 - **Quellen-Seite:** Bei jeder Quelle ohne freien Volltext steht jetzt eine frei lesbare Arbeit („mit derselben Aussage“ oder „zum Thema“), alle mit Europe PMC geprüft; wo es keine gleichwertige gibt, steht das dabei. Neu: F58 (Maximalpuls-Formeln im Vergleich), F59 (Zirkeltraining und Bauchfett). Auch die Quellenliste der Protein-Seite nennt freie Alternativen.
