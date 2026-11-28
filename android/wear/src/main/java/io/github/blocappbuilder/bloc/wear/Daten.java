@@ -15,9 +15,20 @@ final class Daten {
 
     static final class Uebung {
         String id = "", name = "", fig = "", zuletzt = "";
-        int saetze = 3, wdh = 10, satz = 1;
+        int saetze = 3, wdh = 10;
+        /** Satzzahl in der Leichtwoche (0 = keine) */
+        int saetzeLeicht = 0;
         float kg = 0;
+        /** Pause in Sekunden und Gewichtsschritt dieser Übung (wie auf dem Handy) */
+        int pause = 90;
+        float schritt = 2.5f;
+        /** mit Gewicht; zeit: wdh sind Sekunden; tipp: auf dem Handy wartet ein Vorschlag */
+        boolean mitKg = false, zeit = false, tipp = false;
+        String einheit() { return zeit ? "s" : "Wdh."; }
     }
+
+    /** heute als JJJJ-MM-TT */
+    static String heuteTag() { return new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.ROOT).format(new java.util.Date()); }
 
     static final class Schritt {
         String ph = "work", name = "", fig = "", block = "";
@@ -30,6 +41,10 @@ final class Daten {
     static final class Workout {
         String id = "", name = "", info = "", art = "timer";   // "timer" oder "saetze"
         final List<Uebung> uebungen = new ArrayList<>();
+        /** Tage mit Leichtwoche */
+        final List<String> leicht = new ArrayList<>();
+        boolean leichtHeute() { return leicht.contains(heuteTag()); }
+        int saetze(Uebung u) { return u.saetzeLeicht > 0 && leichtHeute() ? u.saetzeLeicht : u.saetze; }
         final List<Schritt> schritte = new ArrayList<>();
         boolean mitUebungen() { for (Schritt s : schritte) if (!s.name.isEmpty()) return true; return false; }
     }
@@ -37,7 +52,19 @@ final class Daten {
     static final class Tag { String name = "", info = ""; Workout w; }
 
     String programmName = "", programmInfo = "";
-    Workout heute;
+    private Workout heute;
+    /** Tag, für den „heute“ gilt, und was an den nächsten Tagen im Kalender steht (Tag → BLOC) */
+    private String heuteFuer = "";
+    private final java.util.Map<String, String> termine = new java.util.HashMap<>();
+    private final List<Workout> vorrat = new ArrayList<>();
+
+    /** Der BLOC von heute wie auf der Startseite des Handys; null, wenn heute nichts ansteht */
+    Workout heute() {
+        if (heuteFuer.isEmpty() || heuteFuer.equals(heuteTag())) return heute;
+        String id = termine.get(heuteTag());
+        if (id != null) for (Workout w : vorrat) if (w.id.equals(id)) return w;
+        return null;
+    }
     final List<Tag> tage = new ArrayList<>();
     final List<Workout> favoriten = new ArrayList<>(), workoutBlocs = new ArrayList<>(), workoutKatalog = new ArrayList<>(),
             mobBlocs = new ArrayList<>(), mobKatalog = new ArrayList<>(), timer = new ArrayList<>();
@@ -56,6 +83,10 @@ final class Daten {
                 d.programmName = p.optString("name");
                 d.programmInfo = p.optString("info");
                 if (p.has("heute")) d.heute = workout(p.getJSONObject("heute"));
+                d.heuteFuer = p.optString("tag");
+                liste(p.optJSONArray("vorrat"), d.vorrat);
+                JSONArray te = p.optJSONArray("termine");
+                if (te != null) for (int i = 0; i < te.length(); i++) d.termine.put(te.getJSONObject(i).optString("tag"), te.getJSONObject(i).optString("id"));
                 JSONArray t = p.optJSONArray("tage");
                 if (t != null) for (int i = 0; i < t.length(); i++) {
                     JSONObject x = t.getJSONObject(i);
@@ -95,6 +126,8 @@ final class Daten {
         Workout w = new Workout();
         w.id = o.optString("id"); w.name = o.optString("name"); w.info = o.optString("info");
         w.art = o.optString("art", "timer");
+        JSONArray lt = o.optJSONArray("leicht");
+        if (lt != null) for (int i = 0; i < lt.length(); i++) w.leicht.add(lt.optString(i));
         JSONArray u = o.optJSONArray("uebungen");
         if (u != null) for (int i = 0; i < u.length(); i++) {
             JSONObject x = u.getJSONObject(i);
@@ -102,6 +135,9 @@ final class Daten {
             ue.id = x.optString("id"); ue.name = x.optString("name"); ue.fig = x.optString("fig", ue.id);
             ue.saetze = x.optInt("saetze", 3); ue.wdh = x.optInt("wdh", 10); ue.kg = (float) x.optDouble("kg", 0);
             ue.zuletzt = x.optString("zuletzt");
+            ue.pause = Math.max(10, x.optInt("pause", 90)); ue.schritt = (float) Math.max(0.25, x.optDouble("schritt", 2.5));
+            ue.mitKg = x.has("mitKg") ? x.optInt("mitKg") == 1 : ue.kg > 0;
+            ue.zeit = x.optInt("zeit") == 1; ue.tipp = x.optInt("tipp") == 1; ue.saetzeLeicht = x.optInt("saetzeLeicht", 0);
             w.uebungen.add(ue);
         }
         JSONArray s = o.optJSONArray("schritte");
@@ -133,7 +169,7 @@ final class Daten {
 
     private static Uebung ue(String name, String fig, int saetze, int wdh, float kg, String zuletzt) {
         Uebung u = new Uebung();
-        u.name = name; u.fig = fig; u.id = fig; u.saetze = saetze; u.wdh = wdh; u.kg = kg; u.zuletzt = zuletzt;
+        u.name = name; u.fig = fig; u.id = fig; u.saetze = saetze; u.wdh = wdh; u.kg = kg; u.zuletzt = zuletzt; u.mitKg = kg > 0;
         return u;
     }
 

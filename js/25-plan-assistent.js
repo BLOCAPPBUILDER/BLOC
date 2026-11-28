@@ -806,7 +806,7 @@ function paLaufKmWoche(km, wk, wochen, maxKm){
 }
 var PA_LAUF_PACE = 390;   // Sekunden je km ohne eigene Läufe (6:30, Praxiswert)
 function paLaufPace(){
-  var l = (state.db.settings.runs || []).filter(function(x){ return x.art !== "rad" && x.dist >= 1000 && x.dur > 0; }).sort(function(a, b){ return a.at - b.at; }).slice(-3);
+  var l = (state.db.settings.runs || []).filter(function(x){ return !runIstRad(x) && !runIstGeh(x) && x.dist >= 1000 && x.dur > 0; }).sort(function(a, b){ return a.at - b.at; }).slice(-3);
   if(!l.length) return PA_LAUF_PACE;
   var s = l.reduce(function(m, x){ return m + x.dur/x.dist; }, 0)/l.length;
   return Math.max(240, Math.min(600, s));
@@ -831,7 +831,7 @@ function paKalender(p){
       if(nurLauf){
         var nm = pt("lauf"); if(p.laufStufe){ var st = PA_LAUF[Math.min(wk, PA_LAUF.length - 1)]; nm = pt("lauf_w", { a:st[0], b:st[1], n:st[2] }); }
         if(p.gehen) nm = pt("gehen", { m:p.gehen });
-        e = kalHinzu(kalTagKey(tag), { art:"run", name:nm, km:paLaufKmWoche(p.laufKm, wk, wochen, paLaufMaxKm(p)) });
+        e = kalHinzu(kalTagKey(tag), { art:"run", name:nm, km:paLaufKmWoche(p.laufKm, wk, wochen, paLaufMaxKm(p)), gehen:!!p.gehen, min:p.gehen || 0 });
       } else {
         e = kalHinzu(kalTagKey(tag), { art:"programm", ref:p.id });
         if(paLeichtWochen(wochen).indexOf(wk) > -1 && p.items.some(function(it){ return /^plan:/.test(it); })) e.leicht = true;   // Leichtwoche: weniger Sätze (nicht am reinen Mobility-Tag)

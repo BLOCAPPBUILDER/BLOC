@@ -63,6 +63,7 @@ public class BlocUhrActivity extends Activity implements SensorEventListener, Da
     protected void onResume() {
         super.onResume();
         ansicht.requestFocus();
+        ansicht.tagPruefen();
         if (pulsSensor != null) {
             if (checkSelfPermission(pulsRecht()) == PackageManager.PERMISSION_GRANTED) pulsStarten();
             else requestPermissions(new String[]{pulsRecht()}, ANFRAGE_PULS);
@@ -141,16 +142,35 @@ public class BlocUhrActivity extends Activity implements SensorEventListener, Da
         for (DataEvent e : ereignisse) if (e.getType() == DataEvent.TYPE_CHANGED) uebernehmen(e.getDataItem());
     }
 
-    /** Eingetragenen Satz ans Handy schicken; ist das Handy gerade nicht da, liefert der Data Layer später nach */
-    void satzEingetragen(Daten.Workout w, Daten.Uebung u, int satz, int wdh, float kg) {
+    /**
+     * Eingetragenen Satz ans Handy schicken; ist das Handy gerade nicht da, liefert der Data Layer später nach.
+     * Nochmal mit demselben Zeitpunkt = korrigierter Satz (gleicher Pfad, ersetzt den alten). Beispieldaten gehen nie ans Handy.
+     */
+    void satzEingetragen(Daten.Workout w, Daten.Uebung u, int satz, int wdh, float kg, long at, String sid) {
+        if (w.id.isEmpty()) return;
         try {
             JSONObject o = new JSONObject();
             o.put("workout", w.id); o.put("uebung", u.id); o.put("name", u.name);
-            o.put("satz", satz); o.put("wdh", wdh); o.put("kg", kg); o.put("at", System.currentTimeMillis());
-            PutDataMapRequest r = PutDataMapRequest.create(PFAD_SATZ + "/" + System.currentTimeMillis());
-            r.getDataMap().putString("json", o.toString());
-            Wearable.getDataClient(this).putDataItem(r.asPutDataRequest().setUrgent());
+            o.put("satz", satz); o.put("wdh", wdh); o.put("kg", Math.round(kg * 100) / 100.0); o.put("at", at); o.put("sid", sid);
+            if (u.zeit) o.put("zeit", 1);
+            senden(String.valueOf(at), o);
         } catch (Exception ignored) { }
+    }
+
+    /** Training abgeschlossen: das Handy speichert es am Tag des Trainings */
+    void trainingFertig(Daten.Workout w, String sid, long at) {
+        if (w.id.isEmpty()) return;
+        try {
+            JSONObject o = new JSONObject();
+            o.put("art", "fertig"); o.put("workout", w.id); o.put("sid", sid); o.put("at", at);
+            senden("fertig-" + sid, o);
+        } catch (Exception ignored) { }
+    }
+
+    private void senden(String name, JSONObject o) {
+        PutDataMapRequest r = PutDataMapRequest.create(PFAD_SATZ + "/" + name);
+        r.getDataMap().putString("json", o.toString());
+        Wearable.getDataClient(this).putDataItem(r.asPutDataRequest().setUrgent());
     }
 
     /** Live-Stand des Laufs vom Handy (/bloc/lauf) */

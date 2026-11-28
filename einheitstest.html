@@ -2027,6 +2027,139 @@
     } finally { s.kalender = vK; W.kalErledigt = vF; }
   });
 
+  /* ---------- Test 17: Uhr (nachgebildetes BlocUhr-Plugin), Gehen, Leichtwoche ---------- */
+  function uhrWelt(fn) {   // „Jonas“: Push Schwer und Push Volumen mit denselben Übungen, Trainingsplan mit zwei Terminen im Kalender
+    var dbAlt = JSON.parse(JSON.stringify(W.state.db)), natAlt = W.IST_NATIV, plAlt = W.nativPlugins.BlocUhr, aktivAlt = W.stPlanAktiv, tAlt = W.kalTerminAktiv;
+    function ende() { W.state.db = dbAlt; W.IST_NATIV = natAlt; if (plAlt) W.nativPlugins.BlocUhr = plAlt; else delete W.nativPlugins.BlocUhr; W.stPlanAktiv = aktivAlt; W.kalTerminAktiv = tAlt; W.save(); }
+    var s = W.state.db.settings, TAG = 86400000, jetzt = Date.now(), vor2 = new Date(jetzt - 2 * TAG); vor2.setHours(18, 5, 0, 0);
+    var A = "bench-press", B = "barbell-overhead-press"; wahr(W.findExercise(A) && W.findExercise(B), "Übungen vorhanden");
+    s.niveau = "erfahren"; W.state.db.history = []; s.einheiten = []; s.kalender = { e: [] }; delete s.uhrEin; delete s.uhrRest; delete s.rundeZu; delete s.leichtAus;
+    s.stPlaene = [
+      { id: "ps", name: "Push Schwer", ids: [A, B], startArt: "saetze", updatedAt: 1, werte: {} },
+      { id: "pv", name: "Push Volumen", ids: [A, B], startArt: "saetze", updatedAt: 1, werte: {} }];
+    s.stPlaene[0].werte[A] = { kg: 112.5, pause: 180, ziel: { saetze: 3, wdh: 6 } }; s.stPlaene[0].werte[B] = { kg: 72.5, pause: 150, ziel: { saetze: 3, wdh: 6 } };
+    s.stPlaene[1].werte[A] = { kg: 92.5, pause: 120, ziel: { saetze: 3, wdh: 10 } }; s.stPlaene[1].werte[B] = { kg: 60, pause: 120, ziel: { saetze: 3, wdh: 10 } };
+    s.studio = {};
+    s.studio[A] = { kg: 92.5, ziel: { saetze: 3, wdh: 10 }, log: [{ at: jetzt - 9 * TAG, b: "ps", zu: true, s: [[112.5, 6], [112.5, 6], [112.5, 5]] }, { at: jetzt - 5 * TAG, b: "pv", zu: true, s: [[92.5, 10], [92.5, 10], [92.5, 9]] }] };
+    s.studio[B] = { kg: 60, ziel: { saetze: 3, wdh: 10 }, log: [{ at: jetzt - 9 * TAG, b: "ps", zu: true, s: [[72.5, 6]] }, { at: jetzt - 5 * TAG, b: "pv", zu: true, s: [[60, 10]] }] };
+    s.programme = [{ id: "pp", name: "Push-Plan", items: ["plan:ps", "plan:pv"], tage: [0, 3], wochen: 6, pos: 0 }];
+    var e1 = W.kalHinzu(W.kalTagKey(vor2), { art: "programm", ref: "pp" }); e1.prog = { id: "pp", i: 0 };
+    var e2 = W.kalHinzu(W.kalTagKey(jetzt), { art: "programm", ref: "pp" }); e2.prog = { id: "pp", i: 1 };
+    var liste = [], bestaetigt = null;
+    W.IST_NATIV = true;
+    W.nativPlugins.BlocUhr = { abholen: function () { return Promise.resolve({ saetze: liste.slice(), uris: liste.map(function (x, i) { return "wear://uhr/bloc/satz/" + i; }) }); },
+      bestaetigen: function (o) { bestaetigt = o.eintraege; return Promise.resolve(); }, senden: function () { return Promise.resolve(); } };
+    W.stPlanAktiv = "pv";   // zuletzt war der andere BLOC geöffnet
+    function satz(u, n, kg, wdh, at, mehr) { return JSON.stringify(Object.assign({ workout: "plan:ps", uebung: u, name: u, satz: n, wdh: wdh, kg: kg, at: at }, mehr || {})); }
+    var ctx = { s: s, A: A, B: B, mo: vor2.getTime(), jetzt: jetzt, e1: e1, e2: e2, satz: satz, setze: function (l) { liste = l; }, bestaetigt: function () { return bestaetigt; },
+      sechs: function (mehr) { var l = [], t = vor2.getTime(), i; for (i = 0; i < 3; i++) l.push(satz(A, i + 1, 115, 5, t + i * 180000, mehr)); for (i = 0; i < 3; i++) l.push(satz(B, i + 1, 75, 6, t + (i + 4) * 180000, mehr)); return l; } };
+    return Promise.resolve().then(function () { return fn(ctx); }).then(function () { ende(); }, function (e) { ende(); throw e; });
+  }
+  test("Test 17 A: Sätze von der Uhr werden ein Training am richtigen Tag, beim richtigen BLOC, mit Termin; doppelt geliefert zählt nicht doppelt", function () {
+    return uhrWelt(async function (c) {
+      c.setze(c.sechs());
+      var r = await W.uhrSaetzeAbholen();
+      gleich(r && r.n, 6, "Sätze"); gleich(r.trainings.length, 1, "ein Training");
+      gleich(c.s.einheiten.length, 1, "Trainings gespeichert"); var x = c.s.einheiten[0];
+      gleich([x.name, x.plan, x.tag, x.saetze], ["Push Schwer", "ps", W.kalTagKey(c.mo), 6], "Training"); gleich(x.vol, 3 * 115 * 5 + 3 * 75 * 6, "Volumen");
+      gleich(x.termin, c.e1.id, "Termin gemerkt"); gleich(x.prog, "pp", "Trainingsplan"); wahr(W.kalErledigt(c.e1), "Termin von Montag erledigt"); wahr(!W.kalErledigt(c.e2), "Termin von heute offen");
+      var l = c.s.studio[c.A].log.filter(function (q) { return q.uhr; });
+      gleich(l.length, 1, "eine Runde"); gleich([l[0].at, l[0].b, l[0].zu], [c.mo, "ps", true], "Runde: Zeit, BLOC, geschlossen");
+      gleich(c.s.studio[c.A].kg, 92.5, "übungsweites Arbeitsgewicht bleibt"); gleich(c.s.stPlaene[0].werte[c.A].kg, 115, "Gewicht im BLOC"); gleich(c.s.stPlaene[1].werte[c.A].kg, 92.5, "anderer BLOC bleibt");
+      gleich(W.trainingOffenInfo(), null, "nichts „Training fortsetzen“");
+      gleich(c.bestaetigt().length, 6, "erst nach dem Sichern bestätigt");
+      var h = W.state.db.history.filter(function (q) { return q.uhr; }); gleich(h.length, 1, "ein Verlaufseintrag"); gleich(W.kalTagKey(h[0].at), W.kalTagKey(c.mo), "am Tag des Trainings");
+      r = await W.uhrSaetzeAbholen(); gleich([r.n, c.s.einheiten.length, c.s.einheiten[0].saetze], [0, 1, 6], "zweimal geliefert");
+      W.trainingsNachtragen(); gleich(c.s.einheiten.length, 1, "kein zweites Training durch das Nachtragen");
+    });
+  });
+  test("Test 17 A/D: Korrektur, Nachzügler und „Training fertig“ von der Uhr", function () {
+    return uhrWelt(async function (c) {
+      var sid = { sid: "u1" }, t = c.jetzt - 600000; if (W.kalTagKey(t) !== W.kalTagKey(c.jetzt)) return;   // kurz nach Mitternacht nicht aussagekräftig
+      c.setze([c.satz(c.A, 1, 115, 5, t, sid)]);
+      var r = await W.uhrSaetzeAbholen(); gleich([r.n, r.trainings.length], [1, 0], "läuft noch: nicht gespeichert"); var o = W.trainingOffenInfo(); gleich(o && o.p.id, "ps", "fortsetzen mit dem richtigen BLOC");
+      gleich(W.uhrDaten().programm.heute.id, "plan:ps", "angefangenes Training ist auch auf der Uhr dran");
+      c.setze([c.satz(c.A, 1, 110, 6, t, sid)]);
+      r = await W.uhrSaetzeAbholen(); gleich([r.n, r.korrigiert], [0, 1], "korrigiert"); gleich(c.s.studio[c.A].log.slice(-1)[0].s, [[110, 6]], "neuer Wert"); gleich(c.s.stPlaene[0].werte[c.A].kg, 110, "Gewicht folgt");
+      c.setze([JSON.stringify({ art: "fertig", workout: "plan:ps", sid: "u1", at: t + 60000 })]);
+      r = await W.uhrSaetzeAbholen(); gleich(r.trainings.length, 1, "fertig: gespeichert"); gleich(c.s.einheiten[0].saetze, 1, "ein Satz"); gleich(W.trainingOffenInfo(), null, "nicht mehr offen");
+      c.setze([c.satz(c.A, 2, 110, 5, t + 30000, sid), c.satz(c.B, 1, 75, 6, t + 40000, sid)]);
+      r = await W.uhrSaetzeAbholen(); gleich([c.s.einheiten.length, c.s.einheiten[0].saetze, c.s.einheiten[0].ex.length], [1, 3, 2], "Nachzügler im selben Training"); gleich(W.trainingOffenInfo(), null, "Nachzügler öffnen nichts");
+    });
+  });
+  test("Test 17 A: auf dem Handy angefangen, auf der Uhr fertig: ein Training mit allen Sätzen", function () {
+    return uhrWelt(async function (c) {
+      W.stPlanAktiv = "ps"; W.studioSatzLog(c.A, 112.5, 6); W.stPlanAktiv = "pv";
+      c.setze([c.satz(c.A, 1, 112.5, 5, Date.now(), { sid: "u2" }), JSON.stringify({ art: "fertig", workout: "plan:ps", sid: "u2", at: Date.now() })]);
+      await W.uhrSaetzeAbholen();
+      gleich(c.s.einheiten.length, 1, "ein Training"); gleich(c.s.einheiten[0].ex[0].s, [[112.5, 6], [112.5, 5]], "beide Sätze"); gleich(W.state.db.history.length, 1, "ein Verlaufseintrag"); gleich(W.trainingOffenInfo(), null, "nichts offen");
+    });
+  });
+  test("Test 17 A: alle Ziel-Sätze drin: gespeichert; unbekannte Übung wird aufgehoben; Speicher voll: nicht bestätigt", function () {
+    return uhrWelt(async function (c) {
+      var t = c.jetzt - 1200000, l = [], i; if (W.kalTagKey(t) !== W.kalTagKey(c.jetzt)) return;
+      for (i = 0; i < 3; i++) { l.push(c.satz(c.A, i + 1, 112.5, 6, t + i * 60000)); l.push(c.satz(c.B, i + 1, 72.5, 6, t + i * 60000 + 30000)); }
+      l.push(c.satz("gibt-es-nicht", 1, 20, 10, t)); c.setze(l);
+      var r = await W.uhrSaetzeAbholen(); gleich([r.n, r.trainings.length, r.rest], [6, 1, 1], "vollständig"); gleich(c.s.uhrRest.length, 1, "aufgehoben"); wahr(W.kalErledigt(c.e2), "Termin heute erledigt");
+      c.setze([]); r = await W.uhrSaetzeAbholen(); gleich([r.n, r.rest, c.s.uhrRest.length], [0, 0, 1], "bleibt aufgehoben, ohne neuen Hinweis");
+      var saveAlt = W.save, n = 0;
+      try { W.save = function () { return false; }; W.nativPlugins.BlocUhr.bestaetigen = function () { n++; return Promise.resolve(); }; c.setze([c.satz(c.A, 4, 112.5, 6, t + 400000)]); r = await W.uhrSaetzeAbholen(); wahr(r, "ohne Fehler"); gleich(n, 0, "nicht bestätigt"); } finally { W.save = saveAlt; }
+    });
+  });
+  test("Test 17 A: ein neueres Training auf dem Handy behält das letzte Wort beim Gewicht", function () {
+    return uhrWelt(async function (c) {
+      c.s.studio[c.A].log.push({ at: c.jetzt - 86400000, b: "ps", zu: true, s: [[120, 5]] }); c.s.stPlaene[0].werte[c.A].kg = 120;
+      c.setze(c.sechs()); await W.uhrSaetzeAbholen();
+      gleich(c.s.stPlaene[0].werte[c.A].kg, 120, "Gewicht bleibt"); var log = c.s.studio[c.A].log; wahr(log.every(function (q, i) { return !i || q.at >= log[i - 1].at; }), "Protokoll zeitlich sortiert");
+    });
+  });
+  test("Test 17 B/C/D: Uhr bekommt Werte und „heute“ wie das Handy, dazu Pause, Schritt, Termine und Leichtwoche", function () {
+    return uhrWelt(function (c) {
+      function bloc(d, id) { return d.workout.blocs.filter(function (w) { return w.id === id; })[0]; }
+      var d = W.uhrDaten(), ps = bloc(d, "plan:ps"), u = ps.uebungen[0], v = bloc(d, "plan:pv").uebungen[0];
+      gleich([u.saetze, u.wdh, u.kg, u.pause, u.mitKg], [3, 6, 112.5, 180, 1], "Push Schwer"); gleich(u.ziel, W.uhrMitBloc(c.s.stPlaene[0], function () { var b = W.studioBereich(c.A); return b.min + "–" + b.max; }), "Bereich wie auf dem Handy");
+      wahr(/^112[,.]5/.test(u.zuletzt), "zuletzt aus dem BLOC: " + u.zuletzt); gleich([v.kg, v.wdh, v.pause], [92.5, 10, 120], "Push Volumen"); gleich(u.schritt, W.studioZiel(c.A).schritt, "Schritt");
+      gleich(d.programm.heute.name, "Push Volumen", "heute wie die Startseite"); gleich([d.programm.name, d.programm.tag, d.programm.tage.length], ["Push-Plan", W.kalTagKey(c.jetzt), 1], "Plan");
+      var m = W.kalHinzu(W.kalTagKey(W.kalPlus(new Date(), 1)), { art: "programm", ref: "pp" }); m.prog = { id: "pp", i: 0 };
+      d = W.uhrDaten(); gleich(d.programm.termine, [{ tag: m.tag, id: "plan:ps" }], "Termin morgen"); wahr(d.programm.vorrat.some(function (w) { return w.id === "plan:ps"; }), "BLOC dazu dabei");
+      c.s.kalender.e = [m]; d = W.uhrDaten(); wahr(!d.programm.heute, "heute nichts geplant"); gleich(d.programm.tage.length, 2, "alle Tage wählbar"); gleich(W.stPlanAktiv, "pv", "geöffneter BLOC bleibt");
+      m.leicht = true; ps = bloc(W.uhrDaten(), "plan:ps"); gleich([ps.leicht, ps.uebungen[0].saetzeLeicht], [[m.tag], 2], "Leichtwoche");
+    });
+  });
+  test("Test 17 E: zügiges Gehen ist kein Lauf (Name, Zeitziel, Statistik); Lauftermine behalten Namen und Kilometer", function () {
+    var s = W.state.db.settings, dbAlt = JSON.parse(JSON.stringify(W.state.db)), alt = { g: W.runGeplant, pk: W.progKontext, l: W.kalTerminAktiv };
+    try {
+      s.programme = [{ id: "pg", name: "Gehen", items: ["run"], tage: [1], wochen: 1, gehen: 30 }, { id: "pl", name: "Lauf", items: ["run"], tage: [2], wochen: 1 }]; s.kalender = { e: [] }; s.runs = []; W.state.db.history = []; s.runArt = "lauf"; delete s.runLive;
+      var e = W.kalHinzu("2026-01-01", { art: "run", name: "Zügiges Gehen · 30 Min", gehen: true, min: 30 }); e.prog = { id: "pg", i: 0 };
+      gleich(W.kalAufloesen(e).sub, "30 min · Gehen", "Termin zeigt das Zeitziel");
+      W.kalStarten(e); gleich([W.runGeplant.name, W.runGeplant.min, W.runGeplant.gehen], ["Zügiges Gehen · 30 Min", 30, true], "geplant"); wahr(W.document.getElementById("app").textContent.indexOf("Ziel: 30 min") > -1, "Ziel auf der Run-Seite");
+      var a = W.kalHinzu("2026-01-02", { art: "run", name: "Alt" }); a.prog = { id: "pg", i: 0 }; gleich(W.kalGehMin(a), 30, "älterer Termin kennt es über den Plan");
+      var l = W.kalHinzu("2026-01-03", { art: "run", name: "Dauerlauf locker", km: 5 }); l.prog = { id: "pl", i: 0 }; W.kalStarten(l); gleich([W.runGeplant.name, W.runGeplant.km, W.runGeplant.gehen], ["Dauerlauf locker", 5, false], "Lauftermin");
+      W.progKontext = { pid: "pg", i: 0 }; W.kalStarten({ art: "run" }); gleich([W.runGeplant.gehen, W.runGeplant.min], [true, 30], "aus dem Plan gestartet");
+      W.runGeplant = null;
+      var jetzt = Date.now();
+      W.runSpeichern({ id: "g1", start: jetzt - 3600000, dur: 1806000, dist: 3000, pts: [], splits: [602000, 1204000, 1806000], name: "Zügiges Gehen · 30 Min", art: "gehen" });
+      gleich([s.runs[0].art, s.runs[0].name], ["gehen", "Zügiges Gehen · 30 Min"], "gespeichert"); gleich(W.runAuswLaeufe().length, 0, "kein Lauf in der Auswertung"); gleich(W.runAuswBest(), "", "keine Bestzeit"); gleich(W.paLaufPace(), W.PA_LAUF_PACE, "Laufplan rechnet nicht mit Gehtempo");
+      s.runs.push({ id: "l1", at: jetzt, dur: 1800000, dist: 5000, pts: [], splits: [] }); wahr(W.runHighlights(s.runs[1]).indexOf(W.t("runErster")) > -1, "der erste Lauf zählt als erster"); wahr(W.runHighlights(s.runs[0]).indexOf(W.t("runErsteGeh")) > -1, "erster Gang");
+      W.go("#home"); W.go("#run"); wahr(!!W.document.querySelector(".run-gaenge"), "Gänge haben ihre eigene Zeile"); wahr(W.document.querySelector(".run-hero .rh-km").textContent.indexOf("5,00") === 0, "Lauf-Kilometer ohne Gang");
+      W.go("#rundetail/g1"); wahr(W.document.querySelector(".topbar").textContent.indexOf("Gehen") > -1, "Detail heißt Gehen");
+      W.go("#stats");
+      s.runs = [{ id: "x", at: new Date(2026, 0, 1, 12).getTime(), dur: 1806000, dist: 3000, pts: [], splits: [], name: "Dauerlauf" }, { id: "y", at: new Date(2026, 0, 3, 12).getTime(), dur: 1500000, dist: 5000, pts: [], splits: [], name: "Dauerlauf" }];
+      gleich(W.runGehenNachtragen(), 1, "alter Gang erkannt"); gleich([s.runs[0].art, s.runs[0].name, s.runs[1].art || ""], ["gehen", "Zügiges Gehen · 30 Min", ""], "alter Gang umgestellt, Lauf bleibt");
+    } finally { W.state.db = dbAlt; W.runGeplant = alt.g; W.progKontext = alt.pk; W.kalTerminAktiv = alt.l; W.save(); W.go("#home"); }
+  });
+  test("Test 17 F: in der Leichtwoche wird eine anstehende schwerere Variante angekündigt", function () {
+    var s = W.state.db.settings, dbAlt = JSON.parse(JSON.stringify(W.state.db)), n = Date.now(), tag = 86400000;
+    try {
+      s.ziel = "muskel"; delete s.leichtAus; delete s.tippsAus; s.einheiten = []; s.stPlaene = [{ id: "pf", name: "F", ids: ["push-ups"], startArt: "saetze", updatedAt: 1 }];
+      s.studio = { "push-ups": { einheit: "wdh", ziel: { saetze: 3, wdh: 12 }, log: [{ at: n - 8 * tag, zu: true, s: [[0, 15], [0, 15], [0, 15]] }, { at: n - 4 * tag, zu: true, s: [[0, 15], [0, 15], [0, 15]] }] } };
+      s.kalender = { e: [] }; var e = W.kalHinzu(W.kalTagKey(n), { art: "plan", ref: "pf" }); e.leicht = true;
+      var nx = W.leichtVarianten(["push-ups"])["push-ups"]; wahr(!!nx, "Variante steht an");
+      W.go("#satz/pf/0"); var b = W.document.querySelector(".satz-danach"); wahr(b && b.textContent.indexOf(W.tplText(W.findExercise(nx).name)) > -1, "Ankündigung auf der Karte"); wahr(!W.document.querySelector(".satz-pille"), "kein Vorschlag zum Übernehmen");
+      delete e.leicht; W.renderSatzTraining("pf", 0); wahr(!W.document.querySelector(".satz-danach"), "ohne Leichtwoche keine Ankündigung");
+    } finally { W.state.db = dbAlt; W.save(); W.go("#home"); }
+  });
+
   function eintrag(name) { var li = document.createElement("li"); li.textContent = name + " …"; liste.appendChild(li); return li; }
   document.getElementById("los").addEventListener("click", async function () {
     var knopf = this;

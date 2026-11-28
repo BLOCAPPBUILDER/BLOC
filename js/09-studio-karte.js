@@ -563,10 +563,11 @@ function studioTippUebernehmen(id, tp){
   return tp.art === "kg" || tp.art === "runter" || tp.art === "pause" || tp.art === "assist" || tp.art === "assistRunter" ? tp.kg : null;
 }
 /* Leichtwoche: steht heute im Kalender ein Termin aus dem Plan-Assistenten mit Leichtwoche, zu dem dieser BLOC gehört? */
-function planLeichtHeute(planId){
+function planLeichtHeute(planId){ return planLeichtAm(planId, kalTagKey(Date.now())); }
+function planLeichtAm(planId, tag){
   if(!planId || typeof kalAn !== "function" || !tippsAn()) return false;
-  if((state.db.settings.leichtAus || {})[kalTagKey(Date.now())+"|"+planId]) return false;   // heute bewusst normal trainiert
-  return kalAn(kalTagKey(Date.now())).some(function(e){
+  if((state.db.settings.leichtAus || {})[tag+"|"+planId]) return false;   // an dem Tag bewusst normal trainiert
+  return kalAn(tag).some(function(e){
     if(!e.leicht) return false;
     if(e.art === "plan") return e.ref === planId;
     var pg = e.art === "programm" && typeof programmFinde === "function" ? programmFinde(e.ref) : null;

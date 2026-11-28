@@ -67,6 +67,14 @@ public class UhrAnsicht extends View {
         }
     }
 
+    private String tag = Daten.heuteTag();
+    /** App wieder sichtbar: an einem neuen Tag zeigt das Menü den BLOC von heute */
+    void tagPruefen() {
+        if (tag.equals(Daten.heuteTag())) return;
+        tag = Daten.heuteTag();
+        if (screen instanceof MenueBildschirm) ((MenueBildschirm) screen).neuAufbauen();
+    }
+
     void neueDaten(Daten d) {
         if (d == null) return;
         daten = d;

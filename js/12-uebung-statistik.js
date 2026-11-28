@@ -498,7 +498,8 @@ function statModule(){
   // Zahlen auf einen Blick (oben auf Fortschritt): Tage am Stück, Trainingstage, Trainingszeit, gehobenes Gewicht, Kilometer, Höhenmeter; Antippen zeigt den Verlauf (zahlGraph)
   var kgGesamt = einheitenListe().reduce(function(a, x){ return a + (+x.vol || 0); }, 0);
   var zeitGesamt = voll.reduce(function(a, w){ return a + w.s; }, 0);
-  var kmGesamt = runs.reduce(function(a, x){ return a + (x.dist || 0); }, 0), hmGesamt = runs.reduce(function(a, x){ return a + (+x.hm || 0); }, 0);
+  var fahrten = runs.filter(function(x){ return !runIstGeh(x); });   // Kilometer und Höhenmeter ohne Gänge (Test 17, E)
+  var kmGesamt = fahrten.reduce(function(a, x){ return a + (x.dist || 0); }, 0), hmGesamt = fahrten.reduce(function(a, x){ return a + (+x.hm || 0); }, 0);
   var Z = [];
   Z.push({ id:"serie", ico:'<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>', titel:t("fk_serie"), wert:String(folgeTage), einheit:t(folgeTage === 1 ? "fkTag" : "fkTage"),
     sub:folgeTage ? (heuteDa ? t("fkHeuteDa") : t("fkHeuteNoch")) : t("fkSerieNeu"), sub2:t(Math.max(bestFolge, folgeTage) === 1 ? "fkRekordTag1" : "fkRekordTage", { n:Math.max(bestFolge, folgeTage) }) });
@@ -508,7 +509,7 @@ function statModule(){
   Z.push({ id:"kg", ico:'<path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/>', titel:t("fk_kg"),
     wert:kgGesamt >= 10000 ? (Math.round(kgGesamt/100)/10).toLocaleString(lang0) : Math.round(kgGesamt).toLocaleString(lang0), einheit:kgGesamt >= 10000 ? "t" : "kg",
     sub:kgGesamt > 0 ? (kgGesamt >= 10000 ? t("fkKgSubKg", { kg:Math.round(kgGesamt).toLocaleString(lang0) }) : t("fkKgSub", { t:(Math.round(kgGesamt/100)/10).toLocaleString(lang0) })) : t("fkKgLeer") });
-  if(aktiv.indexOf("run") > -1 && runs.length) Z.push({ id:"km", ico:'<circle cx="14" cy="4.5" r="2"/><path d="M6 21l3-6 3 2v5M9 15l1-4 4-1 2 3 3 1M10 11L8 8"/>', titel:t("fk_km"), wert:runKm(kmGesamt), einheit:"km", sub:t("fkKmSub", { n:runs.length }) });
+  if(aktiv.indexOf("run") > -1 && fahrten.length) Z.push({ id:"km", ico:'<circle cx="14" cy="4.5" r="2"/><path d="M6 21l3-6 3 2v5M9 15l1-4 4-1 2 3 3 1M10 11L8 8"/>', titel:t("fk_km"), wert:runKm(kmGesamt), einheit:"km", sub:t("fkKmSub", { n:fahrten.length }) });
   if(aktiv.indexOf("run") > -1 && hmGesamt > 0) Z.push({ id:"hm", ico:'<path d="M3 19l6-10 4 6 3-4 5 8z"/>', titel:t("fk_hm"), wert:Math.round(hmGesamt).toLocaleString(lang0), einheit:"m", sub:t("fkHmSub") });
   /* Verlauf zu einer Zahl: Balken je Woche, Monat oder Jahr (gran); nutzt die gleichen Zeiträume wie das Diagramm „Verlauf“ */
   function zahlGraph(id, gran){
@@ -521,8 +522,8 @@ function statModule(){
     else if(id === "tage"){ vals = b.map(function(x){ return x.n; }); }
     else if(id === "zeit"){ vals = b.map(function(x){ return x.s; }); kurz = statMin; }
     else if(id === "kg"){ vals = je(einheitenListe(), "vol"); kurz = function(v){ return Math.round(v).toLocaleString(lang0); }; }
-    else if(id === "km"){ vals = je(runs.map(function(x){ return { at:x.at, d:x.dist || 0 }; }), "d"); kurz = function(v){ return runKm(v).replace(/[,.]00$/, ""); }; }
-    else { vals = je(runs, "hm"); kurz = function(v){ return String(Math.round(v)); }; }
+    else if(id === "km"){ vals = je(fahrten.map(function(x){ return { at:x.at, d:x.dist || 0 }; }), "d"); kurz = function(v){ return runKm(v).replace(/[,.]00$/, ""); }; }
+    else { vals = je(fahrten, "hm"); kurz = function(v){ return String(Math.round(v)); }; }
     return { html:statBalken(vals, b.map(function(x){ return x.label; }), kurz), hinweis:t("fkGraph_"+id, { u:u }), hatDaten:vals.some(function(v){ return v > 0; }) };
   }
   M.logbuch = statFortschrittHTML();   // Gewichte und Verläufe je Übung bzw. Maschine
@@ -616,9 +617,10 @@ function statModule(){
     var k = r.k, d = bereichDaten(k), l = bes(k, 28), letzte = l.length ? Math.max.apply(null, l.map(function(b){ return b.bis; })) : 0;
     var vk = reihe.map(function(b){ return (b.a[k] || {}).s || 0; });
     var tageSeit = letzte ? Math.floor((new Date(jetzt).setHours(0, 0, 0, 0) - new Date(letzte).setHours(0, 0, 0, 0))/tag + 0.5) : 0;
-    var sub = k === "run" && runs.length ? t("statRunSub", { n:runs.length, km:runKm(runs.reduce(function(a, x){ return a + x.dist; }, 0)) })
+    var fahrt = fahrten, gaenge = runs.filter(runIstGeh), kmS = function(q){ return runKm(q.reduce(function(a, x){ return a + x.dist; }, 0)); };   // Gänge getrennt (Test 17, E)
+    var sub = k === "run" && runs.length ? (fahrt.length ? t("statRunSub", { n:fahrt.length, km:kmS(fahrt) }) : t("statGehSub", { n:gaenge.length, km:kmS(gaenge) }))
       : l.length ? t("statBereichSub", { n:l.length, z:dauer(summe(l)) })+" · "+statTage(tageSeit) : t("statNichts");
-    var chipsK = k === "run" && runs.length ? [[String(runs.length), t("statLaeufe")], [runKm(runs.reduce(function(a, x){ return a + x.dist; }, 0)), "km"], [letzte ? statTage(tageSeit) : "–", t("statZuletzt")]]
+    var chipsK = k === "run" && runs.length ? [[String(fahrt.length), t("statLaeufe")], [kmS(fahrt), "km"], [letzte ? statTage(tageSeit) : "–", t("statZuletzt")]]
       : l.length ? [[String(l.length), t("statChipTrainings")], [dauer(summe(l)), t("statChipZeit")], [statTage(tageSeit), t("statZuletzt")]] : null;
     // Der meistgenutzte Bereich steht aufgeklappt, die übrigen sind zu (Zusammenfassung bleibt sichtbar); merkt sich, was du auf- oder zugeklappt hast
     var bOffen = statOffen["b-"+k] !== undefined ? statOffen["b-"+k] : ri === 0 && l.length > 0;
@@ -627,9 +629,10 @@ function statModule(){
       (chipsK ? '<div class="chips-stat">'+chipsK.map(function(c){ return '<span><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></span>'; }).join("")+'</div>' : '');
     if(k !== "run" && vk.some(function(v){ return v > 0; })) h += statBalken(vk, labels, statMin, d[3]);
     if(k === "run" && runs.length){
-      var laeufe = runs.filter(function(x){ return !runIstRad(x); });   // Pace und Rekorde nur aus den Läufen, nicht aus Radfahrten
+      var laeufe = runs.filter(runIstLauf);   // Pace und Rekorde nur aus den Läufen, nicht aus Radfahrten und Gängen
       var gut = laeufe.filter(function(x){ return x.dist >= 1000; }).sort(function(a, b){ return a.at - b.at; }), letzteL = gut.slice(-60);
-      var wk = reihe.map(function(b){ return runs.filter(function(x){ return x.at >= b.ab && x.at < b.bis; }).reduce(function(a, x){ return a + x.dist; }, 0); });
+      var wk = reihe.map(function(b){ return fahrt.filter(function(x){ return x.at >= b.ab && x.at < b.bis; }).reduce(function(a, x){ return a + x.dist; }, 0); });
+      if(gaenge.length) h += '<div class="sk-unter">'+esc(t("statGehSub", { n:gaenge.length, km:kmS(gaenge) }))+'</div>';
       if(wk.some(function(v){ return v > 0; })) h += '<div class="sk-unter titel">'+esc(t("statKmPro", { u:einheit }))+'</div>'+statBalken(wk, labels, function(v){ return runKm(v).replace(/[,.]00$/, ""); }, d[3]);
       if(letzteL.length >= 2){
         h += '<div class="sk-unter titel">'+esc(t("statPaceTitel"))+'</div>'+statPaceSvg(letzteL);
@@ -758,6 +761,7 @@ function trainingsNachtragen(){
     ((alle[id] && alle[id].log) || []).forEach(function(l){
       if(!l || l.zu || !l.letzte || !(l.s || []).length || rundeNochOffen(l)) return;
       var tag = einheitTagKey(l.at), key = (l.b || "")+"|"+tag, x = g[key] || (g[key] = { id:uid(), tag:tag, plan:l.b || "", ex:[], saetze:0, vol:0, wdh:0, rek:0, von:l.at, at:l.letzte, zu:true, nachgetragen:true });
+      if(l.uhr && !x.uhr) x.uhr = l.uhr;   // Sätze von der Uhr: spätere Nachzügler finden dieses Training wieder (js/26-uhr.js)
       x.ex.push({ id:id, s:JSON.parse(JSON.stringify(l.s)), rekord:false });
       x.saetze += arbeitsSaetze(l).length; x.vol += studioVolumen(l, id); x.wdh += studioWdhSumme(l);
       x.von = Math.min(x.von, l.at); x.at = Math.max(x.at, l.letzte);

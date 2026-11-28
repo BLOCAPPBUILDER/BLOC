@@ -7,7 +7,7 @@
  */
 
 /* Einzige Stelle für die Versionsnummer - die App fragt sie per postMessage ab (Einstellungen, ganz unten) */
-var FASSUNG = "2026-11-28-6";
+var FASSUNG = "2026-11-28-7";
 var NETZ_WARTEN = 2500;   // ms - so lange wartet der Start höchstens aufs Netz, wenn es eine gespeicherte Fassung gibt
 var SPEICHER = "sporttimer-" + FASSUNG;
 var GRUNDGERUEST = ["./", "./index.html", "./texte.js", "./quellen.html", "./impressum.html", "./lizenzen.html", "./daten.js", "./fotos.js", "./faq.js", "./js/00-native.js", "./js/01-basis.js", "./js/02-bibliothek.js", "./js/03-router.js", "./js/04-start.js", "./js/05-suche.js", "./js/06-timer-listen.js", "./js/07-studio.js", "./js/08-koerperkarte.js", "./js/09-studio-karte.js", "./js/10-gemeinsam.js", "./js/11-bibliothek-seite.js", "./js/11b-katalog.js", "./js/12-uebung-statistik.js", "./js/13-teilen-editor.js", "./js/14-einfuehrung-sicherung.js", "./js/16-lauf.js", "./js/17-aufwaermen-einstellungen.js", "./js/18-audio.js", "./js/19-timer-motor.js", "./js/19a-kalender.js", "./js/20-walzen-start.js", "./js/21-koerper.js", "./js/22-satz-training.js", "./js/23-protein.js", "./js/24-fortschritt.js", "./js/25-plan-assistent.js", "./js/26-uhr.js", "./img/neu-protein.jpg", "./app.css", "./layout-new.css", "./img/neu-builder.webp", "./img/neu-hell-hintergrund.jpg", "./img/neu-p-freiluft-meer.jpg", "./img/neu-wissen.jpg", "./img/neu-h-hanteln-orange.jpg", "./img/neu-p-dehnung-silhouette.jpg", "./img/neu-freiluft.jpg", "./img/neu-p-freiluft-meer.jpg", "./img/neu-p-frau-kniebeuge.jpg", "./img/neu-p-mobility-sitz.jpg", "./manifest.json", "./icon.png", "./icon-180.png", "./privacy.html", "./img/ort-fitnessstudio.jpg", "./img/ort-freiluft.jpg", "./img/bereich-run.jpg"];

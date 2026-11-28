@@ -3,6 +3,15 @@
 Kurze Notizen zu den **letzten Änderungen** (ab 2026-10-05), jeweils mit der Fassung. Ältere Einträge stehen im
 [Archiv](docs/VERLAUF-Archiv.md). Den **aktuellen** Stand beschreibt die [README](README.md).
 
+## 2026-11-28 · Test 17: Training von der Uhr kommt richtig an (Fassung 2026-11-28-7)
+
+- **Sätze von der Uhr (A):** Je Uhr-Training (`sid`) entsteht ein gespeichertes Training am Tag des Trainings, beim richtigen BLOC und mit Termin. Doppelte Sätze zählen einmal, Nachzügler und Korrekturen landen im selben Training, unbekannte Übungen werden aufgehoben (`settings.uhrRest`). Das übungsweite Arbeitsgewicht bleibt. Gelöscht wird auf der Uhr erst nach `bestaetigen`. Gespeichert wird mit „fertig“, wenn alle Ziel-Sätze drin sind oder 45 Minuten kein Satz kam.
+- **Werte und „heute“ (B, C):** Die Uhr bekommt Ziel, Gewicht und „zuletzt“ des jeweiligen BLOCs und denselben BLOC für heute wie die Startseite; dazu die Termine der nächsten zwei Wochen.
+- **Gehen (E):** eigene Art `gehen` mit Name und Zeitziel aus dem Termin; zählt nicht zu Lauf-Kilometern, Bestzeiten, Pace und Rennzeit, steht als eigene Zeile. Ältere Gänge werden einmal umgestellt. Lauftermine aus einem Plan behalten beim Start Namen und Kilometerziel.
+- **Uhr-App (D):** Abschluss („Training fertig?“), letzten Satz korrigieren (Linse in der Pause antippen), Pause und Gewichtsschritt je Übung, Halteübungen in Sekunden, Rückfrage bei sehr schwerem Gewicht, „Vorschlag auf dem Handy“, Leichtwoche mit weniger Sätzen, nach Unterbrechung dort weiter. Beispieldaten gehen nicht ans Handy.
+- **Leichtwoche (F):** Eine anstehende schwerere Variante wird für das nächste normale Training angekündigt.
+- Einheitstest 149 Prüfungen (acht neue). Uhr-Version 0.3-test, Handy versionCode 4. Offen: G (fachliche Prüfung Kraftteil bei Ausdauer).
+
 ## 2026-11-28 · Lauf verstehen, Phase 1: Daten (Fassung 2026-11-28-6)
 
 - **Routenpunkte mit Zeit und Höhe:** `pts` speichert jetzt `[lat, lon, t, alt]` (t = Sekunden ohne Pausen, alt = geglättete Höhe in m oder `null`). Alte Läufe mit `[lat, lon]` bleiben gültig. `runAusduennen` behält t und alt und lässt mindestens alle 10 s einen Punkt stehen (bei vollem Speicher 30 s), damit Tempo und Höhe für die spätere Kurve erhalten bleiben. Pausen stehen als `pz:[[t, s]…]` am Lauf.

@@ -10,8 +10,8 @@ android {
         applicationId "io.github.blocappbuilder.bloc"
         minSdkVersion 30          // Wear OS 3 und neuer
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "0.2-test"
+        versionCode 3
+        versionName "0.3-test"
     }
     buildTypes {
         release {

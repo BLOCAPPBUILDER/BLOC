@@ -11,6 +11,8 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.google.android.gms.wearable.DataClient;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.MessageClient;
@@ -23,21 +25,37 @@ import com.google.android.gms.wearable.Wearable;
  * Verbindung zur BLOC-Uhr-App (Wear OS) über die Wear-OS-Verbindung (Data Layer):
  * direkt zwischen Handy und Uhr, ohne Konto und ohne Server.
  *  - senden: Favoriten, BLOCs, Katalog, Timer und Programm als JSON unter /bloc/uhr
- *  - abholen: auf der Uhr eingetragene Sätze (/bloc/satz/…), danach werden sie dort gelöscht
+ *  - abholen: auf der Uhr eingetragene Sätze und „Training fertig“ (/bloc/satz/…) lesen; sie bleiben liegen
+ *  - bestaetigen: erst wenn die App sie gesichert hat, werden genau diese Nachrichten gelöscht
+ *  - Ereignis „uhrSatz“: neue Sätze, während die App offen ist
  * Ohne gekoppelte Uhr bleibt alles lokal liegen und geht nirgendwohin.
  */
 @CapacitorPlugin(name = "BlocUhr")
-public class BlocUhrPlugin extends Plugin implements MessageClient.OnMessageReceivedListener {
+public class BlocUhrPlugin extends Plugin implements MessageClient.OnMessageReceivedListener, DataClient.OnDataChangedListener {
+
+    private static final String PFAD_SATZ = "/bloc/satz";
 
     /** Befehle der Uhr beim Lauf (start, pause, weiter, stopp, abbrechen) gehen als Ereignis „uhrBefehl“ an die App */
     @Override
     public void load() {
         try { Wearable.getMessageClient(getContext()).addListener(this); } catch (Exception ignored) { }
+        try { Wearable.getDataClient(getContext()).addListener(this); } catch (Exception ignored) { }
     }
 
     @Override
     protected void handleOnDestroy() {
         try { Wearable.getMessageClient(getContext()).removeListener(this); } catch (Exception ignored) { }
+        try { Wearable.getDataClient(getContext()).removeListener(this); } catch (Exception ignored) { }
+    }
+
+    @Override
+    public void onDataChanged(DataEventBuffer ereignisse) {
+        boolean neu = false;
+        for (DataEvent e : ereignisse) {
+            String pfad = e.getDataItem().getUri().getPath();
+            if (e.getType() == DataEvent.TYPE_CHANGED && pfad != null && pfad.startsWith(PFAD_SATZ)) neu = true;
+        }
+        if (neu) notifyListeners("uhrSatz", new JSObject());
     }
 
     @Override
@@ -88,17 +106,19 @@ public class BlocUhrPlugin extends Plugin implements MessageClient.OnMessageRece
     public void abholen(PluginCall call) {
         try {
             DataClient dc = Wearable.getDataClient(getContext());
-            Uri uri = new Uri.Builder().scheme("wear").path("/bloc/satz").build();
+            Uri uri = new Uri.Builder().scheme("wear").path(PFAD_SATZ).build();
             dc.getDataItems(uri, DataClient.FILTER_PREFIX).addOnSuccessListener(puffer -> {
-                JSArray l = new JSArray();
+                JSArray l = new JSArray(), uris = new JSArray();
                 for (DataItem it : puffer) {
                     String j = DataMapItem.fromDataItem(it).getDataMap().getString("json");
-                    if (j != null) l.put(j);
-                    dc.deleteDataItems(it.getUri());
+                    if (j == null) continue;
+                    l.put(j);
+                    uris.put(it.getUri().toString());
                 }
                 puffer.release();
                 JSObject o = new JSObject();
                 o.put("saetze", l);
+                o.put("uris", uris);
                 call.resolve(o);
             }).addOnFailureListener(e -> { JSObject o = new JSObject(); o.put("saetze", new JSArray()); call.resolve(o); });
         } catch (Exception e) {
@@ -106,5 +126,25 @@ public class BlocUhrPlugin extends Plugin implements MessageClient.OnMessageRece
             o.put("saetze", new JSArray());
             call.resolve(o);
         }
+    }
+
+    /** Gesicherte Nachrichten löschen: { eintraege:[{ uri, json }] }. Hat die Uhr eine inzwischen korrigiert (anderer Inhalt), bleibt sie für das nächste Abholen liegen. */
+    @PluginMethod
+    public void bestaetigen(PluginCall call) {
+        try {
+            JSArray l = call.getArray("eintraege", new JSArray());
+            DataClient dc = Wearable.getDataClient(getContext());
+            for (int i = 0; i < l.length(); i++) {
+                org.json.JSONObject e = l.optJSONObject(i);
+                if (e == null) continue;
+                Uri uri = Uri.parse(e.optString("uri"));
+                String json = e.optString("json");
+                if (uri.getPath() == null || !uri.getPath().startsWith(PFAD_SATZ)) continue;
+                dc.getDataItem(uri).addOnSuccessListener(it -> {
+                    if (it != null && json.equals(DataMapItem.fromDataItem(it).getDataMap().getString("json"))) dc.deleteDataItems(uri);
+                });
+            }
+        } catch (Exception ignored) { }
+        call.resolve();
     }
 }

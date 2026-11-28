@@ -43,10 +43,11 @@ class MenueBildschirm extends Bildschirm {
         seite = id;
         liste.clear();
         Daten d = uhr.daten;
+        final Daten.Workout h = d.heute();
         switch (id) {
             case "start":
                 kopf = "";
-                add("Play", d.heute != null ? "Heute: " + d.heute.name : "Kein Programm aktiv", PLAY, true, () -> oeffne("play", true));
+                add("Play", h != null ? "Heute: " + h.name : d.programmName.isEmpty() ? "Kein Programm aktiv" : "Heute nichts geplant", PLAY, true, () -> oeffne("play", true));
                 add("Favoriten", d.favoriten.size() + " gespeichert", STERN, false, () -> oeffne("fav", true));
                 add("Workout", "BLOCs & Katalog", HANTEL, false, () -> oeffne("workout", true));
                 add("Mobility & Stretch", "BLOCs & Katalog", MOBIL, false, () -> oeffne("mob", true));
@@ -57,8 +58,8 @@ class MenueBildschirm extends Bildschirm {
                 kopf = "PLAY";
                 Eintrag i = add(d.programmName.isEmpty() ? "Kein Programm" : d.programmName, d.programmInfo, null, false, null);
                 i.info = true;
-                if (d.heute != null) add("Starten", d.heute.name + " · " + d.heute.info, PLAY, true, () -> starte(d.heute));
-                if (!d.tage.isEmpty()) add("Anderen Tag wählen", d.tage.size() + " weitere", HANTEL, false, () -> oeffne("tage", true));
+                if (h != null) add("Starten", h.name + " · " + h.info, PLAY, true, () -> starte(h));
+                if (!d.tage.isEmpty()) add(h != null ? "Anderen Tag wählen" : "Tag wählen", d.tage.size() + (h != null ? " weitere" : " Trainings"), HANTEL, false, () -> oeffne("tage", true));
                 break;
             case "tage":
                 kopf = "PROGRAMM";
